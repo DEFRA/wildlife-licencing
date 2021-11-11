@@ -386,8 +386,10 @@ components:
           $ref: '#/components/schemas/a13Activity'
         a13Method:
           $ref: '#/components/schemas/a13Method'
-        a13RoostType:
-          $ref: '#/components/schemas/a13RoostType'
+        a13RoostTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/a13RoostType'
         maximumNumber:
           type: integer
         numberOfBreedingSites:
