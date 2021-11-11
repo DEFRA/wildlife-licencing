@@ -9,11 +9,11 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-  "/applicant/{appliciantId}":
+  "/user/{userId}":
     get:
-      description: reterive appliciant object
+      description: reterive user object
       parameters:
-        - name: appliciantId
+        - name: userId
           in: path
           description: ID of the appliciant
           required: true
@@ -25,23 +25,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/applicant'
+                $ref: '#/components/schemas/user'
         400:
-          description: Bad request. appliciant ID must be a uuid
+          description: Bad request. user ID must be a uuid
         401:
           description: Unauthorized
         404:
-          description: An applicant with the specified ID was not found
+          description: An user with the specified ID was not found
         500:
           description: Unexpected error on server
 
-  "/applicant/{applicantId}/applications":
+  "/applicant/{userId}/applications":
     get:
-      description: get a list of applications created by a given appliciant
+      description: get a list of applications created by a given user
       parameters:
-        - name: applicantId
+        - name: userId
           in: path
-          description: ID of the appliciant
+          description: ID of the user
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
@@ -53,21 +53,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/applications'
         400:
-          description: Bad request. appliciant ID must be a uuid
+          description: Bad request. user ID must be a uuid
         401:
           description: Unauthorized
         404:
-          description: An applicant with the specified ID was not found
+          description: An user with the specified user ID was not found
         500:
           description: Unexpected error on server
 
-  "/applicant/{applicantId}/application/{applicationId}":
+  "/applicant/{userId}/application/{applicationId}":
     get:
       description: an applications created by a specific applicant
       parameters:
-        - name: applicantId
+        - name: userId
           in: path
-          description: ID of the appliciant
+          description: ID of the user
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
@@ -86,49 +86,136 @@ paths:
               schema:
                 $ref: '#/components/schemas/application'
         400:
-          description: Bad request. appliciant ID must be a uuid
+          description: Bad request.
         401:
           description: Unauthorized
         404:
-          description: An applicant with the specified ID was not found
+          description: The specified user ID and application ID was not found
         500:
           description: Unexpected error on server
 
 components:
   schemas:
-    applicant:
+    user:
       type: object
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        appliciantParty:
-          $ref: '#/components/schemas/party'
+        details:
+          $ref: '#/components/schemas/person'
 
     applications:
       type: array
       items:
         $ref: '#/components/schemas/application'
 
+    licenceType:
+      type: string
+      enum:
+        - classLicence
+        - individualLicence
+        - mitigationLicence
+
     application:
-      type: object
       required:
         - id
-        - licencee
-        - work
-        - site
+        - userApplication
+        - role
+        - licenceType
+        - licence
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        licencee:
-          $ref: '#/components/schemas/party'
-        work:
-          $ref: '#/components/schemas/work'
-        permissions:
-          $ref: '#/components/schemas/permissions'
-        site:
-          $ref: '#/components/schemas/site'
-        speciesData:
-          $ref: '#/components/schemas/speciesData'
+        role:
+          $ref: '#/components/schemas/userApplicationRole'
+        userApplication:
+          oneOf:
+            - $ref: '#/components/schemas/applicant'
+            - $ref: '#/components/schemas/agent'
+          discriminator:
+            propertyName: role
+        licenceType:
+          $ref: '#/components/schemas/licenceType'
+        licence:
+          oneOf:
+            - $ref: '#/components/schemas/classLicence'
+            - $ref: '#/components/schemas/individualLicence'
+            - $ref: '#/components/schemas/mitigationLicence'
+          discriminator:
+            propertyName: licenceType
+
+    agent:
+      type: object
+      properties:
+        appliciant:
+          $ref: '#/components/schemas/person'
+
+    applicant:
+      type: object
+
+    userApplicationRole:
+      type: string
+      enum:
+        - applicant
+        - agent
+
+    person:
+      type: object
+      required:
+        [firstname, lastname]
+      properties:
+        firstname:
+          type: string
+          minLength: 1
+          maxLength: 36
+        lastname:
+          type: string
+          minLength: 1
+          maxLength: 36
+        address:
+          $ref:  '#/components/schemas/address'
+        email:
+          $ref:  '#/components/schemas/email'
+        company:
+          $ref: '#/components/schemas/company'
+
+    company:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 36
+        address:
+          $ref: '#/components/schemas/address'
+
+    address:
+      type: object
+      required: [addrLine1, addrline3, postcode]
+      properties:
+        addrline1:
+          type: string
+          minLength: 1
+          maxLength: 36
+        addrline2:
+          type: string
+          minLength: 1
+          maxLength: 36
+        addrline3:
+          type: string
+          minLength: 1
+          maxLength: 36
+        postcode:
+          type: string
+          minLength: 1
+          maxLength: 10
+
+    licenceCodes:
+      type: string
+      enum:
+        - A13
+        - A14
 
     work:
       type: object
@@ -237,90 +324,117 @@ components:
           maxLength: 36
         address:
           $ref: '#/components/schemas/address'
-        boundry:
-          $ref: '#/components/schemas/spacial'
+        gridReference:
+          $ref: '#/components/schemas/gridReference'
 
-    species:
+    gridReference:
+      type: string
+
+    classLicence:
+      type: object
+
+    individualLicence:
+      type: object
+
+    mitigationLicence:
+      type: object
+      properties:
+        work:
+          $ref: '#/components/schemas/work'
+        permissions:
+          $ref: '#/components/schemas/permissions'
+        site:
+          $ref: '#/components/schemas/site'
+        licenceCode:
+          $ref: '#/components/schemas/licenceCodes'
+        licenceDetail:
+          oneOf:
+            - $ref: '#/components/schemas/a13'
+            - $ref: '#/components/schemas/a14'
+          discriminator:
+            propertyName: licenceCode
+
+    a13:
+      type: object
+      required:
+        - actions
+        - proposedDateFrom
+        - proposedDateTo
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/a13Action'
+        proposedDateFrom:
+          type: string
+          format: date
+        proposedDateTo:
+          type: string
+          format: date
+
+    a13Action:
+      type: object
+      required:
+        - a13Activity
+        - a13Method
+        - a13RoostType
+        - maximumNumber
+        - numberOfBreedingSites
+        - numberOfRestingSites
+      properties:
+        a13Activity:
+          $ref: '#/components/schemas/a13Activity'
+        a13Method:
+          $ref: '#/components/schemas/a13Method'
+        a13RoostType:
+          $ref: '#/components/schemas/a13RoostType'
+        maximumNumber:
+          type: integer
+        numberOfBreedingSites:
+          type: integer
+        numberOfRestingSites:
+          type: integer
+
+    a13Activity:
       type: string
       enum:
-        - Bats
-        - Great Crested Newts
+        - Capture Take
+        - Destroy Resting Place
+        - Destroy Breeding Site
+        - Damage Breeding Site
+        - Transport
+        - Disturb
+        - Damage Resting Place
 
-    speciesData:
-        oneOf:
-          - $ref: '#/components/schemas/bats'
-          - $ref: '#/components/schemas/greatCrestedNewts'
-        discriminator:
-          propertyName: species
-
-    bats:
-      type: object
-      required:
-        - species
-      properties:
-        species:
-          $ref: '#/components/schemas/species'
-
-    greatCrestedNewts:
-      type: object
-      required:
-        - species
-      properties:
-        species:
-          $ref: '#/components/schemas/species'
-
-    party:
-      type: object
-      required:
-        [firstname, lastname]
-      properties:
-        firstname:
-          type: string
-          minLength: 1
-          maxLength: 36
-        lastname:
-          type: string
-          minLength: 1
-          maxLength: 36
-        email:
-          $ref:  '#/components/schemas/email'
-        company:
-          $ref: '#/components/schemas/company'
-
-    company:
-      type: object
-      required: [name]
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 36
-        address:
-          $ref: '#/components/schemas/address'
-
-    address:
-      type: object
-      required: [addrLine1, addrline3, postcode]
-      properties:
-        addrline1:
-          type: string
-          minLength: 1
-          maxLength: 36
-        addrline2:
-          type: string
-          minLength: 1
-          maxLength: 36
-        addrline3:
-          type: string
-          minLength: 1
-          maxLength: 36
-        postcode:
-          type: string
-          minLength: 1
-          maxLength: 10
-
-    spacial:
+    a13Method:
       type: string
+      enum:
+        - By hand
+        - By static hand-held net
+        - Temporary exclusion
+        - Permanent exclusion
+        - Destructive search by soft demolition
+        - Mechanical demolition
+        - Disturbance by illumination (intentional by torch)
+        - Disturbance by noise or vibration
+        - Temporary obstruction of roost access
+        - Endoscopes
+
+    a13RoostType:
+      type: string
+      enum:
+        - Hibernation confirmed
+        - Day
+        - Transitional/Occasional
+        - Feeding perch
+        - Night
+        - Satellite
+        - Swarming or mating
+        - Maternity
+        - Underground - mines, caves, cellars, tunnels or bridges
+
+    a14:
+      type: object
 
     uuid:
       type: string
