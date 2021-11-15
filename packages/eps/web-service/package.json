@@ -1,0 +1,20 @@
+{
+  "name": "web-service",
+  "version": "1.0.0",
+  "description": "The web service for wildlife licencing of European Protected Species",
+  "main": "src/eps-web-service.js",
+  "scripts": {
+    "start": "node src/eps-web-service.js"
+  },
+  "keywords": [
+    "Wildlife",
+    "Licencing",
+    "Webservice"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  }
+}

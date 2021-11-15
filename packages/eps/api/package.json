@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "The API to support the wildlife licencing of European Protected Species",
+  "main": "src/eps-api-service.js",
+  "scripts": {
+    "start": "node src/eps-api-service.js"
+  },
+  "keywords": [
+    "API",
+    "Wildlife",
+    "Licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  }
+}

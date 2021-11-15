@@ -1,0 +1,22 @@
+{
+  "name": "dynamics-service",
+  "version": "1.0.0",
+  "description": "Interface to Microsoft Dynamics. Queue consumer.",
+  "main": "src/wildlife-licencing-dynamics-service.js",
+  "scripts": {
+    "start": "node src/wildlife-licencing-dynamics-service.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "keywords": [
+    "Dynamics",
+    "Queue",
+    "Consumer",
+    "Wildlife",
+    "licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE"
+}

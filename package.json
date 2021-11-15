@@ -1,0 +1,18 @@
+{
+  "name": "wildlife-licencing-service",
+  "private": false,
+  "devDependencies": {
+    "lerna": "^4.0.0",
+    "jest": "^27.3.1",
+    "standard": "^16.0.4"
+  },
+  "scripts": {
+    "postinstall": "npm run lerna:bootstrap",
+    "test": "jest",
+    "test:only-changed": "jest --changedSince develop",
+    "test:watch": "jest --watch",
+    "format": "prettier-standard",
+    "lerna:clean": "lerna clean --yes",
+    "lerna:bootstrap": "lerna bootstrap"
+  }
+}

@@ -211,12 +211,6 @@ components:
           minLength: 1
           maxLength: 10
 
-    licenceCodes:
-      type: string
-      enum:
-        - A13
-        - A14
-
     work:
       type: object
       required:
@@ -354,6 +348,23 @@ components:
           discriminator:
             propertyName: licenceCode
 
+    licenceCodes:
+      type: string
+      enum:
+        - A13
+        - A14
+
+    licensableActivities:
+      type: string
+      enum:
+        - Capture Take
+        - Destroy Resting Place
+        - Destroy Breeding Site
+        - Damage Breeding Site
+        - Transport
+        - Disturb
+        - Damage Resting Place
+
     a13:
       type: object
       required:
@@ -364,7 +375,7 @@ components:
         actions:
           type: array
           items:
-            $ref: '#/components/schemas/a13Action'
+            $ref: '#/components/schemas/a13Items'
         proposedDateFrom:
           type: string
           format: date
@@ -372,21 +383,28 @@ components:
           type: string
           format: date
 
-    a13Action:
+    a13Items:
       type: object
       required:
-        - a13Activity
-        - a13Method
-        - a13RoostType
+        - species
+        - licensableActivities
+        - methods
+        - roostTypes
         - maximumNumber
         - numberOfBreedingSites
         - numberOfRestingSites
       properties:
-        a13Activity:
-          $ref: '#/components/schemas/a13Activity'
-        a13Method:
-          $ref: '#/components/schemas/a13Method'
-        a13RoostTypes:
+        species:
+            $ref: '#/components/schemas/a13Species'
+        licensableActivities:
+          type: array
+          items:
+            $ref: '#/components/schemas/licensableActivities'
+        mathods:
+          type: array
+          items:
+            $ref: '#/components/schemas/a13Method'
+        roostTypes:
           type: array
           items:
             $ref: '#/components/schemas/a13RoostType'
@@ -396,17 +414,6 @@ components:
           type: integer
         numberOfRestingSites:
           type: integer
-
-    a13Activity:
-      type: string
-      enum:
-        - Capture Take
-        - Destroy Resting Place
-        - Destroy Breeding Site
-        - Damage Breeding Site
-        - Transport
-        - Disturb
-        - Damage Resting Place
 
     a13Method:
       type: string
@@ -434,6 +441,27 @@ components:
         - Swarming or mating
         - Maternity
         - Underground - mines, caves, cellars, tunnels or bridges
+
+    a13Species:
+      type: string
+      enum:
+        - Alcathoe
+        - Barbastelle
+        - Bechstein’s
+        - Brandt’s
+        - Brown long-eared
+        - Common pipistrelle
+        - Daubenton’s
+        - Greater horseshoe
+        - Grey long-eared
+        - Leisler’s
+        - Lesser horseshoe
+        - Nathusius’ pipistrelle
+        - Natterer’s
+        - Noctule
+        - Serotine
+        - Soprano pipistrelle
+        - Whiskered
 
     a14:
       type: object
