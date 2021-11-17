@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "src/wildlife-licencing-dynamics-service.js",
+  "type": "module",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
-    "start": "node src/wildlife-licencing-dynamics-service.js"
+    "start": "node src/wildlife-licencing-dynamics-service.js",
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "repository": {
     "type": "git",

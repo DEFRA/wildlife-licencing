@@ -9,14 +9,16 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-  "/user/{userId}":
+  '/user/{userId}':
     get:
       description: reterive user object
+      operationId: getUserByUserId
       parameters:
         - name: userId
           in: path
           description: ID of the appliciant
           required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -35,7 +37,7 @@ paths:
         500:
           description: Unexpected error on server
 
-  "/applicant/{userId}/applications":
+  '/applicant/{userId}/applications':
     get:
       description: get a list of applications created by a given user
       parameters:
@@ -61,7 +63,7 @@ paths:
         500:
           description: Unexpected error on server
 
-  "/applicant/{userId}/application/{applicationId}":
+  '/applicant/{userId}/application/{applicationId}':
     get:
       description: an applications created by a specific applicant
       parameters:
@@ -98,6 +100,7 @@ components:
   schemas:
     user:
       type: object
+      required: [id]
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -161,8 +164,7 @@ components:
 
     person:
       type: object
-      required:
-        [firstname, lastname]
+      required: [firstname, lastname]
       properties:
         firstname:
           type: string
@@ -173,9 +175,9 @@ components:
           minLength: 1
           maxLength: 36
         address:
-          $ref:  '#/components/schemas/address'
+          $ref: '#/components/schemas/address'
         email:
-          $ref:  '#/components/schemas/email'
+          $ref: '#/components/schemas/email'
         company:
           $ref: '#/components/schemas/company'
 
@@ -395,7 +397,7 @@ components:
         - numberOfRestingSites
       properties:
         species:
-            $ref: '#/components/schemas/a13Species'
+          $ref: '#/components/schemas/a13Species'
         licensableActivities:
           type: array
           items:
@@ -475,5 +477,3 @@ components:
     email:
       type: string
       pattern: (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
-
-

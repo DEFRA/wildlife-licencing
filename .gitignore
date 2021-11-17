@@ -8,3 +8,10 @@ node_modules/
 
 # Any log file
 **/*.log
+
+# Distribution directories (built or generated files)
+**/dist/*
+
+# Ignore coverage reports
+coverage/
+

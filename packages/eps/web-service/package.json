@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/eps-web-service.js",
+  "type": "module",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
-    "start": "node src/eps-web-service.js"
+    "start": "node src/eps-web-service.js",
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "keywords": [
     "Wildlife",

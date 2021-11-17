@@ -1,7 +1,4 @@
 {
-  "packages": [
-    "packages/*",
-    "packages/eps/*"
-  ],
+  "packages": ["packages/*", "packages/eps/*"],
   "version": "independent"
 }
