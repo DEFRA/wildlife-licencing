@@ -24,6 +24,10 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm run test
+      - name: Fix code coverage paths
+        working-directory: ./coverage
+        run: |
+          sed -i 's/\/home\/runner\/work\/wildlife-licensing\/wildlife-licensing\//\/github\/workspace\//g' lcov.info
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
