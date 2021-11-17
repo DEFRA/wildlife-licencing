@@ -1,3 +1,1 @@
-export default async context => {
-  return { id: context.request.params.userId }
-}
+export default async context => ({ id: context.request.params.userId })

@@ -10,16 +10,14 @@ import postResponseHandler from './handlers/post-response-handler.js'
  * Create the hapi server. Exported for unit testing purposes
  * @returns {Promise<*>}
  */
-const createServer = async () => {
-  return new Hapi.Server({ port: SERVER_PORT })
-}
+const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 
 /**
  * Initialize the server. Exported for unit testing
  * @param server
  * @returns {Promise<any>}
  */
-const init = async (server) => {
+const init = async server => {
   const { OpenAPIBackend } = await import('openapi-backend')
 
   /*
