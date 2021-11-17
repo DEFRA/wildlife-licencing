@@ -1,6 +1,9 @@
 {
   "name": "wildlife-licencing-service",
   "type": "module",
+  "engines": {
+    "node": ">=16.13.0"
+  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
