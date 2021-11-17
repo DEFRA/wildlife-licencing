@@ -70,10 +70,7 @@
       "**/src/**/*.js"
     ],
     "coveragePathIgnorePatterns": [
-      "packages/eps/api/src/eps-api-service.js",
-      "packages/eps/api/src/index.js",
-      "eps/web-service/src/eps-web-service.js",
-      "wildlife-licencing-dynamics-service/src/wildlife-licencing-dynamics-service.js"
+      "packages/eps/api/src/index.js"
     ],
     "coverageReporters": [
       "lcov",

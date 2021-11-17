@@ -29,4 +29,25 @@ describe('The server', () => {
       })
     })
   })
+
+  it.each([
+    ['SIGINT', 130],
+    ['SIGTERM', 137]
+  ])('shuts down on %s', (signal, code, done) => {
+    createServer().then(s => {
+      init(s).then(() => {
+        s.events.on('stop', () => done())
+        const serverStopSpy = jest.spyOn(s, 'stop').mockImplementation(jest.fn())
+        const processStopSpy = jest.spyOn(process, 'exit').mockImplementation(jest.fn())
+        process.exit = processStopSpy
+        process.emit(signal)
+        setImmediate(async () => {
+          expect(serverStopSpy).toHaveBeenCalled()
+          expect(processStopSpy).toHaveBeenCalledWith(code)
+          jest.restoreAllMocks()
+          done()
+        })
+      })
+    })
+  })
 })
