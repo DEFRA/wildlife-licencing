@@ -5,15 +5,19 @@ describe('The postResponseHandler handler', () => {
     const codeFunc = jest.fn()
     const resFunc = jest.fn(() => ({ code: codeFunc }))
     const validateResponseFunc = jest.fn(() => ({ errors: 'baz' }))
-    const result = await postResponseHandler({
-      response: 'foo',
-      operation: 'bar',
-      api: {
-        validateResponse: validateResponseFunc
+    const result = await postResponseHandler(
+      {
+        response: 'foo',
+        operation: 'bar',
+        api: {
+          validateResponse: validateResponseFunc
+        }
+      },
+      null,
+      {
+        response: resFunc
       }
-    }, null, {
-      response: resFunc
-    })
+    )
     expect(validateResponseFunc).toBeCalledWith('foo', 'bar')
     expect(codeFunc).toBeCalledWith(502)
     await expect(result).not.toBeNull()
@@ -23,15 +27,19 @@ describe('The postResponseHandler handler', () => {
     const codeFunc = jest.fn()
     const resFunc = jest.fn(() => ({ code: codeFunc }))
     const validateResponseFunc = jest.fn(() => ({}))
-    const result = await postResponseHandler({
-      response: 'foo',
-      operation: 'bar',
-      api: {
-        validateResponse: validateResponseFunc
+    const result = await postResponseHandler(
+      {
+        response: 'foo',
+        operation: 'bar',
+        api: {
+          validateResponse: validateResponseFunc
+        }
+      },
+      null,
+      {
+        response: resFunc
       }
-    }, null, {
-      response: resFunc
-    })
+    )
     expect(validateResponseFunc).toBeCalledWith('foo', 'bar')
     expect(codeFunc).toBeCalledWith(200)
     await expect(result).not.toBeNull()

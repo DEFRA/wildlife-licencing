@@ -25,7 +25,9 @@ describe('The wrapper: eps-api-service', () => {
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.reject(new Error()))
-        const processExitSpy = jest.spyOn(process, 'exit').mockImplementation(code => {})
+        const processExitSpy = jest
+          .spyOn(process, 'exit')
+          .mockImplementation(code => {})
         require('../eps-api-service')
         setImmediate(() => {
           expect(init).toHaveBeenCalled()
