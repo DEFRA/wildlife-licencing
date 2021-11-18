@@ -19,13 +19,15 @@ describe('The server', () => {
         s.inject({
           method: 'GET',
           url: `/user/${uuid}`
-        }).then(r => {
-          expect(r).toBe({ id: uuid })
-          s.stop()
-        }).catch(e => {
-          console.log(e)
-          s.stop()
         })
+          .then(r => {
+            expect(r).toBe({ id: uuid })
+            s.stop()
+          })
+          .catch(e => {
+            console.log(e)
+            s.stop()
+          })
       })
     })
   })
@@ -37,8 +39,12 @@ describe('The server', () => {
     createServer().then(s => {
       init(s).then(() => {
         s.events.on('stop', () => done())
-        const serverStopSpy = jest.spyOn(s, 'stop').mockImplementation(jest.fn())
-        const processStopSpy = jest.spyOn(process, 'exit').mockImplementation(jest.fn())
+        const serverStopSpy = jest
+          .spyOn(s, 'stop')
+          .mockImplementation(jest.fn())
+        const processStopSpy = jest
+          .spyOn(process, 'exit')
+          .mockImplementation(jest.fn())
         process.exit = processStopSpy
         process.emit(signal)
         setImmediate(async () => {
