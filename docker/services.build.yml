@@ -1,0 +1,21 @@
+#######################################################
+# Common project docker build options
+#######################################################
+services:
+  ##############################################################################################################
+  # Wildlife licencing EPS API service
+  ##############################################################################################################
+  eps-api:
+    image: wildlife-licencing/eps-api:${TAG:-latest}
+    build:
+      context: ../packages/eps/api
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+
+  ##############################################################################################################
+  # Wildlife licencing EPS API service
+  ##############################################################################################################
+  eps-web:
+    image: wildlife-licencing/eps-web:${TAG:-latest}
+    build:
+      context: ../packages/eps/web-service
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
