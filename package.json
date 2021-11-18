@@ -9,22 +9,19 @@
     "@babel/preset-env": "^7.16.0",
     "eslint": "^8.2.0",
     "eslint-plugin-jest": "^25.2.4",
+    "husky": "^7.0.0",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
     "lerna": "^4.0.0",
     "lint-staged": "^12.0.2",
-    "prettier-standard": "^16.4.1",
-    "standard": "^16.0.4",
-    "husky": "^7.0.0"
+    "standard": "^16.0.4"
   },
   "scripts": {
     "postinstall": "npm run lerna:bootstrap",
     "test": "jest",
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
-    "lint": "eslint packages/**/*.js",
-    "format": "prettier-standard --format",
-    "precommit": "lint-staged",
+    "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
     "prepare": "husky install"
@@ -33,7 +30,12 @@
     "env": {
       "node": true,
       "jest": true
-    }
+    },
+    "ignore": [
+      "**/dist/*.js",
+      "packages/eps/api/webpack.config.cjs",
+      ".husky"
+    ]
   },
   "eslintConfig": {
     "extends": "standard",
@@ -55,7 +57,7 @@
   },
   "lint-staged": {
     "*": [
-      "prettier-standard --lint"
+      "standard"
     ]
   },
   "babel": {
