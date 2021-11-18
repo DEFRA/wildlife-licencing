@@ -9,13 +9,13 @@
     "@babel/preset-env": "^7.16.0",
     "eslint": "^8.2.0",
     "eslint-plugin-jest": "^25.2.4",
-    "husky": "^7.0.4",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
     "lerna": "^4.0.0",
     "lint-staged": "^12.0.2",
     "prettier-standard": "^16.4.1",
-    "standard": "^16.0.4"
+    "standard": "^16.0.4",
+    "husky": "^7.0.0"
   },
   "scripts": {
     "postinstall": "npm run lerna:bootstrap",
@@ -26,12 +26,8 @@
     "format": "prettier-standard --format",
     "precommit": "lint-staged",
     "lerna:clean": "lerna clean --yes",
-    "lerna:bootstrap": "lerna bootstrap"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run test:only-changed && lint-staged"
-    }
+    "lerna:bootstrap": "lerna bootstrap",
+    "prepare": "husky install"
   },
   "standard": {
     "env": {
