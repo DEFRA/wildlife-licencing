@@ -29,7 +29,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "echo [Husky]"
+      "pre-commit": "echo [Husky!]"
     }
   },
   "standard": {
