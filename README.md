@@ -13,6 +13,7 @@
 npm run docker:build
 rpm run docker:start
 docker service ls
+rpm run docker:stop
 ```
 
 - http://localhost:3000/openapi-ui
