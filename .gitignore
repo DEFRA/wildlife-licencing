@@ -6,6 +6,7 @@ node_modules/
 # except the github, dockerignore and husky.
 !.github
 !.husky
+!.huskyrc
 !.dockerignore
 
 # Any log file
