@@ -1,10 +1,10 @@
 import { init, createServer } from '../server.js'
 
-describe('The API server', () => {
+describe('The WEB server', () => {
   it('starts', done => {
     createServer().then(s => {
       init(s).then(() => {
-        expect(s.info.port).toEqual(3000)
+        expect(s.info.port).toEqual(4000)
         s.events.on('stop', () => done())
         s.stop()
       })
@@ -12,16 +12,15 @@ describe('The API server', () => {
   })
 
   it('handles a request', done => {
-    const uuid = '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
     createServer().then(s => {
       init(s).then(() => {
         s.events.on('stop', () => done())
         s.inject({
           method: 'GET',
-          url: `/user/${uuid}`
+          url: '/hello'
         })
           .then(r => {
-            expect(r).toBe({ id: uuid })
+            expect(r).toBe('Hello World!')
             s.stop()
           })
           .catch(e => {

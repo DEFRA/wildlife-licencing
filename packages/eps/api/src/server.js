@@ -81,7 +81,7 @@ const init = async server => {
    * Set up shutdown handlers
    */
   const shutdown = async code => {
-    console.log(`Server is shutdown with ${code}`)
+    console.log(`API server is shutdown with ${code}`)
     await server.stop()
     process.exit(code)
   }
