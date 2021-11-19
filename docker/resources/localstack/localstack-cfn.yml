@@ -1,0 +1,7 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cloudformation template to create AWS service artifacts for the wildlife licensing digital service (local development only)
+Resources:
+  FulfilmentAuditBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: example
