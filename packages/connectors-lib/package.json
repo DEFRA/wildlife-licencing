@@ -27,5 +27,5 @@
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
   },
-  "gitHead": "658670a9a24cf62b3a550e50d76bb772482a5af0"
+  "gitHead": "23ec19f5012c7fb833e9b4691bd44ec0e7a798d1"
 }

@@ -1,7 +1,6 @@
 {
   "name": "wildlife-licencing-service",
   "type": "module",
-  "private": true,
   "engines": {
     "node": ">=16.13.0"
   },
