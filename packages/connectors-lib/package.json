@@ -13,6 +13,9 @@
     "Wildlife",
     "Licencing"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "repository": {
@@ -23,5 +26,5 @@
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
   },
-  "gitHead": "8cb1b050578d5e790cdeb099eb76203a43af735c"
+  "gitHead": "5d2487e1434b30e3a11c5733a6ece3bb024a2656"
 }
