@@ -1,6 +1,6 @@
 {
-  "name": "@wildlife-licencing-service/connectors",
-  "version": "1.0.0",
+  "name": "",
+  "version": "1.0.1",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "engines": {

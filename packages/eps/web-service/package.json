@@ -1,6 +1,6 @@
 {
   "name": "web-service",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/eps-web-service.js",
   "type": "module",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.1",
-    "@wildlife-licencing-service/connectors": "^1.0.0",
+    "@wildlife-licencing-service/connectors": "^1.0.1",
     "connectors": "^1.0.0"
   }
 }
