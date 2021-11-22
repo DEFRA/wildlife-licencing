@@ -7,6 +7,9 @@
     "node": ">=14"
   },
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "connectors.js",
   "keywords": [
     "API",
