@@ -1,7 +1,7 @@
-import { AWS } from '@wildlife-licencing-service/connectors'
-import { secrets, fetchSecrets } from '../../services/secrets'
+import { AWS } from '@wildlife-licencing-service/connectors-lib'
+import { secrets, fetchSecrets } from '../secrets'
 
-jest.mock('@wildlife-licencing-service/connectors')
+jest.mock('@wildlife-licencing-service/connectors-lib')
 
 describe('Secrets manager', () => {
   const pw = 'foo'

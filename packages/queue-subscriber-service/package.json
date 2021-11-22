@@ -1,14 +1,14 @@
 {
-  "name": "dynamics-service",
-  "version": "1.0.2",
+  "name": "@wildlife-licencing/queue-subscriber-service",
+  "version": "1.0.0",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
-  "main": "src/wildlife-licencing-dynamics-service.js",
+  "main": "",
   "type": "module",
   "engines": {
     "node": ">=14"
   },
   "scripts": {
-    "start": "node src/wildlife-licencing-dynamics-service.js",
+    "start": "node ",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "repository": {
@@ -25,7 +25,5 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@wildlife-licencing-service/connectors": "^1.0.1",
-    "connectors": "^1.0.0"
   }
 }

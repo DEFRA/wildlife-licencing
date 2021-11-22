@@ -24,7 +24,6 @@
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
-    "lerna:publish": "lerna publish",
     "prepare": "husky install",
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",

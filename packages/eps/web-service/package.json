@@ -1,6 +1,6 @@
 {
-  "name": "web-service",
-  "version": "1.0.2",
+  "name": "@wildlife-licencing/web-service",
+  "version": "1.0.0",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/eps-web-service.js",
   "type": "module",
@@ -23,8 +23,6 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@hapi/hapi": "^20.2.1",
-    "@wildlife-licencing-service/connectors": "^1.0.1",
-    "connectors": "^1.0.0"
+    "@hapi/hapi": "^20.2.1"
   }
 }
