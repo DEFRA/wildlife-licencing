@@ -4,6 +4,7 @@
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/eps-web-service.js",
   "type": "module",
+  "private": true,
   "engines": {
     "node": ">=14"
   },
