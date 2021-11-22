@@ -1,6 +1,6 @@
 {
   "name": "dynamics-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "src/wildlife-licencing-dynamics-service.js",
   "type": "module",
