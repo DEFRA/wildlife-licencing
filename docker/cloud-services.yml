@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  ##############################################################################################################
+  # The database. The administrator is found on localhost:8001
+  ##############################################################################################################
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: wlsuser
+      POSTGRES_PASSWORD: wildl1fe
+      POSTGRES_DB: wls
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8001:8080"
+
+  ##############################################################################################################
+  # Redis - commander is found on localhost:8002
+  ##############################################################################################################
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  ##############################################################################################################
+  # Redis - commander is found on localhost:8002
+  ##############################################################################################################
+  redis_commander:
+    image: rediscommander/redis-commander
+    ports:
+      - "8002:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  ##############################################################################################################
+  # Localstack. AWS s3 and secrets manager
+  # Port number for the edge service, the main entry point for all API invocations is the default: 4566
+  ##############################################################################################################
+  localstack:
+    image: localstack/localstack:0.13.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,secretsmanager,cloudformation
+      - DEFAULT_REGION=eu-west-2
+      - DEBUG=true
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/localstack:/tmp/localstack
+      - ./resources/localstack/localstack-init.sh:/docker-entrypoint-initaws.d/init.sh
+      - ./resources/localstack/localstack-cfn.yml:/docker-entrypoint-initaws.d/localstack-cfn.yml

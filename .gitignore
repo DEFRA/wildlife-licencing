@@ -18,3 +18,9 @@ node_modules/
 # Ignore coverage reports
 coverage/
 
+# Ignore key files
+*.pem
+*.crt
+*.key
+
+

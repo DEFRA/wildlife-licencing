@@ -1,0 +1,1 @@
+## Needed for localstack persistence - do not remove
