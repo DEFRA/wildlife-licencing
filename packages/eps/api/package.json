@@ -24,9 +24,12 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.42.0",
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/vision": "^6.1.0",
+    "@wildlife-licencing-service/connectors": "1.0.0",
+    "connectors": "^1.0.0",
     "openapi-backend": "^5.0.0",
     "swagger-ui": "^4.1.0"
   },

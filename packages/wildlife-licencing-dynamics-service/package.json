@@ -23,5 +23,9 @@
     "licencing"
   ],
   "author": "Graham Willis",
-  "license": "SEE LICENSE IN LICENCE"
+  "license": "SEE LICENSE IN LICENCE",
+  "dependencies": {
+    "@wildlife-licencing-service/connectors": "^1.0.0",
+    "connectors": "^1.0.0"
+  }
 }

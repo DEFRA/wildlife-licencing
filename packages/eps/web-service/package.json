@@ -23,6 +23,8 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@hapi/hapi": "^20.2.1"
+    "@hapi/hapi": "^20.2.1",
+    "@wildlife-licencing-service/connectors": "^1.0.0",
+    "connectors": "^1.0.0"
   }
 }
