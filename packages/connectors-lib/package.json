@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=14"
   },
+  "private": false,
   "main": "connectors.js",
   "keywords": [
     "API",
@@ -22,5 +23,5 @@
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
   },
-  "gitHead": "767021cab0cd95566bf6d40bb2b2bb34aa3d112f"
+  "gitHead": "8cb1b050578d5e790cdeb099eb76203a43af735c"
 }
