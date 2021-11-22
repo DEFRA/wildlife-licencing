@@ -7,6 +7,9 @@
     "node": ">=14"
   },
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "connectors.js",
   "keywords": [
     "API",
@@ -17,11 +20,12 @@
   "license": "SEE LICENSE IN LICENCE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+    "url": "https://github.com/DEFRA/wildlife-licencing.git",
+    "directory": "packages/connectors-lib"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
   },
-  "gitHead": "113e48a9f31c80972df57d6dccf61cbc296846e8"
+  "gitHead": "658670a9a24cf62b3a550e50d76bb772482a5af0"
 }
