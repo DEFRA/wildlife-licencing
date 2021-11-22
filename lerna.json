@@ -3,7 +3,7 @@
   "version": "independent",
   "npmClient": "npm",
   "publishConfig": {
-    "registry": "http://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/"
   },
   "command": {
     "version": {
