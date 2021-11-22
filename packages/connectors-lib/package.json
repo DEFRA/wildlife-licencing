@@ -7,9 +7,6 @@
     "node": ">=14"
   },
   "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "connectors.js",
   "keywords": [
     "API",
@@ -26,5 +23,5 @@
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
   },
-  "gitHead": "c89e13e0a89fc6adf9e1b682474580889f8f3a67"
+  "gitHead": "113e48a9f31c80972df57d6dccf61cbc296846e8"
 }
