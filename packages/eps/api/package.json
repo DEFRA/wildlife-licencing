@@ -1,6 +1,6 @@
 {
   "name": "@wildlife-licencing/eps-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The API to support the wildlife licencing of European Protected Species",
   "private": true,
   "main": "src/eps-api-service.js",
