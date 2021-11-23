@@ -7,6 +7,8 @@ services:
     image: wildlife-licencing/eps-api:${TAG:-latest}
     ports:
       - "3000:3000"
+    env_file:
+      - ./env/eps-api.env
     deploy:
       mode: replicated
       replicas: 1
@@ -21,7 +23,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - ./env/eps-api.env
+      - ./env/eps-web.env
     deploy:
       mode: replicated
       replicas: 1
