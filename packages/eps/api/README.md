@@ -16,7 +16,7 @@ http://localhost:3000/openapi-ui
 | Variable | Description | Default | Example | 
 | -------- | ----------- | ------- | ------- | 
 | AWS_SECRETS_MANAGER_ENDPOINT | Location of the secrets manager | none | http://localhost:4566 |
-| SERVER_PORT | Server Port | 4000 ||
+| SERVER_PORT | Server Port | 3000 ||
 | POSTGRES_USER | Postgres User ||
 | POSTGRES_DB | Posgres Dababase ||
 | AWS_REGION | AWS Region ||
