@@ -3,11 +3,12 @@ node_modules/
 
 # Ignore any hidden files/folders (starting with a .)
 **/.*
-# except the github, dockerignore and husky.
+# except the github, dockerignore, npmignore and husky.
 !.github
 !.husky
 !.huskyrc
 !.dockerignore
+!.npmignore
 
 # Any log file
 **/*.log
@@ -23,4 +24,7 @@ coverage/
 *.crt
 *.key
 
+# Docker Volumes
+docker/volumes/localstack/data/
+docker/volumes/redis/dump.rdb
 

@@ -1,10 +1,13 @@
 {
-  "name": "@wildlife-licencing/queue-subscriber-service",
-  "version": "1.0.0",
+  "name": "@defra/wls-queue-subscriber-service",
+  "version": "1.0.4",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "",
   "type": "module",
-  "private": true,
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=14"
   },
