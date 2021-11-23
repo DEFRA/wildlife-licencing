@@ -19,9 +19,7 @@
       ],
       "ignoreChanges": [
         ".*",
-        "*.md",
-        "docker/*",
-        "sonar-project.properties"
+        "docker/*"
       ]
     }
   }
