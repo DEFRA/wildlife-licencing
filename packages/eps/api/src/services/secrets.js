@@ -1,4 +1,4 @@
-import { AWS } from '@wildlife-licencing-service/connectors-lib'
+import { AWS } from '@defra/wls-connectors-lib'
 import { GetSecretValueCommand } from '@aws-sdk/client-secrets-manager'
 
 const secrets = {}
