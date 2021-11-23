@@ -1,4 +1,4 @@
-import { AWS } from '@wildlife-licencing-service/connectors-lib'
+import { AWS } from '@wildlife-licencing-service/connectors-lib/src/connectors'
 import { secrets, fetchSecrets } from '../secrets'
 
 jest.mock('@wildlife-licencing-service/connectors-lib')
