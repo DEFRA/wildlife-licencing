@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-queue-subscriber-service",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "",
   "type": "module",

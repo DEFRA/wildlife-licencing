@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-eps-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The API to support the wildlife licencing of European Protected Species",
   "main": "src/eps-api-service.js",
   "type": "module",
@@ -29,10 +29,10 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.42.0",
+    "@defra/wls-connectors-lib": "^1.0.4",
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/vision": "^6.1.0",
-    "@defra/wls-connectors-lib": "^1.0.2",
     "module-1": "^0.0.0",
     "openapi-backend": "^5.0.0",
     "swagger-ui": "^4.1.0"
