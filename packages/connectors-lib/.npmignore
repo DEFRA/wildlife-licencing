@@ -1,0 +1,17 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Ignore any hidden files/folders (starting with a .)
+.*
+
+# Test sources
+**/__tests__/
+**/__mocks__/
+**/*.spec.js
+**/*.test.js

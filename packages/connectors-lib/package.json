@@ -1,23 +1,16 @@
 {
-  "name": "@wildlife-licencing-service/connectors-lib",
+  "name": "@defra/wls-connectors-lib",
   "version": "1.0.2",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
-  "engines": {
-    "node": ">=14"
-  },
   "private": false,
   "publishConfig": {
     "access": "public"
   },
-  "main": "src/connectors.js",
-  "directories": {
-    "lib": "src",
-    "test": "__tests__"
+  "engines": {
+    "node": ">=14"
   },
-  "files": [
-    "src"
-  ],
+  "main": "src/connectors.js",
   "keywords": [
     "API",
     "Wildlife",
