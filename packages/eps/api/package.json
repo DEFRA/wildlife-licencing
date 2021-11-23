@@ -1,6 +1,6 @@
 {
   "name": "@wildlife-licencing/eps-api",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "The API to support the wildlife licencing of European Protected Species",
   "private": true,
   "main": "src/eps-api-service.js",
@@ -29,7 +29,7 @@
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/vision": "^6.1.0",
-    "@wildlife-licencing-service/connectors-lib": "^1.0.0",
+    "@wildlife-licencing-service/connectors-lib": "^1.0.2",
     "module-1": "^0.0.0",
     "openapi-backend": "^5.0.0",
     "swagger-ui": "^4.1.0"

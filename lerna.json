@@ -1,6 +1,9 @@
 {
-  "packages": ["packages/*", "packages/eps/*"],
-  "version": "independent",
+  "packages": [
+    "packages/*",
+    "packages/eps/*"
+  ],
+  "version": "1.0.3",
   "npmClient": "npm",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -8,20 +11,20 @@
   "command": {
     "version": {
       "allowBranch": [
-        "master"
+        "master",
+        "feature/publishing"
       ],
       "message": "chore(release): publish %s"
     },
     "publish": {
       "message": "chore(release): publish %s",
       "allowBranch": [
-        "master"
+        "master",
+        "feature/publishing"
       ],
       "ignoreChanges": [
         ".*",
-        "*.md",
-        "docker/*",
-        "sonar-project.properties"
+        "docker/*"
       ]
     }
   }

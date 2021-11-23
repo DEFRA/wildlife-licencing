@@ -1,12 +1,23 @@
 {
   "name": "@wildlife-licencing-service/connectors-lib",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "engines": {
     "node": ">=14"
   },
-  "main": "connectors.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "src/connectors.js",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src"
+  ],
   "keywords": [
     "API",
     "Wildlife",
@@ -16,10 +27,12 @@
   "license": "SEE LICENSE IN LICENCE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+    "url": "https://github.com/DEFRA/wildlife-licencing.git",
+    "directory": "packages/connectors-lib"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0"
-  }
+  },
+  "gitHead": "f92664418a9b793a35815baae90a253ed12b60bf"
 }
