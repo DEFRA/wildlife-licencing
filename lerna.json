@@ -11,16 +11,14 @@
   "command": {
     "version": {
       "allowBranch": [
-        "master",
-        "feature/publishing"
+        "master"
       ],
       "message": "chore(release): publish %s"
     },
     "publish": {
       "message": "chore(release): publish %s",
       "allowBranch": [
-        "master",
-        "feature/publishing"
+        "master"
       ],
       "ignoreChanges": [
         ".*",
