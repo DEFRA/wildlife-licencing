@@ -23,4 +23,7 @@ coverage/
 *.crt
 *.key
 
+# Docker Volumes
+docker/volumes/localstack/data/
+
 
