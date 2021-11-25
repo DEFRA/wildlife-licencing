@@ -1,7 +1,7 @@
 import { init, createServer } from './server.js'
-import { fetchSecrets } from './services/secrets.js'
+import { DATABASE } from '@defra/wls-connectors-lib'
 
-fetchSecrets()
+DATABASE.initialiseConnection()
   .then(() => createServer()
     .then(s => init(s)
     ))

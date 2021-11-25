@@ -1,2 +1,4 @@
 import AWS from './aws.js'
-export { AWS }
+import { DATABASE } from './database.js'
+import { SECRETS } from './secrets.js'
+export { AWS, SECRETS, DATABASE }

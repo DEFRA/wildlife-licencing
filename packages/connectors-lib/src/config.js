@@ -7,5 +7,12 @@ export default {
     secretsManager: {
       endpoint: process.env.AWS_SECRETS_MANAGER_ENDPOINT
     }
+  },
+  pg: {
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    pw: process.env.POSTGRES_PW
   }
 }

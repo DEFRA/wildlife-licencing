@@ -9,6 +9,6 @@ Resources:
   PostgresPassword:
     Type: AWS::SecretsManager::Secret
     Properties:
-      Name: /dev/wls/local/postgres-password
+      Name: /wls/postgres-password
       Description: The password of the local postgres database
       SecretString: wildl1fe

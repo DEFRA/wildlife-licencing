@@ -1,5 +1,4 @@
 import Config from './config.js'
-
 import { S3 } from '@aws-sdk/client-s3'
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
 
