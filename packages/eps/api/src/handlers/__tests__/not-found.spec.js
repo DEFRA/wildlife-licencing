@@ -7,7 +7,6 @@ describe('The notFound handler', () => {
     const result = await notFoundHandler(null, null, {
       response: resFunc
     })
-    expect(resFunc).toBeCalledWith({ err: 'not found' })
     expect(codeFunc).toBeCalledWith(404)
     await expect(result).not.toBeNull()
   })

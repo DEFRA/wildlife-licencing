@@ -1,10 +1,23 @@
-create table if not exists application (
+create table if not exists users (
+   id uuid,
+   created date not null default current_timestamp,
+   updated date not null default current_timestamp,
+   sdds_id uuid,
+   PRIMARY KEY (id)
+);
+
+create table if not exists applications (
     id uuid,
     created date not null default current_timestamp,
     updated date not null default current_timestamp,
     sdds_id uuid,
+    user_id uuid,
     application jsonb,
-    PRIMARY KEY (id)
+    submited boolean not null default false,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (id)
 );
 
-CREATE UNIQUE INDEX title_idx ON application (sdds_id);
+CREATE UNIQUE INDEX title_idx ON applications (sdds_id);
