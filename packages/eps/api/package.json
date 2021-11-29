@@ -12,7 +12,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "webpack",
+    "postinstall": "webpack",
     "start": "node src/eps-api-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

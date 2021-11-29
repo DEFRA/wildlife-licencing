@@ -9,10 +9,6 @@ jest.mock('@aws-sdk/client-secrets-manager', () => {
 
 describe('Secrets manager', () => {
   it('fetch secrets runs without failure', async () => {
-    //    const { secretsManagerClient } = (await import('../aws.js')).default()
-    // secretsManagerClient.send = () => {
-    //   return { SecretString: 'bar' }
-    // }
     const s = await SECRETS.getSecret('foo')
     expect(s).toBe('bar')
   })

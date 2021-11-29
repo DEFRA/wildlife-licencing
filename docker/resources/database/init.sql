@@ -1,15 +1,15 @@
 create table if not exists users (
    id uuid,
-   created date not null default current_timestamp,
-   updated date not null default current_timestamp,
+   created timestamp not null default current_timestamp,
+   updated timestamp not null default current_timestamp,
    sdds_id uuid,
    PRIMARY KEY (id)
 );
 
 create table if not exists applications (
     id uuid,
-    created date not null default current_timestamp,
-    updated date not null default current_timestamp,
+    created timestamp not null default current_timestamp,
+    updated timestamp not null default current_timestamp,
     sdds_id uuid,
     user_id uuid,
     application jsonb,

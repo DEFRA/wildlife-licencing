@@ -14,5 +14,9 @@ export default {
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     pw: process.env.POSTGRES_PW
+  },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT
   }
 }

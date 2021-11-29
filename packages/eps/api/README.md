@@ -25,3 +25,6 @@ http://localhost:3000/openapi-ui
 | AWS_REGION | AWS Region | | eu-west-2 | N | |
 | AWS_ACCESS_KEY_ID | AWS Credential | | | N | |
 | AWS_SECRET_KEY | AWS Credential | | | N | |
+| REDIS_HOST | Redis host | localhost | | N | |
+| REDIS_PORT | Redis port | 6379 | | N | |
+| CACHE_EXPIRE_SECONDS | Expirary time for request cache in seconds | 60000 | | N | |

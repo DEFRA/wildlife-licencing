@@ -1,7 +1,9 @@
 import { init, createServer } from './server.js'
-import { DATABASE } from '@defra/wls-connectors-lib'
+import { DATABASE, REDIS } from '@defra/wls-connectors-lib'
 
-DATABASE.initialiseConnection()
+Promise.all([
+  DATABASE.initialiseConnection(),
+  REDIS.initialiseConnection()])
   .then(() => createServer()
     .then(s => init(s)
     ))
