@@ -7,7 +7,7 @@ export const getUser = async (client, id) => {
   try {
     return await client.query('SELECT * FROM users WHERE id = $1', [id])
   } catch (err) {
-    console.error('Error inserting into user table', err)
+    console.error('Error fetching from user table', err)
     throw new Error(err.message)
   }
 }
@@ -46,7 +46,7 @@ export const updateUsers = async (client, id, payload) => {
       return client.query('UPDATE users SET updated = now(), sdds_id = NULL WHERE id = $1 RETURNING *', [id])
     }
   } catch (err) {
-    console.error('Error inserting into user table', err)
+    console.error('Error updating user table', err)
     throw new Error(err.message)
   }
 }

@@ -1,7 +1,7 @@
 import successHandler from '../success-handler.js'
 import { cache } from '../../services/cache.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { getUser } from './users-dml.js'
+import { getUser } from './user-dml.js'
 
 export default async (context, req, h) => {
   const saved = await cache.restore(req.path)

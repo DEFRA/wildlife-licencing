@@ -1,6 +1,6 @@
 import successHandler from '../success-handler.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { insertIntoUsers, updateUsers } from './users-dml.js'
+import { insertIntoUsers, updateUsers } from './user-dml.js'
 
 /*
  * Create the new user object and return 201 OR

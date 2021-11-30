@@ -1,6 +1,6 @@
 import successHandler from '../success-handler.js'
 import { cache } from '../../services/cache.js'
-import { deleteUser } from './users-dml.js'
+import { deleteUser } from './user-dml.js'
 
 export default async (context, req, h) => {
   await cache.delete(req.path)

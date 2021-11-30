@@ -1,6 +1,6 @@
 import successHandler from '../success-handler.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { insertIntoUsers } from './users-dml.js'
+import { insertIntoUsers } from './user-dml.js'
 import { v4 as uuidv4 } from 'uuid'
 
 /*
