@@ -3,11 +3,7 @@ import { APPLICATION_JSON } from '../constants.js'
 
 export default async (context, req, h) => {
   // Ignore not found and no content
-  if (context?.response?.statusCode === 404) {
-    return context.response
-  }
-
-  if (context?.response?.statusCode === 204) {
+  if ([204, 404].includes(context?.response?.statusCode)) {
     return context.response
   }
 

@@ -27,4 +27,14 @@ describe('The deleteUser handler', () => {
     expect(mockPersistence.mocks.mockQuery).toHaveBeenCalledWith('DELETE FROM users WHERE id = $1', [uuid])
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
+
+  it('returns a 500 with an unexpected database error', async () => {
+    await mockPersistence.init()
+    mockPersistence.setMockGet(() => null)
+    mockPersistence.setMockQuery(() => { throw new Error('Random') })
+    const deleteUser = (await import('../delete-user')).default
+    await expect(async () => {
+      await deleteUser(context, req, { response: resFunc })
+    }).rejects.toThrow()
+  })
 })

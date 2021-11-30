@@ -1,10 +1,11 @@
 import successHandler from '../success-handler.js'
 import { cache } from '../../services/cache.js'
+import { deleteUser } from './users-dml.js'
 
 export default async (context, req, h) => {
   await cache.delete(req.path)
   return successHandler(async (client, id) => {
-    const res = await client.query('DELETE FROM users WHERE id = $1', [id])
+    const res = await deleteUser(client, id)
 
     if (res.rowCount === 1) {
       // Return no content

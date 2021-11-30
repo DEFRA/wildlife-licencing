@@ -9,6 +9,30 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
+  '/users':
+    post:
+      description: Create and store user object
+      summary: Create a new user object on a generated ID and return 201. Return the result
+      operationId: postUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sddsId:
+                  $ref: '#/components/schemas/uuid'
+      responses:
+        201:
+          description: The user object has been created
+        400:
+          description: Bad request. user ID must be a uuid
+        401:
+          description: Unauthorized
+        500:
+          description: Unexpected error on server
+
   '/users/{userId}':
     get:
       description: Reterive the user object
@@ -48,7 +72,7 @@ paths:
 
     put:
       description: store user object
-      summary:  Create a new user object and return 201 OR update existing user object and return 200. Return the result
+      summary:  Create a new user object using the provided ID and return 201 OR update existing user object and return 200. Return the result
       operationId: putUser
       parameters:
         - name: userId

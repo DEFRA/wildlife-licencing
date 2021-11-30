@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
-import { getUserByUserId, putUser, deleteUser } from './handlers/user/users.js'
+import { getUserByUserId, putUser, deleteUser, postUser } from './handlers/user/users.js'
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
@@ -30,6 +30,7 @@ const init = async server => {
    */
   api.register({
     getUserByUserId,
+    postUser,
     putUser,
     deleteUser,
     validationFail,

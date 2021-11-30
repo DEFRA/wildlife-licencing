@@ -16,7 +16,5 @@ export const SECRETS = {
    * @param s
    * @returns {Promise<string|undefined>}
    */
-  getSecret: async s => {
-    return secrets[s] || fetch(s)
-  }
+  getSecret: async s => secrets[s] || fetch(s)
 }

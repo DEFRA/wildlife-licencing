@@ -9,4 +9,5 @@ export default async (func, ...args) => {
   } finally {
     client.release()
   }
+  return null
 }

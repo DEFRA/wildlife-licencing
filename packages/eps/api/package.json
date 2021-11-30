@@ -35,7 +35,8 @@
     "@hapi/vision": "^6.1.0",
     "module-1": "^0.0.0",
     "openapi-backend": "^5.0.0",
-    "swagger-ui": "^4.1.0"
+    "swagger-ui": "^4.1.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "css-loader": "^6.5.1",

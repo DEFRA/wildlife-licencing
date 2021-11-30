@@ -1,6 +1,7 @@
 import successHandler from '../success-handler.js'
 import { cache } from '../../services/cache.js'
 import { APPLICATION_JSON } from '../../constants.js'
+import { getUser } from './users-dml.js'
 
 export default async (context, req, h) => {
   const saved = await cache.restore(req.path)
@@ -12,7 +13,7 @@ export default async (context, req, h) => {
   }
 
   return successHandler(async (client, id) => {
-    const res = await client.query('SELECT * FROM users WHERE id = $1', [id])
+    const res = await getUser(client, id)
 
     // If there is no row return userId not found
     if (res.rows.length !== 1) {

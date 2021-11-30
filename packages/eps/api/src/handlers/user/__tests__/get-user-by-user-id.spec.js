@@ -5,7 +5,7 @@ const path = 'user/uuid'
 
 const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
-const resFunc = jest.fn(() => ({ type: typeFunc }))
+const resFunc = jest.fn(() => ({ type: typeFunc, code: codeFunc }))
 const context = { request: { params: { userId: uuid } } }
 
 describe('The getUserByUserId handler', () => {
@@ -59,13 +59,20 @@ describe('The getUserByUserId handler', () => {
     mockPersistence.setMockGet(() => null)
     mockPersistence.setMockQuery(() => (queryData))
     const getUserByUserId = (await import('../get-user-by-user-id.js')).default
-    const codeFunc = jest.fn()
-    const resFunc = jest.fn(() => ({ code: codeFunc }))
-
     await getUserByUserId(context, { req: { path } }, { response: resFunc })
     expect(mockPersistence.mocks.mockGet).toHaveBeenCalled()
     expect(mockPersistence.mocks.mockQuery).toHaveBeenCalled()
-    expect(resFunc).toHaveBeenCalledWith()
+    expect(resFunc).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
+  })
+
+  it('returns a 500 with an unexpected database error', async () => {
+    await mockPersistence.init()
+    mockPersistence.setMockGet(() => null)
+    mockPersistence.setMockQuery(() => { throw new Error('Random') })
+    const getUserByUserId = (await import('../get-user-by-user-id.js')).default
+    await expect(async () => {
+      await getUserByUserId(context, { req: { path } }, { response: resFunc })
+    }).rejects.toThrow()
   })
 })
