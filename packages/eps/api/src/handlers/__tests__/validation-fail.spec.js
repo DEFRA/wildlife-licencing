@@ -5,13 +5,13 @@ describe('The validationFailHandler handler', () => {
     const codeFunc = jest.fn()
     const resFunc = jest.fn(() => ({ code: codeFunc }))
     const result = await validationFailHandler(
-      { validation: { errors: 'foo' } },
+      { validation: { errors: ['foo'] } },
       null,
       {
         response: resFunc
       }
     )
-    expect(resFunc).toBeCalledWith({ err: 'foo' })
+    expect(resFunc).toBeCalledWith({ code: 400, errors: ['foo'] })
     expect(codeFunc).toBeCalledWith(400)
     await expect(result).not.toBeNull()
   })

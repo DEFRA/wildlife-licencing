@@ -10,7 +10,7 @@ node_modules/
 !.dockerignore
 !.npmignore
 
-# Any log file
+#git checkout -b  Any log file
 **/*.log
 
 # Distribution directories (built or generated files)

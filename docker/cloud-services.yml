@@ -1,11 +1,17 @@
 version: "3.8"
 services:
   ##############################################################################################################
-  # The database. The administrator is found on localhost:8001
+  # The database.
+  # - Postgres on the default port of 5432.
+  # - The administrator on localhost:8001
   ##############################################################################################################
   db:
     image: postgres
     restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./resources/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_USER: wlsuser
       POSTGRES_PASSWORD: wildl1fe

@@ -9,9 +9,29 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-  '/user/{userId}':
+  '/users':
+    post:
+      description: Create and store user
+      summary: Create a new user with a generated ID
+      operationId: postUser
+      responses:
+        201:
+          description: The user has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/users/{userId}':
     get:
-      description: reterive user object
+      description: Reterive a user
+      summary: Reterive a user
       operationId: getUserByUserId
       parameters:
         - name: userId
@@ -23,19 +43,113 @@ paths:
             $ref: '#/components/schemas/uuid'
       responses:
         200:
-          description: An appliciant object
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        400:
+          description: Bad request. User ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Store a user
+      summary:  Create or update a user using the provided ID.
+      operationId: putUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sddsId:
+                  $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        201:
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
         400:
           description: Bad request. user ID must be a uuid
-        401:
-          description: Unauthorized
-        404:
-          description: An user with the specified ID was not found
         500:
           description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete user
+      summary:  Delete the user on the provided ID
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The appliciant object has been deleted
+        400:
+          description: Bad request. user ID must be a uuid
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/users/{userId}/applications':
+    post:
+      description: Create a new application
+      summary: Create a new application for a given user on a generated ID
+      operationId: postApplication
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        201:
+          description: The application object has been created
+        400:
+          description: Bad request. user ID must be a uuid
+        500:
+          description: Unexpected error on server
+
 
   '/applicant/{userId}/applications':
     get:
@@ -100,72 +214,51 @@ components:
   schemas:
     user:
       type: object
-      required: [id]
+      required:
+        - id
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        details:
-          $ref: '#/components/schemas/person'
+        applications:
+          $ref: '#/components/schemas/applications'
 
     applications:
       type: array
       items:
         $ref: '#/components/schemas/application'
 
-    licenceType:
-      type: string
-      enum:
-        - classLicence
-        - individualLicence
-        - mitigationLicence
-
     application:
       required:
         - id
-        - userApplication
-        - role
-        - licenceType
-        - licence
+        - applicant
+        - sites
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        role:
-          $ref: '#/components/schemas/userApplicationRole'
-        userApplication:
-          oneOf:
-            - $ref: '#/components/schemas/applicant'
-            - $ref: '#/components/schemas/agent'
-          discriminator:
-            propertyName: role
-        licenceType:
-          $ref: '#/components/schemas/licenceType'
-        licence:
-          oneOf:
-            - $ref: '#/components/schemas/classLicence'
-            - $ref: '#/components/schemas/individualLicence'
-            - $ref: '#/components/schemas/mitigationLicence'
-          discriminator:
-            propertyName: licenceType
+        applicant:
+          $ref: '#/components/schemas/applicant'
+        sites:
+          $ref: '#/components/schemas/sites'
 
-    agent:
-      type: object
-      properties:
-        appliciant:
-          $ref: '#/components/schemas/person'
+    sites:
+      type: array
+      items:
+        $ref: '#/components/schemas/site'
 
     applicant:
       type: object
-
-    userApplicationRole:
-      type: string
-      enum:
-        - applicant
-        - agent
-
-    person:
-      type: object
-      required: [firstname, lastname]
+      required:
+        - contact
       properties:
+        contact:
+          $ref: '#/components/schemas/application'
+
+    contact:
+      type: object
+      required: [id, firstname, lastname]
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
         firstname:
           type: string
           minLength: 1
@@ -178,24 +271,17 @@ components:
           $ref: '#/components/schemas/address'
         email:
           $ref: '#/components/schemas/email'
-        company:
-          $ref: '#/components/schemas/company'
-
-    company:
-      type: object
-      required: [name]
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 36
-        address:
-          $ref: '#/components/schemas/address'
+        phone:
+          $ref: '#/components/schemas/phone'
 
     address:
       type: object
       required: [addrLine1, addrline3, postcode]
       properties:
+        houseNumber:
+          type: string
+          minLength: 1
+          maxLength: 36
         addrline1:
           type: string
           minLength: 1
@@ -208,105 +294,18 @@ components:
           type: string
           minLength: 1
           maxLength: 36
+        county:
+          type: string
+          minLength: 1
+          maxLength: 36
+        town:
+          type: string
+          minLength: 1
+          maxLength: 36
         postcode:
           type: string
           minLength: 1
           maxLength: 10
-
-    work:
-      type: object
-      required:
-        - description
-        - type
-        - reason
-        - phasedOrMultiplot
-        - homeImprovments
-        - smallDevelopments
-        - protecedBuildings
-        - publicBuildings
-        - importantPopulations
-      properties:
-        description:
-          type: string
-          minLength: 1
-          maxLength: 36
-        type:
-          $ref: '#/components/schemas/workType'
-        reason:
-          $ref: '#/components/schemas/workReason'
-        phasedOrMultiplot:
-          type: boolean
-        homeImprovments:
-          type: boolean
-        smallDevelopments:
-          type: boolean
-        protecedBuildings:
-          type: boolean
-        publicBuildings:
-          type: boolean
-        importantPopulations:
-          type: boolean
-
-    workType:
-      type: string
-      enum:
-        - Agriculture / Farming / Fishing / Forestry / Nature Conservation
-        - Archaeological investigation
-        - Barn conversion
-        - Commercial
-        - Communications
-        - Energy generation / Energy supply
-        - Flood and coastal defences
-        - Health & safety
-        - Heritage / Historical
-        - Householder home improvements
-        - Housing (non-householder)
-        - Industrial / Manufacturing
-        - Mineral extraction / Quarrying
-        - Nationally Significant Infrastructure Projects
-        - Places of worship
-        - Public buildings and land
-        - Tourism / Leisure
-        - Transport / Highways
-        - Waste management
-        - Water supply and treatment / water environment
-
-    workReason:
-      type: string
-      enum:
-        - Imperative reasons of overriding public interest including those of a social or economic nature and beneficial consequences of primary importance for the environment
-        - Preserving public health or public safety
-        - Preventing serious damage to livestock, foodstuffs for livestock, crops, vegetables, fruit, growing timber, fisheries or inland waters, or any other form of property
-        - Preventing the spread of disease
-        - Other
-
-    permissions:
-      type: array
-      items:
-        $ref: '#/components/schemas/permission'
-
-    permission:
-      type: object
-      required: [permissionType, reference]
-      properties:
-        permissionType:
-          $ref: '#/components/schemas/permissionTypes'
-        reference:
-          type: string
-          minLength: 1
-          maxLength: 36
-
-    permissionTypes:
-      type: string
-      enum:
-        - Planning permission
-        - Demolition consent
-        - Listed building consent
-        - Highways Act consent
-        - Mineral consent
-        - Conservation area consent
-        - Tree preservation order
-        - Utilities consent
 
     site:
       type: object
@@ -326,148 +325,6 @@ components:
     gridReference:
       type: string
 
-    classLicence:
-      type: object
-
-    individualLicence:
-      type: object
-
-    mitigationLicence:
-      type: object
-      properties:
-        work:
-          $ref: '#/components/schemas/work'
-        permissions:
-          $ref: '#/components/schemas/permissions'
-        site:
-          $ref: '#/components/schemas/site'
-        licenceCode:
-          $ref: '#/components/schemas/licenceCodes'
-        licenceDetail:
-          oneOf:
-            - $ref: '#/components/schemas/a13'
-            - $ref: '#/components/schemas/a14'
-          discriminator:
-            propertyName: licenceCode
-
-    licenceCodes:
-      type: string
-      enum:
-        - A13
-        - A14
-
-    licensableActivities:
-      type: string
-      enum:
-        - Capture Take
-        - Destroy Resting Place
-        - Destroy Breeding Site
-        - Damage Breeding Site
-        - Transport
-        - Disturb
-        - Damage Resting Place
-
-    a13:
-      type: object
-      required:
-        - actions
-        - proposedDateFrom
-        - proposedDateTo
-      properties:
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/a13Items'
-        proposedDateFrom:
-          type: string
-          format: date
-        proposedDateTo:
-          type: string
-          format: date
-
-    a13Items:
-      type: object
-      required:
-        - species
-        - licensableActivities
-        - methods
-        - roostTypes
-        - maximumNumber
-        - numberOfBreedingSites
-        - numberOfRestingSites
-      properties:
-        species:
-          $ref: '#/components/schemas/a13Species'
-        licensableActivities:
-          type: array
-          items:
-            $ref: '#/components/schemas/licensableActivities'
-        mathods:
-          type: array
-          items:
-            $ref: '#/components/schemas/a13Method'
-        roostTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/a13RoostType'
-        maximumNumber:
-          type: integer
-        numberOfBreedingSites:
-          type: integer
-        numberOfRestingSites:
-          type: integer
-
-    a13Method:
-      type: string
-      enum:
-        - By hand
-        - By static hand-held net
-        - Temporary exclusion
-        - Permanent exclusion
-        - Destructive search by soft demolition
-        - Mechanical demolition
-        - Disturbance by illumination (intentional by torch)
-        - Disturbance by noise or vibration
-        - Temporary obstruction of roost access
-        - Endoscopes
-
-    a13RoostType:
-      type: string
-      enum:
-        - Hibernation confirmed
-        - Day
-        - Transitional/Occasional
-        - Feeding perch
-        - Night
-        - Satellite
-        - Swarming or mating
-        - Maternity
-        - Underground - mines, caves, cellars, tunnels or bridges
-
-    a13Species:
-      type: string
-      enum:
-        - Alcathoe
-        - Barbastelle
-        - Bechstein’s
-        - Brandt’s
-        - Brown long-eared
-        - Common pipistrelle
-        - Daubenton’s
-        - Greater horseshoe
-        - Grey long-eared
-        - Leisler’s
-        - Lesser horseshoe
-        - Nathusius’ pipistrelle
-        - Natterer’s
-        - Noctule
-        - Serotine
-        - Soprano pipistrelle
-        - Whiskered
-
-    a14:
-      type: object
-
     uuid:
       type: string
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
@@ -477,3 +334,20 @@ components:
     email:
       type: string
       pattern: (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+
+    phone:
+      type: string
+
+    error:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: number
+        error:
+          type: object
+        errors:
+          type: array
+          items:
+            type: object
