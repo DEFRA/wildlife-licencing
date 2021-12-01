@@ -22,6 +22,7 @@ http://localhost:3000/openapi-ui
 | POSTGRES_HOST | Postgres host | | localhost | Y | |
 | POSTGRES_PORT | Postgres port | | 5432 | Y | |
 | POSTGRES_PW | Postgres password | | wildl1fe | N | Y |
+| POSTGRES_LOGGING | Log transactions | false | [false,true] | N | 
 | AWS_REGION | AWS Region | | eu-west-2 | N | |
 | AWS_ACCESS_KEY_ID | AWS Credential | | | N | |
 | AWS_SECRET_KEY | AWS Credential | | | N | |

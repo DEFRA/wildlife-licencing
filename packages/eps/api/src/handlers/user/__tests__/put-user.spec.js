@@ -1,85 +1,100 @@
-import { mockPersistence } from '../../../misc/test-utils.js'
-
+/*
+ * Mock the hapi request object
+ */
 const uuid = '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
+const sddsId = '1e470963-e8bf-41f5-9b0b-52d19c21cb76'
 const path = 'user/uuid'
-const req = { path, payload: {} }
+const req = { path, payload: { sddsId } }
 
-const queryData = {
-  rows: [{
-    id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
-    created: '2021-11-25T00:00:00.000Z',
-    updated: '2021-11-25T00:00:00.000Z',
-    sdds_id: null
-  }]
-}
-
+/*
+ * Mock the hapi response toolkit in order to test the results of the request
+ */
 const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
-const resFunc = jest.fn(() => ({ type: typeFunc }))
+const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 
+/*
+ * Create the parameters and payload to mock the openApi context which is inserted into each handler
+ */
 const context = { request: { params: { userId: uuid } } }
 
+jest.mock('../../../model/sequentelize-model.js')
+
+let models
+let putUser
+
 describe('The putUser handler', () => {
+  beforeAll(async () => {
+    models = (await import('../../../model/sequentelize-model.js')).models
+    putUser = (await import('../put-user')).default
+  })
+
   it('returns a 201 on successful create', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    mockPersistence.setMockQuery(() => (queryData))
-    await putUser(context, req, { response: resFunc })
-    expect(mockPersistence.mocks.mockQuery).toHaveBeenCalledWith('INSERT INTO users (id) values ($1) RETURNING *', [uuid])
+    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, true])) }
+    await putUser(context, req, h)
+    expect(models.users.findOrCreate).toHaveBeenCalledWith({
+      defaults: { sddsId },
+      where: { id: uuid }
+    })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
+  it('returns a 201 on successful create - sddsId is undefined', async () => {
+    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, true])) }
+    await putUser(context, { path, payload: {} }, h)
+    expect(models.users.findOrCreate).toHaveBeenCalledWith({
+      defaults: { sddsId: null },
+      where: { id: uuid }
+    })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 200 with an existing key', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    mockPersistence.mocks.mockQuery
-      .mockImplementationOnce(() => { throw new Error('users_pk') })
-      .mockImplementationOnce(() => (queryData))
-
-    await putUser(context, req, { response: resFunc })
+    models.users = {
+      findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, false])),
+      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar' } }]]))
+    }
+    await putUser(context, req, h)
+    expect(models.users.update).toHaveBeenCalledWith({ sddsId }, {
+      returning: true, where: { id: uuid }
+    })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns a 201 on successful create with sddsId', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    mockPersistence.setMockQuery(() => (queryData))
-    req.payload.sddsId = uuid
-    await putUser(context, req, { response: resFunc })
-    expect(mockPersistence.mocks.mockQuery).toHaveBeenCalledWith('INSERT INTO users (id, sdds_id) values ($1, $2) RETURNING *', [uuid, uuid])
-    expect(codeFunc).toHaveBeenCalledWith(201)
-  })
-
-  it('returns a 200 with an existing key with sddsId', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    req.payload.sddsId = uuid
-    mockPersistence.mocks.mockQuery
-      .mockImplementationOnce(() => { throw new Error('users_pk') })
-      .mockImplementationOnce(() => (queryData))
-
-    await putUser(context, req, { response: resFunc })
+  it('returns a 200 with an existing key -- sddsId is null', async () => {
+    models.users = {
+      findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, false])),
+      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar' } }]]))
+    }
+    await putUser(context, { path, payload: {} }, h)
+    expect(models.users.update).toHaveBeenCalledWith({ sddsId: null }, {
+      returning: true, where: { id: uuid }
+    })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns a 500 with a random query error (insert query)', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    mockPersistence.setMockQuery(() => { throw new Error('random') })
+  it('Throws with an insert query error', async () => {
+    models.users = { findOrCreate: jest.fn(async () => { throw new Error() }) }
     await expect(async () => {
-      await putUser(context, req, { response: resFunc })
+      await putUser(context, req, h)
     }).rejects.toThrow()
   })
 
   it('returns a 500 with a random query error (update query)', async () => {
-    await mockPersistence.init()
-    const putUser = (await import('../put-user')).default
-    mockPersistence.mocks.mockQuery
-      .mockImplementationOnce(() => { throw new Error('users_pk') })
-      .mockImplementationOnce(() => { throw new Error('random') })
-
+    models.users = {
+      findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, false])),
+      update: jest.fn(async () => { throw new Error() })
+    }
     await expect(async () => {
-      await putUser(context, req, { response: resFunc })
+      await putUser(context, req, h)
     }).rejects.toThrow()
   })
 })
