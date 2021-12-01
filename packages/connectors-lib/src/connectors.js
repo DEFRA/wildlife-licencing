@@ -1,6 +1,6 @@
 import AWS from './aws.js'
-import { DATABASE } from './database.js'
 import { SECRETS } from './secrets.js'
 import { REDIS } from './redis.js'
+import { SEQUELIZE } from './sequelize.js'
 
-export { AWS, SECRETS, DATABASE, REDIS }
+export { AWS, SECRETS, REDIS, SEQUELIZE }

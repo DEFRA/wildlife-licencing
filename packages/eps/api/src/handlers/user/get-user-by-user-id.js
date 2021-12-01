@@ -1,7 +1,6 @@
-import successHandler from '../success-handler.js'
 import { cache } from '../../services/cache.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { getUser } from './user-dml.js'
+import { models } from '../../model/sequentelize-model.js'
 
 export default async (context, req, h) => {
   const saved = await cache.restore(req.path)
@@ -12,17 +11,13 @@ export default async (context, req, h) => {
       .code(200)
   }
 
-  return successHandler(async (client, id) => {
-    const res = await getUser(client, id)
+  const user = await models.users.findByPk(context.request.params.userId)
 
-    // If there is no row return userId not found
-    if (res.rows.length !== 1) {
-      return h.response().code(404)
-    }
+  if (!user) {
+    return h.response().code(404)
+  }
 
-    // Return result for validation
-    return h.response(res.rows[0])
-      .type(APPLICATION_JSON)
-      .code(200)
-  }, context.request.params.userId)
+  return h.response(user.dataValues)
+    .type(APPLICATION_JSON)
+    .code(200)
 }

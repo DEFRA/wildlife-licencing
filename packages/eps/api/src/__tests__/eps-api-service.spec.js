@@ -3,15 +3,14 @@ describe('The wrapper: eps-api-service', () => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
+        jest.mock('../model/sequentelize-model.js')
         jest.mock('@defra/wls-connectors-lib')
         const { createServer, init } = require('../server.js')
-        const { DATABASE } = require('@defra/wls-connectors-lib')
+        const { SEQUELIZE } = require('@defra/wls-connectors-lib')
         createServer.mockImplementation(() => Promise.resolve())
-        DATABASE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
+        SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
         require('../eps-api-service')
         setImmediate(() => {
-          // expect(fetchSecrets).toHaveBeenCalled()
-          // expect(createServer).toHaveBeenCalled()
           expect(init).toHaveBeenCalled()
           done()
         })
@@ -25,11 +24,12 @@ describe('The wrapper: eps-api-service', () => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
+        jest.mock('../model/sequentelize-model.js')
         jest.mock('@defra/wls-connectors-lib')
         const { createServer, init } = require('../server.js')
-        const { DATABASE } = require('@defra/wls-connectors-lib')
+        const { SEQUELIZE } = require('@defra/wls-connectors-lib')
         createServer.mockImplementation(() => Promise.resolve())
-        DATABASE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
+        SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.reject(new Error()))
         const processExitSpy = jest
           .spyOn(process, 'exit')

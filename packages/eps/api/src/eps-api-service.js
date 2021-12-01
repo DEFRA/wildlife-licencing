@@ -1,8 +1,10 @@
 import { init, createServer } from './server.js'
-import { DATABASE, REDIS } from '@defra/wls-connectors-lib'
+import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
+import { createModels } from './model/sequentelize-model.js'
 
 Promise.all([
-  DATABASE.initialiseConnection(),
+  SEQUELIZE.initialiseConnection()
+    .then(() => createModels()),
   REDIS.initialiseConnection()])
   .then(() => createServer()
     .then(s => init(s)
