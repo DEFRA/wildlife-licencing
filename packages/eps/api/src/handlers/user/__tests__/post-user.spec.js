@@ -22,6 +22,7 @@ jest.mock('../../../model/sequentelize-model.js')
 let models
 let postUser
 
+const applicationJson = 'application/json'
 describe('The postUser handler', () => {
   beforeAll(async () => {
     models = (await import('../../../model/sequentelize-model.js')).models
@@ -29,11 +30,14 @@ describe('The postUser handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.users = { create: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(() => ({ foo: 'bar' })),
+      create: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     await postUser(context, req, h)
     expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
@@ -42,7 +46,7 @@ describe('The postUser handler', () => {
     await postUser(context, { path, payload: {} }, h)
     expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId: null })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 

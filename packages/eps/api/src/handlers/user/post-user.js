@@ -16,7 +16,7 @@ export default async (context, req, h) => {
       .type(APPLICATION_JSON)
       .code(201)
   } catch (err) {
-    console.error('Error inserting into USER table', err)
+    console.error('Error inserting into USERS table', err)
     throw new Error(err.message)
   }
 }

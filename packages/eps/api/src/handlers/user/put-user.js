@@ -28,7 +28,7 @@ export default async (context, req, h) => {
         .code(200)
     }
   } catch (err) {
-    console.error('Error inserting into or updating the USER table', err)
+    console.error('Error inserting into, or updating, the USERS table', err)
     throw new Error(err.message)
   }
 }

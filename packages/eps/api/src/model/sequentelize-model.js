@@ -29,7 +29,7 @@ const createModels = async () => {
     userId: {
       type: DataTypes.UUID,
       references: {
-        model: models.user,
+        model: models.users,
         key: 'id'
       }
     },
@@ -41,7 +41,7 @@ const createModels = async () => {
   })
 
   await models.users.sync()
-  await models.users.sync()
+  await models.applications.sync()
 }
 
 export { models, createModels }

@@ -9,11 +9,20 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-  '/users':
+  ################################################################################################
+  # Users
+  ################################################################################################
+  '/user':
     post:
       description: Create and store user
       summary: Create a new user with a generated ID
       operationId: postUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
       responses:
         201:
           description: The user has been created
@@ -28,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/users/{userId}':
+  '/user/{userId}':
     get:
       description: Reterive a user
       summary: Reterive a user
@@ -120,6 +129,8 @@ paths:
           description: The appliciant object has been deleted
         400:
           description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
         500:
           description: Unexpected error on server
           content:
@@ -127,10 +138,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/users/{userId}/applications':
+  ################################################################################################
+  # Applications
+  ################################################################################################
+  '/user/{userId}/application':
     post:
       description: Create a new application
-      summary: Create a new application for a given user on a generated ID
+      summary: Create a new application for an existing userId
       operationId: postApplication
       parameters:
         - name: userId
@@ -139,44 +153,35 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/application'
       responses:
         201:
           description: The application object has been created
-        400:
-          description: Bad request. user ID must be a uuid
-        500:
-          description: Unexpected error on server
-
-
-  '/applicant/{userId}/applications':
-    get:
-      description: get a list of applications created by a given user
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: An array of application objects
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/applications'
+                $ref: '#/components/schemas/application'
         400:
           description: Bad request. user ID must be a uuid
-        401:
-          description: Unauthorized
         404:
-          description: An user with the specified user ID was not found
+          description: Not found
         500:
           description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
-  '/applicant/{userId}/application/{applicationId}':
+  '/user/{userId}/application/{applicationId}':
     get:
-      description: an applications created by a specific applicant
+      description: Get an application
+      summary: Get an application
+      operationId: getApplicationByApplicationId
       parameters:
         - name: userId
           in: path
@@ -188,26 +193,109 @@ paths:
           in: path
           description: ID of the application
           required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
-
       responses:
         200:
-          description: An application object
+          description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/application'
         400:
           description: Bad request.
-        401:
-          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         404:
-          description: The specified user ID and application ID was not found
+          description: Application not found
         500:
           description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Create a new application or update an application
+      summary: Create or update an application for a given appilcationId and an existing userId
+      operationId: putApplication
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/application'
+      responses:
+        201:
+          description: The application object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an application
+      summary: Delete an application
+      operationId: deleteApplication
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application has been deleted
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 components:
+  ################################################################################################
+  # Schemas
+  ################################################################################################
   schemas:
     user:
       type: object
@@ -225,17 +313,21 @@ components:
         $ref: '#/components/schemas/application'
 
     application:
-      required:
-        - id
-        - applicant
-        - sites
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        applicant:
-          $ref: '#/components/schemas/applicant'
-        sites:
-          $ref: '#/components/schemas/sites'
+        sddsId:
+          oneOf:
+            - $ref: '#/components/schemas/uuid'
+            - type: 'null'
+        proposalDescription:
+          type: string
+          minLength: 1
+          maxLength: 300
+        detailsOfConvictions:
+          type: string
+          minLength: 1
+          maxLength: 300
 
     sites:
       type: array

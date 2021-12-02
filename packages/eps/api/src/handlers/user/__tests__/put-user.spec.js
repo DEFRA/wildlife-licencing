@@ -23,6 +23,7 @@ jest.mock('../../../model/sequentelize-model.js')
 let models
 let putUser
 
+const applicationJson = 'application/json'
 describe('The putUser handler', () => {
   beforeAll(async () => {
     models = (await import('../../../model/sequentelize-model.js')).models
@@ -37,7 +38,7 @@ describe('The putUser handler', () => {
       where: { id: uuid }
     })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
@@ -49,7 +50,7 @@ describe('The putUser handler', () => {
       where: { id: uuid }
     })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
@@ -63,7 +64,7 @@ describe('The putUser handler', () => {
       returning: true, where: { id: uuid }
     })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
@@ -77,18 +78,18 @@ describe('The putUser handler', () => {
       returning: true, where: { id: uuid }
     })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
-    expect(typeFunc).toHaveBeenCalledWith('application/json')
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('Throws with an insert query error', async () => {
+  it('throws with an insert query error', async () => {
     models.users = { findOrCreate: jest.fn(async () => { throw new Error() }) }
     await expect(async () => {
       await putUser(context, req, h)
     }).rejects.toThrow()
   })
 
-  it('returns a 500 with a random query error (update query)', async () => {
+  it('throws with an update query error', async () => {
     models.users = {
       findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, false])),
       update: jest.fn(async () => { throw new Error() })
