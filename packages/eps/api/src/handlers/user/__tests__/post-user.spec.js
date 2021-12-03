@@ -21,22 +21,26 @@ jest.mock('../../../model/sequentelize-model.js')
 
 let models
 let postUser
+let cache
 
 const applicationJson = 'application/json'
 describe('The postUser handler', () => {
   beforeAll(async () => {
     models = (await import('../../../model/sequentelize-model.js')).models
     postUser = (await import('../post-user')).default
+    cache = (await import('../../../services/cache.js')).cache
   })
 
   it('returns a 201 on successful create', async () => {
     models.users = {
-      findByPk: jest.fn(() => ({ foo: 'bar' })),
-      create: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+      findByPk: jest.fn(() => ({ id: 'bar' })),
+      create: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
     }
+    cache.save = jest.fn()
     await postUser(context, req, h)
     expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ id: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

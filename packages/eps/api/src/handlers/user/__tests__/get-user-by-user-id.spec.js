@@ -41,8 +41,10 @@ describe('The getUserByUserId handler', () => {
 
   it('returns a user and status 200 the database', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(() => ({ foo: 'bar' })) }
+    cache.save = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar' } })) }
     await getUser(context, req, h)
+    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar' })
     expect(models.users.findByPk).toHaveBeenCalledWith(uuid)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)

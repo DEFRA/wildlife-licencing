@@ -11,8 +11,8 @@ describe('The sequential model', () => {
       define: mockDefine
     }))
     await createModels()
-    expect(mockDefine).toHaveBeenCalledWith('user', expect.any(Object), { timestamps: true })
-    expect(mockDefine).toHaveBeenCalledWith('applications', expect.any(Object), { timestamps: true })
+    expect(mockDefine).toHaveBeenCalledWith('user', expect.any(Object), expect.any(Object))
+    expect(mockDefine).toHaveBeenCalledWith('applications', expect.any(Object), expect.any(Object))
     expect(models.users).toBeTruthy()
     expect(models.applications).toBeTruthy()
   })

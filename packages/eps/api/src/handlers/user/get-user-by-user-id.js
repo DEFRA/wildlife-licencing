@@ -17,6 +17,8 @@ export default async (context, req, h) => {
     return h.response().code(404)
   }
 
+  // Cache
+  await cache.save(req.path, user.dataValues)
   return h.response(user.dataValues)
     .type(APPLICATION_JSON)
     .code(200)

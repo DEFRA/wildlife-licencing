@@ -4,6 +4,14 @@ import { cache } from '../../services/cache.js'
 
 export default async (context, req, h) => {
   try {
+    const user = await models.users.findByPk(context.request.params.userId)
+
+    // Check the user exists
+    if (!user) {
+      return h.response().code(404)
+    }
+
+    // Check cache
     const saved = await cache.restore(req.path)
 
     if (saved) {
@@ -12,15 +20,14 @@ export default async (context, req, h) => {
         .code(200)
     }
 
-    const application = await models.applications.findByPk(context.request.params.applicationId)
+    const applications = await models.applications.findAll({
+      where: {
+        userId: context.request.params.userId
+      }
+    })
 
-    // Check the user exists
-    if (!application) {
-      return h.response().code(404)
-    }
-
-    await cache.save(req.path, application.dataValues)
-    return h.response(application.dataValues)
+    await cache.save(req.path, applications)
+    return h.response(applications)
       .type(APPLICATION_JSON)
       .code(200)
   } catch (err) {

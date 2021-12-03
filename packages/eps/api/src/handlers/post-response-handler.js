@@ -19,11 +19,6 @@ export default async (context, req, h) => {
       .code(500)
   }
 
-  // Cache only success responses
-  if ([200, 201].includes(context.response.statusCode)) {
-    await cache.save(req.path, context.response.source)
-  }
-
   return h.response(context.response)
     .type(APPLICATION_JSON)
     .code(context.response.statusCode)

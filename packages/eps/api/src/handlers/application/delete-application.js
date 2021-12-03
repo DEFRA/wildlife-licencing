@@ -3,6 +3,7 @@ import { cache } from '../../services/cache.js'
 
 export default async (context, req, h) => {
   await cache.delete(req.path)
+  await cache.delete(`/user/${context.request.params.userId}/applications`)
   const count = await models.applications.destroy({
     where: {
       id: context.request.params.applicationId

@@ -4,6 +4,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '../../model/sequentelize-model.js'
 import { APPLICATION_JSON } from '../../constants.js'
+import { cache } from '../../services/cache.js'
 
 export default async (context, req, h) => {
   try {
@@ -13,6 +14,8 @@ export default async (context, req, h) => {
     if (!user) {
       return h.response().code(404)
     }
+    // Invalidates this cache
+    await cache.delete(`/user/${context.request.params.userId}/applications`)
 
     const applicationPayload = (({ sddsId, ...l }) => l)(req.payload)
 
@@ -23,6 +26,7 @@ export default async (context, req, h) => {
       application: applicationPayload
     })
 
+    await cache.save(`/user/${a.dataValues.userId}/application/${a.dataValues.id}`, a.dataValues)
     return h.response(a.dataValues)
       .type(APPLICATION_JSON)
       .code(201)

@@ -37,7 +37,8 @@ const createModels = async () => {
       type: DataTypes.JSONB
     }
   }, {
-    timestamps: true
+    timestamps: true,
+    indexes: [{ unique: false, fields: ['user_id'], name: 'application_user_fk' }]
   })
 
   await models.users.sync()

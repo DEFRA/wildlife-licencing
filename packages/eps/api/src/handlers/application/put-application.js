@@ -3,6 +3,7 @@
  */
 import { models } from '../../model/sequentelize-model.js'
 import { APPLICATION_JSON } from '../../constants.js'
+import { cache } from '../../services/cache.js'
 
 export default async (context, req, h) => {
   try {
@@ -12,6 +13,9 @@ export default async (context, req, h) => {
     if (!user) {
       return h.response().code(404)
     }
+
+    // Invalidates this cache
+    await cache.delete(`/user/${context.request.params.userId}/applications`)
 
     const applicationPayload = (({ sddsId, ...l }) => l)(req.payload)
 
@@ -26,6 +30,8 @@ export default async (context, req, h) => {
     })
 
     if (created) {
+      // Cache
+      await cache.save(req.path, application.dataValues)
       return h.response(application.dataValues)
         .type(APPLICATION_JSON)
         .code(201)
@@ -39,6 +45,8 @@ export default async (context, req, h) => {
         },
         returning: true
       })
+      // Cache
+      await cache.save(req.path, updatedApplication[0].dataValues)
       return h.response(updatedApplication[0].dataValues)
         .type(APPLICATION_JSON)
         .code(200)
