@@ -16,11 +16,11 @@ const nunjucksEngine = {
     return (context) => {
       context.assetPath = '/public'
       return new Promise((resolve, reject) => {
-        template.render(context, (err, str) => {
+        return template.render(context, (err, str) => {
           if (!err) {
             return resolve(str)
           }
-          reject(err)
+          return reject(err)
         })
       })
     }
@@ -54,6 +54,7 @@ export default {
   },
   path: './views',
   isCached: process.env.NODE_ENV === 'production',
-  defaultExtension: 'njk'
+  defaultExtension: 'njk',
+  addFilters // Exported for unit testing
 }
 

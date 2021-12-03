@@ -1,7 +1,20 @@
 import index from '../index'
+import filters from '../filters'
 
 describe('index', () => {
-  describe('engines.njk', () => {
+  describe('addFilters', () => {
+    const inputValue = {addFilter: jest.fn()}
+
+    beforeEach(() => {
+      index.addFilters(inputValue)
+    })
+
+    test('adds each filter', () => {
+      expect(inputValue.addFilter).toHaveBeenCalledTimes(Object.keys(filters).length)
+    })
+  })
+
+  describe('nunjucksEngine', () => {
     let response
 
     test('.compile is a function', () => {

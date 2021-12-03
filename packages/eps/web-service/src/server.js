@@ -5,21 +5,23 @@ import HapiInert from '@hapi/inert'
 import routes from './routes/index.js'
 import { SERVER_PORT } from './constants.js'
 import viewEngine from './lib/view-engine/index.js'
+import lodash from 'lodash'
 
 /**
  * Create the hapi server. Exported for unit testing purposes
  * @returns {Promise<*>}
  */
-const __dirname = Path.resolve()
-
-const createServer = async () => new Hapi.Server({
-  port: SERVER_PORT,
-  routes: {
-    files: {
-      relativeTo: Path.join(__dirname, 'public')
+const createServer = async () => {
+  const __dirname = Path.resolve()
+  return new Hapi.Server({
+    port: SERVER_PORT,
+    routes: {
+      files: {
+        relativeTo: Path.join(__dirname, 'public')
+      }
     }
-  }
-})
+  })
+}
 
 /**
  * Initialize the server. Exported for unit testing
@@ -33,7 +35,7 @@ const init = async server => {
   /* Registering plugins */
   await server.register(HapiVision)
   await server.register(HapiInert)
-  await server.views(viewEngine)
+  await server.views(lodash.omit(viewEngine, 'addFilters'))
   server.route({
     method: 'GET',
     path: '/public/{param*}',
