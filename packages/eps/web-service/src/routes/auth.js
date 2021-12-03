@@ -1,14 +1,12 @@
-const routes = {
-  status: {
+export default {
+  login: {
     method: 'GET',
     path: '/login',
-    handler: () => ({
-      to: 'do'
-    }),
+    handler: (request, h) => {
+      return h.view('auth/login.njk')
+    },
     config: {
       auth: false
     }
   }
 }
-
-export default routes

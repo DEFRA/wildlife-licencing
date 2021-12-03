@@ -29,9 +29,9 @@ const nunjucksEngine = {
   prepare: (options, next) => {
     const paths = [
       options.path,
-            `${options.path}/common/`,
-            `${options.path}/forms/`,
-            'node_modules/govuk-frontend/'
+      `${options.path}/common/`,
+      `${options.path}/forms/`,
+      'node_modules/govuk-frontend/'
     ]
 
     const config = {
@@ -48,7 +48,7 @@ const nunjucksEngine = {
 
 }
 
-const engine = {
+export default {
   engines: {
     njk: nunjucksEngine
   },
@@ -57,4 +57,3 @@ const engine = {
   defaultExtension: 'njk'
 }
 
-export default engine

@@ -1,7 +1,7 @@
 import lodash from 'lodash'
 import moment from 'moment'
 
-const filters = {
+export default {
   date: (value, format = 'D MMMM YYYY') => {
     if (lodash.isNil(value)) {
       return undefined
@@ -11,4 +11,3 @@ const filters = {
   }
 }
 
-export default filters
