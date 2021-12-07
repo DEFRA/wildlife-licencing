@@ -7,17 +7,18 @@ services:
   ##############################################################################################################
   db:
     image: postgres
-    restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: wlsuser
       POSTGRES_PASSWORD: wildl1fe
       POSTGRES_DB: wls
+    deploy:
+      restart_policy:
+        condition: on-failure
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - "8001:8080"
 
