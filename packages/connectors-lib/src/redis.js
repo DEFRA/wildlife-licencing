@@ -7,9 +7,12 @@ export const REDIS = {
   getClient: () => client,
   initialiseConnection: async () => {
     client = createClient({
-      host: Config.redis.host || 'localhost',
-      port: Config.redis.port || 6379
+      socket: {
+        host: Config.redis.host,
+        port: Config.redis.port
+      }
     })
     await client.connect()
+    return Promise.resolve()
   }
 }
