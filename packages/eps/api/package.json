@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "node src/eps-api-service.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "postinstall": "npx webpack-cli"
   },
   "keywords": [
     "API",
