@@ -12,6 +12,16 @@ const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
 const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
@@ -33,23 +43,23 @@ describe('The postUser handler', () => {
 
   it('returns a 201 on successful create', async () => {
     models.users = {
-      findByPk: jest.fn(() => ({ id: 'bar' })),
-      create: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+      findByPk: jest.fn(() => ({ id: 'bar', ...ts })),
+      create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
     }
     cache.save = jest.fn()
     await postUser(context, req, h)
     expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId })
-    expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar' })
-    expect(h.response).toHaveBeenCalledWith({ id: 'bar' })
+    expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 201 on successful create -- sddsId null', async () => {
-    models.users = { create: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = { create: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
     await postUser(context, { path, payload: {} }, h)
     expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId: null })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

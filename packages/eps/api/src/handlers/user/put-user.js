@@ -1,6 +1,7 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '../../model/sequentelize-model.js'
 import { cache } from '../../services/cache.js'
+import { prepareResponse } from './user-proc.js'
 
 /*
  * Create the new user object and return 201 OR
@@ -16,9 +17,9 @@ export default async (context, req, h) => {
     })
 
     if (created) {
-      // Cache
-      await cache.save(req.path, user.dataValues)
-      return h.response(user.dataValues)
+      const response = prepareResponse(user.dataValues)
+      await cache.save(req.path, response)
+      return h.response(response)
         .type(APPLICATION_JSON)
         .code(201)
     } else {
@@ -26,8 +27,9 @@ export default async (context, req, h) => {
         where: { id: context.request.params.userId },
         returning: true
       })
-      await cache.save(req.path, updatedUser[0].dataValues)
-      return h.response(updatedUser[0].dataValues)
+      const response = prepareResponse(updatedUser[0].dataValues)
+      await cache.save(req.path, response)
+      return h.response(response)
         .type(APPLICATION_JSON)
         .code(200)
     }

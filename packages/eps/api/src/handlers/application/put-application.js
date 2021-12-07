@@ -4,9 +4,12 @@
 import { models } from '../../model/sequentelize-model.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
+import { clearCaches } from './application-cache.js'
+import { prepareResponse } from './application-proc.js'
 
 export default async (context, req, h) => {
   try {
+    const { userId, applicationId } = context.request.params
     const user = await models.users.findByPk(context.request.params.userId)
 
     // Check the user exists
@@ -14,25 +17,24 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    // Invalidates this cache
-    await cache.delete(`/user/${context.request.params.userId}/applications`)
+    await clearCaches(userId, applicationId)
 
-    const applicationPayload = (({ sddsId, ...l }) => l)(req.payload)
+    const applicationPayload = (({ sddsId, ...l }) => l)(req.payload || {})
 
     const [application, created] = await models.applications.findOrCreate({
       where: { id: context.request.params.applicationId },
       defaults: {
-        id: context.request.params.applicationId,
-        userId: context.request.params.userId,
+        id: applicationId,
+        userId: userId,
         sddsId: req.payload?.sddsId ?? null,
         application: applicationPayload
       }
     })
 
     if (created) {
-      // Cache
-      await cache.save(req.path, application.dataValues)
-      return h.response(application.dataValues)
+      const responseBody = prepareResponse(application.dataValues)
+      await cache.save(req.path, responseBody)
+      return h.response(responseBody)
         .type(APPLICATION_JSON)
         .code(201)
     } else {
@@ -41,13 +43,13 @@ export default async (context, req, h) => {
         application: applicationPayload
       }, {
         where: {
-          id: context.request.params.applicationId
+          id: applicationId
         },
         returning: true
       })
-      // Cache
-      await cache.save(req.path, updatedApplication[0].dataValues)
-      return h.response(updatedApplication[0].dataValues)
+      const responseBody = prepareResponse(updatedApplication[0].dataValues)
+      await cache.save(req.path, responseBody)
+      return h.response(responseBody)
         .type(APPLICATION_JSON)
         .code(200)
     }

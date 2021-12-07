@@ -23,6 +23,16 @@ const context = {
   }
 }
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 jest.mock('../../../model/sequentelize-model.js')
 
 let models
@@ -47,11 +57,11 @@ describe('The getApplicationByApplicationId handler', () => {
   it('returns an application and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar' } })) }
+    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar' })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

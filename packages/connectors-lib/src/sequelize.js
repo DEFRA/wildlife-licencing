@@ -15,7 +15,7 @@ export const SEQUELIZE = {
         dialect: 'postgres',
         host: Config.pg.host,
         port: Config.pg.port,
-        logging: Config.pg.logging === 'true',
+        logging: Config.pg.logging === 'true' ? console.log : false,
         native: false,
 
         define: {

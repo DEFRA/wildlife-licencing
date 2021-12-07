@@ -6,6 +6,11 @@ import {
   getApplicationByApplicationId, getApplicationsByUserId,
   postApplication, putApplication, deleteApplication
 } from './handlers/application/application.js'
+import {
+  getApplicationApplicant,
+  putApplicationApplicant,
+  deleteApplicationApplicant
+} from './handlers/application/applicant/applicant.js'
 
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
@@ -43,6 +48,9 @@ const init = async server => {
     postApplication,
     putApplication,
     deleteApplication,
+    getApplicationApplicant,
+    putApplicationApplicant,
+    deleteApplicationApplicant,
     validationFail,
     notFound,
     postResponseHandler

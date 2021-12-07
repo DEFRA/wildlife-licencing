@@ -1,4 +1,3 @@
-import { cache } from '../services/cache.js'
 import { APPLICATION_JSON } from '../constants.js'
 
 export default async (context, req, h) => {

@@ -9,9 +9,9 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-  ################################################################################################
-  # Users
-  ################################################################################################
+################################################################################################
+# Users
+################################################################################################
   '/user':
     post:
       description: Create and store user
@@ -138,9 +138,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Applications
-  ################################################################################################
+################################################################################################
+# Applications
+################################################################################################
   '/user/{userId}/applications':
     get:
       description: Get the (unsubmitted) applications for a user
@@ -278,6 +278,12 @@ paths:
             schema:
               $ref: '#/components/schemas/application'
       responses:
+        200:
+          description: The application object has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
         201:
           description: The application object has been created
           content:
@@ -326,14 +332,128 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+################################################################################################
+# Applicants
+################################################################################################
+  '/user/{userId}/application/{applicationId}/applicant':
+    put:
+      description: Update the application applicant details
+      summary: Create or update the application applicant details
+      operationId: putApplicationApplicant
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application applicant details
+      summary: Get the applicant details for an application
+      operationId: getApplicationApplicant
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application applicant details
+      summary: Delete the applicant details for an application
+      operationId: deleteApplicationApplicant
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 components:
-  ################################################################################################
-  # Schemas
-  ################################################################################################
+################################################################################################
+# Schemas
+################################################################################################
   schemas:
     user:
       type: object
+      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -341,6 +461,10 @@ components:
           oneOf:
             - $ref: '#/components/schemas/uuid'
             - type: 'null'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     applications:
       type: array
@@ -348,6 +472,8 @@ components:
         $ref: '#/components/schemas/application'
 
     application:
+      type: object
+      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -363,26 +489,17 @@ components:
           type: string
           minLength: 1
           maxLength: 300
-
-    sites:
-      type: array
-      items:
-        $ref: '#/components/schemas/site'
-
-    applicant:
-      type: object
-      required:
-        - contact
-      properties:
-        contact:
-          $ref: '#/components/schemas/application'
+        applicant:
+          $ref: '#/components/schemas/contact'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     contact:
       type: object
-      required: [id, firstname, lastname]
+      required: [firstname, lastname]
       properties:
-        id:
-          $ref: '#/components/schemas/uuid'
         firstname:
           type: string
           minLength: 1
@@ -431,6 +548,11 @@ components:
           minLength: 1
           maxLength: 10
 
+    sites:
+      type: array
+      items:
+        $ref: '#/components/schemas/site'
+
     site:
       type: object
       required:
@@ -448,6 +570,12 @@ components:
 
     gridReference:
       type: string
+
+    timestamp:
+      type: string
+      readOnly: true
+      example: 2021-12-06T15:56:46.825Z
+      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z$
 
     uuid:
       type: string

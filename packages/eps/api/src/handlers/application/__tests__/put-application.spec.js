@@ -30,6 +30,16 @@ const context = {
   }
 }
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 jest.mock('../../../model/sequentelize-model.js')
 
 let models
@@ -45,13 +55,14 @@ describe('The putApplication handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
     models.applications = {
       findOrCreate: jest.fn(async () => ([{
         dataValues:
           {
             id: context.request.params.applicationId,
-            userId: context.request.params.userId
+            userId: context.request.params.userId,
+            ...ts
           }
       }, true]))
     }
@@ -69,21 +80,22 @@ describe('The putApplication handler', () => {
         id: context.request.params.applicationId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, userId: context.request.params.userId })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
     expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, userId: context.request.params.userId })
+    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 200 with an existing key', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
     models.applications = {
       findOrCreate: jest.fn(async () => ([{}, false])),
       update: jest.fn(async () => ([1, [{
         dataValues: {
           id: context.request.params.applicationId,
-          userId: context.request.params.userId
+          userId: context.request.params.userId,
+          ...ts
         }
       }]]))
     }
@@ -95,9 +107,9 @@ describe('The putApplication handler', () => {
       sddsId: req.payload.sddsId
     },
     { returning: true, where: { id: context.request.params.applicationId } })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, userId: context.request.params.userId })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
     expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, userId: context.request.params.userId })
+    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -105,12 +117,12 @@ describe('The putApplication handler', () => {
   it('returns a 201 on successful create -- no sddsId', async () => {
     cache.save = jest.fn()
     cache.delete = jest.fn()
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
-    models.applications = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, true])) }
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.applications = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar', ...ts } }, true])) }
     const req2 = Object.assign(req)
     delete req2.payload.sddsId
     await putApplication(context, req2, h)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -118,15 +130,15 @@ describe('The putApplication handler', () => {
   it('returns a 200 with an existing key -- no sddsId', async () => {
     cache.save = jest.fn()
     cache.delete = jest.fn()
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
     models.applications = {
       findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar' } }]]))
+      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar', ...ts } }]]))
     }
     const req2 = Object.assign(req)
     delete req2.payload.sddsId
     await putApplication(context, req2, h)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

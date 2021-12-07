@@ -23,6 +23,16 @@ let models
 let getUser
 let cache
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 const applicationJson = 'application/json'
 describe('The getUserByUserId handler', () => {
   beforeAll(async () => {
@@ -42,11 +52,11 @@ describe('The getUserByUserId handler', () => {
   it('returns a user and status 200 the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar' } })) }
+    models.users = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getUser(context, req, h)
-    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar' })
+    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(models.users.findByPk).toHaveBeenCalledWith(uuid)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

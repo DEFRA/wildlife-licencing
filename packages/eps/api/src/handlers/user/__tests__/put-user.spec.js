@@ -20,6 +20,16 @@ const context = { request: { params: { userId: uuid } } }
 
 jest.mock('../../../model/sequentelize-model.js')
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 let models
 let putUser
 let cache
@@ -32,28 +42,28 @@ describe('The putUser handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { id: uuid } }, true])) }
+    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { id: uuid, ...ts } }, true])) }
     cache.save = jest.fn()
     await putUser(context, req, h)
     expect(models.users.findOrCreate).toHaveBeenCalledWith({
       defaults: { sddsId },
       where: { id: uuid }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: uuid })
-    expect(h.response).toHaveBeenCalledWith({ id: uuid })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: uuid, ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: uuid, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 201 on successful create - sddsId is undefined', async () => {
-    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, true])) }
+    models.users = { findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar', ...ts } }, true])) }
     cache.save = jest.fn()
     await putUser(context, { path, payload: {} }, h)
     expect(models.users.findOrCreate).toHaveBeenCalledWith({
       defaults: { sddsId: null },
       where: { id: uuid }
     })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -61,23 +71,23 @@ describe('The putUser handler', () => {
   it('returns a 200 with an existing key', async () => {
     models.users = {
       findOrCreate: jest.fn(async () => ([{ dataValues: { } }, false])),
-      update: jest.fn(async () => ([1, [{ dataValues: { id: uuid } }]]))
+      update: jest.fn(async () => ([1, [{ dataValues: { id: uuid, ...ts } }]]))
     }
     cache.save = jest.fn()
     await putUser(context, req, h)
     expect(models.users.update).toHaveBeenCalledWith({ sddsId }, {
       returning: true, where: { id: uuid }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: uuid })
-    expect(h.response).toHaveBeenCalledWith({ id: uuid })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: uuid, ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: uuid, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns a 200 with an existing key -- sddsId is null', async () => {
     models.users = {
-      findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar' } }, false])),
-      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar' } }]]))
+      findOrCreate: jest.fn(async () => ([{ dataValues: { foo: 'bar', ...ts } }, false])),
+      update: jest.fn(async () => ([1, [{ dataValues: { foo: 'bar', ...ts } }]]))
     }
     cache.restore = jest.fn()
     cache.save = jest.fn()
@@ -85,7 +95,7 @@ describe('The putUser handler', () => {
     expect(models.users.update).toHaveBeenCalledWith({ sddsId: null }, {
       returning: true, where: { id: uuid }
     })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

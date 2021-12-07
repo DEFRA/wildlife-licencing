@@ -1,10 +1,12 @@
 import { models } from '../../model/sequentelize-model.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
+import { prepareResponse } from './application-proc.js'
 
 export default async (context, req, h) => {
   try {
-    const user = await models.users.findByPk(context.request.params.userId)
+    const { userId } = context.request.params
+    const user = await models.users.findByPk(userId)
 
     // Check the user exists
     if (!user) {
@@ -22,12 +24,14 @@ export default async (context, req, h) => {
 
     const applications = await models.applications.findAll({
       where: {
-        userId: context.request.params.userId
+        userId: userId
       }
     })
 
-    await cache.save(req.path, applications)
-    return h.response(applications)
+    const responseBody = applications.map(a => prepareResponse(a.dataValues))
+
+    await cache.save(req.path, responseBody)
+    return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(200)
   } catch (err) {
