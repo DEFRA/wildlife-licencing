@@ -2,7 +2,15 @@ import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
 import { getUserByUserId, putUser, deleteUser, postUser } from './handlers/user/user.js'
-import { getApplicationByApplicationId, postApplication, putApplication, deleteApplication } from './handlers/application/application.js'
+import {
+  getApplicationByApplicationId, getApplicationsByUserId,
+  postApplication, putApplication, deleteApplication
+} from './handlers/application/application.js'
+import {
+  getApplicationApplicant,
+  putApplicationApplicant,
+  deleteApplicationApplicant
+} from './handlers/application/applicant/applicant.js'
 
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
@@ -36,9 +44,13 @@ const init = async server => {
     putUser,
     deleteUser,
     getApplicationByApplicationId,
+    getApplicationsByUserId,
     postApplication,
     putApplication,
     deleteApplication,
+    getApplicationApplicant,
+    putApplicationApplicant,
+    deleteApplicationApplicant,
     validationFail,
     notFound,
     postResponseHandler

@@ -1,11 +1,12 @@
 import { models } from '../../model/sequentelize-model.js'
-import { cache } from '../../services/cache.js'
+import { clearCaches } from './application-cache.js'
 
 export default async (context, req, h) => {
-  await cache.delete(req.path)
+  const { userId, applicationId } = context.request.params
+  await clearCaches(userId, applicationId)
   const count = await models.applications.destroy({
     where: {
-      id: context.request.params.applicationId
+      id: applicationId
     }
   })
   if (count === 1) {
