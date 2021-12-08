@@ -1,4 +1,4 @@
-import routes from '../../routes/auth'
+import routes from '../auth'
 
 describe('.login', () => {
   const view = jest.fn()

@@ -13,17 +13,7 @@ const nunjucksEngine = {
   compile: (src, options) => {
     const template = Nunjucks.compile(src, options.environment)
 
-    return (context) => {
-      context.assetPath = '/public'
-      return new Promise((resolve, reject) => {
-        return template.render(context, (err, str) => {
-          if (!err) {
-            return resolve(str)
-          }
-          return reject(err)
-        })
-      })
-    }
+    return (context) => { context.assetPath = '/public'; return template.render(context) }
   },
 
   prepare: (options, next) => {
@@ -57,4 +47,3 @@ export default {
   defaultExtension: 'njk',
   addFilters // Exported for unit testing
 }
-

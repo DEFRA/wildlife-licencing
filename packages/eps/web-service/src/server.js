@@ -29,6 +29,7 @@ const createServer = async () => {
  * @returns {Promise<any>}
  */
 const init = async server => {
+  const __dirname = Path.resolve()
   /* Registering routes */
   await server.route(routes)
 

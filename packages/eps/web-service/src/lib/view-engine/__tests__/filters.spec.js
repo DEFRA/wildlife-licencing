@@ -1,13 +1,11 @@
 import filters from '../filters'
 import lodash from 'lodash'
 
-jest.spyOn(lodash, 'isNil')
-
 describe('.date', () => {
-
   afterEach(() => jest.resetAllMocks())
 
   describe('when given a defined value', () => {
+    jest.spyOn(lodash, 'isNil')
 
     const inputValue = '2020-12-30'
     let response
@@ -26,6 +24,7 @@ describe('.date', () => {
   })
 
   describe('when given a nullish input', () => {
+    jest.spyOn(lodash, 'isNil')
 
     const inputValue = null
     let response
@@ -34,13 +33,12 @@ describe('.date', () => {
       response = filters.date(inputValue)
     })
 
-    it('checks that the value is not null, using lodash', () => {
+    it('checks that the value is null, using lodash', () => {
       expect(lodash.isNil).toHaveBeenCalledWith(inputValue)
     })
 
-    it('returns undefined', () => {
+    it('checks that the function returns undefined', () => {
       expect(response).toEqual(undefined)
     })
-
   })
 })

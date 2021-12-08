@@ -16,9 +16,9 @@ describe('index', () => {
   })
 
   describe('nunjucksEngine', () => {
-
     describe('.compile', () => {
       let response
+
       jest.spyOn(Nunjucks, 'compile')
 
       test('.compile is a function', () => {
@@ -30,11 +30,7 @@ describe('index', () => {
 
         expect(response).toBeInstanceOf(Function)
       })
-      test('the function returned by .compile replied with a Promise', () => {
-        const innerFunction = response({})
 
-        expect(innerFunction).toBeInstanceOf(Promise)
-      })
       test('it calls Nunjucks.compile', () => {
         expect(Nunjucks.compile).toHaveBeenCalled()
       })
@@ -54,7 +50,6 @@ describe('index', () => {
         expect(Nunjucks.configure).toHaveBeenCalled()
       })
     })
-
   })
   test('exports an object', () => {
     expect(index).toBeInstanceOf(Object)

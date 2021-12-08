@@ -1,4 +1,4 @@
-import routes from '../../routes/status'
+import routes from '../status'
 
 describe('.serviceStatus', () => {
   const view = jest.fn()
@@ -15,8 +15,7 @@ describe('.serviceStatus', () => {
 })
 
 describe('as a status', () => {
-  const view = jest.fn()
-  let response;
+  let response
 
   beforeEach(() => {
     response = routes.status.handler({}, {})
