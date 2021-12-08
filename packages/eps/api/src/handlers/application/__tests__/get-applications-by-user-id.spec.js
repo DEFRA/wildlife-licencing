@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = '/user/uuid/application/uuid'
+const path = 'user/uuid/application/uuid'
 const req = { path }
 
 /*
@@ -17,8 +17,7 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6',
-      applicationId: '1bfe075b-377e-472b-b160-a6a454648e23'
+      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6'
     }
   }
 }
@@ -39,44 +38,48 @@ let models
 let getApplication
 let cache
 const applicationJson = 'application/json'
-describe('The getApplicationByApplicationId handler', () => {
+
+describe('The getApplicationByUserId handler', () => {
   beforeAll(async () => {
     models = (await import('../../../model/sequentelize-model.js')).models
+    getApplication = (await import('../get-applications-by-user-id.js')).default
     cache = (await import('../../../services/cache.js')).cache
-    getApplication = (await import('../get-application-by-application-id.js')).default
   })
 
-  it('returns an application and status 200 from the cache', async () => {
-    cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+  it('returns an array of applications and status 200 from the database', async () => {
+    cache.restore = jest.fn()
+    cache.save = jest.fn()
+    models.users = { findByPk: jest.fn(async () => ({ foo: 'bar' })) }
+    models.applications = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
     await getApplication(context, req, h)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(cache.restore).toHaveBeenCalledWith(path)
+    expect(cache.save).toHaveBeenCalledWith(path, [{ foo: 'bar', ...tsR }])
+    expect(models.applications.findAll).toHaveBeenCalledWith({ where: { userId: context.request.params.userId } })
+    expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns an application and status 200 from the database', async () => {
-    cache.restore = jest.fn(() => null)
-    cache.save = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+  it('returns an array of applications and status 200 from the cache', async () => {
+    cache.restore = jest.fn(() => JSON.stringify([{ foo: 'bar' }]))
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
     await getApplication(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
+    expect(cache.restore).toHaveBeenCalledWith(path)
+    expect(h.response).toHaveBeenCalledWith([{ foo: 'bar' }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns a status 404 on not found', async () => {
-    cache.restore = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(() => null) }
+  it('returns a status 404 on user not found', async () => {
+    models.users = { findByPk: jest.fn(async () => null) }
     await getApplication(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
-    cache.restore = jest.fn(() => null)
+    cache.restore = jest.fn()
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
     models.applications = { findByPk: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
       await getApplication(context, req, h)

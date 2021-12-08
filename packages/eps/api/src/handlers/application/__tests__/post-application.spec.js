@@ -18,6 +18,16 @@ const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
 const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 
+const ts = {
+  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+}
+
+const tsR = {
+  createdAt: ts.createdAt.toISOString(),
+  updatedAt: ts.updatedAt.toISOString()
+}
+
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
@@ -27,18 +37,21 @@ jest.mock('../../../model/sequentelize-model.js')
 
 let models
 let postApplication
-
+let cache
 const applicationJson = 'application/json'
 
 describe('The postApplication handler', () => {
   beforeAll(async () => {
     models = (await import('../../../model/sequentelize-model.js')).models
     postApplication = (await import('../post-application.js')).default
+    cache = (await import('../../../services/cache.js')).cache
   })
 
   it('returns a 201 on successful create', async () => {
-    models.applications = { create: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applications = { create: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo', ...ts } })) }
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    cache.save = jest.fn(() => null)
+    cache.delete = jest.fn(() => null)
     await postApplication(context, req, h)
     expect(models.applications.create).toHaveBeenCalledWith({
       id: expect.any(String),
@@ -46,18 +59,22 @@ describe('The postApplication handler', () => {
       userId: context.request.params.userId,
       application: (({ sddsId, ...l }) => l)(req.payload)
     })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(cache.save).toHaveBeenCalledWith('/user/foo/application/bar', { id: 'bar', ...tsR })
+    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
+    expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 201 on successful create -- no sddsId', async () => {
-    models.applications = { create: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applications = { create: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
     models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    cache.save = jest.fn(() => null)
+    cache.delete = jest.fn(() => null)
     const req2 = Object.assign(req)
     delete req2.payload.sddsId
     await postApplication(context, req2, h)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -71,6 +88,8 @@ describe('The postApplication handler', () => {
   })
 
   it('throws with an insert error', async () => {
+    cache.save = jest.fn(() => null)
+    cache.delete = jest.fn(() => null)
     models.applications = { create: jest.fn(async () => { throw new Error() }) }
     models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
     await expect(async () => {

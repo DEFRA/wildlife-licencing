@@ -5,6 +5,15 @@ import { prepareResponse } from './application-proc.js'
 
 export default async (context, req, h) => {
   try {
+    const { userId } = context.request.params
+    const user = await models.users.findByPk(userId)
+
+    // Check the user exists
+    if (!user) {
+      return h.response().code(404)
+    }
+
+    // Check cache
     const saved = await cache.restore(req.path)
 
     if (saved) {
@@ -13,14 +22,13 @@ export default async (context, req, h) => {
         .code(200)
     }
 
-    const application = await models.applications.findByPk(context.request.params.applicationId)
+    const applications = await models.applications.findAll({
+      where: {
+        userId: userId
+      }
+    })
 
-    // Check the user exists
-    if (!application) {
-      return h.response().code(404)
-    }
-
-    const responseBody = prepareResponse(application.dataValues)
+    const responseBody = applications.map(a => prepareResponse(a.dataValues))
 
     await cache.save(req.path, responseBody)
     return h.response(responseBody)

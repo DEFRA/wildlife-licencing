@@ -1,6 +1,7 @@
 import { cache } from '../../services/cache.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '../../model/sequentelize-model.js'
+import { prepareResponse } from './user-proc.js'
 
 export default async (context, req, h) => {
   const saved = await cache.restore(req.path)
@@ -17,7 +18,11 @@ export default async (context, req, h) => {
     return h.response().code(404)
   }
 
-  return h.response(user.dataValues)
+  const response = prepareResponse(user.dataValues)
+
+  // Cache
+  await cache.save(req.path, response)
+  return h.response(response)
     .type(APPLICATION_JSON)
     .code(200)
 }

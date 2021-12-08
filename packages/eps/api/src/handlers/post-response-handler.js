@@ -1,4 +1,3 @@
-import { cache } from '../services/cache.js'
 import { APPLICATION_JSON } from '../constants.js'
 
 export default async (context, req, h) => {
@@ -17,11 +16,6 @@ export default async (context, req, h) => {
     return h.response({ errors: responseValidation.errors })
       .type(APPLICATION_JSON)
       .code(500)
-  }
-
-  // Cache only success responses
-  if ([200, 201].includes(context.response.statusCode)) {
-    await cache.save(req.path, context.response.source)
   }
 
   return h.response(context.response)

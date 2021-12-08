@@ -3,7 +3,7 @@ services:
   ##############################################################################################################
   # Wildlife licencing EPS API service - api service is found on localhost:3000
   ##############################################################################################################
-  eps-web:
+  eps-api:
     image: wildlife-licencing/eps-api:${TAG:-latest}
     ports:
       - "3000:3000"
@@ -18,7 +18,7 @@ services:
   ##############################################################################################################
   # Wildlife licencing EPS WEB service - web service is found on localhost:4000
   ##############################################################################################################
-  eps-api:
+  eps-web:
     image: wildlife-licencing/eps-web:${TAG:-latest}
     ports:
       - "4000:4000"
