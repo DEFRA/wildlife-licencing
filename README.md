@@ -18,3 +18,4 @@ rpm run docker:stop
 
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/hello
+- s
