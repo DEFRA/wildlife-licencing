@@ -3,12 +3,12 @@
 #######################################################
 services:
   ##############################################################################################################
-  # Wildlife licencing EPS API service
+  # Wildlife licencing API service
   ##############################################################################################################
-  eps-api:
-    image: wildlife-licencing/eps-api:${TAG:-latest}
+  api:
+    image: wildlife-licencing/api:${TAG:-latest}
     build:
-      context: ../packages/eps/api
+      context: ../packages/api
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
 
   ##############################################################################################################

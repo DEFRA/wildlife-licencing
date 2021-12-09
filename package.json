@@ -37,7 +37,7 @@
     },
     "ignore": [
       "**/dist/*.js",
-      "packages/eps/api/webpack.config.cjs",
+      "packages/api/webpack.config.cjs",
       ".husky"
     ]
   },
@@ -79,7 +79,7 @@
       "**/src/**/*.js"
     ],
     "coveragePathIgnorePatterns": [
-      "packages/eps/api/src/index.js"
+      "packages/api/src/index.js"
     ],
     "coverageReporters": [
       "lcov",
