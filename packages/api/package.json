@@ -1,8 +1,8 @@
 {
-  "name": "@defra/wls-eps-api",
+  "name": "@defra/wls-api",
   "version": "1.1.4",
   "description": "The API to support the wildlife licencing of European Protected Species",
-  "main": "src/eps-api-service.js",
+  "main": "src/api-service.js",
   "type": "module",
   "private": false,
   "publishConfig": {
@@ -12,7 +12,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "node src/eps-api-service.js",
+    "start": "node src/api-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1",
     "postinstall": "npx webpack-cli"
   },

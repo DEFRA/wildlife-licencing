@@ -1,4 +1,4 @@
-# Wildlife licencing EPS API
+# Wildlife licencing API
 
 #### For Natural England
 
@@ -28,4 +28,5 @@ http://localhost:3000/openapi-ui
 | AWS_SECRET_KEY | AWS Credential | | | N | |
 | REDIS_HOST | Redis host | | | Y | |
 | REDIS_PORT | Redis port | | | Y | |
+| REDIS_DATABASE | Redis database | 0 | | N | |
 | CACHE_EXPIRE_SECONDS | Expirary time for request cache in seconds | 60000 | | N | |

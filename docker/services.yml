@@ -1,14 +1,14 @@
 version: "3.8"
 services:
   ##############################################################################################################
-  # Wildlife licencing EPS API service - api service is found on localhost:3000
+  # Wildlife licencing API service - api service is found on localhost:3000
   ##############################################################################################################
-  eps-api:
-    image: wildlife-licencing/eps-api:${TAG:-latest}
+  api:
+    image: wildlife-licencing/api:${TAG:-latest}
     ports:
       - "3000:3000"
     env_file:
-      - ./env/eps-api.env
+      - ./env/api.env
     deploy:
       mode: replicated
       replicas: 1

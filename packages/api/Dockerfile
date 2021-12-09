@@ -1,5 +1,5 @@
 ########################################################################################
-# Create a docker image for the wildlife licencing EPS API service
+# Create a docker image for the wildlife licencing =API service
 ########################################################################################
 FROM node:16.13.0-alpine
 WORKDIR /usr/src/app
@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . .
 RUN npm ci
 EXPOSE 3000
-CMD [ "node", "src/eps-api-service.js" ]
+CMD [ "node", "src/api-service.js" ]

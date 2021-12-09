@@ -1,4 +1,4 @@
-describe('The wrapper: eps-api-service', () => {
+describe('The wrapper: api-service', () => {
   it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
@@ -9,7 +9,7 @@ describe('The wrapper: eps-api-service', () => {
         const { SEQUELIZE } = require('@defra/wls-connectors-lib')
         createServer.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
-        require('../eps-api-service')
+        require('../api-service')
         setImmediate(() => {
           expect(init).toHaveBeenCalled()
           done()
@@ -34,7 +34,7 @@ describe('The wrapper: eps-api-service', () => {
         const processExitSpy = jest
           .spyOn(process, 'exit')
           .mockImplementation(code => {})
-        require('../eps-api-service')
+        require('../api-service')
         setImmediate(() => {
           // expect(fetchSecrets).toHaveBeenCalled()
           expect(init).toHaveBeenCalled()
