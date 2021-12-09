@@ -25,7 +25,7 @@ let cache
 
 describe('The deleteUser handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../model/sequentelize-model.js')).models
+    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
     cache = (await import('../../../services/cache.js')).cache
     deleteUser = (await import('../delete-user.js')).default
   })

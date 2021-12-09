@@ -1,5 +1,5 @@
 import { cache } from '../../services/cache.js'
-import { models } from '../../model/sequentelize-model.js'
+import { models } from '../../../../database-model/src/sequentelize-model.js'
 
 export default async (context, req, h) => {
   await cache.delete(req.path)

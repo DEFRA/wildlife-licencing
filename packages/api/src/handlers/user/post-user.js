@@ -1,6 +1,6 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
-import { models } from '../../model/sequentelize-model.js'
+import { models } from '../../../../database-model/src/sequentelize-model.js'
 import { cache } from '../../services/cache.js'
 import { prepareResponse } from './user-proc.js'
 

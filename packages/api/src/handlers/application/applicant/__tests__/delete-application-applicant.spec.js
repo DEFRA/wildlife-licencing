@@ -40,7 +40,7 @@ const applicationJson = 'application/json'
 
 describe('The putApplicationApplicant handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../../model/sequentelize-model.js')).models
+    models = (await import('../../../../../../database-model/src/sequentelize-model.js')).models
     deleteApplicationApplicant = (await import('../delete-application-applicant.js')).default
     cache = (await import('../../../../services/cache.js')).cache
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')

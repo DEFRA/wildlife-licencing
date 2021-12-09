@@ -1,4 +1,4 @@
-import { models } from '../../model/sequentelize-model.js'
+import { models } from '../../../../database-model/src/sequentelize-model.js'
 import { clearCaches } from './application-cache.js'
 
 export default async (context, req, h) => {

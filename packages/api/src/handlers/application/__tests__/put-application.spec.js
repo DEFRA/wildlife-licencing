@@ -49,7 +49,7 @@ const applicationJson = 'application/json'
 
 describe('The putApplication handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../model/sequentelize-model.js')).models
+    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
     putApplication = (await import('../put-application.js')).default
     cache = (await import('../../../services/cache.js')).cache
   })

@@ -47,7 +47,6 @@ paths:
           in: path
           description: ID of the appliciant
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -81,7 +80,6 @@ paths:
           in: path
           description: ID of the user
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
           schema:
             $ref: '#/components/schemas/uuid'
       requestBody:
@@ -121,7 +119,6 @@ paths:
           in: path
           description: ID of the user
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb75
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -228,7 +225,6 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -268,7 +264,6 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
       requestBody:
@@ -316,7 +311,6 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -332,6 +326,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Applicants
 ################################################################################################
@@ -351,7 +346,6 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
       requestBody:
@@ -393,7 +387,6 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -429,7 +422,41 @@ paths:
           in: path
           description: ID of the application
           required: true
-          example: 1e470963-e8bf-41f5-9b0b-52d19c21cb76
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Submission
+  ################################################################################################
+  '/user/{userId}/application/{applicationId}/submit':
+    post:
+      description: Queue the application for submission
+      summary: Queue the application for submission
+      operationId: postApplicationSubmit
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -580,12 +607,14 @@ components:
     uuid:
       type: string
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
       minLength: 36
       maxLength: 36
 
     email:
       type: string
       pattern: (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+      example: email@email.com
 
     phone:
       type: string
