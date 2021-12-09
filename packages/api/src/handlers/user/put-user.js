@@ -1,5 +1,5 @@
 import { APPLICATION_JSON } from '../../constants.js'
-import { models } from '../../model/sequentelize-model.js'
+import { models } from '../../../../database-model/src/sequentelize-model.js'
 import { cache } from '../../services/cache.js'
 import { prepareResponse } from './user-proc.js'
 

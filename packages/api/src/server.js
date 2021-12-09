@@ -1,11 +1,22 @@
 import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
-import { getUserByUserId, putUser, deleteUser, postUser } from './handlers/user/user.js'
 import {
-  getApplicationByApplicationId, getApplicationsByUserId,
-  postApplication, putApplication, deleteApplication
+  getUserByUserId,
+  putUser,
+  deleteUser,
+  postUser
+} from './handlers/user/user.js'
+
+import {
+  getApplicationByApplicationId,
+  getApplicationsByUserId,
+  postApplication,
+  putApplication,
+  deleteApplication,
+  postApplicationSubmit
 } from './handlers/application/application.js'
+
 import {
   getApplicationApplicant,
   putApplicationApplicant,
@@ -33,7 +44,7 @@ const init = async server => {
   /*
    * Create the OpenAPI backend
    */
-  const api = new OpenAPIBackend({ definition: 'openapi/eps-licence.yaml' })
+  const api = new OpenAPIBackend({ definition: 'openapi/licence.yaml' })
 
   /*
    * Register the openapi/hapi route handler mappings
@@ -51,6 +62,7 @@ const init = async server => {
     getApplicationApplicant,
     putApplicationApplicant,
     deleteApplicationApplicant,
+    postApplicationSubmit,
     validationFail,
     notFound,
     postResponseHandler

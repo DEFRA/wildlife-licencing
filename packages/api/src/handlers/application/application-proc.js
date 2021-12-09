@@ -3,7 +3,14 @@
  * @param application.dataValues
  * @returns {any}
  */
-export const prepareResponse = a => Object.assign((({ createdAt, updatedAt, userId, application, ...l }) => l)(a), {
+export const prepareResponse = a => Object.assign((({
+  createdAt,
+  updatedAt,
+  userId,
+  application,
+  submitted,
+  ...l
+}) => l)(a), {
   createdAt: a.createdAt.toISOString(),
   updatedAt: a.updatedAt.toISOString(),
   ...a.application

@@ -1,7 +1,4 @@
-/*
- * Create the application user object and return 201
- */
-import { models } from '../../model/sequentelize-model.js'
+import { models } from '../../../../database-model/src/sequentelize-model.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
 import { clearCaches } from './application-cache.js'

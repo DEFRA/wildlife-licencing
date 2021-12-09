@@ -42,7 +42,7 @@ const applicationJson = 'application/json'
 
 describe('The postApplication handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../model/sequentelize-model.js')).models
+    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
     postApplication = (await import('../post-application.js')).default
     cache = (await import('../../../services/cache.js')).cache
   })

@@ -36,7 +36,7 @@ const tsR = {
 const applicationJson = 'application/json'
 describe('The getUserByUserId handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../model/sequentelize-model.js')).models
+    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
     cache = (await import('../../../services/cache.js')).cache
     getUser = (await import('../get-user-by-user-id.js')).default
   })
