@@ -9,11 +9,15 @@ const addFilters = (env) => {
   return env
 }
 
+const engineRender = (context, template) => {
+  context.assetPath = '/public'
+  return template.render(context)
+}
+
 const nunjucksEngine = {
   compile: (src, options) => {
     const template = Nunjucks.compile(src, options.environment)
-
-    return (context) => { context.assetPath = '/public'; return template.render(context) }
+    return (context) => engineRender(context, template)
   },
 
   prepare: (options, next) => {
@@ -39,11 +43,14 @@ const nunjucksEngine = {
 }
 
 export default {
-  engines: {
-    njk: nunjucksEngine
+  wrapper: {
+    engines: {
+      njk: nunjucksEngine
+    },
+    path: './views',
+    isCached: process.env.NODE_ENV === 'production',
+    defaultExtension: 'njk'
   },
-  path: './views',
-  isCached: process.env.NODE_ENV === 'production',
-  defaultExtension: 'njk',
-  addFilters // Exported for unit testing
+  addFilters, // Exported for unit testing
+  engineRender // Exported for unit testing
 }

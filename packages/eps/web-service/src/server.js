@@ -36,7 +36,7 @@ const init = async server => {
   /* Registering plugins */
   await server.register(HapiVision)
   await server.register(HapiInert)
-  await server.views(lodash.omit(viewEngine, 'addFilters'))
+  await server.views(lodash.omit(viewEngine.wrapper, 'addFilters'))
   server.route({
     method: 'GET',
     path: '/public/{param*}',
