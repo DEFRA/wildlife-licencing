@@ -9,6 +9,7 @@ export const prepareResponse = a => Object.assign((({
   userId,
   application,
   submitted,
+  sddsId,
   ...l
 }) => l)(a), {
   createdAt: a.createdAt.toISOString(),

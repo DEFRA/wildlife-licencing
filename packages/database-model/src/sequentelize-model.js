@@ -37,8 +37,7 @@ const createModels = async () => {
       type: DataTypes.JSONB
     },
     submitted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+      type: DataTypes.DATE
     }
   }, {
     timestamps: true,

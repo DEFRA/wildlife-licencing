@@ -79,7 +79,7 @@
       "**/src/**/*.js"
     ],
     "coveragePathIgnorePatterns": [
-      "packages/api/src/index.js"
+      "api/src/index"
     ],
     "coverageReporters": [
       "lcov",

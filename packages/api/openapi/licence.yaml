@@ -71,45 +71,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-    put:
-      description: Store a user
-      summary:  Create or update a user using the provided ID.
-      operationId: putUser
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/user'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-        201:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-        400:
-          description: Bad request. user ID must be a uuid
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
     delete:
       description: Delete user
       summary:  Delete the user on the provided ID
@@ -484,10 +445,6 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        sddsId:
-          oneOf:
-            - $ref: '#/components/schemas/uuid'
-            - type: 'null'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -504,10 +461,6 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        sddsId:
-          oneOf:
-            - $ref: '#/components/schemas/uuid'
-            - type: 'null'
         proposalDescription:
           type: string
           minLength: 1
@@ -518,6 +471,8 @@ components:
           maxLength: 300
         applicant:
           $ref: '#/components/schemas/contact'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

@@ -31,7 +31,7 @@ const a = {
   firstname: 'g', lastname: 'b'
 }
 
-jest.mock('../../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let deleteApplicationApplicant

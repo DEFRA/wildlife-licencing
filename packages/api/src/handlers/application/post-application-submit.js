@@ -1,6 +1,6 @@
-import { models } from '../../../../database-model/src/sequentelize-model.js'
-import { clearCaches } from './application-cache.js'
+import { models } from '@defra/wls-database-model'
 import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
+import { clearCaches } from './application-cache.js'
 
 export default async (context, req, h) => {
   try {
@@ -18,7 +18,7 @@ export default async (context, req, h) => {
       userId, applicationId
     })
 
-    console.log(`Added job: ${job.id}`)
+    console.log(`Queued application ${applicationId} - job: ${job.id}`)
 
     return h.response().code(204)
   } catch (err) {

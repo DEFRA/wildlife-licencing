@@ -1,4 +1,4 @@
-import { models } from '../../../../../database-model/src/sequentelize-model.js'
+import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
 import { clearCaches } from '../application-cache.js'
 import { SEQUELIZE } from '@defra/wls-connectors-lib'

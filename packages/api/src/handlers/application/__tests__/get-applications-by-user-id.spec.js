@@ -32,7 +32,7 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-jest.mock('../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let getApplication
