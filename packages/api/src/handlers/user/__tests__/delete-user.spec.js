@@ -17,7 +17,7 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
  */
 const context = { request: { params: { userId: uuid } } }
 
-jest.mock('../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let deleteUser

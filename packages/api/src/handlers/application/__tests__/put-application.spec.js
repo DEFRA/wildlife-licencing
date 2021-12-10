@@ -5,7 +5,6 @@ const path = 'user/uuid/application/uuid'
 const req = {
   path,
   payload: {
-    sddsId: '1e470963-e8bf-41f5-9b0b-52d19c21cb79',
     proposalDescription: 'a proposal',
     detailsOfConvictions: 'convictions'
   }
@@ -40,7 +39,7 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-jest.mock('../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let putApplication

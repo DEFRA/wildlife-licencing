@@ -5,7 +5,6 @@ const path = 'user/uuid/application'
 const req = {
   path,
   payload: {
-    sddsId: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
     proposalDescription: 'a proposal',
     detailsOfConvictions: 'convictions'
   }
@@ -33,7 +32,7 @@ const tsR = {
  */
 const context = { request: { params: { userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
 
-jest.mock('../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let postApplication

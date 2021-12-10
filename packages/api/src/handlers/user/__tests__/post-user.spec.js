@@ -1,9 +1,8 @@
 /*
  * Mock the hapi request object
  */
-const sddsId = '1e470963-e8bf-41f5-9b0b-52d19c21cb76'
 const path = 'user/uuid'
-const req = { path, payload: { sddsId } }
+const req = { path, payload: { } }
 
 /*
  * Mock the hapi response toolkit in order to test the results of the request
@@ -27,7 +26,7 @@ const tsR = {
  */
 const context = { request: { params: {} } }
 
-jest.mock('../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let postUser
@@ -48,18 +47,9 @@ describe('The postUser handler', () => {
     }
     cache.save = jest.fn()
     await postUser(context, req, h)
-    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId })
+    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String) })
     expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(201)
-  })
-
-  it('returns a 201 on successful create -- sddsId null', async () => {
-    models.users = { create: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
-    await postUser(context, { path, payload: {} }, h)
-    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), sddsId: null })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

@@ -3,7 +3,6 @@ import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
 import {
   getUserByUserId,
-  putUser,
   deleteUser,
   postUser
 } from './handlers/user/user.js'
@@ -52,7 +51,6 @@ const init = async server => {
   api.register({
     getUserByUserId,
     postUser,
-    putUser,
     deleteUser,
     getApplicationByApplicationId,
     getApplicationsByUserId,

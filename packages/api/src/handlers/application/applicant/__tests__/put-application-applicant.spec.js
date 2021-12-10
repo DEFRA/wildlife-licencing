@@ -27,7 +27,7 @@ const context = {
   }
 }
 
-jest.mock('../../../../model/sequentelize-model.js')
+jest.mock('@defra/wls-database-model')
 
 let models
 let putApplicationApplicant

@@ -1,4 +1,4 @@
-import { models } from '../../../../database-model/src/sequentelize-model.js'
+import { models } from '@defra/wls-database-model'
 import { clearCaches } from './application-cache.js'
 
 export default async (context, req, h) => {

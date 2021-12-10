@@ -1,6 +1,6 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
-import { models } from '../../../../database-model/src/sequentelize-model.js'
+import { models } from '@defra/wls-database-model'
 import { cache } from '../../services/cache.js'
 import { prepareResponse } from './user-proc.js'
 
@@ -10,8 +10,7 @@ import { prepareResponse } from './user-proc.js'
 export default async (context, req, h) => {
   try {
     const user = await models.users.create({
-      id: uuidv4(),
-      sddsId: req?.payload?.sddsId ?? null
+      id: uuidv4()
     })
 
     const response = prepareResponse(user.dataValues)

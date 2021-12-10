@@ -1,25 +1,30 @@
-describe('The wrapper: api-service', () => {
+describe('The wrapper: application-queue-processor', () => {
+  afterAll(done => {
+    jest.clearAllMocks()
+    done()
+  })
+
   it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
-        jest.mock('../server.js')
+        jest.mock('../process.js')
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib')
         jest.mock('@defra/wls-queue-defs')
 
+        const { jobProcess } = require('../process.js')
+        const { SEQUELIZE } = require('@defra/wls-connectors-lib')
         const { createModels } = require('@defra/wls-database-model')
         const { createQueue } = require('@defra/wls-queue-defs')
-        const { createServer, init } = require('../server.js')
-        const { SEQUELIZE } = require('@defra/wls-connectors-lib')
 
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
-        createServer.mockImplementation(() => Promise.resolve())
+        jobProcess.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
 
-        require('../api-service')
+        require('../application-queue-processor')
         setImmediate(() => {
-          expect(init).toHaveBeenCalled()
+          expect(jobProcess).toHaveBeenCalled()
           done()
         })
       } catch (e) {
@@ -31,30 +36,27 @@ describe('The wrapper: api-service', () => {
   it('has initialisation failure', done => {
     jest.isolateModules(() => {
       try {
-        jest.mock('../server.js')
+        jest.mock('../process.js')
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib')
         jest.mock('@defra/wls-queue-defs')
 
         const { createModels } = require('@defra/wls-database-model')
+        const { jobProcess } = require('../process.js')
         const { createQueue } = require('@defra/wls-queue-defs')
-        const { createServer, init } = require('../server.js')
         const { SEQUELIZE } = require('@defra/wls-connectors-lib')
 
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
-        createServer.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
-        init.mockImplementation(() => Promise.reject(new Error()))
+        jobProcess.mockImplementation(() => Promise.reject(new Error()))
 
         const processExitSpy = jest
           .spyOn(process, 'exit')
           .mockImplementation(code => {})
-        require('../api-service')
+        require('../application-queue-processor')
         setImmediate(() => {
-          // expect(fetchSecrets).toHaveBeenCalled()
-          expect(init).toHaveBeenCalled()
-          expect(createServer).toHaveBeenCalled()
+          expect(jobProcess).toHaveBeenCalled()
           expect(processExitSpy).toHaveBeenCalledWith(1)
           done()
         })

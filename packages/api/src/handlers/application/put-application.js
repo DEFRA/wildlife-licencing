@@ -1,4 +1,4 @@
-import { models } from '../../../../database-model/src/sequentelize-model.js'
+import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
 import { clearCaches } from './application-cache.js'
@@ -16,15 +16,12 @@ export default async (context, req, h) => {
 
     await clearCaches(userId, applicationId)
 
-    const applicationPayload = (({ sddsId, ...l }) => l)(req.payload || {})
-
     const [application, created] = await models.applications.findOrCreate({
       where: { id: context.request.params.applicationId },
       defaults: {
         id: applicationId,
         userId: userId,
-        sddsId: req.payload?.sddsId ?? null,
-        application: applicationPayload
+        application: req.payload
       }
     })
 
@@ -36,8 +33,7 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedApplication] = await models.applications.update({
-        sddsId: req.payload?.sddsId ?? null,
-        application: applicationPayload
+        application: req.payload
       }, {
         where: {
           id: applicationId
