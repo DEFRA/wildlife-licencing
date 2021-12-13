@@ -1,6 +1,5 @@
-import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
-import { models } from '@defra/wls-database-model'
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { models } from '@defra/wls-database-model'
 
 /**
  * Should fail on:
@@ -30,9 +29,4 @@ export const applicationJobProcess = async job => {
       id: applicationId
     }
   })
-}
-
-export const jobProcess = async () => {
-  const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
-  applicationQueue.process(applicationJobProcess)
 }
