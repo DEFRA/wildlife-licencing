@@ -76,10 +76,10 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/src/**/*.js"
+      "<rootDir>/**/src/**/*.js"
     ],
     "coveragePathIgnorePatterns": [
-      "api/src/index"
+      "<rootDir>/packages/api/src/index.js"
     ],
     "coverageReporters": [
       "lcov",
