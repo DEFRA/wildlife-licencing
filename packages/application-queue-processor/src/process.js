@@ -23,7 +23,7 @@ export const applicationJobProcess = async job => {
   }
 
   const sequelize = SEQUELIZE.getSequelize()
-  await models.applications.update({
+  return models.applications.update({
     submitted: sequelize.fn('NOW')
   }, {
     where: {
