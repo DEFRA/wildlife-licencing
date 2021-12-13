@@ -41,7 +41,7 @@ let cache
 const applicationJson = 'application/json'
 describe('The getApplicationByApplicationId handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
+    models = (await import('@defra/wls-database-model')).models
     cache = (await import('../../../services/cache.js')).cache
     getApplication = (await import('../get-application-by-application-id.js')).default
   })

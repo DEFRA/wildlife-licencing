@@ -41,7 +41,7 @@ const applicationJson = 'application/json'
 
 describe('The postApplication handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
+    models = (await import('@defra/wls-database-model')).models
     postApplication = (await import('../post-application.js')).default
     cache = (await import('../../../services/cache.js')).cache
   })
