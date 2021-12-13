@@ -1,4 +1,4 @@
-import { createModels, models } from '../sequentelize-model.js'
+import { createModels, models } from '../sequelize-model.js'
 import { describe } from 'jest-circus'
 
 jest.mock('@defra/wls-connectors-lib')
