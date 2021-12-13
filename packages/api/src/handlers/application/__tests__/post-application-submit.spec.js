@@ -37,7 +37,7 @@ let cache
 
 describe('The postApplicationSubmit handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
+    models = (await import('@defra/wls-database-model')).models
     postApplicationSubmit = (await import('../post-application-submit.js')).default
     cache = (await import('../../../services/cache.js')).cache
   })

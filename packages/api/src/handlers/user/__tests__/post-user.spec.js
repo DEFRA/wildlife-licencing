@@ -35,7 +35,7 @@ let cache
 const applicationJson = 'application/json'
 describe('The postUser handler', () => {
   beforeAll(async () => {
-    models = (await import('../../../../../database-model/src/sequentelize-model.js')).models
+    models = (await import('@defra/wls-database-model')).models
     postUser = (await import('../post-user')).default
     cache = (await import('../../../services/cache.js')).cache
   })
