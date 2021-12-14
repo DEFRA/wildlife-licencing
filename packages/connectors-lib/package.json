@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-connectors-lib",
-  "version": "1.1.1",
+  "version": "1.1.5",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "private": false,
@@ -8,7 +8,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.13.0"
   },
   "main": "src/connectors.js",
   "keywords": [
@@ -26,6 +26,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/client-secrets-manager": "^3.42.0",
+    "bull": "^4.1.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "redis": "^4.0.0",

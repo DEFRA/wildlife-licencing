@@ -5,7 +5,7 @@ describe('The redis connector', () => {
 
   it('connects', async () => {
     const mockRedis = {
-      createClient: jest.fn(() => ({ connect: jest.fn() }))
+      createClient: jest.fn(() => ({ connect: jest.fn(), on: jest.fn() }))
     }
 
     jest.mock('redis', () => mockRedis)
@@ -31,7 +31,7 @@ describe('The redis connector', () => {
 
   it('connects - with db', async () => {
     const mockRedis = {
-      createClient: jest.fn(() => ({ connect: jest.fn() }))
+      createClient: jest.fn(() => ({ connect: jest.fn(), on: jest.fn() }))
     }
 
     jest.mock('redis', () => mockRedis)

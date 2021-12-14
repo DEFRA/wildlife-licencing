@@ -1,0 +1,52 @@
+{
+  "name": "@defra/wls-api",
+  "version": "1.1.5",
+  "description": "The API to support the wildlife licencing of European Protected Species",
+  "main": "src/api-service.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "scripts": {
+    "start": "node src/api-service.js",
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "postinstall": "npx webpack-cli"
+  },
+  "keywords": [
+    "API",
+    "Wildlife",
+    "Licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.42.0",
+    "@defra/wls-connectors-lib": "^1.1.5",
+    "@defra/wls-database-model": "^1.1.5",
+    "@defra/wls-queue-defs": "^1.1.5",
+    "@hapi/hapi": "^20.2.1",
+    "@hapi/inert": "^6.0.4",
+    "@hapi/vision": "^6.1.0",
+    "openapi-backend": "^5.0.0",
+    "sequelize": "^6.12.0-alpha.1",
+    "swagger-ui": "^4.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "css-loader": "^6.5.1",
+    "html-webpack-plugin": "^5.5.0",
+    "json-loader": "^0.5.7",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.1",
+    "yaml-loader": "^0.6.0"
+  }
+}

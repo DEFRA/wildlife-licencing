@@ -1,0 +1,34 @@
+{
+  "name": "@defra/wls-queue-defs",
+  "version": "1.1.5",
+  "description": "Queue definitions",
+  "main": "src/queue-defs.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "scripts": {
+    "start": "node ",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "keywords": [
+    "Dynamics",
+    "Queue",
+    "Wildlife",
+    "licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "dependencies": {
+    "@defra/wls-connectors-lib": "^1.1.5",
+    "bull": "^4.1.1"
+  }
+}

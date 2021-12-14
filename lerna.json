@@ -3,7 +3,7 @@
     "packages/*",
     "packages/eps/*"
   ],
-  "version": "1.1.4",
+  "version": "1.1.5",
   "npmClient": "npm",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -12,7 +12,7 @@
     "version": {
       "allowBranch": [
         "master",
-        "publish"
+        "develop"
       ],
       "message": "chore(release): publish %s"
     },
@@ -20,7 +20,7 @@
       "message": "chore(release): publish %s",
       "allowBranch": [
         "master",
-        "publish"
+        "develop"
       ],
       "ignoreChanges": [
         ".*",

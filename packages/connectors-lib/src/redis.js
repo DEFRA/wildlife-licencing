@@ -6,16 +6,16 @@ let client
 export const REDIS = {
   getClient: () => client,
   initialiseConnection: async () => {
-    client = createClient(Object.assign({
+    const options = {
       socket: {
         host: Config.redis.host,
         port: Config.redis.port
-      }
-    }, Config.redis.database
-      ? {
-          database: Config.redis.database
-        }
-      : {}))
+      },
+      ...Config.redis.database ? { database: Config.redis.database } : {}
+    }
+
+    client = createClient(options)
+    await client.on('error', err => console.error('Redis Client Error', err))
     await client.connect()
     return Promise.resolve()
   }
