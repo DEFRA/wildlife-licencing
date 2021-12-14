@@ -1,0 +1,36 @@
+{
+  "name": "@defra/wls-application-queue-processor",
+  "version": "1.1.5",
+  "description": "Interface to Microsoft Dynamics. Queue consumer.",
+  "main": "src/application-queue-processor.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "scripts": {
+    "start": "node src/application-queue-processor.js",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "keywords": [
+    "Dynamics",
+    "Queue",
+    "Processor",
+    "Wildlife",
+    "licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "dependencies": {
+    "@defra/wls-connectors-lib": "^1.1.5",
+    "@defra/wls-database-model": "^1.1.5",
+    "@defra/wls-queue-defs": "^1.1.5"
+  }
+}

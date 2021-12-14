@@ -1,0 +1,33 @@
+{
+  "name": "@defra/wls-database-model",
+  "version": "1.1.5",
+  "description": "Common sequelize database model for the wildlife service",
+  "main": "src/sequelize-model.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "scripts": {
+    "start": "node ",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "keywords": [
+    "Database",
+    "Wildlife",
+    "licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE",
+  "dependencies": {
+    "@defra/wls-connectors-lib": "^1.1.5",
+    "sequelize": "^6.12.0-alpha.1"
+  }
+}
