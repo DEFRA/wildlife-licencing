@@ -1,4 +1,4 @@
-import { init, createServer } from '../server.js'
+import { createServer, init } from '../server'
 
 describe('The WEB server', () => {
   it('starts', done => {
