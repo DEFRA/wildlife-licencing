@@ -12,7 +12,7 @@ export const worker = async () => {
   })
 
   process.on('SIGINT', async () => {
-    console.info('SIGTERM signal received. Completing current job before shutting down...')
+    console.info('SIGINT signal received. Completing current job before shutting down...')
     await applicationQueue.pause()
     process.exit(1)
   })
