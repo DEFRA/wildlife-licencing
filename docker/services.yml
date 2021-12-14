@@ -16,6 +16,19 @@ services:
         condition: on-failure
 
   ##############################################################################################################
+  # Wildlife licencing API service - The application queue processor
+  ##############################################################################################################
+  aqp:
+    image: wildlife-licencing/aqp:${TAG:-latest}
+    env_file:
+      - ./env/aqp.env
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  ##############################################################################################################
   # Wildlife licencing EPS WEB service - web service is found on localhost:4000
   ##############################################################################################################
   eps-web:
