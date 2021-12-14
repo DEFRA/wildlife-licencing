@@ -29,3 +29,4 @@ const getQueue = definition => queues[definition.name]
 export {
   getQueue, errorHandler, waitingHandler, activeHandler, completedHandler, stalledHandler
 }
+

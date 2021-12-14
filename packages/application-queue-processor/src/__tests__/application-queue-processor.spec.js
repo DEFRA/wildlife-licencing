@@ -19,6 +19,7 @@ describe('The wrapper: application-queue-processor', () => {
 
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
+
         worker.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
 
