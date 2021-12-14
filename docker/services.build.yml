@@ -12,6 +12,15 @@ services:
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
 
   ##############################################################################################################
+  # Wildlife licencing API service
+  ##############################################################################################################
+  aqp:
+    image: wildlife-licencing/aqp:${TAG:-latest}
+    build:
+      context: ../packages/application-queue-processor
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+
+  ##############################################################################################################
   # Wildlife licencing EPS API service
   ##############################################################################################################
   eps-web:

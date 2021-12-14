@@ -7,7 +7,7 @@ export default async (context, req, h) => {
     const { userId, applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
 
-    // Check the user exists
+    // Check the application exists
     if (!application) {
       return h.response().code(404)
     }
