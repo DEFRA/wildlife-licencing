@@ -1,5 +1,4 @@
-import { jobProcess, applicationJobProcess } from '../process.js'
-import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
+import { applicationJobProcess } from '../application-job-process.js'
 
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-connectors-lib')
@@ -13,12 +12,8 @@ const job = {
     applicationId: '593c29d4-876b-4662-8614-619f008c8c38'
   }
 }
-describe('The application job processor', () => {
-  it('returns resolve on registration', async () => {
-    await expect(jobProcess()).resolves.not.toBeDefined()
-    expect(getQueue).toHaveBeenCalledWith(queueDefinitions.APPLICATION_QUEUE)
-  })
 
+describe('The application job processor', () => {
   it('returns resolve for a completed job', async () => {
     const { models } = await import('@defra/wls-database-model')
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')

@@ -6,7 +6,7 @@ import { worker } from './worker.js'
 Promise.all([
   SEQUELIZE.initialiseConnection()
     .then(() => createModels()),
-  createQueue(queueDefinitions.APPLICATION_QUEUE)
+  createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'subscriber' })
 ]).then(() => worker())
   .catch(e => {
     console.error(e)
