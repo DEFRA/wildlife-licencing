@@ -23,4 +23,6 @@ export const worker = async () => {
     console.log('Un-pausing application queue')
     await applicationQueue.resume()
   }
+
+  console.log('Application queue processor started')
 }
