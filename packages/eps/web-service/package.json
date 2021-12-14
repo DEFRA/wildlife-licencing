@@ -12,7 +12,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "postinstall": "gulp build",
+    "postinstall": "node_modules/gulp/bin/gulp.js build",
     "start": "node src/eps-web-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
