@@ -1,4 +1,4 @@
-import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { POWERAPPS, SEQUELIZE } from '@defra/wls-connectors-lib'
 import { models } from '@defra/wls-database-model'
 
 /**
@@ -13,20 +13,27 @@ import { models } from '@defra/wls-database-model'
  * @returns {Promise<void>}
  */
 export const applicationJobProcess = async job => {
-  const { applicationId } = job.data
-  const application = await models.applications.findByPk(applicationId)
+  try {
+    const { applicationId } = job.data
+    const application = await models.applications.findByPk(applicationId)
 
-  if (!application) {
-    console.error(`Cannot locate application: ${applicationId} in database`)
-    return Promise.resolve()
-  }
-
-  const sequelize = SEQUELIZE.getSequelize()
-  return models.applications.update({
-    submitted: sequelize.fn('NOW')
-  }, {
-    where: {
-      id: applicationId
+    if (!application) {
+      console.error(`Cannot locate application: ${applicationId} in database`)
+      return Promise.resolve()
     }
-  })
+
+    const token = await POWERAPPS.getToken()
+    console.log(token)
+
+    const sequelize = SEQUELIZE.getSequelize()
+    return models.applications.update({
+      submitted: sequelize.fn('NOW')
+    }, {
+      where: {
+        id: applicationId
+      }
+    })
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }

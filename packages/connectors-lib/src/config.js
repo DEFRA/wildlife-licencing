@@ -25,5 +25,19 @@ export default {
     host: process.env.REDIS_QUEUE_HOST,
     port: process.env.REDIS_QUEUE_PORT,
     database: process.env.REDIS_QUEUE_DATABASE
+  },
+  powerApps: {
+    oauth: {
+      client: {
+        id: process.env.MSPA_CLIENT_ID,
+        secret: process.env.MSPA_SECRET
+      },
+      auth: {
+        tokenHost: process.env.OAUTH_AUTHORITY_HOST_URL,
+        tokenPath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/token`,
+        authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
+      }
+    },
+    scope: process.env.MSPA_SCOPE
   }
 }

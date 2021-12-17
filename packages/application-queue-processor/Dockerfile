@@ -6,4 +6,4 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . .
 RUN npm ci
-CMD [ "node", "src/application-queue-processor.js" ]
+CMD [ "node", "src/sdds_applications-queue-processor.js" ]
