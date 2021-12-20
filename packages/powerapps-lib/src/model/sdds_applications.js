@@ -1,18 +1,28 @@
 /* eslint-disable camelcase */
-import { contacts } from './contacts.js'
+
+import { applicant } from './applicant.js'
+import { ecologist } from './ecologist.js'
 
 export const sdds_applications = {
   targetEntity: 'sdds_applications',
   targetKey: 'sdds_applicationid',
   targetFields: {
     sdds_descriptionofproposal: {
-      srcJsonPath: '$proposalDescription'
+      srcJsonPath: '$.proposalDescription'
     },
-    detailsOfConvictions: {
-      srcJsonPath: '$proposalDescription'
+    sdds_detailsofconvictions: {
+      srcJsonPath: '$.detailsOfConvictions'
+    }
+  },
+
+  relationships: {
+    applicant: {
+      ...applicant,
+      fk: 'sdds_applicantid@odata.bind'
     },
-    sdds_applicantid: {
-      ...contacts
+    ecologist: {
+      ...ecologist,
+      fk: 'sdds_ecologistid@odata.bind'
     }
   }
 }

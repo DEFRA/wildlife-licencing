@@ -1,4 +1,7 @@
 import jp from 'jsonpath'
+import crypto from 'crypto'
+import { v4 as uuidv4 } from 'uuid'
+import { model } from '../model/sdds-model.js'
 
 class UnrecoverableError extends Error {}
 
@@ -7,54 +10,72 @@ class UnrecoverableError extends Error {}
  * at the leaves and progressing towards the trunk. This is the order
  * that the entity operation ODATA queries will need to be run
  */
-const nodeStepper = (node, entities = []) => {
-  if (!entities.length) {
-    entities.unshift(node.targetEntity)
+export const findRequestSequence = (node, sequence = []) => {
+  const nodeName = Object.keys(node)[0]
+  if (!node[nodeName].relationships) {
+    sequence.push(nodeName)
+    return sequence
   }
 
-  Object.values(node.targetFields).forEach(e => {
-    if (e.targetEntity) {
-      entities.unshift(e.targetEntity)
-      nodeStepper(e, entities)
+  for (const r in node[nodeName].relationships) {
+    if (!node[nodeName].relationships[r]) {
+      sequence.push(r)
+    } else {
+      findRequestSequence({ [r]: node[nodeName].relationships[r] }, sequence)
+    }
+  }
+
+  sequence.push(nodeName)
+  return sequence
+}
+
+const headerBuilder = (obj, n, urlbase) => `POST ${urlbase}/${obj.targetEntity}\nContent-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n`
+const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;\nboundary=changeset_${c}\n`
+const changesetStart = c => `--changeset_${c}\n`
+const changesetEnd = c => `--changeset_${c}--\n`
+const batchEnd = b => `--batch_${b}--\n`
+
+export const objectBuilder = (fields, src, obj = {}) => {
+  for (const field in fields) {
+    if (fields[field].srcJsonPath) {
+      Object.assign(obj, { [field]: jp.query(src, fields[field].srcJsonPath)[0] })
+    } else {
+      const f = {}
+      Object.assign(obj, { [field]: f })
+      objectBuilder(fields[field], src, f)
+    }
+  }
+  return obj
+}
+
+export const relationshipBuilder = (name, obj, sequence) => {
+  const contentId = sequence.findIndex(s => s === name) + 1
+  return { [obj.fk]: '$' + contentId }
+}
+
+export const formQuery = (sequence, src, urlbase) => {
+  let n = 1
+  const batchId = crypto.randomBytes(3).toString('hex').toUpperCase()
+  const changeId = uuidv4()
+  let body = batchStart(batchId, changeId)
+
+  const queryResults = sequence.map(s => {
+    try {
+      const obj = model[s]
+      const header = headerBuilder(obj, n++, urlbase)
+      const payload = objectBuilder(obj.targetFields, src)
+      Object.entries(obj.relationships || []).forEach(([name, obj]) =>
+        Object.assign(payload, relationshipBuilder(name, obj, sequence)))
+      return `${changesetStart(changeId)}\n${header}\n${JSON.stringify(payload, null, 4)}\n${changesetEnd(changeId)}\n\n`
+    } catch (error) {
+      const msg = `Translation error for, model: ${s} and data: \n${JSON.stringify(src, null, 4)}`
+      console.error(msg, error)
+      throw new UnrecoverableError(msg)
     }
   })
 
-  return entities
-}
+  body = body.concat(queryResults.join('\n'))
+  body = body.concat(batchEnd(batchId))
 
-export const objectBuilder = (node, src) => {
-  const x = Object.entries(node.targetFields).map(([name, value]) => {
-    return value.srcJsonPath ? { [name]: jp.query(src, value.srcJsonPath)[0] } : objectBuilder(value, src)
-  })
-
-  console.log(x)
-}
-
-// TODO step in recursively for inline data
-export const buildPayload = (node, src) => {
-  try {
-    const x = objectBuilder(node, src)
-
-    const e = Object.entries(node.targetFields)
-      .filter(f => f[1].srcJsonPath)
-      .map(e => ({ name: e[0], srcJsonPath: e[1].srcJsonPath }))
-    return e.reduce((a, c) => ({ ...a, [c.name]: jp.query(src, c.srcJsonPath)[0] }), {})
-  } catch (error) {
-    const msg = `Translation error for, node: \n${JSON.stringify(node, null, 4)} and data: \n${JSON.stringify(src, null, 4)}`
-    console.error(msg, error)
-    throw new UnrecoverableError(msg)
-  }
-}
-
-export const formQuery = (model, src) => {
-  const steps = nodeStepper(model)
-  steps.forEach((s, idx) => {
-    const node = steps.length === idx + 1
-      ? jp.query(model, '$')
-      : jp.query(model, `$..${s}`)
-
-    const payLoad = buildPayload(node[0], src)
-    console.log(payLoad)
-  })
-  console.log(steps)
+  return body
 }
