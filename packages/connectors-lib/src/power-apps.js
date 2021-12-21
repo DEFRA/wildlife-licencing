@@ -20,5 +20,8 @@ export const POWERAPPS = {
       console.log('Access Token Error', error.message)
       throw new Error(`OAUTH access token error ${error.message}`)
     }
+  },
+  batchRequest: async () => {
+
   }
 }

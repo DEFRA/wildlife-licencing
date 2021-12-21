@@ -12,20 +12,4 @@ export const applicant = {
     address1_telephone1: { srcJsonPath: '$.applicant.phone' },
     emailaddress1: { srcJsonPath: '$.applicant.email' }
   }
-  // , relationships: {
-  //   foo2: {
-  //     relationships: {
-  //       foo4: {
-  //         entity: {
-  //           targetEntity: 'foo'
-  //         },
-  //         fk: 'sdds_fooid@odata.bind'
-  //       }
-  //     },
-  //     entity: {
-  //       targetEntity: 'foo'
-  //     },
-  //     fk: 'sdds_fooid@odata.bind'
-  //   }
-  // }
 }
