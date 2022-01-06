@@ -1,10 +1,10 @@
 import { Readable } from 'stream'
-import { AbortError } from 'node-fetch'
 
 describe('The powerapps connector', () => {
   beforeEach(() => jest.resetModules())
 
   it('returns a token', async () => {
+    jest.doMock('node-fetch')
     jest.doMock('simple-oauth2', () => ({
       __esModule: true,
       ClientCredentials: jest.fn(() => ({
@@ -14,6 +14,7 @@ describe('The powerapps connector', () => {
         }))
       }))
     }))
+
     const { getToken } = await import('../power-apps.js')
     const token = await getToken()
     expect(token).toBe('Bearer 56GKJGKJHGS')
@@ -21,6 +22,7 @@ describe('The powerapps connector', () => {
 
   it('returns a token - if called twice checks expiry', async () => {
     const mockExpired = jest.fn()
+    jest.doMock('node-fetch')
     jest.doMock('simple-oauth2', () => ({
       __esModule: true,
       ClientCredentials: jest.fn(() => ({
@@ -71,7 +73,7 @@ describe('The powerapps connector', () => {
     }
 
     const mockFetch = jest.fn(() => ({ ok: true, body: Readable.from(generate()) }))
-    jest.doMock('node-fetch', () => mockFetch)
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
 
     const { POWERAPPS } = await import('../power-apps.js')
     const response = await POWERAPPS.batchRequest('batch123', 'batch-payload')
@@ -110,7 +112,7 @@ describe('The powerapps connector', () => {
     }))
 
     const mockFetch = jest.fn(() => ({ ok: false, status: 400 }))
-    jest.doMock('node-fetch', () => mockFetch)
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
     const { POWERAPPS, HTTPResponseError } = await import('../power-apps.js')
 
     await expect(async () =>
@@ -165,10 +167,11 @@ describe('The powerapps connector', () => {
       }
     }))
 
-    const mockFetch = jest.fn(() => { throw new AbortError() })
-    jest.doMock('node-fetch', () => mockFetch)
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const AbortError = new Error()
+    AbortError.name = 'AbortError'
+    const mockFetch = jest.fn(() => { throw AbortError })
     const { POWERAPPS } = await import('../power-apps.js')
-
     await expect(async () =>
       await POWERAPPS.batchRequest('batch123', 'batch-payload'))
       .rejects.toThrowError(Error)
@@ -182,6 +185,7 @@ describe('The powerapps connector', () => {
         }
       }
     }))
+    jest.doMock('node-fetch')
     const { POWERAPPS } = await import('../power-apps.js')
     expect(POWERAPPS.getClientUrl()).toBe('http://powerapps:8080/xyz')
   })

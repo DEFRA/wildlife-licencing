@@ -14,7 +14,7 @@ export const applicationJobProcess = async job => {
 
     // Data error - unrecoverable
     if (!application) {
-      console.error(`Cannot locate application: ${applicationId} in database`)
+      console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)
       return Promise.resolve()
     }
 
@@ -32,9 +32,10 @@ export const applicationJobProcess = async job => {
     })
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
-      console.error('Unrecoverable error', error.message)
+      console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
+      return Promise.resolve()
     } else {
-      console.log('Recoverable error', error.message)
+      console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error.message)
       return Promise.reject(error)
     }
   }

@@ -54,26 +54,12 @@ describe('The postApplication handler', () => {
     await postApplication(context, req, h)
     expect(models.applications.create).toHaveBeenCalledWith({
       id: expect.any(String),
-      sddsId: req.payload.sddsId,
       userId: context.request.params.userId,
-      application: (({ sddsId, ...l }) => l)(req.payload)
+      application: (({ ...l }) => l)(req.payload)
     })
     expect(cache.save).toHaveBeenCalledWith('/user/foo/application/bar', { id: 'bar', ...tsR })
     expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(201)
-  })
-
-  it('returns a 201 on successful create -- no sddsId', async () => {
-    models.applications = { create: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
-    cache.save = jest.fn(() => null)
-    cache.delete = jest.fn(() => null)
-    const req2 = Object.assign(req)
-    delete req2.payload.sddsId
-    await postApplication(context, req2, h)
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

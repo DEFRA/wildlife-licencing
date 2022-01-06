@@ -1,6 +1,7 @@
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
-import fetch, { AbortError } from 'node-fetch'
+import pkg from 'node-fetch'
+const fetch = pkg.default
 
 /*
  * Access to dynamics using the OAuth2 client credentials flow.
@@ -91,7 +92,8 @@ export const POWERAPPS = {
 
       return result
     } catch (err) {
-      if (err instanceof AbortError) {
+      // Note if upgrading to node-fetch version 3 this needs to change
+      if (err.name === 'AbortError') {
         // Create a client timeout response
         throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
       } else {

@@ -2,7 +2,6 @@ const path = 'user/uuid/application/uuid/applicant'
 const req = {
   path,
   payload: {
-    sddsId: '1e470963-e8bf-41f5-9b0b-52d19c21cb79',
     proposalDescription: 'a proposal',
     detailsOfConvictions: 'convictions'
   }
