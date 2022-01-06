@@ -4,7 +4,7 @@ import { model } from '../../model/sdds-model.js'
 import fs from 'fs'
 import path from 'path'
 
-const src = {
+export const src = {
   applicant: {
     lastname: 'Botham',
     firstname: 'Ian',

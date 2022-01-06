@@ -17,8 +17,8 @@ export const worker = async () => {
     process.exit(1)
   })
 
+  // applicationQueue.process(applicationJobProcess)
   applicationQueue.process(applicationJobProcess)
-
   if (applicationQueue.isPaused()) {
     console.log('Un-pausing application queue')
     await applicationQueue.resume()

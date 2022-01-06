@@ -1,7 +1,8 @@
 import jp from 'jsonpath'
 import crypto from 'crypto'
-import { v4 as uuidv4 } from 'uuid'
 import { model } from '../model/sdds-model.js'
+import pkg from 'uuid'
+const { v4: uuidv4 } = pkg
 
 class UnrecoverableError extends Error {}
 

@@ -38,6 +38,10 @@ export default {
         authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
       }
     },
-    scope: process.env.MSPA_SCOPE
+    scope: process.env.MSPA_SCOPE,
+    client: {
+      url: process.env.MSPA_CLIENT_URL,
+      timeout: process.env.MSPA_CLIENT_TIMEOUT_MS
+    }
   }
 }

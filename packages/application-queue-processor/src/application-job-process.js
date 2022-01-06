@@ -1,15 +1,10 @@
-import { POWERAPPS, SEQUELIZE } from '@defra/wls-connectors-lib'
+import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import { models } from '@defra/wls-database-model'
+import { batchUpdate, UnRecoverableBatchError } from '@defra/wls-powerapps-lib'
 
 /**
- * Should fail on:
- * - exceptions due to connectivity
- * - 500 errors from dynamics
- * - authentication errors
- * - unexpected exceptions
- * Log error AND resolve on:
- * - Any 400 errors
- * - Data not found
+ * Recoverable exceptions from the PowerApp processes are FAILED - and so will be retried
+ * UnRecoverable exceptions from the PowerApp processes are ENDED - and an error reported
  * @returns {Promise<void>}
  */
 export const applicationJobProcess = async job => {
@@ -17,23 +12,30 @@ export const applicationJobProcess = async job => {
     const { applicationId } = job.data
     const application = await models.applications.findByPk(applicationId)
 
+    // Data error - unrecoverable
     if (!application) {
       console.error(`Cannot locate application: ${applicationId} in database`)
       return Promise.resolve()
     }
 
-    const token = await POWERAPPS.getToken()
-    console.log(token)
-
     const sequelize = SEQUELIZE.getSequelize()
+
+    const result = await batchUpdate(application.dataValues.application)
+
     return models.applications.update({
-      submitted: sequelize.fn('NOW')
+      submitted: sequelize.fn('NOW'),
+      targetKeys: result
     }, {
       where: {
         id: applicationId
       }
     })
   } catch (error) {
-    return Promise.reject(error)
+    if (error instanceof UnRecoverableBatchError) {
+      console.error('Unrecoverable error', error.message)
+    } else {
+      console.log('Recoverable error', error.message)
+      return Promise.reject(error)
+    }
   }
 }
