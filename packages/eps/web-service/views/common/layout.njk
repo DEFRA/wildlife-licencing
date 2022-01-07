@@ -14,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
 
   <!--[if !IE 8]><!-->
-    <link href="/public/stylesheets/{{cssVersion}}/application.css" rel="stylesheet" />
+    <link href="/public/stylesheets/{{cssVersion}}/sddsApplications.css" rel="stylesheet" />
   <!--<![endif]-->
 
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
@@ -98,7 +98,7 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script nonce="{{ nonces.script }}" src="/public/javascripts/application.all.min.js"></script>
+  <script nonce="{{ nonces.script }}" src="/public/javascripts/sddsApplications.all.min.js"></script>
   <script nonce="{{ nonces.script }}">window.GOVUKFrontend.initAll()</script>
 
   <!-- Google Analytics -->

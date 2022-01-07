@@ -10,11 +10,42 @@
 
 ## Getting started
 ```shell
+cd  wildlife-licencing
 npm run docker:build
-rpm run docker:start
+npm run docker:start
 docker service ls
-rpm run docker:stop
+npm run docker:stop
 ```
-
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/hello
+
+## To run locally
+To run the microservices locally you need to start the supporting cloud services in the docker swarm
+```shell
+cd  wildlife-licencing
+npm run docker:start-cloud
+docker service ls
+```
+The docker services running should be as follows:
+- wls_adminer
+- wls_db
+- wls_localstack
+- wls_redis
+- wls_redis_commander
+
+### To start the API locally
+```shell
+cd wildlife-licencing/packages/api
+cp env.example .env
+node -r dotenv/config src/api-service.js
+```
+
+### To start the queue processor locally
+```shell
+cd wildlife-licencing/packages/application-queue-processor
+cp env.example .env
+node -r dotenv/config src/application-queue-processor.js
+```
+
+Alternatively set the environment variables in the running shell or your IDE
+

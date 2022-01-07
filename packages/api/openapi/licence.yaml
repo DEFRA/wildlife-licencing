@@ -499,7 +499,7 @@ components:
 
     address:
       type: object
-      required: [addrLine1, addrline3, postcode]
+      required: [addrline1, addrline3, postcode]
       properties:
         houseNumber:
           type: string

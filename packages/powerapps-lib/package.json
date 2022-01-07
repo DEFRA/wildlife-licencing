@@ -1,8 +1,8 @@
 {
-  "name": "@defra/wls-database-model",
+  "name": "@defra/wls-powerapps-lib",
   "version": "1.1.6",
-  "description": "Common sequelize database model for the wildlife service",
-  "main": "src/sequelize-model.js",
+  "description": "Powerapps lib",
+  "main": "src/powerapps-lib.js",
   "type": "module",
   "private": false,
   "publishConfig": {
@@ -12,7 +12,6 @@
     "node": ">=16.13.0"
   },
   "scripts": {
-    "start": "node ",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "repository": {
@@ -20,7 +19,7 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "keywords": [
-    "Database",
+    "Dynamics",
     "Wildlife",
     "licencing"
   ],
@@ -28,6 +27,6 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^1.1.6",
-    "sequelize": "^6.12.5"
+    "jsonpath": "^1.1.1"
   }
 }
