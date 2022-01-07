@@ -1,32 +1,42 @@
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import { models } from '@defra/wls-database-model'
+import { batchUpdate, UnRecoverableBatchError } from '@defra/wls-powerapps-lib'
 
 /**
- * Should fail on:
- * - exceptions due to connectivity
- * - 500 errors from dynamics
- * - authentication errors
- * - unexpected exceptions
- * Log error AND resolve on:
- * - Any 400 errors
- * - Data not found
+ * Recoverable exceptions from the PowerApp processes are FAILED - and so will be retried
+ * UnRecoverable exceptions from the PowerApp processes are ENDED - and an error reported
  * @returns {Promise<void>}
  */
 export const applicationJobProcess = async job => {
-  const { applicationId } = job.data
-  const application = await models.applications.findByPk(applicationId)
+  try {
+    const { applicationId } = job.data
+    const application = await models.applications.findByPk(applicationId)
 
-  if (!application) {
-    console.error(`Cannot locate application: ${applicationId} in database`)
-    return Promise.resolve()
-  }
-
-  const sequelize = SEQUELIZE.getSequelize()
-  return models.applications.update({
-    submitted: sequelize.fn('NOW')
-  }, {
-    where: {
-      id: applicationId
+    // Data error - unrecoverable
+    if (!application) {
+      console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)
+      return Promise.resolve()
     }
-  })
+
+    const { application: applicationJson, targetKeys } = application.dataValues
+
+    const result = await batchUpdate(applicationJson, targetKeys)
+
+    return models.applications.update({
+      submitted: SEQUELIZE.getSequelize().fn('NOW'),
+      targetKeys: result
+    }, {
+      where: {
+        id: applicationId
+      }
+    })
+  } catch (error) {
+    if (error instanceof UnRecoverableBatchError) {
+      console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
+      return Promise.resolve()
+    } else {
+      console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error.message)
+      return Promise.reject(error)
+    }
+  }
 }

@@ -10,9 +10,6 @@ const createModels = async () => {
     id: {
       type: DataTypes.UUID,
       primaryKey: true
-    },
-    sddsId: {
-      type: DataTypes.UUID
     }
   }, {
     timestamps: true
@@ -23,9 +20,6 @@ const createModels = async () => {
       type: DataTypes.UUID,
       primaryKey: true
     },
-    sddsId: {
-      type: DataTypes.UUID
-    },
     userId: {
       type: DataTypes.UUID,
       references: {
@@ -34,6 +28,9 @@ const createModels = async () => {
       }
     },
     application: {
+      type: DataTypes.JSONB
+    },
+    targetKeys: {
       type: DataTypes.JSONB
     },
     submitted: {
