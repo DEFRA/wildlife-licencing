@@ -31,10 +31,13 @@ export const findRequestSequence = (node, sequence = []) => {
 }
 
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n`
-const headerBuilder = (obj, id, n, urlbase) =>
-  `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n` +
-  (() => id ? `PATCH ${urlbase}/${obj.targetEntity}(${id}) HTTP/1.1\n` : `POST ${urlbase}/${obj.targetEntity} HTTP/1.1\n`)() +
-  'Content-Type: application/json;type=entry\n\n' // Require two breaks before payload
+
+// Warning, the interface is fussy about whitespace
+const headerBuilder = (obj, id, n, urlbase) => {
+  const reqLine = id ? `PATCH ${urlbase}/${obj.targetEntity}(${id}) HTTP/1.1` : `POST ${urlbase}/${obj.targetEntity} HTTP/1.1`
+  return `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n${reqLine}\nContent-Type: application/json;type=entry\n\n` // Require two breaks before payload
+}
+
 const changeSetStart = c => `\n--changeset_${c}\n`
 const changeSetEnd = c => `\n--changeset_${c}--\n`
 const batchEnd = b => `\n--batch_${b}--\n`
