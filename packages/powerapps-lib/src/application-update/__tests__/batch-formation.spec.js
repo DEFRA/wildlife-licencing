@@ -49,15 +49,14 @@ describe('Batch query formation', () => {
     const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
     const batchId = openBatchRequest()
 
-    const baseUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-
-    const batchQuery = createBatchRequestBody(batchId, sequence, src, baseUrl)
+    const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
+    const batchQuery = createBatchRequestBody(batchId, sequence, src, {}, clientUrl)
 
     console.log(batchQuery)
 
     expect(batchQuery).toContain(`--batch_${batchId}`)
-    expect(batchQuery).toContain(`POST ${baseUrl}/contacts HTTP/1.1`)
-    expect(batchQuery).toContain(`POST ${baseUrl}/sdds_applications HTTP/1.1`)
+    expect(batchQuery).toContain(`POST ${clientUrl}/contacts HTTP/1.1`)
+    expect(batchQuery).toContain(`POST ${clientUrl}/sdds_applications HTTP/1.1`)
     expect(batchQuery).toContain(JSON.stringify({
       firstname: 'Ian',
       lastname: 'Botham',
@@ -124,5 +123,51 @@ describe('Batch query formation', () => {
         entity: 'sdds_applications'
       }
     })
+  })
+
+  it('forms a batch query set for an application update', async () => {
+    const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
+    const batchId = openBatchRequest()
+
+    const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
+    const batchQuery = createBatchRequestBody(batchId, sequence, src, {
+      applicant: {
+        eid: '9d17ae34-3c62-ec11-8f8f-0022480078af',
+        entity: 'contacts'
+      },
+      ecologist: {
+        eid: '9f17ae34-3c62-ec11-8f8f-0022480078bf',
+        entity: 'contacts'
+      },
+      sdds_applications: {
+        eid: '9417ae34-3c62-ec11-8f8f-0022480078df',
+        entity: 'sdds_applications'
+      }
+    }, clientUrl)
+
+    expect(batchQuery).toContain(`PATCH ${clientUrl}/contacts(9d17ae34-3c62-ec11-8f8f-0022480078af)`)
+    expect(batchQuery).toContain(`PATCH ${clientUrl}/contacts(9f17ae34-3c62-ec11-8f8f-0022480078bf)`)
+    expect(batchQuery).toContain(`PATCH ${clientUrl}/sdds_applications(9417ae34-3c62-ec11-8f8f-0022480078df)`)
+  })
+
+  it('forms a batch query set for a partial application update', async () => {
+    const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
+    const batchId = openBatchRequest()
+
+    const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
+    const batchQuery = createBatchRequestBody(batchId, sequence, src, {
+      applicant: {
+        eid: '9d17ae34-3c62-ec11-8f8f-0022480078af',
+        entity: 'contacts'
+      },
+      sdds_applications: {
+        eid: '9417ae34-3c62-ec11-8f8f-0022480078df',
+        entity: 'sdds_applications'
+      }
+    }, clientUrl)
+
+    expect(batchQuery).toContain(`PATCH ${clientUrl}/contacts(9d17ae34-3c62-ec11-8f8f-0022480078af)`)
+    expect(batchQuery).toContain(`POST ${clientUrl}/contacts HTTP/1.1`)
+    expect(batchQuery).toContain(`PATCH ${clientUrl}/sdds_applications(9417ae34-3c62-ec11-8f8f-0022480078df)`)
   })
 })

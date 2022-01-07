@@ -18,12 +18,12 @@ export const applicationJobProcess = async job => {
       return Promise.resolve()
     }
 
-    const sequelize = SEQUELIZE.getSequelize()
+    const { application: applicationJson, targetKeys } = application.dataValues
 
-    const result = await batchUpdate(application.dataValues.application)
+    const result = await batchUpdate(applicationJson, targetKeys)
 
     return models.applications.update({
-      submitted: sequelize.fn('NOW'),
+      submitted: SEQUELIZE.getSequelize().fn('NOW'),
       targetKeys: result
     }, {
       where: {

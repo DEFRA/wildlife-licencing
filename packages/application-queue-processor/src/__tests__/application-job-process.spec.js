@@ -23,7 +23,17 @@ describe('The application job processor', () => {
     }))
 
     models.applications = {
-      findByPk: jest.fn(() => ({ dataValues: { application: { foo: 'bar' } } })),
+      findByPk: jest.fn(() => ({
+        dataValues:
+          {
+            application: {
+              foo: 'bar'
+            },
+            targetKeys: {
+              keys: 'key'
+            }
+          }
+      })),
       update: jest.fn()
     }
 
@@ -39,7 +49,7 @@ describe('The application job processor', () => {
     const { applicationJobProcess } = await import('../application-job-process.js')
     await applicationJobProcess(job)
 
-    expect(mockBatchUpdate).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(mockBatchUpdate).toHaveBeenCalledWith({ foo: 'bar' }, { keys: 'key' })
 
     expect(models.applications.update)
       .toHaveBeenCalledWith({

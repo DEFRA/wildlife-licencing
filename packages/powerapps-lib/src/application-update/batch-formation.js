@@ -31,9 +31,9 @@ export const findRequestSequence = (node, sequence = []) => {
 }
 
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n`
-const headerBuilder = (obj, n, urlbase) =>
+const headerBuilder = (obj, id, n, urlbase) =>
   `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n` +
-  `POST ${urlbase}/${obj.targetEntity} HTTP/1.1\n` +
+  (() => id ? `PATCH ${urlbase}/${obj.targetEntity}(${id}) HTTP/1.1\n` : `POST ${urlbase}/${obj.targetEntity} HTTP/1.1\n`)() +
   'Content-Type: application/json;type=entry\n\n' // Require two breaks before payload
 const changeSetStart = c => `\n--changeset_${c}\n`
 const changeSetEnd = c => `\n--changeset_${c}--\n`
@@ -68,7 +68,7 @@ export const openBatchRequest = () => crypto.randomBytes(3).toString('hex').toUp
  * @param urlbase
  * @returns {string} - the text of the batch request body
  */
-export const createBatchRequestBody = (batchId, sequence, src, urlbase) => {
+export const createBatchRequestBody = (batchId, sequence, applicationJson, targetKeysJson, clientUrl) => {
   let n = 1
   const changeId = uuidv4()
   let body = batchStart(batchId, changeId)
@@ -76,13 +76,13 @@ export const createBatchRequestBody = (batchId, sequence, src, urlbase) => {
   const queryResults = sequence.map(s => {
     try {
       const obj = model[s]
-      const header = headerBuilder(obj, n++, urlbase)
-      const payload = objectBuilder(obj.targetFields, src)
+      const header = headerBuilder(obj, targetKeysJson[s]?.eid, n++, clientUrl)
+      const payload = objectBuilder(obj.targetFields, applicationJson)
       Object.entries(obj.relationships || []).forEach(([name, o]) =>
         Object.assign(payload, relationshipBuilder(name, o, sequence)))
       return `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}`
     } catch (error) {
-      const msg = `Translation error for, model: ${s} and data: \n${JSON.stringify(src, null, 4)}`
+      const msg = `Translation error for, model: ${s} and data: \n${JSON.stringify(applicationJson, null, 4)}`
       console.error(msg, error)
       throw new UnrecoverableError(msg)
     }

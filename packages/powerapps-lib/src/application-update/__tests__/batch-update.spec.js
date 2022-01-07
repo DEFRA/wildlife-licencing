@@ -49,7 +49,7 @@ describe('The batch query update', () => {
     }))
 
     const { batchUpdate } = await import('../batch-update.js')
-    await batchUpdate(payload)
+    await batchUpdate(payload, {})
     expect(mockBatchRequest).toHaveBeenCalledWith(expect.any(String),
       expect.stringContaining('brian.ecologist@gmail.com'))
   })
@@ -75,7 +75,7 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(payload)).rejects.toThrowError(RecoverableBatchError)
+    await expect(async () => await batchUpdate(payload, {})).rejects.toThrowError(RecoverableBatchError)
   })
 
   it.each([
@@ -99,7 +99,7 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, UnRecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(payload)).rejects.toThrowError(UnRecoverableBatchError)
+    await expect(async () => await batchUpdate(payload, {})).rejects.toThrowError(UnRecoverableBatchError)
   })
 
   it('throws recoverable batch error on general error', async () => {
@@ -118,6 +118,6 @@ describe('The batch query update', () => {
       }
     })
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(payload)).rejects.toThrowError(RecoverableBatchError)
+    await expect(async () => await batchUpdate(payload, {})).rejects.toThrowError(RecoverableBatchError)
   })
 })

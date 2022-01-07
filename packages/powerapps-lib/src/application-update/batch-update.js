@@ -10,17 +10,18 @@ export class UnRecoverableBatchError extends Error {}
 
 /**
  * Update/insert data to microsoft powerapps
- * @param srcJson - the unprocessed data from the database
  * @returns {Promise<void>} - the key object to write down into the database
  * Throws either a recoverable or an unrecoverable error depending on the status
  * (1) 5XX are all recoverable
  * (2) 4XX are all unrecoverable except authorization errors 401 and client timeout 408
  * (3) Unexpected errors such as network errors are recoverable
  * Redirections (3XX are not expected)
+ * @param applicationJson - A JSON structure holding the application data
+ * @param targetKeysJson - A JSON structure holding the target key data - for an update
  */
-export const batchUpdate = async srcJson => {
+export const batchUpdate = async (applicationJson, targetKeysJson) => {
   const batchId = openBatchRequest()
-  const batchRequestBody = createBatchRequestBody(batchId, sequence, srcJson, clientUrl)
+  const batchRequestBody = createBatchRequestBody(batchId, sequence, applicationJson, targetKeysJson, clientUrl)
   try {
     const responseText = await POWERAPPS.batchRequest(batchId, batchRequestBody)
     return createKeyObject(responseText, sequence, clientUrl)
