@@ -32,6 +32,7 @@
     "@defra/wls-connectors-lib": "^1.1.6",
     "@defra/wls-database-model": "^1.1.6",
     "@defra/wls-powerapps-lib": "^1.1.6",
-    "@defra/wls-queue-defs": "^1.1.6"
+    "@defra/wls-queue-defs": "^1.1.6",
+    "dotenv": "^10.0.0"
   }
 }

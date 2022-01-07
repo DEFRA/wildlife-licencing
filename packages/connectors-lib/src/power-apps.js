@@ -11,9 +11,8 @@ let accessToken
 
 export const getToken = async () => {
   try {
-    const EXPIRATION_WINDOW_SECONDS = 60
     const oauthClient = new ClientCredentials(Config.powerApps.oauth)
-    if (!accessToken || accessToken.expired(EXPIRATION_WINDOW_SECONDS)) {
+    if (!accessToken || accessToken.expired(Config.powerApps.tokenExpireWindow || 60)) {
       accessToken = await oauthClient.getToken({ scope: Config.powerApps.scope })
     }
     return `${accessToken.token.token_type} ${accessToken.token.access_token}`

@@ -10,10 +10,10 @@ export default {
   },
   pg: {
     user: process.env.POSTGRES_USER,
+    pw: process.env.POSTGRES_PW,
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
-    pw: process.env.POSTGRES_PW,
     logging: process.env.POSTGRES_LOGGING
   },
   redis: {
@@ -38,6 +38,7 @@ export default {
         authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
       }
     },
+    tokenExpireWindow: process.env.TOKEN_EXPIRE_WINDOW_SECONDS,
     scope: process.env.MSPA_SCOPE,
     client: {
       url: process.env.MSPA_CLIENT_URL,

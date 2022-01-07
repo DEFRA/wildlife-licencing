@@ -13,13 +13,4 @@ export const ecologist = {
     address1_telephone1: { srcJsonPath: '$.ecologist.phone' },
     emailaddress1: { srcJsonPath: '$.ecologist.email' }
   }
-  // ,
-  // relationships: {
-  //   foo: {
-  //     entity: {
-  //       targetEntity: 'foo'
-  //     },
-  //     fk: 'sdds_fooid@odata.bind'
-  //   }
-  // }
 }
