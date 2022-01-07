@@ -78,8 +78,8 @@ export const createBatchRequestBody = (batchId, sequence, src, urlbase) => {
       const obj = model[s]
       const header = headerBuilder(obj, n++, urlbase)
       const payload = objectBuilder(obj.targetFields, src)
-      Object.entries(obj.relationships || []).forEach(([name, obj]) =>
-        Object.assign(payload, relationshipBuilder(name, obj, sequence)))
+      Object.entries(obj.relationships || []).forEach(([name, o]) =>
+        Object.assign(payload, relationshipBuilder(name, o, sequence)))
       return `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}`
     } catch (error) {
       const msg = `Translation error for, model: ${s} and data: \n${JSON.stringify(src, null, 4)}`

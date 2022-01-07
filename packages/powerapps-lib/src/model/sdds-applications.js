@@ -3,7 +3,7 @@
 import { applicant } from './applicant.js'
 import { ecologist } from './ecologist.js'
 
-export const sdds_applications = {
+export const sddsApplications = {
   targetEntity: 'sdds_applications',
   targetKey: 'sdds_applicationid',
   targetFields: {
