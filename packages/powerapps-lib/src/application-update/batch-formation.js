@@ -2,9 +2,9 @@ import jp from 'jsonpath'
 import crypto from 'crypto'
 import { model } from '../model/sdds-model.js'
 import pkg from 'uuid'
-const { v4: uuidv4 } = pkg
 
-class UnrecoverableError extends Error {}
+import { UnRecoverableBatchError } from './batch-errors.js'
+const { v4: uuidv4 } = pkg
 
 /*
  * Traverses the model and locates all the nodes starting
@@ -33,9 +33,10 @@ export const findRequestSequence = (node, sequence = []) => {
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n`
 
 // Warning, the interface is fussy about whitespace
-const headerBuilder = (obj, id, n, urlbase) => {
-  const reqLine = id ? `PATCH ${urlbase}/${obj.targetEntity}(${id}) HTTP/1.1` : `POST ${urlbase}/${obj.targetEntity} HTTP/1.1`
-  return `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n${reqLine}\nContent-Type: application/json;type=entry\n\n` // Require two breaks before payload
+const headerBuilder = (obj, id, n, clientUrl) => {
+  const reqLine = id ? `PATCH ${clientUrl}/${obj.targetEntity}(${id}) HTTP/1.1` : `POST ${clientUrl}/${obj.targetEntity} HTTP/1.1`
+  return `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n${reqLine}\n` +
+    'Content-Type: application/json;type=entry\n\n' // Require two breaks before payload
 }
 
 const changeSetStart = c => `\n--changeset_${c}\n`
@@ -79,7 +80,7 @@ export const createBatchRequestBody = (batchId, sequence, applicationJson, targe
   const queryResults = sequence.map(s => {
     try {
       const obj = model[s]
-      const header = headerBuilder(obj, targetKeysJson[s]?.eid, n++, clientUrl)
+      const header = headerBuilder(obj, targetKeysJson?.[s]?.eid, n++, clientUrl)
       const payload = objectBuilder(obj.targetFields, applicationJson)
       Object.entries(obj.relationships || []).forEach(([name, o]) =>
         Object.assign(payload, relationshipBuilder(name, o, sequence)))
@@ -87,7 +88,7 @@ export const createBatchRequestBody = (batchId, sequence, applicationJson, targe
     } catch (error) {
       const msg = `Translation error for, model: ${s} and data: \n${JSON.stringify(applicationJson, null, 4)}`
       console.error(msg, error)
-      throw new UnrecoverableError(msg)
+      throw new UnRecoverableBatchError(msg)
     }
   })
 

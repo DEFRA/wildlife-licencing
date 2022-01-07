@@ -1,12 +1,9 @@
 import { POWERAPPS } from '@defra/wls-connectors-lib'
 import { createBatchRequestBody, createKeyObject, findRequestSequence, openBatchRequest } from './batch-formation.js'
 import { model } from '../model/sdds-model.js'
-
+import { RecoverableBatchError, UnRecoverableBatchError } from './batch-errors.js'
 const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
 const clientUrl = POWERAPPS.getClientUrl()
-
-export class RecoverableBatchError extends Error {}
-export class UnRecoverableBatchError extends Error {}
 
 /**
  * Update/insert data to microsoft powerapps
