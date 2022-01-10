@@ -1,9 +1,11 @@
 import { POWERAPPS } from '@defra/wls-connectors-lib'
+import db from 'debug'
 import { createBatchRequestBody, createKeyObject, findRequestSequence, openBatchRequest } from './batch-formation.js'
 import { model } from '../model/sdds-model.js'
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-errors.js'
 const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
 const clientUrl = POWERAPPS.getClientUrl()
+const debug = db('powerapps-lib:batch-update')
 
 /**
  * Update/insert data to microsoft powerapps
@@ -19,8 +21,10 @@ const clientUrl = POWERAPPS.getClientUrl()
 export const batchUpdate = async (applicationJson, targetKeysJson) => {
   const batchId = openBatchRequest()
   const batchRequestBody = createBatchRequestBody(batchId, sequence, applicationJson, targetKeysJson, clientUrl)
+  debug(`Batch request body for batchId ${batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
   try {
     const responseText = await POWERAPPS.batchRequest(batchId, batchRequestBody)
+    debug(`Batch request response body for batchId ${batchId}:  \n---Start ---\n${responseText}\n---End ---`)
     return createKeyObject(responseText, sequence, clientUrl)
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
