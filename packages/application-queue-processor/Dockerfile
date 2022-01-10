@@ -4,6 +4,7 @@
 FROM node:16.13.0-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY . .
 RUN npm ci
+COPY . .
+
 CMD [ "node", "src/application-queue-processor.js" ]
