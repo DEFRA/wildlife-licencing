@@ -22,6 +22,7 @@ services:
     image: wildlife-licencing/aqp:${TAG:-latest}
     env_file:
       - ./env/aqp.env
+      - ./env/aqp-secrets.env
     deploy:
       mode: replicated
       replicas: 1
