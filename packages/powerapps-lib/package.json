@@ -27,6 +27,7 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^1.2.0",
-    "jsonpath": "^1.1.1"
+    "jsonpath": "^1.1.1",
+    "uuid": "^8.3.2"
   }
 }

@@ -9,6 +9,16 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_rod-licensing&metric=bugs)](https://sonarcloud.io/dashboard?id=DEFRA_rod-licensing)
 
 ## Getting started
+
+### To run the application as a docker swarm
+
+First edit the docker secret environment files to add the secret keys
+- docker/env/aqp-secrets.env
+
+(The secrets for the test environment may be obtained from <TBC - graham.willis@defra.gov.uk>)
+
+Now run the following shell commands;
+
 ```shell
 cd  wildlife-licencing
 npm run docker:build
@@ -19,13 +29,25 @@ npm run docker:stop
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/hello
 
-## To run locally
-To run the microservices locally you need to start the supporting cloud services in the docker swarm
+The docker services running should be as follows:
+- wls_adminer
+- wls_db
+- wls_localstack
+- wls_redis
+- wls_redis_commander
+- wls_api
+- wls_aqp
+
+### To run locally
+To run the microservices locally you need to start the supporting cloud services in the docker swarm.
+
+Run the following shell commands;
 ```shell
 cd  wildlife-licencing
 npm run docker:start-cloud
 docker service ls
 ```
+
 The docker services running should be as follows:
 - wls_adminer
 - wls_db
@@ -33,19 +55,28 @@ The docker services running should be as follows:
 - wls_redis
 - wls_redis_commander
 
-### To start the API locally
+#### Start the API locally
 ```shell
 cd wildlife-licencing/packages/api
 cp env.example .env
 node -r dotenv/config src/api-service.js
 ```
 
-### To start the queue processor locally
+#### To start the queue processor locally
 ```shell
 cd wildlife-licencing/packages/application-queue-processor
 cp env.example .env
 node -r dotenv/config src/application-queue-processor.js
 ```
 
+Edit the .env files to add secrets
+
+(The secrets for the test environment may be obtained from <TBC - graham.willis@defra.gov.uk>)
+
 Alternatively set the environment variables in the running shell or your IDE
+
+## Description of API Process
+
+### API to PowerApps
+### PowerApps to API
 
