@@ -137,10 +137,12 @@ in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON objec
 which a JSON path element is used to map the data to the API/database structure.
 
 (4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA
+
 batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or
 PATCH each element based on the existence of key data.
 
 (5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level
+
 request. This deals for authorisation and token management.
 
 ### PowerApps to API
