@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import { openBatchRequest, createBatchRequestBody, findRequestSequence, createKeyObject } from '../batch-formation.js'
-import { model } from '../../model/sdds-model.js'
+import { openBatchRequest, createBatchRequestBody, createKeyObject } from '../batch-formation.js'
+import { findRequestSequence, model } from '../../model/sdds-model.js'
 import fs from 'fs'
 import path from 'path'
 
