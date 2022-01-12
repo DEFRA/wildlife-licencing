@@ -134,7 +134,7 @@ On un-recoverable errors the batchUpdate method will return Promise.Resolve and 
 
 (3) In the powerapps-lib the application data is transformed using the model defined
 in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into
-which a JSON path element is used to map the data to the API/database structure.
+which a path element is used to map the data to the API/database structure.
 
 (4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA
 

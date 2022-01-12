@@ -8,11 +8,14 @@ export const sddsApplications = {
   targetKey: 'sdds_applicationid',
   targetFields: {
     sdds_descriptionofproposal: {
-      srcJsonPath: '$.proposalDescription'
+      srcPath: 'proposalDescription'
     },
     sdds_detailsofconvictions: {
-      srcJsonPath: '$.detailsOfConvictions'
+      srcPath: 'detailsOfConvictions'
     }
+    // TODO ,sdds_sourceremote: {
+    //   srcFunc: () => true
+    // }
   },
 
   relationships: {

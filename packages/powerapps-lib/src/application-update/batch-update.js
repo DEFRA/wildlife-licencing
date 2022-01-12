@@ -1,8 +1,9 @@
 import { POWERAPPS } from '@defra/wls-connectors-lib'
 import db from 'debug'
 import { createBatchRequestBody, createKeyObject, openBatchRequest } from './batch-formation.js'
-import { findRequestSequence, model } from '../model/sdds-model.js'
+import { model } from '../model/sdds-model.js'
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-errors.js'
+import { findRequestSequence } from '../model/model-utils.js'
 const sequence = findRequestSequence({ sdds_applications: model.sdds_applications })
 const clientUrl = POWERAPPS.getClientUrl()
 const debug = db('powerapps-lib:batch-update')

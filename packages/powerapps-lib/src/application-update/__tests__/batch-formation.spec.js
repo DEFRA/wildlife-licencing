@@ -1,41 +1,10 @@
 /* eslint-disable camelcase */
 import { openBatchRequest, createBatchRequestBody, createKeyObject } from '../batch-formation.js'
-import { findRequestSequence, model } from '../../model/sdds-model.js'
+import { model } from '../../model/sdds-model.js'
 import fs from 'fs'
 import path from 'path'
-
-export const src = {
-  applicant: {
-    lastname: 'Botham',
-    firstname: 'Ian',
-    email: 'Ian.botham@gmail.com',
-    phone: '876877666876',
-    address:
-        {
-          postcode: 'BS92LT',
-          addrline1: '1 The cottages',
-          addrline2: 'The Village',
-          addrline3: 'Taunton',
-          county: 'Somerset'
-        }
-  },
-  ecologist: {
-    firstname: 'Brian',
-    lastname: 'The-Ecologist',
-    email: 'brian.ecologist@gmail.com',
-    phone: '+44 837248649864',
-    address:
-      {
-        postcode: 'YT56 9UW',
-        addrline1: 'The University',
-        addrline2: 'University Rd.',
-        addrline3: 'Cambridge',
-        county: 'Cambridgeshire'
-      }
-  },
-  proposalDescription: 'move some newts across a road',
-  detailsOfConvictions: 'speeding fine 2008. 167mph.'
-}
+import { findRequestSequence } from '../../model/model-utils.js'
+import src from '../../model/test-data/json-src.js'
 
 /**
  * Content-Type:multipart/mixed;boundary=batch_499D1B
@@ -52,8 +21,6 @@ describe('Batch query formation', () => {
     const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
     const batchQuery = createBatchRequestBody(batchId, sequence, src, {}, clientUrl)
 
-    console.log(batchQuery)
-
     expect(batchQuery).toContain(`--batch_${batchId}`)
     expect(batchQuery).toContain(`POST ${clientUrl}/contacts HTTP/1.1`)
     expect(batchQuery).toContain(`POST ${clientUrl}/sdds_applications HTTP/1.1`)
@@ -63,6 +30,7 @@ describe('Batch query formation', () => {
       address1_line1: '1 The cottages',
       address1_line2: 'The Village',
       address1_line3: 'Taunton',
+      address1_county: 'Somerset',
       address1_postalcode: 'BS92LT',
       address1_telephone1: '876877666876',
       emailaddress1: 'Ian.botham@gmail.com'
@@ -74,6 +42,7 @@ describe('Batch query formation', () => {
       address1_line1: 'The University',
       address1_line2: 'University Rd.',
       address1_line3: 'Cambridge',
+      address1_county: 'Cambridgeshire',
       address1_postalcode: 'YT56 9UW',
       address1_telephone1: '+44 837248649864',
       emailaddress1: 'brian.ecologist@gmail.com'

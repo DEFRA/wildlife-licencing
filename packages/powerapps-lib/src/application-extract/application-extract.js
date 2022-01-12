@@ -1,26 +1,39 @@
-export const buildRequestPath = (node, isFirst = true) => {
-  // Iterate over the model
-  let path = ''
-  const nodeName = Object.keys(node)[0]
-  if (isFirst) {
-    path += `${nodeName}?`
-  }
-  path += `$select=${Object.keys(node[nodeName].targetFields).join(',')}`
-  for (const entity in node[nodeName]?.relationships) {
-    const relNode = node[nodeName].relationships[entity]
-    const delim = isFirst ? '&' : ';'
-    path += `${delim}$expand=${relNode.fk.replace('@odata.bind', '')}(${buildRequestPath({ [entity]: relNode }, false)})`
-  }
-  return path
+import { Readable } from 'stream'
+import { POWERAPPS } from '@defra/wls-connectors-lib'
+import { model } from '../model/sdds-model.js'
+import { buildRequestPath } from '../model/model-utils.js'
+import { localObjectBuilder } from '../model/transformer.js'
+
+const abortController = new global.AbortController()
+
+async function * fetchApplications () {
+  const path = buildRequestPath({ sdds_applications: model.sdds_applications })
+  let p = path
+  let next = false
+  do {
+    const result = await POWERAPPS.fetch(p)
+    yield result.value.map(i => localObjectBuilder({ sdds_applications: model.sdds_applications }, i))
+    const nextLink = result['@odata.nextLink']
+    if (nextLink) {
+      next = true
+      p = nextLink.replace(POWERAPPS.getClientUrl() + '/', '')
+    } else {
+      next = false
+    }
+  } while (next)
 }
 
-/**
- * Builds a request from the model
- * Extract the applications from Power Apps
- * Apply the inverse transformation
- * return as a stream of of objects
- */
-export const extractApplications = async () => {
-  console.log(buildRequestPath())
-  return null
+export const extractApplications = () => {
+  const stream = Readable.from(fetchApplications())
+
+  // Abort if stream closed by consumer
+  stream.on('close', () => {
+    abortController.abort()
+  })
+
+  stream.on('data', (chunk) => {
+    console.log(JSON.stringify(chunk, null, 2))
+  })
+
+  return stream
 }

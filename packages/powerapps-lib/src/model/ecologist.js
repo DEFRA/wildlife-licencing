@@ -4,13 +4,14 @@ export const ecologist = {
   targetEntity: 'contacts',
   targetKey: 'contactid',
   targetFields: {
-    firstname: { srcJsonPath: '$.ecologist.firstname' },
-    lastname: { srcJsonPath: '$.ecologist.lastname' },
-    address1_line1: { srcJsonPath: '$.ecologist.address.addrline1' },
-    address1_line2: { srcJsonPath: '$.ecologist.address.addrline2' },
-    address1_line3: { srcJsonPath: '$.ecologist.address.addrline3' },
-    address1_postalcode: { srcJsonPath: '$.ecologist.address.postcode' },
-    address1_telephone1: { srcJsonPath: '$.ecologist.phone' },
-    emailaddress1: { srcJsonPath: '$.ecologist.email' }
+    firstname: { srcPath: 'ecologist.firstname' },
+    lastname: { srcPath: 'ecologist.lastname' },
+    address1_line1: { srcPath: 'ecologist.address.addrline1' },
+    address1_line2: { srcPath: 'ecologist.address.addrline2' },
+    address1_line3: { srcPath: 'ecologist.address.addrline3' },
+    address1_county: { srcPath: 'ecologist.address.county' },
+    address1_postalcode: { srcPath: 'ecologist.address.postcode' },
+    address1_telephone1: { srcPath: 'ecologist.phone' },
+    emailaddress1: { srcPath: 'ecologist.email' }
   }
 }

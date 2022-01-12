@@ -1,9 +1,9 @@
-import jp from 'jsonpath'
 import crypto from 'crypto'
 import { model } from '../model/sdds-model.js'
 import { v4 as uuidv4 } from 'uuid'
 
 import { UnRecoverableBatchError } from './batch-errors.js'
+import { powerAppsObjectBuilder } from '../model/transformer.js'
 
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n`
 
@@ -17,19 +17,6 @@ const headerBuilder = (obj, id, n, clientUrl) => {
 const changeSetStart = c => `\n--changeset_${c}\n`
 const changeSetEnd = c => `\n--changeset_${c}--\n`
 const batchEnd = b => `\n--batch_${b}--\n`
-
-export const objectBuilder = (fields, src, obj = {}) => {
-  for (const field in fields) {
-    if (fields[field].srcJsonPath) {
-      Object.assign(obj, { [field]: jp.query(src, fields[field].srcJsonPath)[0] })
-    } else {
-      const f = {}
-      Object.assign(obj, { [field]: f })
-      objectBuilder(fields[field], src, f)
-    }
-  }
-  return obj
-}
 
 export const relationshipBuilder = (name, obj, sequence) => {
   const contentId = sequence.findIndex(s => s === name) + 1
@@ -56,7 +43,7 @@ export const createBatchRequestBody = (batchId, sequence, applicationJson, targe
     try {
       const obj = model[s]
       const header = headerBuilder(obj, targetKeysJson?.[s]?.eid, n++, clientUrl)
-      const payload = objectBuilder(obj.targetFields, applicationJson)
+      const payload = powerAppsObjectBuilder(obj.targetFields, applicationJson)
       Object.entries(obj.relationships || []).forEach(([name, o]) =>
         Object.assign(payload, relationshipBuilder(name, o, sequence)))
       return `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}`
