@@ -2,6 +2,8 @@ import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
 import pkg from 'node-fetch'
 const fetch = pkg.default
+const defaultTimeout = 20000
+const defaultFetchSize = 100
 
 /*
  * Access to dynamics using the OAuth2 client credentials flow.
@@ -40,6 +42,18 @@ const getBatchOptions = async (batchId, batchRequestBody) => ({
   signal: abortController.signal
 })
 
+const getFetchOptions = async () => ({
+  headers: {
+    Authorization: await getToken(),
+    'Content-Type': 'application/json',
+    'OData-MaxVersion': '4.0',
+    'OData-Version': '4.0',
+    Prefer: `odata.maxpagesize=${Config.powerApps.client.fetchSize || defaultFetchSize}`
+  },
+  method: 'GET',
+  signal: abortController.signal
+})
+
 class HTTPResponseError extends Error {
   constructor (response) {
     super(`HTTP Error Response: ${response.status} ${response.statusText}`)
@@ -74,7 +88,7 @@ export const POWERAPPS = {
     // Create a timeout
     const timeout = setTimeout(() => {
       abortController.abort()
-    }, parseInt(Config.powerApps.client.timeout) || 20000)
+    }, parseInt(Config.powerApps.client.timeout) || defaultTimeout)
 
     try {
       // Make the request
@@ -92,6 +106,41 @@ export const POWERAPPS = {
       return result
     } catch (err) {
       // Note if upgrading to node-fetch version 3 this needs to change
+      if (err.name === 'AbortError') {
+        // Create a client timeout response
+        throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
+      } else {
+        throw err
+      }
+    } finally {
+      clearTimeout(timeout)
+    }
+  },
+  /**
+   * Fetch JSON data (GET request) using the path and maxRows
+   * @returns {Promise<void>}
+   */
+  fetch: async path => {
+    const fetchURL = new URL(`${Config.powerApps.client.url}/${path}`).href
+
+    // Set up options for fetch
+    const options = await getFetchOptions()
+
+    // Create a timeout
+    const timeout = setTimeout(() => {
+      abortController.abort()
+    }, parseInt(Config.powerApps.client.timeout) || defaultTimeout)
+
+    try {
+      // Make the request
+      const response = await fetch(fetchURL, options)
+
+      // Throw on not-ok
+      checkStatus(response)
+
+      // Ready the body json
+      return response.json()
+    } catch (err) {
       if (err.name === 'AbortError') {
         // Create a client timeout response
         throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
