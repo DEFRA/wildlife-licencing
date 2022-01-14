@@ -92,7 +92,7 @@ describe('The powerapps connector', () => {
     })
   })
 
-  it('batch request failure case returns 400', async () => {
+  it('batch request with status 400 throws HTTPResponseError', async () => {
     jest.doMock('simple-oauth2', () => ({
       __esModule: true,
       ClientCredentials: jest.fn(() => ({
@@ -188,5 +188,100 @@ describe('The powerapps connector', () => {
     jest.doMock('node-fetch')
     const { POWERAPPS } = await import('../power-apps.js')
     expect(POWERAPPS.getClientUrl()).toBe('http://powerapps:8080/xyz')
+  })
+
+  it('fetch request success case returns 200', async () => {
+    jest.doMock('simple-oauth2', () => ({
+      __esModule: true,
+      ClientCredentials: jest.fn(() => ({
+        getToken: jest.fn(() => ({
+          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
+          expired: jest.fn()
+        }))
+      }))
+    }))
+
+    jest.doMock('../config.js', () => ({
+      powerApps: {
+        client: {
+          url: 'http://powerapps:8080'
+        }
+      }
+    }))
+
+    const mockFetch = jest.fn(() => ({ ok: true, json: () => ({ foo: 'bar' }) }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+
+    const { POWERAPPS } = await import('../power-apps.js')
+    const response = await POWERAPPS.fetch('fetch/path')
+    expect(response).toEqual({ foo: 'bar' })
+    expect(mockFetch).toHaveBeenCalledWith('http://powerapps:8080/fetch/path', {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer 56GKJGKJHGS',
+        'Content-Type': 'application/json',
+        'OData-MaxVersion': '4.0',
+        'OData-Version': '4.0',
+        Prefer: 'odata.maxpagesize=100'
+      },
+      signal: expect.any(Object)
+    })
+  })
+
+  it('fetch request with status 400 throws HTTPResponseError', async () => {
+    jest.doMock('simple-oauth2', () => ({
+      __esModule: true,
+      ClientCredentials: jest.fn(() => ({
+        getToken: jest.fn(() => ({
+          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
+          expired: jest.fn()
+        }))
+      }))
+    }))
+
+    jest.doMock('../config.js', () => ({
+      powerApps: {
+        client: {
+          url: 'http://powerapps:8080'
+        }
+      }
+    }))
+
+    const mockFetch = jest.fn(() => ({ ok: false, status: 400 }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const { POWERAPPS, HTTPResponseError } = await import('../power-apps.js')
+
+    await expect(async () =>
+      await POWERAPPS.fetch('fetch/path'))
+      .rejects.toThrowError(HTTPResponseError)
+  })
+
+  it('fetch request failure case fetch throws AbortError', async () => {
+    jest.doMock('simple-oauth2', () => ({
+      __esModule: true,
+      ClientCredentials: jest.fn(() => ({
+        getToken: jest.fn(() => ({
+          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
+          expired: jest.fn()
+        }))
+      }))
+    }))
+
+    jest.doMock('../config.js', () => ({
+      powerApps: {
+        client: {
+          url: 'http://powerapps:8080'
+        }
+      }
+    }))
+
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const AbortError = new Error()
+    AbortError.name = 'AbortError'
+    const mockFetch = jest.fn(() => { throw AbortError })
+    const { POWERAPPS } = await import('../power-apps.js')
+    await expect(async () =>
+      await POWERAPPS.fetch('fetch/path'))
+      .rejects.toThrowError(Error)
   })
 })

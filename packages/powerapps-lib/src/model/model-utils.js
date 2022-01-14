@@ -14,11 +14,7 @@ export const findRequestSequence = (node, sequence = []) => {
   }
 
   for (const r in node[nodeName].relationships) {
-    if (!node[nodeName].relationships[r]) {
-      sequence.push(r)
-    } else {
-      findRequestSequence({ [r]: node[nodeName].relationships[r] }, sequence)
-    }
+    findRequestSequence({ [r]: node[nodeName].relationships[r] }, sequence)
   }
 
   sequence.push(nodeName)
