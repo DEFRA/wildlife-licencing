@@ -3,6 +3,7 @@ export default {
   sdds_descriptionofproposal: 'move some newts across a road',
   sdds_detailsofconvictions: 'speeding fine 2008. 167mph.',
   sdds_applicationid: '5e02378c-736d-ec11-8943-000d3a86e24e',
+  sdds_sourceremote: true,
   sdds_applicantid: {
     firstname: 'Ian',
     lastname: 'Botham',

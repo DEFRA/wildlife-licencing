@@ -27,8 +27,9 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^1.2.0",
-    "lodash.set": "^4.3.2",
     "lodash.get": "^4.3.2",
+    "lodash.has": "^4.3.2",
+    "lodash.set": "^4.3.2",
     "uuid": "^8.3.2"
   }
 }

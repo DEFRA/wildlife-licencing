@@ -51,6 +51,7 @@ describe('Batch query formation', () => {
     expect(batchQuery).toContain(JSON.stringify({
       sdds_descriptionofproposal: 'move some newts across a road',
       sdds_detailsofconvictions: 'speeding fine 2008. 167mph.',
+      sdds_sourceremote: true,
       'sdds_applicantid@odata.bind': '$1',
       'sdds_ecologistid@odata.bind': '$2'
     }, null, 4))
@@ -63,20 +64,12 @@ describe('Batch query formation', () => {
     const baseUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
 
     const { POWERAPPS } = await import('@defra/wls-connectors-lib')
-    POWERAPPS.batchRequest = jest.fn(() => {
-      return ({
-        status: 200,
-        headers: [],
-        getBody: jest.fn(async () => Promise.resolve(
-          fs.readFileSync(path.join(__dirname, '/success-response.txt'), { encoding: 'utf8' })))
-      })
-    })
+    POWERAPPS.batchRequest = jest.fn(async () => Promise.resolve(
+      fs.readFileSync(path.join(__dirname, '/success-response.txt'), { encoding: 'utf8' })))
 
     const response = await POWERAPPS.batchRequest(batchId, '')
-    expect(response.status).toBe(200)
-    const bodyTxt = await response.getBody()
-    expect(bodyTxt).toContain('--batchresponse_546e00b0-78e1-4917-a359-c3aa31c64c76')
-    const keyObject = createKeyObject(bodyTxt, sequence, baseUrl)
+    expect(response).toContain('--batchresponse_546e00b0-78e1-4917-a359-c3aa31c64c76')
+    const keyObject = createKeyObject(response, sequence, baseUrl)
 
     expect(keyObject).toEqual({
       applicant: {

@@ -12,10 +12,10 @@ export const sddsApplications = {
     },
     sdds_detailsofconvictions: {
       srcPath: 'detailsOfConvictions'
+    },
+    sdds_sourceremote: {
+      srcFunc: () => true
     }
-    // TODO ,sdds_sourceremote: {
-    //   srcFunc: () => true
-    // }
   },
 
   relationships: {
