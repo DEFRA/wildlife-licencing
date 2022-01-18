@@ -7,4 +7,4 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
-CMD [ "node", "src/extract-processor.js" ]
+CMD [ "node", "src/processor.js" ]

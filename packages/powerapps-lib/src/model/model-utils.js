@@ -20,6 +20,30 @@ export const findRequestSequence = (node, sequence = []) => {
   sequence.push(nodeName)
   return sequence
 }
+
+/**
+ * Traverse the model and locate that part specified by the nodeName (obtained from sequence)
+ * @param model - The model
+ * @param nodeName - The name of the model node
+ * @param node - Do not set
+ */
+export const getModelNode = (model, nodeName) => {
+  const nn = Object.keys(model)[0]
+  if (nn === nodeName) {
+    return model
+  }
+
+  let result = null
+  for (const r in model[nn].relationships) {
+    result = getModelNode({ [r]: model[nn].relationships[r] }, nodeName)
+    if (result) {
+      break
+    }
+  }
+
+  return result
+}
+
 /**
  * Generate a multi-level request path based on a model
  * @param node - The start node of the model

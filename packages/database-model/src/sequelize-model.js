@@ -33,12 +33,22 @@ const createModels = async () => {
     targetKeys: {
       type: DataTypes.JSONB
     },
+    sddsApplicationId: {
+      type: DataTypes.UUID
+    },
     submitted: {
       type: DataTypes.DATE
+    },
+    updateStatus: {
+      type: DataTypes.STRING(1),
+      allowNull: false
     }
   }, {
     timestamps: true,
-    indexes: [{ unique: false, fields: ['user_id'], name: 'application_user_fk' }]
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'application_user_fk' },
+      { unique: true, fields: ['sdds_application_id'], name: 'application_sdds_id_uk' }
+    ]
   })
 
   await models.users.sync()

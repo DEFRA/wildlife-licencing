@@ -20,7 +20,8 @@ export default async (context, req, h) => {
     const { dataValues } = await models.applications.create({
       id: uuidv4(),
       userId: userId,
-      application: req.payload
+      application: req.payload,
+      updateStatus: 'L'
     })
 
     const responseBody = prepareResponse(dataValues)

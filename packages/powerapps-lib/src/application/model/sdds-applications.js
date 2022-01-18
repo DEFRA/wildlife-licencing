@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-
 import { applicant } from './applicant.js'
 import { ecologist } from './ecologist.js'
 
