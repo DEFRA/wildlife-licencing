@@ -1,8 +1,8 @@
 {
-  "name": "@defra/wls-extract-processor",
+  "name": "@defra/wls-application-extract-processor",
   "version": "1.2.2",
   "description": "Interface to Microsoft Dynamics. Extract processor.",
-  "main": "src/extract-processor.js",
+  "main": "",
   "type": "module",
   "private": false,
   "publishConfig": {
@@ -12,7 +12,7 @@
     "node": ">=16.13.0"
   },
   "scripts": {
-    "start": "node src/extract-processor.js",
+    "start": "node src/processor.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "repository": {

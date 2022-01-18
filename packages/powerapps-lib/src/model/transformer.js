@@ -15,10 +15,10 @@ const { default: has } = _has
  */
 export const powerAppsObjectBuilder = (fields, src, obj = {}) => {
   for (const field in fields) {
-    if (fields[field].srcPath) {
-      Object.assign(obj, { [field]: get(src, fields[field].srcPath) })
-    } else if (fields[field].srcFunc) {
+    if (fields[field].srcFunc) {
       Object.assign(obj, { [field]: fields[field].srcFunc(src) })
+    } else if (fields[field].srcPath) {
+      Object.assign(obj, { [field]: get(src, fields[field].srcPath) })
     }
   }
   return obj
@@ -47,7 +47,10 @@ export const localObjectBuilder = (node, paObj, obj = {}, keys = {}) => {
 
   for (const field in node[nodeName].targetFields) {
     if (has(paObj, field)) {
-      if (node[nodeName].targetFields[field].srcPath) { // Ignore write only
+      if (node[nodeName].targetFields[field].tgtFunc) {
+        const res = node[nodeName].targetFields[field].tgtFunc(paObj)
+        res.forEach(r => set(obj, r.srcPath, r.value))
+      } else if (node[nodeName].targetFields[field].srcPath) { // Ignore write only
         const value = get(paObj, field)
         set(obj, node[nodeName].targetFields[field].srcPath, value)
       }

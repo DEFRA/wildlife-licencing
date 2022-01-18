@@ -1,5 +1,4 @@
-import tgtJson from '../../model/test-data/json-tgt.js'
-import srcJson from '../../model/test-data/json-src.js'
+import { tasks, srcData, tgtData } from '../../test-model-data/task-model.js'
 
 describe('The application extract job', () => {
   beforeEach(() => jest.resetModules())
@@ -12,12 +11,12 @@ describe('The application extract job', () => {
         fetch: async p => {
           if (p === '/more/data') {
             return Promise.resolve({
-              value: [tgtJson, tgtJson]
+              value: [tgtData, tgtData]
             })
           } else {
             return Promise.resolve({
               '@odata.nextLink': '/more/data',
-              value: [tgtJson, tgtJson, tgtJson]
+              value: [tgtData, tgtData, tgtData]
             })
           }
         },
@@ -25,11 +24,11 @@ describe('The application extract job', () => {
       }
     }))
 
-    import('../application-extract.js').then(({ extractApplications }) => {
-      const stream = extractApplications()
+    import('../powerapps-read-stream.js').then(({ extractAndTransform }) => {
+      const stream = extractAndTransform({ tasks })
       let cnt = 0
       stream.on('data', c => {
-        expect(c.data).toEqual(srcJson)
+        expect(c.data).toEqual(srcData)
         cnt++
       })
 
@@ -42,19 +41,19 @@ describe('The application extract job', () => {
 
   it('does not disrupt the stream and ignores object when transformation throws an error', done => {
     // eslint-disable-next-line camelcase
-    const tgtRemoveExpected = (({ sdds_detailsofconvictions, ...t }) => t)(tgtJson)
+    const tgtRemoveExpected = (({ subject, ...t }) => t)(tgtData)
 
     jest.doMock('@defra/wls-connectors-lib', () => ({
       POWERAPPS: {
         fetch: async p => {
           if (p === '/more/data') {
             return Promise.resolve({
-              value: [tgtJson, tgtRemoveExpected]
+              value: [tgtData, tgtRemoveExpected]
             })
           } else {
             return Promise.resolve({
               '@odata.nextLink': '/more/data',
-              value: [tgtRemoveExpected, tgtJson, tgtJson]
+              value: [tgtRemoveExpected, tgtData, tgtData]
             })
           }
         },
@@ -62,11 +61,11 @@ describe('The application extract job', () => {
       }
     }))
 
-    import('../application-extract.js').then(({ extractApplications }) => {
-      const stream = extractApplications()
+    import('../powerapps-read-stream.js').then(({ extractAndTransform }) => {
+      const stream = extractAndTransform({ tasks })
       let cnt = 0
       stream.on('data', c => {
-        expect(c.data).toEqual(srcJson)
+        expect(c.data).toEqual(srcData)
         cnt++
       })
 

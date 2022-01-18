@@ -72,6 +72,7 @@ describe('The putApplication handler', () => {
       defaults: {
         id: expect.any(String),
         userId: context.request.params.userId,
+        updateStatus: 'L',
         application: (({ ...l }) => l)(req.payload)
       },
       where: {
@@ -101,6 +102,7 @@ describe('The putApplication handler', () => {
     cache.delete = jest.fn()
     await putApplication(context, req, h)
     expect(models.applications.update).toHaveBeenCalledWith({
+      updateStatus: 'L',
       application: (({ ...l }) => l)(req.payload)
     },
     { returning: true, where: { id: context.request.params.applicationId } })

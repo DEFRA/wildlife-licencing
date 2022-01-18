@@ -1,26 +1,22 @@
-import fs from 'fs'
-import path from 'path'
-
-import src from '../../model/test-data/json-src.js'
+import { tasks, srcData } from '../../test-model-data/task-model.js'
 
 describe('The batch query update', () => {
   beforeEach(() => jest.resetModules())
 
   it('makes the correct lower level call to the connectors library', async () => {
-    const successBody = fs.readFileSync(path.join(__dirname, '/success-response.txt'), { encoding: 'utf8' })
-    const mockBatchRequest = jest.fn(() => (successBody))
-
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      POWERAPPS: {
-        getClientUrl: jest.fn(() => 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'),
-        batchRequest: mockBatchRequest
+    const mockBatchRequest = jest.fn()
+    jest.doMock('@defra/wls-connectors-lib', () => {
+      return {
+        POWERAPPS: {
+          getClientUrl: jest.fn(),
+          batchRequest: mockBatchRequest
+        }
       }
-    }))
-
+    })
+    jest.doMock('../batch-formation.js')
     const { batchUpdate } = await import('../batch-update.js')
-    await batchUpdate(src, {})
-    expect(mockBatchRequest).toHaveBeenCalledWith(expect.any(String),
-      expect.stringContaining('brian.ecologist@gmail.com'))
+    await batchUpdate(srcData, {}, tasks)
+    expect(mockBatchRequest).toHaveBeenCalled()
   })
 
   it.each([
@@ -44,7 +40,8 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(src, {})).rejects.toThrowError(RecoverableBatchError)
+    await expect(async () => await batchUpdate(srcData, {}, tasks))
+      .rejects.toThrowError(RecoverableBatchError)
   })
 
   it.each([
@@ -68,7 +65,8 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, UnRecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(src, {})).rejects.toThrowError(UnRecoverableBatchError)
+    await expect(async () => await batchUpdate(srcData, {}, tasks))
+      .rejects.toThrowError(UnRecoverableBatchError)
   })
 
   it('throws recoverable batch error on general error', async () => {
@@ -87,6 +85,7 @@ describe('The batch query update', () => {
       }
     })
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(src, {})).rejects.toThrowError(RecoverableBatchError)
+    await expect(async () => await batchUpdate(srcData, {}, tasks))
+      .rejects.toThrowError(RecoverableBatchError)
   })
 })

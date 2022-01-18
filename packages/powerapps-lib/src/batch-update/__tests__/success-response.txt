@@ -8,8 +8,8 @@ Content-ID: 1
 
 HTTP/1.1 204 No Content
 OData-Version: 4.0
-Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contacts(7d17ae34-3c62-ec11-8f8f-0022480078af)
-OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contacts(7d17ae34-3c62-ec11-8f8f-0022480078af)
+Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/systemUser(7d17ae34-3c62-ec11-8f8f-0022480078af)
+OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/systemUser(7d17ae34-3c62-ec11-8f8f-0022480078af)
 
 
 --changesetresponse_9597ea70-8873-4cb4-b7cd-6e9bf7ffd0c5
@@ -19,8 +19,8 @@ Content-ID: 2
 
 HTTP/1.1 204 No Content
 OData-Version: 4.0
-Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contacts(7f17ae34-3c62-ec11-8f8f-0022480078af)
-OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contacts(7f17ae34-3c62-ec11-8f8f-0022480078af)
+Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/account(7f17ae34-3c62-ec11-8f8f-0022480078af)
+OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/account(7f17ae34-3c62-ec11-8f8f-0022480078af)
 
 
 --changesetresponse_9597ea70-8873-4cb4-b7cd-6e9bf7ffd0c5
@@ -30,8 +30,8 @@ Content-ID: 3
 
 HTTP/1.1 204 No Content
 OData-Version: 4.0
-Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/sdds_applications(8417ae34-3c62-ec11-8f8f-0022480078af)
-OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/sdds_applications(8417ae34-3c62-ec11-8f8f-0022480078af)
+Location: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contact(8417ae34-3c62-ec11-8f8f-0022480078af)
+OData-EntityId: https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contact(8417ae34-3c62-ec11-8f8f-0022480078af)
 
 
 --changesetresponse_9597ea70-8873-4cb4-b7cd-6e9bf7ffd0c5--

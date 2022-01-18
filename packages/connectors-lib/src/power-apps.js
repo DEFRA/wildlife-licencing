@@ -69,6 +69,8 @@ const checkStatus = response => {
   }
 }
 
+const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
+
 export const POWERAPPS = {
   /**
    * Batch operations against powerapps
@@ -94,14 +96,20 @@ export const POWERAPPS = {
       // Make the request
       const response = await fetch(batchURL, options)
 
-      // Throw on not-ok
-      checkStatus(response)
-
       // Ready the body text
       let result = ''
       for await (const chunk of response.body) {
         result += chunk.toString()
       }
+
+      // Look for an extractable error message
+      const m = result.match(errorRegEx)
+      if (m) {
+        console.error(`Batch request error: ${m}`)
+      }
+
+      // Throw on not-ok
+      checkStatus(response)
 
       return result
     } catch (err) {

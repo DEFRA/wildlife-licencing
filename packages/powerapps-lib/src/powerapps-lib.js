@@ -1,4 +1,4 @@
-import { batchUpdate } from './application-update/batch-update.js'
-import { RecoverableBatchError, UnRecoverableBatchError } from './application-update/batch-errors.js'
-import { extractApplications } from './application-extract/application-extract.js'
-export { batchUpdate, UnRecoverableBatchError, RecoverableBatchError, extractApplications }
+import { applicationUpdate } from './application/application-update.js'
+import { applicationReadStream } from './application/application-read-stream.js'
+import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
+export { applicationUpdate, UnRecoverableBatchError, RecoverableBatchError, applicationReadStream }
