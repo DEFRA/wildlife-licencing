@@ -49,13 +49,12 @@ export const createBatchRequestBody = (batchId, applicationJson, targetKeysJson,
   let n = 1
   const changeId = uuidv4()
   let body = batchStart(batchId, changeId)
-  const sequence = findRequestSequence(model)
   const queryResults = sequence.map(s => {
     const node = getModelNode(model, s)
     const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, n++, clientUrl)
     const payload = powerAppsObjectBuilder(node[s].targetFields, applicationJson)
     Object.entries(node[s].relationships || []).forEach(([name, o]) =>
-      Object.assign(payload, relationshipBuilder(name, o, sequence)))
+      Object.assign(payload, relationshipBuilder(name, o)))
     return `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}`
   })
 
