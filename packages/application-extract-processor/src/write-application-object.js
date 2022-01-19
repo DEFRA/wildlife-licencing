@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
+
 /**
  * (1) if an application has un-submitted user entered data it will have an update-status code of 'L' locked - indicating
  * that the user has altered the data. This prevents the extract update from overwriting any changes.
@@ -40,9 +41,9 @@ export const writeApplicationObject = async (obj, ts) => {
           },
           returning: false
         })
-        return { insert: 1, update: 0, pending: 0 }
+        return { insert: 0, update: 1, pending: 0, error: 0 }
       } else {
-        return { insert: 0, update: 0, pending: 1 }
+        return { insert: 0, update: 0, pending: 1, error: 0 }
       }
     } else {
       // Create a new application and user
@@ -53,10 +54,10 @@ export const writeApplicationObject = async (obj, ts) => {
         updateStatus: 'U',
         sdds_application_id: keys.sdds_applications.eid
       })
-      return { insert: 0, update: 1, pending: 0 }
+      return { insert: 1, update: 0, pending: 0, error: 0 }
     }
   } catch (error) {
     console.error('Error updating applications', error)
-    return { insert: 0, update: 0, pending: 0 }
+    return { insert: 0, update: 0, pending: 0, error: 1 }
   }
 }

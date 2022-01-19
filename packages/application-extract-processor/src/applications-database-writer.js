@@ -8,12 +8,13 @@ import { writeApplicationObject } from './write-application-object.js'
  */
 
 const dbIterator = async (s, ts) => {
-  const counter = { insert: 0, update: 0, pending: 0 }
+  const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   for await (const obj of s.iterator({ destroyOnReturn: true })) {
-    const { insert, update, pending } = await writeApplicationObject(obj, ts)
+    const { insert, update, pending, error } = await writeApplicationObject(obj, ts)
     counter.insert += insert
     counter.update += update
     counter.pending += pending
+    counter.error += error
   }
   return counter
 }
@@ -28,4 +29,5 @@ export const applicationsDatabaseWriter = async (s, ts) => {
   console.log(`Applications inserted: ${counter.insert}`)
   console.log(`Applications updated: ${counter.update}`)
   console.log(`Applications locked or pending: ${counter.pending}`)
+  console.log(`Applications errored: ${counter.error}`)
 }
