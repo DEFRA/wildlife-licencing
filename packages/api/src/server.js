@@ -22,6 +22,11 @@ import {
   deleteApplicationApplicant
 } from './handlers/application/applicant/applicant.js'
 
+import {
+  getApplicationTypes,
+  getApplicationPurposes
+} from './handlers/reference-data/reference-data.js'
+
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
@@ -61,6 +66,8 @@ const init = async server => {
     putApplicationApplicant,
     deleteApplicationApplicant,
     postApplicationSubmit,
+    getApplicationTypes,
+    getApplicationPurposes,
     validationFail,
     notFound,
     postResponseHandler

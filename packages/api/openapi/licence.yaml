@@ -434,6 +434,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  ################################################################################################
+  # Reference Data
+  ################################################################################################
+  '/application/types':
+    get:
+      description: Get the application types
+      summary: The licence type requested by an application
+      operationId: getApplicationTypes
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/purposes':
+    get:
+      description: Get the application purposes
+      summary: The purpose of an application
+      operationId: getApplicationPurposes
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 components:
 ################################################################################################
 # Schemas
@@ -473,6 +519,27 @@ components:
           $ref: '#/components/schemas/contact'
         submitted:
           $ref: '#/components/schemas/timestamp'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    referenceDataTypes:
+      type: array
+      items:
+        $ref: '#/components/schemas/referenceDataType'
+
+    referenceDataType:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
