@@ -51,8 +51,34 @@ const createModels = async () => {
     ]
   })
 
+  models.applicationTypes = await sequelize.define('application-types', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
+    json: {
+      type: DataTypes.JSONB
+    }
+  }, {
+    timestamps: true
+  })
+
+  models.applicationPurposes = await sequelize.define('application-purposes', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
+    json: {
+      type: DataTypes.JSONB
+    }
+  }, {
+    timestamps: true
+  })
+
   await models.users.sync()
   await models.applications.sync()
+  await models.applicationTypes.sync()
+  await models.applicationPurposes.sync()
 }
 
 export { models, createModels }
