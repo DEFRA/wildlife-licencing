@@ -55,6 +55,7 @@ describe('The postApplication handler', () => {
     expect(models.applications.create).toHaveBeenCalledWith({
       id: expect.any(String),
       userId: context.request.params.userId,
+      updateStatus: 'L',
       application: (({ ...l }) => l)(req.payload)
     })
     expect(cache.save).toHaveBeenCalledWith('/user/foo/application/bar', { id: 'bar', ...tsR })

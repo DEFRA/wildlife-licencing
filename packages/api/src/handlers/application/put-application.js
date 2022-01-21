@@ -21,7 +21,8 @@ export default async (context, req, h) => {
       defaults: {
         id: applicationId,
         userId: userId,
-        application: req.payload
+        application: req.payload,
+        updateStatus: 'L'
       }
     })
 
@@ -33,7 +34,8 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedApplication] = await models.applications.update({
-        application: req.payload
+        application: req.payload,
+        updateStatus: 'L'
       }, {
         where: {
           id: applicationId

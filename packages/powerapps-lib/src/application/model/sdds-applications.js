@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-
 import { applicant } from './applicant.js'
 import { ecologist } from './ecologist.js'
 
@@ -8,10 +7,13 @@ export const sddsApplications = {
   targetKey: 'sdds_applicationid',
   targetFields: {
     sdds_descriptionofproposal: {
-      srcJsonPath: '$.proposalDescription'
+      srcPath: 'proposalDescription'
     },
     sdds_detailsofconvictions: {
-      srcJsonPath: '$.detailsOfConvictions'
+      srcPath: 'detailsOfConvictions'
+    },
+    sdds_sourceremote: {
+      srcFunc: () => true
     }
   },
 
