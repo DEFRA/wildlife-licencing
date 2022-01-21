@@ -23,13 +23,13 @@ export const writeApplicationObject = async (obj, ts) => {
   const { data, keys } = obj
 
   try {
-    const application = await models.applications.findAll({
+    const application = await models.applications.findOne({
       where: { sdds_application_id: keys.sdds_applications.eid }
     })
 
     // Update or insert a new applications
-    if (application.length) {
-      const a = application[0].dataValues
+    if (application) {
+      const a = application.dataValues
       if ((a.updateStatus === 'P' && ts > a.updatedAt) || a.updateStatus === 'U') {
         await models.applications.update({
           application: data,

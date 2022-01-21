@@ -6,13 +6,13 @@ describe('The application extract processor: write-object', () => {
     const mockUpdate = jest.fn()
 
     models.applications = {
-      findAll: jest.fn(() => ([{
+      findOne: jest.fn(() => ({
         dataValues: {
           id: '9487013e-abf5-4f42-95fa-15ad404570a1',
           updateStatus: 'P',
           updatedAt: Date.parse('01 Jan 2020 00:00:00 GMT')
         }
-      }])),
+      })),
       update: mockUpdate
     }
 
@@ -49,13 +49,13 @@ describe('The application extract processor: write-object', () => {
     const mockUpdate = jest.fn()
 
     models.applications = {
-      findAll: jest.fn(() => ([{
+      findOne: jest.fn(() => ({
         dataValues: {
           id: '9487013e-abf5-4f42-95fa-15ad404570a1',
           updateStatus: 'U',
           updatedAt: Date.now()
         }
-      }])),
+      })),
       update: mockUpdate
     }
 
@@ -92,13 +92,13 @@ describe('The application extract processor: write-object', () => {
     const mockUpdate = jest.fn()
 
     models.applications = {
-      findAll: jest.fn(() => ([{
+      findOne: jest.fn(() => ({
         dataValues: {
           id: '9487013e-abf5-4f42-95fa-15ad404570a1',
           updateStatus: 'P',
           updatedAt: Date.now()
         }
-      }])),
+      })),
       update: mockUpdate
     }
 
@@ -123,7 +123,7 @@ describe('The application extract processor: write-object', () => {
     const mockCreate = jest.fn()
 
     models.applications = {
-      findAll: jest.fn(() => ([])),
+      findOne: jest.fn(() => null),
       create: mockCreate
     }
 
@@ -155,7 +155,7 @@ describe('The application extract processor: write-object', () => {
     const { models } = await import('@defra/wls-database-model')
 
     models.applications = {
-      findAll: jest.fn(() => { throw new Error() })
+      findOne: jest.fn(() => { throw new Error() })
     }
 
     const { writeApplicationObject } = await import('../write-application-object.js')
