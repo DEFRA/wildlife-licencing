@@ -37,23 +37,32 @@ describe('The application job processor', () => {
       update: jest.fn()
     }
 
-    const mockBatchUpdate = jest.fn()
+    const mockApplicationUpdate = jest.fn(x => ({
+      sdds_applications: { eid: '1c943c9e-7872-11ec-90d6-0242ac120003' }
+    }))
 
     jest.doMock('@defra/wls-powerapps-lib', () => {
       const originalModule = jest.requireActual('@defra/wls-powerapps-lib')
       return {
-        batchUpdate: mockBatchUpdate,
+        applicationUpdate: mockApplicationUpdate,
         UnRecoverableBatchError: originalModule.UnRecoverableBatchError
       }
     })
     const { applicationJobProcess } = await import('../application-job-process.js')
     await applicationJobProcess(job)
 
-    expect(mockBatchUpdate).toHaveBeenCalledWith({ foo: 'bar' }, { keys: 'key' })
+    expect(mockApplicationUpdate).toHaveBeenCalledWith({ foo: 'bar' }, { keys: 'key' })
 
     expect(models.applications.update)
       .toHaveBeenCalledWith({
-        submitted: expect.anything()
+        submitted: expect.anything(),
+        sddsApplicationId: '1c943c9e-7872-11ec-90d6-0242ac120003',
+        updateStatus: 'P',
+        targetKeys: {
+          sdds_applications: {
+            eid: '1c943c9e-7872-11ec-90d6-0242ac120003'
+          }
+        }
       }, {
         where: {
           id: job.data.applicationId
@@ -90,11 +99,11 @@ describe('The application job processor', () => {
 
     const originalModule = jest.requireActual('@defra/wls-powerapps-lib')
     const UnRecoverableBatchError = originalModule.UnRecoverableBatchError
-    const mockBatchUpdate = jest.fn(() => { throw new UnRecoverableBatchError() })
+    const mockApplicationUpdate = jest.fn(() => { throw new UnRecoverableBatchError() })
 
     jest.doMock('@defra/wls-powerapps-lib', () => {
       return {
-        batchUpdate: mockBatchUpdate,
+        applicationUpdate: mockApplicationUpdate,
         UnRecoverableBatchError
       }
     })
@@ -118,11 +127,11 @@ describe('The application job processor', () => {
     const originalModule = jest.requireActual('@defra/wls-powerapps-lib')
     const RecoverableBatchError = originalModule.RecoverableBatchError
     const UnRecoverableBatchError = originalModule.UnRecoverableBatchError
-    const mockBatchUpdate = jest.fn(() => { throw new RecoverableBatchError('err') })
+    const mockApplicationUpdate = jest.fn(() => { throw new RecoverableBatchError('err') })
 
     jest.doMock('@defra/wls-powerapps-lib', () => {
       return {
-        batchUpdate: mockBatchUpdate,
+        applicationUpdate: mockApplicationUpdate,
         RecoverableBatchError,
         UnRecoverableBatchError
       }
