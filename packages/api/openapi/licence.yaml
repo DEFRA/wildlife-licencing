@@ -515,6 +515,10 @@ components:
           type: string
           minLength: 1
           maxLength: 300
+        applicationTypeId:
+          $ref: '#/components/schemas/uuid'
+        applicationPurposeId:
+          $ref: '#/components/schemas/uuid'
         applicant:
           $ref: '#/components/schemas/contact'
         submitted:

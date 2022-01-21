@@ -74,7 +74,7 @@ export const tasks = {
           ])
         }
       },
-      fk: 'regardingobjectid_contact_task@odata.bind',
+      fk: 'regardingobjectid_contact_task',
       relationships: {
         account: {
           targetEntity: 'account',
@@ -84,7 +84,7 @@ export const tasks = {
               srcPath: 'account.name'
             }
           },
-          fk: 'parentcustomerid_account@odata.bind',
+          fk: 'parentcustomerid_account',
           relationships: {
             systemUser: {
               targetEntity: 'systemuser',
@@ -93,7 +93,7 @@ export const tasks = {
                   srcFunc: () => 'SYSTEM-USER'
                 }
               },
-              fk: 'createdby@odata.bind'
+              fk: 'createdby'
             }
           }
         }
@@ -108,7 +108,7 @@ export const tasks = {
         },
         counter: {}
       },
-      fk: 'tasktypeid@odata.bind'
+      fk: 'tasktypeid'
     }
   }
 }
