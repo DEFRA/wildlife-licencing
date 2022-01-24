@@ -33,6 +33,8 @@ import {
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
 
+import { getOptionSets } from './handlers/reference-data/option-sets.js'
+
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
@@ -77,6 +79,7 @@ const init = async server => {
     postApplicationSubmit,
     getApplicationTypes,
     getApplicationPurposes,
+    getOptionSets,
     validationFail,
     notFound,
     postResponseHandler

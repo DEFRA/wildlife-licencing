@@ -38,6 +38,9 @@ export const sddsApplications = {
     sdds_detailsofconvictions: {
       srcPath: 'detailsOfConvictions'
     },
+    sdds_whydoyouneedalicence: {
+      srcPath: 'licenceReason'
+    },
     sdds_sourceremote: {
       srcFunc: () => true
     },

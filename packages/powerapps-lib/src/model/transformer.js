@@ -75,3 +75,21 @@ export const localObjectBuilder = (node, paObj, obj = {}, keys = {}) => {
 
   return { data: obj, keys }
 }
+
+/**
+ * Get the salient information from the options sets metadata
+ * null if we don't want the option set
+ * @param obj
+ * @returns {*}
+ */
+export const globalOptionSetTransformer = obj => {
+  return obj.Name && obj.Options && obj.Options.length > 0
+    ? {
+        name: obj.Name,
+        values: obj.Options.map(s => ({
+          value: s.Value,
+          description: s.Label.UserLocalizedLabel.Label
+        }))
+      }
+    : null
+}

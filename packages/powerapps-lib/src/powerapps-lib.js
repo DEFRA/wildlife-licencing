@@ -1,6 +1,6 @@
 import { applicationUpdate } from './application/application-update.js'
 import { applicationReadStream } from './application/application-read-stream.js'
-import { applicationPurposesReadStream, applicationTypesReadStream } from './refdata/refdata-read-stream.js'
+import { applicationPurposesReadStream, applicationTypesReadStream, optionSetsReadStream } from './refdata/refdata-read-stream.js'
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
 
 export {
@@ -8,6 +8,7 @@ export {
   applicationPurposesReadStream,
   applicationTypesReadStream,
   applicationUpdate,
+  optionSetsReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError
 }

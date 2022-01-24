@@ -22,4 +22,14 @@ describe('Reference data read stream', () => {
     applicationPurposesReadStream()
     expect(mockReadStream).toHaveBeenCalledWith(applicationPurposesModel)
   })
+
+  it('correctly calls option-sets read stream', async () => {
+    const mockReadStream = jest.fn()
+    jest.doMock('../../extract/powerapps-read-stream.js', () => ({
+      extractAndTransformGlobalOptionSetDefinitions: mockReadStream
+    }))
+    const { optionSetsReadStream } = await import('../refdata-read-stream.js')
+    optionSetsReadStream()
+    expect(mockReadStream).toHaveBeenCalled()
+  })
 })

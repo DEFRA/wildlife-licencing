@@ -75,4 +75,98 @@ describe('The application extract job', () => {
       })
     })
   })
+
+  it('returns readable stream of option set data', done => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      POWERAPPS: {
+        fetch: async () => Promise.resolve({
+          value: [{
+            Name: 'os',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: { Label: 'Agriculture' }
+                }
+              }
+            ]
+          }]
+        })
+      }
+    }))
+
+    import('../powerapps-read-stream.js').then(({ extractAndTransformGlobalOptionSetDefinitions }) => {
+      const stream = extractAndTransformGlobalOptionSetDefinitions()
+      let cnt = 0
+      stream.on('data', c => {
+        expect(c).toEqual({
+          name: 'os',
+          values: [
+            {
+              value: 100000000,
+              description: 'Agriculture'
+            }
+          ]
+        })
+        cnt++
+      })
+
+      stream.on('end', () => {
+        expect(cnt).toBe(1)
+        done()
+      })
+    })
+  })
+
+  it('returns readable stream of option set data and does not disrupt the stream with bad data', done => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      POWERAPPS: {
+        fetch: async () => Promise.resolve({
+          value: [{
+            Name: 'os',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: { Label: 'Agriculture' }
+                }
+              }
+            ]
+          }, {
+            Name: 'bad',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: {}
+                }
+              }
+            ]
+          }]
+        })
+      }
+    }))
+
+    import('../powerapps-read-stream.js').then(({ extractAndTransformGlobalOptionSetDefinitions }) => {
+      const stream = extractAndTransformGlobalOptionSetDefinitions()
+      let cnt = 0
+      stream.on('data', c => {
+        expect(c).toEqual({
+          name: 'os',
+          values: [
+            {
+              value: 100000000,
+              description: 'Agriculture'
+            }
+          ]
+        })
+        cnt++
+      })
+
+      stream.on('end', () => {
+        expect(cnt).toBe(1)
+        done()
+      })
+    })
+  })
 })

@@ -20,3 +20,9 @@ export const writeApplicationPurposes = async obj => {
     description: data.description
   })
 }
+
+export const writeOptionSets = async obj => {
+  const { name, values } = obj
+  const [, created] = await models.optionSets.upsert({ name, json: values })
+  return { insert: created ? 1 : 0, update: created ? 0 : 1 }
+}

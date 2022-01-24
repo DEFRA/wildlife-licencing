@@ -591,6 +591,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  ################################################################################################
+  # Option sets
+  ################################################################################################
+  '/option-sets':
+    get:
+      description: Get the global option set values
+      summary: Get the global option set values
+      operationId: getOptionSets
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/optionSetTypes'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
 components:
 ################################################################################################
 # Schemas
@@ -623,6 +648,10 @@ components:
           minLength: 1
           maxLength: 300
         detailsOfConvictions:
+          type: string
+          minLength: 1
+          maxLength: 300
+        licenceReason:
           type: string
           minLength: 1
           maxLength: 300
@@ -661,6 +690,34 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    optionSetTypes:
+      type: object
+      additionalProperties:
+        type: object
+        items:
+          $ref: '#/components/schemas/optionSetType'
+
+    optionSetType:
+      type: object
+      additionalProperties: false
+      properties:
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/objectSet'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    objectSet:
+      type: object
+      properties:
+        value:
+          type: number
+        description:
+          type: string
 
     contact:
       type: object
