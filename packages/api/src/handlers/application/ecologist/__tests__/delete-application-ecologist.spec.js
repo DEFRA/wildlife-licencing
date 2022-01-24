@@ -1,4 +1,4 @@
-const path = 'user/uuid/application/uuid/applicant'
+const path = 'user/uuid/application/uuid/ecologist'
 const req = {
   path,
   payload: {
@@ -33,14 +33,14 @@ const a = {
 jest.mock('@defra/wls-database-model')
 
 let models
-let deleteApplicationApplicant
+let deleteApplicationEcologist
 let cache
 const applicationJson = 'application/json'
 
-describe('The putApplicationApplicant handler', () => {
+describe('The putApplicationeEcologist handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    deleteApplicationApplicant = (await import('../applicant.js')).deleteApplicationApplicant
+    deleteApplicationEcologist = (await import('../ecologist.js')).deleteApplicationEcologist
     cache = (await import('../../../../services/cache.js')).cache
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
     SEQUELIZE.getSequelize = jest.fn(() => ({
@@ -55,11 +55,11 @@ describe('The putApplicationApplicant handler', () => {
     cache.delete = jest.fn()
     models.applications = {
       findByPk: jest.fn(() => ({
-        dataValues: { application: { applicant: a } }
+        dataValues: { application: { ecologist: a } }
       }))
     }
     cache.restore = jest.fn(() => null)
-    await deleteApplicationApplicant(context, req, h)
+    await deleteApplicationEcologist(context, req, h)
     expect(h.response).toHaveBeenCalled()
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(204)
@@ -68,7 +68,7 @@ describe('The putApplicationApplicant handler', () => {
   it('returns status 404 on not found', async () => {
     cache.delete = jest.fn()
     models.applications = { findByPk: jest.fn(() => null) }
-    await deleteApplicationApplicant(context, req, h)
+    await deleteApplicationEcologist(context, req, h)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -77,7 +77,7 @@ describe('The putApplicationApplicant handler', () => {
     cache.delete = jest.fn()
     models.applications = { findByPk: () => { throw Error() } }
     await expect(async () => {
-      await deleteApplicationApplicant(context, req, h)
+      await deleteApplicationEcologist(context, req, h)
     }).rejects.toThrow()
   })
 })

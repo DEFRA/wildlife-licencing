@@ -400,6 +400,117 @@ paths:
                 $ref: '#/components/schemas/error'
 
   ################################################################################################
+  # Ecologists / Agent
+  ################################################################################################
+  '/user/{userId}/application/{applicationId}/ecologist':
+    put:
+      description: Update the application ecologist details
+      summary: Create or update the application ecologist details
+      operationId: putApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application ecologist details
+      summary: Get the ecologist details for an application
+      operationId: getApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application ecologist details
+      summary: Delete the ecologist details for an application
+      operationId: deleteApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
   # Submission
   ################################################################################################
   '/user/{userId}/application/{applicationId}/submit':
@@ -521,6 +632,8 @@ components:
           $ref: '#/components/schemas/uuid'
         applicant:
           $ref: '#/components/schemas/contact'
+        ecologist:
+          $ref: '#/components/schemas/contact'
         submitted:
           $ref: '#/components/schemas/timestamp'
         createdAt:
@@ -551,7 +664,6 @@ components:
 
     contact:
       type: object
-      required: [firstname, lastname]
       properties:
         firstname:
           type: string
@@ -570,7 +682,6 @@ components:
 
     address:
       type: object
-      required: [addrline1, addrline3, postcode]
       properties:
         houseNumber:
           type: string

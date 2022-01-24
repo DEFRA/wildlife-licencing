@@ -1,4 +1,4 @@
-const path = 'user/uuid/application/uuid/applicant'
+const path = 'user/uuid/application/uuid/ecologist'
 const req = {
   path,
   payload: {
@@ -29,7 +29,7 @@ const context = {
 jest.mock('@defra/wls-database-model')
 
 let models
-let putApplicationApplicant
+let getApplicationEcologist
 let cache
 const applicationJson = 'application/json'
 
@@ -37,59 +37,54 @@ const a = {
   firstname: 'g', lastname: 'b'
 }
 
-describe('The putApplicationApplicant handler', () => {
+describe('The putApplicationEcologist handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    putApplicationApplicant = (await import('../applicant.js')).putApplicationApplicant
+    getApplicationEcologist = (await import('../ecologist.js')).getApplicationEcologist
     cache = (await import('../../../../services/cache.js')).cache
-    const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
-    SEQUELIZE.getSequelize = jest.fn(() => ({
-      fn: jest.fn(() => ({})),
-      col: jest.fn(() => ({}))
-    }))
   })
 
-  it('returns status 200 on a successful update', async () => {
-    models.applications = {
-      findByPk: jest.fn(() => ({ id: context.request.params.userId })),
-      update: jest.fn(() => ([1, [{
-        dataValues: {
-          application: {
-            applicant: a
-          }
-        }
-      }]]))
-    }
-    cache.delete = jest.fn()
-    cache.save = jest.fn()
-    await putApplicationApplicant(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(models.applications.update).toHaveBeenCalledWith({ application: { } },
-      { returning: ['application'], where: { id: context.request.params.applicationId } })
-    expect(cache.save).toHaveBeenCalledWith(path, a)
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}/applicant`)
+  it('returns status 200 on a successful get from cache', async () => {
+    cache.restore = jest.fn(() => JSON.stringify(a))
+    await getApplicationEcologist(context, req, h)
     expect(h.response).toHaveBeenCalledWith(a)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns 404 on application not found', async () => {
+  it('returns status 200 on a successful get from db', async () => {
     models.applications = {
-      findByPk: jest.fn(() => (null))
+      findByPk: jest.fn(() => ({
+        dataValues: { application: { ecologist: a } }
+      }))
     }
-    await putApplicationApplicant(context, req, h)
+    cache.restore = jest.fn(() => null)
+    cache.save = jest.fn()
+    await getApplicationEcologist(context, req, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(cache.save).toHaveBeenCalledWith(path, a)
+    expect(h.response).toHaveBeenCalledWith(a)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
+  it('returns status 404 when not found', async () => {
+    cache.restore = jest.fn(() => null)
+    models.applications = {
+      findByPk: jest.fn(() => null)
+    }
+    await getApplicationEcologist(context, req, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a database error', async () => {
     models.applications = {
-      findByPk: jest.fn(() => ({ id: context.request.params.userId })),
-      update: jest.fn(() => { throw new Error() })
+      findByPk: jest.fn(() => { throw new Error() })
     }
-    cache.delete = jest.fn()
-    cache.save = jest.fn()
+    cache.restore = jest.fn(() => null)
     await expect(async () => {
-      await putApplicationApplicant(context, req, h)
+      await getApplicationEcologist(context, req, h)
     }).rejects.toThrow()
   })
 })

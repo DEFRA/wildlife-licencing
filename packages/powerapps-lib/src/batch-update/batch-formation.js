@@ -51,8 +51,8 @@ export const createBatchRequestBody = (batchId, json, targetKeysJson, clientUrl)
   let body = batchStart(batchId, changeId)
   const queryResults = sequence.map(s => {
     const node = getModelNode(model, s)
-    const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, n++, clientUrl)
     const payload = powerAppsObjectBuilder(node[s].targetFields, json)
+    const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, n++, clientUrl)
     Object.entries(node[s].relationships || []).filter(([, o]) => !o.readOnly).forEach(([name, o]) =>
       Object.assign(payload, relationshipBuilder(name, o)))
 

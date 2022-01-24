@@ -11,5 +11,6 @@ export const clearCaches = async (userId, applicationId) => {
   if (applicationId) {
     await cache.delete(`/user/${userId}/application/${applicationId}`)
     await cache.delete(`/user/${userId}/application/${applicationId}/applicant`)
+    await cache.delete(`/user/${userId}/application/${applicationId}/ecologist`)
   }
 }

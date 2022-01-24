@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-import { applicant } from './applicant.js'
-import { ecologist } from './ecologist.js'
+import { contactClass } from './contact.js'
+export const ecologist = contactClass('ecologist')
+export const applicant = contactClass('applicant')
 
 /**
  * Each model is an independent set of associated data held in a hierarchical javascript object structure.

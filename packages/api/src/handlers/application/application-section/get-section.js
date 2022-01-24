@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
 import { cache } from '../../../services/cache.js'
 
-export default async (context, req, h) => {
+export const getSectionHandler = section => async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const saved = await cache.restore(req.path)
@@ -19,7 +19,7 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    const res = result.dataValues.application.applicant
+    const res = result.dataValues.application[section] || {}
     await cache.save(req.path, res)
     return h.response(res)
       .type(APPLICATION_JSON)

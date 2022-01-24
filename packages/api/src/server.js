@@ -23,6 +23,12 @@ import {
 } from './handlers/application/applicant/applicant.js'
 
 import {
+  getApplicationEcologist,
+  putApplicationEcologist,
+  deleteApplicationEcologist
+} from './handlers/application/ecologist/ecologist.js'
+
+import {
   getApplicationTypes,
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
@@ -65,6 +71,9 @@ const init = async server => {
     getApplicationApplicant,
     putApplicationApplicant,
     deleteApplicationApplicant,
+    getApplicationEcologist,
+    putApplicationEcologist,
+    deleteApplicationEcologist,
     postApplicationSubmit,
     getApplicationTypes,
     getApplicationPurposes,

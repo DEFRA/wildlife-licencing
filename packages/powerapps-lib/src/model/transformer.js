@@ -22,7 +22,7 @@ export const powerAppsObjectBuilder = (fields, src, obj = {}) => {
         const data = `/${fields[field].bind}(${get(src, fields[field].srcPath)})`
         Object.assign(obj, { [`${field}@odata.bind`]: data })
       } else {
-        Object.assign(obj, { [field]: get(src, fields[field].srcPath) })
+        Object.assign(obj, { [field]: get(src, fields[field].srcPath) || null })
       }
     }
   }
