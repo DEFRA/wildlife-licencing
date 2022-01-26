@@ -4,7 +4,8 @@ export const applicationTypesModel = {
     targetKey: 'sdds_applicationtypesid',
     targetFields: {
       sdds_applicationname: {
-        srcPath: 'name'
+        srcPath: 'name',
+        required: true
       },
       sdds_description: {
         srcPath: 'description'

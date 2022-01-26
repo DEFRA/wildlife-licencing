@@ -28,7 +28,7 @@ describe('The reference data extract processor: write-object', () => {
       }
     })
 
-    expect(result).toEqual({ insert: 1, update: 0 })
+    expect(result).toEqual({ update: 1 })
   })
 
   it('performs an upsert on a application-purposes', async () => {
@@ -59,6 +59,6 @@ describe('The reference data extract processor: write-object', () => {
         name: 'purpose name'
       }
     })
-    expect(result).toEqual({ insert: 0, update: 1 })
+    expect(result).toEqual({ update: 1 })
   })
 })

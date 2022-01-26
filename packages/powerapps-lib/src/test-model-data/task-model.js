@@ -1,6 +1,7 @@
 export const requestPath = 'tasks?$select=subject&$expand=regardingobjectid_contact_task' +
   '($select=fullname;$expand=parentcustomerid_account($select=accountName;$expand=createdby' +
-  '($select=systemName))),tasktypeid($select=description,counter),refdataId($select=refdataId)'
+  '($select=systemName))),tasktypeid($select=description,counter),refdataId($select=refdataId),' +
+  'refdataId2($select=refdata2Id)'
 
 export const srcData = {
   subject: 'Get all things done',
@@ -17,6 +18,8 @@ export const tgtData = {
   '@odata.etag': 'W/"2751267"',
   tasksid: '5e02378c-736d-ec11-8943-000d3a86e24e',
   subject: 'Get all things done',
+  boundRelation: { foo: 'bar' },
+  missingBoundRelation: { foo1: 'bar1' },
   refdata: '123',
   regardingobjectid_contact_task: {
     contactid: '5902378c-736d-ec11-8943-000d3a86e24f',
@@ -64,6 +67,21 @@ export const tasks = {
       bind: 'refdata',
       writeOnly: true,
       srcPath: 'refDataId'
+    },
+    refdata2: { // Not found bound, ignored
+      bind: 'refdata2',
+      writeOnly: true,
+      srcPath: 'refDataId2'
+    },
+    boundRelation: {
+      bind: 'bound-relation',
+      writeOnly: true,
+      srcFunc: async () => 123456
+    },
+    missingBoundRelation: { // Ignored
+      bind: 'missing-bound-relation',
+      writeOnly: true,
+      srcFunc: async () => null
     }
   },
 
@@ -106,6 +124,7 @@ export const tasks = {
         }
       }
     },
+
     taskType: {
       targetEntity: 'tasktype',
       targetKey: 'tasktypeid',
@@ -126,6 +145,18 @@ export const tasks = {
       targetFields: {
         refdataId: {
           srcPath: 'refDataId'
+        }
+      }
+    },
+
+    refdata2: {
+      targetEntity: 'refdata2',
+      targetKey: 'id',
+      fk: 'refdataId2',
+      readOnly: true,
+      targetFields: {
+        refdata2Id: {
+          srcPath: 'refData2Id'
         }
       }
     }

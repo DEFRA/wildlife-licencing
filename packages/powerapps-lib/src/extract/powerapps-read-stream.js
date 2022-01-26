@@ -34,14 +34,18 @@ export const extractAndTransform = model => {
   const transformStream = new Transform({
     objectMode: true,
     transform (data, encoding, callback) {
-      data.forEach(i => {
+      Promise.all(data.map(async i => {
         try {
-          this.push(localObjectBuilder(model, i))
+          return await localObjectBuilder(model, i)
         } catch (error) {
           console.error(error.message, error)
         }
+      })).then(results => {
+        if (results) {
+          results.forEach(r => r && this.push(r))
+        }
+        callback()
       })
-      callback()
     }
   })
 

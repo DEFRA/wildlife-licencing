@@ -1,8 +1,8 @@
 import { models } from '@defra/wls-database-model'
 
 const generalUpsert = async (model, id, json) => {
-  const [, created] = await model.upsert({ id, json })
-  return { insert: created ? 1 : 0, update: created ? 0 : 1 }
+  await model.upsert({ id, json }) // Possible sequelize bug: created not working with upsert
+  return { update: 1 }
 }
 
 export const writeApplicationTypes = async obj => {
@@ -23,6 +23,6 @@ export const writeApplicationPurposes = async obj => {
 
 export const writeOptionSets = async obj => {
   const { name, values } = obj
-  const [, created] = await models.optionSets.upsert({ name, json: values })
-  return { insert: created ? 1 : 0, update: created ? 0 : 1 }
+  await models.optionSets.upsert({ name, json: values })
+  return { update: 1 }
 }

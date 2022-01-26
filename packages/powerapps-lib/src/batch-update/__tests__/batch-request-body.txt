@@ -62,6 +62,7 @@ Content-Type: application/json;type=entry
 {
     "subject": "Get all things done",
     "refdata@odata.bind": "/refdata(123)",
+    "boundRelation@odata.bind": "/bound-relation(123456)",
     "regardingobjectid_contact_task@odata.bind": "$3",
     "tasktypeid@odata.bind": "$4"
 }

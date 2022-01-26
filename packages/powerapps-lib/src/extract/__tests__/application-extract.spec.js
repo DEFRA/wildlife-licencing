@@ -39,43 +39,6 @@ describe('The application extract job', () => {
     })
   })
 
-  it('does not disrupt the stream and ignores object when transformation throws an error', done => {
-    // eslint-disable-next-line camelcase
-    const tgtRemoveExpected = (({ subject, ...t }) => t)(tgtData)
-
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      POWERAPPS: {
-        fetch: async p => {
-          if (p === '/more/data') {
-            return Promise.resolve({
-              value: [tgtData, tgtRemoveExpected]
-            })
-          } else {
-            return Promise.resolve({
-              '@odata.nextLink': '/more/data',
-              value: [tgtRemoveExpected, tgtData, tgtData]
-            })
-          }
-        },
-        getClientUrl: () => 'base'
-      }
-    }))
-
-    import('../powerapps-read-stream.js').then(({ extractAndTransform }) => {
-      const stream = extractAndTransform({ tasks })
-      let cnt = 0
-      stream.on('data', c => {
-        expect(c.data).toEqual(srcData)
-        cnt++
-      })
-
-      stream.on('end', () => {
-        expect(cnt).toBe(3)
-        done()
-      })
-    })
-  })
-
   it('returns readable stream of option set data', done => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       POWERAPPS: {

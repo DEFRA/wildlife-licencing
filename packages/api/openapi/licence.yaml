@@ -655,10 +655,16 @@ components:
           type: string
           minLength: 1
           maxLength: 300
-        applicationTypeId:
-          $ref: '#/components/schemas/uuid'
-        applicationPurposeId:
-          $ref: '#/components/schemas/uuid'
+        applicationCategory:
+          type: number
+        applicationType:
+          type: string
+          minLength: 1
+          maxLength: 300
+        applicationPurpose:
+          type: string
+          minLength: 1
+          maxLength: 300
         applicant:
           $ref: '#/components/schemas/contact'
         ecologist:

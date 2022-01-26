@@ -4,7 +4,8 @@ export const applicationPurposesModel = {
     targetKey: 'sdds_applicationpurposeid',
     targetFields: {
       sdds_name: {
-        srcPath: 'name'
+        srcPath: 'name',
+        required: true
       },
       sdds_description: {
         srcPath: 'description'
