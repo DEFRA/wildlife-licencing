@@ -1,16 +1,39 @@
+import * as _get from 'lodash.get'
+
+const { default: get } = _get
+
 /* eslint-disable camelcase */
-export const contactClass = cc => ({
+export const contactClass = srcPath => ({
   targetEntity: 'contacts',
   targetKey: 'contactid',
   targetFields: {
-    firstname: { srcPath: `${cc}.firstname` },
-    lastname: { srcPath: `${cc}.lastname` },
-    address1_line1: { srcPath: `${cc}.address.addrline1` },
-    address1_line2: { srcPath: `${cc}.address.addrline2` },
-    address1_line3: { srcPath: `${cc}.address.addrline3` },
-    address1_county: { srcPath: `${cc}.address.county` },
-    address1_postalcode: { srcPath: `${cc}.address.postcode` },
-    address1_telephone1: { srcPath: `${cc}.phone` },
-    emailaddress1: { srcPath: `${cc}.email` }
+    firstname: { srcPath: `${srcPath}.firstname` },
+    lastname: { srcPath: `${srcPath}.lastname` },
+    ...addressClass(`${srcPath}.address`),
+    ...contactDetailsClass(`${srcPath}.contactDetails`)
   }
+})
+
+export const accountClass = srcPath => ({
+  targetEntity: 'accounts',
+  targetKey: 'accountid',
+  targetFields: {
+    name: { srcPath: `${srcPath}.name` },
+    ...addressClass(`${srcPath}.address`),
+    ...contactDetailsClass(`${srcPath}.contactDetails`)
+  }
+})
+
+const addressClass = srcPath => ({
+  address1_line1: { srcPath: `${srcPath}.addrline1` },
+  address1_line2: { srcPath: `${srcPath}.addrline2` },
+  address1_line3: { srcPath: `${srcPath}.addrline3` },
+  address1_county: { srcPath: `${srcPath}.county` },
+  address1_city: { srcPath: `${srcPath}.town` },
+  address1_postalcode: { srcFunc: s => get(s, srcPath)?.postcode?.toUpperCase() || null } // To uppercase
+})
+
+const contactDetailsClass = srcPath => ({
+  telephone1: { srcPath: `${srcPath}.phone` },
+  emailaddress1: { srcPath: `${srcPath}.email` }
 })

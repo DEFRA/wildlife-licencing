@@ -725,6 +725,14 @@ components:
         description:
           type: string
 
+    contactDetails:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        phone:
+          $ref: '#/components/schemas/phone'
+
     contact:
       type: object
       properties:
@@ -736,12 +744,24 @@ components:
           type: string
           minLength: 1
           maxLength: 36
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
-        email:
-          $ref: '#/components/schemas/email'
-        phone:
-          $ref: '#/components/schemas/phone'
+        organization:
+          $ref: '#/components/schemas/organization'
+
+    organization:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 36
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
 
     address:
       type: object

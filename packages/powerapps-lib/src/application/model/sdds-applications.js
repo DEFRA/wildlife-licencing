@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
+import crypto from 'crypto'
 import { getReferenceDataIdByName, getReferenceDataNameById } from '../../refdata/cache.js'
-import { contactClass } from './contact.js'
+import { contactClass, accountClass } from './contact.js'
 export const ecologist = contactClass('ecologist')
 export const applicant = contactClass('applicant')
+export const ecologistOrganization = accountClass('ecologist.organization')
+export const applicantOrganization = accountClass('applicant.organization')
 
 /**
  * Each model is an independent set of associated data held in a hierarchical javascript object structure.
@@ -75,6 +78,10 @@ export const sddsApplications = {
   targetEntity: 'sdds_applications',
   targetKey: 'sdds_applicationid',
   targetFields: {
+    sdds_applicationnumber: { // Place holder - needs  further discussion
+      srcFunc: () => crypto.randomBytes(3).toString('hex').toUpperCase()
+    },
+
     sdds_descriptionofproposal: {
       srcPath: 'proposalDescription'
     },
@@ -114,16 +121,26 @@ export const sddsApplications = {
       fk: 'sdds_applicantid'
     },
 
+    applicantOrganization: {
+      ...applicantOrganization,
+      fk: 'sdds_organisationid'
+    },
+
     ecologist: {
       ...ecologist,
       fk: 'sdds_ecologistid'
+    },
+
+    ecologistOrganization: {
+      ...ecologistOrganization,
+      fk: 'sdds_ecologistorganisationid'
     },
 
     sdds_applicationtypesid: {
       targetEntity: 'sdds_applicationtypeses',
       targetKey: 'sdds_applicationtypesid',
       fk: 'sdds_applicationtypesid',
-      readOnly: true, // Only used in the extract
+      readOnly: true,
       targetFields: {
         sdds_applicationtypesid: {
           tgtFunc: async s => [{

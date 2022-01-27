@@ -1,7 +1,7 @@
 import { Readable, Transform } from 'stream'
 import { POWERAPPS } from '@defra/wls-connectors-lib'
 import { buildRequestPath } from '../model/model-utils.js'
-import { localObjectBuilder, globalOptionSetTransformer } from '../model/transformer.js'
+import { apiObjectBuilder, globalOptionSetTransformer } from '../model/transformer.js'
 
 async function * fetcher (path) {
   let p = path
@@ -36,7 +36,7 @@ export const extractAndTransform = model => {
     transform (data, encoding, callback) {
       Promise.all(data.map(async i => {
         try {
-          return await localObjectBuilder(model, i)
+          return await apiObjectBuilder(model, i)
         } catch (error) {
           console.error(error.message, error)
         }

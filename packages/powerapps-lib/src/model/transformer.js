@@ -64,7 +64,7 @@ export const powerAppsObjectBuilder = async (fields, src, obj = {}) => {
  *
  * Logs an error and returns null if an field is not found on the extracted object
  */
-export const localObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
+export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
   const nodeName = Object.keys(node)[0]
   const nodeKey = paObj[node[nodeName].targetKey]
   Object.assign(keys, {
@@ -80,9 +80,12 @@ export const localObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
       if (node[nodeName].targetFields[field].tgtFunc) {
         const res = await node[nodeName].targetFields[field].tgtFunc(paObj)
         res.forEach(r => set(obj, r.srcPath, r.value))
-      } else if (node[nodeName].targetFields[field].srcPath) { // Ignore write only
+      } else if (node[nodeName].targetFields[field].srcPath) {
+        // Null values are not written, they are left undefined
         const value = get(paObj, field)
-        set(obj, node[nodeName].targetFields[field].srcPath, value)
+        if (value) {
+          set(obj, node[nodeName].targetFields[field].srcPath, value)
+        }
       }
 
       if (node[nodeName].targetFields[field].required &&
@@ -104,7 +107,7 @@ export const localObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
     const nn = node[nodeName].relationships[next]
     const key = nn.fk.replace('@odata.bind', '')
     if (paObj[key]) {
-      await localObjectBuilder({ [next]: nn }, paObj[key], obj, keys)
+      await apiObjectBuilder({ [next]: nn }, paObj[key], obj, keys)
     }
   }
 
