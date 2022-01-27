@@ -30,7 +30,13 @@ describe('the applications model', () => {
     await expect(mockGetReferenceDataNameById).toHaveBeenCalledWith('sdds_applicationpurposes', 456)
   })
 
-  it('other functions are correctly called', async () => {
+  it('the application number function correctly called', async () => {
+    const { applicationModel } = await import('../sdds-application-model.js')
+    const applicationNumber = applicationModel.sdds_applications.targetFields.sdds_applicationnumber.srcFunc()
+    expect(applicationNumber.length).toBe(6)
+  })
+
+  it('the postcode parser is correctly called', async () => {
     const { applicationModel } = await import('../sdds-application-model.js')
     const applicationNumber = applicationModel.sdds_applications.targetFields.sdds_applicationnumber.srcFunc()
     expect(applicationNumber.length).toBe(6)
@@ -42,5 +48,27 @@ describe('the applications model', () => {
       }
     })
     expect(postcode).toBe('BS1 1PY')
+  })
+
+  it('the postcode parser is correctly called for null postcode', async () => {
+    const { applicationModel } = await import('../sdds-application-model.js')
+    const applicationNumber = applicationModel.sdds_applications.targetFields.sdds_applicationnumber.srcFunc()
+    expect(applicationNumber.length).toBe(6)
+    const postcode = applicationModel.sdds_applications.relationships.applicant.targetFields.address1_postalcode.srcFunc({
+      applicant: {
+        address: {
+          postcode: null
+        }
+      }
+    })
+    expect(postcode).toBeNull()
+  })
+
+  it('the postcode parser is correctly called for null payload', async () => {
+    const { applicationModel } = await import('../sdds-application-model.js')
+    const applicationNumber = applicationModel.sdds_applications.targetFields.sdds_applicationnumber.srcFunc()
+    expect(applicationNumber.length).toBe(6)
+    const postcode = applicationModel.sdds_applications.relationships.applicant.targetFields.address1_postalcode.srcFunc({})
+    expect(postcode).toBeNull()
   })
 })

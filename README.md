@@ -101,7 +101,7 @@ Alternatively set the environment variables in the running shell or your IDE
 
 ## Description of API Process
 
-### API to PowerApps
+### API to Power Apps
 
 A set of API handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
@@ -111,7 +111,7 @@ JSONB field. Each application is associated with a user which is recorded in the
 
 On submission of the application via API application/submit request the following will occur:
 
-(1)    The data will be queued using bull-queue and a 204 no-content returned by the API. The queues are stored in Redis
+(1) The data will be queued using bull-queue and a 204 no-content returned by the API. The queues are stored in Redis
 and can be inspected (locally) using redis-commander `http://localhost:8002/`
 
 The queues are defined centrally in the package ```packages/queue-defs/src/defs.js```. This enables autonomous processes
@@ -145,5 +145,4 @@ PATCH each element based on the existence of key data.
 
 request. This deals for authorisation and token management.
 
-### PowerApps to API
-
+### Power Apps to API

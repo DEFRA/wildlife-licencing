@@ -33,14 +33,6 @@ export const powerAppsObjectBuilder = async (fields, src, obj = {}) => {
   return obj
 }
 
-/**
- * Extracted from above to pass cognitive complexity
- * @param fields
- * @param field
- * @param src
- * @param obj
- * @returns {Promise<void>}
- */
 async function powerAppsObjectBuildByFieldFunction (fields, field, src, obj) {
   if (fields[field].bind) {
     const id = await fields[field].srcFunc(src)
@@ -56,13 +48,6 @@ async function powerAppsObjectBuildByFieldFunction (fields, field, src, obj) {
   }
 }
 
-/**
- * Extracted from above to pass cognitive complexity
- * @param fields
- * @param field
- * @param src
- * @param obj
- */
 function powerAppsObjectBuilderByField (fields, field, src, obj) {
   if (fields[field].bind) {
     const id = get(src, fields[field].srcPath)
@@ -103,14 +88,9 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
   for (const field in node[nodeName].targetFields) {
     if (has(paObj, field)) {
       if (node[nodeName].targetFields[field].tgtFunc) {
-        const res = await node[nodeName].targetFields[field].tgtFunc(paObj)
-        res.forEach(r => set(obj, r.srcPath, r.value))
+        await apiObjectBuilderFieldByFunction(node, nodeName, field, paObj, obj)
       } else if (node[nodeName].targetFields[field].srcPath) {
-        // Null values are not written, they are left undefined
-        const value = get(paObj, field)
-        if (value) {
-          set(obj, node[nodeName].targetFields[field].srcPath, value)
-        }
+        apiObjectBuilderFieldByPath(paObj, field, obj, node, nodeName)
       }
     } else {
       // If we have do not have a required field and value then return null
@@ -128,15 +108,19 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
   return { data: obj, keys }
 }
 
-/**
- * Extracted from apiObjectBuilder to pass cognitive complexity
- * @param node
- * @param nodeName
- * @param paObj
- * @param obj
- * @param keys
- * @returns {Promise<void>}
- */
+function apiObjectBuilderFieldByPath (paObj, field, obj, node, nodeName) {
+  // Null values are not written, they are left undefined
+  const value = get(paObj, field)
+  if (value) {
+    set(obj, node[nodeName].targetFields[field].srcPath, value)
+  }
+}
+
+async function apiObjectBuilderFieldByFunction (node, nodeName, field, paObj, obj) {
+  const res = await node[nodeName].targetFields[field].tgtFunc(paObj)
+  res.forEach(r => set(obj, r.srcPath, r.value))
+}
+
 async function apiObjectBuilderTraverse (node, nodeName, paObj, obj, keys) {
   for (const next in node[nodeName]?.relationships) {
     const nn = node[nodeName].relationships[next]
