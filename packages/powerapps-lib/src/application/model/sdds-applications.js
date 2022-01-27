@@ -105,13 +105,13 @@ export const sddsApplications = {
     sdds_applicationtypesid: {
       bind: 'sdds_applicationtypeses',
       writeOnly: true,
-      srcFunc: async s => await getReferenceDataIdByName('sdds_applicationtypeses', s.applicationType)
+      srcFunc: s => getReferenceDataIdByName('sdds_applicationtypeses', s.applicationType)
     },
 
     sdds_applicationpurpose: {
       bind: 'sdds_applicationpurposes',
       writeOnly: true,
-      srcFunc: async s => await getReferenceDataIdByName('sdds_applicationpurposes', s.applicationPurpose)
+      srcFunc: s => getReferenceDataIdByName('sdds_applicationpurposes', s.applicationPurpose)
     }
   },
 

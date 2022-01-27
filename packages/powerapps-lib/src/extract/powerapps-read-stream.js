@@ -34,13 +34,7 @@ export const extractAndTransform = model => {
   const transformStream = new Transform({
     objectMode: true,
     transform (data, encoding, callback) {
-      Promise.all(data.map(async i => {
-        try {
-          return await apiObjectBuilder(model, i)
-        } catch (error) {
-          console.error(error.message, error)
-        }
-      })).then(results => {
+      Promise.all(data.map(async i => await apiObjectBuilder(model, i))).then(results => {
         if (results) {
           results.forEach(r => r && this.push(r))
         }

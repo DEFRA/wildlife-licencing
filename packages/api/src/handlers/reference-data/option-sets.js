@@ -11,8 +11,8 @@ export const getOptionSets = async (context, req, h) => {
       .code(200)
   }
 
-  const r = await models.optionSets.findAll()
-  const response = r.map(r => r.dataValues).reduce((a, c) => ({
+  const res = await models.optionSets.findAll()
+  const response = res.map(r => r.dataValues).reduce((a, c) => ({
     ...a,
     [c.name]: {
       values: c.json,

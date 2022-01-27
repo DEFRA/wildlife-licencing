@@ -91,7 +91,8 @@ Alternatively set the environment variables in the running shell or your IDE
 | ----------- | ----------- | ----------- | ----------- |
 | [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Apps | Y | wildlife-licencing/api |
 | [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Apps as ODATA batch updates. | Y | wildlife-licencing/aqp | 
-| [extract-processor](packages/application-extract-processor) | Extracts data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
 | [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/eps-web |
 | [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Apps & Bull-Queue | N | 
 | [database-model](packages/database-model) | Extracts the sequelize database model in order to share it between multiple processes | N | 
@@ -133,8 +134,7 @@ the retry configuration in queue-defs.
 On un-recoverable errors the batchUpdate method will return Promise.Resolve and log an error for investigation.
 
 (3) In the powerapps-lib the application data is transformed using the model defined
-in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into
-which a path element is used to map the data to the API/database structure.
+in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into which a path element is used to map the data to the API/database structure.
 
 (4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA
 

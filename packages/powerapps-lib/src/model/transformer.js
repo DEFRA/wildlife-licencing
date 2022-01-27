@@ -25,48 +25,71 @@ const { default: has } = _has
 export const powerAppsObjectBuilder = async (fields, src, obj = {}) => {
   for (const field in fields) {
     if (fields[field].srcFunc) {
-      if (fields[field].bind) {
-        const id = await fields[field].srcFunc(src)
-        if (id) {
-          const data = `/${fields[field].bind}(${id})`
-          Object.assign(obj, { [`${field}@odata.bind`]: data })
-        } else {
-          console.log(`WARNING: expected bound relation not found: ${fields[field].bind}`)
-        }
-      } else {
-        const val = await fields[field].srcFunc(src)
-        Object.assign(obj, { [field]: val || null })
-      }
+      await powerAppsObjectBuildByFieldFunction(fields, field, src, obj)
     } else if (fields[field].srcPath) {
-      if (fields[field].bind) {
-        const id = get(src, fields[field].srcPath)
-        if (id) {
-          const data = `/${fields[field].bind}(${id})`
-          Object.assign(obj, { [`${field}@odata.bind`]: data })
-        } else {
-          console.log(`WARNING: expected bound relation not found: ${fields[field].bind}`)
-        }
-      } else {
-        Object.assign(obj, { [field]: get(src, fields[field].srcPath) || null })
-      }
+      powerAppsObjectBuilderByField(fields, field, src, obj)
     }
   }
   return obj
 }
 
 /**
- * Traverse the model and build an API payload from the powerapps data
+ * Extracted from above to pass cognitive complexity
+ * @param fields
+ * @param field
+ * @param src
+ * @param obj
+ * @returns {Promise<void>}
+ */
+async function powerAppsObjectBuildByFieldFunction (fields, field, src, obj) {
+  if (fields[field].bind) {
+    const id = await fields[field].srcFunc(src)
+    if (id) {
+      const data = `/${fields[field].bind}(${id})`
+      Object.assign(obj, { [`${field}@odata.bind`]: data })
+    } else {
+      console.log(`WARNING: expected bound relation not found: ${fields[field].bind}`)
+    }
+  } else {
+    const val = await fields[field].srcFunc(src)
+    Object.assign(obj, { [field]: val || null })
+  }
+}
+
+/**
+ * Extracted from above to pass cognitive complexity
+ * @param fields
+ * @param field
+ * @param src
+ * @param obj
+ */
+function powerAppsObjectBuilderByField (fields, field, src, obj) {
+  if (fields[field].bind) {
+    const id = get(src, fields[field].srcPath)
+    if (id) {
+      const data = `/${fields[field].bind}(${id})`
+      Object.assign(obj, { [`${field}@odata.bind`]: data })
+    } else {
+      console.log(`WARNING: expected bound relation not found: ${fields[field].bind}`)
+    }
+  } else {
+    Object.assign(obj, { [field]: get(src, fields[field].srcPath) || null })
+  }
+}
+
+/**
+ * Traverse the model and build an API payload and KEYS object from the powerapps data
  * @param node - A model node
  * @param paObj - The powerapps data as a JSON object
  * @param obj - Do not set
  * @param keys - Do not set
  * @returns {Promise<{}>} - The built object
- *
- * Logs an error and returns null if an field is not found on the extracted object
  */
 export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
   const nodeName = Object.keys(node)[0]
   const nodeKey = paObj[node[nodeName].targetKey]
+
+  // Assign the PowerApps key details for the current model node to the keys object
   Object.assign(keys, {
     [nodeName]: {
       eid: nodeKey,
@@ -75,6 +98,8 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
     }
   })
 
+  // Process each field on the current model node target function
+  // Each field is either a a path extract or a function
   for (const field in node[nodeName].targetFields) {
     if (has(paObj, field)) {
       if (node[nodeName].targetFields[field].tgtFunc) {
@@ -87,12 +112,6 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
           set(obj, node[nodeName].targetFields[field].srcPath, value)
         }
       }
-
-      if (node[nodeName].targetFields[field].required &&
-        node[nodeName].targetFields[field].srcPath &&
-        !obj[node[nodeName].targetFields[field].srcPath]) {
-        return null
-      }
     } else {
       // If we have do not have a required field and value then return null
       // Which filters out the item in the read stream
@@ -103,6 +122,22 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
     }
   }
 
+  // Step in the child nodes of the model
+  await apiObjectBuilderTraverse(node, nodeName, paObj, obj, keys)
+
+  return { data: obj, keys }
+}
+
+/**
+ * Extracted from apiObjectBuilder to pass cognitive complexity
+ * @param node
+ * @param nodeName
+ * @param paObj
+ * @param obj
+ * @param keys
+ * @returns {Promise<void>}
+ */
+async function apiObjectBuilderTraverse (node, nodeName, paObj, obj, keys) {
   for (const next in node[nodeName]?.relationships) {
     const nn = node[nodeName].relationships[next]
     const key = nn.fk.replace('@odata.bind', '')
@@ -110,8 +145,6 @@ export const apiObjectBuilder = async (node, paObj, obj = {}, keys = {}) => {
       await apiObjectBuilder({ [next]: nn }, paObj[key], obj, keys)
     }
   }
-
-  return { data: obj, keys }
 }
 
 /**

@@ -1,6 +1,6 @@
 
 describe('the applications model', () => {
-  it('field functions are correct', async () => {
+  it('lookup functions are correctly called', async () => {
     const mockGetReferenceDataIdByName = jest.fn()
     const mockGetReferenceDataNameById = jest.fn()
 
@@ -28,5 +28,19 @@ describe('the applications model', () => {
     await applicationModel.sdds_applications.relationships
       .sdds_applicationpurpose.targetFields.sdds_applicationpurposeid.tgtFunc({ sdds_applicationpurposeid: 456 })
     await expect(mockGetReferenceDataNameById).toHaveBeenCalledWith('sdds_applicationpurposes', 456)
+  })
+
+  it('other functions are correctly called', async () => {
+    const { applicationModel } = await import('../sdds-application-model.js')
+    const applicationNumber = applicationModel.sdds_applications.targetFields.sdds_applicationnumber.srcFunc()
+    expect(applicationNumber.length).toBe(6)
+    const postcode = applicationModel.sdds_applications.relationships.applicant.targetFields.address1_postalcode.srcFunc({
+      applicant: {
+        address: {
+          postcode: 'bs1 1py'
+        }
+      }
+    })
+    expect(postcode).toBe('BS1 1PY')
   })
 })
