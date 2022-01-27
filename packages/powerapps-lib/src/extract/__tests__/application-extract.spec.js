@@ -39,38 +39,95 @@ describe('The application extract job', () => {
     })
   })
 
-  it('does not disrupt the stream and ignores object when transformation throws an error', done => {
-    // eslint-disable-next-line camelcase
-    const tgtRemoveExpected = (({ subject, ...t }) => t)(tgtData)
-
+  it('returns readable stream of option set data', done => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       POWERAPPS: {
-        fetch: async p => {
-          if (p === '/more/data') {
-            return Promise.resolve({
-              value: [tgtData, tgtRemoveExpected]
-            })
-          } else {
-            return Promise.resolve({
-              '@odata.nextLink': '/more/data',
-              value: [tgtRemoveExpected, tgtData, tgtData]
-            })
-          }
-        },
-        getClientUrl: () => 'base'
+        fetch: async () => Promise.resolve({
+          value: [{
+            Name: 'os',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: { Label: 'Agriculture' }
+                }
+              }
+            ]
+          }]
+        })
       }
     }))
 
-    import('../powerapps-read-stream.js').then(({ extractAndTransform }) => {
-      const stream = extractAndTransform({ tasks })
+    import('../powerapps-read-stream.js').then(({ extractAndTransformGlobalOptionSetDefinitions }) => {
+      const stream = extractAndTransformGlobalOptionSetDefinitions()
       let cnt = 0
       stream.on('data', c => {
-        expect(c.data).toEqual(srcData)
+        expect(c).toEqual({
+          name: 'os',
+          values: [
+            {
+              value: 100000000,
+              description: 'Agriculture'
+            }
+          ]
+        })
         cnt++
       })
 
       stream.on('end', () => {
-        expect(cnt).toBe(3)
+        expect(cnt).toBe(1)
+        done()
+      })
+    })
+  })
+
+  it('returns readable stream of option set data and does not disrupt the stream with bad data', done => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      POWERAPPS: {
+        fetch: async () => Promise.resolve({
+          value: [{
+            Name: 'os',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: { Label: 'Agriculture' }
+                }
+              }
+            ]
+          }, {
+            Name: 'bad',
+            Options: [
+              {
+                Value: 100000000,
+                Label: {
+                  UserLocalizedLabel: {}
+                }
+              }
+            ]
+          }]
+        })
+      }
+    }))
+
+    import('../powerapps-read-stream.js').then(({ extractAndTransformGlobalOptionSetDefinitions }) => {
+      const stream = extractAndTransformGlobalOptionSetDefinitions()
+      let cnt = 0
+      stream.on('data', c => {
+        expect(c).toEqual({
+          name: 'os',
+          values: [
+            {
+              value: 100000000,
+              description: 'Agriculture'
+            }
+          ]
+        })
+        cnt++
+      })
+
+      stream.on('end', () => {
+        expect(cnt).toBe(1)
         done()
       })
     })

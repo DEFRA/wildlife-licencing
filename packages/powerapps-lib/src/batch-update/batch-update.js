@@ -19,7 +19,7 @@ const debug = db('powerapps-lib:batch-update')
  */
 export const batchUpdate = async (srcJson, targetKeysJson, model) => {
   const batchId = openBatchRequest(model)
-  const batchRequestBody = createBatchRequestBody(batchId, srcJson, targetKeysJson, clientUrl)
+  const batchRequestBody = await createBatchRequestBody(batchId, srcJson, targetKeysJson, clientUrl)
   debug(`Batch request body for batchId ${batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
   try {
     const responseText = await POWERAPPS.batchRequest(batchId, batchRequestBody)

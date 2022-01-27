@@ -1,6 +1,7 @@
 export const requestPath = 'tasks?$select=subject&$expand=regardingobjectid_contact_task' +
   '($select=fullname;$expand=parentcustomerid_account($select=accountName;$expand=createdby' +
-  '($select=systemName))),tasktypeid($select=description,counter)'
+  '($select=systemName))),tasktypeid($select=description,counter),refdataId($select=refdataId),' +
+  'refdataId2($select=refdata2Id)'
 
 export const srcData = {
   subject: 'Get all things done',
@@ -9,13 +10,17 @@ export const srcData = {
   type: 'dependency',
   account: {
     name: 'Main Account'
-  }
+  },
+  refDataId: '123'
 }
 
 export const tgtData = {
   '@odata.etag': 'W/"2751267"',
   tasksid: '5e02378c-736d-ec11-8943-000d3a86e24e',
   subject: 'Get all things done',
+  boundRelation: { foo: 'bar' },
+  missingBoundRelation: { foo1: 'bar1' },
+  refdata: '123',
   regardingobjectid_contact_task: {
     contactid: '5902378c-736d-ec11-8943-000d3a86e24f',
     fullname: 'Brian Jones',
@@ -57,6 +62,26 @@ export const tasks = {
   targetFields: {
     subject: {
       srcPath: 'subject'
+    },
+    refdata: {
+      bind: 'refdata',
+      writeOnly: true,
+      srcPath: 'refDataId'
+    },
+    refdata2: { // Not found bound, ignored
+      bind: 'refdata2',
+      writeOnly: true,
+      srcPath: 'refDataId2'
+    },
+    boundRelation: {
+      bind: 'bound-relation',
+      writeOnly: true,
+      srcFunc: async () => 123456
+    },
+    missingBoundRelation: { // Ignored
+      bind: 'missing-bound-relation',
+      writeOnly: true,
+      srcFunc: async () => null
     }
   },
 
@@ -74,7 +99,7 @@ export const tasks = {
           ])
         }
       },
-      fk: 'regardingobjectid_contact_task@odata.bind',
+      fk: 'regardingobjectid_contact_task',
       relationships: {
         account: {
           targetEntity: 'account',
@@ -84,7 +109,7 @@ export const tasks = {
               srcPath: 'account.name'
             }
           },
-          fk: 'parentcustomerid_account@odata.bind',
+          fk: 'parentcustomerid_account',
           relationships: {
             systemUser: {
               targetEntity: 'systemuser',
@@ -93,12 +118,13 @@ export const tasks = {
                   srcFunc: () => 'SYSTEM-USER'
                 }
               },
-              fk: 'createdby@odata.bind'
+              fk: 'createdby'
             }
           }
         }
       }
     },
+
     taskType: {
       targetEntity: 'tasktype',
       targetKey: 'tasktypeid',
@@ -108,7 +134,31 @@ export const tasks = {
         },
         counter: {}
       },
-      fk: 'tasktypeid@odata.bind'
+      fk: 'tasktypeid'
+    },
+
+    refdata: {
+      targetEntity: 'refdata',
+      targetKey: 'id',
+      fk: 'refdataId',
+      readOnly: true,
+      targetFields: {
+        refdataId: {
+          srcPath: 'refDataId'
+        }
+      }
+    },
+
+    refdata2: {
+      targetEntity: 'refdata2',
+      targetKey: 'id',
+      fk: 'refdataId2',
+      readOnly: true,
+      targetFields: {
+        refdata2Id: {
+          srcPath: 'refData2Id'
+        }
+      }
     }
   }
 }

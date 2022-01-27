@@ -1,5 +1,7 @@
-import getApplicationApplicant from './get-application-applicant.js'
-import putApplicationApplicant from './put-application-applicant.js'
-import deleteApplicationApplicant from './delete-application-applicant.js'
+import { getSectionHandler } from '../application-section/get-section.js'
+import { putSectionHandler } from '../application-section/put-section.js'
+import { deleteSectionHandler } from '../application-section/delete-section.js'
 
-export { getApplicationApplicant, putApplicationApplicant, deleteApplicationApplicant }
+export const getApplicationApplicant = getSectionHandler('applicant')
+export const putApplicationApplicant = putSectionHandler('applicant')
+export const deleteApplicationApplicant = deleteSectionHandler('applicant')

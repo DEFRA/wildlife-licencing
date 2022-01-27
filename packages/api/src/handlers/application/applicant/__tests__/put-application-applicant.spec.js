@@ -40,7 +40,7 @@ const a = {
 describe('The putApplicationApplicant handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    putApplicationApplicant = (await import('../put-application-applicant.js')).default
+    putApplicationApplicant = (await import('../applicant.js')).putApplicationApplicant
     cache = (await import('../../../../services/cache.js')).cache
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
     SEQUELIZE.getSequelize = jest.fn(() => ({

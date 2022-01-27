@@ -25,6 +25,7 @@ describe('The application extract processor: write-object', () => {
         }
       }
     }, Date.now())
+
     expect(mockUpdate).toHaveBeenCalledWith({
       application: { foo: 'bar' },
       updateStatus: 'U',
@@ -145,7 +146,7 @@ describe('The application extract processor: write-object', () => {
           eid: 'e0eb1ba9-0cc2-4bf1-92a9-68ec1d7c2626'
         }
       },
-      sdds_application_id: 'e0eb1ba9-0cc2-4bf1-92a9-68ec1d7c2626'
+      sddsApplicationId: 'e0eb1ba9-0cc2-4bf1-92a9-68ec1d7c2626'
     })
 
     expect(result).toEqual({ insert: 1, pending: 0, update: 0, error: 0 })

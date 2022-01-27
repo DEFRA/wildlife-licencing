@@ -52,7 +52,7 @@ export const writeApplicationObject = async (obj, ts) => {
         application: data,
         targetKeys: keys,
         updateStatus: 'U',
-        sdds_application_id: keys.sdds_applications.eid
+        sddsApplicationId: keys.sdds_applications.eid
       })
       return { insert: 1, update: 0, pending: 0, error: 0 }
     }

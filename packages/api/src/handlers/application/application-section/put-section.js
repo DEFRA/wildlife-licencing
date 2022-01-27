@@ -4,7 +4,7 @@ import { APPLICATION_JSON } from '../../../constants.js'
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import { clearCaches } from '../application-cache.js'
 
-export default async (context, req, h) => {
+export const putSectionHandler = section => async (context, req, h) => {
   try {
     const { userId, applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
@@ -18,7 +18,7 @@ export default async (context, req, h) => {
     const sequelize = SEQUELIZE.getSequelize()
 
     const [, updatedApplication] = await models.applications.update({
-      application: sequelize.fn('jsonb_set', sequelize.col('application'), '{applicant}', JSON.stringify(req.payload), true)
+      application: sequelize.fn('jsonb_set', sequelize.col('application'), `{${section}}`, JSON.stringify(req.payload), true)
     }, {
       where: {
         id: applicationId
@@ -26,11 +26,11 @@ export default async (context, req, h) => {
       returning: ['application']
     })
 
-    const applicant = updatedApplication[0].dataValues.application.applicant
+    const result = updatedApplication[0].dataValues.application[section]
 
     // Cache
-    await cache.save(req.path, applicant)
-    return h.response(applicant)
+    await cache.save(req.path, result)
+    return h.response(result)
       .type(APPLICATION_JSON)
       .code(200)
   } catch (err) {
