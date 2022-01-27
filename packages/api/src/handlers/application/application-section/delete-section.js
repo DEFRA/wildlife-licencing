@@ -3,7 +3,7 @@ import { APPLICATION_JSON } from '../../../constants.js'
 import { clearCaches } from '../application-cache.js'
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 
-export default async (context, req, h) => {
+export const deleteSectionHandler = section => async (context, req, h) => {
   try {
     const { userId, applicationId } = context.request.params
     const result = await models.applications.findByPk(applicationId)
@@ -17,7 +17,7 @@ export default async (context, req, h) => {
     const sequelize = SEQUELIZE.getSequelize()
 
     await sequelize.query('UPDATE applications ' +
-      'SET application = application::jsonb - \'applicant\' WHERE id = ?', {
+      `SET application = application::jsonb - '${section}' WHERE id = ?`, {
       type: sequelize.QueryTypes.UPDATE,
       replacements: [applicationId]
     })

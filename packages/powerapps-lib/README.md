@@ -11,5 +11,9 @@ On failure, it will throw either a _recoverable_ or _unrecoverable_ exception in
 
 On success, it will return a new keys object for storage in the source postgres database
 
+(2) Extracts application data from Power Apps, performs a transformation according to the defined
+model and returns a readable stream
+
+(3) Supports reading and REDIS caching of reference data for use in the transformation 
 
 

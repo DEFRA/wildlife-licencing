@@ -18,7 +18,7 @@ describe('Batch query formation', () => {
   it('forms a correct batch query set for a complex nested insert', async () => {
     const batchId = openBatchRequest({ tasks })
     const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-    const batchQuery = createBatchRequestBody(batchId, srcData, {}, clientUrl)
+    const batchQuery = await createBatchRequestBody(batchId, srcData, {}, clientUrl)
     const expected = fs.readFileSync(path.join(__dirname, './batch-request-body.txt'), { encoding: 'utf8' })
     expect(batchQuery).toContain(`--batch_${batchId}`)
     expect(batchQuery.replace(changeSetRegEx, '__cs__').replace(batchRegEx, '__b__'))
@@ -28,7 +28,7 @@ describe('Batch query formation', () => {
   it('forms a correct batch query set for a complex nested update', async () => {
     const batchId = openBatchRequest({ tasks })
     const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-    const batchQuery = createBatchRequestBody(batchId, srcData, {
+    const batchQuery = await createBatchRequestBody(batchId, srcData, {
       tasks: {
         eid: '9d17ae34-3c62-ec11-8f8f-0022480078af',
         entity: 'tasks'

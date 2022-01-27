@@ -400,6 +400,117 @@ paths:
                 $ref: '#/components/schemas/error'
 
   ################################################################################################
+  # Ecologists / Agent
+  ################################################################################################
+  '/user/{userId}/application/{applicationId}/ecologist':
+    put:
+      description: Update the application ecologist details
+      summary: Create or update the application ecologist details
+      operationId: putApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application ecologist details
+      summary: Get the ecologist details for an application
+      operationId: getApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application ecologist details
+      summary: Delete the ecologist details for an application
+      operationId: deleteApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
   # Submission
   ################################################################################################
   '/user/{userId}/application/{applicationId}/submit':
@@ -433,6 +544,77 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Reference Data
+  ################################################################################################
+  '/application/types':
+    get:
+      description: Get the application types
+      summary: The licence type requested by an application
+      operationId: getApplicationTypes
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/purposes':
+    get:
+      description: Get the application purposes
+      summary: The purpose of an application
+      operationId: getApplicationPurposes
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Option sets
+  ################################################################################################
+  '/option-sets':
+    get:
+      description: Get the global option set values
+      summary: Get the global option set values
+      operationId: getOptionSets
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/optionSetTypes'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 
 components:
 ################################################################################################
@@ -469,7 +651,23 @@ components:
           type: string
           minLength: 1
           maxLength: 300
+        licenceReason:
+          type: string
+          minLength: 1
+          maxLength: 300
+        applicationCategory:
+          type: number
+        applicationType:
+          type: string
+          minLength: 1
+          maxLength: 300
+        applicationPurpose:
+          type: string
+          minLength: 1
+          maxLength: 300
         applicant:
+          $ref: '#/components/schemas/contact'
+        ecologist:
           $ref: '#/components/schemas/contact'
         submitted:
           $ref: '#/components/schemas/timestamp'
@@ -478,9 +676,65 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
+    referenceDataTypes:
+      type: array
+      items:
+        $ref: '#/components/schemas/referenceDataType'
+
+    referenceDataType:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    optionSetTypes:
+      type: object
+      additionalProperties:
+        type: object
+        items:
+          $ref: '#/components/schemas/optionSetType'
+
+    optionSetType:
+      type: object
+      additionalProperties: false
+      properties:
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/objectSet'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    objectSet:
+      type: object
+      properties:
+        value:
+          type: number
+        description:
+          type: string
+
+    contactDetails:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        phone:
+          $ref: '#/components/schemas/phone'
+
     contact:
       type: object
-      required: [firstname, lastname]
       properties:
         firstname:
           type: string
@@ -490,16 +744,27 @@ components:
           type: string
           minLength: 1
           maxLength: 36
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
-        email:
-          $ref: '#/components/schemas/email'
-        phone:
-          $ref: '#/components/schemas/phone'
+        organization:
+          $ref: '#/components/schemas/organization'
+
+    organization:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 36
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
 
     address:
       type: object
-      required: [addrline1, addrline3, postcode]
       properties:
         houseNumber:
           type: string

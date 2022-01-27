@@ -32,33 +32,33 @@ const batchEnd = b => `\n--batch_${b}--\n`
 
 export const relationshipBuilder = (name, obj) => {
   const contentId = sequence.findIndex(s => s === name) + 1
-  return { [obj.fk]: '$' + contentId }
+  return { [`${obj.fk}@odata.bind`]: '$' + contentId }
 }
 
 /**
  * Forms an ODATA batch request from the model and the source json
  * See https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/execute-batch-operations-using-web-api
  * @param batchId - The batch identifier created by openBatchRequest
- * @param applicationJson
+ * @param json
  * @param targetKeysJson
  * @param model
  * @param clientUrl
- * @returns {string} - the text of the batch request body
+ * @returns  {Promise<string>} - the text of the batch request body
  */
-export const createBatchRequestBody = (batchId, applicationJson, targetKeysJson, clientUrl) => {
-  let n = 1
+export const createBatchRequestBody = async (batchId, json, targetKeysJson, clientUrl) => {
   const changeId = uuidv4()
   let body = batchStart(batchId, changeId)
-  const queryResults = sequence.map(s => {
+  const queryResults = await Promise.all(sequence.map(async (s, index) => {
     const node = getModelNode(model, s)
-    const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, n++, clientUrl)
-    const payload = powerAppsObjectBuilder(node[s].targetFields, applicationJson)
-    Object.entries(node[s].relationships || []).forEach(([name, o]) =>
+    const payload = await powerAppsObjectBuilder(node[s].targetFields, json)
+    const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, index + 1, clientUrl)
+    Object.entries(node[s].relationships || []).filter(([, o]) => !o.readOnly).forEach(([name, o]) =>
       Object.assign(payload, relationshipBuilder(name, o)))
-    return `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}`
-  })
 
-  body = body.concat(queryResults.join('\n'))
+    return { index, str: `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}` }
+  }))
+
+  body = body.concat(queryResults.sort(qr => qr.index).map(qr => qr.str).join('\n'))
   body = body.concat(changeSetEnd(changeId))
   body = body.concat(batchEnd(batchId))
 

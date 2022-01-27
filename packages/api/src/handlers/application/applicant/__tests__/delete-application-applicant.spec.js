@@ -40,7 +40,7 @@ const applicationJson = 'application/json'
 describe('The putApplicationApplicant handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    deleteApplicationApplicant = (await import('../delete-application-applicant.js')).default
+    deleteApplicationApplicant = (await import('../applicant.js')).deleteApplicationApplicant
     cache = (await import('../../../../services/cache.js')).cache
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
     SEQUELIZE.getSequelize = jest.fn(() => ({

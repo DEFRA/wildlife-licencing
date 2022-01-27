@@ -1,7 +1,7 @@
 import { Readable, Transform } from 'stream'
 import { POWERAPPS } from '@defra/wls-connectors-lib'
 import { buildRequestPath } from '../model/model-utils.js'
-import { localObjectBuilder } from '../model/transformer.js'
+import { apiObjectBuilder, globalOptionSetTransformer } from '../model/transformer.js'
 
 async function * fetcher (path) {
   let p = path
@@ -34,9 +34,37 @@ export const extractAndTransform = model => {
   const transformStream = new Transform({
     objectMode: true,
     transform (data, encoding, callback) {
+      Promise.all(data.map(i => apiObjectBuilder(model, i))).then(results => {
+        if (results) {
+          results.forEach(r => r && this.push(r))
+        }
+        callback()
+      })
+    }
+  })
+
+  // The stream starts flow on pipe
+  stream.pipe(transformStream)
+
+  // Return immediately
+  return transformStream
+}
+
+/**
+ * The global option set definitions are meta-data and so cannot be queried normally
+ * These are processed as a single extract
+ */
+export const extractAndTransformGlobalOptionSetDefinitions = () => {
+  const stream = Readable.from(fetcher('GlobalOptionSetDefinitions'))
+  const transformStream = new Transform({
+    objectMode: true,
+    transform (data, encoding, callback) {
       data.forEach(i => {
         try {
-          this.push(localObjectBuilder(model, i))
+          const os = globalOptionSetTransformer(i)
+          if (os) {
+            this.push(os)
+          }
         } catch (error) {
           console.error(error.message, error)
         }
