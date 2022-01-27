@@ -123,8 +123,7 @@ The `packages/application-queue-processor/src/application-job-process.js` method
 the application data from the database and uses and calls the batchUpdate method
 in `powerapps-lib/src/application-update/batch-update.js`. The job is removed from the queue.
 
-On success this will return a set of keys from Power Apps which are stored in the applications table in the target_keys
-column. In subsequent calls to submit these keys are used to effect an update of the data in Power Apps.
+On success this will return a set of keys from Power Apps which are stored in the applications table in the target_keys column. In subsequent calls to submit these keys are used to effect an update of the data in Power Apps.
 
 The batchUpdate method may throw a recoverable or un-recoverable error.
 
@@ -136,13 +135,11 @@ On un-recoverable errors the batchUpdate method will return Promise.Resolve and 
 (3) In the powerapps-lib the application data is transformed using the model defined
 in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into which a path element is used to map the data to the API/database structure.
 
-(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA
-
-batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or
-PATCH each element based on the existence of key data.
+(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or PATCH each element based on the existence of key data.
 
 (5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level
 
 request. This deals for authorisation and token management.
 
 ### Power Apps to API
+
