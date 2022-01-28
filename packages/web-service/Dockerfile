@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . .
 RUN npm ci --only=production
 EXPOSE 4000
-CMD [ "node", "src/eps-web-service.js" ]
+CMD [ "node", "src/web-service.js" ]
