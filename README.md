@@ -3,10 +3,10 @@
 #### For Natural England
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_rod-licensing&metric=alert_status)](https://sonarcloud.io/dashboard?id=DEFRA_rod-licensing)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_rod-licensing&metric=ncloc)](https://sonarcloud.io/dashboard?id=DEFRA_rod-licensing)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_rod-licensing&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_rod-licensing)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_rod-licensing&metric=bugs)](https://sonarcloud.io/dashboard?id=DEFRA_rod-licensing)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=alert_status)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=ncloc)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=bugs)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
 
 ## Getting started
 
