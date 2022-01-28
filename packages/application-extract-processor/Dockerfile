@@ -7,4 +7,5 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
-CMD [ "node", "src/processor.js" ]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]

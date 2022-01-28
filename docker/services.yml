@@ -30,16 +30,51 @@ services:
         condition: on-failure
 
   ##############################################################################################################
-  # Wildlife licencing EPS WEB service - web service is found on localhost:4000
+  # Wildlife licencing API service - The application extract processor
   ##############################################################################################################
-  eps-web:
-    image: wildlife-licencing/eps-web:${TAG:-latest}
+  aep:
+    image: wildlife-licencing/aep:${TAG:-latest}
+    env_file:
+      - ./env/aep.env
+      - ./env/aep-secrets.env
+    volumes:
+      - ./resources/cron/application-extract.crontab:/var/spool/cron/crontabs/root:ro
+    command: crond -f -l 2
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+
+  ##############################################################################################################
+  # Wildlife licencing API service - The reference data extract processor - run on a schedule
+  ##############################################################################################################
+  rep:
+    image: wildlife-licencing/rep:${TAG:-latest}
+    env_file:
+      - ./env/rep.env
+      - ./env/rep-secrets.env
+    volumes:
+      - ./resources/cron/repdata-extract.crontab:/var/spool/cron/crontabs/root:ro
+    command: crond -f -l 2
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+
+  ##############################################################################################################
+  # Wildlife licencing WLS WEB service - web service is found on localhost:4000
+  ##############################################################################################################
+  web:
+    image: wildlife-licencing/web:${TAG:-latest}
     ports:
       - "4000:4000"
     env_file:
-      - ./env/eps-web.env
+      - ./env/web.env
     deploy:
       mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
+
+
+
