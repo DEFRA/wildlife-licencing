@@ -67,3 +67,4 @@ services:
       - ./volumes/localstack:/tmp/localstack
       - ./resources/localstack/localstack-init.sh:/docker-entrypoint-initaws.d/init.sh
       - ./resources/localstack/localstack-cfn.yml:/docker-entrypoint-initaws.d/localstack-cfn.yml
+

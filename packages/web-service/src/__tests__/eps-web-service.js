@@ -1,4 +1,4 @@
-describe('The wrapper: eps-web-service', () => {
+describe('The wrapper: web-service', () => {
   it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
@@ -6,7 +6,7 @@ describe('The wrapper: eps-web-service', () => {
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.resolve())
-        require('../eps-web-service')
+        require('../web-service')
         setImmediate(() => {
           expect(createServer).toHaveBeenCalled()
           expect(init).toHaveBeenCalled()
@@ -28,7 +28,7 @@ describe('The wrapper: eps-web-service', () => {
         const processExitSpy = jest
           .spyOn(process, 'exit')
           .mockImplementation(code => {})
-        require('../eps-web-service')
+        require('../web-service')
         setImmediate(() => {
           expect(init).toHaveBeenCalled()
           expect(createServer).toHaveBeenCalled()
