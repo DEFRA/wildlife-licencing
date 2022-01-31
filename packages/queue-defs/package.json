@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-queue-defs",
-  "version": "1.3.0-alpha.0",
+  "version": "1.3.1-alpha.0",
   "description": "Queue definitions",
   "main": "src/queue-defs.js",
   "type": "module",
@@ -28,7 +28,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@defra/wls-connectors-lib": "^1.3.0-alpha.0",
+    "@defra/wls-connectors-lib": "^1.3.1-alpha.0",
     "bull": "^4.1.1"
   }
 }
