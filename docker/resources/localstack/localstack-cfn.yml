@@ -1,3 +1,12 @@
+####################################################################################
+# Cloud formation template for localstack
+# CAUTION: Do not check in secrets.
+# Note:
+# To avoid unintended checkins, git can ignore changes to tracked files as follows...
+#   git update-index --assume-unchanged docker/resources/localstack/localstack-cfn.yml
+# To restore
+#   git update-index --no-assume-unchanged docker/resources/localstack/localstack-cfn.yml
+####################################################################################
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Cloudformation template to create AWS service artifacts for the wildlife licensing digital service (local development only)
 Resources:
@@ -12,3 +21,17 @@ Resources:
       Name: /wls/postgres-password
       Description: The password of the local postgres database
       SecretString: wildl1fe
+
+  OauthClientId:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: /oauth/client-id
+      Description: Client id for Power Apps connectivity
+      SecretString: AAAAAAAAAA
+
+  OauthClientSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: /oauth/client-secret
+      Description: Client secret for Power Apps connectivity
+      SecretString: AAAAAAAAA
