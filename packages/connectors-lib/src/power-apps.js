@@ -1,3 +1,4 @@
+import { SECRETS } from './secrets.js'
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
 import pkg from 'node-fetch'
@@ -13,7 +14,15 @@ let accessToken
 
 export const getToken = async () => {
   try {
-    const oauthClient = new ClientCredentials(Config.powerApps.oauth)
+    // If the oath client id and secret is not set in the environment then look it up
+    // from the secrets manager
+    const { client, auth } = Config.powerApps.oauth
+    let { id, secret } = client
+    if (!id || !secret) {
+      id = await SECRETS.getSecret('/oauth/client-id')
+      secret = await SECRETS.getSecret('/oauth/client-secret')
+    }
+    const oauthClient = new ClientCredentials({ client: { id, secret }, auth })
     if (!accessToken || accessToken.expired(Config.powerApps.tokenExpireWindow || 60)) {
       accessToken = await oauthClient.getToken({ scope: Config.powerApps.scope })
     }
