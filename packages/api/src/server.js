@@ -8,6 +8,10 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  postSite
+} from './handlers/site/site.js'
+
+import {
   getApplicationByApplicationId,
   getApplicationsByUserId,
   postApplication,
@@ -65,6 +69,7 @@ const init = async server => {
     getUserByUserId,
     postUser,
     deleteUser,
+    postSite,
     getApplicationByApplicationId,
     getApplicationsByUserId,
     postApplication,

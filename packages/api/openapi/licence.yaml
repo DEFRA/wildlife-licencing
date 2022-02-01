@@ -511,6 +511,46 @@ paths:
                 $ref: '#/components/schemas/error'
 
   ################################################################################################
+  # Sites
+  ################################################################################################
+  '/user/{userId}/site':
+    post:
+      description: Create a new site
+      summary: Create a new site for an existing userId
+      operationId: postSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/site'
+      responses:
+        201:
+          description: The application object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+  ################################################################################################
   # Submission
   ################################################################################################
   '/user/{userId}/application/{applicationId}/submit':
@@ -802,10 +842,10 @@ components:
 
     site:
       type: object
-      required:
-        - name
-        - address
+      additionalProperties: false
       properties:
+        id:
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           minLength: 1
@@ -814,6 +854,10 @@ components:
           $ref: '#/components/schemas/address'
         gridReference:
           $ref: '#/components/schemas/gridReference'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     gridReference:
       type: string
