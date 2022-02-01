@@ -12,6 +12,28 @@ const createModels = async () => {
     timestamps: true
   })
 
+  models.sites = await sequelize.define('sites', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.users,
+        key: 'id'
+      }
+    },
+    site: { type: DataTypes.JSONB },
+    targetKeys: { type: DataTypes.JSONB },
+    sddsSiteId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'site_user_fk' },
+      { unique: true, fields: ['sdds_site_id'], name: 'site_sdds_id_uk' }
+    ]
+  })
+
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
     userId: {
@@ -56,6 +78,7 @@ const createModels = async () => {
   })
 
   await models.users.sync()
+  await models.sites.sync()
   await models.applications.sync()
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
