@@ -101,8 +101,8 @@ paths:
 ################################################################################################
   '/user/{userId}/applications':
     get:
-      description: Get the (unsubmitted) applications for a user
-      summary: Get the (unsubmitted) applications for a user
+      description: Get the applications for a user
+      summary: Get the applications for a user
       operationId: getApplicationsByUserId
       parameters:
         - name: userId
@@ -510,9 +510,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Sites
-  ################################################################################################
+################################################################################################
+# Sites
+################################################################################################
+  '/user/{userId}/sites':
+    get:
+      description: Get the sites for a user
+      summary: Get the sites for a user
+      operationId: getSitesByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sites'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/user/{userId}/site':
     post:
       description: Create a new site
