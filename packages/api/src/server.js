@@ -8,8 +8,9 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  getSitesByUserId,
   postSite,
-  getSitesByUserId
+  putSite
 } from './handlers/site/site.js'
 
 import {
@@ -70,8 +71,9 @@ const init = async server => {
     getUserByUserId,
     postUser,
     deleteUser,
-    postSite,
     getSitesByUserId,
+    postSite,
+    putSite,
     getApplicationByApplicationId,
     getApplicationsByUserId,
     postApplication,
