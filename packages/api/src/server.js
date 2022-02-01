@@ -9,8 +9,10 @@ import {
 
 import {
   getSitesByUserId,
+  getSiteBySiteId,
   postSite,
-  putSite
+  putSite,
+  deleteSite
 } from './handlers/site/site.js'
 
 import {
@@ -72,8 +74,10 @@ const init = async server => {
     postUser,
     deleteUser,
     getSitesByUserId,
+    getSiteBySiteId,
     postSite,
     putSite,
+    deleteSite,
     getApplicationByApplicationId,
     getApplicationsByUserId,
     postApplication,

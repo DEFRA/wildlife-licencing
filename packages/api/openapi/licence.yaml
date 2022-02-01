@@ -588,7 +588,7 @@ paths:
     get:
       description: Get a site
       summary: Get a site
-      operationId: getSiteBySIteId
+      operationId: getSiteBySiteId
       parameters:
         - name: userId
           in: path
