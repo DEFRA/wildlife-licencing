@@ -67,18 +67,19 @@ const init = async server => {
   const api = new OpenAPIBackend({ definition: 'openapi/licence.yaml' })
 
   /*
-   * Register the openapi/hapi route handler mappings
+   * Register the openapi/hapi route handler mappings. The function calls are to allow the model
+   * to initialize which is needed in the common handlers
    */
   api.register({
-    getUserByUserId,
+    getUserByUserId: getUserByUserId(),
     postUser,
     deleteUser,
     getSitesByUserId,
-    getSiteBySiteId,
+    getSiteBySiteId: getSiteBySiteId(),
     postSite,
     putSite,
     deleteSite,
-    getApplicationByApplicationId,
+    getApplicationByApplicationId: getApplicationByApplicationId(),
     getApplicationsByUserId,
     postApplication,
     putApplication,

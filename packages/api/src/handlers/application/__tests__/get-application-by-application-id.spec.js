@@ -36,18 +36,17 @@ const tsR = {
 jest.mock('@defra/wls-database-model')
 
 let models
-let getApplication
 let cache
 const applicationJson = 'application/json'
 describe('The getApplicationByApplicationId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     cache = (await import('../../../services/cache.js')).cache
-    getApplication = (await import('../get-application-by-application-id.js')).default
   })
 
   it('returns an application and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+    const getApplication = (await import('../application.js')).getApplicationByApplicationId()
     await getApplication(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -58,6 +57,7 @@ describe('The getApplicationByApplicationId handler', () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
     models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    const getApplication = (await import('../application.js')).getApplicationByApplicationId()
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
@@ -69,6 +69,7 @@ describe('The getApplicationByApplicationId handler', () => {
   it('returns a status 404 on not found', async () => {
     cache.restore = jest.fn(() => null)
     models.applications = { findByPk: jest.fn(() => null) }
+    const getApplication = (await import('../application.js')).getApplicationByApplicationId()
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(h.response).toHaveBeenCalled()
@@ -78,6 +79,7 @@ describe('The getApplicationByApplicationId handler', () => {
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
     models.applications = { findByPk: jest.fn(() => { throw new Error() }) }
+    const getApplication = (await import('../application.js')).getApplicationByApplicationId()
     await expect(async () => {
       await getApplication(context, req, h)
     }).rejects.toThrow()

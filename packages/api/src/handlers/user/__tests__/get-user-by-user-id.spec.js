@@ -20,7 +20,6 @@ const context = { request: { params: { userId: uuid } } }
 jest.mock('@defra/wls-database-model')
 
 let models
-let getUser
 let cache
 
 const ts = {
@@ -38,11 +37,11 @@ describe('The getUserByUserId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     cache = (await import('../../../services/cache.js')).cache
-    getUser = (await import('../get-user-by-user-id.js')).default
   })
 
   it('returns a user and status 200 the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+    const getUser = (await import('../user.js')).getUserByUserId()
     await getUser(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -53,6 +52,7 @@ describe('The getUserByUserId handler', () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
     models.users = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    const getUser = (await import('../user.js')).getUserByUserId()
     await getUser(context, req, h)
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(models.users.findByPk).toHaveBeenCalledWith(uuid)
@@ -64,6 +64,7 @@ describe('The getUserByUserId handler', () => {
   it('returns a 404 with user id not found', async () => {
     cache.restore = jest.fn(() => null)
     models.users = { findByPk: jest.fn(() => null) }
+    const getUser = (await import('../user.js')).getUserByUserId()
     await getUser(context, req, h)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
@@ -72,6 +73,7 @@ describe('The getUserByUserId handler', () => {
   it('throws on an unexpected database error', async () => {
     cache.restore = jest.fn(() => null)
     models.users = { findByPk: jest.fn(() => { throw new Error() }) }
+    const getUser = (await import('../user.js')).getUserByUserId()
     await expect(async () => {
       await getUser(context, req, h)
     }).rejects.toThrow()
