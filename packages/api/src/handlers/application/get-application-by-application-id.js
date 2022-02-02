@@ -2,13 +2,18 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
 import { prepareResponse } from './application-proc.js'
+import { checkCache, checkUser } from '../utils.js'
 
 export default async (context, req, h) => {
   try {
-    const saved = await cache.restore(req.path)
+    if (!await checkUser(context)) {
+      return h.response().code(404)
+    }
 
-    if (saved) {
-      return h.response(JSON.parse(saved))
+    const result = await checkCache(req)
+
+    if (result) {
+      return h.response(result)
         .type(APPLICATION_JSON)
         .code(200)
     }

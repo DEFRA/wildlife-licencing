@@ -48,7 +48,7 @@ describe('The getSitesByUserId handler', () => {
   })
 
   it('returns an array of sites and status 200 from the database', async () => {
-    cache.restore = jest.fn()
+    cache.restore = jest.fn(() => null)
     cache.save = jest.fn()
     models.users = { findByPk: jest.fn(async () => ({ foo: 'bar' })) }
     models.sites = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
