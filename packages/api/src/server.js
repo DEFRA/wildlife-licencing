@@ -25,6 +25,10 @@ import {
 } from './handlers/application/application.js'
 
 import {
+  postApplicationSite
+} from './handlers/application-site/application-site.js'
+
+import {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant
@@ -90,6 +94,7 @@ const init = async server => {
     putApplicationEcologist,
     deleteApplicationEcologist,
     postApplicationSubmit,
+    postApplicationSite,
     getApplicationTypes,
     getApplicationPurposes,
     getOptionSets,

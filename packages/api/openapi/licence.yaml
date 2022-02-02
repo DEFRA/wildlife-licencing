@@ -510,9 +510,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Sites
-################################################################################################
+  ################################################################################################
+  # Sites
+  ################################################################################################
   '/user/{userId}/sites':
     get:
       description: Get the sites for a user
@@ -582,7 +582,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
 
   '/user/{userId}/site/{siteId}':
     get:
@@ -696,6 +695,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  ################################################################################################
+  # Application Sites
+  ################################################################################################
+  '/user/{userId}/application-site':
+    post:
+      description: Create a new application-site relationship
+      summary: Create a new application-site relationship for an existing userId, applicationId and SiteId
+      operationId: postApplicationSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationSite'
+      responses:
+        201:
+          description: The application-site object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
   ################################################################################################
   # Submission
@@ -1006,6 +1053,26 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
+    applicationSites:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationSite'
+
+    applicationSite:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        siteId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
     gridReference:
       type: string
 
@@ -1043,3 +1110,4 @@ components:
           type: array
           items:
             type: object
+
