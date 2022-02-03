@@ -744,6 +744,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user/{userId}/application-sites':
+    get:
+      description: Get the application-sites
+      summary: Get a list of application-site relationships for a user
+      operationId: getApplicationSitesByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSites'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   ################################################################################################
   # Submission
   ################################################################################################
