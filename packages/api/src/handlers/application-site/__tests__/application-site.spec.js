@@ -81,7 +81,7 @@ describe('The postApplicationSite handler', () => {
       userId: USER_ID
     })
     expect(cache.save).toHaveBeenCalledWith(`/user/${USER_ID}/application-site/${APPLICATION_SITE_ID}`, expect.any(Object))
-    expect(cache.delete).not.toHaveBeenCalled()
+    expect(cache.delete).toHaveBeenCalledWith(`/user/${USER_ID}/application-sites`)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: APPLICATION_ID,
       id: APPLICATION_SITE_ID,
