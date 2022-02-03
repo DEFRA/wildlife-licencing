@@ -46,7 +46,7 @@ describe('The getApplicationSitesByUserId handler', () => {
     cache = (await import('../../../services/cache.js')).cache
   })
 
-  it('returns an array of applications and status 200 from the database', async () => {
+  it('returns an array of application-sites and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn()
     models.users = { findByPk: jest.fn(async () => ({ foo: 'bar' })) }
@@ -60,7 +60,7 @@ describe('The getApplicationSitesByUserId handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns an array of applications and status 200 from the cache', async () => {
+  it('returns an array of application-sites- and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify([{ foo: 'bar' }]))
     models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
     await getApplicationSitesByUserId(context, req, h)

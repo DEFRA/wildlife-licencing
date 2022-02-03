@@ -778,6 +778,77 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user/{userId}/application-site/{applicationSiteId}':
+    get:
+      description: Get an application-site by id
+      summary:  Get an application-site by id
+      operationId: getApplicationSiteByApplicationSiteId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationSiteId
+          in: path
+          description: ID of the application-site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The application-site is not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an application-site by id
+      summary:  Get an application-site by id
+      operationId: deleteApplicationSiteByApplicationSiteId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationSiteId
+          in: path
+          description: ID of the application-site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application-site has been deleted
+        400:
+          description: Bad request
+        404:
+          description: The application-site is not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   ################################################################################################
   # Submission
   ################################################################################################

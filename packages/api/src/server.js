@@ -26,6 +26,8 @@ import {
 
 import {
   getApplicationSitesByUserId,
+  getApplicationSiteByApplicationSiteId,
+  deleteApplicationSiteByApplicationSiteId,
   postApplicationSite
 } from './handlers/application-site/application-site.js'
 
@@ -96,6 +98,8 @@ const init = async server => {
     deleteApplicationEcologist,
     postApplicationSubmit,
     getApplicationSitesByUserId,
+    getApplicationSiteByApplicationSiteId,
+    deleteApplicationSiteByApplicationSiteId,
     postApplicationSite,
     getApplicationTypes,
     getApplicationPurposes,
