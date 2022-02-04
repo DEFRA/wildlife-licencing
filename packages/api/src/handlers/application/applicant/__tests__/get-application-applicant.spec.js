@@ -40,7 +40,7 @@ const a = {
 describe('The putApplicationApplicant handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationApplicant = (await import('../get-application-applicant.js')).default
+    getApplicationApplicant = (await import('../applicant.js')).getApplicationApplicant
     cache = (await import('../../../../services/cache.js')).cache
   })
 

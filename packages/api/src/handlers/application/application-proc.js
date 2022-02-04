@@ -10,6 +10,8 @@ export const prepareResponse = a => Object.assign((({
   application,
   submitted,
   targetKeys,
+  sddsApplicationId,
+  updateStatus,
   ...l
 }) => l)(a), {
   createdAt: a.createdAt.toISOString(),

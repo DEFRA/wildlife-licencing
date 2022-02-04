@@ -1,6 +1,6 @@
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import { models } from '@defra/wls-database-model'
-import { batchUpdate, UnRecoverableBatchError } from '@defra/wls-powerapps-lib'
+import { applicationUpdate, UnRecoverableBatchError } from '@defra/wls-powerapps-lib'
 
 /**
  * Recoverable exceptions from the PowerApp processes are FAILED - and so will be retried
@@ -20,11 +20,13 @@ export const applicationJobProcess = async job => {
 
     const { application: applicationJson, targetKeys } = application.dataValues
 
-    const result = await batchUpdate(applicationJson, targetKeys)
+    const result = await applicationUpdate(applicationJson, targetKeys)
 
     return models.applications.update({
       submitted: SEQUELIZE.getSequelize().fn('NOW'),
-      targetKeys: result
+      targetKeys: result,
+      sddsApplicationId: result.sdds_applications.eid,
+      updateStatus: 'P'
     }, {
       where: {
         id: applicationId

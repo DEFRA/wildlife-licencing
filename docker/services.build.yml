@@ -1,6 +1,7 @@
-#######################################################
-# Common project docker build options
-#######################################################
+##############################################################################################################
+# Common project docker build options.
+# This builds the docker images which may be used locally within the swarm or in the AWS container service
+##############################################################################################################
 services:
   ##############################################################################################################
   # Wildlife licencing API service
@@ -12,7 +13,7 @@ services:
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
 
   ##############################################################################################################
-  # Wildlife licencing API service
+  # Wildlife licencing API service; application queue processor
   ##############################################################################################################
   aqp:
     image: wildlife-licencing/aqp:${TAG:-latest}
@@ -21,10 +22,30 @@ services:
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
 
   ##############################################################################################################
-  # Wildlife licencing EPS API service
+  # Wildlife licencing API service; application extract processor
   ##############################################################################################################
-  eps-web:
-    image: wildlife-licencing/eps-web:${TAG:-latest}
+  aep:
+    image: wildlife-licencing/aep:${TAG:-latest}
     build:
-      context: ../packages/eps/web-service
+      context: ../packages/application-extract-processor
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+
+  ##############################################################################################################
+  # Wildlife licencing API service; reference data extract processor
+  ##############################################################################################################
+  rep:
+    image: wildlife-licencing/rep:${TAG:-latest}
+    build:
+      context: ../packages/refdata-extract-processor
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+
+  ##############################################################################################################
+  # Wildlife licencing Web service
+  ##############################################################################################################
+  web:
+    image: wildlife-licencing/web:${TAG:-latest}
+    build:
+      context: ../packages/web-service
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+
+# TODO Docker build . -t wildlife-licencing/wls_cron

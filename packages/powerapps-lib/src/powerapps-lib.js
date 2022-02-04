@@ -1,3 +1,14 @@
-import { batchUpdate } from './application-update/batch-update.js'
-import { RecoverableBatchError, UnRecoverableBatchError } from './application-update/batch-errors.js'
-export { batchUpdate, UnRecoverableBatchError, RecoverableBatchError }
+import { applicationUpdate } from './application/application-update.js'
+import { applicationReadStream } from './application/application-read-stream.js'
+import { applicationPurposesReadStream, applicationTypesReadStream, optionSetsReadStream } from './refdata/refdata-read-stream.js'
+import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
+
+export {
+  applicationReadStream,
+  applicationPurposesReadStream,
+  applicationTypesReadStream,
+  applicationUpdate,
+  optionSetsReadStream,
+  RecoverableBatchError,
+  UnRecoverableBatchError
+}
