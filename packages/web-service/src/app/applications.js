@@ -1,3 +1,1 @@
-export default (request, handler) => {
-  return handler.view('app/applications.njk');
-};
+export default (request, handler) => handler.view('app/applications.njk')
