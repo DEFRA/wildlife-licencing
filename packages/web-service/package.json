@@ -14,7 +14,7 @@
   },
   "scripts": {
     "postinstall": "node_modules/gulp/bin/gulp.js build",
-    "start": "nodemon -e js,njk,json -r esm src/web-service.js",
+    "start": "nodemon -e js,njk,json src/web-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "keywords": [

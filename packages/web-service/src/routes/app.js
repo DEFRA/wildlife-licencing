@@ -1,4 +1,4 @@
-import applications from '../app/applications';
+import applications from '../app/applications.js'
 
 export default {
   applications: {
@@ -6,7 +6,7 @@ export default {
     path: '/applications',
     handler: (request, handler) => applications(request, handler),
     config: {
-      auth: false,
-    },
-  },
-};
+      auth: false
+    }
+  }
+}
