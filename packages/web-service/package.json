@@ -4,6 +4,7 @@
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/eps-web-service.js",
   "type": "module",
+  "exports": "./dist/index.js",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -13,7 +14,7 @@
   },
   "scripts": {
     "postinstall": "node_modules/gulp/bin/gulp.js build",
-    "start": "node src/web-service.js",
+    "start": "nodemon -e js,njk,json -r esm src/web-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "keywords": [
@@ -46,5 +47,9 @@
     "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
     "sass": "^1.44.0"
+  },
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.15"
   }
 }
