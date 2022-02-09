@@ -11,19 +11,21 @@
  * @returns {*[]} an array of the nodes in leaf-to-trunk order
  */
 export const findRequestSequence = (node, sequence = []) => {
-  const nodeName = Object.keys(node)[0]
-  if (!node[nodeName].relationships) {
-    sequence.push(nodeName)
-    return sequence
-  }
-
-  for (const r in node[nodeName].relationships) {
-    if (!node[nodeName].relationships[r].readOnly) {
-      findRequestSequence({ [r]: node[nodeName].relationships[r] }, sequence)
+  for (const nodeName of Object.keys(node)) {
+    if (!node[nodeName].relationships && !node[nodeName].multiValuedRelationships) {
+      sequence.push(nodeName)
+      return sequence
     }
+
+    for (const r in node[nodeName].relationships) {
+      if (!node[nodeName].relationships[r].readOnly) {
+        findRequestSequence({ [r]: node[nodeName].relationships[r] }, sequence)
+      }
+    }
+
+    sequence.push(nodeName)
   }
 
-  sequence.push(nodeName)
   return sequence
 }
 
@@ -34,20 +36,35 @@ export const findRequestSequence = (node, sequence = []) => {
  * @param node - Do not set
  */
 export const getModelNode = (model, nodeName) => {
-  const nn = Object.keys(model)[0]
-  if (nn === nodeName) {
-    return model
-  }
-
   let result = null
-  for (const r in model[nn].relationships) {
-    result = getModelNode({ [r]: model[nn].relationships[r] }, nodeName)
+  for (const nn of Object.keys(model)) {
+    // True when locating the top level node
+    if (nn === nodeName) {
+      return model[nn]
+    }
+
+    // True when locating child node
+    // if (model === nodeName) {
+    //   return model
+    // }
+
+    // True if found within recursion, step up
     if (result) {
-      break
+      return result
+    }
+
+    result = null
+    for (const r in model[nn].relationships) {
+      result = getModelNode({ [r]: model[nn].relationships[r] }, nodeName)
+      if (result) {
+        return result
+      }
     }
   }
 
-  return result
+  // Not found
+  return null
+  // return result
 }
 
 /**

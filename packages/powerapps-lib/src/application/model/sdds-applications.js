@@ -2,10 +2,10 @@
 import crypto from 'crypto'
 import { getReferenceDataIdByName, getReferenceDataNameById } from '../../refdata/cache.js'
 import { contactClass, accountClass } from './contact.js'
-export const ecologist = contactClass('ecologist')
-export const applicant = contactClass('applicant')
-export const ecologistOrganization = accountClass('ecologist.organization')
-export const applicantOrganization = accountClass('applicant.organization')
+export const ecologist = contactClass('application.ecologist')
+export const applicant = contactClass('application.applicant')
+export const ecologistOrganization = accountClass('application.ecologist.organization')
+export const applicantOrganization = accountClass('application.applicant.organization')
 
 /**
  * Each model is an independent set of associated data held in a hierarchical javascript object structure.
@@ -64,7 +64,8 @@ export const applicantOrganization = accountClass('applicant.organization')
  *    (e) Write only excludes a field in the extract as is typically used for lookups, this is used in
  *    conjunction with srcPath
  *
- * (4) The Relationships object represents the set of child entities related to the target entity
+ * (4) The Relationships object represents the set of child entities related to the target entity.
+ * These are related tables expanding **single-valued** navigation properties.
  * The relationships have the following properties
  *    (a) The relationship object name is the model node object. It is recursive of the model.
  *    (b) The fk property represents the child entity as it is known to the parent target entity. It is used to
@@ -83,19 +84,19 @@ export const sddsApplications = {
     },
 
     sdds_descriptionofproposal: {
-      srcPath: 'proposalDescription'
+      srcPath: 'application.proposalDescription'
     },
 
     sdds_detailsofconvictions: {
-      srcPath: 'detailsOfConvictions'
+      srcPath: 'application.detailsOfConvictions'
     },
 
     sdds_whydoyouneedalicence: {
-      srcPath: 'licenceReason'
+      srcPath: 'application.licenceReason'
     },
 
     sdds_applicationcategory: {
-      srcPath: 'applicationCategory'
+      srcPath: 'application.applicationCategory'
     },
 
     sdds_sourceremote: {
@@ -121,7 +122,7 @@ export const sddsApplications = {
       fk: 'sdds_applicantid'
     },
 
-    applicantOrganization: {
+    applicant_organization: {
       ...applicantOrganization,
       fk: 'sdds_organisationid'
     },
@@ -131,7 +132,7 @@ export const sddsApplications = {
       fk: 'sdds_ecologistid'
     },
 
-    ecologistOrganization: {
+    ecologist_organization: {
       ...ecologistOrganization,
       fk: 'sdds_ecologistorganisationid'
     },

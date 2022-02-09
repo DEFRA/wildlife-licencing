@@ -1,10 +1,13 @@
 import { batchUpdate } from '../batch-update/batch-update.js'
-import { applicationModel } from './model/sdds-application-model.js'
+import { SddsApplication, Contact, Account, SddsSite } from '../model/schema/tables/tables.js'
+import { createTableSet } from '../model/schema/processors/schema-processes.js'
+
+const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
 
 /**
- * On submit INSERT an application in PowerApps
- * or UPDATE an application in PowerApps
- * Calls the batch update for the application model
+ * On submit INSERT an application into Power Apps
+ * or UPDATE an application in Power Apps
+ * Calls the batch update for the application
  */
 export const applicationUpdate = async (applicationJson, targetKeysJson) =>
-  batchUpdate(applicationJson, targetKeysJson, applicationModel)
+  batchUpdate(applicationJson, targetKeysJson, tableSet)

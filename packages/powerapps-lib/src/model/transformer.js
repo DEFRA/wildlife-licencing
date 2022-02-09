@@ -27,7 +27,9 @@ export const powerAppsObjectBuilder = async (fields, src, obj = {}) => {
     if (fields[field].srcFunc) {
       await powerAppsObjectBuildByFieldFunction(fields, field, src, obj)
     } else if (fields[field].srcPath) {
-      powerAppsObjectBuilderByField(fields, field, src, obj)
+      if (!powerAppsObjectBuilderByField(fields, field, src, obj)) {
+        return null
+      }
     }
   }
   return obj
@@ -58,8 +60,23 @@ function powerAppsObjectBuilderByField (fields, field, src, obj) {
       console.log(`WARNING: expected bound relation not found: ${fields[field].bind}`)
     }
   } else {
-    Object.assign(obj, { [field]: get(src, fields[field].srcPath) || null })
+    const value = get(src, fields[field].srcPath)
+    // If the value is null then;
+    // (a) If we have the field marked as a trigger then return false
+    //     the entity update will the omitted from the batch.
+    // (b) Otherwise continue, the entity value is set to null
+    if (!value) {
+      if (fields[field].entityTrigger) {
+        return false
+      } else {
+        Object.assign(obj, { [field]: null })
+      }
+    } else {
+      Object.assign(obj, { [field]: value })
+    }
   }
+  // Return true if no entity trigger found
+  return true
 }
 
 /**

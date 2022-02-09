@@ -1,6 +1,6 @@
 import { POWERAPPS } from '@defra/wls-connectors-lib'
 import db from 'debug'
-import { createBatchRequestBody, createKeyObject, openBatchRequest } from './batch-formation.js'
+import { createBatchRequest, createKeyObject, openBatchRequest } from './batch-formation.js'
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-errors.js'
 const clientUrl = POWERAPPS.getClientUrl()
 const debug = db('powerapps-lib:batch-update')
@@ -17,14 +17,14 @@ const debug = db('powerapps-lib:batch-update')
  * @param targetKeysJson - A JSON structure holding the target key data - for an update PATCH
  * @param model - The model to use to create the batch update
  */
-export const batchUpdate = async (srcJson, targetKeysJson, model) => {
-  const batchId = openBatchRequest(model)
-  const batchRequestBody = await createBatchRequestBody(batchId, srcJson, targetKeysJson, clientUrl)
+export const batchUpdate = async (srcObj, targetKeys, tableSet) => {
+  const batchId = openBatchRequest(tableSet, clientUrl)
+  const batchRequestBody = await createBatchRequest(srcObj, targetKeys)
   debug(`Batch request body for batchId ${batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
   try {
     const responseText = await POWERAPPS.batchRequest(batchId, batchRequestBody)
     debug(`Batch request response body for batchId ${batchId}:  \n---Start ---\n${responseText}\n---End ---`)
-    return createKeyObject(responseText, clientUrl)
+    return createKeyObject(responseText, targetKeys)
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
       if (err.response.status === 401 || err.response.status === 408 || err.response.status >= 500) {

@@ -18,13 +18,13 @@ export default async (context, req, h) => {
         .code(200)
     }
 
-    const applications = await models.applicationSites.findAll({
+    const applicationSites = await models.applicationSites.findAll({
       where: {
         userId: context.request.params.userId
       }
     })
 
-    const responseBody = applications.map(a => prepareResponse(a.dataValues))
+    const responseBody = applicationSites.map(a => prepareResponse(a.dataValues))
 
     await cache.save(req.path, responseBody)
     return h.response(responseBody)

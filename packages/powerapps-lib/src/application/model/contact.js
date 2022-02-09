@@ -8,7 +8,7 @@ export const contactClass = srcPath => ({
   targetKey: 'contactid',
   targetFields: {
     firstname: { srcPath: `${srcPath}.firstname` },
-    lastname: { srcPath: `${srcPath}.lastname` },
+    lastname: { srcPath: `${srcPath}.lastname`, entityTrigger: true },
     ...addressClass(`${srcPath}.address`),
     ...contactDetailsClass(`${srcPath}.contactDetails`)
   }
@@ -18,7 +18,7 @@ export const accountClass = srcPath => ({
   targetEntity: 'accounts',
   targetKey: 'accountid',
   targetFields: {
-    name: { srcPath: `${srcPath}.name` },
+    name: { srcPath: `${srcPath}.name`, entityTrigger: true },
     ...addressClass(`${srcPath}.address`),
     ...contactDetailsClass(`${srcPath}.contactDetails`)
   }
