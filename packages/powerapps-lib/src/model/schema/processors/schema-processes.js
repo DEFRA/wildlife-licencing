@@ -176,13 +176,15 @@ const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updat
 
   for (const relationship of m2mRelationships) {
     // Only set up where the target is in the update
-    const r = updateObjects.filter(u => u.relationshipName === relationship.name)
+    const rel = updateObjects.filter(u => u.relationshipName === relationship.name)
     // Assignments requires a non-valid JS object (repeating keys)
     // The result is therefore a string (which is not invariant under stringify)
-    result.push({
-      name: relationship.name,
-      assignments: '{\n' + r.map(r => `  "@odata.id": "$${r.contentId}"`).join(',\n') + '\n}'
-    })
+    if (rel.length) {
+      rel.forEach(r => result.push({
+        name: relationship.name,
+        assignments: '{\n' + `  "@odata.id": "$${r.contentId}"` + '\n}'
+      }))
+    }
   }
 
   return result
@@ -276,7 +278,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     // Handle m2m relationships. These are a separate request occurring after the containing
     // (driving) table request
     const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, tableSet, srcObj, updateObjects)
-    if (tableM2MRelationshipsPayloads) {
+    if (tableM2MRelationshipsPayloads && tableM2MRelationshipsPayloads.length) {
       for (const m of tableM2MRelationshipsPayloads) {
         updateObjects.push({
           table: `$${currentContentId}/${m.name}/$ref`,

@@ -54,12 +54,14 @@ const postProcess = async targetKeys => {
  * @returns {Promise<{application: any}>}
  */
 async function buildApiObject (userId, applicationId) {
-  const { application, targetKeys } = await models.applications.findByPk(applicationId)
+  const applicationResult = await models.applications.findByPk(applicationId)
 
   // Not found application - data corrupted
-  if (!application) {
+  if (!applicationResult) {
     return null
   }
+
+  const { application, targetKeys } = applicationResult
 
   const keys = targetKeys
     ? targetKeys.map(t => BaseKeyMapping.copy(t))
