@@ -3,6 +3,7 @@ import { RelationshipType } from '../schema.js'
 import * as _get from 'lodash.get'
 import * as _set from 'lodash.set'
 import * as _cloneDeep from 'lodash.clonedeep'
+import { BaseKeyMapping } from '../key-mappings.js'
 
 const { default: set } = _set
 const { default: get } = _get
@@ -12,6 +13,7 @@ export const Methods = Object.freeze({
   GET: 'GET',
   PATCH: 'PATCH',
   POST: 'POST',
+  PUT: 'PUT',
   DELETE: 'DELETE'
 })
 
@@ -117,31 +119,6 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   return { id, columnPayload, relationshipsPayload }
 }
 
-/**
- * Given a table object, the set of tables in the update and the API src object
- * Create the set of relationships to bind to the table.
- * @param table - The table
- * @param tableSet - The tableset
- * @param srcObj - The API src data
- * @returns {Promise<*[]>}
- */
-
-// export const createTableRelationshipsPayload = async (table, tableSet, srcObj) => {
-//   const result = []
-//   const base = get(srcObj, `${table.basePath}`)
-//   // If its an array create each item in turn at the clone depth
-//   if (Array.isArray(base)) {
-//     for (const item of base) {
-//       const tempObj = {}
-//       set(tempObj, table.basePath, item)
-//       result.push(await createTableRelationshipsPayloadInner(table, tableSet, tempObj))
-//     }
-//     return result
-//   } else {
-//     return createTableRelationshipsPayloadInner(table, tableSet, srcObj)
-//   }
-// }
-
 const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
   const result = { }
 
@@ -236,6 +213,21 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
   return { }
 }
 
+function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
+  const key = targetKeys.find(tk => tk.apiKey === tableColumnsPayloads?.id) ||
+    targetKeys.find(tk => tk.apiBasePath === table.basePath)
+
+  if (key) {
+    key.powerAppsTable = table.name
+    key.contentId = contentId
+    key.apiBasePath = table.basePath
+    return key.powerAppsKey
+  } else {
+    targetKeys.push(new BaseKeyMapping(table.apiTable, null, table.basePath, table.name, contentId))
+    return null
+  }
+}
+
 /**
  * Generates a set of objects to enable the subsequent generation of
  * the batch update payload text. Wraps and processes the results of the
@@ -246,7 +238,7 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
  */
 export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) => {
   const updateObjects = []
-  let contentId = 1
+  let contentId = 1 // Incremented after each push into updateObjects
   // Iterate over the table-set and gather the inline assignments of fields and relationships
   for (const table of tableSet) {
     const currentContentId = contentId
@@ -254,24 +246,30 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     if (tableColumnsPayloads) {
       if (Array.isArray(tableColumnsPayloads)) {
         for (const tableColumnsPayload of tableColumnsPayloads) {
+          const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayload, contentId, table)
           updateObjects.push({
             table: table.name,
             relationshipName: table.relationshipName,
-            contentId: contentId++,
+            contentId: contentId,
             assignments: Object.assign(tableColumnsPayload.columnPayload,
               substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-            methods: [Methods.POST, Methods.PATCH]
+            powerAppsId,
+            method: powerAppsId ? Methods.PATCH : Methods.POST
           })
+          contentId++
         }
       } else {
+        const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayloads, contentId, table)
         updateObjects.push({
           table: table.name,
           relationshipName: table.relationshipName,
-          contentId: contentId++,
+          contentId: contentId,
           assignments: Object.assign(tableColumnsPayloads.columnPayload,
             substitutePlaceholders(tableColumnsPayloads.relationshipsPayload, updateObjects, table.relationships)),
-          methods: [Methods.POST, Methods.PATCH]
+          powerAppsId,
+          method: powerAppsId ? Methods.PATCH : Methods.POST
         })
+        contentId++
       }
     }
 
@@ -283,10 +281,11 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
         updateObjects.push({
           table: `$${currentContentId}/${m.name}/$ref`,
           relationshipName: table.relationshipName,
-          contentId: contentId++,
+          contentId: contentId,
           assignments: m.assignments,
-          methods: [Methods.POST, Methods.DELETE]
+          method: Methods.POST
         })
+        contentId++
       }
     }
   }
@@ -295,6 +294,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     contentId: u.contentId,
     table: u.table,
     assignments: u.assignments,
-    methods: u.methods
+    method: u.method,
+    powerAppsId: u.powerAppsId
   }))
 }

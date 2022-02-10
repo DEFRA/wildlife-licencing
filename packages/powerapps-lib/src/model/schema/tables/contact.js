@@ -7,4 +7,4 @@ export const Contact = new Table('contacts', [
   new Column('telephone1', 'contactDetails.phone'),
   new Column('emailaddress1', 'contactDetails.email'),
   ...address
-], null, null, ['firstname', 'lastname'])
+], null, null, ['firstname', 'lastname'], 'applications')

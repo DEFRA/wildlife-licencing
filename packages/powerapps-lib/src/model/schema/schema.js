@@ -30,12 +30,14 @@ export class Table {
     columns = [],
     relationships = [],
     basePath,
-    requiredColumns = []
+    requiredColumns = [],
+    apiTable
   ) {
     this.name = name
     this.columns = columns
     this.relationships = relationships
     this.basePath = basePath
     this.requiredColumns = requiredColumns
+    this.apiTable = apiTable
   }
 }

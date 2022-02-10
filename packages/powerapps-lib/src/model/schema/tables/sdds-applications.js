@@ -39,4 +39,4 @@ export const SddsApplication = new Table('sdds_applications', [
   new Relationship('sdds_application_applicationpurpose_sdds_', 'sdds_applicationpurposes',
     RelationshipType.MANY_TO_ONE, 'sdds_applicationpurpose', 'applicationPurpose',
     s => getReferenceDataIdByName('sdds_applicationpurposes', s))
-], 'application')
+], 'application', [], 'applications')

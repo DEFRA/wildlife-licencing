@@ -20,13 +20,17 @@ export const openBatchRequest = (tableSet, clientUrl) => {
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n\n`
 
 // Warning, the interface is fussy about whitespace
-const headerBuilder = (contentId, table, method) => {
+const headerBuilder = (contentId, table, method, powerAppsId) => {
   let result = 'Content-Type: application/http\n'
   result += 'Content-Transfer-Encoding:binary\n'
   result += `Content-ID: ${contentId}\n`
   result += '\n'
-  if (method === Methods.POST) {
+  if (method === Methods.PATCH) {
+    result += `PATCH ${params.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
+  } else if (method === Methods.POST) {
     result += `POST ${params.clientUrl}/${table} HTTP/1.1\n`
+  } else if (method === Methods.PUT) {
+    result += `PUT ${params.clientUrl}/${table} HTTP/1.1\n`
   }
   result += 'Content-Type: application/json;type=entry\n'
   return result
@@ -56,7 +60,7 @@ export const createBatchRequest = async (srcObj, targetKeys) => {
 
   for (const b of params.batchRequestObjects) {
     body += changeSetStart(changeId)
-    body += headerBuilder(b.contentId, b.table, Methods.POST)
+    body += headerBuilder(b.contentId, b.table, b.method, b.powerAppsId)
     body += '\n'
     body += typeof b.assignments === 'object' ? JSON.stringify(b.assignments, null, 2) : b.assignments
     body += '\n\n'
@@ -71,15 +75,13 @@ export const createBatchRequest = async (srcObj, targetKeys) => {
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
 const preComplied = (n =>
-  ([...Array(n).keys()].map(i => i + 1).map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
 
 /*
  * Create a key object from the response body text
  */
 export const createKeyObject = (responseBody, targetKeys) => {
   const strippedResponseBody = responseBody.replaceAll(params.clientUrl, '')
-  const searchResponse = id => strippedResponseBody.match(preComplied[id - 1])?.groups || {}
-  console.log(params.batchRequestObjects)
-  // return sequence.reduce((p, c) => ({ ...p, [c]: searchResponse(sequence.findIndex(s => s === c) + 1) }), {})
-  return null
+  targetKeys.forEach(tk => { tk.powerAppsKey = strippedResponseBody.match(preComplied[tk.contentId])?.groups?.eid })
+  return targetKeys
 }

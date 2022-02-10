@@ -1,17 +1,19 @@
-export class DependentKeyMapping {
-  constructor (apiTable, powerAppsRelationship, powerAppsTable, powerAppsKey) {
-    this.apiTable = apiTable
-    this.powerAppsRelationship = powerAppsRelationship
-    this.powerAppsTable = powerAppsTable
-    this.powerAppsKey = powerAppsKey
-  }
-}
-
 export class BaseKeyMapping {
-  constructor (apiTable, apiKey, powerAppsTable, powerAppsKey = null, dependentKeyMappings = []) {
-    this.dependentKeyMappings = dependentKeyMappings
+  static copy (obj) {
+    if (obj) {
+      const mapping = new BaseKeyMapping()
+      Object.assign(mapping, obj)
+      return mapping
+    }
+    return null
+  }
+
+  constructor (apiTable, apiKey, apiBasePath, powerAppsTable, contentId, powerAppsKey) {
     this.apiTable = apiTable
     this.apiKey = apiKey
+    this.apiBasePath = apiBasePath
+    this.powerAppsTable = powerAppsTable
+    this.contentId = contentId
     this.powerAppsKey = powerAppsKey
   }
 }
