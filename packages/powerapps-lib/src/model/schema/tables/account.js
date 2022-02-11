@@ -6,4 +6,4 @@ export const Account = new Table('accounts', [
   new Column('telephone1', 'phone'),
   new Column('emailaddress1', 'email'),
   ...address
-], null, null, ['name'], 'applications')
+], null, null, 'applications')

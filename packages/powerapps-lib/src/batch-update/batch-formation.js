@@ -62,7 +62,7 @@ export const createBatchRequest = async (srcObj, targetKeys) => {
     body += changeSetStart(changeId)
     body += headerBuilder(b.contentId, b.table, b.method, b.powerAppsId)
     body += '\n'
-    body += typeof b.assignments === 'object' ? JSON.stringify(b.assignments, null, 2) : b.assignments
+    body += JSON.stringify(b.assignments, null, 2)
     body += '\n\n'
   }
 

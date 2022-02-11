@@ -1,12 +1,14 @@
-import { RelationshipType } from '../schema.js'
+import { RelationshipType, OperationType } from '../schema.js'
 
 import * as _get from 'lodash.get'
 import * as _set from 'lodash.set'
+import * as _has from 'lodash.has'
 import * as _cloneDeep from 'lodash.clonedeep'
 import { BaseKeyMapping } from '../key-mappings.js'
 
 const { default: set } = _set
 const { default: get } = _get
+const { default: has } = _has
 const { default: cloneDeep } = _cloneDeep
 
 export const Methods = Object.freeze({
@@ -63,7 +65,13 @@ export const createTableSet = (table, include, sequence = [], path = table.baseP
  */
 export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
   const result = []
-  const base = get(srcObj, `${table.basePath}`)
+
+  // Omit the payload if the base path is not set
+  if (!has(srcObj, table.basePath)) {
+    return null
+  }
+
+  const base = get(srcObj, table.basePath)
   // If its an array create each item in turn at the clone depth
   if (Array.isArray(base)) {
     for (const item of base) {
@@ -86,36 +94,21 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   // Look for the API id in the payload to associate with the contentId
   const id = get(srcObj, `${table.basePath}.id`)
   for (const column of table.columns) {
-    const param = get(srcObj, `${table.basePath}.${column.srcPath}`)
-    let value
-    if (column.srcFunc) {
-      if (column.srcPath) { // Expecting a parameter
-        value = param ? await column.srcFunc(param) : null
+    if (OperationType.outbound(column.operationType)) {
+      if (has(srcObj, `${table.basePath}.${column.srcPath}`)) {
+        // If the path is set then set the column directly or via the function
+        const param = get(srcObj, `${table.basePath}.${column.srcPath}`)
+        Object.assign(columnPayload, { [column.name]: column.srcFunc ? await column.srcFunc(param) : param })
       } else {
-        value = await column.srcFunc()
+        // If the path is not set then it is possible to run the function un-parametrized
+        if (column.srcFunc) {
+          Object.assign(columnPayload, { [column.name]: await column.srcFunc() })
+        }
       }
-    } else {
-      value = param
     }
-    // If the value is null then;
-    // (a) If we have the field marked as a required do not set
-    // (b) Otherwise continue, the entity value is set to null
-    if (!value) {
-      if (!column.required) {
-        Object.assign(columnPayload, { [column.name]: null })
-      }
-    } else {
-      Object.assign(columnPayload, { [column.name]: value })
-    }
-  }
-
-  // Check all the required columns are set otherwise this update goes no further
-  if (!Object.entries(columnPayload).filter(([k]) => table.requiredColumns.find(rq => rq === k)).every(([, v]) => v)) {
-    return null
   }
 
   const relationshipsPayload = await createTableRelationshipsPayload(table, srcObj, tableSet)
-
   return { id, columnPayload, relationshipsPayload }
 }
 
@@ -160,6 +153,15 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
   return result
 }
 
+/**
+ * Generate the update objects for the many-to-many relationships on any
+ * given table in the set
+ * @param table - The table
+ * @param tableSet - The set of tables in the update
+ * @param srcObj - The source object
+ * @param updateObjects - The set of update objects being built
+ * @returns {Promise<null|*[]>}
+ */
 const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updateObjects) => {
   const result = []
 
@@ -177,12 +179,10 @@ const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updat
   for (const relationship of m2mRelationships) {
     // Only set up where the target is in the update
     const rel = updateObjects.filter(u => u.relationshipName === relationship.name)
-    // Assignments requires a non-valid JS object (repeating keys)
-    // The result is therefore a string (which is not invariant under stringify)
     if (rel.length) {
       rel.forEach(r => result.push({
         name: relationship.name,
-        assignments: '{\n' + `  "@odata.id": "$${r.contentId}"` + '\n}'
+        assignments: { '@odata.id': `$${r.contentId}` }
       }))
     }
   }
@@ -215,6 +215,17 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
   return { }
 }
 
+/**
+ * Decorate the target keys object.
+ * The target keys object is read from the database, decorated here with the contentId
+ * Then decorated with the Power Apps keys in the response object
+ * and written back down to the database
+ * @param targetKeys
+ * @param tableColumnsPayloads
+ * @param contentId
+ * @param table
+ * @returns {null|*}
+ */
 function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
   const key = targetKeys.find(tk => tk.apiKey === tableColumnsPayloads?.id) ||
     targetKeys.find(tk => tk.apiBasePath === table.basePath)
@@ -234,20 +245,26 @@ function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
  * Generates a set of objects to enable the subsequent generation of
  * the batch update payload text. Wraps and processes the results of the
  * createTableColumnsPayload and createTableRelationshipsPayload process
- * @param srcObj
- * @param tableSet
- * @returns {Promise<void>}
+ * @param srcObj - The source data object
+ * @param tableSet - The set of tables involved the update
+ * @returns {Promise<void>} - the built update object
  */
 export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) => {
+  // Built as each table in the set is processed, contains all the field assignments
+  // and relationship bindings as well as the target keys and request method
   const updateObjects = []
   let contentId = 1 // Incremented after each push into updateObjects
-  // Iterate over the table-set and gather the inline assignments of fields and relationships
+  // Iterate over the table-set
   for (const table of tableSet) {
     const currentContentId = contentId
+    // Gathers the table columns, assignments and relationship bindings
     const tableColumnsPayloads = await createTableColumnsPayload(table, srcObj, tableSet)
+    // If required fields are not set then will have a null here and this table is omitted from the update
     if (tableColumnsPayloads) {
+      // In the case where a relationship is m2m this will be an array. e.g. sites
       if (Array.isArray(tableColumnsPayloads)) {
         for (const tableColumnsPayload of tableColumnsPayloads) {
+          // Decorate the target keys object with the contentId
           const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayload, contentId, table)
           updateObjects.push({
             table: table.name,
@@ -275,7 +292,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
       }
     }
 
-    // Handle m2m relationships. These are a separate request occurring after the containing
+    // Handle m2m relationships. These are a separate requests occurring after the containing
     // (driving) table request
     const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, tableSet, srcObj, updateObjects)
     if (tableM2MRelationshipsPayloads && tableM2MRelationshipsPayloads.length) {
@@ -292,6 +309,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     }
   }
 
+  // Filter out the fields no longer used and return the update object
   return updateObjects.map(u => ({
     contentId: u.contentId,
     table: u.table,
@@ -299,4 +317,69 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     method: u.method,
     powerAppsId: u.powerAppsId
   }))
+}
+
+/**
+ * Generate a multi-level request path based on a given table and set of included tables
+ * with a atomic GET request to the ODATA interface
+ * Write-only fields are ignored
+ * TableName?$select=SelectList
+ *   &$expand=Relationship.LookupColumnName($Select=SelectList;$expand...),
+ *   &$expand=Relationship.LookupColumnName($Select=SelectList;$expand...)...
+ */
+export const buildRequestPath = (table, include, isFirst = true, delim = '&$expand=') => {
+  let path = ''
+  if (isFirst) {
+    path += table.name
+    path += '?' // Start the url query parameters
+  }
+  path += `$select=${table.columns.filter(c => OperationType.inbound(c.operationType)).map(c => c.name).join(',')}`
+
+  if (table.relationships && table.relationships.length) {
+    for (const relationship of table.relationships) {
+      // Filter the relationships by the tables included in the table set
+      const nextTable = include.find(i => i.name === relationship.relatedTable)
+      if (nextTable) {
+        path += `${delim}${relationship.lookupColumnName}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
+        delim = ','
+      }
+    }
+  }
+
+  return path
+}
+
+export const buildObjectTransformer = (table, tableSet) => {
+  const objectTransformerColumns = async (t, src, result) => {
+    for (const column of t.columns) {
+      if (OperationType.inbound(column.operationType) && column.srcPath) {
+        set(result, `${t.basePath}.${column.srcPath}`, src[column.name])
+      }
+    }
+  }
+
+  const objectTransformer = async (src, t = table, result = {}) => {
+    await objectTransformerColumns(t, src, result)
+    if (t.relationships && t.relationships.length) {
+      for (const relationship of t.relationships) {
+        // Lookup relationships (with a tgtFunc)
+        // Evaluate target functions on the relationships
+        // And are not further traversed
+        if (relationship.tgtFunc && src[relationship.lookupColumnName]) {
+          const value = await relationship.tgtFunc(src[relationship.lookupColumnName])
+          if (value) {
+            set(result, `${t.basePath}.${relationship.srcPath}`, value)
+          }
+        } else {
+          const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
+          if (nextTable && src[relationship.lookupColumnName]) {
+            await objectTransformer(src[relationship.lookupColumnName], nextTable, result)
+          }
+        }
+      }
+    }
+    return result
+  }
+
+  return objectTransformer
 }

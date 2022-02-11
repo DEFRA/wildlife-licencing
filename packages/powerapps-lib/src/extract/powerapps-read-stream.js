@@ -19,6 +19,32 @@ async function * fetcher (path) {
   } while (next)
 }
 
+export const powerAppsReadStream = (requestPath, objectTransformer) => {
+  const stream = Readable.from(fetcher(requestPath))
+  /*
+   * Use a transform stream to apply the Power Apps to API transformation
+   * and to ungroup the objects in the stream.
+   * Errors are reported and stepped over
+   */
+  const transformStream = new Transform({
+    objectMode: true,
+    transform (data, encoding, callback) {
+      Promise.all(data.map(src => objectTransformer(src))).then(results => {
+        if (results) {
+          results.forEach(r => r && this.push(r))
+        }
+        callback()
+      })
+    }
+  })
+
+  // The stream starts flow on pipe
+  stream.pipe(transformStream)
+
+  // Return immediately
+  return transformStream
+}
+
 /**
  * Extract the a dataset from Power Apps based on a model and return a readable stream of transformed application objects
  * @returns {module:stream.internal.Transform}

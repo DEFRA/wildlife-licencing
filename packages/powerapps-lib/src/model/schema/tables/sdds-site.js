@@ -9,4 +9,4 @@ export const SddsSite = new Table('sdds_sites', [
   new Column('sdds_county', 'address.county'),
   new Column('sdds_town', 'address.town'),
   new Column('sdds_postcode', 'address.postcode', s => s.toUpperCase())
-], [], 'sites', ['sdds_name'], 'sites')
+], [], 'sites', 'sites')

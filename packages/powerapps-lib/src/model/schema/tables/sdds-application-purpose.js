@@ -1,6 +1,6 @@
 import { Table, Column } from '../schema.js'
 
 export const SddsApplicationPurpose = new Table('sdds_applicationpurposes', [
-  new Column('name', 'name'),
-  new Column('description', 'description')
+  new Column('sdds_name', 'name'),
+  new Column('sdds_description', 'description')
 ])

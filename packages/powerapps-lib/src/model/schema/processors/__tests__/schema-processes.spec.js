@@ -1,8 +1,11 @@
+import { buildObjectTransformer, createTableSet } from '../schema-processes.js'
 import {
   SddsApplication,
   SddsSite,
   Contact,
-  Account
+  Account,
+  SddsApplicationType,
+  SddsApplicationPurpose
 } from '../../tables/tables.js'
 
 const srcObj = {
@@ -80,6 +83,70 @@ const srcObj = {
     ]
   }
 }
+const powerAppsApplicationObj = {
+  '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_applicantid(firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
+  '@odata.etag': 'W/"3285321"',
+  sdds_applicationnumber: 'B6F826',
+  sdds_descriptionofproposal: 'Removal of badgers by dogs',
+  sdds_detailsofconvictions: null,
+  sdds_whydoyouneedalicence: 'New hosuing development',
+  sdds_applicationcategory: 100000001,
+  sdds_applicationid: '8d797550-818a-ec11-93b0-0022481b4422',
+  sdds_applicantid: {
+    '@odata.etag': 'W/"3285313"',
+    firstname: 'Robert',
+    lastname: 'Plant',
+    telephone1: '16542',
+    emailaddress1: 'me@email.com',
+    address1_line1: 'the grove',
+    address1_line2: 'henleaze',
+    address1_line3: null,
+    address1_county: 'bristol',
+    address1_city: 'briz',
+    address1_postalcode: 'BS1',
+    contactid: '88797550-818a-ec11-93b0-0022481b4422'
+  },
+  sdds_organisationid: null,
+  sdds_ecologistid: {
+    '@odata.etag': 'W/"3285316"',
+    firstname: 'Mr Brian',
+    lastname: 'Ecologist',
+    telephone1: 'string',
+    emailaddress1: 'ecologist1@email.com',
+    address1_line1: 'Old Hill',
+    address1_line2: 'Stapleton',
+    address1_line3: 'Nr. Bristol',
+    address1_county: 'Somerset',
+    address1_city: 'Bristol',
+    address1_postalcode: 'BS11',
+    contactid: '8a797550-818a-ec11-93b0-0022481b4422'
+  },
+  sdds_ecologistorganisationid: {
+    '@odata.etag': 'W/"3285319"',
+    name: 'Ecologist1_Org',
+    telephone1: null,
+    emailaddress1: null,
+    address1_line1: 'a1',
+    address1_line2: 'a2',
+    address1_line3: 'a3',
+    address1_county: 'c1',
+    address1_city: 't1',
+    address1_postalcode: '876',
+    accountid: '8c797550-818a-ec11-93b0-0022481b4422'
+  },
+  sdds_applicationtypesid: {
+    '@odata.etag': 'W/"3283675"',
+    sdds_applicationname: 'A24 Badger',
+    sdds_description: 'Any application that has got to do with a badger sett.',
+    sdds_applicationtypesid: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
+  },
+  sdds_applicationpurpose: {
+    '@odata.etag': 'W/"2843256"',
+    sdds_name: 'Keeping badgers in zoological gardens or collections',
+    sdds_description: 'Under section 10(1)(b) of the Act licences can be issued for the purpose of any zoological collection to take badgers or to sell badgers',
+    sdds_applicationpurposeid: '81bbe720-9975-ec11-8943-0022481aacb0'
+  }
+}
 
 describe('the schema processes', () => {
   beforeEach(() => jest.resetModules())
@@ -90,7 +157,7 @@ describe('the schema processes', () => {
       [SddsSite, Contact, Account])
 
     expect(tableSet.map(t => t.name))
-      .toEqual(['sdds_site', 'contact', 'account', 'contact', 'account', 'sdds_application'])
+      .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
   })
 
   it('can create the batch update columns object for specific table', async () => {
@@ -99,27 +166,20 @@ describe('the schema processes', () => {
     const ecologist = tableSet.find(ts => ts.basePath === 'application.ecologist')
     const applicationPayload = await createTableColumnsPayload(ecologist, srcObj)
     expect(applicationPayload).toEqual({
-      firstname: 'Mr Brian',
-      lastname: 'Yak',
-      telephone1: '234234',
-      emailaddress1: 'brian.yak@email.com',
-      address1_line1: 'Old Hill',
-      address1_line2: 'Stapleton',
-      address1_line3: 'Nr. Bristol',
-      address1_county: 'Somerset',
-      address1_city: 'Bristol',
-      address1_postalcode: 'BS11 1PW'
+      relationshipsPayload: null,
+      columnPayload: {
+        firstname: 'Mr Brian',
+        lastname: 'Yak',
+        telephone1: '234234',
+        emailaddress1: 'brian.yak@email.com',
+        address1_line1: 'Old Hill',
+        address1_line2: 'Stapleton',
+        address1_line3: 'Nr. Bristol',
+        address1_county: 'Somerset',
+        address1_city: 'Bristol',
+        address1_postalcode: 'BS11 1PW'
+      }
     })
-  })
-
-  it('returns a null batch update columns object with a required fields missing', async () => {
-    const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-    const tableSet = createTableSet(SddsApplication, [Contact, Account])
-    const ecologist = tableSet.find(ts => ts.basePath === 'application.ecologist')
-    const newSrc = Object.assign(srcObj)
-    newSrc.application.ecologist.firstname = null
-    const applicationPayload = await createTableColumnsPayload(ecologist, srcObj)
-    expect(applicationPayload).toBeNull()
   })
 
   it('can create the batch update columns for a set of table items', async () => {
@@ -182,5 +242,12 @@ describe('the schema processes', () => {
         'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurpose(123)'
       }
     )
+  })
+
+  it('inbound object transformer can process a single object', async () => {
+    const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
+    const objectTransformer = buildObjectTransformer(SddsApplication, tableSet)
+    const result = await objectTransformer(powerAppsApplicationObj)
+    expect(result).toEqual({})
   })
 })

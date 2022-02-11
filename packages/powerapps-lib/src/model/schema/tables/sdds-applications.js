@@ -7,8 +7,7 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),
-  new Column('sdds_applicationcategory', 'applicationCategory'),
-  new Column('sdds_sourceremote', null, () => true)
+  new Column('sdds_applicationcategory', 'applicationCategory')
 ], [
   // Site
   new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',
@@ -33,10 +32,12 @@ export const SddsApplication = new Table('sdds_applications', [
   // Application Type
   new Relationship('sdds_ApplicationTypes_sdds_applicationtyp', 'sdds_applicationtypeses',
     RelationshipType.MANY_TO_ONE, 'sdds_applicationtypesid', 'applicationType',
-    s => getReferenceDataIdByName('sdds_applicationtypeses', s)),
+    s => getReferenceDataIdByName('sdds_applicationtypeses', s),
+    s => s.sdds_applicationname),
 
   // Application purpose
   new Relationship('sdds_application_applicationpurpose_sdds_', 'sdds_applicationpurposes',
     RelationshipType.MANY_TO_ONE, 'sdds_applicationpurpose', 'applicationPurpose',
-    s => getReferenceDataIdByName('sdds_applicationpurposes', s))
-], 'application', [], 'applications')
+    s => getReferenceDataIdByName('sdds_applicationpurposes', s),
+    s => s.sdds_name)
+], 'application', 'applications')

@@ -153,7 +153,7 @@ export const sddsApplications = {
     },
 
     sdds_applicationpurpose: {
-      targetEntity: 'sdds_applicationpurposes',
+      targetEntity: 'sdds_applicationpurpose',
       targetKey: 'sdds_applicationpurposeid',
       fk: 'sdds_applicationpurpose',
       readOnly: true, // Only used in the extract
