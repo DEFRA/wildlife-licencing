@@ -1,3 +1,5 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
 {% extends "./common/layout.njk" %} {% block content %}
 
 <div class='govuk-grid-row'>
@@ -66,9 +68,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-!-margin-bottom-4'>
-              In progress
-            </strong>
+            {{ govukTag({
+              text: "In Progress",
+              classes: "govuk-tag--blue"
+            }) }}
 
           </td>
 
@@ -107,9 +110,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-!-margin-bottom-4'>
-              In progress
-            </strong>
+            {{ govukTag({
+              text: "In Progress",
+              classes: "govuk-tag--blue"
+            }) }}
 
           </td>
 
@@ -153,9 +157,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-tag--green govuk-!-margin-bottom-4'>
-              Granted
-            </strong>
+            {{ govukTag({
+              text: "Granted",
+              classes: "govuk-tag--green"
+            }) }}
 
           </td>
 
@@ -199,9 +204,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-tag--green govuk-!-margin-bottom-4'>
-              Granted
-            </strong>
+            {{ govukTag({
+              text: "Granted",
+              classes: "govuk-tag--green"
+            }) }}
 
           </td>
 
@@ -241,9 +247,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-tag--grey govuk-!-margin-bottom-4'>
-              Submitted
-            </strong>
+            {{ govukTag({
+              text: "Submitted",
+              classes: "govuk-tag--grey"
+            }) }}
 
           </td>
 
@@ -283,9 +290,10 @@
 
           <td class='govuk-table__cell'>
 
-            <strong class='govuk-tag govuk-tag--grey govuk-!-margin-bottom-4'>
-              Submitted
-            </strong>
+             {{ govukTag({
+              text: "Submitted",
+              classes: "govuk-tag--grey"
+            }) }}
 
           </td>
 
