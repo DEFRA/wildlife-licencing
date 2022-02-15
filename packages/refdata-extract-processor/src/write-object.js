@@ -7,17 +7,19 @@ const generalUpsert = async (model, id, json) => {
 
 export const writeApplicationTypes = async obj => {
   const { data, keys } = obj
+  const v = Object.values(data)[0]
   return generalUpsert(models.applicationTypes, keys[0].powerAppsKey, {
-    name: data.name,
-    description: data.description
+    name: v?.name,
+    description: v?.description
   })
 }
 
 export const writeApplicationPurposes = async obj => {
   const { data, keys } = obj
+  const v = Object.values(data)[0]
   return generalUpsert(models.applicationPurposes, keys[0].powerAppsKey, {
-    name: data.name,
-    description: data.description
+    name: v?.name,
+    description: v?.description
   })
 }
 

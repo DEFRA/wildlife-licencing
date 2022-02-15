@@ -18,7 +18,8 @@ export const putSectionHandler = section => async (context, req, h) => {
     const sequelize = SEQUELIZE.getSequelize()
 
     const [, updatedApplication] = await models.applications.update({
-      application: sequelize.fn('jsonb_set', sequelize.col('application'), `{${section}}`, JSON.stringify(req.payload), true)
+      application: sequelize.fn('jsonb_set', sequelize.col('application'), `{${section}}`, JSON.stringify(req.payload), true),
+      updateStatus: 'L'
     }, {
       where: {
         id: applicationId

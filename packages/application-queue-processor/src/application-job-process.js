@@ -62,6 +62,8 @@ async function buildApiObject (userId, applicationId) {
   }
 
   const { targetKeys, application } = applicationResult.dataValues
+  application.id = applicationId
+  const data = { application }
 
   const keys = targetKeys
     ? targetKeys.map(t => BaseKeyMapping.copy(t))
@@ -72,20 +74,18 @@ async function buildApiObject (userId, applicationId) {
     where: { userId, applicationId }
   })
 
-  const s = await models.sites.findAll({
-    where: { id: applicationSites.map(s => s.dataValues.siteId) }
-  })
+  if (applicationSites.length) {
+    const s = await models.sites.findAll({
+      where: { id: applicationSites.map(s => s.dataValues.siteId) }
+    })
 
-  const sites = s.map(s => ({ id: s.dataValues.id, site: s.dataValues.site, targetKeys: s.dataValues.targetKeys }))
-  keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
-    new BaseKeyMapping('sites', s.id, 'applications.sites')))
-
-  // Merge the sites api-id's into the update object as field **id**
-  application.application.id = applicationId
-  return {
-    data: Object.assign({ application: application.application }, { sites: sites.map(s => ({ id: s.id, ...s.site })) }),
-    keys
+    const sites = s.map(s => ({ id: s.dataValues.id, site: s.dataValues.site, targetKeys: s.dataValues.targetKeys }))
+    data.application.sites = sites.map(s => ({ id: s.id, ...s.site }))
+    keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
+      new BaseKeyMapping('sites', s.id, 'applications.sites')))
   }
+
+  return { data, keys }
 }
 
 /**

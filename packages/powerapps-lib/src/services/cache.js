@@ -14,7 +14,7 @@ const loadReferenceDataCache = async client => {
     let entity
     for await (const obj of readableStream.iterator()) {
       entity = obj.keys[0].powerAppsTable
-      const name = Object.values(obj.data)[0].name
+      const name = Object.values(obj.data).length ? Object.values(obj.data)[0]?.name : null
       if (name) {
         cacheValue.push({ id: obj.keys[0].powerAppsKey, name: Object.values(obj.data)[0].name })
       }

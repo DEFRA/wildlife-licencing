@@ -145,7 +145,10 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
         } else {
           value = param
         }
-        Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: `/${relationship.relatedTable}(${value})` })
+        // If there is no value this is ignored
+        if (value) {
+          Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: `/${relationship.relatedTable}(${value})` })
+        }
       }
     }
   }
