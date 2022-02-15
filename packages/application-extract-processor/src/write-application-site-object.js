@@ -3,7 +3,7 @@ import { models } from '@defra/wls-database-model'
 import pkg from 'sequelize'
 const { Sequelize } = pkg
 
-export const writeApplicationSiteObject = async (obj, ts) => {
+export const writeApplicationSiteObject = async obj => {
   const { data } = obj
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   try {

@@ -95,15 +95,13 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   const id = get(srcObj, `${table.basePath}.id`)
   for (const column of table.columns) {
     if (OperationType.outbound(column.operationType)) {
-      if (has(srcObj, `${table.basePath}.${column.srcPath}`)) {
+      // If the path is not set then it is possible to run the function un-parametrized
+      if (column.srcFunc && !column.srcPath) {
+        Object.assign(columnPayload, { [column.name]: await column.srcFunc() })
+      } else if (has(srcObj, `${table.basePath}.${column.srcPath}`)) {
         // If the path is set then set the column directly or via the function
         const param = get(srcObj, `${table.basePath}.${column.srcPath}`)
         Object.assign(columnPayload, { [column.name]: column.srcFunc ? await column.srcFunc(param) : param })
-      } else {
-        // If the path is not set then it is possible to run the function un-parametrized
-        if (column.srcFunc) {
-          Object.assign(columnPayload, { [column.name]: await column.srcFunc() })
-        }
       }
     }
   }
