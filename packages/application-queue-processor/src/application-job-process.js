@@ -61,7 +61,7 @@ async function buildApiObject (userId, applicationId) {
     return null
   }
 
-  const { application, targetKeys } = applicationResult
+  const { targetKeys, application } = applicationResult.dataValues
 
   const keys = targetKeys
     ? targetKeys.map(t => BaseKeyMapping.copy(t))
@@ -80,12 +80,10 @@ async function buildApiObject (userId, applicationId) {
   keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
     new BaseKeyMapping('sites', s.id, 'applications.sites')))
 
-  // Merge the Api Id into the update object as field **id**
-  Object.assign(application, { id: applicationId })
+  // Merge the sites api-id's into the update object as field **id**
+  application.application.id = applicationId
   return {
-    data: {
-      application: Object.assign(application, { sites: sites.map(s => ({ id: s.id, ...s.site })) })
-    },
+    data: Object.assign({ application: application.application }, { sites: sites.map(s => ({ id: s.id, ...s.site })) }),
     keys
   }
 }

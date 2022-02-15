@@ -79,9 +79,8 @@ const createModels = async () => {
         key: 'id'
       }
     },
-    sddsApplicationSiteId: { type: DataTypes.UUID },
-    submitted: { type: DataTypes.DATE },
-    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+    sddsApplicationId: { type: DataTypes.UUID },
+    sddsSiteId: { type: DataTypes.UUID }
   }, {
     timestamps: true,
     indexes: [
@@ -89,7 +88,7 @@ const createModels = async () => {
       { unique: false, fields: ['application_id'], name: 'application_site_application_fk' },
       { unique: false, fields: ['site_id'], name: 'application_site_site_fk' },
       { unique: true, fields: ['user_id', 'application_id', 'site_id'], name: 'application_site_uk' },
-      { unique: true, fields: ['sdds_application_site_id'], name: 'sdds_application_site_uk' }
+      { unique: true, fields: ['sdds_application_id', 'sdds_site_id'], name: 'sdds_application_site_uk' }
     ]
   })
 

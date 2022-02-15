@@ -7,7 +7,8 @@ export const prepareResponse = as => Object.assign((({
   createdAt,
   updatedAt,
   userId,
-  sddsApplicationSiteId,
+  sddsApplicationId,
+  sddsSiteId,
   submitted,
   updateStatus,
   ...l

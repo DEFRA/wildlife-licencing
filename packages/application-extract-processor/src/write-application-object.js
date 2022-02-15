@@ -23,16 +23,19 @@ export const writeApplicationObject = async (obj, ts) => {
   const { data, keys } = obj
 
   try {
+    const baseKey = keys.find(k => k.apiTable === 'applications')
+
     const application = await models.applications.findOne({
-      where: { sdds_application_id: keys.sdds_applications.eid }
+      where: { sdds_application_id: baseKey.powerAppsKey }
     })
 
     // Update or insert a new applications
     if (application) {
       const a = application.dataValues
+      baseKey.apiKey = a.id
       if ((a.updateStatus === 'P' && ts > a.updatedAt) || a.updateStatus === 'U') {
         await models.applications.update({
-          application: data,
+          application: data.application,
           targetKeys: keys,
           updateStatus: 'U'
         }, {
@@ -47,12 +50,13 @@ export const writeApplicationObject = async (obj, ts) => {
       }
     } else {
       // Create a new application and user
+      baseKey.apiKey = uuidv4()
       await models.applications.create({
-        id: uuidv4(),
-        application: data,
+        id: baseKey.apiKey,
+        application: data.application,
         targetKeys: keys,
         updateStatus: 'U',
-        sddsApplicationId: keys.sdds_applications.eid
+        sddsApplicationId: baseKey.powerAppsKey
       })
       return { insert: 1, update: 0, pending: 0, error: 0 }
     }

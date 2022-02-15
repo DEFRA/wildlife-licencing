@@ -7,7 +7,7 @@ const generalUpsert = async (model, id, json) => {
 
 export const writeApplicationTypes = async obj => {
   const { data, keys } = obj
-  return generalUpsert(models.applicationTypes, keys.sdds_applicationtypeses.eid, {
+  return generalUpsert(models.applicationTypes, keys[0].powerAppsKey, {
     name: data.name,
     description: data.description
   })
@@ -15,7 +15,7 @@ export const writeApplicationTypes = async obj => {
 
 export const writeApplicationPurposes = async obj => {
   const { data, keys } = obj
-  return generalUpsert(models.applicationPurposes, keys.sdds_applicationpurposes.eid, {
+  return generalUpsert(models.applicationPurposes, keys[0].powerAppsKey, {
     name: data.name,
     description: data.description
   })

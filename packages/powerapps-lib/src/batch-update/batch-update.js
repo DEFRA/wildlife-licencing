@@ -18,13 +18,13 @@ const debug = db('powerapps-lib:batch-update')
  * @param model - The model to use to create the batch update
  */
 export const batchUpdate = async (srcObj, targetKeys, tableSet) => {
-  const batchId = openBatchRequest(tableSet, clientUrl)
-  const batchRequestBody = await createBatchRequest(srcObj, targetKeys)
-  debug(`Batch request body for batchId ${batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
+  const requestHandle = openBatchRequest(tableSet, clientUrl)
+  const batchRequestBody = await createBatchRequest(requestHandle, srcObj, targetKeys)
+  debug(`Batch request body for batchId ${requestHandle.batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
   try {
-    const responseText = await POWERAPPS.batchRequest(batchId, batchRequestBody)
-    debug(`Batch request response body for batchId ${batchId}:  \n---Start ---\n${responseText}\n---End ---`)
-    return createKeyObject(responseText, targetKeys)
+    const responseText = await POWERAPPS.batchRequest(requestHandle, batchRequestBody)
+    debug(`Batch request response body for batchId ${requestHandle.batchId}:  \n---Start ---\n${responseText}\n---End ---`)
+    return createKeyObject(requestHandle, responseText, targetKeys)
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
       if (err.response.status === 401 || err.response.status === 408 || err.response.status >= 500) {
