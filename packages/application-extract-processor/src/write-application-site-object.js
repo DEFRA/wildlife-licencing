@@ -10,68 +10,80 @@ export const writeApplicationSiteObject = async obj => {
     const Op = Sequelize.Op
     if (data.application.sites.length > 0) {
       for (const s of data.application.sites) {
-        const applicationSite = await models.applicationSites.findOne({
-          where: {
-            [Op.and]: [
-              { sdds_application_id: data.application.id },
-              { sdds_site_id: s.id }
-            ]
-          }
-        })
-
+        // Find the application record using the Power Apps keys
         const application = await models.applications.findOne({
           where: { sdds_application_id: data.application.id }
         })
 
+        // Find the site record using the Power Apps keys
         const site = await models.sites.findOne({
           where: { sdds_site_id: s.id }
         })
 
-        if (!applicationSite) {
-          if (application && site) {
-            await models.applicationSites.create({
-              id: uuidv4(),
-              userId: application.userId,
-              applicationId: application.id,
-              sddsApplicationId: application.sddsApplicationId,
-              siteId: site.id,
-              sddsSiteId: site.sddsSiteId
-            })
-            counter.insert++
-          }
-        } else {
-          if (application && site) {
-            await models.applicationSites.update({
-              userId: application.userId,
-              applicationId: application.id,
-              sddsApplicationId: application.sddsApplicationId,
-              siteId: site.id,
-              sddsSiteId: site.sddsSiteId
-            }, {
-              where: {
-                id: applicationSite.dataValues.id
-              },
-              returning: false
-            })
-            counter.update++
-          }
-        }
-
-        // If a site was created on Power Apps and does not have a user assigned then the user
-        // Can be transferred from the application to the site.
-        // It is possible that a site without a user is created in Power Apps
-        // and subsequently assigned to an application created in the API with a user
-        // In this case the user can be assigned to the site. The site may also
-        // be attached to a user-less application is which case we ignore.
-        if (application && site && !site.dataValues.user && application.dataValues.userId) {
-          await models.sites.update({
-            userId: application.dataValues.userId
-          }, {
-            where: { id: site.dataValues.id }
+        // If these records are not in the database then do nothing
+        if (application && site) {
+          // Test if the application-site exists using the power Apps Keys
+          const applicationSitePAKeys = await models.applicationSites.findOne({
+            where: {
+              [Op.and]: [
+                { sdds_application_id: data.application.id },
+                { sdds_site_id: s.id }
+              ]
+            }
           })
+
+          // If the record is found using the power apps keys then there is nothing to do.
+          // if the record is not found attempt to find it using the looked up API keys
+          if (!applicationSitePAKeys) {
+            const applicationSiteApiKeys = await models.applicationSites.findOne({
+              where: {
+                [Op.and]: [
+                  { application_id: application.dataValues.id },
+                  { site_id: site.dataValues.id }
+                ]
+              }
+            })
+
+            // If the record is not found then create it
+            // If the record is found then only set the Power Apps keys
+            if (!applicationSiteApiKeys) {
+              await models.applicationSites.create({
+                id: uuidv4(),
+                userId: application.userId,
+                applicationId: application.dataValues.id,
+                sddsApplicationId: data.application.id,
+                siteId: site.dataValues.id,
+                sddsSiteId: s.id
+              })
+              counter.insert++
+            } else {
+              await models.applicationSites.update({
+                sddsApplicationId: data.application.id,
+                sddsSiteId: s.id
+              }, {
+                where: {
+                  id: applicationSiteApiKeys.dataValues.id
+                },
+                returning: false
+              })
+              counter.update++
+            }
+          }
+          // If a site was created on Power Apps and does not have a user assigned then the user
+          // Can be transferred from the application to the site.
+          // It is possible that a site without a user is created in Power Apps
+          // and subsequently assigned to an application created in the API with a user
+          // In this case the user can be assigned to the site. The site may also
+          // be attached to a user-less application is which case we ignore.
+          if (!site.dataValues.user && application.dataValues.userId) {
+            await models.sites.update({
+              userId: application.dataValues.userId
+            }, {
+              where: { id: site.dataValues.id }
+            })
+          }
         }
       }
-
       return counter
     } else {
       // No sites for an application - nothing to do

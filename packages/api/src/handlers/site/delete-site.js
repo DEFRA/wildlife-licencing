@@ -3,6 +3,18 @@ import { clearCaches } from './site-cache.js'
 
 export default async (context, req, h) => {
   const { userId, siteId } = context.request.params
+
+  // Check there are no application sites owned by this site
+  const applicationSites = await models.applicationSites.findAll({
+    where: {
+      userId, siteId
+    }
+  })
+
+  if (applicationSites.length) {
+    return h.response().code(409)
+  }
+
   await clearCaches(userId, siteId)
   const count = await models.sites.destroy({
     where: {

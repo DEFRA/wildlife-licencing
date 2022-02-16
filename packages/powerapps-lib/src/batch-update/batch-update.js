@@ -28,13 +28,13 @@ export const batchUpdate = async (srcObj, targetKeys, tableSet) => {
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
       if (err.response.status === 401 || err.response.status === 408 || err.response.status >= 500) {
-        throw new RecoverableBatchError(`Batch update error for batch ${batchId}: ${err.message}`)
+        throw new RecoverableBatchError(`Batch update error for batch ${requestHandle.batchId}: ${err.message}`)
       } else {
-        throw new UnRecoverableBatchError(`Batch update error for batch ${batchId}: ${err.message}`)
+        throw new UnRecoverableBatchError(`Batch update error for batch ${requestHandle.batchId}: ${err.message}`)
       }
     } else {
       // statements to handle any unspecified exceptions
-      throw new RecoverableBatchError(`Batch update error for batch ${batchId}: ${err.message}`)
+      throw new RecoverableBatchError(`Batch update error for batch ${requestHandle.batchId}: ${err.message}`)
     }
   }
 }

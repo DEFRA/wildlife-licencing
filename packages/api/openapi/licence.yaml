@@ -89,6 +89,8 @@ paths:
           description: Bad request. user ID must be a uuid
         404:
           description: Not found
+        409:
+          description: Conflict
         500:
           description: Unexpected error on server
           content:
@@ -281,6 +283,8 @@ paths:
           description: Bad request
         404:
           description: Not found
+        409:
+          description: Conflict
         500:
           description: Unexpected error on server
           content:
@@ -688,6 +692,8 @@ paths:
           description: Bad request
         404:
           description: Not found
+        409:
+          description: Conflict
         500:
           description: Unexpected error on server
           content:
