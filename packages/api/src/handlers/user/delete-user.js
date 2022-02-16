@@ -16,7 +16,7 @@ export default async (context, req, h) => {
   }
 
   // Check there are no sites owned by this user
-  const sites = await models.applications.findAll({
+  const sites = await models.sites.findAll({
     where: {
       userId
     }
