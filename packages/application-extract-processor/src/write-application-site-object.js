@@ -75,7 +75,7 @@ export const writeApplicationSiteObject = async obj => {
           // and subsequently assigned to an application created in the API with a user
           // In this case the user can be assigned to the site. The site may also
           // be attached to a user-less application is which case we ignore.
-          if (!site.dataValues.user && application.dataValues.userId) {
+          if (!site.dataValues.userId && application.dataValues.userId) {
             await models.sites.update({
               userId: application.dataValues.userId
             }, {

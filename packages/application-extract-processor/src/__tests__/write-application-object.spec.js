@@ -1,4 +1,4 @@
-describe('The application extract processor: write-object', () => {
+describe('The application extract processor: write-application-object', () => {
   beforeEach(() => jest.resetModules())
 
   it('makes an update on a found, pending application with a timestamp older than the extract', async () => {
