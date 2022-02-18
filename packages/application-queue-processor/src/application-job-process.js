@@ -3,100 +3,136 @@ import { models } from '@defra/wls-database-model'
 import { applicationUpdate, UnRecoverableBatchError, BaseKeyMapping } from '@defra/wls-powerapps-lib'
 
 /**
- * Write the key information found in the response back into the table
+ * Write the key information created from the batch response back into the tables
  * @param targetKeys
  * @returns {Promise<unknown[]>}
  */
-const postProcess = async targetKeys => {
-  const applicationsKeys = targetKeys.filter(t => t.contentId).map(({ contentId, ...t }) => t).filter(t => t.apiTable === 'applications')
-  const applicationId = applicationsKeys.filter(t => t.apiBasePath === 'application').map(t => t.apiKey)[0]
-  const sddsApplicationsId = applicationsKeys.filter(t => t.apiBasePath === 'application').map(t => t.powerAppsKey)[0]
+export const postProcess = async targetKeys => {
+  try {
+    const applicationsKeys = targetKeys.filter(t => t.contentId).map(({
+      contentId,
+      apiBasePath,
+      ...t
+    }) => t).filter(t => t.apiTable === 'applications')
 
-  // Save keys in applications table
-  await models.applications.update({
-    submitted: SEQUELIZE.getSequelize().fn('NOW'),
-    targetKeys: applicationsKeys,
-    sddsApplicationId: sddsApplicationsId,
-    updateStatus: 'P'
-  }, {
-    where: {
-      id: applicationId
-    }
-  })
+    // Get keys from top level entry
+    const top = applicationsKeys.find(t => t.powerAppsTable === 'sdds_applications')
+    const applicationId = top.apiKey
+    const sddsApplicationsId = top.powerAppsKey
 
-  // Save the keys into the sites table
-  const sitesKeys = targetKeys.filter(t => t.contentId).map(({ contentId, ...t }) => t).filter(t => t.apiTable === 'sites')
-  return Promise.all(sitesKeys.map(s =>
-    models.sites.update({
+    // Save keys in applications table
+    await models.applications.update({
       submitted: SEQUELIZE.getSequelize().fn('NOW'),
-      targetKeys: s,
-      sddsSiteId: s.powerAppsKey,
+      targetKeys: applicationsKeys,
+      sddsApplicationId: sddsApplicationsId,
       updateStatus: 'P'
     }, {
       where: {
-        id: s.apiKey
+        id: applicationId
       }
     })
-  ))
+
+    // Save the keys into the sites table
+    // The base path and content are only used during the transaction and not persisted
+    const sitesKeys = targetKeys.filter(t => t.contentId).map(({
+      contentId,
+      apiBasePath,
+      ...t
+    }) => t).filter(t => t.apiTable === 'sites')
+
+    // Make the updates to the site and application-sites
+    return Promise.all(sitesKeys.map(async s => {
+      await models.sites.update({
+        submitted: SEQUELIZE.getSequelize().fn('NOW'),
+        targetKeys: s,
+        sddsSiteId: s.powerAppsKey,
+        updateStatus: 'P'
+      }, {
+        where: {
+          id: s.apiKey
+        }
+      })
+
+      await models.applicationSites.update({
+        sddsSiteId: s.powerAppsKey,
+        sddsApplicationId: sddsApplicationsId
+      }, {
+        where: {
+          applicationId: applicationId,
+          siteId: s.apiKey
+        }
+      })
+    }))
+  } catch (error) {
+    console.error('Error writing response data to database', error)
+    throw new Error(error)
+  }
 }
 
 /**
  * Merge the application and sites into a single API payload object
- * Read or construct targetKeys objects for each table instance
- * (Except the M2M relations which are managed only in Power Apps)
+ * Read or construct targetKeys objects for each table
  *
  * The targetKeys are created or read from the database, then used to determine
  * each request method (POST, PATCH...). They are decorated by the response
  * from Power Apps and finally written back into the database tables
  *
  * @param userId
- * @param application
+ * @param applicationId
  * @returns {Promise<{application: any}>}
  */
-async function buildApiObject (userId, applicationId) {
-  const applicationResult = await models.applications.findByPk(applicationId)
+export const buildApiObject = async (userId, applicationId) => {
+  try {
+    const applicationResult = await models.applications.findByPk(applicationId)
 
-  // Not found application - data corrupted
-  if (!applicationResult) {
-    return null
-  }
+    // Not found application - data corrupted
+    if (!applicationResult) {
+      return null
+    }
 
-  const { targetKeys, application } = applicationResult.dataValues
-  application.id = applicationId
-  const data = { application }
+    const { targetKeys, application } = applicationResult.dataValues
+    application.id = applicationId
+    const data = { application }
 
-  const keys = targetKeys
-    ? targetKeys.map(t => BaseKeyMapping.copy(t))
-    : [new BaseKeyMapping('applications',
-        applicationId, 'sdds_applications')]
+    const keys = targetKeys
+      ? targetKeys.map(t => BaseKeyMapping.copy(t))
+      : [new BaseKeyMapping('applications', applicationId)]
 
-  const applicationSites = await models.applicationSites.findAll({
-    where: { userId, applicationId }
-  })
-
-  if (applicationSites.length) {
-    const s = await models.sites.findAll({
-      where: { id: applicationSites.map(s => s.dataValues.siteId) }
+    const applicationSites = await models.applicationSites.findAll({
+      where: { userId, applicationId }
     })
 
-    const sites = s.map(s => ({ id: s.dataValues.id, site: s.dataValues.site, targetKeys: s.dataValues.targetKeys }))
-    data.application.sites = sites.map(s => ({ id: s.id, ...s.site }))
-    keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
-      new BaseKeyMapping('sites', s.id, 'applications.sites')))
-  }
+    if (applicationSites.length) {
+      const sitesFound = await models.sites.findAll({
+        where: { id: applicationSites.map(s => s.dataValues.siteId) }
+      })
 
-  return { data, keys }
+      const sites = sitesFound.map(s => ({
+        id: s.dataValues.id,
+        site: s.dataValues.site,
+        targetKeys: s.dataValues.targetKeys
+      }))
+      data.application.sites = sites.map(s => ({ id: s.id, ...s.site }))
+      keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
+        new BaseKeyMapping('sites', s.id)))
+    }
+
+    return { data, keys }
+  } catch (error) {
+    console.error('Error building source object and keys', error)
+    throw new Error(error)
+  }
 }
 
 /**
  * The job process will read the data from the Postgres database and submit it to Power Apps.
- * Fot the application submission there are three components which are atomic and idempotent
- * and so may be treated in three independent batch updates; the application, the sites and the
- * application site relationship. The relationship must be done last.
+ * The application submission is atomic and idempotent.
  *
  * Recoverable exceptions from the PowerApp processes are FAILED - and so will be retried
  * UnRecoverable exceptions from the PowerApp processes are ENDED - and an error reported
- * @returns {Promise<void>}
+ *
+ * @param job - The job object from the queue
+ * @returns {Promise<*[]|void>}
  */
 export const applicationJobProcess = async job => {
   try {
@@ -111,7 +147,7 @@ export const applicationJobProcess = async job => {
     // Update the application and associated data in Power Apps
     const { data, keys } = apiObject
     const targetKeys = await applicationUpdate(data, keys)
-    return postProcess(targetKeys, job)
+    return await postProcess(targetKeys)
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
