@@ -82,12 +82,12 @@ describe('The postApplicationSite handler', () => {
     })
     expect(cache.save).toHaveBeenCalledWith(`/user/${USER_ID}/application-site/${APPLICATION_SITE_ID}`, expect.any(Object))
     expect(cache.delete).toHaveBeenCalledWith(`/user/${USER_ID}/application-sites`)
-    expect(h.response).toHaveBeenCalledWith({
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({
       applicationId: APPLICATION_ID,
       id: APPLICATION_SITE_ID,
       siteId: SITE_ID,
       ...tsR
-    })
+    }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

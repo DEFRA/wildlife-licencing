@@ -100,6 +100,7 @@ const targetKeyResponse = [
 
 describe('The application job processor', () => {
   beforeEach(() => jest.resetModules())
+  afterEach(() => jest.clearAllMocks())
 
   describe('The buildApiObject function - creates a data and keys payload for the batch update process', () => {
     it('return null where no application is found', async () => {

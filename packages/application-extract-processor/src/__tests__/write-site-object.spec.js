@@ -15,7 +15,6 @@ const data = {
 const keys = [{
   apiTable: 'sites',
   apiKey: 'ddf7eec2-9893-445a-b301-14730a0ff2f3',
-  apiBasePath: 'sites',
   powerAppsTable: 'sdds_sites',
   powerAppsKey: 'add63e12-510f-ec11-b6e6-000d3a0cc807'
 }]

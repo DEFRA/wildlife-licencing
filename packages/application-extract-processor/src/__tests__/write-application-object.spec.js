@@ -23,9 +23,7 @@ describe('The application extract processor: write-application-object', () => {
       {
         apiTable: 'applications',
         apiKey: '070d5df6-00c8-4080-91fc-284887a4b3b9',
-        apiBasePath: 'application',
         powerAppsTable: 'sdds_applications',
-        contentId: null,
         powerAppsKey: '743da832-786d-ec11-8943-000d3a86e24e'
       }]
 
@@ -68,9 +66,7 @@ describe('The application extract processor: write-application-object', () => {
     const keysArr = [{
       apiTable: 'applications',
       apiKey: '070d5df6-00c8-4080-91fc-284887a4b3b9',
-      apiBasePath: 'application',
       powerAppsTable: 'sdds_applications',
-      contentId: null,
       powerAppsKey: '743da832-786d-ec11-8943-000d3a86e24e'
     }]
 
@@ -115,9 +111,7 @@ describe('The application extract processor: write-application-object', () => {
     const keysArr = [{
       apiTable: 'applications',
       apiKey: '070d5df6-00c8-4080-91fc-284887a4b3b9',
-      apiBasePath: 'application',
       powerAppsTable: 'sdds_applications',
-      contentId: null,
       powerAppsKey: '743da832-786d-ec11-8943-000d3a86e24e'
     }]
 
@@ -150,9 +144,7 @@ describe('The application extract processor: write-application-object', () => {
     const keysArr = [{
       apiTable: 'applications',
       apiKey: '070d5df6-00c8-4080-91fc-284887a4b3b9',
-      apiBasePath: 'application',
       powerAppsTable: 'sdds_applications',
-      contentId: null,
       powerAppsKey: '743da832-786d-ec11-8943-000d3a86e24e'
     }]
 
@@ -181,9 +173,7 @@ describe('The application extract processor: write-application-object', () => {
     const keysArr = [{
       apiTable: 'applications',
       apiKey: null,
-      apiBasePath: 'application',
       powerAppsTable: 'sdds_applications',
-      contentId: null,
       powerAppsKey: '743da832-786d-ec11-8943-000d3a86e24e'
     }]
 
