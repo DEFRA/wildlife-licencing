@@ -7,7 +7,7 @@ export const writeSiteObject = async (obj, ts) => {
   const { data, keys } = obj
   try {
     const baseKey = keys.find(k => k.apiTable === 'sites')
-
+    baseKey.apiBasePath = 'application.sites'
     const site = await models.sites.findOne({
       where: { sdds_site_id: baseKey.powerAppsKey }
     })
@@ -21,7 +21,7 @@ export const writeSiteObject = async (obj, ts) => {
         if ((hash(data.sites) !== hash(s.site)) || s.updateStatus !== 'U') {
           await models.sites.update({
             site: data.sites,
-            targetKeys: (({ contentId, apiBasePath, ...t }) => t)(keys[0]),
+            targetKeys: (({ contentId, ...t }) => t)(keys[0]),
             updateStatus: 'U'
           }, {
             where: {
@@ -41,7 +41,7 @@ export const writeSiteObject = async (obj, ts) => {
       await models.sites.create({
         id: baseKey.apiKey,
         site: data.sites,
-        targetKeys: (({ contentId, apiBasePath, ...t }) => t)(keys[0]),
+        targetKeys: (({ contentId, ...t }) => t)(keys[0]),
         updateStatus: 'U',
         sddsSiteId: baseKey.powerAppsKey
       })

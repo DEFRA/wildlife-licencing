@@ -1,4 +1,4 @@
-import { UnRecoverableBatchError } from '@defra/wls-powerapps-lib'
+import { UnRecoverableBatchError, BaseKeyMapping } from '@defra/wls-powerapps-lib'
 
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-connectors-lib')
@@ -100,7 +100,7 @@ const targetKeyResponse = [
 
 describe('The application job processor', () => {
   beforeEach(() => jest.resetModules())
-  afterEach(() => jest.clearAllMocks())
+  afterAll(() => jest.clearAllMocks())
 
   describe('The buildApiObject function - creates a data and keys payload for the batch update process', () => {
     it('return null where no application is found', async () => {
@@ -124,7 +124,7 @@ describe('The application job processor', () => {
       const { buildApiObject } = await import('../application-job-process.js')
       const { data, keys } = await buildApiObject(job.data.userId, job.data.applicationId)
       expect(data).toEqual({ application: { id: job.data.applicationId, foo: 'bar' } })
-      const expectedKeys = [{ apiKey: job.data.applicationId, apiTable: 'applications' }]
+      const expectedKeys = [{ apiKey: job.data.applicationId, apiTable: 'applications', apiBasePath: 'application', powerAppsTable: 'sdds_applications' }]
       expect(keys).toEqual(expectedKeys)
     })
 
@@ -146,8 +146,8 @@ describe('The application job processor', () => {
         }
       })
       const expectedKeys = [
-        { apiKey: job.data.applicationId, apiTable: 'applications' },
-        { apiKey: siteId, apiTable: 'sites' }
+        { apiKey: job.data.applicationId, apiTable: 'applications', apiBasePath: 'application', powerAppsTable: 'sdds_applications' },
+        { apiKey: siteId, apiTable: 'sites', apiBasePath: 'application.sites', powerAppsTable: 'sdds_sites' }
       ]
       expect(keys).toEqual(expectedKeys)
     })
@@ -260,10 +260,17 @@ describe('The application job processor', () => {
   })
 
   describe('The applicationJobProcess function - calls the update process and handles errors', () => {
+    beforeAll(() => {
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        SEQUELIZE: { getSequelize: () => ({ fn: jest.fn() }) },
+        POWERAPPS: { getClientUrl: jest.fn() }
+      }))
+    })
+
     it('Resolves when no error', async () => {
       jest.doMock('@defra/wls-powerapps-lib', () => ({
         applicationUpdate: jest.fn(() => targetKeyResponse),
-        BaseKeyMapping: { copy: jest.fn() }
+        BaseKeyMapping: BaseKeyMapping
       }))
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
@@ -273,13 +280,13 @@ describe('The application job processor', () => {
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
-      await expect(async () => await applicationJobProcess(job)).resolves
+      await expect(applicationJobProcess(job)).resolves
     })
 
     it('Resolves where no application found in database', async () => {
       jest.doMock('@defra/wls-powerapps-lib', () => ({
         applicationUpdate: jest.fn(),
-        BaseKeyMapping: { copy: jest.fn() }
+        BaseKeyMapping: BaseKeyMapping
       }))
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
@@ -287,7 +294,7 @@ describe('The application job processor', () => {
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
-      await expect(async () => await applicationJobProcess(job)).resolves
+      await expect(applicationJobProcess(job)).resolves
     })
 
     it('Logs error and resolves with unrecoverable error', async () => {
@@ -295,7 +302,7 @@ describe('The application job processor', () => {
         return {
           UnRecoverableBatchError: UnRecoverableBatchError,
           applicationUpdate: jest.fn(() => { throw new UnRecoverableBatchError() }),
-          BaseKeyMapping: { copy: jest.fn() }
+          BaseKeyMapping: BaseKeyMapping
         }
       })
       jest.doMock('@defra/wls-database-model', () => ({
@@ -305,20 +312,15 @@ describe('The application job processor', () => {
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
-      await expect(async () => {
-        const consoleSpy = jest
-          .spyOn(console, 'error')
-          .mockImplementation(code => {})
-        await applicationJobProcess(job)
-        expect(consoleSpy).toHaveBeenCalled()
-      }).resolves
+      await expect(applicationJobProcess(job)).resolves
     })
 
     it('Reject with recoverable error', async () => {
       jest.doMock('@defra/wls-powerapps-lib', () => {
         return {
+          UnRecoverableBatchError: UnRecoverableBatchError,
           applicationUpdate: jest.fn(() => { throw new Error() }),
-          BaseKeyMapping: { copy: jest.fn() }
+          BaseKeyMapping: BaseKeyMapping
         }
       })
       jest.doMock('@defra/wls-database-model', () => ({
@@ -328,7 +330,7 @@ describe('The application job processor', () => {
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
-      await expect(async () => await applicationJobProcess(job)).resolves
+      await expect(applicationJobProcess(job)).rejects.toThrow()
     })
   })
 })

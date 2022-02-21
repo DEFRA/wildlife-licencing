@@ -164,7 +164,7 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
  * @param updateObjects - The set of update objects being built
  * @returns {Promise<null|*[]>}
  */
-const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updateObjects) => {
+export const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updateObjects) => {
   const result = []
 
   if (!table.relationships) {
@@ -249,6 +249,7 @@ function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
  * the batch update payload text. Wraps and processes the results of the
  * createTableColumnsPayload and createTableRelationshipsPayload process
  * @param srcObj - The source data object
+ * @param targetKeys - The target keys
  * @param tableSet - The set of tables involved the update
  * @returns {Promise<void>} - the built update object
  */

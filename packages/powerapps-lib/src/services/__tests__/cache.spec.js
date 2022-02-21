@@ -87,21 +87,21 @@ describe('Reference data cache', () => {
 
     const mockApplicationTypesReadStream = jest.fn(() => Readable.from([{
       data: {
-        name: 'MIT BAT A045',
-        description: 'movements of bats'
-      },
-      keys: {
-        sdds_applicationtypeses: {
-          eid: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
-          entity: 'sdds_applicationtypeses'
+        null: {
+          name: 'MIT BAT A045',
+          description: 'movements of bats'
         }
-      }
+      },
+      keys: [{
+        powerAppsTable: 'sdds_applicationtypeses',
+        powerAppsKey: '00171fc3-a556-ec11-8f8f-000d3a0ce11e'
+      }]
     }]
     ))
 
     const mockApplicationPurposesReadStream = jest.fn(() => Readable.from([]))
 
-    jest.doMock('../refdata-read-stream.js', () => ({
+    jest.doMock('../../read-streams/read-streams.js', () => ({
       applicationTypesReadStream: mockApplicationTypesReadStream,
       applicationPurposesReadStream: mockApplicationPurposesReadStream
     }))

@@ -11,7 +11,11 @@ describe('The batch query update', () => {
         }
       }
     })
-    jest.doMock('../batch-formation.js')
+    jest.doMock('../batch-formation.js', () => ({
+      openBatchRequest: () => ({ batchId: 'batch123' }),
+      createBatchRequest: jest.fn(),
+      createKeyObject: jest.fn()
+    }))
     const { batchUpdate } = await import('../batch-update.js')
     await batchUpdate({ }, {})
     expect(mockBatchRequest).toHaveBeenCalled()

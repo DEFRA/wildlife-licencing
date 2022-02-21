@@ -11,7 +11,6 @@ export const postProcess = async targetKeys => {
   try {
     const applicationsKeys = targetKeys.filter(t => t.contentId).map(({
       contentId,
-      apiBasePath,
       ...t
     }) => t).filter(t => t.apiTable === 'applications')
 
@@ -36,12 +35,11 @@ export const postProcess = async targetKeys => {
     // The base path and content are only used during the transaction and not persisted
     const sitesKeys = targetKeys.filter(t => t.contentId).map(({
       contentId,
-      apiBasePath,
       ...t
     }) => t).filter(t => t.apiTable === 'sites')
 
     // Make the updates to the site and application-sites
-    return Promise.all(sitesKeys.map(async s => {
+    await Promise.all(sitesKeys.map(async s => {
       await models.sites.update({
         submitted: SEQUELIZE.getSequelize().fn('NOW'),
         targetKeys: s,
@@ -96,7 +94,7 @@ export const buildApiObject = async (userId, applicationId) => {
 
     const keys = targetKeys
       ? targetKeys.map(t => BaseKeyMapping.copy(t))
-      : [new BaseKeyMapping('applications', applicationId)]
+      : [new BaseKeyMapping('applications', applicationId, 'application', 'sdds_applications')]
 
     const applicationSites = await models.applicationSites.findAll({
       where: { userId, applicationId }
@@ -114,7 +112,7 @@ export const buildApiObject = async (userId, applicationId) => {
       }))
       data.application.sites = sites.map(s => ({ id: s.id, ...s.site }))
       keys.push(...sites.map(s => BaseKeyMapping.copy(s.targetKeys) ||
-        new BaseKeyMapping('sites', s.id)))
+        new BaseKeyMapping('sites', s.id, 'application.sites', 'sdds_sites')))
     }
 
     return { data, keys }
@@ -147,7 +145,8 @@ export const applicationJobProcess = async job => {
     // Update the application and associated data in Power Apps
     const { data, keys } = apiObject
     const targetKeys = await applicationUpdate(data, keys)
-    return await postProcess(targetKeys)
+    await postProcess(targetKeys)
+    return Promise.resolve()
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
