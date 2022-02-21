@@ -1,16 +1,9 @@
-import { ApplicationsSchema } from '../models/application.js'
+import pageRoute from '../../routes/page-route.js'
+import { APPLICATIONS } from '../../uris.js'
 import fetch from 'node-fetch'
+import { ApplicationsSchema } from '../../models/application.js'
 
-// todo: using fake user id temporarily until users are intgerated
 const userId = '579d4e05-e9d8-472f-a9a9-3fc52234d88b'
-
-export default async (request, handler) => {
-  let applications = await fetchApplications(userId)
-
-  console.log(applications)
-
-  return handler.view('app/applications.njk', { applications })
-}
 
 async function fetchApplications(userId) {
   try {
@@ -31,3 +24,10 @@ async function fetchApplications(userId) {
     console.error(exception)
   }
 }
+
+export const getData = async request => {
+  const applications = await fetchApplications(userId)
+  return { applications }
+}
+
+export default pageRoute(APPLICATIONS.page, APPLICATIONS.uri, null, '', getData)
