@@ -28,21 +28,17 @@ export const Methods = Object.freeze({
  *
  * @param table - The table to start the search at
  * @param include - The set of tables to be searched
- * @param sequence - do not set
  * @param path - do not set
+ * @param relationshipName
+ * @param sequence - do not set
  * @returns {*[]}  - The sequence of table entities to operate on
  */
-export const createTableSet = (table, include = [], sequence = [], path = table.basePath, relationshipName) => {
+export const createTableSet = (table, include = [], path = table.basePath, relationshipName = null, sequence = []) => {
   if (table.relationships && table.relationships.length) {
     for (const relationship of table.relationships) {
       const child = include.find(i => i.name === relationship.relatedTable)
       if (child) {
-        createTableSet(
-          child,
-          include,
-          sequence,
-          `${path}.${relationship.srcPath}`,
-          relationship.name)
+        createTableSet(child, include, `${path}.${relationship.srcPath}`, relationship.name, sequence)
       }
     }
   }
@@ -111,6 +107,24 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   return { id, columnPayload, relationshipsPayload }
 }
 
+const createTableRelationsPayloadRefRelationships = async (srcObj, table, relationship, result) => {
+  let value
+  const param = get(srcObj, `${table.basePath}.${relationship.srcPath}`)
+  if (relationship.srcFunc) {
+    if (relationship.srcPath) { // Expecting a parameter
+      value = param ? await relationship.srcFunc(param) : null
+    } else {
+      value = await relationship.srcFunc()
+    }
+  } else {
+    value = param
+  }
+  // If there is no value this is ignored
+  if (value) {
+    Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: `/${relationship.relatedTable}(${value})` })
+  }
+}
+
 const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
   const result = { }
 
@@ -133,21 +147,7 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
       } else {
         // This is data not included in the batch update (reference data) apply the function and bind
         // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
-        let value
-        const param = get(srcObj, `${table.basePath}.${relationship.srcPath}`)
-        if (relationship.srcFunc) {
-          if (relationship.srcPath) { // Expecting a parameter
-            value = param ? await relationship.srcFunc(param) : null
-          } else {
-            value = await relationship.srcFunc()
-          }
-        } else {
-          value = param
-        }
-        // If there is no value this is ignored
-        if (value) {
-          Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: `/${relationship.relatedTable}(${value})` })
-        }
+        await createTableRelationsPayloadRefRelationships(srcObj, table, relationship, result)
       }
     }
   }
@@ -276,7 +276,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
             contentId: contentId,
             assignments: Object.assign(tableColumnsPayload.columnPayload,
               substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-            powerAppsId,
+            powerAppsId: powerAppsId,
             method: powerAppsId ? Methods.PATCH : Methods.POST
           })
           contentId++
@@ -289,7 +289,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
           contentId: contentId,
           assignments: Object.assign(tableColumnsPayloads.columnPayload,
             substitutePlaceholders(tableColumnsPayloads.relationshipsPayload, updateObjects, table.relationships)),
-          powerAppsId,
+          powerAppsId: powerAppsId,
           method: powerAppsId ? Methods.PATCH : Methods.POST
         })
         contentId++
@@ -357,33 +357,72 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
   return path
 }
 
+const buildArrayObjectTransformer = (src, t, data) => {
+  const values = []
+  for (const s of src) {
+    const value = {}
+    for (const column of t.columns) {
+      if (OperationType.inbound(column.operationType) && column.srcPath) {
+        const val = s[column.name]
+        if (val) {
+          Object.assign(value, { [column.srcPath]: val })
+        }
+      }
+    }
+    values.push(value)
+  }
+  set(data, `${t.basePath}`, values)
+}
+
+function buildObjectObjectTransformer (t, src, data) {
+  for (const column of t.columns) {
+    if (OperationType.inbound(column.operationType) && column.srcPath) {
+      const value = src[column.name]
+      // The inbound stream does not set null values
+      if (value) {
+        set(data, `${t.basePath}.${column.srcPath}`, src[column.name])
+      }
+    }
+  }
+}
+
+const updateRelationships = async (t, src, data, tableSet, objectTransformer, keys) => {
+  if (t.relationships && t.relationships.length) {
+    for (const relationship of t.relationships) {
+      // Lookup relationships (with a tgtFunc) 1:M
+      // Evaluate target functions on the relationships
+      // And are not further traversed
+      if (relationship.tgtFunc && src[relationship.lookupColumnName]) {
+        const value = await relationship.tgtFunc(src[relationship.lookupColumnName])
+        if (value) {
+          set(data, `${t.basePath}.${relationship.srcPath}`, value)
+        }
+      } else {
+        const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
+        const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+        const nextSrc = src[navigationProperty]
+        if (nextTable && nextSrc) {
+          await objectTransformer(nextSrc, nextTable, data, keys)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * This function returns a function to transform the query results from a given table set
+ * It produces a function which is processed in the read-stream to create data and keys objects
+ * which conform to the API data specification
+ * @param table
+ * @param tableSet
+ * @returns {function(*=, *=, *=, *=): {data: {}, keys: *[]}}
+ */
 export const buildObjectTransformer = (table, tableSet) => {
   const objectTransformerColumns = (t, src, data) => {
     if (Array.isArray(src)) {
-      const values = []
-      for (const s of src) {
-        const value = {}
-        for (const column of t.columns) {
-          if (OperationType.inbound(column.operationType) && column.srcPath) {
-            const val = s[column.name]
-            if (val) {
-              Object.assign(value, { [column.srcPath]: val })
-            }
-          }
-        }
-        values.push(value)
-      }
-      set(data, `${t.basePath}`, values)
+      buildArrayObjectTransformer(src, t, data)
     } else {
-      for (const column of t.columns) {
-        if (OperationType.inbound(column.operationType) && column.srcPath) {
-          const value = src[column.name]
-          // The inbound stream does not set null values
-          if (value) {
-            set(data, `${t.basePath}.${column.srcPath}`, src[column.name])
-          }
-        }
-      }
+      buildObjectObjectTransformer(t, src, data)
     }
   }
 
@@ -403,29 +442,14 @@ export const buildObjectTransformer = (table, tableSet) => {
     // Add the key mapping to the key mapping set - the API key is not known yet
     updateTransformerKeys(t, src, keys)
 
-    if (t.relationships && t.relationships.length) {
-      for (const relationship of t.relationships) {
-        // Lookup relationships (with a tgtFunc) 1:M
-        // Evaluate target functions on the relationships
-        // And are not further traversed
-        if (relationship.tgtFunc && src[relationship.lookupColumnName]) {
-          const value = await relationship.tgtFunc(src[relationship.lookupColumnName])
-          if (value) {
-            set(data, `${t.basePath}.${relationship.srcPath}`, value)
-          }
-        } else {
-          const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
-          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
-          const nextSrc = src[navigationProperty]
-          if (nextTable && nextSrc) {
-            await objectTransformer(nextSrc, nextTable, data, keys)
-          }
-        }
-      }
-    }
+    // Add the relationships assignments
+    await updateRelationships(t, src, data, tableSet, objectTransformer, keys)
+
+    // Return data and keys
     return { data, keys }
   }
 
+  // Returns the function which is supplied to the stream
   return objectTransformer
 }
 

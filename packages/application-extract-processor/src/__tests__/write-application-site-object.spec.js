@@ -42,20 +42,13 @@ describe('The application extract processor: write-application-site-object', () 
   beforeEach(() => jest.resetModules())
 
   it('makes no change if an application-site has no sites', async () => {
-    const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data: { application: { id: '2b6759f9-268f-ec11-b400-000d3a8728b2', sites: [] } } })
-    expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
-  })
-
-  it('makes no change if an application-site has no associated application', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        sites: { findOne: jest.fn(() => foundSite) },
         applications: { findOne: jest.fn(() => null) }
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { application: { id: '2b6759f9-268f-ec11-b400-000d3a8728b2', sites: [] } } })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 

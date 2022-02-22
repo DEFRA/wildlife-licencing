@@ -7,4 +7,9 @@ describe('The table object', () => {
     const copy = Table.copy(table)
     expect(copy).toEqual(table)
   })
+
+  it('returns null on copy null', () => {
+    const copy = Table.copy(null)
+    expect(copy).toBeNull()
+  })
 })

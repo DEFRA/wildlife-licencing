@@ -3,17 +3,46 @@ import { models } from '@defra/wls-database-model'
 import pkg from 'sequelize'
 const { Sequelize } = pkg
 
+/**
+ * If a site was created on Power Apps and does not have a user assigned then the user
+ * Can be transferred from the application to the site.
+ * It is possible that a site without a user is created in Power Apps
+ * and subsequently assigned to an application created in the API with a user
+ * In this case the user can be assigned to the site. The site may also
+ * be attached to a user-less application is which case we ignore.
+ * @param site
+ * @param application
+ * @returns {Promise<void>}
+ */
+async function updateOwnership (site, application) {
+  if (!site.dataValues.userId && application.dataValues.userId) {
+    await models.sites.update({
+      userId: application.dataValues.userId
+    }, {
+      where: { id: site.dataValues.id }
+    })
+  }
+}
+
+/**
+ * Write the application-site relationship
+ * @param obj
+ * @returns {Promise<{pending: number, insert: number, update: number, error: number}>}
+ */
 export const writeApplicationSiteObject = async obj => {
   const { data } = obj
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+
   try {
     const Op = Sequelize.Op
-    if (data.application.sites.length > 0) {
+    const application = await models.applications.findOne({
+      where: { sdds_application_id: data.application.id }
+    })
+
+    // If the applications is not (yet) in the database do nothing
+    if (application) {
       for (const s of data.application.sites) {
         // Find the application record using the Power Apps keys
-        const application = await models.applications.findOne({
-          where: { sdds_application_id: data.application.id }
-        })
 
         // Find the site record using the Power Apps keys
         const site = await models.sites.findOne({
@@ -21,7 +50,7 @@ export const writeApplicationSiteObject = async obj => {
         })
 
         // If these records are not in the database then do nothing
-        if (application && site) {
+        if (site) {
           // Test if the application-site exists using the power Apps Keys
           const applicationSitePAKeys = await models.applicationSites.findOne({
             where: {
@@ -69,28 +98,15 @@ export const writeApplicationSiteObject = async obj => {
               counter.update++
             }
           }
-          // If a site was created on Power Apps and does not have a user assigned then the user
-          // Can be transferred from the application to the site.
-          // It is possible that a site without a user is created in Power Apps
-          // and subsequently assigned to an application created in the API with a user
-          // In this case the user can be assigned to the site. The site may also
-          // be attached to a user-less application is which case we ignore.
-          if (!site.dataValues.userId && application.dataValues.userId) {
-            await models.sites.update({
-              userId: application.dataValues.userId
-            }, {
-              where: { id: site.dataValues.id }
-            })
-          }
+          await updateOwnership(site, application)
         }
       }
-      return counter
-    } else {
-      // No sites for an application - nothing to do
-      return { insert: 0, update: 0, pending: 0, error: 0 }
     }
+
+    return counter
   } catch (error) {
     console.error('Error updating sites', error)
-    return { insert: 0, update: 0, pending: 0, error: 1 }
+    counter.error++
+    return counter
   }
 }

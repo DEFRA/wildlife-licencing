@@ -4,14 +4,15 @@ const { DataTypes } = pkg
 
 const models = {}
 
-const createModels = async () => {
-  const sequelize = SEQUELIZE.getSequelize()
+async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true }
   }, {
     timestamps: true
   })
+}
 
+async function defineSites (sequelize) {
   models.sites = await sequelize.define('sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
     userId: {
@@ -33,7 +34,9 @@ const createModels = async () => {
       { unique: true, fields: ['sdds_site_id'], name: 'site_sdds_id_uk' }
     ]
   })
+}
 
+async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
     userId: {
@@ -55,7 +58,9 @@ const createModels = async () => {
       { unique: true, fields: ['sdds_application_id'], name: 'application_sdds_id_uk' }
     ]
   })
+}
 
+async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
     userId: {
@@ -91,27 +96,44 @@ const createModels = async () => {
       { unique: true, fields: ['sdds_application_id', 'sdds_site_id'], name: 'sdds_application_site_uk' }
     ]
   })
+}
 
+async function defineApplicationTypes (sequelize) {
   models.applicationTypes = await sequelize.define('application-types', {
     id: { type: DataTypes.UUID, primaryKey: true },
     json: { type: DataTypes.JSONB }
   }, {
     timestamps: true
   })
+}
 
+async function defineApplicationPurposes (sequelize) {
   models.applicationPurposes = await sequelize.define('application-purposes', {
     id: { type: DataTypes.UUID, primaryKey: true },
     json: { type: DataTypes.JSONB }
   }, {
     timestamps: true
   })
+}
 
+async function defineOptionSets (sequelize) {
   models.optionSets = await sequelize.define('option-sets', {
     name: { type: DataTypes.STRING(100), primaryKey: true },
     json: { type: DataTypes.JSONB }
   }, {
     timestamps: true
   })
+}
+
+const createModels = async () => {
+  const sequelize = SEQUELIZE.getSequelize()
+  await defineUsers(sequelize)
+  await defineSites(sequelize)
+  await defineApplications(sequelize)
+  await defineApplicationSites(sequelize)
+  await defineApplicationTypes(sequelize)
+  await defineApplicationPurposes(sequelize)
+  await defineOptionSets(sequelize)
 
   await models.users.sync()
   await models.sites.sync()

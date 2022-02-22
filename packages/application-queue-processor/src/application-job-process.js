@@ -32,7 +32,7 @@ export const postProcess = async targetKeys => {
     })
 
     // Save the keys into the sites table
-    // The base path and content are only used during the transaction and not persisted
+    // The contentId is only used during the transaction and not persisted
     const sitesKeys = targetKeys.filter(t => t.contentId).map(({
       contentId,
       ...t

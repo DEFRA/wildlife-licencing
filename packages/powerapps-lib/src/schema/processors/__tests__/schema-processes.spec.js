@@ -30,8 +30,7 @@ describe('the schema processes', () => {
   describe('the createTableSet function', () => {
     it('can determine the correct batch update sequence with a set of tables', async () => {
       const { createTableSet } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication,
-        [SddsSite, Contact, Account])
+      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
         .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])

@@ -7,4 +7,9 @@ describe('The base key mapping object', () => {
     const copy = BaseKeyMapping.copy(baseKeyMapping)
     expect(copy).toEqual(baseKeyMapping)
   })
+
+  it('returns null on copy null', () => {
+    const copy = BaseKeyMapping.copy(null)
+    expect(copy).toBeNull()
+  })
 })

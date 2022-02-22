@@ -5,6 +5,8 @@ const hash = pkg.default
 
 export const writeSiteObject = async (obj, ts) => {
   const { data, keys } = obj
+  const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+
   try {
     const baseKey = keys.find(k => k.apiTable === 'sites')
     baseKey.apiBasePath = 'application.sites'
@@ -16,24 +18,22 @@ export const writeSiteObject = async (obj, ts) => {
     if (site) {
       const s = site.dataValues
       baseKey.apiKey = s.id
-      if ((s.updateStatus === 'P' && ts > s.updatedAt) || s.updateStatus === 'U') {
-        // Only update if a change of state/data
-        if ((hash(data.sites) !== hash(s.site)) || s.updateStatus !== 'U') {
-          await models.sites.update({
-            site: data.sites,
-            targetKeys: (({ contentId, ...t }) => t)(keys[0]),
-            updateStatus: 'U'
-          }, {
-            where: {
-              id: s.id
-            },
-            returning: false
-          })
-          return { insert: 0, update: 1, pending: 0, error: 0 }
-        }
-        return { insert: 0, update: 0, pending: 0, error: 0 }
-      } else {
-        return { insert: 0, update: 0, pending: 1, error: 0 }
+      // (a) If pending and not changed since the start of the extract
+      // (b) If updatable and with a material change in the payload
+      if ((s.updateStatus === 'P' && ts > s.updatedAt) || (s.updateStatus === 'U' && hash(data.sites) !== hash(s.site))) {
+        await models.sites.update({
+          site: data.sites,
+          targetKeys: (({ contentId, ...t }) => t)(keys[0]),
+          updateStatus: 'U'
+        }, {
+          where: {
+            id: s.id
+          },
+          returning: false
+        })
+        counter.update++
+      } else if (s.updateStatus === 'P' || s.updateStatus === 'L') {
+        counter.pending++
       }
     } else {
       // Create a new site
@@ -45,10 +45,13 @@ export const writeSiteObject = async (obj, ts) => {
         updateStatus: 'U',
         sddsSiteId: baseKey.powerAppsKey
       })
-      return { insert: 1, update: 0, pending: 0, error: 0 }
+      counter.insert++
     }
+
+    return counter
   } catch (error) {
     console.error('Error updating sites', error)
-    return { insert: 0, update: 0, pending: 0, error: 1 }
+    counter.error++
+    return counter
   }
 }

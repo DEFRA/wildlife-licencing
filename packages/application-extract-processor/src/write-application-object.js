@@ -22,6 +22,7 @@ const hash = pkg.default
  */
 export const writeApplicationObject = async (obj, ts) => {
   const { data, keys } = obj
+  const counter = { insert: 0, update: 0, pending: 0, error: 0 }
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'applications')
@@ -34,25 +35,23 @@ export const writeApplicationObject = async (obj, ts) => {
     if (application) {
       const a = application.dataValues
       baseKey.apiKey = a.id
-      if ((a.updateStatus === 'P' && ts > a.updatedAt) || a.updateStatus === 'U') {
-        // Only update if a change of state/data
-        if ((hash(data.application) !== hash(a.application)) || a.updateStatus !== 'U') {
-          await models.applications.update({
-            application: data.application,
-            targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
-            updateStatus: 'U'
-          }, {
-            where: {
-              id: a.id
-            },
-            returning: false
-          })
-          return { insert: 0, update: 1, pending: 0, error: 0 }
-        } else {
-          return { insert: 0, update: 0, pending: 0, error: 0 }
-        }
-      } else {
-        return { insert: 0, update: 0, pending: 1, error: 0 }
+      // Only update
+      // (a) If pending and not changed since the start of the extract
+      // (b) If updatable and with a material change in the payload
+      if ((a.updateStatus === 'P' && ts > a.updatedAt) || (a.updateStatus === 'U' && hash(data.application) !== hash(a.application))) {
+        await models.applications.update({
+          application: data.application,
+          targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
+          updateStatus: 'U'
+        }, {
+          where: {
+            id: a.id
+          },
+          returning: false
+        })
+        counter.update++
+      } else if (a.updateStatus === 'P' || a.updateStatus === 'L') {
+        counter.pending++
       }
     } else {
       // Create a new application and user
@@ -64,10 +63,13 @@ export const writeApplicationObject = async (obj, ts) => {
         updateStatus: 'U',
         sddsApplicationId: baseKey.powerAppsKey
       })
-      return { insert: 1, update: 0, pending: 0, error: 0 }
+      counter.insert++
     }
+
+    return counter
   } catch (error) {
     console.error('Error updating applications', error)
-    return { insert: 0, update: 0, pending: 0, error: 1 }
+    counter.error++
+    return counter
   }
 }

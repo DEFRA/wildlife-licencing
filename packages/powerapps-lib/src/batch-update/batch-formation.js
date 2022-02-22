@@ -8,12 +8,12 @@ import { createBatchRequestObjects, Methods } from '../schema/processors/schema-
  * @param clientUrl - The client url (required for some references within the update
  */
 export const openBatchRequest = (tableSet, clientUrl) => {
-  const requestHandle = { }
-  requestHandle.tableSet = tableSet
-  requestHandle.batchId = crypto.randomBytes(3).toString('hex').toUpperCase()
-  requestHandle.clientUrl = clientUrl
-  requestHandle.batchRequestObject = null
-  return requestHandle
+  return {
+    tableSet: tableSet,
+    batchId: crypto.randomBytes(3).toString('hex').toUpperCase(),
+    clientUrl: clientUrl,
+    batchRequestObject: null
+  }
 }
 
 const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n\n`
@@ -79,6 +79,8 @@ const preComplied = (n =>
  */
 export const createKeyObject = (requestHandle, responseBody, targetKeys) => {
   const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
-  targetKeys.forEach(tk => { tk.powerAppsKey = strippedResponseBody.match(preComplied[tk.contentId])?.groups?.eid })
+  targetKeys.forEach(tk => {
+    tk.powerAppsKey = strippedResponseBody.match(preComplied[tk.contentId])?.groups?.eid
+  })
   return targetKeys
 }
