@@ -51,7 +51,6 @@ export const writeSiteObject = async (obj, ts) => {
     return counter
   } catch (error) {
     console.error('Error updating sites', error)
-    counter.error++
-    return counter
+    return { insert: 0, update: 0, pending: 0, error: 1 }
   }
 }

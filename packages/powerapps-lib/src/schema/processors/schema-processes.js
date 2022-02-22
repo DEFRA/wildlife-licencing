@@ -244,6 +244,22 @@ function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
   }
 }
 
+function assignColumns (targetKeys, tableColumnsPayload, contentId, table, updateObjects) {
+  // Decorate the target keys object with the contentId
+  const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayload, contentId, table)
+  updateObjects.push({
+    table: table.name,
+    relationshipName: table.relationshipName,
+    contentId: contentId,
+    assignments: Object.assign(tableColumnsPayload.columnPayload,
+      substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
+    powerAppsId: powerAppsId,
+    method: powerAppsId ? Methods.PATCH : Methods.POST
+  })
+  contentId++
+  return contentId
+}
+
 /**
  * Generates a set of objects to enable the subsequent generation of
  * the batch update payload text. Wraps and processes the results of the
@@ -268,31 +284,10 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
       // In the case where a relationship is m2m this will be an array. e.g. sites
       if (Array.isArray(tableColumnsPayloads)) {
         for (const tableColumnsPayload of tableColumnsPayloads) {
-          // Decorate the target keys object with the contentId
-          const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayload, contentId, table)
-          updateObjects.push({
-            table: table.name,
-            relationshipName: table.relationshipName,
-            contentId: contentId,
-            assignments: Object.assign(tableColumnsPayload.columnPayload,
-              substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-            powerAppsId: powerAppsId,
-            method: powerAppsId ? Methods.PATCH : Methods.POST
-          })
-          contentId++
+          contentId = assignColumns(targetKeys, tableColumnsPayload, contentId, table, updateObjects)
         }
       } else {
-        const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayloads, contentId, table)
-        updateObjects.push({
-          table: table.name,
-          relationshipName: table.relationshipName,
-          contentId: contentId,
-          assignments: Object.assign(tableColumnsPayloads.columnPayload,
-            substitutePlaceholders(tableColumnsPayloads.relationshipsPayload, updateObjects, table.relationships)),
-          powerAppsId: powerAppsId,
-          method: powerAppsId ? Methods.PATCH : Methods.POST
-        })
-        contentId++
+        contentId = assignColumns(targetKeys, tableColumnsPayloads, contentId, table, updateObjects)
       }
     }
 
@@ -357,17 +352,21 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
   return path
 }
 
+function buildObjectTransformerColumn (column, s, value) {
+  if (OperationType.inbound(column.operationType) && column.srcPath) {
+    const val = s[column.name]
+    if (val) {
+      Object.assign(value, { [column.srcPath]: val })
+    }
+  }
+}
+
 const buildArrayObjectTransformer = (src, t, data) => {
   const values = []
   for (const s of src) {
     const value = {}
     for (const column of t.columns) {
-      if (OperationType.inbound(column.operationType) && column.srcPath) {
-        const val = s[column.name]
-        if (val) {
-          Object.assign(value, { [column.srcPath]: val })
-        }
-      }
+      buildObjectTransformerColumn(column, s, value)
     }
     values.push(value)
   }
@@ -386,25 +385,29 @@ function buildObjectObjectTransformer (t, src, data) {
   }
 }
 
+async function updateRelationship (relationship, src, data, t, tableSet, objectTransformer, keys) {
+  // Lookup relationships (with a tgtFunc) 1:M
+  // Evaluate target functions on the relationships
+  // And are not further traversed
+  if (relationship.tgtFunc && src[relationship.lookupColumnName]) {
+    const value = await relationship.tgtFunc(src[relationship.lookupColumnName])
+    if (value) {
+      set(data, `${t.basePath}.${relationship.srcPath}`, value)
+    }
+  } else {
+    const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
+    const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+    const nextSrc = src[navigationProperty]
+    if (nextTable && nextSrc) {
+      await objectTransformer(nextSrc, nextTable, data, keys)
+    }
+  }
+}
+
 const updateRelationships = async (t, src, data, tableSet, objectTransformer, keys) => {
   if (t.relationships && t.relationships.length) {
     for (const relationship of t.relationships) {
-      // Lookup relationships (with a tgtFunc) 1:M
-      // Evaluate target functions on the relationships
-      // And are not further traversed
-      if (relationship.tgtFunc && src[relationship.lookupColumnName]) {
-        const value = await relationship.tgtFunc(src[relationship.lookupColumnName])
-        if (value) {
-          set(data, `${t.basePath}.${relationship.srcPath}`, value)
-        }
-      } else {
-        const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
-        const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
-        const nextSrc = src[navigationProperty]
-        if (nextTable && nextSrc) {
-          await objectTransformer(nextSrc, nextTable, data, keys)
-        }
-      }
+      await updateRelationship(relationship, src, data, t, tableSet, objectTransformer, keys)
     }
   }
 }

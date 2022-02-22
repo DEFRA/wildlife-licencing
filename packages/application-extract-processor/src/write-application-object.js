@@ -69,7 +69,6 @@ export const writeApplicationObject = async (obj, ts) => {
     return counter
   } catch (error) {
     console.error('Error updating applications', error)
-    counter.error++
-    return counter
+    return { insert: 0, update: 0, pending: 0, error: 1 }
   }
 }
