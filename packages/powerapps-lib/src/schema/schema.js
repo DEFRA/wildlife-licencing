@@ -2,12 +2,15 @@ import * as _cloneDeep from 'lodash.clonedeep'
 const { default: cloneDeep } = _cloneDeep
 
 // With respect to the API
+const INBOUND_AND_OUTBOUND = 'inbound-and-outbound'
+const INBOUND = 'inbound'
+const OUTBOUND = 'outbound'
 export const OperationType = Object.freeze({
-  INBOUND: 'inbound',
-  OUTBOUND: 'outbound',
-  INBOUND_AND_OUTBOUND: 'inbound-and-outbound',
-  inbound: ot => ot === 'inbound' || ot === 'inbound-and-outbound',
-  outbound: ot => ot === 'outbound' || ot === 'inbound-and-outbound'
+  INBOUND,
+  OUTBOUND,
+  INBOUND_AND_OUTBOUND,
+  inbound: ot => ot === INBOUND || ot === INBOUND_AND_OUTBOUND,
+  outbound: ot => ot === OUTBOUND || ot === INBOUND_AND_OUTBOUND
 })
 
 export class Column {

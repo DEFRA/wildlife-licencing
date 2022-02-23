@@ -26,7 +26,7 @@ export const powerAppsReadStream = (requestPath, objectTransformer) => {
    */
   const transformStream = new Transform({
     objectMode: true,
-    transform (data, encoding, callback) {
+    transform (data, _encoding, callback) {
       Promise.all(data.map(src => objectTransformer(src))).then(results => {
         if (results) {
           results.forEach(r => r && this.push(r))

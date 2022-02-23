@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { clearCaches } from './application-site-cache.js'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   const { userId, applicationSiteId } = context.request.params
   await clearCaches(userId, applicationSiteId)
   const count = await models.applicationSites.destroy({

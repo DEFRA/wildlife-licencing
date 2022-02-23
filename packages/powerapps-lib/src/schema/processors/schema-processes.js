@@ -164,7 +164,7 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
  * @param updateObjects - The set of update objects being built
  * @returns {Promise<null|*[]>}
  */
-export const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj, updateObjects) => {
+export const createTableMMRelationshipsPayloads = async (table, updateObjects) => {
   const result = []
 
   if (!table.relationships) {
@@ -203,7 +203,7 @@ export const createTableMMRelationshipsPayloads = async (table, tableSet, srcObj
 const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableRelationships) => {
   if (tableRelationshipsPayload) {
     const substituted = Object.entries(tableRelationshipsPayload)
-      .filter(([k, v]) => updateObjects.find(u => u.relationshipName === v))
+      .filter(([, v]) => updateObjects.find(u => u.relationshipName === v))
       .map(([k, v]) => ({ [k]: `$${updateObjects.find(u => u.relationshipName === v).contentId}` }))
       .reduce((p, c) => Object.assign(p, c), {})
 
@@ -293,7 +293,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
 
     // Handle m2m relationships. These are a separate requests occurring after the containing
     // (driving) table request
-    const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, tableSet, srcObj, updateObjects)
+    const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, updateObjects)
     if (tableM2MRelationshipsPayloads && tableM2MRelationshipsPayloads.length) {
       for (const m of tableM2MRelationshipsPayloads) {
         updateObjects.push({

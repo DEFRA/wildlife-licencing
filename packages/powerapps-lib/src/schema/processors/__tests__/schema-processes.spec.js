@@ -193,8 +193,7 @@ describe('the schema processes', () => {
 
   describe('the createTableMMRelationshipsPayloads function', () => {
     it('creates a correct many-to-many post statement object', async () => {
-      const { createTableSet, createTableMMRelationshipsPayloads } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [SddsSite])
+      const { createTableMMRelationshipsPayloads } = await import('../schema-processes.js')
       const updateObjects = {
         table: 'sdds_sites',
         relationshipName: 'sdds_application_sdds_site_sdds_site',
@@ -209,7 +208,7 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTableMMRelationshipsPayloads(SddsApplication, tableSet, srcObj, [updateObjects])
+      const result = await createTableMMRelationshipsPayloads(SddsApplication, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_application_sdds_site_sdds_site' }])
     })
   })
