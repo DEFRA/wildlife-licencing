@@ -11,8 +11,7 @@ export const openBatchRequest = (tableSet, clientUrl) => {
   return {
     tableSet: tableSet,
     batchId: crypto.randomBytes(3).toString('hex').toUpperCase(),
-    clientUrl: clientUrl,
-    batchRequestObject: null
+    clientUrl: clientUrl
   }
 }
 

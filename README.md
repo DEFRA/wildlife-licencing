@@ -89,19 +89,22 @@ Alternatively set the environment variables in the running shell or your IDE
 
 | Package | Description | Runnable | Docker Image |
 | ----------- | ----------- | ----------- | ----------- |
-| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Apps | Y | wildlife-licencing/api |
-| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Apps as ODATA batch updates. | Y | wildlife-licencing/aqp | 
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
-| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
+| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
+| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates. | Y | wildlife-licencing/aqp | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
 | [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/eps-web |
-| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Apps & Bull-Queue | N | 
+| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue | N | 
 | [database-model](packages/database-model) | Extracts the sequelize database model in order to share it between multiple processes | N | 
-| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Apps ODATA interface including transformation | N | 
+| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Platform ODATA interface including transformation | N | 
 | [queue-defs](packages/queue-defs) | Extracts the bull-queue queue definitions | N | 
 
 ## Description of API Process
 
-### API to Power Apps
+#### Overview
+![](./wls-system-stack.png)
+
+### API to Power Platform
 
 A set of API handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
@@ -123,7 +126,7 @@ The `packages/application-queue-processor/src/application-job-process.js` method
 the application data from the database and uses and calls the batchUpdate method
 in `powerapps-lib/src/application-update/batch-update.js`. The job is removed from the queue.
 
-On success this will return a set of keys from Power Apps which are stored in the applications table in the target_keys column. In subsequent calls to submit these keys are used to effect an update of the data in Power Apps.
+On success this will return a set of keys from Power Platform which are stored in the applications table in the target_keys column. In subsequent calls to submit these keys are used to effect an update of the data in Power Platform.
 
 The batchUpdate method may throw a recoverable or un-recoverable error.
 
@@ -132,14 +135,21 @@ the retry configuration in queue-defs.
 
 On un-recoverable errors the batchUpdate method will return Promise.Resolve and log an error for investigation.
 
-(3) In the powerapps-lib the application data is transformed using the model defined
-in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into which a path element is used to map the data to the API/database structure.
+(3) In the powerapps-lib the application data is transformed using the model in
+in `packages/powerapps-lib/src/schema`. This is a set of objects representing the tables and relationships of the Dataverse schema, into which a path elements are used to map the data to the API/database structure.
 
-(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or PATCH each element based on the existence of key data.
+(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a serialized ODATA batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or PATCH each element based on the existence of key data.
 
-(5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level
+(5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level request. This deals for authorisation and token management.
 
-request. This deals for authorisation and token management.
+### Power Platform to API
 
-### Power Apps to API
+(1) Data is pulled from the Dataverse and written to the Postgres database to make it available to the web application via the API
 
+(2) For each data flow from Dataverse into postgres is a read-stream is created and exported from the powerapps-lib.
+
+(3) Each read-stream is composed of a request path, an object transformer and a generic read-stream provider. The read-stream construction is defined in ```packages/powerapps-lib/src/read-streams/read-streams.js```
+
+(4) The object transformer and the request path are generated at start-up by processing the data dictionary defined in ```packages/powerapps-lib/src/schema```.  
+
+(5) There are two packages which consume the read-streams; application-extract-processor and refdata-extract processor. These consume the streams and write the data down to the database. (In addition the transformation also consumes and caches the reference data read streams. For simplicity this is not shown on the diagram.)
