@@ -99,57 +99,22 @@ Alternatively set the environment variables in the running shell or your IDE
 | [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Platform ODATA interface including transformation | N | 
 | [queue-defs](packages/queue-defs) | Extracts the bull-queue queue definitions | N | 
 
-## Description of API Process
+## Application Architecture 
 
 #### Overview
 ![](./wls-system-stack.png)
 
-### API to Power Platform
-
 A set of API handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
 
-Requests to the API will create an entry in the applications table and populate the JSON structure in the application
-JSONB field. Each application is associated with a user which is recorded in the users table.
+Requests to the API perform SQL on the postgres tables and populate the JSON structures in the JSONB fields. 
 
-On submission of the application via API application/submit request the following will occur:
-
-(1) The data will be queued using bull-queue and a 204 no-content returned by the API. The queues are stored in Redis
-and can be inspected (locally) using redis-commander `http://localhost:8002/`
+Submitted data will be queued using bull-queue. The queues are stored in Redis and can be inspected (locally) using redis-commander `http://localhost:8002/`
 
 The queues are defined centrally in the package ```packages/queue-defs/src/defs.js```. This enables autonomous processes
 that connect to the queues on start-up to ensure they have the same definition.
 
-(2) The queued data is consumed by the application-queue-processor.
+(2) The queued data is consumed by the ```application-queue-processor```.
 
-The `packages/application-queue-processor/src/application-job-process.js` method in application-queue-processor reads
-the application data from the database and uses and calls the batchUpdate method
-in `powerapps-lib/src/application-update/batch-update.js`. The job is removed from the queue.
+For details of the inbound and outbound processes see [poserapps-lib/README.md](packages/powerapps-lib/README.md)
 
-On success this will return a set of keys from Power Platform which are stored in the applications table in the target_keys column. In subsequent calls to submit these keys are used to effect an update of the data in Power Platform.
-
-The batchUpdate method may throw a recoverable or un-recoverable error.
-
-On recoverable errors the batchUpdate method will return Promise.Reject that the queue mechanism will retry according to
-the retry configuration in queue-defs.
-
-On un-recoverable errors the batchUpdate method will return Promise.Resolve and log an error for investigation.
-
-(3) In the powerapps-lib the application data is transformed using the model in
-in `packages/powerapps-lib/src/schema`. This is a set of objects representing the tables and relationships of the Dataverse schema, into which a path elements are used to map the data to the API/database structure.
-
-(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a serialized ODATA batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or PATCH each element based on the existence of key data.
-
-(5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level request. This deals for authorisation and token management.
-
-### Power Platform to API
-
-(1) Data is pulled from the Dataverse and written to the Postgres database to make it available to the web application via the API
-
-(2) For each data flow from Dataverse into postgres is a read-stream is created and exported from the powerapps-lib.
-
-(3) Each read-stream is composed of a request path, an object transformer and a generic read-stream provider. The read-stream construction is defined in ```packages/powerapps-lib/src/read-streams/read-streams.js```
-
-(4) The object transformer and the request path are generated at start-up by processing the data dictionary defined in ```packages/powerapps-lib/src/schema```.  
-
-(5) There are two packages which consume the read-streams; application-extract-processor and refdata-extract processor. These consume the streams and write the data down to the database. (In addition the transformation also consumes and caches the reference data read streams. For simplicity this is not shown on the diagram.)
