@@ -114,7 +114,9 @@ Submitted data will be queued using bull-queue. The queues are stored in Redis a
 The queues are defined centrally in the package ```packages/queue-defs/src/defs.js```. This enables autonomous processes
 that connect to the queues on start-up to ensure they have the same definition.
 
-(2) The queued data is consumed by the ```application-queue-processor```.
+The queued data is consumed by the __Application Queue Processor__ and wrtiien into the Power Platform using the powerapps-lib package.
 
-For details of the inbound and outbound processes see [poserapps-lib/README.md](packages/powerapps-lib/README.md)
+The __Application Extract Processor__ and the __Reference Data Extract Processor__ are used to extract data from the Power Platform and write it down to the Postgres tables.
+
+For details of the inbound and outbound processes see [powerapps-lib/README.md](packages/powerapps-lib/README.md)
 
