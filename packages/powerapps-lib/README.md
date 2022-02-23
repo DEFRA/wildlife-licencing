@@ -5,9 +5,10 @@
 ## Overview
 ### The outbound process
 ![Outbound](./powerapps-lib-outbound.png)
+
 (1) When any service implementing the powerapps-lib is started, such as the application-queue-processor, it will initialize the schema from the set of metadata definitions described in the ``` packages/powerapps-lib/src/schema``` directory. The definition is used to instantiate a __tableset__ which is a meta-model object which maps the input data JSON structure to the target Power-Platform structure. The mapping for each data item is stored in a path variable in the __tableset__.
 
-(2) When a job is picked up from the queue it is processed by __applicationJobProcess__ in ```packages/application-queue-processor/src/application-job-process.js```. This reads the userId and applicationId for the job extracts the JSON data from the application, sites and application-sites data. The is combined into two single JSON objects; a data object and a keys object. The keys object is generated if null and the API (database) keys are set. The application data and keys objects are deeply nested structures and contain JSON blocks with child data which must be written to the contacts and accounts data.
+(2) When a job is picked up from the queue it is processed by __applicationJobProcess__ in ```packages/application-queue-processor/src/application-job-process.js```. This reads the userId and applicationId for the job and extracts the JSON data from the application, sites and application-sites tables. This is combined into two single JSON objects; a data object and a keys object. The keys object is generated if null and the known API (Postgres) keys are set. The application data and keys objects are deeply nested structures and contain JSON blocks with child data which must be written to the contacts and accounts tables on Power Platform.
 
 An outline of the data object for an application update
 ```json
@@ -25,6 +26,16 @@ An outline of the data object for an application update
         "id": ""
       }
     ]
+  }
+}
+```
+
+Reference data may be referred to by name, and global option sets must be addressed by their numeric identifier;
+```json
+{
+  "application": {
+    "applicationType": "A24 Badger",
+    "applicationCategory": 100000001
   }
 }
 ```
@@ -82,7 +93,7 @@ An example of the keys object for applications
 - Unexpected errors such as network errors are recoverable. Redirections (3XX are not expected)
 
 ### The inbound process
-There are many inbound processes that follow the same pattern; inbounds exist for applications, sites, application-sites and reference data.
+All inbound processes that follow the same pattern; inbounds exist for applications, sites, application-sites and reference data.
 
 The following example illustrates the applications inbound process, but it is common to all inbound processes;
 
