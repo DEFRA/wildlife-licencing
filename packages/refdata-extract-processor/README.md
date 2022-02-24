@@ -2,4 +2,6 @@
 
 #### For Natural England
 
-Runnable process to extract reference data and update the database
+Read the reference data and global option sets from Power Platform and save it in the Postgres database
+
+

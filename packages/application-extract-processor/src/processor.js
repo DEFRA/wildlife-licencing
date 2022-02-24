@@ -1,18 +1,23 @@
 import { REDIS, SEQUELIZE } from '@defra/wls-connectors-lib'
 import { createModels } from '@defra/wls-database-model'
-import { applicationReadStream } from '@defra/wls-powerapps-lib'
-import { applicationsDatabaseWriter } from './applications-database-writer.js'
+import { applicationReadStream, sitesReadStream, applicationSitesReadStream } from '@defra/wls-powerapps-lib'
+import { databaseWriter } from './database-writer.js'
+import { writeApplicationObject } from './write-application-object.js'
+import { writeSiteObject } from './write-site-object.js'
+import { writeApplicationSiteObject } from './write-application-site-object.js'
 
 Promise.all([
   REDIS.initialiseConnection(),
   SEQUELIZE.initialiseConnection()
 ]).then(() => createModels()
-  .then(() => applicationsDatabaseWriter(applicationReadStream(), new Date())
+  .then(() => databaseWriter(applicationReadStream(), writeApplicationObject, new Date(), 'Applications')
+    .then(() => databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites'))
+    .then(() => databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites'))
     .then(() => {
-      console.log('Application extract completed')
+      console.log('Extracts completed')
       process.exit(0)
-    })))
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
+    }))
+).catch(e => {
+  console.error(e)
+  process.exit(1)
+})

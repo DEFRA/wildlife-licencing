@@ -48,6 +48,7 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('returns an application and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     await getApplication(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -57,6 +58,7 @@ describe('The getApplicationByApplicationId handler', () => {
   it('returns an application and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
@@ -66,9 +68,19 @@ describe('The getApplicationByApplicationId handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns a status 404 on not found', async () => {
+  it('returns a status 404 on application not found', async () => {
     cache.restore = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applications = { findByPk: jest.fn(() => null) }
+    await getApplication(context, req, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(h.response).toHaveBeenCalled()
+    expect(codeFunc).toHaveBeenCalledWith(404)
+  })
+
+  it('returns a status 404 on user not found', async () => {
+    cache.restore = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(async () => null) }
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(h.response).toHaveBeenCalled()
@@ -77,6 +89,7 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applications = { findByPk: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
       await getApplication(context, req, h)

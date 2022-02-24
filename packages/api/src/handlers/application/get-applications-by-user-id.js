@@ -2,29 +2,25 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { cache } from '../../services/cache.js'
 import { prepareResponse } from './application-proc.js'
+import { checkCache, checkUser } from '../utils.js'
 
 export default async (context, req, h) => {
   try {
-    const { userId } = context.request.params
-    const user = await models.users.findByPk(userId)
-
-    // Check the user exists
-    if (!user) {
+    if (!await checkUser(context)) {
       return h.response().code(404)
     }
 
-    // Check cache
-    const saved = await cache.restore(req.path)
+    const result = await checkCache(req)
 
-    if (saved) {
-      return h.response(JSON.parse(saved))
+    if (result) {
+      return h.response(result)
         .type(APPLICATION_JSON)
         .code(200)
     }
 
     const applications = await models.applications.findAll({
       where: {
-        userId: userId
+        userId: context.request.params.userId
       }
     })
 

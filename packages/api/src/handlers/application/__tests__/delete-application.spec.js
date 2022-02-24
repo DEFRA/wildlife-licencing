@@ -38,6 +38,7 @@ describe('The deleteApplication handler', () => {
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
+    models.applicationSites = { findAll: jest.fn(() => []) }
     models.applications = { destroy: jest.fn(() => 1) }
     await deleteApplication(context, req, h)
     expect(models.applications.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationId } })
@@ -47,13 +48,23 @@ describe('The deleteApplication handler', () => {
 
   it('returns a 404 on id not found', async () => {
     cache.delete = jest.fn()
+    models.applicationSites = { findAll: jest.fn(() => []) }
     models.applications = { destroy: jest.fn(() => 0) }
     await deleteApplication(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
+  it('returns a 409 if application-site', async () => {
+    cache.delete = jest.fn()
+    models.applicationSites = { findAll: jest.fn(() => [{}]) }
+    models.applications = { destroy: jest.fn(() => 0) }
+    await deleteApplication(context, req, h)
+    expect(codeFunc).toHaveBeenCalledWith(409)
+  })
+
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
+    models.applicationSites = { findAll: jest.fn(() => []) }
     models.applications = { destroy: jest.fn(() => { throw Error() }) }
     await expect(async () => {
       await deleteApplication(context, req, h)

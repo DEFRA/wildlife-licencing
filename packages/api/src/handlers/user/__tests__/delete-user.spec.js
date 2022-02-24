@@ -33,21 +33,44 @@ describe('The deleteUser handler', () => {
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
     models.users = { destroy: jest.fn(() => 1) }
+    models.applications = { findAll: jest.fn(() => []) }
+    models.sites = { findAll: jest.fn(() => []) }
     await deleteUser(context, req, h)
     expect(models.users.destroy).toHaveBeenCalledWith({ where: { id: uuid } })
     expect(cache.delete).toHaveBeenCalledWith(req.path)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
+  it('returns a 409 with an application', async () => {
+    cache.delete = jest.fn()
+    models.users = { destroy: jest.fn(() => 1) }
+    models.applications = { findAll: jest.fn(() => [{ foo: 'bar' }]) }
+    await deleteUser(context, req, h)
+    expect(codeFunc).toHaveBeenCalledWith(409)
+  })
+
+  it('returns a 409 with an site', async () => {
+    cache.delete = jest.fn()
+    models.users = { destroy: jest.fn(() => 1) }
+    models.applications = { findAll: jest.fn(() => []) }
+    models.sites = { findAll: jest.fn(() => [{ foo: 'bar' }]) }
+    await deleteUser(context, req, h)
+    expect(codeFunc).toHaveBeenCalledWith(409)
+  })
+
   it('returns a 404 on id not found', async () => {
     cache.delete = jest.fn()
     models.users = { destroy: jest.fn(() => 0) }
+    models.applications = { findAll: jest.fn(() => []) }
+    models.sites = { findAll: jest.fn(() => []) }
     await deleteUser(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
+    models.applications = { findAll: jest.fn(() => []) }
+    models.sites = { findAll: jest.fn(() => []) }
     models.users = { destroy: jest.fn(() => { throw Error() }) }
     await expect(async () => {
       await deleteUser(context, req, h)

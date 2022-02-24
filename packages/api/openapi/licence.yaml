@@ -89,6 +89,8 @@ paths:
           description: Bad request. user ID must be a uuid
         404:
           description: Not found
+        409:
+          description: Conflict
         500:
           description: Unexpected error on server
           content:
@@ -101,8 +103,8 @@ paths:
 ################################################################################################
   '/user/{userId}/applications':
     get:
-      description: Get the (unsubmitted) applications for a user
-      summary: Get the (unsubmitted) applications for a user
+      description: Get the applications for a user
+      summary: Get the applications for a user
       operationId: getApplicationsByUserId
       parameters:
         - name: userId
@@ -211,7 +213,7 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
-      description: Create a new application or update an application
+      description: Update an application
       summary: Create or update an application for a given appilcationId and an existing userId
       operationId: putApplication
       parameters:
@@ -281,6 +283,8 @@ paths:
           description: Bad request
         404:
           description: Not found
+        409:
+          description: Conflict
         500:
           description: Unexpected error on server
           content:
@@ -503,6 +507,347 @@ paths:
           description: Bad request
         404:
           description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Sites
+  ################################################################################################
+  '/user/{userId}/sites':
+    get:
+      description: Get the sites for a user
+      summary: Get the sites for a user
+      operationId: getSitesByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sites'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/site':
+    post:
+      description: Create a new site
+      summary: Create a new site for an existing userId
+      operationId: postSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/site'
+      responses:
+        201:
+          description: The application object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/site/{siteId}':
+    get:
+      description: Get a site
+      summary: Get a site
+      operationId: getSiteBySiteId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: siteId
+          in: path
+          description: ID of the site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Site not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Create a new site or update an existing site
+      summary: Create a new site or update an existing site
+      operationId: putSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: siteId
+          in: path
+          description: ID of the site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: The site object has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+        201:
+          description: The site object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete a site
+      summary: Delete a site
+      operationId: deleteSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: siteId
+          in: path
+          description: ID of the site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The site has been deleted
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        409:
+          description: Conflict
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Application Sites
+  ################################################################################################
+  '/user/{userId}/application-site':
+    post:
+      description: Create a new application-site relationship
+      summary: Create a new application-site relationship for an existing userId, applicationId and SiteId
+      operationId: postApplicationSite
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationSite'
+      responses:
+        201:
+          description: The application-site object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/application-sites':
+    get:
+      description: Get the application-sites
+      summary: Get a list of application-site relationships for a user
+      operationId: getApplicationSitesByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSites'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/application-site/{applicationSiteId}':
+    get:
+      description: Get an application-site by id
+      summary:  Get an application-site by id
+      operationId: getApplicationSiteByApplicationSiteId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationSiteId
+          in: path
+          description: ID of the application-site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The application-site is not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an application-site by id
+      summary:  Get an application-site by id
+      operationId: deleteApplicationSiteByApplicationSiteId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationSiteId
+          in: path
+          description: ID of the application-site
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application-site has been deleted
+        400:
+          description: Bad request
+        404:
+          description: The application-site is not found
         500:
           description: Unexpected error on server
           content:
@@ -802,10 +1147,10 @@ components:
 
     site:
       type: object
-      required:
-        - name
-        - address
+      additionalProperties: false
       properties:
+        id:
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           minLength: 1
@@ -814,6 +1159,30 @@ components:
           $ref: '#/components/schemas/address'
         gridReference:
           $ref: '#/components/schemas/gridReference'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    applicationSites:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationSite'
+
+    applicationSite:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        siteId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     gridReference:
       type: string
@@ -852,3 +1221,4 @@ components:
           type: array
           items:
             type: object
+

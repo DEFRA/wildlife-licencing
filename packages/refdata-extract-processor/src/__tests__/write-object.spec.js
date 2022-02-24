@@ -10,18 +10,19 @@ describe('The reference data extract processor: write-object', () => {
     const { writeApplicationTypes } = await import('../write-object.js')
     const result = await writeApplicationTypes({
       data: {
-        name: 'type name',
-        description: 'type-desc'
-      },
-      keys: {
-        sdds_applicationtypeses: {
-          eid: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a'
+        null: {
+          name: 'type name',
+          description: 'type-desc'
         }
-      }
+      },
+      keys: [{
+        powerAppsTable: 'sdds_applicationtypeses',
+        powerAppsKey: '00171fc3-a556-ec11-8f8f-000d3a0ce11e'
+      }]
     })
 
     expect(mockUpsert).toHaveBeenCalledWith({
-      id: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a',
+      id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
       json: {
         description: 'type-desc',
         name: 'type name'
@@ -42,14 +43,15 @@ describe('The reference data extract processor: write-object', () => {
     const { writeApplicationPurposes } = await import('../write-object.js')
     const result = await writeApplicationPurposes({
       data: {
-        name: 'purpose name',
-        description: 'purpose-desc'
-      },
-      keys: {
-        sdds_applicationpurposes: {
-          eid: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a'
+        null: {
+          name: 'purpose name',
+          description: 'purpose-desc'
         }
-      }
+      },
+      keys: [{
+        powerAppsTable: 'sdds_applicationpurposes',
+        powerAppsKey: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a'
+      }]
     })
 
     expect(mockUpsert).toHaveBeenCalledWith({

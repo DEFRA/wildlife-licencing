@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
+import * as pkg from 'object-hash'
 import { models } from '@defra/wls-database-model'
-
+const hash = pkg.default
 /**
  * (1) if an application has un-submitted user entered data it will have an update-status code of 'L' locked - indicating
  * that the user has altered the data. This prevents the extract update from overwriting any changes.
@@ -21,19 +22,26 @@ import { models } from '@defra/wls-database-model'
  */
 export const writeApplicationObject = async (obj, ts) => {
   const { data, keys } = obj
+  const counter = { insert: 0, update: 0, pending: 0, error: 0 }
 
   try {
+    const baseKey = keys.find(k => k.apiTable === 'applications')
+
     const application = await models.applications.findOne({
-      where: { sdds_application_id: keys.sdds_applications.eid }
+      where: { sdds_application_id: baseKey.powerAppsKey }
     })
 
     // Update or insert a new applications
     if (application) {
       const a = application.dataValues
-      if ((a.updateStatus === 'P' && ts > a.updatedAt) || a.updateStatus === 'U') {
+      baseKey.apiKey = a.id
+      // Only update
+      // (a) If pending and not changed since the start of the extract
+      // (b) If updatable and with a material change in the payload
+      if ((a.updateStatus === 'P' && ts > a.updatedAt) || (a.updateStatus === 'U' && hash(data.application) !== hash(a.application))) {
         await models.applications.update({
-          application: data,
-          targetKeys: keys,
+          application: data.application,
+          targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
           updateStatus: 'U'
         }, {
           where: {
@@ -41,21 +49,24 @@ export const writeApplicationObject = async (obj, ts) => {
           },
           returning: false
         })
-        return { insert: 0, update: 1, pending: 0, error: 0 }
-      } else {
-        return { insert: 0, update: 0, pending: 1, error: 0 }
+        counter.update++
+      } else if (a.updateStatus === 'P' || a.updateStatus === 'L') {
+        counter.pending++
       }
     } else {
       // Create a new application and user
+      baseKey.apiKey = uuidv4()
       await models.applications.create({
-        id: uuidv4(),
-        application: data,
-        targetKeys: keys,
+        id: baseKey.apiKey,
+        application: data.application,
+        targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
         updateStatus: 'U',
-        sddsApplicationId: keys.sdds_applications.eid
+        sddsApplicationId: baseKey.powerAppsKey
       })
-      return { insert: 1, update: 0, pending: 0, error: 0 }
+      counter.insert++
     }
+
+    return counter
   } catch (error) {
     console.error('Error updating applications', error)
     return { insert: 0, update: 0, pending: 0, error: 1 }

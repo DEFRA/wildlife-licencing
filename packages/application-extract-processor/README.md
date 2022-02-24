@@ -2,4 +2,5 @@
 
 #### For Natural England
 
-Runnable process to extract applications and licences and update the database
+Read the applications, sites and application-sites data from Power Platform and save it in the Postgres database
+

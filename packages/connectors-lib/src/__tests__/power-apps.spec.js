@@ -115,7 +115,8 @@ describe('The powerapps connector', () => {
     jest.doMock('node-fetch', () => ({ default: mockFetch }))
 
     const { POWERAPPS } = await import('../power-apps.js')
-    const response = await POWERAPPS.batchRequest('batch123', 'batch-payload')
+    const requestHandle = { batchId: 'batch123' }
+    const response = await POWERAPPS.batchRequest(requestHandle, 'batch-payload')
     expect(response).toBe('data-data-data')
     expect(mockFetch).toHaveBeenCalledWith('http://powerapps:8080/xyz/$batch', {
       body: 'batch-payload',
@@ -153,7 +154,8 @@ describe('The powerapps connector', () => {
 
     const { POWERAPPS } = await import('../power-apps.js')
     const errorSpy = jest.spyOn(console, 'error')
-    const response = await POWERAPPS.batchRequest('batch123', 'batch-payload')
+    const requestHandle = { batchId: 'batch123' }
+    const response = await POWERAPPS.batchRequest(requestHandle, 'batch-payload')
     expect(response).toBe(errTxt)
     expect(errorSpy).toHaveBeenCalled()
     expect(mockFetch).toHaveBeenCalledWith('http://powerapps:8080/xyz/$batch', {

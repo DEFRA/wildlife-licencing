@@ -8,6 +8,14 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  getSitesByUserId,
+  getSiteBySiteId,
+  postSite,
+  putSite,
+  deleteSite
+} from './handlers/site/site.js'
+
+import {
   getApplicationByApplicationId,
   getApplicationsByUserId,
   postApplication,
@@ -15,6 +23,13 @@ import {
   deleteApplication,
   postApplicationSubmit
 } from './handlers/application/application.js'
+
+import {
+  getApplicationSitesByUserId,
+  getApplicationSiteByApplicationSiteId,
+  deleteApplicationSiteByApplicationSiteId,
+  postApplicationSite
+} from './handlers/application-site/application-site.js'
 
 import {
   getApplicationApplicant,
@@ -45,6 +60,40 @@ import postResponseHandler from './handlers/post-response-handler.js'
  */
 const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 
+// Split out to comply with sonar-cube line restriction on functions
+const handlers = {
+  getUserByUserId,
+  postUser,
+  deleteUser,
+  getSitesByUserId,
+  getSiteBySiteId,
+  postSite,
+  putSite,
+  deleteSite,
+  getApplicationByApplicationId,
+  getApplicationsByUserId,
+  postApplication,
+  putApplication,
+  deleteApplication,
+  getApplicationApplicant,
+  putApplicationApplicant,
+  deleteApplicationApplicant,
+  getApplicationEcologist,
+  putApplicationEcologist,
+  deleteApplicationEcologist,
+  postApplicationSubmit,
+  getApplicationSitesByUserId,
+  getApplicationSiteByApplicationSiteId,
+  deleteApplicationSiteByApplicationSiteId,
+  postApplicationSite,
+  getApplicationTypes,
+  getApplicationPurposes,
+  getOptionSets,
+  validationFail,
+  notFound,
+  postResponseHandler
+}
+
 /**
  * Initialize the server. Exported for unit testing
  * @param server
@@ -61,29 +110,7 @@ const init = async server => {
   /*
    * Register the openapi/hapi route handler mappings
    */
-  api.register({
-    getUserByUserId,
-    postUser,
-    deleteUser,
-    getApplicationByApplicationId,
-    getApplicationsByUserId,
-    postApplication,
-    putApplication,
-    deleteApplication,
-    getApplicationApplicant,
-    putApplicationApplicant,
-    deleteApplicationApplicant,
-    getApplicationEcologist,
-    putApplicationEcologist,
-    deleteApplicationEcologist,
-    postApplicationSubmit,
-    getApplicationTypes,
-    getApplicationPurposes,
-    getOptionSets,
-    validationFail,
-    notFound,
-    postResponseHandler
-  })
+  api.register(handlers)
 
   /*
    * Initialize OpenAPI backend

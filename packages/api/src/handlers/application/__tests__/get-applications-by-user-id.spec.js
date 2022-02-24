@@ -47,7 +47,7 @@ describe('The getApplicationByUserId handler', () => {
   })
 
   it('returns an array of applications and status 200 from the database', async () => {
-    cache.restore = jest.fn()
+    cache.restore = jest.fn(() => null)
     cache.save = jest.fn()
     models.users = { findByPk: jest.fn(async () => ({ foo: 'bar' })) }
     models.applications = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }

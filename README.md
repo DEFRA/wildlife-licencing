@@ -89,57 +89,34 @@ Alternatively set the environment variables in the running shell or your IDE
 
 | Package | Description | Runnable | Docker Image |
 | ----------- | ----------- | ----------- | ----------- |
-| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Apps | Y | wildlife-licencing/api |
-| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Apps as ODATA batch updates. | Y | wildlife-licencing/aqp | 
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
-| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Apps and updates the postgres database | Y | wildlife-licencing/ep | 
-| [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/eps-web |
-| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Apps & Bull-Queue | N | 
+| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
+| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates. | Y | wildlife-licencing/aqp | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
+| [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/web-service |
+| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue | N | 
 | [database-model](packages/database-model) | Extracts the sequelize database model in order to share it between multiple processes | N | 
-| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Apps ODATA interface including transformation | N | 
+| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Platform ODATA interface including transformation | N | 
 | [queue-defs](packages/queue-defs) | Extracts the bull-queue queue definitions | N | 
 
-## Description of API Process
+## Application Architecture 
 
-### API to Power Apps
+#### Overview
+![](./wls-system-stack.png)
 
 A set of API handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
 
-Requests to the API will create an entry in the applications table and populate the JSON structure in the application
-JSONB field. Each application is associated with a user which is recorded in the users table.
+Requests to the API perform SQL on the postgres tables and populate the JSON structures in the JSONB fields. 
 
-On submission of the application via API application/submit request the following will occur:
-
-(1) The data will be queued using bull-queue and a 204 no-content returned by the API. The queues are stored in Redis
-and can be inspected (locally) using redis-commander `http://localhost:8002/`
+Submitted data will be queued using bull-queue. The queues are stored in Redis and can be inspected (locally) using redis-commander `http://localhost:8002/`
 
 The queues are defined centrally in the package ```packages/queue-defs/src/defs.js```. This enables autonomous processes
 that connect to the queues on start-up to ensure they have the same definition.
 
-(2) The queued data is consumed by the application-queue-processor.
+The queued data is consumed by the __Application Queue Processor__ and wrtiien into the Power Platform using the powerapps-lib package.
 
-The `packages/application-queue-processor/src/application-job-process.js` method in application-queue-processor reads
-the application data from the database and uses and calls the batchUpdate method
-in `powerapps-lib/src/application-update/batch-update.js`. The job is removed from the queue.
+The __Application Extract Processor__ and the __Reference Data Extract Processor__ are used to extract data from the Power Platform and write it down to the Postgres tables.
 
-On success this will return a set of keys from Power Apps which are stored in the applications table in the target_keys column. In subsequent calls to submit these keys are used to effect an update of the data in Power Apps.
-
-The batchUpdate method may throw a recoverable or un-recoverable error.
-
-On recoverable errors the batchUpdate method will return Promise.Reject that the queue mechanism will retry according to
-the retry configuration in queue-defs.
-
-On un-recoverable errors the batchUpdate method will return Promise.Resolve and log an error for investigation.
-
-(3) In the powerapps-lib the application data is transformed using the model defined
-in `packages/powerapps-lib/src/model/sdds-applications.js`. This is a JSON object representing the target schema, into which a path element is used to map the data to the API/database structure.
-
-(4) The createBatchRequestBody in `packages/powerapps-lib/src/application-update/batch-formation.js` builds a ODATA batch request which ensures that the insert update transactions fail or succeed as a group. It also determines whether to POST or PATCH each element based on the existence of key data.
-
-(5) The powerapps-lib calls batchRequest method in `packages/connectors-lib/src/power-apps.js` to handle the low level
-
-request. This deals for authorisation and token management.
-
-### Power Apps to API
+For details of the inbound and outbound processes see [powerapps-lib/README.md](packages/powerapps-lib/README.md)
 
