@@ -1,4 +1,4 @@
-import applications from '../pages/applications/route.js'
+import applications from '../pages/applications/applications.js'
 
 const routes = [
   ...applications,
