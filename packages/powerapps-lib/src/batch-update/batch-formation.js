@@ -1,81 +1,85 @@
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
-
-import { powerAppsObjectBuilder } from '../model/transformer.js'
-import { findRequestSequence, getModelNode } from '../model/model-utils.js'
-
-let sequence
-let model
+import { createBatchRequestObjects, Methods } from '../schema/processors/schema-processes.js'
 
 /**
  * Initialize a batch request
- * @param model
+ * @param tableSet - The table-set to be included in the updates
+ * @param clientUrl - The client url (required for some references within the update
  */
-export const openBatchRequest = m => {
-  model = m
-  sequence = findRequestSequence(model)
-  return crypto.randomBytes(3).toString('hex').toUpperCase()
+export const openBatchRequest = (tableSet, clientUrl) => {
+  return {
+    tableSet: tableSet,
+    batchId: crypto.randomBytes(3).toString('hex').toUpperCase(),
+    clientUrl: clientUrl
+  }
 }
 
-const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n`
+const batchStart = (b, c) => `--batch_${b}\nContent-Type: multipart/mixed;boundary=changeset_${c}\n\n`
 
 // Warning, the interface is fussy about whitespace
-const headerBuilder = (obj, id, n, clientUrl) => {
-  const reqLine = id ? `PATCH ${clientUrl}/${obj.targetEntity}(${id}) HTTP/1.1` : `POST ${clientUrl}/${obj.targetEntity} HTTP/1.1`
-  return `Content-Type: application/http\nContent-Transfer-Encoding:binary\nContent-ID: ${n}\n\n${reqLine}\n` +
-    'Content-Type: application/json;type=entry\n\n' // Require two breaks before payload
+const headerBuilder = (requestHandle, contentId, table, method, powerAppsId) => {
+  let result = 'Content-Type: application/http\n'
+  result += 'Content-Transfer-Encoding:binary\n'
+  result += `Content-ID: ${contentId}\n`
+  result += '\n'
+  if (method === Methods.PATCH) {
+    result += `PATCH ${requestHandle.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
+  } else if (method === Methods.POST) {
+    result += `POST ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+  } else if (method === Methods.PUT) {
+    result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+  }
+  result += 'Content-Type: application/json;type=entry\n'
+  return result
 }
 
-const changeSetStart = c => `\n--changeset_${c}\n`
-const changeSetEnd = c => `\n--changeset_${c}--\n`
-const batchEnd = b => `\n--batch_${b}--\n`
-
-export const relationshipBuilder = (name, obj) => {
-  const contentId = sequence.findIndex(s => s === name) + 1
-  return { [`${obj.fk}@odata.bind`]: '$' + contentId }
-}
+const changeSetStart = cs => `--changeset_${cs}\n`
+const changeSetEnd = cs => `--changeset_${cs}--\n`
+const batchEnd = requestHandle => `--batch_${requestHandle.batchId}--\n`
 
 /**
  * Forms an ODATA batch request from the model and the source json
  * See https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/execute-batch-operations-using-web-api
- * @param batchId - The batch identifier created by openBatchRequest
- * @param json
- * @param targetKeysJson
- * @param model
- * @param clientUrl
  * @returns  {Promise<string>} - the text of the batch request body
+ * @param requestHandle - Object containing the current request state
+ * @param srcObj - The data to be serialized
+ * @param targetKeys - The key set
  */
-export const createBatchRequestBody = async (batchId, json, targetKeysJson, clientUrl) => {
+export const createBatchRequest = async (requestHandle, srcObj, targetKeys) => {
+  // Generate the data required for the batch update
+  requestHandle.batchRequestObjects = await createBatchRequestObjects(srcObj, targetKeys, requestHandle.tableSet)
+
+  // Build the batch update request body
   const changeId = uuidv4()
-  let body = batchStart(batchId, changeId)
-  const queryResults = await Promise.all(sequence.map(async (s, index) => {
-    const node = getModelNode(model, s)
-    const payload = await powerAppsObjectBuilder(node[s].targetFields, json)
-    const header = headerBuilder(node[s], targetKeysJson?.[s]?.eid, index + 1, clientUrl)
-    Object.entries(node[s].relationships || []).filter(([, o]) => !o.readOnly).forEach(([name, o]) =>
-      Object.assign(payload, relationshipBuilder(name, o)))
+  let body = batchStart(requestHandle.batchId, changeId)
 
-    return { index, str: `${changeSetStart(changeId)}${header}${JSON.stringify(payload, null, 4)}` }
-  }))
+  for (const b of requestHandle.batchRequestObjects) {
+    body += changeSetStart(changeId)
+    body += headerBuilder(requestHandle, b.contentId, b.table, b.method, b.powerAppsId)
+    body += '\n'
+    body += JSON.stringify(b.assignments, null, 2)
+    body += '\n\n'
+  }
 
-  body = body.concat(queryResults.sort(qr => qr.index).map(qr => qr.str).join('\n'))
-  body = body.concat(changeSetEnd(changeId))
-  body = body.concat(batchEnd(batchId))
-
+  body += changeSetEnd(changeId)
+  body += batchEnd(requestHandle)
   return body
 }
 
 /*
- * Create a set of pre-compiled regular expressions to extract the enity keys from the batch response
+ * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
 const preComplied = (n =>
-  ([...Array(n).keys()].map(i => i + 1).map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(10)
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
 
 /*
  * Create a key object from the response body text
  */
-export const createKeyObject = (responseBody, baseUrl) => {
-  const strippedResponseBody = responseBody.replaceAll(baseUrl, '')
-  const searchResponse = id => strippedResponseBody.match(preComplied[id - 1])?.groups || {}
-  return sequence.reduce((p, c) => ({ ...p, [c]: searchResponse(sequence.findIndex(s => s === c) + 1) }), {})
+export const createKeyObject = (requestHandle, responseBody, targetKeys) => {
+  const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
+  targetKeys.forEach(tk => {
+    tk.powerAppsKey = strippedResponseBody.match(preComplied[tk.contentId])?.groups?.eid
+  })
+  return targetKeys
 }

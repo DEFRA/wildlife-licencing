@@ -1,0 +1,27 @@
+--batchresponse_d06e845d-8a3d-4ef7-b567-3c10036748f5
+Content-Type: multipart/mixed; boundary=changesetresponse_f59df1e8-dae6-4df4-a1fc-1d8d98503d39
+
+--changesetresponse_f59df1e8-dae6-4df4-a1fc-1d8d98503d39
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 204 No Content
+OData-Version: 4.0
+Location: foo/contacts(8c75e48d-1393-ec11-b400-0022481ac7f1)
+OData-EntityId: foo/contacts(8c75e48d-1393-ec11-b400-0022481ac7f1)
+
+
+--changesetresponse_f59df1e8-dae6-4df4-a1fc-1d8d98503d39
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+HTTP/1.1 204 No Content
+OData-Version: 4.0
+Location: foo/sdds_applications(8f75e48d-1393-ec11-b400-0022481ac7f1)
+OData-EntityId: foo/sdds_applications(8f75e48d-1393-ec11-b400-0022481ac7f1)
+
+
+--changesetresponse_f59df1e8-dae6-4df4-a1fc-1d8d98503d39--
+--batchresponse_d06e845d-8a3d-4ef7-b567-3c10036748f5--

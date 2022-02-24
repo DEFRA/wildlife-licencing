@@ -1,5 +1,3 @@
-import { tasks, srcData } from '../../test-model-data/task-model.js'
-
 describe('The batch query update', () => {
   beforeEach(() => jest.resetModules())
 
@@ -13,9 +11,13 @@ describe('The batch query update', () => {
         }
       }
     })
-    jest.doMock('../batch-formation.js')
+    jest.doMock('../batch-formation.js', () => ({
+      openBatchRequest: () => ({ batchId: 'batch123' }),
+      createBatchRequest: jest.fn(),
+      createKeyObject: jest.fn()
+    }))
     const { batchUpdate } = await import('../batch-update.js')
-    await batchUpdate(srcData, {}, tasks)
+    await batchUpdate({ }, {})
     expect(mockBatchRequest).toHaveBeenCalled()
   })
 
@@ -40,7 +42,7 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(srcData, {}, tasks))
+    await expect(async () => await batchUpdate({}, {}))
       .rejects.toThrowError(RecoverableBatchError)
   })
 
@@ -65,7 +67,7 @@ describe('The batch query update', () => {
     })
 
     const { batchUpdate, UnRecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(srcData, {}, tasks))
+    await expect(async () => await batchUpdate({ }, {}))
       .rejects.toThrowError(UnRecoverableBatchError)
   })
 
@@ -85,7 +87,7 @@ describe('The batch query update', () => {
       }
     })
     const { batchUpdate, RecoverableBatchError } = await import('../batch-update.js')
-    await expect(async () => await batchUpdate(srcData, {}, tasks))
+    await expect(async () => await batchUpdate({ }, {}))
       .rejects.toThrowError(RecoverableBatchError)
   })
 })

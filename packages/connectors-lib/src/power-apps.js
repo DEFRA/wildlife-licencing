@@ -90,11 +90,11 @@ export const POWERAPPS = {
    * It throws an 'Error' on general exceptions like network errors and operational errors
    * or an HTTPResponseError where a request has return a non-success response i.e. the status code is not 200...299
    */
-  batchRequest: async (batchId, batchRequestBody) => {
+  batchRequest: async (requestHandle, batchRequestBody) => {
     const batchURL = new URL(`${Config.powerApps.client.url}/$batch`).href
 
     // Set up options for fetch
-    const options = await getBatchOptions(batchId, batchRequestBody)
+    const options = await getBatchOptions(requestHandle.batchId, batchRequestBody)
 
     // Create a timeout
     const timeout = setTimeout(() => {

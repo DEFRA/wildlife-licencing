@@ -64,7 +64,7 @@ describe('The putApplicationApplicant handler', () => {
     cache.save = jest.fn()
     await putApplicationApplicant(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(models.applications.update).toHaveBeenCalledWith({ application: { } },
+    expect(models.applications.update).toHaveBeenCalledWith({ application: { }, updateStatus: 'L' },
       { returning: ['application'], where: { id: context.request.params.applicationId } })
     expect(cache.save).toHaveBeenCalledWith(path, a)
     expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}/applicant`)
