@@ -15,7 +15,6 @@ async function fetchApplications(userId) {
 
 export const getData = async request => {
   const applications = await fetchApplications(userId)
-  console.log(1)
   return { applications }
 }
 

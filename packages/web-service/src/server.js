@@ -1,15 +1,13 @@
-import Path from 'path'
-import Hapi from '@hapi/hapi'
-import HapiVision from '@hapi/vision'
-import HapiInert from '@hapi/inert'
-import routes from './routes/routes.js'
-import { SERVER_PORT } from './constants.js'
-import viewEngine from './lib/view-engine/index.js'
-import lodash from 'lodash'
 import CatboxRedis from '@hapi/catbox-redis'
+import Hapi from '@hapi/hapi'
+import HapiInert from '@hapi/inert'
+import HapiVision from '@hapi/vision'
 import find from 'find'
-import path from 'path'
 import Nunjucks from 'nunjucks'
+import { default as Path, default as path } from 'path'
+import __dirname from '../dirname.cjs'
+import { SERVER_PORT } from './constants.js'
+import routes from './routes/routes.js'
 
 /**
  * Create the hapi server. Exported for unit testing purposes
@@ -46,8 +44,6 @@ const createServer = async () => {
  * @returns {Promise<any>}
  */
 const init = async server => {
-  const __dirname = Path.resolve()
-
   const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/pages')).map(f => path.dirname(f)))]
   const commonViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/views')).map(f => path.dirname(f)))]
 
