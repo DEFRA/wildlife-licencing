@@ -104,7 +104,7 @@ Alternatively set the environment variables in the running shell or your IDE
 #### Overview
 ![](./wls-system-stack.png)
 
-A set of API handlers has been created for the manipulation of the application data in the POSTGRES database. These are
+A set of API request handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
 
 Requests to the API perform SQL on the postgres tables and populate the JSON structures in the JSONB fields. 
