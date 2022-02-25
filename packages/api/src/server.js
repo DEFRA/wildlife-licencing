@@ -21,7 +21,8 @@ import {
   postApplication,
   putApplication,
   deleteApplication,
-  postApplicationSubmit
+  postApplicationSubmit,
+  getApplicationReference
 } from './handlers/application/application.js'
 
 import {
@@ -75,6 +76,7 @@ const handlers = {
   postApplication,
   putApplication,
   deleteApplication,
+  getApplicationReference,
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,

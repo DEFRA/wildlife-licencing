@@ -101,6 +101,29 @@ paths:
 ################################################################################################
 # Applications
 ################################################################################################
+  /applications/get-reference:
+    get:
+      description: Get the next reference number for an application
+      summary: counter
+      operationId: getApplicationReference
+      responses:
+        200:
+          description: The next reference number
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ref:
+                    type: string
+
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/user/{userId}/applications':
     get:
       description: Get the applications for a user
@@ -292,9 +315,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Applicants
-################################################################################################
+  ################################################################################################
+  # Applicants
+  ################################################################################################
   '/user/{userId}/application/{applicationId}/applicant':
     put:
       description: Update the application applicant details
