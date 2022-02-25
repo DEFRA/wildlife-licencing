@@ -1,6 +1,11 @@
 export default (path, view, completion, getData) => ({
   get: async (request, handler) => {
-    return handler.view(view, { data: await getData(request) })
+    const data = {}
+
+    const pageData = await getData(request)
+    Object.assign(data, { data: pageData })
+
+    return handler.view(view, data)
   },
   post: async (request, handler) => {
     return handler.redirect(completion)
