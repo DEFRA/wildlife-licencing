@@ -1,71 +1,41 @@
---batch_000000
-Content-Type: multipart/mixed;boundary=changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
+--batch_EB074F
+Content-Type: multipart/mixed;boundary=changeset_cbfdb229-ba8b-4f3d-ba91-4aa35a3ecc33
 
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
+--changeset_cbfdb229-ba8b-4f3d-ba91-4aa35a3ecc33
 Content-Type: application/http
 Content-Transfer-Encoding:binary
 Content-ID: 1
 
-POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/systemuser HTTP/1.1
+POST foo/tab1 HTTP/1.1
 Content-Type: application/json;type=entry
 
 {
-    "systemName": "SYSTEM-USER"
+  "foo": "bar"
 }
 
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
+--changeset_cbfdb229-ba8b-4f3d-ba91-4aa35a3ecc33
 Content-Type: application/http
 Content-Transfer-Encoding:binary
 Content-ID: 2
 
-POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/account HTTP/1.1
+PATCH foo/tab1(453) HTTP/1.1
 Content-Type: application/json;type=entry
 
 {
-    "accountName": "Main Account",
-    "createdby@odata.bind": "$1"
+  "foo": "bar"
 }
 
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
+--changeset_cbfdb229-ba8b-4f3d-ba91-4aa35a3ecc33
 Content-Type: application/http
 Content-Transfer-Encoding:binary
 Content-ID: 3
 
-POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/contacts HTTP/1.1
+PUT foo/tab1 HTTP/1.1
 Content-Type: application/json;type=entry
 
 {
-    "fullname": "Brian Jones",
-    "parentcustomerid_account@odata.bind": "$2"
+  "foo": "bar"
 }
 
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
-Content-Type: application/http
-Content-Transfer-Encoding:binary
-Content-ID: 4
-
-POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/tasktype HTTP/1.1
-Content-Type: application/json;type=entry
-
-{
-    "description": "dependency"
-}
-
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05
-Content-Type: application/http
-Content-Transfer-Encoding:binary
-Content-ID: 5
-
-POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/tasks HTTP/1.1
-Content-Type: application/json;type=entry
-
-{
-    "subject": "Get all things done",
-    "refdata@odata.bind": "/refdata(123)",
-    "boundRelation@odata.bind": "/bound-relation(123456)",
-    "regardingobjectid_contact_task@odata.bind": "$3",
-    "tasktypeid@odata.bind": "$4"
-}
---changeset_6eb28380-f8e0-4f4a-a78e-cc2ffbc6de05--
-
---batch_000000--
+--changeset_cbfdb229-ba8b-4f3d-ba91-4aa35a3ecc33--
+--batch_EB074F--

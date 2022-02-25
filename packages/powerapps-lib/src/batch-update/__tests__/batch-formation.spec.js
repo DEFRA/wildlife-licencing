@@ -1,70 +1,65 @@
-/* eslint-disable camelcase */
-import { openBatchRequest, createBatchRequestBody, createKeyObject } from '../batch-formation.js'
-import { tasks, srcData } from '../../test-model-data/task-model.js'
+import { Methods } from '../../schema/processors/schema-processes.js'
 import fs from 'fs'
 import path from 'path'
-
 const changeSetRegEx = /changeset_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g
 const batchRegEx = /--batch_[0-9A-F]{6}/g
 
-/**
- * Content-Type:multipart/mixed;boundary=batch_499D1B
- Accept:application/json
- OData-MaxVersion: 4.0
- OData-Version: 4.0
- Prefer:return=representation
- */
 describe('Batch query formation', () => {
-  it('forms a correct batch query set for a complex nested insert', async () => {
-    const batchId = openBatchRequest({ tasks })
-    const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-    const batchQuery = await createBatchRequestBody(batchId, srcData, {}, clientUrl)
+  beforeEach(() => jest.resetModules())
+  it('a new handler is generated when a batch request is opened', async () => {
+    const { openBatchRequest } = await import('../batch-formation.js')
+    expect(openBatchRequest([1], 'foo')).toEqual(expect.objectContaining({
+      batchId: expect.any(String),
+      clientUrl: 'foo',
+      tableSet: [1]
+    }))
+  })
+
+  it('generates a serialized batch request', async () => {
+    jest.doMock('../../schema/processors/schema-processes.js', () => ({
+      Methods: Methods,
+      createBatchRequestObjects: () => ([
+        { contentId: 1, table: 'tab1', method: 'POST', assignments: { foo: 'bar' } },
+        { contentId: 2, table: 'tab1', method: 'PATCH', powerAppsId: '453', assignments: { foo: 'bar' } },
+        { contentId: 3, table: 'tab1', method: 'PUT', powerAppsId: '123', assignments: { foo: 'bar' } }
+      ])
+    }))
+    const { openBatchRequest, createBatchRequest } = await import('../batch-formation.js')
+    const handle = openBatchRequest([], 'foo')
     const expected = fs.readFileSync(path.join(__dirname, './batch-request-body.txt'), { encoding: 'utf8' })
-    expect(batchQuery).toContain(`--batch_${batchId}`)
-    expect(batchQuery.replace(changeSetRegEx, '__cs__').replace(batchRegEx, '__b__'))
+    const result = await createBatchRequest(handle, {}, {})
+    expect(result).toContain(`--batch_${handle.batchId}`)
+    expect(result.replace(changeSetRegEx, '__cs__').replace(batchRegEx, '__b__'))
       .toBe(expected.replace(changeSetRegEx, '__cs__').replace(batchRegEx, '__b__'))
   })
 
-  it('forms a correct batch query set for a complex nested update', async () => {
-    const batchId = openBatchRequest({ tasks })
-    const clientUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-    const batchQuery = await createBatchRequestBody(batchId, srcData, {
-      tasks: {
-        eid: '9d17ae34-3c62-ec11-8f8f-0022480078af',
-        entity: 'tasks'
-      }
-    }, clientUrl)
-    const expected = fs.readFileSync(path.join(__dirname, './batch-request-body.txt'), { encoding: 'utf8' })
-    expect(batchQuery).toContain(`--batch_${batchId}`)
-    expect(batchQuery.replace(changeSetRegEx, '__cs__').replace(batchRegEx, '__b__'))
-      .toBe(expected.replace(changeSetRegEx, '__cs__')
-        .replace(batchRegEx, '__b__')
-        .replace('POST https://sdds-dev.crm11.dynamics.com/api/data/v9.0/tasks', 'PATCH https://sdds-dev.crm11.dynamics.com/api/data/v9.0/tasks(9d17ae34-3c62-ec11-8f8f-0022480078af)')
-      )
-  })
-
-  it('creates a valid key object from the response', async () => {
-    openBatchRequest({ tasks })
-    const baseUrl = 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0'
-    const responseBody = fs.readFileSync(path.join(__dirname, './success-response.txt'), { encoding: 'utf8' })
-    const keyObject = createKeyObject(responseBody, baseUrl)
-
-    // The response is anticipated in sequence order
-    expect(keyObject).toEqual({
-      systemUser: {
-        entity: 'systemUser',
-        eid: '7d17ae34-3c62-ec11-8f8f-0022480078af'
-      },
-      account: {
-        entity: 'account',
-        eid: '7f17ae34-3c62-ec11-8f8f-0022480078af'
-      },
-      contact: {
-        entity: 'contact',
-        eid: '8417ae34-3c62-ec11-8f8f-0022480078af'
-      },
-      taskType: {},
-      tasks: {}
-    })
+  it('decorates the key object from the response', async () => {
+    const { openBatchRequest, createKeyObject } = await import('../batch-formation.js')
+    const keySet = [{
+      apiTable: 'applications',
+      apiKey: '8d382932-36ba-4969-84f5-380f4f6830c1',
+      apiBasePath: 'application',
+      powerAppsTable: 'sdds_applications',
+      contentId: 2
+    },
+    {
+      apiTable: 'applications',
+      apiKey: null,
+      apiBasePath: 'application.applicant',
+      powerAppsTable: 'contacts',
+      contentId: 1
+    }]
+    const response = fs.readFileSync(path.join(__dirname, './batch-response-body.txt'), { encoding: 'utf8' })
+    const handle = openBatchRequest([], 'foo')
+    const result = createKeyObject(handle, response, keySet)
+    expect(result).toEqual([
+      expect.objectContaining({
+        powerAppsKey: '8f75e48d-1393-ec11-b400-0022481ac7f1',
+        powerAppsTable: 'sdds_applications'
+      }), expect.objectContaining({
+        powerAppsKey: '8c75e48d-1393-ec11-b400-0022481ac7f1',
+        powerAppsTable: 'contacts'
+      })
+    ])
   })
 })
