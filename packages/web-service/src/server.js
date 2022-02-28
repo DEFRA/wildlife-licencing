@@ -4,7 +4,7 @@ import HapiInert from '@hapi/inert'
 import HapiVision from '@hapi/vision'
 import find from 'find'
 import Nunjucks from 'nunjucks'
-import { default as Path, default as path } from 'path'
+import path from 'path'
 import __dirname from '../dirname.cjs'
 import { SERVER_PORT } from './constants.js'
 import routes from './routes/routes.js'
@@ -14,12 +14,11 @@ import routes from './routes/routes.js'
  * @returns {Promise<*>}
  */
 const createServer = async () => {
-  const __dirname = Path.resolve()
   return new Hapi.Server({
     port: SERVER_PORT,
     routes: {
       files: {
-        relativeTo: Path.join(__dirname, 'public')
+        relativeTo: path.join(__dirname, 'public')
       }
     },
     cache: [
@@ -80,7 +79,7 @@ const init = async server => {
     path: '/public/{param*}',
     handler: {
       directory: {
-        path: Path.join(__dirname, 'public')
+        path: path.join(__dirname, 'public')
       }
     }
   })

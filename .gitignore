@@ -9,6 +9,7 @@ node_modules/
 !.huskyrc
 !.dockerignore
 !.npmignore
+!.env.example
 
 #git checkout -b  Any log file
 **/*.log
