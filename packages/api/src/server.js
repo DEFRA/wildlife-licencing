@@ -44,6 +44,12 @@ import {
 } from './handlers/application/ecologist/ecologist.js'
 
 import {
+  getApplicationEligibility,
+  putApplicationEligibility,
+  deleteApplicationEligibility
+} from './handlers/application/eligibility/eligibility.js'
+
+import {
   getApplicationTypes,
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
@@ -81,6 +87,9 @@ const handlers = {
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
+  getApplicationEligibility,
+  putApplicationEligibility,
+  deleteApplicationEligibility,
   postApplicationSubmit,
   getApplicationSitesByUserId,
   getApplicationSiteByApplicationSiteId,
