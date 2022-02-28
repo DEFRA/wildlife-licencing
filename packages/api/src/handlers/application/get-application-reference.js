@@ -6,7 +6,7 @@ import { prepareResponse } from '../reference-data/reference-data.js'
 // Use the types cache
 const TYPES_CACHE = 'application/types'
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const { applicationType } = req.query
     let response

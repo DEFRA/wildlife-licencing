@@ -127,7 +127,7 @@ async function defineOptionSets (sequelize) {
 
 async function defineApplicationRefSeq (sequelize) {
   await sequelize.query('CREATE SEQUENCE IF NOT EXISTS application_ref_seq START  WITH  500000 CACHE 100;')
-  models.getApplicationRef = async () => await sequelize.query('select nextval(\'application_ref_seq\')', { type: QueryTypes.SELECT })
+  models.getApplicationRef = () => sequelize.query('select nextval(\'application_ref_seq\')', { type: QueryTypes.SELECT })
 }
 
 const createModels = async () => {
