@@ -1023,6 +1023,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        applicationReferenceNumber:
+          type: string
+          minLength: 13
+          maxLength: 30
         proposalDescription:
           type: string
           minLength: 1
