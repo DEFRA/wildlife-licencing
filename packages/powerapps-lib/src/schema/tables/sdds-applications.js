@@ -1,9 +1,8 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import crypto from 'crypto'
 import { getReferenceDataIdByName } from '../../services/cache.js'
 
 export const SddsApplication = new Table('sdds_applications', [
-  new Column('sdds_applicationnumber', null, () => crypto.randomBytes(3).toString('hex').toUpperCase()),
+  new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),

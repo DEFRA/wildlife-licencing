@@ -1,6 +1,7 @@
 export const srcObj = {
   application: {
     id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
+    applicationReferenceNumber: '2022-500000-EPS-MIT',
     proposalDescription: 'Badgers are proposed to be moved',
     detailsOfConvictions: 'no convictions',
     licenceReason: 'need to move some badgers',
@@ -207,7 +208,7 @@ export const initialGeneratedAssignmentsObject = [
     assignments: {
       'sdds_applicantid@odata.bind': '$4',
       sdds_applicationcategory: 100000001,
-      sdds_applicationnumber: expect.any(String),
+      sdds_applicationnumber: '2022-500000-EPS-MIT',
       'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
@@ -290,7 +291,7 @@ export const updatedGeneratedAssignmentsObject = [
     assignments: {
       'sdds_applicantid@odata.bind': '$4',
       sdds_applicationcategory: 100000001,
-      sdds_applicationnumber: expect.any(String),
+      sdds_applicationnumber: '2022-500000-EPS-MIT',
       'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
@@ -328,12 +329,12 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$expand=sdds_applicantid($select=firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid($select=firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid($select=sdds_applicationname,sdds_description),sdds_applicationpurpose($select=sdds_name,sdds_description)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$expand=sdds_applicantid($select=firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid($select=firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description)'
 
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(firstname,lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
   '@odata.etag': 'W/"3285321"',
-  sdds_applicationnumber: 'B6F826',
+  sdds_applicationnumber: '2022-500000-EPS-MIT',
   sdds_descriptionofproposal: 'Removal of badgers by dogs',
   sdds_detailsofconvictions: null,
   sdds_whydoyouneedalicence: 'New hosuing development',
@@ -397,6 +398,7 @@ export const applicationResponseObject = {
 
 export const applicationResponseTransformedDataObject = {
   application: {
+    applicationReferenceNumber: '2022-500000-EPS-MIT',
     applicant: {
       address: {
         addrline1: 'the grove',

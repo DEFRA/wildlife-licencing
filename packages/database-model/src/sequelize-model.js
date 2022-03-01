@@ -1,6 +1,6 @@
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import pkg from 'sequelize'
-const { DataTypes } = pkg
+const { DataTypes, QueryTypes } = pkg
 
 const models = {}
 
@@ -125,6 +125,11 @@ async function defineOptionSets (sequelize) {
   })
 }
 
+async function defineApplicationRefSeq (sequelize) {
+  await sequelize.query('CREATE SEQUENCE IF NOT EXISTS application_ref_seq START  WITH  500000 CACHE 100;')
+  models.getApplicationRef = () => sequelize.query('select nextval(\'application_ref_seq\')', { type: QueryTypes.SELECT })
+}
+
 const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
   await defineUsers(sequelize)
@@ -134,6 +139,7 @@ const createModels = async () => {
   await defineApplicationTypes(sequelize)
   await defineApplicationPurposes(sequelize)
   await defineOptionSets(sequelize)
+  await defineApplicationRefSeq(sequelize)
 
   await models.users.sync()
   await models.sites.sync()
