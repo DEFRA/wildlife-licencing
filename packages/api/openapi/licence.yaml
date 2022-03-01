@@ -101,41 +101,6 @@ paths:
 ################################################################################################
 # Applications
 ################################################################################################
-  /applications/get-reference:
-    get:
-      description: Get the next reference number for an application
-      summary: counter
-      operationId: getApplicationReference
-      parameters:
-        - in: query
-          name: applicationType
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: The next reference number
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ref:
-                    type: string
-
-        404:
-          description: Not found - ensure refernce data extract has run
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
   '/user/{userId}/applications':
     get:
       description: Get the applications for a user
@@ -169,7 +134,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
 
   '/user/{userId}/application':
     post:
@@ -327,9 +291,120 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Applicants
-  ################################################################################################
+################################################################################################
+# Eligibility
+################################################################################################
+  '/user/{userId}/application/{applicationId}/eligibility':
+    put:
+      description: Update the application eligibility details
+      summary: Create or update the application eligibility details
+      operationId: putApplicationEligibility
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eligibility'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eligibility'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application eligibility details
+      summary: Get the eligibility details for an application
+      operationId: getApplicationEligibility
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eligibility'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application eligibility details
+      summary: Delete the eligibility details for an application
+      operationId: deleteApplicationEligibility
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
+# Applicants
+################################################################################################
   '/user/{userId}/application/{applicationId}/applicant':
     put:
       description: Update the application applicant details
@@ -438,9 +513,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Ecologists / Agent
-  ################################################################################################
+################################################################################################
+# Ecologists / Agent
+################################################################################################
   '/user/{userId}/application/{applicationId}/ecologist':
     put:
       description: Update the application ecologist details
@@ -549,9 +624,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Sites
-  ################################################################################################
+################################################################################################
+# Sites
+################################################################################################
   '/user/{userId}/sites':
     get:
       description: Get the sites for a user
@@ -736,9 +811,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Application Sites
-  ################################################################################################
+################################################################################################
+# Application Sites
+################################################################################################
   '/user/{userId}/application-site':
     post:
       description: Create a new application-site relationship
@@ -890,9 +965,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Submission
-  ################################################################################################
+################################################################################################
+# Submission
+################################################################################################
   '/user/{userId}/application/{applicationId}/submit':
     post:
       description: Queue the application for submission
@@ -925,9 +1000,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Reference Data
-  ################################################################################################
+################################################################################################
+# Reference Data
+################################################################################################
   '/application/types':
     get:
       description: Get the application types
@@ -939,7 +1014,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/applicationTypes'
+                $ref: '#/components/schemas/referenceDataTypes'
 
         404:
           description: Not found
@@ -971,9 +1046,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Option sets
-  ################################################################################################
+################################################################################################
+# Option sets
+################################################################################################
   '/option-sets':
     get:
       description: Get the global option set values
@@ -1049,6 +1124,8 @@ components:
           type: string
           minLength: 1
           maxLength: 300
+        eligibility:
+          $ref: '#/components/schemas/eligibility'
         applicant:
           $ref: '#/components/schemas/contact'
         ecologist:
@@ -1060,6 +1137,18 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
+    eligibility:
+      type: object
+      properties:
+        isOwnerOfLand:
+          type: boolean
+        hasLandOwnerPermission:
+          type: boolean
+        permissionsRequired:
+          type: boolean
+        permissionsGranted:
+          type: boolean
+
     referenceDataTypes:
       type: array
       items:
@@ -1067,6 +1156,7 @@ components:
 
     referenceDataType:
       type: object
+      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/uuid'
