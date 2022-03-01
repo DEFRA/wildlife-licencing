@@ -1,5 +1,5 @@
-import { cache } from '../../services/cache.js'
 import { models } from '@defra/wls-database-model'
+import { clearCaches } from './users-cache.js'
 
 export default async (context, req, h) => {
   const userId = context.request.params.userId
@@ -26,14 +26,14 @@ export default async (context, req, h) => {
     return h.response().code(409)
   }
 
-  // Ok to proceed with the delete
-  await cache.delete(req.path)
   const count = await models.users.destroy({
     where: {
       id: userId
     }
   })
+
   if (count === 1) {
+    await clearCaches(userId)
     // Return no content
     return h.response().code(204)
   } else {
