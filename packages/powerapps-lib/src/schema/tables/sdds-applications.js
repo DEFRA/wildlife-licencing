@@ -7,7 +7,14 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),
-  new Column('sdds_applicationcategory', 'applicationCategory')
+  new Column('sdds_applicationcategory', 'applicationCategory'),
+
+  // The Eligibility section
+  new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'),
+  new Column('sdds_receivedonwerpermission', 'eligibility.hasLandOwnerPermission'),
+  new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
+  new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted')
+
 ], [
   // Site
   new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',
