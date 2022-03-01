@@ -101,6 +101,41 @@ paths:
 ################################################################################################
 # Applications
 ################################################################################################
+  /applications/get-reference:
+    get:
+      description: Get the next reference number for an application
+      summary: counter
+      operationId: getApplicationReference
+      parameters:
+        - in: query
+          name: applicationType
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The next reference number
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ref:
+                    type: string
+
+        404:
+          description: Not found - ensure refernce data extract has run
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/user/{userId}/applications':
     get:
       description: Get the applications for a user
@@ -1014,7 +1049,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/referenceDataTypes'
+                $ref: '#/components/schemas/applicationTypes'
 
         404:
           description: Not found
@@ -1098,6 +1133,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        applicationReferenceNumber:
+          type: string
+          minLength: 13
+          maxLength: 30
         proposalDescription:
           type: string
           minLength: 1
@@ -1152,7 +1191,6 @@ components:
 
     referenceDataType:
       type: object
-      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -1165,6 +1203,19 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    applicationTypes:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationType'
+
+    applicationType:
+      allOf:
+        - $ref: '#/components/schemas/referenceDataType'
+        - type: object
+          properties:
+            refNoSuffix:
+              type: string
 
     optionSetTypes:
       type: object

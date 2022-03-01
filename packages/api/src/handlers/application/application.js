@@ -4,6 +4,7 @@ import getApplicationByApplicationId from './get-application-by-application-id.j
 import getApplicationsByUserId from './get-applications-by-user-id.js'
 import deleteApplication from './delete-application.js'
 import postApplicationSubmit from './post-application-submit.js'
+import getApplicationReference from './get-application-reference.js'
 
 export {
   postApplication,
@@ -11,5 +12,6 @@ export {
   getApplicationsByUserId,
   getApplicationByApplicationId,
   deleteApplication,
-  postApplicationSubmit
+  postApplicationSubmit,
+  getApplicationReference
 }
