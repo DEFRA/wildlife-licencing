@@ -3,7 +3,7 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { prepareResponse } from './user-proc.js'
 import { cache } from '../../services/cache.js'
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const params = new URLSearchParams(req.query)
     const key = params.toString().length ? `${req.path}?${params.toString()}` : req.path
