@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-api",
-  "version": "2.1.0-alpha.0",
+  "version": "2.1.1-alpha.0",
   "description": "The API to support the wildlife licencing of European Protected Species",
   "main": "src/api-service.js",
   "type": "module",
@@ -47,7 +47,7 @@
     "json-loader": "^0.5.7",
     "style-loader": "^3.3.1",
     "webpack": "^5.64.0",
-    "yaml-loader": "^0.6.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.1",
+    "yaml-loader": "^0.6.0"
   }
 }
