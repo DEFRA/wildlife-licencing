@@ -42,16 +42,32 @@ describe('The postUser handler', () => {
 
   it('returns a 201 on successful create', async () => {
     models.users = {
+      findAll: jest.fn(() => []),
       findByPk: jest.fn(() => ({ id: 'bar', ...ts })),
       create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
     }
     cache.save = jest.fn()
-    await postUser(context, req, h)
-    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String) })
+    await postUser(context, { payload: { username: 'Graham' } }, h)
+    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), username: 'Graham' })
     expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
+  it('returns a 400 with a duplicate username', async () => {
+    models.users = {
+      findAll: jest.fn(() => [{ dataValues: {} }]),
+      findByPk: jest.fn(() => ({ id: 'bar', ...ts })),
+      create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
+    }
+    cache.save = jest.fn()
+    await postUser(context, { payload: { username: 'Graham' } }, h)
+    expect(models.users.create).not.toHaveBeenCalled()
+    expect(cache.save).not.toHaveBeenCalledWith()
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ code: 400 }))
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(400)
   })
 
   it('throws with a create query error', async () => {

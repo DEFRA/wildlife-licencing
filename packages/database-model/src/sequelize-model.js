@@ -6,9 +6,13 @@ const models = {}
 
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
-    id: { type: DataTypes.UUID, primaryKey: true }
+    id: { type: DataTypes.UUID, primaryKey: true },
+    username: { type: DataTypes.STRING(20), allowNull: false }
   }, {
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['username'], name: 'user_username_uk' }
+    ]
   })
 }
 

@@ -17,5 +17,9 @@ export const cache = {
   delete: async key => {
     const client = REDIS.getClient()
     await client.GETDEL(key)
+  },
+  keys: async str => {
+    const client = REDIS.getClient()
+    return client.KEYS(str)
   }
 }
