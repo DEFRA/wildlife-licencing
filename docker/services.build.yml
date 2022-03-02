@@ -47,5 +47,3 @@ services:
     build:
       context: ../packages/web-service
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
-
-# TODO Docker build . -t wildlife-licencing/wls_cron
