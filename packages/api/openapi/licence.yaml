@@ -30,6 +30,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
+        400:
+          description: Bad request. Username required
         500:
           description: Unexpected error on server
           content:
@@ -97,6 +99,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+
+  '/users':
+    get:
+      description: Get users
+      summary: Get the users and optionally filter by name
+      operationId: getUsers
+      parameters:
+        - in: query
+          name: username
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 
 ################################################################################################
 # Applications
@@ -1111,12 +1139,24 @@ components:
 # Schemas
 ################################################################################################
   schemas:
+    users:
+      type: array
+      items:
+        $ref: '#/components/schemas/user'
+
     user:
       type: object
       additionalProperties: false
+      required:
+        - username
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        username:
+          type: string
+          minLength: 1
+          maxLength: 20
+          pattern: ^[A-Za-z0-9\s]*$
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

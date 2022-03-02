@@ -2,7 +2,7 @@
  * Mock the hapi request object
  */
 const uuid = '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
-const path = 'user/uuid'
+const path = `/user/${uuid}`
 const req = { path }
 
 /*
@@ -32,12 +32,15 @@ describe('The deleteUser handler', () => {
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
+    cache.keys = jest.fn(() => ['random'])
     models.users = { destroy: jest.fn(() => 1) }
     models.applications = { findAll: jest.fn(() => []) }
     models.sites = { findAll: jest.fn(() => []) }
     await deleteUser(context, req, h)
     expect(models.users.destroy).toHaveBeenCalledWith({ where: { id: uuid } })
     expect(cache.delete).toHaveBeenCalledWith(req.path)
+    expect(cache.delete).toHaveBeenCalledWith('/users')
+    expect(cache.delete).toHaveBeenCalledWith('random')
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
