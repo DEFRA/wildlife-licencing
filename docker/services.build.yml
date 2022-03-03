@@ -4,13 +4,38 @@
 ##############################################################################################################
 services:
   ##############################################################################################################
+  # Rod licensing services base image
+  #
+  # This is not designed to be deployed but to serve as the base image for rod-licensing services.
+  ##############################################################################################################
+  base:
+    image: wildlife/base
+    build:
+      context: ..
+      dockerfile: Dockerfile.base
+
+  ##############################################################################################################
+  # rod-licensing services builder image
+  #
+  # This is not designed to be deployed but to serve as the base image for building rod-licensing services.
+  # Provides additional libraries for the build process not required at runtime.
+  ##############################################################################################################
+  builder:
+    image: wildlife/builder
+    build:
+      context: ..
+      dockerfile: Dockerfile.build
+
+  ##############################################################################################################
   # Wildlife licencing API service
+  # The development version of the service runs the webpack post-process to install the
+  # Open API browser
   ##############################################################################################################
   api:
     image: wildlife-licencing/api:${TAG:-latest}
     build:
       context: ../packages/api
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application queue processor
@@ -19,7 +44,7 @@ services:
     image: wildlife-licencing/aqp:${TAG:-latest}
     build:
       context: ../packages/application-queue-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application extract processor
@@ -28,7 +53,7 @@ services:
     image: wildlife-licencing/aep:${TAG:-latest}
     build:
       context: ../packages/application-extract-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; reference data extract processor
@@ -37,7 +62,7 @@ services:
     image: wildlife-licencing/rep:${TAG:-latest}
     build:
       context: ../packages/refdata-extract-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing Web service
@@ -46,4 +71,4 @@ services:
     image: wildlife-licencing/web:${TAG:-latest}
     build:
       context: ../packages/web-service
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile}
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}

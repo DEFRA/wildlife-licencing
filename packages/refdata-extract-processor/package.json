@@ -2,7 +2,7 @@
   "name": "@defra/wls-refdata-extract-processor",
   "version": "2.1.0-alpha.0",
   "description": "Interface to Microsoft Dynamics. Extract processor for reference data.",
-  "main": "",
+  "main": "src/processor.js",
   "type": "module",
   "private": false,
   "publishConfig": {

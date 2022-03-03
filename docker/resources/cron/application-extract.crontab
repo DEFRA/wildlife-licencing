@@ -1,1 +1,1 @@
-*	*	*	*	*	cd /usr/src/app && node src/processor.js
+*	*	*	*	*	cd /app && node src/processor.js
