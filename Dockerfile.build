@@ -1,0 +1,12 @@
+########################################################################################
+# Create an image suitable to building each of the services.
+########################################################################################
+FROM wildlife_licensing/base
+USER root
+RUN mkdir -p /app
+
+# Set npm configuration for builds
+RUN npm config set loglevel error \
+    && npm config set audit false
+
+WORKDIR /app
