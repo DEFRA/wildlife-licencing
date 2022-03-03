@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-application-queue-processor",
-  "version": "2.1.0-alpha.0",
+  "version": "2.1.2-alpha.0",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "src/application-queue-processor.js",
   "type": "module",
