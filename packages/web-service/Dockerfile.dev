@@ -7,7 +7,7 @@ WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
 COPY . .
-RUN npm ci --production
+RUN npm ci
 
 ####################################################################################################################################
 # Build stage 2 - Using the distribution from stage 1, build the final docker image with a minimal number of layers.
@@ -17,6 +17,7 @@ WORKDIR /app
 COPY --from=builder /app/ /app/
 
 # Default service port
-ARG PORT=3000
+ARG PORT=4000
 EXPOSE ${PORT}
-CMD [ "node", "src/api-service.js" ]
+CMD [ "node", "src/web-service.js" ]
+
