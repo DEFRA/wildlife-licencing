@@ -1,16 +1,18 @@
 import Config from './config.js'
 import pkg from 'sequelize'
-import { SECRETS } from './secrets.js'
+import db from 'debug'
 const { Sequelize, Transaction } = pkg
-
+const debug = db('connectors-lib:db')
 let sequelize
 
 export const SEQUELIZE = {
   getSequelize: () => sequelize,
   initialiseConnection: async () => {
+    debug(`Db host: ${Config.pg.host}`)
+    debug(`Db port: ${Config.pg.port}`)
     sequelize = new Sequelize(Config.pg.database,
       Config.pg.user,
-      Config.pg.pw || await SECRETS.getSecret('/wls/postgres-password'),
+      Config.pg.pw,
       {
         dialect: 'postgres',
         host: Config.pg.host,
