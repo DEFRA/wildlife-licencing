@@ -1,10 +1,11 @@
-import { SECRETS } from './secrets.js'
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
 import pkg from 'node-fetch'
+import db from 'debug'
 const fetch = pkg.default
 const defaultTimeout = 20000
 const defaultFetchSize = 100
+const debug = db('connectors-lib:db')
 
 /*
  * Access to dynamics using the OAuth2 client credentials flow.
@@ -14,14 +15,9 @@ let accessToken
 
 export const getToken = async () => {
   try {
-    // If the oath client id and secret is not set in the environment then look it up
-    // from the secrets manager
+    debug(`Power Platform URL: ${Config.powerApps.client.url}`)
     const { client, auth } = Config.powerApps.oauth
-    let { id, secret } = client
-    if (!id || !secret) {
-      id = await SECRETS.getSecret('/oauth/client-id')
-      secret = await SECRETS.getSecret('/oauth/client-secret')
-    }
+    const { id, secret } = client
     const oauthClient = new ClientCredentials({ client: { id, secret }, auth })
     if (!accessToken || accessToken.expired(Config.powerApps.tokenExpireWindow || 60)) {
       accessToken = await oauthClient.getToken({ scope: Config.powerApps.scope })
