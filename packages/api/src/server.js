@@ -3,6 +3,7 @@ import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
 import {
   getUserByUserId,
+  getUsers,
   deleteUser,
   postUser
 } from './handlers/user/user.js'
@@ -21,7 +22,8 @@ import {
   postApplication,
   putApplication,
   deleteApplication,
-  postApplicationSubmit
+  postApplicationSubmit,
+  getApplicationReference
 } from './handlers/application/application.js'
 
 import {
@@ -44,6 +46,12 @@ import {
 } from './handlers/application/ecologist/ecologist.js'
 
 import {
+  getApplicationEligibility,
+  putApplicationEligibility,
+  deleteApplicationEligibility
+} from './handlers/application/eligibility/eligibility.js'
+
+import {
   getApplicationTypes,
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
@@ -63,6 +71,7 @@ const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 // Split out to comply with sonar-cube line restriction on functions
 const handlers = {
   getUserByUserId,
+  getUsers,
   postUser,
   deleteUser,
   getSitesByUserId,
@@ -75,12 +84,16 @@ const handlers = {
   postApplication,
   putApplication,
   deleteApplication,
+  getApplicationReference,
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
+  getApplicationEligibility,
+  putApplicationEligibility,
+  deleteApplicationEligibility,
   postApplicationSubmit,
   getApplicationSitesByUserId,
   getApplicationSiteByApplicationSiteId,

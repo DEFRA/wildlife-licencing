@@ -1,13 +1,19 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import crypto from 'crypto'
 import { getReferenceDataIdByName } from '../../services/cache.js'
 
 export const SddsApplication = new Table('sdds_applications', [
-  new Column('sdds_applicationnumber', null, () => crypto.randomBytes(3).toString('hex').toUpperCase()),
+  new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),
-  new Column('sdds_applicationcategory', 'applicationCategory')
+  new Column('sdds_applicationcategory', 'applicationCategory'),
+
+  // The Eligibility section
+  new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'),
+  new Column('sdds_receivedonwerpermission', 'eligibility.hasLandOwnerPermission'),
+  new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
+  new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted')
+
 ], [
   // Site
   new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',
