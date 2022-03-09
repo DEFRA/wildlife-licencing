@@ -15,7 +15,7 @@ import routes from './routes/routes.js'
  */
 const createServer = async () => {
   return new Hapi.Server({
-    port: process.env.SERVER_PORT,
+    port: process.env.SERVER_PORT || 4000,
     routes: {
       files: {
         relativeTo: path.join(__dirname, 'public')
