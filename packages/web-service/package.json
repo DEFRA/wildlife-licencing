@@ -36,6 +36,7 @@
     "@hapi/vision": "^6.1.0",
     "accessible-autocomplete": "^2.0.3",
     "del": "^6.0.0",
+    "dotenv": "^16.0.0",
     "find": "^0.3.0",
     "got": "^11.8.3",
     "govuk-frontend": "^3.14.0",

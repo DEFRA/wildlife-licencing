@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import CatboxRedis from '@hapi/catbox-redis'
 import Hapi from '@hapi/hapi'
 import HapiInert from '@hapi/inert'
@@ -6,7 +7,6 @@ import find from 'find'
 import Nunjucks from 'nunjucks'
 import path from 'path'
 import __dirname from '../dirname.cjs'
-import { SERVER_PORT } from './constants.js'
 import routes from './routes/routes.js'
 
 /**
@@ -15,25 +15,12 @@ import routes from './routes/routes.js'
  */
 const createServer = async () => {
   return new Hapi.Server({
-    port: SERVER_PORT,
+    port: process.env.SERVER_PORT,
     routes: {
       files: {
         relativeTo: path.join(__dirname, 'public')
       }
-    },
-    cache: [
-      {
-        provider: {
-          constructor: CatboxRedis,
-          options: {
-            partition: 'web-service',
-            host: process.env.REDIS_HOST,
-            port: process.env.REDIS_PORT,
-            db: 0
-          }
-        }
-      }
-    ]
+    }
   })
 }
 
