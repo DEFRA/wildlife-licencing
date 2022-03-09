@@ -1,4 +1,3 @@
-import { it } from 'jest-circus'
 import pageHandler from '../page-handler.js'
 
 describe('the page handler function', () => {
