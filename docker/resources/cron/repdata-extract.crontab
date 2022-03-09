@@ -1,1 +1,2 @@
-*	*	*	*	*	cd /app && node src/processor.js
+# Every quarter-to-the-hour during the development phase
+45	*	*	*	*	cd /app && node src/processor.js
