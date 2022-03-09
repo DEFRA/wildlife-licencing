@@ -40,10 +40,12 @@ const init = async server => {
   await server.views({
     engines: {
       njk: {
+        // NOSONAR
         compile: (src, options) => {
           const template = Nunjucks.compile(src, options.environment)
           return context => template.render(context)
         },
+        // NOSONAR
         prepare: (options, next) => {
           options.compileOptions.environment = Nunjucks.configure(options.path, { watch: false })
           return next()
