@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import CatboxRedis from '@hapi/catbox-redis'
 import Hapi from '@hapi/hapi'
 import HapiInert from '@hapi/inert'
 import HapiVision from '@hapi/vision'
