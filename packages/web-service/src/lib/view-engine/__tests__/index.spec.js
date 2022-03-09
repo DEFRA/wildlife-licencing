@@ -1,21 +1,8 @@
 import index from '../index'
-import filters from '../filters'
 import Nunjucks from 'nunjucks'
 import { difference } from 'lodash'
 
 describe('index', () => {
-  describe('addFilters', () => {
-    const inputValue = { addFilter: jest.fn() }
-
-    beforeEach(() => {
-      index.addFilters(inputValue)
-    })
-
-    test('adds each filter', () => {
-      expect(inputValue.addFilter).toHaveBeenCalledTimes(Object.keys(filters).length)
-    })
-  })
-
   describe('nunjucksEngine', () => {
     describe('.compile', () => {
       let response
