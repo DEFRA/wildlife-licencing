@@ -2,7 +2,7 @@
   "name": "@defra/wls-eps-web-service",
   "version": "2.1.2-alpha.0",
   "description": "The web service for wildlife licencing of European Protected Species",
-  "main": "src/eps-web-service.js",
+  "main": "src/web-service.js",
   "type": "module",
   "exports": "./dist/index.js",
   "private": false,
@@ -29,12 +29,15 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
+    "@hapi/catbox-redis": "^6.0.2",
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/lab": "^24.4.0",
     "@hapi/vision": "^6.1.0",
     "accessible-autocomplete": "^2.0.3",
     "del": "^6.0.0",
+    "dotenv": "^16.0.0",
+    "find": "^0.3.0",
     "got": "^11.8.3",
     "govuk-frontend": "^3.14.0",
     "gulp": "^4.0.2",
@@ -45,7 +48,9 @@
     "joi": "^17.5.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "node-fetch": "^2.6.0",
     "nunjucks": "^3.2.3",
+    "path": "^0.12.7",
     "sass": "^1.44.0"
   },
   "devDependencies": {
