@@ -1,15 +1,6 @@
 import { createServer, init } from '../server'
 
 describe('The WEB server', () => {
-  it('setups up the njk engine', () => {
-    createServer().then(s => {
-      init(s).then(() => {
-        const x = s.views
-        console.log(x)
-      })
-    })
-  })
-
   it('starts', done => {
     createServer().then(s => {
       init(s).then(() => {
