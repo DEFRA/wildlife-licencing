@@ -1,23 +1,23 @@
-import Path from 'path'
+import 'dotenv/config'
 import Hapi from '@hapi/hapi'
-import HapiVision from '@hapi/vision'
 import HapiInert from '@hapi/inert'
-import routes from './routes/index.js'
-import { SERVER_PORT } from './constants.js'
-import viewEngine from './lib/view-engine/index.js'
-import lodash from 'lodash'
+import HapiVision from '@hapi/vision'
+import find from 'find'
+import Nunjucks from 'nunjucks'
+import path from 'path'
+import __dirname from '../dirname.cjs'
+import routes from './routes/routes.js'
 
 /**
  * Create the hapi server. Exported for unit testing purposes
  * @returns {Promise<*>}
  */
 const createServer = async () => {
-  const __dirname = Path.resolve()
   return new Hapi.Server({
-    port: SERVER_PORT,
+    port: process.env.SERVER_PORT || 4000,
     routes: {
       files: {
-        relativeTo: Path.join(__dirname, 'public')
+        relativeTo: path.join(__dirname, 'public')
       }
     }
   })
@@ -29,20 +29,43 @@ const createServer = async () => {
  * @returns {Promise<any>}
  */
 const init = async server => {
-  const __dirname = Path.resolve()
-  /* Registering routes */
+  const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/pages')).map(f => path.dirname(f)))]
+  const commonViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/views')).map(f => path.dirname(f)))]
+
   await server.route(routes)
 
-  /* Registering plugins */
   await server.register(HapiVision)
   await server.register(HapiInert)
-  await server.views(lodash.omit(viewEngine.wrapper, 'addFilters'))
+  await server.views({
+    engines: {
+      njk: {
+        compile: (src, options) => {
+          const template = Nunjucks.compile(src, options.environment)
+          return context => template.render(context)
+        },
+        prepare: (options, next) => {
+          options.compileOptions.environment = Nunjucks.configure(options.path, { watch: false })
+          return next()
+        }
+      }
+    },
+
+    relativeTo: __dirname,
+    isCached: process.env.NODE_ENV !== 'development',
+
+    path: [
+      path.join(__dirname, 'node_modules', 'govuk-frontend'),
+      ...commonViewPaths,
+      ...pagesViewPaths
+    ]
+  })
+
   server.route({
     method: 'GET',
     path: '/public/{param*}',
     handler: {
       directory: {
-        path: Path.join(__dirname, 'public')
+        path: path.join(__dirname, 'public')
       }
     }
   })
