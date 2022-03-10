@@ -4,29 +4,6 @@
 ##############################################################################################################
 services:
   ##############################################################################################################
-  # Rod licensing services base image
-  #
-  # This is not designed to be deployed but to serve as the base image for rod-licensing services.
-  ##############################################################################################################
-  base:
-    image: wildlife/base
-    build:
-      context: ..
-      dockerfile: Dockerfile.base
-
-  ##############################################################################################################
-  # rod-licensing services builder image
-  #
-  # This is not designed to be deployed but to serve as the base image for building rod-licensing services.
-  # Provides additional libraries for the build process not required at runtime.
-  ##############################################################################################################
-  builder:
-    image: wildlife/builder
-    build:
-      context: ..
-      dockerfile: Dockerfile.build
-
-  ##############################################################################################################
   # Wildlife licencing API service
   # The development version of the service runs the webpack post-process to install the
   # Open API browser
