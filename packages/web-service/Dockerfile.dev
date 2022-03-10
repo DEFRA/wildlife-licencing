@@ -1,23 +1,11 @@
-####################################################################################################################################
-# Build stage 1 - Create a distribution of the project which we can copy in the second build stage.
-####################################################################################################################################
-FROM wildlife_licensing/builder AS builder
+########################################################################################
+# Create a docker image for the wildlife licencing EPS WEB service
+########################################################################################
+FROM node:16.13.0-alpine
 WORKDIR /app
-
-# Install app dependencies
 COPY package*.json ./
 COPY . .
 RUN npm ci
-
-####################################################################################################################################
-# Build stage 2 - Using the distribution from stage 1, build the final docker image with a minimal number of layers.
-####################################################################################################################################
-FROM wildlife_licensing/base
-WORKDIR /app
-COPY --from=builder /app/ /app/
-
-# Default service port
-ARG PORT=4000
-EXPOSE ${PORT}
+EXPOSE 4000
 CMD [ "node", "src/web-service.js" ]
 
