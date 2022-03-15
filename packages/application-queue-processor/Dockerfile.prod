@@ -15,4 +15,5 @@ RUN npm ci --production
 FROM wildlife_licensing/base
 WORKDIR /app
 COPY --from=builder /app/ /app/
+
 CMD [ "node", "src/application-queue-processor.js" ]
