@@ -22,8 +22,9 @@ wildlife-licencing/web
 wildlife-licencing/rep 
 wildlife-licencing/aep
 ```
+The swarm deployment uses the set of environment files located at `docker/env`. The files are made up of some standard environment parameters `*.env` and secrets `*-secrets.env`. The secrets must be populated manually before running the deployment and care should be taken not to check these secret files into github.
 
-The local swarm requires a set of supporting services to run, these images can be deployed into the stack wls, along with the service images with
+The local swarm requires a set of supporting cloud services to run, these images can be deployed into the stack wls, along with the service images with;
 
 ```shell
 docker stack deploy -c docker/cloud-services.yml wls
@@ -32,7 +33,9 @@ docker stack deploy -c docker/services.yml wls
 
 ### Steps to the images build manually 
 
-To build using the multi-stage image creation (as in the production builds) create the images as described here
+It may be occasionally useful to test the production images in the local swarm.
+
+To build using the multi-stage image creation create the production images as described here
 
 1. Build the base and builder packages which are used in the staged build
 ``` shell
@@ -48,3 +51,5 @@ docker build -t wildlife-licencing/aep:latest --file ./packages/application-extr
 docker build -t wildlife-licencing/rep:latest --file ./packages/refdata-extract-processor/Dockerfile.prod ./packages/refdata-extract-processor
 docker build -t wildlife-licencing/web:latest --file ./packages/web-service/Dockerfile.prod ./packages/web-service
 ```
+
+The production images can be used in the local swarm by running the deployment as above.
