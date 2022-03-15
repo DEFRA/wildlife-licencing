@@ -5,7 +5,7 @@ import db from 'debug'
 const fetch = pkg.default
 const defaultTimeout = 20000
 const defaultFetchSize = 100
-const debug = db('connectors-lib:db')
+const debug = db('connectors-lib:pp')
 
 /*
  * Access to dynamics using the OAuth2 client credentials flow.
@@ -15,7 +15,7 @@ let accessToken
 
 export const getToken = async () => {
   try {
-    debug(`Power Platform URL: ${Config.powerApps.client.url}`)
+    debug(`Power Platform URL: ${JSON.stringify(Config.powerApps)}`)
     const { client, auth } = Config.powerApps.oauth
     const { id, secret } = client
     const oauthClient = new ClientCredentials({ client: { id, secret }, auth })
