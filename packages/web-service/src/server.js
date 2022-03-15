@@ -77,8 +77,6 @@ const init = async server => {
     path: '/'
   }
 
-  console.debug((({ password, ...o }) => o)(sessionCookieOptions))
-
   server.state(sessionCookieName, sessionCookieOptions)
 
   server.ext('onPreHandler', sessionManager(sessionCookieName))
