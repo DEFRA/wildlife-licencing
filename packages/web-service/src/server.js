@@ -7,6 +7,10 @@ import Nunjucks from 'nunjucks'
 import path from 'path'
 import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
+import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
+import sessionManager from '../session-cache/session-manager.js'
+
+const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
 /**
  * Create the hapi server. Exported for unit testing purposes
@@ -59,6 +63,23 @@ const init = async server => {
       ...pagesViewPaths
     ]
   })
+
+  const sessionCookieName = getSessionCookieName()
+  const sessionCookieOptions = {
+    ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
+    isSecure: process.env.NODE_ENV !== 'development',
+    isHttpOnly: process.env.NODE_ENV !== 'development',
+    isSameSite: 'Lax', // Needed for the GOV pay redirect back into the service
+    encoding: 'iron',
+    password: process.env.SESSION_COOKIE_PASSWORD,
+    clearInvalid: true,
+    strictHeader: true,
+    path: '/'
+  }
+
+  server.state(sessionCookieName, sessionCookieOptions)
+
+  server.ext('onPreHandler', sessionManager(sessionCookieName))
 
   server.route({
     method: 'GET',
