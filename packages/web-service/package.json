@@ -51,7 +51,8 @@
     "node-fetch": "^2.6.0",
     "nunjucks": "^3.2.3",
     "path": "^0.12.7",
-    "sass": "^1.44.0"
+    "sass": "^1.44.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "esm": "^3.2.25",
