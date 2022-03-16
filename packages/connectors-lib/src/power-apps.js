@@ -1,11 +1,15 @@
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
 import pkg from 'node-fetch'
+import { hide } from './utils.js'
 import db from 'debug'
+import * as _cloneDeep from 'lodash.clonedeep'
+
 const fetch = pkg.default
 const defaultTimeout = 20000
 const defaultFetchSize = 100
 const debug = db('connectors-lib:pp')
+const { default: cloneDeep } = _cloneDeep
 
 /*
  * Access to dynamics using the OAuth2 client credentials flow.
@@ -15,7 +19,10 @@ let accessToken
 
 export const getToken = async () => {
   try {
-    debug(`Power Platform URL: ${JSON.stringify(Config.powerApps)}`)
+    const msg = cloneDeep(Config.powerApps)
+    hide(msg, 'oauth.client.id')
+    hide(msg, 'oauth.client.secret')
+    debug(`Power Platform connections: ${JSON.stringify(msg, null, 4)}`)
     const { client, auth } = Config.powerApps.oauth
     const { id, secret } = client
     const oauthClient = new ClientCredentials({ client: { id, secret }, auth })
