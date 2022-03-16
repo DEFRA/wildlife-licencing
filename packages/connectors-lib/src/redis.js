@@ -1,7 +1,7 @@
 import { createClient } from 'redis'
 import Config from './config.js'
 import db from 'debug'
-const debug = db('connectors-lib:db')
+const debug = db('connectors-lib:redis')
 
 let client
 
