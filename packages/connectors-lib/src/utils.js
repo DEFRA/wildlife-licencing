@@ -10,7 +10,7 @@ const endProcess = err => {
 }
 
 const hide = (obj, path) =>
-  set(obj, path, s =>
-    s.substr(0, 2) + '*'.repeat(s.length - 4) + s.substr(s.length - 2, 2)(get(obj, path)))
+  set(obj, path, (s =>
+    s.substr(0, 2) + '*'.repeat(s.length - 4) + s.substr(s.length - 2, 2))(get(obj, path)))
 
 export { endProcess, hide }
