@@ -11,9 +11,15 @@ const endProcess = err => {
   process.exit(-1)
 }
 
-const hide = (obj, path) => has(obj, path)
+/**
+ * Minimum
+ * @param obj
+ * @param path
+ * @returns {*}
+ */
+const hide = (obj, path) => has(obj, path) && get(obj, path).length >= 5
   ? set(obj, path, (s =>
-      s.substr(0, 2) + '*'.repeat(s.length - 4) + s.substr(s.length - 2, 2))(get(obj, path)))
+      s.substr(0, 2) + '*'.repeat(2) + s.substr(s.length - 2, 2))(get(obj, path)))
   : obj
 
 export { endProcess, hide }
