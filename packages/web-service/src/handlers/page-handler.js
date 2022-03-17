@@ -1,18 +1,18 @@
 export default (_path, view, completion, getData) => ({
-  get: async (request, handler) => {
+  get: async (request, h) => {
     const data = {}
 
     const pageData = await getData(request)
 
     Object.assign(data, { data: pageData })
 
-    return handler.view(view, data)
+    return h.view(view, data)
   },
-  post: async (request, handler) => {
+  post: async (request, h) => {
     if (typeof completion === 'function') {
-      return handler.redirect(await completion(request))
+      return h.redirect(await completion(request))
     } else {
-      return handler.redirect(completion)
+      return h.redirect(completion)
     }
-  },
+  }
 })

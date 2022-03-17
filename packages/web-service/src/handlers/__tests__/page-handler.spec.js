@@ -1,17 +1,32 @@
 import pageHandler from '../page-handler.js'
 
 describe('the page handler function', () => {
-  it('the get method throws any exceptions', async () => {
+  it('the get handler invokes a given view with the page data', async () => {
+    const getData = () => ({ foo: 'bar' })
+    const mockView = jest.fn(() => 'view')
+    const h = { view: mockView }
     const request = {}
+    const view = { view: 'view ' }
+    const result = await pageHandler(null, view, null, getData).get(request, h)
+    expect(mockView).toHaveBeenLastCalledWith({ view: 'view ' }, { data: { foo: 'bar' } })
+    expect(result).toEqual('view')
+  })
 
-    const getData = async () => {
-      throw new Error('Random exception')
-    }
+  it('the post handler redirects to an explicit page', async () => {
+    const mockRedirect = jest.fn(() => 'page')
+    const h = { redirect: mockRedirect }
+    const request = {}
+    const result = await pageHandler(null, null, 'next-page', null).post(request, h)
+    expect(mockRedirect).toHaveBeenLastCalledWith('next-page')
+    expect(result).toEqual('page')
+  })
 
-    try {
-      await pageHandler(null, null, null, getData).get(request)
-    } catch (err) {
-      expect(err.message).toBe('Random exception')
-    }
+  it('the post handler redirects to the result of a page function', async () => {
+    const mockRedirect = jest.fn(() => 'page')
+    const h = { redirect: mockRedirect }
+    const request = {}
+    const result = await pageHandler(null, null, () => 'next-page', null).post(request, h)
+    expect(mockRedirect).toHaveBeenLastCalledWith('next-page')
+    expect(result).toEqual('page')
   })
 })
