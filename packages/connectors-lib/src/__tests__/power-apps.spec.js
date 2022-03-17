@@ -13,7 +13,7 @@ jest.mock('../config.js', () => ({
     },
     oauth: {
       client: {
-        id: 'id', secret: 'secret'
+        id: '928709827', secret: 'secret'
       }
     }
   }
@@ -34,34 +34,6 @@ describe('The powerapps connector', () => {
       }))
     }))
 
-    const { getToken } = await import('../power-apps.js')
-    const token = await getToken()
-    expect(token).toBe('Bearer 56GKJGKJHGS')
-  })
-
-  it('returns a token using the secrets manager', async () => {
-    jest.doMock('node-fetch')
-    jest.doMock('simple-oauth2', () => ({
-      __esModule: true,
-      ClientCredentials: jest.fn(() => ({
-        getToken: jest.fn(() => ({
-          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
-          expired: jest.fn()
-        }))
-      }))
-    }))
-    jest.doMock('../config.js', () => ({
-      powerApps: {
-        client: {
-          url: 'http://powerapps:8080/xyz'
-        },
-        oauth: {
-          client: {
-            id: null, secret: null
-          }
-        }
-      }
-    }))
     const { getToken } = await import('../power-apps.js')
     const token = await getToken()
     expect(token).toBe('Bearer 56GKJGKJHGS')
