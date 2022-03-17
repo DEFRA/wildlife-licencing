@@ -14,5 +14,5 @@ export default (_path, view, completion, getData) => ({
     } else {
       return handler.redirect(completion)
     }
-  },
+  }
 })
