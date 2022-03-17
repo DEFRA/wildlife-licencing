@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-connectors-lib",
-  "version": "2.1.6-alpha.0",
+  "version": "2.1.7-alpha.0",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "private": false,
@@ -30,8 +30,8 @@
     "debug": "^4.3.3",
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.3.2",
-    "lodash.set": "^4.3.2",
     "lodash.has": "^4.3.2",
+    "lodash.set": "^4.3.2",
     "node-fetch": "2.6.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
