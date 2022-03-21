@@ -9,6 +9,7 @@ import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
 import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
 import sessionManager from '../session-cache/session-manager.js'
+import cacheDecorator from '../session-cache/cache-decorator.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -79,6 +80,7 @@ const init = async server => {
 
   server.state(sessionCookieName, sessionCookieOptions)
   server.ext('onPreHandler', sessionManager(sessionCookieName))
+  server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
 
   // Serve static
   server.route({

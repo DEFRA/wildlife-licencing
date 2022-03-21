@@ -1,8 +1,8 @@
 import { createClient } from 'redis'
 import Config from './config.js'
 import db from 'debug'
-import { CACHE_EXPIRE_SECONDS } from '../../api/src/constants.js'
 const debug = db('connectors-lib:redis')
+export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 600
 
 let client
 
@@ -11,6 +11,7 @@ export const REDIS = {
   initialiseConnection: async () => {
     debug(`Redis host: ${Config.redis.host}`)
     debug(`Redis port: ${Config.redis.port}`)
+    debug(`Redis expire time (second): ${CACHE_EXPIRE_SECONDS}`)
     const options = {
       socket: {
         host: Config.redis.host,
