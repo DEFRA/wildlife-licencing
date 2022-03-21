@@ -41,7 +41,7 @@ describe('The putApplicationeEcologist handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     deleteApplicationEcologist = (await import('../ecologist.js')).deleteApplicationEcologist
-    cache = (await import('../../../../services/cache.js')).cache
+    cache = (await import('@defra/wls-connectors-lib')).REDIS.cache
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
     SEQUELIZE.getSequelize = jest.fn(() => ({
       query: jest.fn(() => ({})),

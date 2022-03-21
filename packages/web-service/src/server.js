@@ -69,7 +69,7 @@ const init = async server => {
     ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
     isSecure: process.env.NODE_ENV !== 'development',
     isHttpOnly: process.env.NODE_ENV !== 'development',
-    isSameSite: 'Lax', // Needed for the GOV pay redirect back into the service
+    isSameSite: 'Lax',
     encoding: 'iron',
     password: process.env.SESSION_COOKIE_PASSWORD,
     clearInvalid: true,
@@ -78,9 +78,9 @@ const init = async server => {
   }
 
   server.state(sessionCookieName, sessionCookieOptions)
-
   server.ext('onPreHandler', sessionManager(sessionCookieName))
 
+  // Serve static
   server.route({
     method: 'GET',
     path: '/public/{param*}',
@@ -90,6 +90,7 @@ const init = async server => {
       }
     }
   })
+
   /*
    * Set up shutdown handlers
    */

@@ -35,7 +35,6 @@
     "node-fetch": "2.6.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "redis": "^4.0.0",
     "sequelize": "^6.12.5",
     "simple-oauth2": "^4.2.0"
   },

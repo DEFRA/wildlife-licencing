@@ -1,24 +1,28 @@
-import { cache } from '../cache.js'
-
 const so = { foo: 'bar' }
 const mockSet = jest.fn().mockImplementation(() => {})
 const mockGet = jest.fn().mockImplementation(() => {})
 const mockDel = jest.fn().mockImplementation(() => {})
 const mockKeys = jest.fn().mockImplementation(() => [])
 
-jest.mock('@defra/wls-connectors-lib', () => ({
-  REDIS: {
-    getClient: () => ({
-      set: mockSet,
-      get: mockGet,
-      GETDEL: mockDel,
-      KEYS: mockKeys
-    })
-  }
-}))
-
 describe('Caching', () => {
   it('the save, restore, delete and keys cache functions are called correctly', async () => {
+    jest.doMock('redis', () => {
+      return {
+        createClient: () => ({
+          set: mockSet,
+          get: mockGet,
+          GETDEL: mockDel,
+          KEYS: mockKeys,
+          on: jest.fn(),
+          connect: jest.fn()
+        })
+      }
+    })
+
+    const { REDIS } = await import('../redis.js')
+    const { cache } = REDIS
+    await REDIS.initialiseConnection()
+
     await cache.save('key', so)
     await cache.restore('key')
     await cache.delete('key')
