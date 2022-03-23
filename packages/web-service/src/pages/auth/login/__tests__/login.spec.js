@@ -1,4 +1,4 @@
-import pageRoute from '../../../routes/page-route.js'
+import pageRoute from '../../../../routes/page-route.js'
 
 jest.mock('../../../routes/page-route.js')
 

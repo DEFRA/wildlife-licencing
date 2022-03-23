@@ -13,13 +13,14 @@ export default (_path, view, completion, getData, setData) => ({
 
     return h.view(view, pageData)
   },
+
   post: async (request, h) => {
     // Store page data in cache for automatic playback and clear any errors
     await request.cache().setPageData({ payload: request.payload })
 
     // Write data from page into the persistence
     if (setData) {
-      await setData(request.payload)
+      await setData(request)
     }
 
     // Redirect to the next page using the completion function
@@ -32,7 +33,12 @@ export default (_path, view, completion, getData, setData) => ({
 
   // On a validation error, set the errors and redirect back to teh GET handler
   error: async (request, h, err) => {
-    await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
-    return h.redirect(request.path).takeover()
+    try {
+      await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
+      return h.redirect(request.path).takeover()
+    } catch (err) {
+      console.error('Unexpected validation error', err)
+      return h.redirect('/').takeover()
+    }
   }
 })

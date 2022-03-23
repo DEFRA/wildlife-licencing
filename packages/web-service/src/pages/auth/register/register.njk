@@ -1,0 +1,34 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set title = 'Register a new user' %}
+
+{% set errorMap = {
+        'user-id': {
+            'string.empty': { ref: '#user-id', text: 'Enter your email address' },
+            'string.email': { ref: '#user-id', text: 'You did not enter a valid email address' },
+            'duplicate': { ref: '#user-id', text: 'The email address you entered is already registered' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: 'Email address'
+      },
+      hint: {
+          text: "The email address you will use to register with the service, for instance jon.doe@email.com"
+      },
+      id: "user-id",
+      name: "user-id",
+      type: "email",
+      autocomplete: "email",
+      spellcheck: false,
+      value: payload['user-id'],
+      classes: "govuk-input--width-20",
+      attributes: { maxlength: 30 },
+      errorMessage: { text: 'Enter your email address' } if error['user-id']
+    }) }}
+
+{% endblock %}

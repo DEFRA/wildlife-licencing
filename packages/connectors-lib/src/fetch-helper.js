@@ -16,27 +16,38 @@ export class HTTPResponseError extends Error {
   }
 }
 
-export const checkOkOrThrow = response => {
+export const checkOkOrThrow = async responsePromise => {
+  const response = await responsePromise
   if (response.ok) {
     return response
   }
   throw new HTTPResponseError(response)
 }
 
-export const checkOkJsonOrThrow = async response => {
+export const checkOkJsonOrThrow = async responsePromise => {
+  const response = await responsePromise
   if (response.ok) {
     return response.json()
   }
   throw new HTTPResponseError(response)
 }
 
-export const checkOkJsonOrNull = async response => {
+export const checkOkJsonOrNull = async responsePromise => {
+  const response = await responsePromise
   return (response.ok && response.json()) || null
 }
 
-export const httpFetch = async (urlBase, path, method, payload, headerFunc, responseFunc, timeOutSeconds) => {
-  const fetchURL = new URL(`${urlBase}/${path}`).href
-
+/**
+ * Make a general HTTP request using node-fetch. Deal with timeouts and exceptions
+ * @param url - The fully qualified endpoint of the exception
+ * @param method - GET POST PUT DELETE
+ * @param payload - The body of the request
+ * @param headerFunc - A function to return the set of headers
+ * @param responseFunc - A function to parse on the reponse
+ * @param timeOutMS - The Timeout in milliseconds
+ * @returns {Promise<*|*>}
+ */
+export const httpFetch = async (url, method, payload, headerFunc, responseFunc, timeOutMS) => {
   const headers = headerFunc && typeof headerFunc === 'function'
     ? await headerFunc()
     : { 'Content-Type': 'application/json', Accept: 'application/json' }
@@ -48,16 +59,16 @@ export const httpFetch = async (urlBase, path, method, payload, headerFunc, resp
     ...payload && { body: payload }
   }
 
-  debug(`Making HTTP request to ${fetchURL} with options: ${JSON.stringify(options)}`)
+  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)
 
   // Create a timeout
   const timeout = setTimeout(() => {
     abortController.abort()
-  }, parseInt(timeOutSeconds) || DEFAULT_TIMEOUT)
+  }, parseInt(timeOutMS) || DEFAULT_TIMEOUT)
 
   try {
     // Make the request
-    const response = fetch(fetchURL, options)
+    const response = fetch(url, options)
 
     // Run the supplied async response function
     if (responseFunc && typeof responseFunc === 'function') {

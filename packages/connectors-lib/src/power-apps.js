@@ -50,7 +50,8 @@ const batchHeaderFunction = async batchId => ({
   Prefer: 'return=representation'
 })
 
-const batchResponseFunction = async response => {
+const batchResponseFunction = async responsePromise => {
+  const response = await checkOkOrThrow(responsePromise)
   const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
   let result = ''
   for await (const chunk of response.body) {
@@ -63,9 +64,6 @@ const batchResponseFunction = async response => {
     console.error(`Batch request error: ${m}`)
   }
 
-  // Throw on not-ok
-  checkOkOrThrow(response)
-
   return result
 }
 
@@ -77,8 +75,7 @@ export const POWERAPPS = {
    * @returns {Promise<*|undefined>}
    */
   batchRequest: async (requestHandle, batchRequestBody) =>
-    httpFetch(Config.powerApps.client.url,
-      '$batch',
+    httpFetch(new URL(`${Config.powerApps.client.url}/$batch`).href,
       'POST',
       batchRequestBody,
       () => batchHeaderFunction(requestHandle.batchId),
@@ -91,8 +88,7 @@ export const POWERAPPS = {
    * @returns {Promise<void>}
    */
   fetch: async path =>
-    httpFetch(Config.powerApps.client.url,
-      path,
+    httpFetch(new URL(`${Config.powerApps.client.url}/${path}`).href,
       'GET',
       null,
       fetchHeaderFunction,

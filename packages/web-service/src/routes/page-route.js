@@ -10,7 +10,7 @@ export default (view, path, validator, completion, getData, setData, options) =>
   {
     method: 'POST',
     path: path,
-    handler: handler(path, view, completion, setData).post,
+    handler: handler(path, view, completion, null, setData).post,
     options: {
       ...options,
       validate: {

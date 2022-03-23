@@ -1,11 +1,10 @@
 import { v4 as uuidv4 } from 'uuid'
-import { APPLICATIONS } from '../src/uris.js'
+import { APPLICATIONS } from '../uris.js'
 
 const staticMatcherPublic = /^(?:\/public\/.*|\/robots.txt|\/favicon.ico)/
-const staticMatcherOidc = /^\/oidc\/.*/
 
 export const isStaticResource = request => staticMatcherPublic.test(request.path)
-export const useSessionCookie = request => !isStaticResource(request) && !staticMatcherOidc.test(request.path)
+export const useSessionCookie = request => !isStaticResource(request)
 
 export const includesRegex = (str, regexArray) => regexArray.some(regex => regex.test(str))
 

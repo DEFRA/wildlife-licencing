@@ -1153,10 +1153,7 @@ components:
         id:
           $ref: '#/components/schemas/uuid'
         username:
-          type: string
-          minLength: 1
-          maxLength: 20
-          pattern: ^[A-Za-z0-9\s]*$
+          $ref: '#/components/schemas/email'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

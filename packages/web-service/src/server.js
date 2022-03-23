@@ -8,9 +8,10 @@ import path from 'path'
 import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
 import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
-import sessionManager from '../session-cache/session-manager.js'
-import cacheDecorator from '../session-cache/cache-decorator.js'
-import embedded from './auth/schema.js'
+import sessionManager from './session-cache/session-manager.js'
+import cacheDecorator from './session-cache/cache-decorator.js'
+import scheme from './services/authorization.js'
+import { REGISTER } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -27,6 +28,19 @@ const createServer = async () => {
       }
     }
   })
+}
+
+const additionalPageData = (request, h) => {
+  const response = request.response
+  if (request.method === 'get' && response.variety === 'view') {
+    Object.assign(response.source.context, {
+      _uri: {
+        register: REGISTER.uri
+      },
+      credentials: request.auth.credentials
+    })
+  }
+  return h.continue
 }
 
 /**
@@ -85,9 +99,12 @@ const init = async server => {
   server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
 
   // Set authentication up
-  server.auth.scheme('embedded', embedded)
-  server.auth.strategy('default', 'embedded')
+  server.auth.scheme('session-cache', scheme)
+  server.auth.strategy('default', 'session-cache')
   server.auth.default('default')
+
+  // Add additional data used by all pages
+  server.ext('onPreResponse', additionalPageData)
 
   // Register the dynamic routes
   await server.route(routes)
@@ -100,6 +117,9 @@ const init = async server => {
       directory: {
         path: path.join(__dirname, 'public')
       }
+    },
+    options: {
+      auth: false
     }
   })
 

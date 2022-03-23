@@ -4,6 +4,9 @@ export default [
   {
     method: 'GET',
     path: '/',
-    handler: async (request, h) => h.redirect(APPLICATIONS.uri)
+    handler: async (request, h) => h.redirect(APPLICATIONS.uri),
+    options: {
+      auth: false
+    }
   }
 ]

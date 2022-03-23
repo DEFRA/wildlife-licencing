@@ -3,7 +3,7 @@ import { APPLICATIONS } from '../../uris.js'
 
 const getData = async request => {
   // const cache = await request.cache().get()
-  await request.cache().setPageData('jkhdgkjshgdf')
+  // await request.cache().setPageData()
   return []
 }
 
