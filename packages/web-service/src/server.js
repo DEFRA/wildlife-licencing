@@ -10,6 +10,7 @@ import routes from './routes/routes.js'
 import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
 import sessionManager from '../session-cache/session-manager.js'
 import cacheDecorator from '../session-cache/cache-decorator.js'
+import embedded from './auth/schema.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -35,9 +36,6 @@ const createServer = async () => {
  */
 const init = async server => {
   const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/pages')).map(f => path.dirname(f)))]
-  const commonViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/views')).map(f => path.dirname(f)))]
-
-  await server.route(routes)
 
   await server.register(HapiVision)
   await server.register(HapiInert)
@@ -60,7 +58,10 @@ const init = async server => {
 
     path: [
       path.join(__dirname, 'node_modules', 'govuk-frontend'),
-      ...commonViewPaths,
+      path.join(__dirname, 'node_modules', 'govuk-frontend', 'govuk'),
+      path.join(__dirname, 'node_modules', 'govuk-frontend', 'govuk', 'components'),
+      path.join(__dirname, 'src/pages/layout'),
+      path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths
     ]
   })
@@ -78,9 +79,18 @@ const init = async server => {
     path: '/'
   }
 
+  // Set up the session cookie
   server.state(sessionCookieName, sessionCookieOptions)
   server.ext('onPreHandler', sessionManager(sessionCookieName))
   server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
+
+  // Set authentication up
+  server.auth.scheme('embedded', embedded)
+  server.auth.strategy('default', 'embedded')
+  server.auth.default('default')
+
+  // Register the dynamic routes
+  await server.route(routes)
 
   // Serve static
   server.route({

@@ -25,6 +25,9 @@ coverage/
 *.crt
 *.key
 
+# Ignore public which is built by gulp
+packages/web-service/public/**/*
+
 # Docker Volumes
 docker/volumes/localstack/data/
 docker/volumes/redis/dump.rdb

@@ -1,18 +1,38 @@
+export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
+
 export default (_path, view, completion, getData, setData) => ({
   get: async (request, h) => {
-    const data = {}
-    const pageData = await getData(request)
-    Object.assign(data, { data: pageData })
-    return h.view(view, data)
+    // Page data is automatically handled payload and error data
+    const pageData = await request.cache().getPageData() || { payload: null }
+
+    // The gotData is data augmented by the handler
+    if (getData && typeof getData === 'function') {
+      const gotData = await getData(request)
+      Object.assign(pageData, { data: gotData })
+    }
+
+    return h.view(view, pageData)
   },
   post: async (request, h) => {
+    // Store page data in cache for automatic playback and clear any errors
+    await request.cache().setPageData({ payload: request.payload })
+
+    // Write data from page into the persistence
     if (setData) {
-      await setData(request)
+      await setData(request.payload)
     }
+
+    // Redirect to the next page using the completion function
     if (typeof completion === 'function') {
       return h.redirect(await completion(request))
     } else {
       return h.redirect(completion)
     }
+  },
+
+  // On a validation error, set the errors and redirect back to teh GET handler
+  error: async (request, h, err) => {
+    await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
+    return h.redirect(request.path).takeover()
   }
 })

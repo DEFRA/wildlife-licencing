@@ -3,12 +3,23 @@ import { APPLICATIONS } from '../../uris.js'
 
 const getData = async request => {
   // const cache = await request.cache().get()
-  await request.cache().set('jkhdgkjshgdf')
+  await request.cache().setPageData('jkhdgkjshgdf')
   return []
 }
 
 const setData = async request => {
-  await request.cache().set('ss')
+  await request.cache().setPageData('ss')
 }
 
-export default pageRoute(APPLICATIONS.page, APPLICATIONS.uri, null, '', getData, setData)
+export default pageRoute(
+  APPLICATIONS.page,
+  APPLICATIONS.uri,
+  null, '',
+  getData,
+  setData,
+  {
+    auth: {
+      mode: 'required'
+    }
+  }
+)
