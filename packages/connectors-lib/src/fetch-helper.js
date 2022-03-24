@@ -16,29 +16,37 @@ export class HTTPResponseError extends Error {
   }
 }
 
-export const checkOkOrThrow = async responsePromise => {
+/**
+ * General behaviour on response. Will throw exceptions on any failure except
+ * not found, and will de-serialize json responses, return null on no-content
+ * or return the stream in all other cases
+ * @param responsePromise
+ * @returns {Promise<null|*>}
+ */
+export const checkResponseOkElseThrow = async responsePromise => {
   const response = await responsePromise
   if (response.ok) {
-    return response
+    if (response.status === 204) {
+      return null
+    } else {
+      if (response.headers.get('content-type').includes('application/json')) {
+        return response.json()
+      } else {
+        return response.body
+      }
+    }
+  } else {
+    if (response.status === 404) {
+      return null
+    } else {
+      throw new HTTPResponseError(response)
+    }
   }
-  throw new HTTPResponseError(response)
-}
-
-export const checkOkJsonOrThrow = async responsePromise => {
-  const response = await responsePromise
-  if (response.ok) {
-    return response.json()
-  }
-  throw new HTTPResponseError(response)
-}
-
-export const checkOkJsonOrNull = async responsePromise => {
-  const response = await responsePromise
-  return (response.ok && response.json()) || null
 }
 
 /**
- * Make a general HTTP request using node-fetch. Deal with timeouts and exceptions
+ * Make a general HTTP request using node-fetch. Deal with timeouts and exceptions.
+ * Allows different behaviour for the Power Platform and API etc. with respect to responses
  * @param url - The fully qualified endpoint of the exception
  * @param method - GET POST PUT DELETE
  * @param payload - The body of the request
@@ -47,7 +55,7 @@ export const checkOkJsonOrNull = async responsePromise => {
  * @param timeOutMS - The Timeout in milliseconds
  * @returns {Promise<*|*>}
  */
-export const httpFetch = async (url, method, payload, headerFunc, responseFunc, timeOutMS) => {
+export const httpFetch = async (url, method, payload, headerFunc, responseFunc = checkResponseOkElseThrow, timeOutMS) => {
   const headers = headerFunc && typeof headerFunc === 'function'
     ? await headerFunc()
     : { 'Content-Type': 'application/json', Accept: 'application/json' }
@@ -68,17 +76,12 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc, 
 
   try {
     // Make the request
-    const response = fetch(url, options)
+    const responsePromise = fetch(url, options)
 
     // Run the supplied async response function
-    if (responseFunc && typeof responseFunc === 'function') {
-      const res = await responseFunc(response)
-      debug(`HTTP response: ${res}`)
-      return res
-    } else {
-      debug(`HTTP response: ${response}`)
-      return response
-    }
+    const result = await responseFunc(responsePromise)
+    debug(`HTTP response: ${result}`)
+    return result
   } catch (err) {
     if (err.name === 'AbortError') {
       // Create a client timeout response

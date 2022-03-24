@@ -3,7 +3,7 @@ export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c
 export default (_path, view, completion, getData, setData) => ({
   get: async (request, h) => {
     // Page data is automatically handled payload and error data
-    const pageData = await request.cache().getPageData() || { payload: null }
+    const pageData = await request.cache().getPageData() || {}
 
     // The gotData is data augmented by the handler
     if (getData && typeof getData === 'function') {

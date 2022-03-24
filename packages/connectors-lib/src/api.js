@@ -1,4 +1,4 @@
-import { HTTPResponseError, httpFetch, checkOkJsonOrNull, checkOkJsonOrThrow } from './fetch-helper.js'
+import { HTTPResponseError, httpFetch, checkResponseOkElseThrow } from './fetch-helper.js'
 import Config from './config.js'
 
 const apiUrl = (path, query) => {
@@ -18,16 +18,32 @@ export const API = {
       'GET',
       null,
       null,
-      checkOkJsonOrNull,
-      Config.powerApps.client.timeout),
+      checkResponseOkElseThrow,
+      Config.api.timeout),
 
   post: async (path, payload = {}) =>
     httpFetch(apiUrl(path),
       'POST',
       JSON.stringify(payload),
       null,
-      checkOkJsonOrThrow,
-      Config.powerApps.client.timeout),
+      checkResponseOkElseThrow,
+      Config.api.timeout),
+
+  put: async (path, payload = {}) =>
+    httpFetch(apiUrl(path),
+      'PUT',
+      JSON.stringify(payload),
+      null,
+      checkResponseOkElseThrow,
+      Config.api.timeout),
+
+  delete: async path =>
+    httpFetch(apiUrl(path),
+      'DELETE',
+      null,
+      null,
+      checkResponseOkElseThrow,
+      Config.api.timeout),
 
   HTTPResponseError
 }

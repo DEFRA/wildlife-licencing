@@ -1,7 +1,12 @@
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
 import { hide } from './utils.js'
-import { HTTPResponseError, httpFetch, checkOkOrThrow, checkOkJsonOrThrow } from './fetch-helper.js'
+import {
+  HTTPResponseError,
+  httpFetch,
+  checkResponseOkElseThrow
+} from './fetch-helper.js'
+
 import db from 'debug'
 import * as _cloneDeep from 'lodash.clonedeep'
 
@@ -51,10 +56,10 @@ const batchHeaderFunction = async batchId => ({
 })
 
 const batchResponseFunction = async responsePromise => {
-  const response = await checkOkOrThrow(responsePromise)
+  const response = await checkResponseOkElseThrow(responsePromise)
   const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
   let result = ''
-  for await (const chunk of response.body) {
+  for await (const chunk of response) {
     result += chunk.toString()
   }
 
@@ -65,6 +70,21 @@ const batchResponseFunction = async responsePromise => {
   }
 
   return result
+}
+
+/**
+ * Simplified response function - for fetches from power apps
+ * a status 200 with a JSON payload is always expected
+ * @param responsePromise
+ * @returns {Promise<*>}
+ */
+const fetchResponseFunction = async responsePromise => {
+  const response = await responsePromise
+  if (response.ok) {
+    return response.json()
+  } else {
+    throw new HTTPResponseError(response)
+  }
 }
 
 export const POWERAPPS = {
@@ -92,7 +112,7 @@ export const POWERAPPS = {
       'GET',
       null,
       fetchHeaderFunction,
-      checkOkJsonOrThrow,
+      fetchResponseFunction,
       Config.powerApps.client.timeout),
 
   getClientUrl: () => new URL(Config.powerApps.client.url).href,
