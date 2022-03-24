@@ -6,8 +6,6 @@ const staticMatcherPublic = /^(?:\/public\/.*|\/robots.txt|\/favicon.ico)/
 export const isStaticResource = request => staticMatcherPublic.test(request.path)
 export const useSessionCookie = request => !isStaticResource(request)
 
-export const includesRegex = (str, regexArray) => regexArray.some(regex => regex.test(str))
-
 const sessionManager = sessionCookieName => async (request, h) => {
   if (useSessionCookie(request)) {
     let initialized = false
