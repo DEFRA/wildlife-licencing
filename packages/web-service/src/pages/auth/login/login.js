@@ -28,7 +28,7 @@ export const validator = async payload => {
 }
 
 // If we have validated then we have an authenticated user and we can save the authorization object
-const setData = async request => {
+export const setData = async request => {
   const result = await APIRequests.USER.findUserByName(request.payload['user-id'].toLowerCase())
   await request.cache().setAuthData(result)
 }
