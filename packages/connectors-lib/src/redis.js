@@ -44,8 +44,6 @@ export const REDIS = {
       debug(`Redis DELETE: ${key}`)
       await client.GETDEL(key)
     },
-    keys: async str => {
-      return client.KEYS(str)
-    }
+    keys: async str => client.KEYS(str)
   }
 }

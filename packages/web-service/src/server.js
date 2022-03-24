@@ -43,6 +43,8 @@ const additionalPageData = (request, h) => {
   return h.continue
 }
 
+const GOVUK_FRONTEND = 'govuk-frontend'
+
 /**
  * Initialize the server. Exported for unit testing
  * @param server
@@ -71,9 +73,9 @@ const init = async server => {
     isCached: process.env.NODE_ENV !== 'development',
 
     path: [
-      path.join(__dirname, 'node_modules', 'govuk-frontend'),
-      path.join(__dirname, 'node_modules', 'govuk-frontend', 'govuk'),
-      path.join(__dirname, 'node_modules', 'govuk-frontend', 'govuk', 'components'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk', 'components'),
       path.join(__dirname, 'src/pages/layout'),
       path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths

@@ -8,7 +8,7 @@ const fetch = pkg.default
 const debug = db('connectors:fetch')
 const abortController = new global.AbortController()
 const DEFAULT_TIMEOUT = 20000
-
+const APPLICATION_JSON = 'application/json'
 export class HTTPResponseError extends Error {
   constructor (response) {
     super(`HTTP Error Response: ${response.status} ${response.statusText}`)
@@ -29,7 +29,7 @@ export const checkResponseOkElseThrow = async responsePromise => {
     if (response.status === 204) {
       return null
     } else {
-      if (response.headers.get('content-type').includes('application/json')) {
+      if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
         return response.json()
       } else {
         return response.body
@@ -55,10 +55,10 @@ export const checkResponseOkElseThrow = async responsePromise => {
  * @param timeOutMS - The Timeout in milliseconds
  * @returns {Promise<*|*>}
  */
-export const httpFetch = async (url, method, payload, headerFunc, responseFunc = checkResponseOkElseThrow, timeOutMS) => {
+export const httpFetch = async (url, method, payload, headerFunc, responseFunc = checkResponseOkElseThrow, timeOutMS = DEFAULT_TIMEOUT) => {
   const headers = headerFunc && typeof headerFunc === 'function'
     ? await headerFunc()
-    : { 'Content-Type': 'application/json', Accept: 'application/json' }
+    : { 'Content-Type': APPLICATION_JSON, Accept: APPLICATION_JSON }
 
   const options = {
     headers,
@@ -72,7 +72,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
   // Create a timeout
   const timeout = setTimeout(() => {
     abortController.abort()
-  }, parseInt(timeOutMS) || DEFAULT_TIMEOUT)
+  }, parseInt(timeOutMS))
 
   try {
     // Make the request

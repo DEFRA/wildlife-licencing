@@ -32,11 +32,11 @@ describe('login page', () => {
       await expect(async () => await validator({ 'user-id': 'a.b@email.com' })).rejects.toThrowError()
     })
 
-    it('completes successfully on an found email address', async () => {
+    it.only('completes successfully on an found email address', async () => {
       const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
       jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
       const { validator } = await import('../login.js')
-      await expect(async () => await validator({ 'user-id': 'a.b@email.com' })).resolves
+      await expect(async () => await validator({ 'user-id': 'a.b@email.com' })).not.toThrow()
     })
   })
 

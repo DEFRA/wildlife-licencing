@@ -72,6 +72,19 @@ describe('The API connector', () => {
     expect(mockFetch).toHaveBeenCalledWith('http://localhost:1000/path', expect.objectContaining({ method: 'POST' }))
   })
 
+  it('correctly performs a successful POST request with no payload', async () => {
+    const mockFetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ foo: 'bar' }),
+      headers: { get: () => 'application/json' }
+    }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const { API } = await import('../api.js')
+    const response = await API.post('path')
+    expect(response).toEqual({ foo: 'bar' })
+    expect(mockFetch).toHaveBeenCalledWith('http://localhost:1000/path', expect.objectContaining({ method: 'POST' }))
+  })
+
   it('correctly performs a successful PUT request', async () => {
     const mockFetch = jest.fn(() => Promise.resolve({
       ok: true,
@@ -81,6 +94,19 @@ describe('The API connector', () => {
     jest.doMock('node-fetch', () => ({ default: mockFetch }))
     const { API } = await import('../api.js')
     const response = await API.put('path', { foo: 'bar' })
+    expect(response).toEqual({ foo: 'bar' })
+    expect(mockFetch).toHaveBeenCalledWith('http://localhost:1000/path', expect.objectContaining({ method: 'PUT' }))
+  })
+
+  it('correctly performs a successful PUT request with no payload', async () => {
+    const mockFetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ foo: 'bar' }),
+      headers: { get: () => 'application/json' }
+    }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const { API } = await import('../api.js')
+    const response = await API.put('path')
     expect(response).toEqual({ foo: 'bar' })
     expect(mockFetch).toHaveBeenCalledWith('http://localhost:1000/path', expect.objectContaining({ method: 'PUT' }))
   })

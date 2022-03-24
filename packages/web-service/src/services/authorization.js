@@ -1,6 +1,6 @@
 import { LOGIN } from '../uris.js'
 
-export default (server, options) => ({
+export default (_server, _options) => ({
   authenticate: async (request, h) => {
     const authorization = await request.cache().getAuthData()
 

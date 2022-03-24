@@ -36,8 +36,8 @@ export default (_path, view, completion, getData, setData) => ({
     try {
       await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
       return h.redirect(request.path).takeover()
-    } catch (err) {
-      console.error('Unexpected validation error', err)
+    } catch (e) {
+      console.error('Unexpected validation error', e)
       return h.redirect('/').takeover()
     }
   }

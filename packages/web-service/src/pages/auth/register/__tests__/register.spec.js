@@ -33,7 +33,7 @@ describe('registration page', () => {
       const mockFindUser = jest.fn(() => null)
       jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
       const { validator } = await import('../register.js')
-      await expect(async () => await validator({ 'user-id': 'a.b@email.com' })).resolves
+      await expect(async () => await validator({ 'user-id': 'a.b@email.com' })).not.toThrow()
     })
   })
 
