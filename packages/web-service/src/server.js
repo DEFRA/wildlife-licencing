@@ -111,6 +111,15 @@ const init = async server => {
   // Register the dynamic routes
   await server.route(routes)
 
+  // Log any errors
+  server.ext('onPreResponse', (request, h) => {
+    if (!request.response.isBoom) {
+      return h.continue
+    }
+    console.error('Error processing request. Request: %j, Exception: %o', request, request.response)
+    return h.redirect('/')
+  })
+
   // Serve static
   server.route({
     method: 'GET',

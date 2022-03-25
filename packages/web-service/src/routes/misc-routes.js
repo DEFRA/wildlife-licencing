@@ -1,4 +1,5 @@
 import { APPLICATIONS } from '../uris.js'
+import createApplication from '../handlers/create-application.js'
 
 export default [
   {
@@ -8,5 +9,10 @@ export default [
     options: {
       auth: false
     }
+  },
+  {
+    method: 'GET',
+    path: '/application/create',
+    handler: createApplication
   }
 ]
