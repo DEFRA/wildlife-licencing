@@ -50,7 +50,8 @@ describe('The putSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     putSite = (await import('../put-site.js')).default
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
   })
 
   it('returns a 201 on successful create', async () => {

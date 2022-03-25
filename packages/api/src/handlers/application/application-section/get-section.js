@@ -1,6 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
-import { cache } from '../../../services/cache.js'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
 export const getSectionHandler = section => async (context, req, h) => {
   try {

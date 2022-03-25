@@ -1,6 +1,6 @@
 import { models } from '@defra/wls-database-model'
-import { cache } from '../services/cache.js'
-
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 /**
  * Convenience functions
  * @param context

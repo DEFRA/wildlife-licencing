@@ -37,11 +37,12 @@ describe('The reference data handlers', () => {
     }])
 
     const mockSave = jest.fn()
-
-    jest.doMock('../../../services/cache.js', () => ({
-      cache: {
-        restore: jest.fn(),
-        save: mockSave
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: jest.fn(),
+          save: mockSave
+        }
       }
     }))
 
@@ -65,9 +66,11 @@ describe('The reference data handlers', () => {
   it('returns application types from the cache', async () => {
     const mockRestore = jest.fn(() => JSON.stringify(resp))
 
-    jest.doMock('../../../services/cache.js', () => ({
-      cache: {
-        restore: mockRestore
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: mockRestore
+        }
       }
     }))
 

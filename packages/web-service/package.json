@@ -29,7 +29,8 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@hapi/catbox-redis": "^6.0.2",
+    "@defra/wls-connectors-lib": "^2.1.7-alpha.0",
+    "@hapi/boom": "^9.1.4",
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/lab": "^24.4.0",
@@ -40,22 +41,22 @@
     "find": "^0.3.0",
     "got": "^11.8.3",
     "govuk-frontend": "^3.14.0",
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-sass": "^5.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-uglify": "^3.0.2",
     "joi": "^17.5.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "node-fetch": "^2.6.0",
     "nunjucks": "^3.2.3",
     "path": "^0.12.7",
-    "sass": "^1.44.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify": "^3.1.0",
+    "gulp-sass": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
     "esm": "^3.2.25",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "sass": "^1.44.0"
   }
 }

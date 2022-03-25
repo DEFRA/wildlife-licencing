@@ -1,14 +1,17 @@
 import { ClientCredentials } from 'simple-oauth2'
 import Config from './config.js'
-import pkg from 'node-fetch'
 import { hide } from './utils.js'
+import {
+  HTTPResponseError,
+  httpFetch,
+  checkResponseOkElseThrow
+} from './fetch-helper.js'
+
 import db from 'debug'
 import * as _cloneDeep from 'lodash.clonedeep'
 
-const fetch = pkg.default
-const defaultTimeout = 20000
-const defaultFetchSize = 100
-const debug = db('connectors-lib:pp')
+const DEFAULT_FETCH_SIZE = 100
+const debug = db('connectors-lib:power-platform')
 const { default: cloneDeep } = _cloneDeep
 
 /*
@@ -36,144 +39,82 @@ export const getToken = async () => {
   }
 }
 
-/**
- * Set a server timeout event - default 20 seconds
- */
-const abortController = new global.AbortController()
-
-const getBatchOptions = async (batchId, batchRequestBody) => ({
-  headers: {
-    Authorization: await getToken(),
-    'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
-    'OData-MaxVersion': '4.0',
-    'OData-Version': '4.0',
-    Prefer: 'return=representation'
-  },
-  method: 'POST',
-  body: batchRequestBody,
-  signal: abortController.signal
+const fetchHeaderFunction = async () => ({
+  Authorization: await getToken(),
+  'Content-Type': 'application/json',
+  'OData-MaxVersion': '4.0',
+  'OData-Version': '4.0',
+  Prefer: `odata.maxpagesize=${Config.powerApps.client.fetchSize || DEFAULT_FETCH_SIZE}`
 })
 
-const getFetchOptions = async () => ({
-  headers: {
-    Authorization: await getToken(),
-    'Content-Type': 'application/json',
-    'OData-MaxVersion': '4.0',
-    'OData-Version': '4.0',
-    Prefer: `odata.maxpagesize=${Config.powerApps.client.fetchSize || defaultFetchSize}`
-  },
-  method: 'GET',
-  signal: abortController.signal
+const batchHeaderFunction = async batchId => ({
+  Authorization: await getToken(),
+  'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
+  'OData-MaxVersion': '4.0',
+  'OData-Version': '4.0',
+  Prefer: 'return=representation'
 })
 
-class HTTPResponseError extends Error {
-  constructor (response) {
-    super(`HTTP Error Response: ${response.status} ${response.statusText}`)
-    this.response = response
+const batchResponseFunction = async responsePromise => {
+  const response = await checkResponseOkElseThrow(responsePromise)
+  const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
+  let result = ''
+  for await (const chunk of response) {
+    result += chunk.toString()
   }
+
+  // Look for an extractable error message
+  const m = result.match(errorRegEx)
+  if (m) {
+    console.error(`Batch request error: ${m}`)
+  }
+
+  return result
 }
 
-const checkStatus = response => {
+/**
+ * Simplified response function - for fetches from power apps
+ * a status 200 with a JSON payload is always expected
+ * @param responsePromise
+ * @returns {Promise<*>}
+ */
+const fetchResponseFunction = async responsePromise => {
+  const response = await responsePromise
   if (response.ok) {
-    return response
+    return response.json()
   } else {
     throw new HTTPResponseError(response)
   }
 }
 
-const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
-
 export const POWERAPPS = {
   /**
-   * Batch operations against powerapps
-   * @param batchId - the batch Id (String)
-   * @param batchRequestBody - the batch request body (text)
-   * @returns text - the response in plain http/text
-   *
-   * It throws an 'Error' on general exceptions like network errors and operational errors
-   * or an HTTPResponseError where a request has return a non-success response i.e. the status code is not 200...299
+   * Batch operations to update the Power Platform
+   * @param requestHandle
+   * @param batchRequestBody
+   * @returns {Promise<*|undefined>}
    */
-  batchRequest: async (requestHandle, batchRequestBody) => {
-    const batchURL = new URL(`${Config.powerApps.client.url}/$batch`).href
+  batchRequest: async (requestHandle, batchRequestBody) =>
+    httpFetch(new URL(`${Config.powerApps.client.url}/$batch`).href,
+      'POST',
+      batchRequestBody,
+      () => batchHeaderFunction(requestHandle.batchId),
+      batchResponseFunction,
+      Config.powerApps.client.timeout),
 
-    // Set up options for fetch
-    const options = await getBatchOptions(requestHandle.batchId, batchRequestBody)
-
-    // Create a timeout
-    const timeout = setTimeout(() => {
-      abortController.abort()
-    }, parseInt(Config.powerApps.client.timeout) || defaultTimeout)
-
-    try {
-      // Make the request
-      const response = await fetch(batchURL, options)
-
-      // Ready the body text
-      let result = ''
-      for await (const chunk of response.body) {
-        result += chunk.toString()
-      }
-
-      // Look for an extractable error message
-      const m = result.match(errorRegEx)
-      if (m) {
-        console.error(`Batch request error: ${m}`)
-      }
-
-      // Throw on not-ok
-      checkStatus(response)
-
-      return result
-    } catch (err) {
-      // Note if upgrading to node-fetch version 3 this needs to change
-      if (err.name === 'AbortError') {
-        // Create a client timeout response
-        throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
-      } else {
-        throw err
-      }
-    } finally {
-      clearTimeout(timeout)
-    }
-  },
   /**
-   * Fetch JSON data (GET request) using the path and maxRows
+   * Get operations to retrieve data from Power Platform
+   * @param path
    * @returns {Promise<void>}
    */
-  fetch: async path => {
-    const fetchURL = new URL(`${Config.powerApps.client.url}/${path}`).href
+  fetch: async path =>
+    httpFetch(new URL(`${Config.powerApps.client.url}/${path}`).href,
+      'GET',
+      null,
+      fetchHeaderFunction,
+      fetchResponseFunction,
+      Config.powerApps.client.timeout),
 
-    // Set up options for fetch
-    const options = await getFetchOptions()
-
-    // Create a timeout
-    const timeout = setTimeout(() => {
-      abortController.abort()
-    }, parseInt(Config.powerApps.client.timeout) || defaultTimeout)
-
-    try {
-      // Make the request
-      const response = await fetch(fetchURL, options)
-
-      // Throw on not-ok
-      checkStatus(response)
-
-      // Ready the body json
-      return response.json()
-    } catch (err) {
-      if (err.name === 'AbortError') {
-        // Create a client timeout response
-        throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
-      } else {
-        throw err
-      }
-    } finally {
-      clearTimeout(timeout)
-    }
-  },
-  /**
-   * The client URL is used in the formation of the batch payload
-   */
   getClientUrl: () => new URL(Config.powerApps.client.url).href,
   /*
    * Export the HTTPResponseError to catch in the caller

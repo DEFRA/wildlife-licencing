@@ -42,7 +42,9 @@ const applicationJson = 'application/json'
 describe('The getApplicationByApplicationId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
+
     getApplicationSiteByApplicationSiteId = (await import('../get-application-site-by-application-site-id.js')).default
   })
 
