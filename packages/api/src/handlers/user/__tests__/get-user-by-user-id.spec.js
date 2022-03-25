@@ -37,7 +37,9 @@ const applicationJson = 'application/json'
 describe('The getUserByUserId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
+
     getUser = (await import('../get-user-by-user-id.js')).default
   })
 

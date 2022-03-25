@@ -8,7 +8,10 @@ import path from 'path'
 import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
 import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
-import sessionManager from '../session-cache/session-manager.js'
+import sessionManager from './session-cache/session-manager.js'
+import cacheDecorator from './session-cache/cache-decorator.js'
+import scheme from './services/authorization.js'
+import { REGISTER } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -27,6 +30,21 @@ const createServer = async () => {
   })
 }
 
+const additionalPageData = (request, h) => {
+  const response = request.response
+  if (request.method === 'get' && response.variety === 'view') {
+    Object.assign(response.source.context, {
+      _uri: {
+        register: REGISTER.uri
+      },
+      credentials: request.auth.credentials
+    })
+  }
+  return h.continue
+}
+
+const GOVUK_FRONTEND = 'govuk-frontend'
+
 /**
  * Initialize the server. Exported for unit testing
  * @param server
@@ -34,9 +52,6 @@ const createServer = async () => {
  */
 const init = async server => {
   const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/pages')).map(f => path.dirname(f)))]
-  const commonViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/views')).map(f => path.dirname(f)))]
-
-  await server.route(routes)
 
   await server.register(HapiVision)
   await server.register(HapiInert)
@@ -58,8 +73,11 @@ const init = async server => {
     isCached: process.env.NODE_ENV !== 'development',
 
     path: [
-      path.join(__dirname, 'node_modules', 'govuk-frontend'),
-      ...commonViewPaths,
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk', 'components'),
+      path.join(__dirname, 'src/pages/layout'),
+      path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths
     ]
   })
@@ -69,7 +87,7 @@ const init = async server => {
     ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
     isSecure: process.env.NODE_ENV !== 'development',
     isHttpOnly: process.env.NODE_ENV !== 'development',
-    isSameSite: 'Lax', // Needed for the GOV pay redirect back into the service
+    isSameSite: 'Lax',
     encoding: 'iron',
     password: process.env.SESSION_COOKIE_PASSWORD,
     clearInvalid: true,
@@ -77,10 +95,23 @@ const init = async server => {
     path: '/'
   }
 
+  // Set up the session cookie
   server.state(sessionCookieName, sessionCookieOptions)
-
   server.ext('onPreHandler', sessionManager(sessionCookieName))
+  server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
 
+  // Set authentication up
+  server.auth.scheme('session-cache', scheme)
+  server.auth.strategy('default', 'session-cache')
+  server.auth.default('default')
+
+  // Add additional data used by all pages
+  server.ext('onPreResponse', additionalPageData)
+
+  // Register the dynamic routes
+  await server.route(routes)
+
+  // Serve static
   server.route({
     method: 'GET',
     path: '/public/{param*}',
@@ -88,8 +119,12 @@ const init = async server => {
       directory: {
         path: path.join(__dirname, 'public')
       }
+    },
+    options: {
+      auth: false
     }
   })
+
   /*
    * Set up shutdown handlers
    */

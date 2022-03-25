@@ -1,0 +1,49 @@
+{% extends "template.njk" %}
+
+{% set assetPath = "/public" %}
+
+{% from "footer/macro.njk" import govukFooter %}
+{% from "header/macro.njk" import govukHeader %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{% block head %}
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="/public/stylesheets/main.css" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+{% endblock %}
+
+{% block header %}
+    {{ govukHeader({
+        assetsPath: assetPath + '/images',
+        homepageUrl: "https://www.gov.uk/",
+        serviceUrl: "/",
+        classes: "no-print",
+        containerClasses: "govuk-width-container",
+        serviceName: "Apply for a licence to do work that affects a protected species"
+        })
+    }}
+{% endblock %}
+
+{% block beforeContent %}
+{{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+{% endblock %}
+
+{% block bodyStart %}{% endblock %}
+
+{% block footer %}
+    {{ govukFooter({
+        classes: "no-print"
+    }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/public/javascript/all-min.js"></script>
+    <script nonce={{nonce}}>window.GOVUKFrontend.initAll()</script>
+{% endblock %}

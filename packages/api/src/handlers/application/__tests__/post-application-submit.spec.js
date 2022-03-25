@@ -39,7 +39,8 @@ describe('The postApplicationSubmit handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     postApplicationSubmit = (await import('../post-application-submit.js')).default
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
   })
 
   it('returns a 204 on a successful submission', async () => {

@@ -1,8 +1,8 @@
 import { models } from '@defra/wls-database-model'
-import { cache } from '../../../services/cache.js'
 import { APPLICATION_JSON } from '../../../constants.js'
-import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
 import { clearCaches } from '../application-cache.js'
+const { cache } = REDIS
 
 export const putSectionHandler = section => async (context, req, h) => {
   try {

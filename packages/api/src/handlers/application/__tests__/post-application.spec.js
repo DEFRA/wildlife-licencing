@@ -43,7 +43,8 @@ describe('The postApplication handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     postApplication = (await import('../post-application.js')).default
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
   })
 
   it('returns a 201 on successful create', async () => {

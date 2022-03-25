@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { cache } from '../../services/cache.js'
 import { clearCaches } from './application-cache.js'
 import { prepareResponse } from './application-proc.js'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {

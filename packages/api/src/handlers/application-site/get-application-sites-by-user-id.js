@@ -1,8 +1,9 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { cache } from '../../services/cache.js'
 import { prepareResponse } from './application-site-proc.js'
 import { checkCache, checkUser } from '../utils.js'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {

@@ -43,7 +43,7 @@ describe('The putApplicationEligibility handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     getApplicationEligibility = (await import('../eligibility.js')).getApplicationEligibility
-    cache = (await import('../../../../services/cache.js')).cache
+    cache = (await import('@defra/wls-connectors-lib')).REDIS.cache
   })
 
   it('returns status 200 on a successful get from cache', async () => {

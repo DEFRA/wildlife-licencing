@@ -35,11 +35,12 @@ describe('The option-set data handlers', () => {
     }])
 
     const mockSave = jest.fn()
-
-    jest.doMock('../../../services/cache.js', () => ({
-      cache: {
-        restore: jest.fn(),
-        save: mockSave
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: jest.fn(),
+          save: mockSave
+        }
       }
     }))
 
@@ -63,9 +64,11 @@ describe('The option-set data handlers', () => {
   it('returns option-sets from the cache', async () => {
     const mockRestore = jest.fn(() => JSON.stringify(resp))
 
-    jest.doMock('../../../services/cache.js', () => ({
-      cache: {
-        restore: mockRestore
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: mockRestore
+        }
       }
     }))
 

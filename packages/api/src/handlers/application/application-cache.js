@@ -1,4 +1,5 @@
-import { cache } from '../../services/cache.js'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
 /**
  * Clear all effected caches on write

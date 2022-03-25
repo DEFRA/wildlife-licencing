@@ -1,4 +1,9 @@
 export default {
+  api: {
+    host: process.env.API_HOST,
+    port: process.env.API_PORT,
+    timeout: process.env.REQUEST_TIMEOUT_MS
+  },
   aws: {
     region: process.env.AWS_REGION,
     s3: {

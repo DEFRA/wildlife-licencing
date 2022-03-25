@@ -1,6 +1,7 @@
-import { cache } from '../../services/cache.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '@defra/wls-database-model'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
 export const getOptionSets = async (context, req, h) => {
   const saved = await cache.restore(req.path)

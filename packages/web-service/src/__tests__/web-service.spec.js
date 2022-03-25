@@ -3,9 +3,12 @@ describe('The wrapper: web-service', () => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
+        const { REDIS } = require('@defra/wls-connectors-lib')
+        REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.resolve())
+
         require('../web-service')
         setImmediate(() => {
           expect(createServer).toHaveBeenCalled()
@@ -22,6 +25,8 @@ describe('The wrapper: web-service', () => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
+        const { REDIS } = require('@defra/wls-connectors-lib')
+        REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.reject(new Error()))

@@ -1,7 +1,6 @@
 import postResponseHandler from '../post-response-handler.js'
 
 jest.mock('@defra/wls-connectors-lib')
-jest.mock('../../services/cache.js')
 
 const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))

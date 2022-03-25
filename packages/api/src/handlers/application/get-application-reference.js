@@ -1,7 +1,8 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { cache } from '../../services/cache.js'
+import { REDIS } from '@defra/wls-connectors-lib'
 import { prepareResponse } from '../reference-data/reference-data.js'
+const { cache } = REDIS
 
 // Use the types cache
 const TYPES_CACHE = 'application/types'

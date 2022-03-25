@@ -43,7 +43,8 @@ describe('The getApplicationByUserId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     getApplication = (await import('../get-applications-by-user-id.js')).default
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
   })
 
   it('returns an array of applications and status 200 from the database', async () => {

@@ -42,7 +42,9 @@ const applicationJson = 'application/json'
 describe('The getSiteBySiteId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    cache = (await import('../../../services/cache.js')).cache
+    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    cache = REDIS.cache
+
     getSite = (await import('../get-site-by-site-id.js')).default
   })
 

@@ -1,0 +1,20 @@
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% macro errorSummary(error, errorMap, errorTitle) %}
+    {% if error %}
+
+        {% set errList = [] %}
+
+        <div class="hidden-area">
+            {% for field, type in error %}
+               {{ errList.push({ text: errorMap[field][type].text, href: errorMap[field][type].ref }) | reject() }}
+            {% endfor %}
+        </div>
+
+        {{ govukErrorSummary({
+            titleText: errorTitle,
+            errorList: errList
+        }) }}
+
+    {% endif %}
+{% endmacro %}
