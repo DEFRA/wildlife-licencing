@@ -2,7 +2,7 @@ import pageRoute from '../../routes/page-route.js'
 import { APPLICATIONS } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 
-const getData = async request => {
+export const getData = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
   const applications = await APIRequests.APPLICATION.findByUser(userId)

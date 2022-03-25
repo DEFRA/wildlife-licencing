@@ -110,7 +110,7 @@ describe('The API requests service', () => {
       expect(result).toEqual([{ foo: 'bar' }])
     })
 
-    it.only('findByUser rethrows an error', async () => {
+    it('findByUser rethrows an error', async () => {
       const mockGet = jest.fn(() => { throw new Error() })
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
