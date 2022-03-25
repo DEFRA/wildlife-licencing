@@ -43,7 +43,7 @@
 {% macro lastSavedHtml(application) %}
     <p class="govuk-body govuk-!-margin-bottom-2">
         Last saved:<br>
-        {{application.updatedAt}}
+        {{ application.lastSaved }}
     </p>
 {% endmacro -%}
 
@@ -57,7 +57,7 @@
     <div class="hidden-area">
         {{ tableRows.push([
             { html: applicationReferenceHtml(application) },
-            { html: '<p></p>' },
+            { html: '<p/>' },
             { html: lastSavedHtml(application) },
             { html: statusHtml(application) }])
          }}

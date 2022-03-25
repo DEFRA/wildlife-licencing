@@ -7,7 +7,7 @@ const models = {}
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(20), allowNull: false }
+    username: { type: DataTypes.STRING(50), allowNull: false }
   }, {
     timestamps: true,
     indexes: [

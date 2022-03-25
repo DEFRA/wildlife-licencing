@@ -1,5 +1,7 @@
 import { APPLICATIONS } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
+import path from 'path'
+import __dirname from '../../dirname.cjs'
 
 export default [
   {
@@ -14,5 +16,17 @@ export default [
     method: 'GET',
     path: '/application/create',
     handler: createApplication
+  },
+  {
+    method: 'GET',
+    path: '/public/{param*}',
+    handler: {
+      directory: {
+        path: path.join(__dirname, 'public')
+      }
+    },
+    options: {
+      auth: false
+    }
   }
 ]
