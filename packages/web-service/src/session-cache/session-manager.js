@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { APPLICATIONS } from '../uris.js'
+import db from 'debug'
+const debug = db('web-service:sessions')
 
 const staticMatcherPublic = /^(?:\/public\/.*|\/robots.txt|\/favicon.ico|\/health)/
 
@@ -12,7 +14,7 @@ const sessionManager = sessionCookieName => async (request, h) => {
 
     if (!request.state[sessionCookieName]) {
       const id = uuidv4()
-      console.debug(`New session cookie: ${id} create on ${request.path}`)
+      debug(`New session cookie: ${id} create on ${request.path}`)
       h.state(sessionCookieName, { id })
       request.state[sessionCookieName] = { id }
       initialized = true

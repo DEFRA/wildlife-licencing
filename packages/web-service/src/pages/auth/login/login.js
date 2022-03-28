@@ -3,6 +3,8 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { LOGIN, APPLICATIONS } from '../../../uris.js'
 import { authJoiObject } from '../auth.js'
+import db from 'debug'
+const debug = db('web-service:login')
 
 export const completion = async () => APPLICATIONS.uri
 
@@ -29,7 +31,9 @@ export const validator = async payload => {
 
 // If we have validated then we have an authenticated user and we can save the authorization object
 export const setData = async request => {
-  const result = await APIRequests.USER.findByName(request.payload['user-id'].toLowerCase())
+  const username = request.payload['user-id'].toLowerCase()
+  const result = await APIRequests.USER.findByName(username)
+  debug(`Logging in user: ${username}`)
   await request.cache().setAuthData(result)
   await request.cache().setData({ userId: result.id })
 }

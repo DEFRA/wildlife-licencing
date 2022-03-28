@@ -3,6 +3,8 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { REGISTER, LOGIN } from '../../../uris.js'
 import { authJoiObject } from '../auth.js'
+import db from 'debug'
+const debug = db('web-service:register')
 
 export const completion = async request => {
   // On a successful registration clear the auto-saved page data and
@@ -31,7 +33,11 @@ export const validator = async payload => {
 }
 
 // If we have validated then we have an authenticated user and we can save the authorization object
-export const setData = async request => APIRequests.USER.create(request.payload['user-id'].toLowerCase())
+export const setData = async request => {
+  const username = request.payload['user-id'].toLowerCase()
+  debug(`Registering new user: ${username}`)
+  await APIRequests.USER.create(username)
+}
 
 export default pageRoute(
   REGISTER.page,
