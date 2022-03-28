@@ -44,6 +44,25 @@ const additionalPageData = (request, h) => {
 }
 
 const GOVUK_FRONTEND = 'govuk-frontend'
+const sessionCookieOptions = {
+  ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
+  isSecure: process.env.NODE_ENV !== 'development',
+  isHttpOnly: process.env.NODE_ENV !== 'development',
+  isSameSite: 'Strict',
+  encoding: 'iron',
+  password: process.env.SESSION_COOKIE_PASSWORD,
+  clearInvalid: true,
+  strictHeader: true,
+  path: '/'
+}
+
+const errorHandler = (request, h) => {
+  if (!request.response.isBoom) {
+    return h.continue
+  }
+  console.error('Error processing request. Request: %j, Exception: %o', request, request.response)
+  return h.redirect('/')
+}
 
 /**
  * Initialize the server. Exported for unit testing
@@ -83,17 +102,6 @@ const init = async server => {
   })
 
   const sessionCookieName = getSessionCookieName()
-  const sessionCookieOptions = {
-    ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
-    isSecure: process.env.NODE_ENV !== 'development',
-    isHttpOnly: process.env.NODE_ENV !== 'development',
-    isSameSite: 'Lax',
-    encoding: 'iron',
-    password: process.env.SESSION_COOKIE_PASSWORD,
-    clearInvalid: true,
-    strictHeader: true,
-    path: '/'
-  }
 
   // Set up the session cookie
   server.state(sessionCookieName, sessionCookieOptions)
@@ -111,19 +119,8 @@ const init = async server => {
   // Register the dynamic routes
   await server.route(routes)
 
-  // Serve static
-  server.route({
-    method: 'GET',
-    path: '/public/{param*}',
-    handler: {
-      directory: {
-        path: path.join(__dirname, 'public')
-      }
-    },
-    options: {
-      auth: false
-    }
-  })
+  // Log any errors
+  server.ext('onPreResponse', errorHandler)
 
   /*
    * Set up shutdown handlers

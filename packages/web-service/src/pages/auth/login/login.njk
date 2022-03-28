@@ -18,7 +18,7 @@
         text: 'Email address'
       },
       hint: {
-        text: "The email address that you used to register with the service, for instance jon.doe@email.com"
+        text: "The email address that you used to register with the service, for instance nigel.molesworth@email.co.uk"
       },
       id: "user-id",
       name: "user-id",
@@ -27,9 +27,9 @@
       spellcheck: false,
       value: payload['user-id'],
       classes: "govuk-input--width-20",
-      attributes: { maxlength: 30 },
+      attributes: { maxlength: 50 },
       errorMessage: { text: 'Enter your email address' } if error['user-id']
     }) }}
 
-    <a href="{{ _uri.register }}" class="govuk-link">Register</a>
+    <a href="{{ _uri.register }}" class="govuk-link govuk-body-m">Register</a>
 {% endblock %}

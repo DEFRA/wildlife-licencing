@@ -15,7 +15,7 @@ export const completion = async request => {
 export const validator = async payload => {
   const userId = payload['user-id'].toLowerCase()
   Joi.assert({ 'user-id': userId }, authJoiObject)
-  const result = await APIRequests.USER.findUserByName(payload['user-id'])
+  const result = await APIRequests.USER.findByName(payload['user-id'])
   if (result) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Email address already exists',
@@ -31,7 +31,7 @@ export const validator = async payload => {
 }
 
 // If we have validated then we have an authenticated user and we can save the authorization object
-export const setData = async request => APIRequests.USER.addUser(request.payload['user-id'].toLowerCase())
+export const setData = async request => APIRequests.USER.create(request.payload['user-id'].toLowerCase())
 
 export default pageRoute(
   REGISTER.page,

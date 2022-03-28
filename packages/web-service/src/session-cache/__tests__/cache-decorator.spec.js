@@ -83,7 +83,7 @@ describe('The cache-decorator', () => {
     expect(result).toEqual({ foo: 'bar' })
     await response.clearPageData()
     expect(mockDelete).toHaveBeenLastCalledWith('af474441-9efa-4560-9c2a-663844ec59b6_/path')
-    await response.clearPageData('/another')
+    await response.clearPageData('another')
     expect(mockDelete).toHaveBeenLastCalledWith('af474441-9efa-4560-9c2a-663844ec59b6_/another')
   })
 

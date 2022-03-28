@@ -1,92 +1,81 @@
-{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% extends "information-page.njk" %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% extends "layout.njk" %}
-{% block content %}
+{% set title = 'View licence applications' %}
 
-  <div class='govuk-grid-row'>
-    <div class='govuk-grid-column-full'>
-      <h1 class='govuk-heading-xl'>
-      View license applications
-    </h1>
-      <p class='govuk-body'>
-        <a class='govuk-button' href='start'>
-        New application
-      </a>
-      </p>
-    </div>
+{% set html %}
+  <h3 class="govuk-notification-banner__heading">
+    Application saved
+  </h3>
+  <p class="govuk-body">Return to an existing application by selecting it from your list of licence applications.</p>
+{% endset %}
+
+{% block pageContent %}
+
+<div hidden class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukNotificationBanner({
+      html: html,
+      type: 'success'
+    }) }}
   </div>
+</div>
 
-  <div class='govuk-grid-row'>
-    <div class='govuk-grid-column-full'>
+{{ govukButton({
+  text: 'New application',
+  href: 'application/create'
+}) }}
 
-      <table class='govuk-table responsive'>
-        <thead class='govuk-table__head'>
-          <tr class='govuk-table__row'>
-            <th scope='col' class='govuk-table__header app-custom-class'>Application</th>
-            <th scope='col' class='govuk-table__header app-custom-class'>Site</th>
-            <th scope='col' class='govuk-table__header app-custom-class'></th>
-            <th scope='col' class='govuk-table__header app-custom-class'></th>
-          </tr>
-        </thead>
+{% macro applicationReferenceHtml(application) %}
+    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
+        <a href="tasklist?application={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+    </p>
+    <p class="govuk-body govuk-!-margin-bottom-2">
+    <!-- <span class="visually-hidden-desktop">Reference:<br></span> -->
+    {{ application.applicationReferenceNumber}}
+    </p>
+    <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">0 of N sections completed</p>
+{% endmacro -%}
 
-        <tbody class='govuk-table__body'>
+{% macro lastSavedHtml(application) %}
+    <p class="govuk-body govuk-!-margin-bottom-2">
+        Last saved:<br>
+        {{ application.lastSaved }}
+    </p>
+{% endmacro -%}
 
-          {% for application in data.applications %}
+{% macro statusHtml(application) %}
+    <strong class="govuk-tag govuk-!-margin-bottom-4">In progress</strong>
+{% endmacro -%}
 
-            <tr class='govuk-table__row'>
+{% set tableRows = [] %}
 
-              <th scope='row' class='govuk-table__header'>
+{% for application in data.applications %}
+    <div hidden>
+        {{ tableRows.push([
+            { html: applicationReferenceHtml(application) },
+            { html: '<p>&nbsp<p/>' },
+            { html: lastSavedHtml(application) },
+            { html: statusHtml(application) }])
+         }}
+     </div>
+{% endfor %}
 
-                <p class='govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2'>
-                  <a href='tasklist?application=2021-73955-EPS-MIT' class='govuk-link govuk-link--no-visited-state'>
-                    {{application.proposalDescription}}
-                  </a>
-                </p>
-                <p class='govuk-body govuk-!-margin-bottom-2'>
-                  {{application.id}}
-                </p>
-
-                <p class='govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4'>
-              3 of 8 sections completed
-            </p>
-
-              </th>
-
-              <td class='govuk-table__cell'>
-
-                <p class='govuk-body govuk-!-margin-bottom-2'>
-                  <span class='visually-hidden-desktop'>Site:<br/></span>
-              12 Parkland Avenue
-            </p>
-
-              </td>
-
-              <td class='govuk-table__cell'>
-
-                <p class='govuk-body govuk-!-margin-bottom-2'>
-              Last saved:<br/>
-              7 November 2021
-            </p>
-
-              </td>
-
-              <td class='govuk-table__cell'>
-
-                {{ govukTag({
-              text: "In Progress"
-            }) }}
-
-              </td>
-
-            </tr>
-
-          {% endfor %}
-
-        </tbody>
-
-      </table>
-
-    </div>
-  </div>
+{{ govukTable({
+  captionClasses: "govuk-table__caption--m",
+  firstCellIsHeader: true,
+  head: [
+    {
+      text: "Application"
+    },
+    {
+      text: "Site",
+      colspan: 3
+    }
+  ],
+  rows: tableRows
+}) }}
 
 {% endblock %}

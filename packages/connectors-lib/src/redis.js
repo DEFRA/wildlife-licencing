@@ -2,7 +2,7 @@ import { createClient } from 'redis'
 import Config from './config.js'
 import db from 'debug'
 const debug = db('connectors-lib:redis')
-export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 600
+export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 3600
 
 let client
 

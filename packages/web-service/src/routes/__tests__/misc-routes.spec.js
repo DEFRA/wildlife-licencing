@@ -10,4 +10,10 @@ describe('The miscellaneous route handlers', () => {
     await route.handler(null, h)
     expect(mockRedirect).toHaveBeenCalledWith('/applications')
   })
+  it('The health route returns a status of 200', async () => {
+    const route = misc.find(r => r.method === 'GET' && r.path === '/health')
+    const mockCode = jest.fn()
+    await route.handler(null, { response: () => ({ code: mockCode }) })
+    expect(mockCode).toHaveBeenCalledWith(200)
+  })
 })

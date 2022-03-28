@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { APPLICATIONS } from '../uris.js'
 
-const staticMatcherPublic = /^(?:\/public\/.*|\/robots.txt|\/favicon.ico)/
+const staticMatcherPublic = /^(?:\/public\/.*|\/robots.txt|\/favicon.ico|\/health)/
 
 export const isStaticResource = request => staticMatcherPublic.test(request.path)
 export const useSessionCookie = request => !isStaticResource(request)

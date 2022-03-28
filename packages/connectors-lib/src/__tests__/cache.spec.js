@@ -28,10 +28,10 @@ describe('Caching', () => {
     await cache.delete('key')
     await cache.keys('str')
     expect(mockSet).toHaveBeenCalledWith('key', JSON.stringify(so), {
-      EX: 600
+      EX: 3600
     })
     expect(mockGet).toHaveBeenCalledWith('key', {
-      EX: 600
+      EX: 3600
     })
     expect(mockDel).toHaveBeenCalledWith('key')
     expect(mockKeys).toHaveBeenCalledWith('str')
