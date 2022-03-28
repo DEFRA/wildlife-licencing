@@ -6,16 +6,15 @@ import __dirname from '../../dirname.cjs'
 export default [
   {
     method: 'GET',
-    path: '/',
-    handler: async (_request, h) => h.redirect(APPLICATIONS.uri),
-    options: {
-      auth: false
-    }
+    path: '/health',
+    handler: async (_request, h) => h.response('healthy!').code(200),
+    options: { auth: false }
   },
   {
     method: 'GET',
-    path: '/application/create',
-    handler: createApplication
+    path: '/',
+    handler: async (_request, h) => h.redirect(APPLICATIONS.uri),
+    options: { auth: false }
   },
   {
     method: 'GET',
@@ -25,8 +24,11 @@ export default [
         path: path.join(__dirname, 'public')
       }
     },
-    options: {
-      auth: false
-    }
+    options: { auth: false }
+  },
+  {
+    method: 'GET',
+    path: '/application/create',
+    handler: createApplication
   }
 ]
