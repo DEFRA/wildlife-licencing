@@ -9,7 +9,7 @@ export const completion = async () => APPLICATIONS.uri
 export const validator = async payload => {
   const userId = payload['user-id'].toLowerCase()
   Joi.assert({ 'user-id': userId }, authJoiObject)
-  const result = await APIRequests.USER.findUserByName(payload['user-id'])
+  const result = await APIRequests.USER.findByName(payload['user-id'])
 
   // The API will have cached the result so it is cheap to get this again in the completion handler where
   // we can easily rewrite to the cache
@@ -29,8 +29,9 @@ export const validator = async payload => {
 
 // If we have validated then we have an authenticated user and we can save the authorization object
 export const setData = async request => {
-  const result = await APIRequests.USER.findUserByName(request.payload['user-id'].toLowerCase())
+  const result = await APIRequests.USER.findByName(request.payload['user-id'].toLowerCase())
   await request.cache().setAuthData(result)
+  await request.cache().setData({ userId: result.id })
 }
 
 export default pageRoute(

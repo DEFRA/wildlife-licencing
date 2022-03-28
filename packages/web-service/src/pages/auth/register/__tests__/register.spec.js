@@ -4,7 +4,7 @@ describe('registration page', () => {
   describe('the setData', () => {
     it('submits the user to the API', async () => {
       const mockAddUser = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { addUser: mockAddUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { create: mockAddUser } } }))
       const { setData } = await import('../register.js')
       await setData({ payload: { 'user-id': 'a.b@email.com' } })
       expect(mockAddUser).toHaveBeenCalledWith('a.b@email.com')
@@ -24,14 +24,14 @@ describe('registration page', () => {
 
     it('throws an exception on a found email address', async () => {
       const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { validator } = await import('../register.js')
       await expect(validator({ 'user-id': 'a.b@email.com' })).rejects.toThrowError()
     })
 
     it('completes successfully on a not-found email address', async () => {
       const mockFindUser = jest.fn(() => null)
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { validator } = await import('../register.js')
       await expect(validator({ 'user-id': 'a.b@email.com' })).resolves
     })

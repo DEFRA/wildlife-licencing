@@ -9,7 +9,7 @@ export default sessionCookieName => function () { // Preservers this pointer
     return this.state[sessionCookieName].id
   }
 
-  const otherPageKey = opk => `${getId()}_${opk}`
+  const otherPageKey = opk => `${getId()}_/${opk}`
   const pageKey = `${getId()}_${this.path}`
   const authKey = `${getId()}_auth`
   const dataKey = `${getId()}_data`

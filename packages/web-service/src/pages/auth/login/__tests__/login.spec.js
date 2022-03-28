@@ -3,13 +3,11 @@ describe('login page', () => {
 
   describe('the setData', () => {
     it('submits the user to the authorization cache', async () => {
-      // const mockAddUser = jest.fn()
-      // jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { addUser: mockAddUser } } }))
       const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
       const mockSetAuthData = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { setData } = await import('../login.js')
-      await setData({ cache: () => ({ setAuthData: mockSetAuthData }), payload: { 'user-id': 'a.b@email.com' } })
+      await setData({ cache: () => ({ setAuthData: mockSetAuthData, setData: jest.fn() }), payload: { 'user-id': 'a.b@email.com' } })
       expect(mockSetAuthData).toHaveBeenCalledWith({ username: 'flintstone' })
     })
   })
@@ -27,14 +25,14 @@ describe('login page', () => {
 
     it('throws an exception on an not-found email address', async () => {
       const mockFindUser = jest.fn(() => null)
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { validator } = await import('../login.js')
       await expect(validator({ 'user-id': 'a.b@email.com' })).rejects.toThrowError()
     })
 
     it('completes successfully on an found email address', async () => {
       const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findUserByName: mockFindUser } } }))
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { validator } = await import('../login.js')
       await expect(validator({ 'user-id': 'a.b@email.com' })).resolves
     })

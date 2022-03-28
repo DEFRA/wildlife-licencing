@@ -18,7 +18,7 @@
         text: 'Email address'
       },
       hint: {
-          text: "The email address you will use to register with the service, for instance jon.doe@email.com"
+          text: "The email address you will use to register with the service, for instance nigel.molesworth@email.co.uk"
       },
       id: "user-id",
       name: "user-id",
@@ -27,7 +27,7 @@
       spellcheck: false,
       value: payload['user-id'],
       classes: "govuk-input--width-20",
-      attributes: { maxlength: 30 },
+      attributes: { maxlength: 50 },
       errorMessage: { text: 'Enter your email address' } if error['user-id']
     }) }}
 
