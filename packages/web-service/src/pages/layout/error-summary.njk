@@ -5,7 +5,7 @@
 
         {% set errList = [] %}
 
-        <div class="hidden-area">
+        <div hidden>
             {% for field, type in error %}
                {{ errList.push({ text: errorMap[field][type].text, href: errorMap[field][type].ref }) }}
             {% endfor %}

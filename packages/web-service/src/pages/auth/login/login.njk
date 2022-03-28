@@ -18,7 +18,7 @@
         text: 'Email address'
       },
       hint: {
-        text: "The email address that you used to register with the service, for instance nigel.molesworthe@email.co.uk"
+        text: "The email address that you used to register with the service, for instance nigel.molesworth@email.co.uk"
       },
       id: "user-id",
       name: "user-id",
@@ -31,5 +31,5 @@
       errorMessage: { text: 'Enter your email address' } if error['user-id']
     }) }}
 
-    <a href="{{ _uri.register }}" class="govuk-link">Register</a>
+    <a href="{{ _uri.register }}" class="govuk-link govuk-body-m">Register</a>
 {% endblock %}

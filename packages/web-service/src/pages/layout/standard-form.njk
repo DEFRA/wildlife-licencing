@@ -15,8 +15,8 @@
         <form method="post" novalidate>
             {% call govukFieldset({
               legend: {
-                text: title,
-                classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-3",
+                html: '<h1 class="govuk-heading-xl">' + title + '</h1>',
+                classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-0",
                 isPageHeading: true
               }
             }) %}

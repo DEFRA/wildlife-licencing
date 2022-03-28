@@ -6,7 +6,6 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
   const applications = await APIRequests.APPLICATION.findByUser(userId)
-  console.log(JSON.stringify(applications))
   Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())
   return {
     applications: applications

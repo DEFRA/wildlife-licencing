@@ -14,7 +14,7 @@
 
 {% block pageContent %}
 
-<div class="govuk-grid-row">
+<div hidden class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     {{ govukNotificationBanner({
       html: html,
@@ -22,7 +22,6 @@
     }) }}
   </div>
 </div>
-
 
 {{ govukButton({
   text: 'New application',
@@ -54,10 +53,10 @@
 {% set tableRows = [] %}
 
 {% for application in data.applications %}
-    <div class="hidden-area">
+    <div hidden>
         {{ tableRows.push([
             { html: applicationReferenceHtml(application) },
-            { html: '<p/>' },
+            { html: '<p>&nbsp<p/>' },
             { html: lastSavedHtml(application) },
             { html: statusHtml(application) }])
          }}
@@ -65,7 +64,6 @@
 {% endfor %}
 
 {{ govukTable({
-  caption: "Dates and amounts",
   captionClasses: "govuk-table__caption--m",
   firstCellIsHeader: true,
   head: [
