@@ -1,4 +1,4 @@
-import { eligibility } from '../../../uris.js'
+import { eligibilityURIs } from '../../../uris.js'
 import {
   eligibilityHelper, eligibilityCompletion, landOwnerSetData,
   landOwnerPermissionSetData, consentSetData, consentGrantedSetData,
@@ -7,7 +7,7 @@ import {
 const {
   LANDOWNER, LANDOWNER_PERMISSION, CONSENT, CONSENT_GRANTED,
   NOT_ELIGIBLE_LANDOWNER, NOT_ELIGIBLE_PROJECT, ELIGIBILITY_CHECK, ELIGIBLE
-} = eligibility
+} = eligibilityURIs
 
 describe('the eligibility pages', () => {
   it('the eligibilityHelper - operates on the eligibility section of the journey cache - without eligibility section', async () => {

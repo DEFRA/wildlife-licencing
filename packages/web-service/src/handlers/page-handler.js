@@ -1,6 +1,5 @@
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
-// view, path, checkData, getData, validator, completion, setData, options
-export default (view, path, checkData, getData, validator, completion, setData) => ({
+export default (view, checkData, getData, completion, setData) => ({
   get: async (request, h) => {
     // If checkData exists call it and if returning truthy, return
     if (checkData && typeof checkData === 'function') {

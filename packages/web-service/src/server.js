@@ -11,7 +11,7 @@ import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants
 import sessionManager from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
-import { REGISTER, eligibility } from './uris.js'
+import { REGISTER, eligibilityURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -36,10 +36,10 @@ const additionalPageData = (request, h) => {
     Object.assign(response.source.context, {
       _uri: {
         register: REGISTER.uri,
-        landowner: eligibility.LANDOWNER.uri,
-        landownerPermission: eligibility.LANDOWNER_PERMISSION.uri,
-        consent: eligibility.CONSENT.uri,
-        consentGranted: eligibility.CONSENT_GRANTED.uri
+        landowner: eligibilityURIs.LANDOWNER.uri,
+        landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
+        consent: eligibilityURIs.CONSENT.uri,
+        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri
       },
       credentials: request.auth.credentials
     })

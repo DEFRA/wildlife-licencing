@@ -3,13 +3,13 @@
  */
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
-import { eligibility } from '../../uris.js'
+import { eligibilityURIs } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 // The pages in the flow
 const {
   LANDOWNER, LANDOWNER_PERMISSION, CONSENT, CONSENT_GRANTED,
   NOT_ELIGIBLE_LANDOWNER, NOT_ELIGIBLE_PROJECT, ELIGIBILITY_CHECK, ELIGIBLE
-} = eligibility
+} = eligibilityURIs
 
 const IS_OWNER_OF_LAND = 'isOwnerOfLand'
 const HAS_LANDOWNER_PERMISSION = 'hasLandOwnerPermission'
@@ -28,26 +28,30 @@ export const eligibilityHelper = async (request, operator) => {
 export const eligibilityCompletion = async request => {
   const journeyData = await request.cache().getData() || { eligibility: {} }
   const { eligibility } = journeyData
-  const consentCompletionSection = eligibility => {
-    if (eligibility[PERMISSION_REQUIRED] === undefined) {
-      return CONSENT.uri
-    } else if (!eligibility[PERMISSION_REQUIRED]) {
-      return ELIGIBILITY_CHECK.uri
+  const grantedCompletionSection = e => {
+    if (e[PERMISSION_GRANTED] === undefined) {
+      return CONSENT_GRANTED.uri
+    } else if (!e[PERMISSION_GRANTED]) {
+      return NOT_ELIGIBLE_PROJECT.uri
     } else {
-      if (eligibility[PERMISSION_GRANTED] === undefined) {
-        return CONSENT_GRANTED.uri
-      } else if (!eligibility[PERMISSION_GRANTED]) {
-        return NOT_ELIGIBLE_PROJECT.uri
-      } else {
-        return ELIGIBILITY_CHECK.uri
-      }
+      return ELIGIBILITY_CHECK.uri
     }
   }
 
-  const permissionsCompletionSection = eligibility => {
-    if (eligibility[HAS_LANDOWNER_PERMISSION] === undefined) {
+  const consentCompletionSection = e => {
+    if (e[PERMISSION_REQUIRED] === undefined) {
+      return CONSENT.uri
+    } else if (!e[PERMISSION_REQUIRED]) {
+      return ELIGIBILITY_CHECK.uri
+    } else {
+      return grantedCompletionSection(e)
+    }
+  }
+
+  const permissionsCompletionSection = e => {
+    if (e[HAS_LANDOWNER_PERMISSION] === undefined) {
       return LANDOWNER_PERMISSION.uri
-    } else if (!eligibility[HAS_LANDOWNER_PERMISSION]) {
+    } else if (!e[HAS_LANDOWNER_PERMISSION]) {
       return NOT_ELIGIBLE_LANDOWNER.uri
     } else {
       return consentCompletionSection(eligibility)
@@ -57,7 +61,7 @@ export const eligibilityCompletion = async request => {
   // Must be set
   if (eligibility[IS_OWNER_OF_LAND] === undefined) {
     return LANDOWNER.uri
-  } if (eligibility[IS_OWNER_OF_LAND]) {
+  } else if (eligibility[IS_OWNER_OF_LAND]) {
     // Owner
     return consentCompletionSection(eligibility)
   } else {

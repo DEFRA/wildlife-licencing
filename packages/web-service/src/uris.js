@@ -2,7 +2,7 @@ export const HEALTH = { uri: '/health', page: 'health' }
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const LOGIN = { uri: '/login', page: 'login' }
 export const REGISTER = { uri: '/register', page: 'register' }
-export const eligibility = {
+export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },
   LANDOWNER_PERMISSION: { uri: '/landowner-permission', page: 'landowner-permission' },
   CONSENT: { uri: '/consent', page: 'consent' },
