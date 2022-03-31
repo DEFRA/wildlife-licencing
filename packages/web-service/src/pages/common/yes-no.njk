@@ -18,7 +18,7 @@
         text: radioHint
       } if radioHint,
       errorMessage: {
-        text: noneSelectedButton
+        text: noneSelectedButton if noneSelectedButton else noneSelected
       } if error['yes-no'] === 'any.required',
       items: [
         {

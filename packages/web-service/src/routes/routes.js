@@ -3,8 +3,8 @@ import login from '../pages/auth/login/login.js'
 import register from '../pages/auth/register/register.js'
 import miscRoutes from './misc-routes.js'
 import {
-  consent, consentGranted, landOwner, landOwnerPermission,
-  notEligibleLandowner, notEligibleProject
+  consent, consentGranted, eligibilityCheck, eligible, landOwner,
+  landOwnerPermission, notEligibleLandowner, notEligibleProject
 } from '../pages/eligibility/eligibility.js'
 
 const routes = [
@@ -17,6 +17,8 @@ const routes = [
   ...consentGranted,
   ...notEligibleLandowner,
   ...notEligibleProject,
+  ...eligibilityCheck,
+  ...eligible,
   ...miscRoutes
 ]
 
