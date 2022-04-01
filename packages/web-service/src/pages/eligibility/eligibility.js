@@ -3,7 +3,7 @@
  */
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
-import { eligibilityURIs } from '../../uris.js'
+import { eligibilityURIs, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 // The pages in the flow
 const {
@@ -18,7 +18,8 @@ const PERMISSION_GRANTED = 'permissionsGranted'
 
 // Helper to operate on the eligibility section of the journey cache
 export const eligibilityHelper = async (request, operator) => {
-  const journeyData = await request.cache().getData() || { eligibility: {} }
+  const journeyData = await request.cache().getData() || {}
+  journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
   operator(request, eligibility)
   await request.cache().setData(journeyData)
@@ -26,7 +27,8 @@ export const eligibilityHelper = async (request, operator) => {
 
 // A state machine to determine the next page
 export const eligibilityCompletion = async request => {
-  const journeyData = await request.cache().getData() || { eligibility: {} }
+  const journeyData = await request.cache().getData() || {}
+  journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
   const grantedCompletionSection = e => {
     if (e[PERMISSION_GRANTED] === undefined) {
@@ -168,5 +170,5 @@ export const eligibleCheckData = async (request, h) => {
 }
 
 export const eligible = pageRoute(ELIGIBLE.page, ELIGIBLE.uri, eligibleCheckData,
-  null, null, null, null, { auth: false }
+  null, null, TASKLIST.uri, null, { auth: false }
 )
