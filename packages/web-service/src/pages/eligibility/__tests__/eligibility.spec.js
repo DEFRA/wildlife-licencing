@@ -16,7 +16,8 @@ describe('the eligibility pages', () => {
     const request = {
       cache: () => ({
         getData: mockGetData,
-        setData: mockSetData
+        setData: mockSetData,
+        clearPageData: jest.fn()
       })
     }
     const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
@@ -30,7 +31,8 @@ describe('the eligibility pages', () => {
     const request = {
       cache: () => ({
         getData: mockGetData,
-        setData: mockSetData
+        setData: mockSetData,
+        clearPageData: jest.fn()
       })
     }
     const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
@@ -89,26 +91,32 @@ describe('the eligibility pages', () => {
   describe('the landOwnerSetData function', () => {
     it('if \'yes\' sets isOwnerOfLand and removes hasLandOwnerPermission', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await landOwnerSetData(request)
+      expect(mockClearPageData).not.toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
     })
     it('if \'no\' unsets isOwnerOfLand', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await landOwnerSetData(request)
+      expect(mockClearPageData).toHaveBeenCalledWith(LANDOWNER_PERMISSION.page)
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })
     })
   })
@@ -143,26 +151,32 @@ describe('the eligibility pages', () => {
   describe('the consentSetData function', () => {
     it('if \'yes\' sets permissionsRequired', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => null),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await consentSetData(request)
+      expect(mockClearPageData).toHaveBeenCalledWith(CONSENT_GRANTED.page)
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: true } })
     })
     it('if \'no\' unsets permissionsRequired and removes permissionsGranted', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { permissionsGranted: true } })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await consentSetData(request)
+      expect(mockClearPageData).not.toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: false } })
     })
   })

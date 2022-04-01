@@ -76,12 +76,14 @@ export const eligibilityCompletion = async request => {
  * Are you the landowner?
  **************************************************************/
 export const landOwnerSetData = request =>
-  eligibilityHelper(request, (r, e) => {
+  eligibilityHelper(request, async (r, e) => {
     if (isYes(r)) {
       Object.assign(e, { [IS_OWNER_OF_LAND]: true })
       delete e[HAS_LANDOWNER_PERMISSION]
     } else {
       Object.assign(e, { [IS_OWNER_OF_LAND]: false })
+      // Clear the next page
+      await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
     }
   })
 
@@ -92,7 +94,8 @@ export const landOwner = yesNoPage(LANDOWNER, null, eligibilityCompletion,
  * Do you have the landowners permission?
  **************************************************************/
 export const landOwnerPermissionSetData = request =>
-  eligibilityHelper(request, (r, e) => Object.assign(e, { [HAS_LANDOWNER_PERMISSION]: isYes(r) }))
+  eligibilityHelper(request, (r, e) =>
+    Object.assign(e, { [HAS_LANDOWNER_PERMISSION]: isYes(r) }))
 
 export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, eligibilityCompletion,
   landOwnerPermissionSetData, { auth: false })
@@ -101,9 +104,10 @@ export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, eligibi
  * Does the work require consents?
  **************************************************************/
 export const consentSetData = request =>
-  eligibilityHelper(request, (r, e) => {
+  eligibilityHelper(request, async (r, e) => {
     if (isYes(r)) {
       Object.assign(e, { [PERMISSION_REQUIRED]: true })
+      await request.cache().clearPageData(CONSENT_GRANTED.page)
     } else {
       Object.assign(e, { [PERMISSION_REQUIRED]: false })
       delete e[PERMISSION_GRANTED]

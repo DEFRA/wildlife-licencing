@@ -11,7 +11,10 @@
                 {{ rows.push({
                     key: { text: questionMap[item.key].question },
                     value: { text: questionMap[item.key].answer[item.value] },
-                    actions: { items: [ { href: questionMap[item.key].href, text: "Change", visuallyHiddenText: questionMap[item.key].question } ]} })
+                    actions: { items: [ { href: questionMap[item.key].href,
+                                          text: "Change",
+                                          classes: 'govuk-link govuk-link--no-visited-state',
+                                          visuallyHiddenText: questionMap[item.key].question } ]} })
                 }}
             {% endfor %}
         </div>
