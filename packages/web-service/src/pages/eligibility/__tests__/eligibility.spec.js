@@ -19,7 +19,7 @@ describe('the eligibility pages', () => {
         setData: mockSetData
       })
     }
-    const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
+    const operation = e => Object.assign(e, { isOwnerOfLand: true })
     await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
   })
@@ -33,7 +33,7 @@ describe('the eligibility pages', () => {
         setData: mockSetData
       })
     }
-    const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
+    const operation = e => Object.assign(e, { isOwnerOfLand: true })
     await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })
   })
