@@ -1,2 +1,11 @@
 {% extends "information-page.njk" %}
-{% set title = '' %}
+{% import "tasklist-text.njk" as text %}
+{% set title = text.titleText['A24 Badger'] %}
+
+{% block pageContent %}
+<span>
+  {{ text.titleText['A24 Badger'] }}
+</span>
+{% endblock %}
+
+
