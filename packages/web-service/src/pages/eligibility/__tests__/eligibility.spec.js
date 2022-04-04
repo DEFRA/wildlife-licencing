@@ -1,6 +1,6 @@
 import { eligibilityURIs } from '../../../uris.js'
 import {
-  eligibilityHelper, eligibilityCompletion, landOwnerSetData,
+  updateEligibilityCache, eligibilityCompletion, landOwnerSetData,
   landOwnerPermissionSetData, consentSetData, consentGrantedSetData,
   checkYourAnswersGetData, checkAnswersCompletion, eligibleCheckData
 } from '../eligibility.js'
@@ -10,7 +10,7 @@ const {
 } = eligibilityURIs
 
 describe('the eligibility pages', () => {
-  it('the eligibilityHelper - operates on the eligibility section of the journey cache - without eligibility section', async () => {
+  it('the updateEligibilityCache - operates on the eligibility section of the journey cache - without eligibility section', async () => {
     const mockGetData = jest.fn()
     const mockSetData = jest.fn()
     const request = {
@@ -20,11 +20,11 @@ describe('the eligibility pages', () => {
       })
     }
     const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
-    await eligibilityHelper(request, operation)
+    await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
   })
 
-  it('the eligibilityHelper - operates on the eligibility section of the journey cache - with eligibility section', async () => {
+  it('the updateEligibilityCache - operates on the eligibility section of the journey cache - with eligibility section', async () => {
     const mockGetData = jest.fn(() => ({ eligibility: { hasLandOwnerPermission: true } }))
     const mockSetData = jest.fn()
     const request = {
@@ -34,7 +34,7 @@ describe('the eligibility pages', () => {
       })
     }
     const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
-    await eligibilityHelper(request, operation)
+    await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })
   })
 
