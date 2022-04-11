@@ -7,16 +7,25 @@ describe('the page handler function', () => {
     const h = { view: mockView }
     const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
     const view = { view: 'view' }
-    const result = await pageHandler(null, view, null, getData).get(request, h)
+    const result = await pageHandler(view, null, getData).get(request, h)
     expect(mockView).toHaveBeenLastCalledWith({ view: 'view' }, { data: { foo: 'bar' } })
     expect(result).toEqual('view')
+  })
+
+  it('the get handler calls the specified checkData function', async () => {
+    const checkData = jest.fn(() => ({ foo: 'bar' }))
+    const request = {}
+    const h = {}
+    const result = await pageHandler(null, checkData).get(request, h)
+    expect(result).toEqual({ foo: 'bar' })
+    expect(checkData).toHaveBeenCalledWith(request, h)
   })
 
   it('the post handler redirects to an explicit page', async () => {
     const mockRedirect = jest.fn(() => 'page')
     const h = { redirect: mockRedirect }
     const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
-    const result = await pageHandler(null, null, 'next-page', null).post(request, h)
+    const result = await pageHandler(null, null, null, 'next-page').post(request, h)
     expect(mockRedirect).toHaveBeenLastCalledWith('next-page')
     expect(result).toEqual('page')
   })
@@ -25,7 +34,7 @@ describe('the page handler function', () => {
     const mockSetData = jest.fn()
     const h = { redirect: jest.fn() }
     const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
-    await pageHandler(null, null, 'next-page', null, mockSetData).post(request, h)
+    await pageHandler(null, null, null, 'next-page', mockSetData).post(request, h)
     expect(mockSetData).toHaveBeenCalled()
   })
 
@@ -33,7 +42,7 @@ describe('the page handler function', () => {
     const mockRedirect = jest.fn(() => 'page')
     const h = { redirect: mockRedirect }
     const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
-    const result = await pageHandler(null, null, () => 'next-page', null).post(request, h)
+    const result = await pageHandler(null, null, null, () => 'next-page').post(request, h)
     expect(mockRedirect).toHaveBeenLastCalledWith('next-page')
     expect(result).toEqual('page')
   })
@@ -55,7 +64,7 @@ describe('the page handler function', () => {
     const request = { path: '/page', payload: { foo: 'bar' }, cache: () => ({ setPageData: mockSetPageData }) }
     const mockRedirect = jest.fn(() => ({ takeover: jest.fn() }))
     const h = { redirect: mockRedirect }
-    await pageHandler(null, null, () => 'next-page', null).error(request, h, err)
+    await pageHandler().error(request, h, err)
     expect(mockSetPageData).toHaveBeenCalledWith({ error: { 'user-id': 'unauthorized' }, payload: { foo: 'bar' } })
     expect(mockRedirect).toHaveBeenCalledWith('/page')
   })
@@ -66,7 +75,7 @@ describe('the page handler function', () => {
     const request = { path: '/page', payload: { foo: 'bar' }, cache: () => ({ setPageData: mockSetPageData }) }
     const mockRedirect = jest.fn(() => ({ takeover: jest.fn() }))
     const h = { redirect: mockRedirect }
-    await pageHandler(null, null, () => 'next-page', null).error(request, h, err)
+    await pageHandler().error(request, h, err)
     expect(mockRedirect).toHaveBeenCalledWith('/')
   })
 })

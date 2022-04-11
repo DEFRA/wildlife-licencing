@@ -1,7 +1,14 @@
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
-
-export default (_path, view, completion, getData, setData) => ({
+export default (view, checkData, getData, completion, setData) => ({
   get: async (request, h) => {
+    // If checkData exists call it and if returning truthy, return
+    if (checkData && typeof checkData === 'function') {
+      const check = await checkData(request, h)
+      if (check) {
+        return check
+      }
+    }
+
     // Page data is automatically handled payload and error data
     const pageData = await request.cache().getPageData() || {}
 

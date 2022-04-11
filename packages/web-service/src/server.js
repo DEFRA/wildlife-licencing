@@ -11,7 +11,7 @@ import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants
 import sessionManager from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
-import { REGISTER } from './uris.js'
+import { REGISTER, eligibilityURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -35,7 +35,11 @@ const additionalPageData = (request, h) => {
   if (request.method === 'get' && response.variety === 'view') {
     Object.assign(response.source.context, {
       _uri: {
-        register: REGISTER.uri
+        register: REGISTER.uri,
+        landowner: eligibilityURIs.LANDOWNER.uri,
+        landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
+        consent: eligibilityURIs.CONSENT.uri,
+        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri
       },
       credentials: request.auth.credentials
     })
@@ -56,12 +60,17 @@ const sessionCookieOptions = {
   path: '/'
 }
 
+/**
+ * Need to add the 400 and 500 error pages, for now log it
+ * @param request
+ * @param h
+ * @returns {string|((key?: IDBValidKey) => void)|*}
+ */
 const errorHandler = (request, h) => {
-  if (!request.response.isBoom) {
-    return h.continue
+  if (request.response.isBoom) {
+    console.error('Error processing request. Request: %j, Exception: %o', request, request.response)
   }
-  console.error('Error processing request. Request: %j, Exception: %o', request, request.response)
-  return h.redirect('/')
+  return h.continue
 }
 
 /**

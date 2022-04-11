@@ -4,6 +4,7 @@
 
 {% from "footer/macro.njk" import govukFooter %}
 {% from "header/macro.njk" import govukHeader %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
@@ -27,12 +28,18 @@
 {% endblock %}
 
 {% block beforeContent %}
-{{ govukPhaseBanner({
-  tag: {
-    text: "alpha"
-  },
-  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-}) }}
+    {{ govukPhaseBanner({
+      tag: {
+        text: "alpha"
+      },
+      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    }) }}
+    <div id="backlink-div" hidden>
+        {{ govukBackLink({
+          text: "Back",
+          href: "javascript: window.history.go(-1)"
+        }) }}
+    </div>
 {% endblock %}
 
 {% block bodyStart %}{% endblock %}
@@ -46,4 +53,9 @@
 {% block bodyEnd %}
     <script src="/public/javascript/all-min.js"></script>
     <script nonce={{nonce}}>window.GOVUKFrontend.initAll()</script>
+    <script nonce={{nonce}}>(function () {
+        const backLinkDiv = document.getElementById('backlink-div')
+        backLinkDiv.removeAttribute('hidden')
+    })()
+    </script>
 {% endblock %}

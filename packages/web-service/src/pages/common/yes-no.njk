@@ -1,0 +1,36 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: noneSelected }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      hint: {
+        text: radioHint
+      } if radioHint,
+      errorMessage: {
+        text: noneSelectedButton if noneSelectedButton else noneSelected
+      } if error['yes-no'] === 'any.required',
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: payload['yes-no'] === 'yes'
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

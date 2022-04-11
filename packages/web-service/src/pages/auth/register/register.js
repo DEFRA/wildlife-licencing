@@ -39,13 +39,5 @@ export const setData = async request => {
   await APIRequests.USER.create(username)
 }
 
-export default pageRoute(
-  REGISTER.page,
-  REGISTER.uri,
-  validator,
-  completion,
-  null,
-  setData,
-  {
-    auth: false
-  })
+export default pageRoute(REGISTER.page, REGISTER.uri, null, null,
+  validator, completion, setData, { auth: false })
