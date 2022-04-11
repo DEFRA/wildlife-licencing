@@ -1,6 +1,7 @@
 import { eligibilityURIs } from './uris.js'
 const { LANDOWNER_PERMISSION } = eligibilityURIs
 
+export const A24 = 'A24 Badger'
 export const ELIGIBILITY_CHECK = 'eligibility-check'
 export const LICENCE_HOLDER = 'licence-holder'
 export const ECOLOGIST = 'ecologist'
@@ -13,7 +14,7 @@ export const SEND_APPLICATION = 'send-application'
 const search = (required, completed) => required.every(t => completed.find(c => c === t))
 
 export const licenceTypeMap = {
-  'A24 badger': {
+  [A24]: {
     sections: [
       {
         name: 'check-before-you-start',
@@ -21,7 +22,7 @@ export const licenceTypeMap = {
           {
             name: ELIGIBILITY_CHECK,
             uri: LANDOWNER_PERMISSION,
-            enabled: signedIn => !signedIn
+            enabled: (signedIn, _completed) => !signedIn
           }
         ]
       },
