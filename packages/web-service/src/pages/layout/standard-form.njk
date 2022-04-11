@@ -5,7 +5,7 @@
 {% from "error-summary.njk" import errorSummary %}
 {% from "back-link/macro.njk" import govukBackLink %}
 
-{% block pageTitle %}{{ title }}{% endblock %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -15,8 +15,8 @@
         <form method="post" novalidate>
             {% call govukFieldset({
               legend: {
-                html: '<h1 class="govuk-heading-xl">' + title + '</h1>',
-                classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-0",
+                text: title,
+                classes: "govuk-fieldset__legend--xl",
                 isPageHeading: true
               }
             }) %}
@@ -28,8 +28,8 @@
             {{ govukButton({
                 attributes: { id: 'continue' },
                 preventDoubleClick: true,
-                name: "continue",
-                text: 'Continue',
+                name: 'continue',
+                text: buttonText if buttonText else 'Continue',
                 classes: "govuk-!-margin-top-5"
             }) }}
         </form>

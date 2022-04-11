@@ -38,13 +38,5 @@ export const setData = async request => {
   await request.cache().setData({ userId: result.id })
 }
 
-export default pageRoute(
-  LOGIN.page,
-  LOGIN.uri,
-  validator,
-  completion,
-  null,
-  setData,
-  {
-    auth: false
-  })
+export default pageRoute(LOGIN.page, LOGIN.uri, null, null,
+  validator, completion, setData, { auth: false })

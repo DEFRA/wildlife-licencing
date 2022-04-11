@@ -1,0 +1,20 @@
+{% from "summary-list/macro.njk" import govukSummaryList %}
+
+# checkData is an array of data [key, value]
+# Where key and value are the internal representation of the question and answers
+# questionMap maps that data to external representation { ...{ key: { question: string , answer: { a: 'show this', ... }, href } } }
+{% macro answerSummary(questionMap, checkData) %}
+    {% if checkData.length > 0 and questionMap %}
+        {% set rows = [] %}
+        <div hidden>
+            {% for item in checkData %}
+                {{ rows.push({
+                    key: { text: questionMap[item.key].question },
+                    value: { text: questionMap[item.key].answer[item.value] },
+                    actions: { items: [ { href: questionMap[item.key].href, text: "Change", visuallyHiddenText: questionMap[item.key].question } ]} })
+                }}
+            {% endfor %}
+        </div>
+        {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
+    {% endif %}
+{% endmacro %}

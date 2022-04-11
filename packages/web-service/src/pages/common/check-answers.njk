@@ -1,0 +1,16 @@
+{% extends "information-page.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Check your answers' %}
+{% from "answer-summary.njk" import answerSummary %}
+
+{% block pageContent %}
+    {{ answerSummary(questionMap, checkData) }}
+    {{ govukButton({
+        attributes: { id: 'continue' },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Confirm',
+        classes: "govuk-!-margin-top-5"
+    }) }}
+{% endblock %}

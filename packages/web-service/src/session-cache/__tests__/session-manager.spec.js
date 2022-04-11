@@ -17,9 +17,8 @@ describe('The session-manager', () => {
       continue: 'continue'
     }
     const result = await sessionManager(request, h)
-    expect(result).toBe('takeover')
+    expect(result).toBe('continue')
     expect(mockState).toHaveBeenCalledWith('sid', { id: expect.any(String) })
-    expect(mockRedirect).toHaveBeenCalledWith('/applications')
   })
 
   it('Reset expiry on the session-cookie and continue if session-cookie exists', async () => {

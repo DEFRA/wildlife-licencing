@@ -1,0 +1,11 @@
+{% extends "check-answers.njk" %}
+
+{% set questionMap = {
+    isOwnerOfLand: { question: 'Does the applicant own the land?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.landowner },
+    hasLandOwnerPermission:  { question: "Does the applicant have the landowner's permission to apply?", answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.landownerPermission },
+    permissionsRequired:  { question: 'Does the project need any permissions?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.consent },
+    permissionsGranted:  { question: 'Has the project got all permissions for work to start?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.consentGranted }
+} %}
+
+{% set checkData = data %}
+

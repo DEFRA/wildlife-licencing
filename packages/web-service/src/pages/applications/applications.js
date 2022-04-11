@@ -17,10 +17,4 @@ export const getData = async request => {
   }
 }
 
-export default pageRoute(
-  APPLICATIONS.page,
-  APPLICATIONS.uri,
-  null,
-  null,
-  getData
-)
+export default pageRoute(APPLICATIONS.page, APPLICATIONS.uri, null, getData)
