@@ -1,9 +1,30 @@
 {% extends "information-page.njk" %}
 {% import "tasklist-text.njk" as text %}
+{% from "govuk-tasklist.njk" import govukTaskList %}
 {% set title = text.titleText['A24 Badger'] %}
 
 {% block pageContent %}
 <span>
-  {{ text.titleText['A24 Badger'] }}
+  {{ govukTaskList({ sections: [
+    {
+        name:  'First section',
+        tasks: [
+            { name: 'First task', href: 'blah', status: 'Completed', colour: 'blue' },
+            { name: 'Second task', href: 'blah', status: 'No started'  },
+            { name: 'Third task', href: 'blah', status: 'Completed', colour: 'grey'  }
+        ]
+    },
+    {
+        name:  'Second section',
+        tasks: [
+            { name: 'Fifth task', href: 'blah', status: 'Completed' },
+            { name: 'Sixth task', href: 'blah', status: 'No started'  },
+            { name: 'Seventh task', href: 'blah', status: 'Completed'  }
+        ]
+    },
+    {
+        name:  'Third section'
+    }
+  ] }) }}
 </span>
 {% endblock %}
