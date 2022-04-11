@@ -1,6 +1,6 @@
 import { eligibilityURIs } from '../../../uris.js'
 import {
-  eligibilityHelper, eligibilityCompletion, landOwnerSetData,
+  updateEligibilityCache, eligibilityCompletion, landOwnerSetData,
   landOwnerPermissionSetData, consentSetData, consentGrantedSetData,
   checkYourAnswersGetData, checkAnswersCompletion, eligibleCheckData
 } from '../eligibility.js'
@@ -10,33 +10,31 @@ const {
 } = eligibilityURIs
 
 describe('the eligibility pages', () => {
-  it('the eligibilityHelper - operates on the eligibility section of the journey cache - without eligibility section', async () => {
+  it('the updateEligibilityCache - operates on the eligibility section of the journey cache - without eligibility section', async () => {
     const mockGetData = jest.fn()
     const mockSetData = jest.fn()
     const request = {
       cache: () => ({
         getData: mockGetData,
-        setData: mockSetData,
-        clearPageData: jest.fn()
+        setData: mockSetData
       })
     }
-    const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
-    await eligibilityHelper(request, operation)
+    const operation = e => Object.assign(e, { isOwnerOfLand: true })
+    await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
   })
 
-  it('the eligibilityHelper - operates on the eligibility section of the journey cache - with eligibility section', async () => {
+  it('the updateEligibilityCache - operates on the eligibility section of the journey cache - with eligibility section', async () => {
     const mockGetData = jest.fn(() => ({ eligibility: { hasLandOwnerPermission: true } }))
     const mockSetData = jest.fn()
     const request = {
       cache: () => ({
         getData: mockGetData,
-        setData: mockSetData,
-        clearPageData: jest.fn()
+        setData: mockSetData
       })
     }
-    const operation = (r, e) => Object.assign(e, { isOwnerOfLand: true })
-    await eligibilityHelper(request, operation)
+    const operation = e => Object.assign(e, { isOwnerOfLand: true })
+    await updateEligibilityCache(request, operation)
     expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })
   })
 
@@ -91,32 +89,26 @@ describe('the eligibility pages', () => {
   describe('the landOwnerSetData function', () => {
     it('if \'yes\' sets isOwnerOfLand and removes hasLandOwnerPermission', async () => {
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })),
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
       await landOwnerSetData(request)
-      expect(mockClearPageData).not.toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
     })
     it('if \'no\' unsets isOwnerOfLand', async () => {
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })),
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
       await landOwnerSetData(request)
-      expect(mockClearPageData).toHaveBeenCalledWith(LANDOWNER_PERMISSION.page)
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })
     })
   })
@@ -151,32 +143,26 @@ describe('the eligibility pages', () => {
   describe('the consentSetData function', () => {
     it('if \'yes\' sets permissionsRequired', async () => {
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => null),
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
       await consentSetData(request)
-      expect(mockClearPageData).toHaveBeenCalledWith(CONSENT_GRANTED.page)
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: true } })
     })
     it('if \'no\' unsets permissionsRequired and removes permissionsGranted', async () => {
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { permissionsGranted: true } })),
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
       await consentSetData(request)
-      expect(mockClearPageData).not.toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: false } })
     })
   })

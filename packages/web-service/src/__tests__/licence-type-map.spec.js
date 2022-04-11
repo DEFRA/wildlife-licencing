@@ -9,7 +9,7 @@ import {
 
 describe('The licence type map', () => {
   describe('for the A24 Badger licence', () => {
-    const a24 = licenceTypeMap['A24 badger']
+    const a24 = licenceTypeMap['A24 Badger']
     it('the eligibility check', () => {
       const startCheck = a24.sections.find(m => m.name === 'check-before-you-start')
       const eligibilityCheck = startCheck.tasks.find(t => t.name === ELIGIBILITY_CHECK)

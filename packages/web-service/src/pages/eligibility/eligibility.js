@@ -4,6 +4,7 @@
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST } from '../../uris.js'
+
 import pageRoute from '../../routes/page-route.js'
 // The pages in the flow
 const {
@@ -17,11 +18,11 @@ const PERMISSION_REQUIRED = 'permissionsRequired'
 const PERMISSION_GRANTED = 'permissionsGranted'
 
 // Helper to operate on the eligibility section of the journey cache
-export const eligibilityHelper = async (request, operator) => {
+export const updateEligibilityCache = async (request, operator) => {
   const journeyData = await request.cache().getData() || {}
   journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
-  operator(request, eligibility)
+  operator(eligibility)
   await request.cache().setData(journeyData)
 }
 
@@ -30,30 +31,30 @@ export const eligibilityCompletion = async request => {
   const journeyData = await request.cache().getData() || {}
   journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
-  const grantedCompletionSection = e => {
-    if (e[PERMISSION_GRANTED] === undefined) {
+  const grantedCompletionSection = eligibilityPart => {
+    if (eligibilityPart[PERMISSION_GRANTED] === undefined) {
       return CONSENT_GRANTED.uri
-    } else if (!e[PERMISSION_GRANTED]) {
+    } else if (!eligibilityPart[PERMISSION_GRANTED]) {
       return NOT_ELIGIBLE_PROJECT.uri
     } else {
       return ELIGIBILITY_CHECK.uri
     }
   }
 
-  const consentCompletionSection = e => {
-    if (e[PERMISSION_REQUIRED] === undefined) {
+  const consentCompletionSection = eligibilityPart => {
+    if (eligibilityPart[PERMISSION_REQUIRED] === undefined) {
       return CONSENT.uri
-    } else if (!e[PERMISSION_REQUIRED]) {
+    } else if (!eligibilityPart[PERMISSION_REQUIRED]) {
       return ELIGIBILITY_CHECK.uri
     } else {
-      return grantedCompletionSection(e)
+      return grantedCompletionSection(eligibilityPart)
     }
   }
 
-  const permissionsCompletionSection = e => {
-    if (e[HAS_LANDOWNER_PERMISSION] === undefined) {
+  const permissionsCompletionSection = eligibilityPart => {
+    if (eligibilityPart[HAS_LANDOWNER_PERMISSION] === undefined) {
       return LANDOWNER_PERMISSION.uri
-    } else if (!e[HAS_LANDOWNER_PERMISSION]) {
+    } else if (!eligibilityPart[HAS_LANDOWNER_PERMISSION]) {
       return NOT_ELIGIBLE_LANDOWNER.uri
     } else {
       return consentCompletionSection(eligibility)
@@ -76,14 +77,12 @@ export const eligibilityCompletion = async request => {
  * Are you the landowner?
  **************************************************************/
 export const landOwnerSetData = request =>
-  eligibilityHelper(request, async (r, e) => {
-    if (isYes(r)) {
-      Object.assign(e, { [IS_OWNER_OF_LAND]: true })
-      delete e[HAS_LANDOWNER_PERMISSION]
+  updateEligibilityCache(request, eligibility => {
+    if (isYes(request)) {
+      Object.assign(eligibility, { [IS_OWNER_OF_LAND]: true })
+      delete eligibility[HAS_LANDOWNER_PERMISSION]
     } else {
-      Object.assign(e, { [IS_OWNER_OF_LAND]: false })
-      // Clear the next page
-      await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
+      Object.assign(eligibility, { [IS_OWNER_OF_LAND]: false })
     }
   })
 
@@ -94,8 +93,8 @@ export const landOwner = yesNoPage(LANDOWNER, null, eligibilityCompletion,
  * Do you have the landowners permission?
  **************************************************************/
 export const landOwnerPermissionSetData = request =>
-  eligibilityHelper(request, (r, e) =>
-    Object.assign(e, { [HAS_LANDOWNER_PERMISSION]: isYes(r) }))
+  updateEligibilityCache(request, eligibility =>
+    Object.assign(eligibility, { [HAS_LANDOWNER_PERMISSION]: isYes(request) }))
 
 export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, eligibilityCompletion,
   landOwnerPermissionSetData, { auth: false })
@@ -104,13 +103,12 @@ export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, eligibi
  * Does the work require consents?
  **************************************************************/
 export const consentSetData = request =>
-  eligibilityHelper(request, async (r, e) => {
-    if (isYes(r)) {
-      Object.assign(e, { [PERMISSION_REQUIRED]: true })
-      await request.cache().clearPageData(CONSENT_GRANTED.page)
+  updateEligibilityCache(request, eligibility => {
+    if (isYes(request)) {
+      Object.assign(eligibility, { [PERMISSION_REQUIRED]: true })
     } else {
-      Object.assign(e, { [PERMISSION_REQUIRED]: false })
-      delete e[PERMISSION_GRANTED]
+      Object.assign(eligibility, { [PERMISSION_REQUIRED]: false })
+      delete eligibility[PERMISSION_GRANTED]
     }
   })
 
@@ -121,7 +119,8 @@ export const consent = yesNoPage(CONSENT, null, eligibilityCompletion,
  * Have the consents been granted?
  **************************************************************/
 export const consentGrantedSetData = request =>
-  eligibilityHelper(request, (r, e) => Object.assign(e, { [PERMISSION_GRANTED]: isYes(r) }))
+  updateEligibilityCache(request, eligibility =>
+    Object.assign(eligibility, { [PERMISSION_GRANTED]: isYes(request) }))
 
 export const consentGranted = yesNoPage(CONSENT_GRANTED, null, eligibilityCompletion,
   consentGrantedSetData, { auth: false })
