@@ -3,7 +3,7 @@ import {
   licenceTypeMap,
   updateStatusCache,
   STATUS_VALUES,
-  tasks,
+  SECTION_TASKS,
   getStatus,
   getProgress,
   decorateMap
@@ -18,7 +18,7 @@ describe('The licence type map', () => {
         setData: mockSetData
       })
     }
-    await updateStatusCache(request, tasks.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
+    await updateStatusCache(request, SECTION_TASKS.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
     expect(mockSetData).toHaveBeenCalledWith({ tasks: { 'eligibility-check': 'completed' } })
   })
 
@@ -28,7 +28,7 @@ describe('The licence type map', () => {
         getData: () => ({ tasks: { 'eligibility-check': 'in-progress' } })
       })
     }
-    const result = await getStatus(tasks.ELIGIBILITY_CHECK)(request)
+    const result = await getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)
     expect(result).toBe(STATUS_VALUES.IN_PROGRESS)
   })
 
@@ -38,7 +38,7 @@ describe('The licence type map', () => {
         getData: () => ({ tasks: {} })
       })
     }
-    const result = await getStatus(tasks.ELIGIBILITY_CHECK)(request)
+    const result = await getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)
     expect(result).toBe(STATUS_VALUES.CANNOT_START_YET)
   })
 
@@ -48,7 +48,7 @@ describe('The licence type map', () => {
         getData: () => ({})
       })
     }
-    const result = await getStatus(tasks.ELIGIBILITY_CHECK)(request)
+    const result = await getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)
     expect(result).toBe(STATUS_VALUES.CANNOT_START_YET)
   })
 
@@ -60,7 +60,7 @@ describe('The licence type map', () => {
     }
     const decoratedMap = await decorateMap(request, licenceTypeMap[A24])
     const startCheck = decoratedMap.find(m => m.name === 'check-before-you-start')
-    const eligibilityCheck = startCheck.tasks.find(t => t.name === tasks.ELIGIBILITY_CHECK)
+    const eligibilityCheck = startCheck.tasks.find(t => t.name === SECTION_TASKS.ELIGIBILITY_CHECK)
     const result = { name: 'eligibility-check', status: 'cannot-start', uri: '/landowner' }
     expect(eligibilityCheck).toEqual(result)
   })
@@ -73,7 +73,7 @@ describe('The licence type map', () => {
     }
     const decoratedMap = await decorateMap(request, licenceTypeMap[A24])
     const startCheck = decoratedMap.find(m => m.name === 'check-before-you-start')
-    const eligibilityCheck = startCheck.tasks.find(t => t.name === tasks.ELIGIBILITY_CHECK)
+    const eligibilityCheck = startCheck.tasks.find(t => t.name === SECTION_TASKS.ELIGIBILITY_CHECK)
     const result = { name: 'eligibility-check', status: 'completed', uri: '/eligibility-check' }
     expect(eligibilityCheck).toEqual(result)
     const progress = getProgress(decoratedMap)

@@ -6,8 +6,8 @@ import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST } from '../../uris.js'
 
 import pageRoute from '../../routes/page-route.js'
-import { tasks, STATUS_VALUES, updateStatusCache } from '../tasklist/licence-type-map.js'
-const { ELIGIBILITY_CHECK: ELIGIBILITY_CHECK_TASK } = tasks
+import { SECTION_TASKS, STATUS_VALUES, updateStatusCache } from '../tasklist/licence-type-map.js'
+const { ELIGIBILITY_CHECK: ELIGIBILITY_CHECK_TASK } = SECTION_TASKS
 
 // The pages in the flow
 const {
@@ -157,7 +157,7 @@ export const checkYourAnswersGetData = async request => {
     .sort((a, b) => orderKeys[a.key] - orderKeys[b.key])
 }
 
-export const checkYourAnswersSetData = request => updateStatusCache(request, tasks.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
+export const checkYourAnswersSetData = request => updateStatusCache(request, SECTION_TASKS.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
 
 export const checkAnswersCompletion = () => ELIGIBLE.uri
 

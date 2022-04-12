@@ -5,7 +5,7 @@ const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 export const A24 = 'A24 Badger'
 
 // The set of tasks for all licence types
-export const tasks = {
+export const SECTION_TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
@@ -66,11 +66,11 @@ export const licenceTypeMap = {
         name: 'check-before-you-start', // The name of a section, referred on in the template
         tasks: [ // The set of tasks in this section
           {
-            name: tasks.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
-            uri: async request => await (getStatus(tasks.ELIGIBILITY_CHECK)(request)) === STATUS_VALUES.COMPLETED
+            name: SECTION_TASKS.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
+            uri: async request => await (getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)) === STATUS_VALUES.COMPLETED
               ? ELIGIBILITY_CHECK.uri
               : LANDOWNER.uri, // Either a fixed uri or a function of the request to resolve the uri
-            status: getStatus(tasks.ELIGIBILITY_CHECK) // returns a function of request to get the current status
+            status: getStatus(SECTION_TASKS.ELIGIBILITY_CHECK) // returns a function of request to get the current status
           }
         ]
       },
@@ -78,14 +78,14 @@ export const licenceTypeMap = {
         name: 'contact-details',
         tasks: [
           {
-            name: tasks.LICENCE_HOLDER,
+            name: SECTION_TASKS.LICENCE_HOLDER,
             uri: '/',
-            status: getStatus(tasks.LICENCE_HOLDER)
+            status: getStatus(SECTION_TASKS.LICENCE_HOLDER)
           },
           {
-            name: tasks.ECOLOGIST,
+            name: SECTION_TASKS.ECOLOGIST,
             uri: '/',
-            status: getStatus(tasks.ECOLOGIST)
+            status: getStatus(SECTION_TASKS.ECOLOGIST)
           }
         ]
       },
@@ -93,24 +93,24 @@ export const licenceTypeMap = {
         name: 'planned-work-activity',
         tasks: [
           {
-            name: tasks.WORK_ACTIVITY,
+            name: SECTION_TASKS.WORK_ACTIVITY,
             uri: '/',
-            status: getStatus(tasks.WORK_ACTIVITY)
+            status: getStatus(SECTION_TASKS.WORK_ACTIVITY)
           },
           {
-            name: tasks.PERMISSIONS,
+            name: SECTION_TASKS.PERMISSIONS,
             uri: '/',
-            status: getStatus(tasks.PERMISSIONS)
+            status: getStatus(SECTION_TASKS.PERMISSIONS)
           },
           {
-            name: tasks.SITES,
+            name: SECTION_TASKS.SITES,
             uri: '/',
-            status: getStatus(tasks.SITES)
+            status: getStatus(SECTION_TASKS.SITES)
           },
           {
-            name: tasks.SETTS,
+            name: SECTION_TASKS.SETTS,
             uri: '/',
-            status: getStatus(tasks.SETTS)
+            status: getStatus(SECTION_TASKS.SETTS)
           }
         ]
       },
@@ -118,9 +118,9 @@ export const licenceTypeMap = {
         name: 'apply',
         tasks: [
           {
-            name: tasks.SEND_APPLICATION,
+            name: SECTION_TASKS.SEND_APPLICATION,
             uri: '/',
-            status: getStatus(tasks.SEND_APPLICATION)
+            status: getStatus(SECTION_TASKS.SEND_APPLICATION)
           }
         ]
       }
