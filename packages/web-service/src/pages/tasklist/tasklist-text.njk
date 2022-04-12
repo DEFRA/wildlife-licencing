@@ -25,3 +25,20 @@
     'apply': 'Apply'
   }
 %}
+
+{%
+  set statusText = {
+    'completed': 'COMPLETED',
+    'in-progress': 'IN PROGRESS',
+    'not-started': 'NOT STARTED',
+    'cannot-start': 'CANNOT START YET'
+  }
+%}
+
+{%
+  set statusColours = {
+    'in-progress': 'blue',
+    'not-started': 'grey',
+    'cannot-start': 'grey'
+  }
+%}

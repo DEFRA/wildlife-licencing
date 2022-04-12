@@ -10,9 +10,13 @@
                     {% for task in section.tasks %}
                         {% if task %}
                             <li class="app-task-list__item">
-                                <span class="app-task-list__task-name">
-                                    <a class="govuk-link" href="{{task.href}}" aria-describedby="{{task.name}}-status">{{task.name}}</a>
-                                </span>
+                                {% if task.disabled %}
+                                    <span class="app-task-list__task-name">{{task.name}}</span>
+                                {% else %}
+                                    <span class="app-task-list__task-name">
+                                        <a class="govuk-link govuk-link--no-visited-state" href="{{task.href}}" aria-describedby="{{task.name}}-status">{{task.name}}</a>
+                                    </span>
+                                {% endif %}
                                 <strong class="govuk-tag {%- if task.colour %} govuk-tag--{{task.colour}}{% endif %} app-task-list__tag" id="{{task.name}}-status">{{task.status}}</strong>
                             <li>
                         {% endif %}

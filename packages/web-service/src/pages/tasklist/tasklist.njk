@@ -5,26 +5,28 @@
 
 {% block pageContent %}
 <span>
-  {{ govukTaskList({ sections: [
-    {
-        name:  'First section',
-        tasks: [
-            { name: 'First task', href: 'blah', status: 'Completed', colour: 'blue' },
-            { name: 'Second task', href: 'blah', status: 'No started'  },
-            { name: 'Third task', href: 'blah', status: 'Completed', colour: 'grey'  }
-        ]
-    },
-    {
-        name:  'Second section',
-        tasks: [
-            { name: 'Fifth task', href: 'blah', status: 'Completed' },
-            { name: 'Sixth task', href: 'blah', status: 'No started'  },
-            { name: 'Seventh task', href: 'blah', status: 'Completed'  }
-        ]
-    },
-    {
-        name:  'Third section'
-    }
-  ] }) }}
+    <div hidden>
+        {% set tld = [] %}
+        {% for section in data.licenceTypeMap %}
+           {% set t = [] %}
+           {% for task in section.tasks %}
+                {{ t.push({
+                    name: text.taskText[task.name],
+                    href: task.uri,
+                    status: text.statusText[task.status],
+                    colour: text.statusColours[task.status] if text.statusColours[task.status] else null,
+                    disabled: task.status === 'cannot-start'
+                }) }}
+           {% endfor %}
+           {{ tld.push({ name: text.sectionText[section.name], tasks: t }) }}
+        {% endfor %}
+    </div>
+
+    {% if data.progress.completed !== data.progress.from %}
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
+        <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{data.progress.completed}} of {{data.progress.from}} sections.</p>
+    {% endif %}
+
+    {{ govukTaskList({ sections: tld }) }}
 </span>
 {% endblock %}
