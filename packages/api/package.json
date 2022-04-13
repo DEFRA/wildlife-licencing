@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-api",
-  "version": "2.2.1-alpha.0",
+  "version": "2.2.2-alpha.0",
   "description": "The API to support the wildlife licencing of European Protected Species",
   "main": "src/api-service.js",
   "type": "module",
