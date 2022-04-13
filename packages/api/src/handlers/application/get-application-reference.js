@@ -17,7 +17,9 @@ export default async (_context, req, h) => {
 
     if (!cached) {
       const r = await models.applicationTypes.findAll()
+      // Only those with a name and a suffix set are of interest
       response = r.map(t => prepareResponse(t.dataValues))
+        .filter(d => d.name && d.refNoSuffix)
       if (response.length) {
         await cache.save(TYPES_CACHE, response)
       }
