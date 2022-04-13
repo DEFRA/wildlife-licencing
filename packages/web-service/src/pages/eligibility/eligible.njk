@@ -1,15 +1,15 @@
 {% from "button/macro.njk" import govukButton %}
 {% extends "information-page.njk" %}
-{% set title = "You're eligible to apply for a licence" %}
-
+{% set title = "You’re eligible to apply for a licence" %}
 {% block pageContent %}
     <h2 class="govuk-heading-m">Save application</h2>
+
     <p class="govuk-body">To be able to save your application and return to it later, you need to sign into an existing account or create a new one.</p>
     {{ govukButton({
         attributes: { id: 'continue' },
         preventDoubleClick: true,
         name: 'continue',
-        text: 'Sign in to save',
+        text: 'Continue',
         classes: "govuk-!-margin-top-5"
     }) }}
 {% endblock %}

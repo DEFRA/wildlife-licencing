@@ -7,7 +7,10 @@ describe('login page', () => {
       const mockSetAuthData = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
       const { setData } = await import('../login.js')
-      await setData({ cache: () => ({ setAuthData: mockSetAuthData, setData: jest.fn() }), payload: { 'user-id': 'a.b@email.com' } })
+      await setData({
+        cache: () => ({ setAuthData: mockSetAuthData, setData: jest.fn(), getData: jest.fn() }),
+        payload: { 'user-id': 'a.b@email.com' }
+      })
       expect(mockSetAuthData).toHaveBeenCalledWith({ username: 'flintstone' })
     })
   })
@@ -41,8 +44,16 @@ describe('login page', () => {
   describe('the completion', () => {
     it('returns the applications page', async () => {
       const { completion } = await import('../login.js')
-      const result = await completion()
+      const result = await completion({ cache: () => ({ getData: jest.fn() }) })
       expect(result).toBe('/applications')
+    })
+
+    it('returns the page requested', async () => {
+      const { completion } = await import('../login.js')
+      const result = await completion({
+        cache: () => ({ getData: jest.fn(() => ({ navigation: { requestedPage: '/page' } })) })
+      })
+      expect(result).toBe('/page')
     })
   })
 })

@@ -6,6 +6,7 @@ import {
   consent, consentGranted, eligibilityCheck, eligible, landOwner,
   landOwnerPermission, notEligibleLandowner, notEligibleProject
 } from '../pages/eligibility/eligibility.js'
+import { tasklist } from '../pages/tasklist/tasklist.js'
 
 const routes = [
   ...applications,
@@ -19,6 +20,7 @@ const routes = [
   ...notEligibleProject,
   ...eligibilityCheck,
   ...eligible,
+  ...tasklist,
   ...miscRoutes
 ]
 

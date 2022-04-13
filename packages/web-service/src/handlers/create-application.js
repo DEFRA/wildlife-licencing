@@ -6,6 +6,12 @@ const debug = db('web-service:create-application')
 // This will be replaced by a selected type
 const TYPE = 'A24 Badger'
 
+/**
+ * The creation of a new application
+ * @param request
+ * @param h
+ * @returns {Promise<*>}
+ */
 export default async (request, h) => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData

@@ -3,14 +3,19 @@
  */
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
-import { eligibilityURIs } from '../../uris.js'
+import { eligibilityURIs, TASKLIST } from '../../uris.js'
+
 import pageRoute from '../../routes/page-route.js'
+import { SECTION_TASKS, STATUS_VALUES, updateStatusCache } from '../tasklist/licence-type-map.js'
+const { ELIGIBILITY_CHECK: ELIGIBILITY_CHECK_TASK } = SECTION_TASKS
+
 // The pages in the flow
 const {
   LANDOWNER, LANDOWNER_PERMISSION, CONSENT, CONSENT_GRANTED,
   NOT_ELIGIBLE_LANDOWNER, NOT_ELIGIBLE_PROJECT, ELIGIBILITY_CHECK, ELIGIBLE
 } = eligibilityURIs
 
+// The cache keys for the eligibility questions, mirror the API schema
 const IS_OWNER_OF_LAND = 'isOwnerOfLand'
 const HAS_LANDOWNER_PERMISSION = 'hasLandOwnerPermission'
 const PERMISSION_REQUIRED = 'permissionsRequired'
@@ -22,6 +27,12 @@ export const updateEligibilityCache = async (request, operator) => {
   journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
   operator(eligibility)
+
+  // Expediently set the task status to in-progress
+  journeyData.tasks = journeyData.tasks || {}
+  const { tasks } = journeyData
+
+  tasks[ELIGIBILITY_CHECK_TASK] = STATUS_VALUES.IN_PROGRESS
   await request.cache().setData(journeyData)
 }
 
@@ -146,12 +157,15 @@ export const checkYourAnswersGetData = async request => {
     .sort((a, b) => orderKeys[a.key] - orderKeys[b.key])
 }
 
+export const checkYourAnswersSetData = request => updateStatusCache(request, SECTION_TASKS.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
+
 export const checkAnswersCompletion = () => ELIGIBLE.uri
 
 export const eligibilityCheck = checkAnswersPage(
   ELIGIBILITY_CHECK,
   null,
   checkYourAnswersGetData,
+  checkYourAnswersSetData,
   checkAnswersCompletion,
   { auth: false }
 )
@@ -172,5 +186,5 @@ export const eligibleCheckData = async (request, h) => {
 }
 
 export const eligible = pageRoute(ELIGIBLE.page, ELIGIBLE.uri, eligibleCheckData,
-  null, null, null, null, { auth: false }
+  null, null, TASKLIST.uri, null, { auth: false }
 )
