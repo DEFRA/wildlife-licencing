@@ -1,6 +1,8 @@
 import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
+import db from 'debug'
+
 import {
   getUserByUserId,
   getUsers,
@@ -129,6 +131,22 @@ const init = async server => {
    * Initialize OpenAPI backend
    */
   await api.init()
+
+  /*
+   * For debugging only
+   */
+  server.ext('onPreHandler', (request, h) => {
+    const debug = db('api:request')
+    const info = {
+      method: request.method,
+      path: request.path,
+      query: request.query,
+      headers: request.headers,
+      payload: request.payload
+    }
+    debug(info)
+    return h.continue
+  })
 
   /*
    * Direct the generic hapi route handler to the openapi backend
