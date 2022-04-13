@@ -1,6 +1,7 @@
 import { LOGIN } from '../uris.js'
 
 export default (_server, _options) => ({
+  // Preservers this pointer
   authenticate: async function (request, h) {
     const authorization = await request.cache().getAuthData()
     // Any attempt to request a protected page results in a redirect to the login page
