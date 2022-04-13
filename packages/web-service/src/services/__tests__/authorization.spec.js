@@ -4,9 +4,13 @@ describe('The authorization scheme', () => {
   it('Unauthorized access redirects to the login handler', async () => {
     const authorization = await import('../authorization.js')
     const { authenticate } = authorization.default()
+    const mockSetData = jest.fn()
     const request = {
+      path: '/some-path',
       cache: () => ({
-        getAuthData: () => null
+        getAuthData: () => null,
+        getData: () => null,
+        setData: mockSetData
       })
     }
     const mockRedirect = jest.fn(() => ({ takeover: () => 'takeover' }))
@@ -15,6 +19,7 @@ describe('The authorization scheme', () => {
     }
     const result = await authenticate(request, h)
     expect(mockRedirect).toHaveBeenCalledWith('/login')
+    expect(mockSetData).toHaveBeenCalledWith({ navigation: { requestedPage: '/some-path' } })
     expect(result).toBe('takeover')
   })
 

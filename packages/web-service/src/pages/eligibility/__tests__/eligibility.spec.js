@@ -21,7 +21,12 @@ describe('the eligibility pages', () => {
     }
     const operation = e => Object.assign(e, { isOwnerOfLand: true })
     await updateEligibilityCache(request, operation)
-    expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
+    expect(mockSetData).toHaveBeenCalledWith({
+      eligibility: { isOwnerOfLand: true },
+      tasks: {
+        'eligibility-check': 'in-progress'
+      }
+    })
   })
 
   it('the updateEligibilityCache - operates on the eligibility section of the journey cache - with eligibility section', async () => {
@@ -35,7 +40,12 @@ describe('the eligibility pages', () => {
     }
     const operation = e => Object.assign(e, { isOwnerOfLand: true })
     await updateEligibilityCache(request, operation)
-    expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })
+    expect(mockSetData).toHaveBeenCalledWith({
+      eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true },
+      tasks: {
+        'eligibility-check': 'in-progress'
+      }
+    })
   })
 
   describe('the eligibilityCompletion function', () => {
@@ -97,7 +107,12 @@ describe('the eligibility pages', () => {
         })
       }
       await landOwnerSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: true } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { isOwnerOfLand: true },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
     it('if \'no\' unsets isOwnerOfLand', async () => {
       const mockSetData = jest.fn()
@@ -109,7 +124,12 @@ describe('the eligibility pages', () => {
         })
       }
       await landOwnerSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
   })
 
@@ -124,7 +144,12 @@ describe('the eligibility pages', () => {
         })
       }
       await landOwnerPermissionSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { hasLandOwnerPermission: true } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { hasLandOwnerPermission: true },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
     it('if \'no\' unsets hasLandOwnerPermission', async () => {
       const mockSetData = jest.fn()
@@ -136,7 +161,12 @@ describe('the eligibility pages', () => {
         })
       }
       await landOwnerPermissionSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { hasLandOwnerPermission: false } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { hasLandOwnerPermission: false },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
   })
 
@@ -151,19 +181,34 @@ describe('the eligibility pages', () => {
         })
       }
       await consentSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: true } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { permissionsRequired: true },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
     it('if \'no\' unsets permissionsRequired and removes permissionsGranted', async () => {
       const mockSetData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
-          getData: jest.fn(() => ({ eligibility: { permissionsGranted: true } })),
+          getData: jest.fn(() => ({
+            eligibility: { permissionsGranted: true },
+            tasks: {
+              'eligibility-check': 'in-progress'
+            }
+          })),
           setData: mockSetData
         })
       }
       await consentSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsRequired: false } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { permissionsRequired: false },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
   })
 
@@ -178,7 +223,12 @@ describe('the eligibility pages', () => {
         })
       }
       await consentGrantedSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsGranted: true } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { permissionsGranted: true },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
     it('if \'no\' unsets permissionsGranted', async () => {
       const mockSetData = jest.fn()
@@ -190,7 +240,12 @@ describe('the eligibility pages', () => {
         })
       }
       await consentGrantedSetData(request)
-      expect(mockSetData).toHaveBeenCalledWith({ eligibility: { permissionsGranted: false } })
+      expect(mockSetData).toHaveBeenCalledWith({
+        eligibility: { permissionsGranted: false },
+        tasks: {
+          'eligibility-check': 'in-progress'
+        }
+      })
     })
   })
 

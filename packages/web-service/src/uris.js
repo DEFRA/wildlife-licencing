@@ -12,3 +12,4 @@ export const eligibilityURIs = {
   ELIGIBILITY_CHECK: { uri: '/eligibility-check', page: 'eligibility-check' },
   ELIGIBLE: { uri: '/eligible', page: 'eligible' }
 }
+export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }

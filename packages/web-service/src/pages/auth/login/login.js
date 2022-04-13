@@ -6,7 +6,11 @@ import { authJoiObject } from '../auth.js'
 import db from 'debug'
 const debug = db('web-service:login')
 
-export const completion = async () => APPLICATIONS.uri
+// If we have request a which needs authorization then redirect to that page
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  return journeyData?.navigation?.requestedPage || APPLICATIONS.uri
+}
 
 export const validator = async payload => {
   const userId = payload['user-id'].toLowerCase()
@@ -35,7 +39,9 @@ export const setData = async request => {
   const result = await APIRequests.USER.findByName(username)
   debug(`Logging in user: ${username}`)
   await request.cache().setAuthData(result)
-  await request.cache().setData({ userId: result.id })
+  const journeyData = await request.cache().getData() || {}
+  Object.assign(journeyData, { userId: result.id })
+  await request.cache().setData(journeyData)
 }
 
 export default pageRoute(LOGIN.page, LOGIN.uri, null, null,

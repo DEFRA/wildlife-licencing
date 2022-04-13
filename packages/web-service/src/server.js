@@ -114,7 +114,7 @@ const init = async server => {
 
   // Set up the session cookie
   server.state(sessionCookieName, sessionCookieOptions)
-  server.ext('onPreHandler', sessionManager(sessionCookieName))
+  server.ext('onPreAuth', sessionManager(sessionCookieName))
   server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
 
   // Set authentication up
