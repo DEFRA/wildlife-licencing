@@ -5,7 +5,7 @@ import db from 'debug'
 import pkg from 'node-fetch'
 const fetch = pkg.default
 
-const debug = db('connectors:fetch')
+const debug = db('connectors-lib:fetch')
 const abortController = new global.AbortController()
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
@@ -67,7 +67,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     ...payload && { body: payload }
   }
 
-  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)
+  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)} and timeout ${timeOutMS}ms`)
 
   // Create a timeout
   const timeout = setTimeout(() => {
@@ -88,6 +88,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       console.error('Fetch abort error', err)
       throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
     } else {
+      console.error('Fetch error', err)
       throw err
     }
   } finally {
