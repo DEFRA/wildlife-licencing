@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-connectors-lib",
-  "version": "2.1.8-alpha.0",
+  "version": "2.2.3-alpha.0",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "private": false,
