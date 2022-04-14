@@ -7,7 +7,7 @@ const fetch = pkg.default
 
 const debug = db('connectors:fetch')
 const abortController = new global.AbortController()
-const DEFAULT_TIMEOUT = 20000
+const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
 export class HTTPResponseError extends Error {
   constructor (response) {
@@ -85,6 +85,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
   } catch (err) {
     if (err.name === 'AbortError') {
       // Create a client timeout response
+      console.error('Fetch abort error', err)
       throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
     } else {
       throw err
