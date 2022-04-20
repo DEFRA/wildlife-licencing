@@ -11,6 +11,7 @@ import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants
 import sessionManager from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
+import { errorHandler } from './handlers/error-handler.js'
 import { REGISTER, eligibilityURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
@@ -58,19 +59,6 @@ const sessionCookieOptions = {
   clearInvalid: true,
   strictHeader: true,
   path: '/'
-}
-
-/**
- * Need to add the 400 and 500 error pages, for now log it
- * @param request
- * @param h
- * @returns {string|((key?: IDBValidKey) => void)|*}
- */
-const errorHandler = (request, h) => {
-  if (request.response.isBoom) {
-    console.error('Error processing request. Request: %j, Exception: %o', request, request.response)
-  }
-  return h.continue
 }
 
 /**

@@ -1,4 +1,5 @@
 import pageHandler from '../page-handler.js'
+import Joi from 'joi'
 
 describe('the page handler function', () => {
   it('the get handler invokes a given view with the page data', async () => {
@@ -48,8 +49,8 @@ describe('the page handler function', () => {
   })
 
   it('the error handler redirects to the same page', async () => {
-    const err = {
-      details: [{
+    const err = new Joi.ValidationError('ValidationError',
+      [{
         message: 'Unauthorized: email address not found',
         path: ['user-id'],
         type: 'unauthorized',
@@ -58,8 +59,7 @@ describe('the page handler function', () => {
           value: 'flintstone',
           key: 'user-id'
         }
-      }]
-    }
+      }])
     const mockSetPageData = jest.fn()
     const request = { path: '/page', payload: { foo: 'bar' }, cache: () => ({ setPageData: mockSetPageData }) }
     const mockRedirect = jest.fn(() => ({ takeover: jest.fn() }))
@@ -69,13 +69,12 @@ describe('the page handler function', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/page')
   })
 
-  it('the error handler redirects to \'/\' on an unexpected error', async () => {
-    const err = { foo: 'bar' }
+  it('the error handler rethrows on an unexpected error', async () => {
+    const err = new Error()
     const mockSetPageData = jest.fn()
     const request = { path: '/page', payload: { foo: 'bar' }, cache: () => ({ setPageData: mockSetPageData }) }
     const mockRedirect = jest.fn(() => ({ takeover: jest.fn() }))
     const h = { redirect: mockRedirect }
-    await pageHandler().error(request, h, err)
-    expect(mockRedirect).toHaveBeenCalledWith('/')
+    await expect(() => pageHandler().error(request, h, err)).rejects.toThrowError()
   })
 })
