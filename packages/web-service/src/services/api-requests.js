@@ -1,5 +1,6 @@
 import { API } from '@defra/wls-connectors-lib'
 import db from 'debug'
+import Boom from '@hapi/boom'
 const debug = db('web-service:api-requests')
 
 export const APIRequests = {
@@ -11,6 +12,7 @@ export const APIRequests = {
         return users.length === 1 ? users[0] : null
       } catch (error) {
         console.error(`Error fetching user ${username}`, error)
+        Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
@@ -20,6 +22,7 @@ export const APIRequests = {
         await API.post('/user', { username })
       } catch (error) {
         console.error(`Error creating user ${username}`, error)
+        Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     }
@@ -32,6 +35,7 @@ export const APIRequests = {
         return API.post(`/user/${userId}/application`, { applicationReferenceNumber, applicationType: type })
       } catch (error) {
         console.error(`Error creating application with userId ${userId} and type ${type}`, error)
+        Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
@@ -41,6 +45,7 @@ export const APIRequests = {
         return API.get(`/user/${userId}/applications`)
       } catch (error) {
         console.error(`Error finding application with userId ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     }

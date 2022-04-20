@@ -1,3 +1,5 @@
+import Joi from 'joi'
+
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
 export default (view, checkData, getData, completion, setData) => ({
   get: async (request, h) => {
@@ -40,12 +42,12 @@ export default (view, checkData, getData, completion, setData) => ({
 
   // On a validation error, set the errors and redirect back to teh GET handler
   error: async (request, h, err) => {
-    try {
+    if (err instanceof Joi.ValidationError) {
       await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
       return h.redirect(request.path).takeover()
-    } catch (e) {
-      console.error('Unexpected validation error', e)
-      return h.redirect('/').takeover()
+    } else {
+      // If error is anything other than a validation exception then rethrow it
+      throw err
     }
   }
 })

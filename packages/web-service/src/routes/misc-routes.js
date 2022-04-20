@@ -1,4 +1,4 @@
-import { APPLICATIONS } from '../uris.js'
+import { APPLICATIONS, HEALTH } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
 import path from 'path'
 import __dirname from '../../dirname.cjs'
@@ -6,7 +6,7 @@ import __dirname from '../../dirname.cjs'
 export default [
   {
     method: 'GET',
-    path: '/health',
+    path: HEALTH.uri,
     handler: async (_request, h) => h.response('healthy!').code(200),
     options: { auth: false }
   },
