@@ -28,6 +28,6 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^2.2.4-alpha.0",
-    "sequelize": "^6.12.5"
+    "debug": "^4.3.3"
   }
 }

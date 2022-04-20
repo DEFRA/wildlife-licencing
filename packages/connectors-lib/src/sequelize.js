@@ -1,7 +1,7 @@
 import Config from './config.js'
 import pkg from 'sequelize'
 import db from 'debug'
-const { Sequelize, Transaction } = pkg
+const { Sequelize, Transaction, DataTypes, QueryTypes } = pkg
 const debug = db('connectors-lib:db')
 let sequelize
 
@@ -39,6 +39,11 @@ export const SEQUELIZE = {
         isolationLevel: Transaction.ISOLATION_LEVELS.REPEATABLE_READ
       })
 
+    sequelize.afterConnect(() => debug('Connected database'))
+    sequelize.afterDisconnect(() => debug('Disconnected database'))
+
     return sequelize
-  }
+  },
+  DataTypes,
+  QueryTypes
 }

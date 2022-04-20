@@ -1,6 +1,8 @@
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
-import pkg from 'sequelize'
-const { DataTypes, QueryTypes } = pkg
+import db from 'debug'
+
+const { DataTypes, QueryTypes } = SEQUELIZE
+const debug = db('database-model:define')
 
 const models = {}
 
@@ -136,6 +138,7 @@ async function defineApplicationRefSeq (sequelize) {
 
 const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
+
   await defineUsers(sequelize)
   await defineSites(sequelize)
   await defineApplications(sequelize)
@@ -152,6 +155,8 @@ const createModels = async () => {
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
   await models.optionSets.sync()
+
+  debug('Created database model')
 }
 
 export { models, createModels }

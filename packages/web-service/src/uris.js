@@ -13,3 +13,7 @@ export const eligibilityURIs = {
   ELIGIBLE: { uri: '/eligible', page: 'eligible' }
 }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
+export const ERRORS = {
+  CLIENT: { page: 'client-error' },
+  SERVER: { page: 'server-error' }
+}
