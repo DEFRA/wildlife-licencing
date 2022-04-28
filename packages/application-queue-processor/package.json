@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-application-queue-processor",
-  "version": "2.2.5-alpha.0",
+  "version": "2.2.6-alpha.0",
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "src/application-queue-processor.js",
   "type": "module",
@@ -29,10 +29,10 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@defra/wls-connectors-lib": "^2.2.5-alpha.0",
-    "@defra/wls-database-model": "^2.2.5-alpha.0",
-    "@defra/wls-powerapps-lib": "^2.2.5-alpha.0",
-    "@defra/wls-queue-defs": "^2.2.5-alpha.0",
+    "@defra/wls-connectors-lib": "^2.2.6-alpha.0",
+    "@defra/wls-database-model": "^2.2.6-alpha.0",
+    "@defra/wls-powerapps-lib": "^2.2.6-alpha.0",
+    "@defra/wls-queue-defs": "^2.2.6-alpha.0",
     "debug": "^4.3.3",
     "dotenv": "^10.0.0"
   }
