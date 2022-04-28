@@ -67,10 +67,12 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     ...payload && { body: payload }
   }
 
-  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)} and timeout ${timeOutMS}ms`)
+  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)
 
   // Create a timeout
+  debug(`Setting timeout ${parseInt(timeOutMS)}...`)
   const timeout = setTimeout(() => {
+    debug('Request timeout: abort controller ')
     abortController.abort()
   }, parseInt(timeOutMS))
 
@@ -85,10 +87,13 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
   } catch (err) {
     if (err.name === 'AbortError') {
       // Create a client timeout response
-      console.error('Fetch abort error', err)
+      console.error('Fetch ABORT error', err)
       throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
+    } else if (err.name === 'FetchError') {
+      console.error('Fetch REQUEST error', err)
+      throw err
     } else {
-      console.error('Fetch error', err)
+      console.error('Unknown error thrown in fetch', err)
       throw err
     }
   } finally {
