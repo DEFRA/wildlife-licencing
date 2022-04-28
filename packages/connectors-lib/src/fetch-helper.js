@@ -82,7 +82,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
 
     // Run the supplied async response function
     const result = await responseFunc(responsePromise)
-    debug(`HTTP response: ${result}`)
+    debug(`HTTP response: ${JSON.stringify(result)}`)
     return result
   } catch (err) {
     if (err.name === 'AbortError') {
