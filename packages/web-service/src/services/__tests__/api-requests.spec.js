@@ -121,5 +121,30 @@ describe('The API requests service', () => {
       await expect(() => APIRequests.APPLICATION.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
+
+    it('getById calls the API correctly', async () => {
+      const mockGet = jest.fn(() => [{ foo: 'bar' }])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
+      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d')
+      expect(result).toEqual([{ foo: 'bar' }])
+    })
+
+    it('getById rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
+        .rejects.toThrowError()
+    })
   })
 })
