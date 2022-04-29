@@ -48,6 +48,16 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    getById: async (userId, applicationId) => {
+      try {
+        debug(`Get applications by userId: ${userId} and applicationId: ${applicationId}`)
+        return API.get(`/user/${userId}/application/${applicationId}`)
+      } catch (error) {
+        console.error(`Error getting application with userId ${userId} and applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   }
 }
