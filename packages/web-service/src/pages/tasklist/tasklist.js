@@ -11,22 +11,24 @@ import {
 export const getApplication = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
+  let applicationId
 
   // Look for the applicationId in the query parameter
   const params = new URLSearchParams(request.query)
 
   // Switch (current) applicationId in the cache if necessary
   const id = params.get('applicationId')
-  if (id) {
-    if (journeyData.applicationId && journeyData.applicationId !== id) {
-      Object.assign(journeyData, { applicationId: id })
-      await request.cache().setData(journeyData)
-    }
-    journeyData.applicationId = id
-  }
 
-  // If there is no current application create one.
-  const applicationId = journeyData.applicationId ? journeyData.applicationId : await applicationService.createApplication(request)
+  // If a parameter has been supplied
+  if (id) {
+    // Check that the parameter is written into the cache as the current parameter
+    Object.assign(journeyData, { applicationId: id })
+    await request.cache().setData(journeyData)
+    applicationId = id
+  } else {
+    // Where there is no parameter expect to find an id in the cache, otherwise created a new application
+    applicationId = journeyData.applicationId ? journeyData.applicationId : await applicationService.createApplication(request)
+  }
 
   // Get the application reference number
   return APIRequests.APPLICATION.getById(userId, applicationId)
