@@ -3,6 +3,12 @@
 {% from "govuk-tasklist.njk" import govukTaskList %}
 {% set title = text.titleText['A24 Badger'] %}
 
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
 {% block pageContent %}
 <span>
     <div hidden>
@@ -25,6 +31,7 @@
     {% if data.progress.completed !== data.progress.from %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
         <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{data.progress.completed}} of {{data.progress.from}} sections.</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">Reference:<br>{{data.reference}}</p>
     {% endif %}
 
     {{ govukTaskList({ sections: tld }) }}

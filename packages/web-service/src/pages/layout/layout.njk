@@ -34,11 +34,17 @@
       },
       html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
     }) }}
-    <div id="backlink-div" hidden>
-        {{ govukBackLink({
-          text: "Back",
-          href: "javascript: window.history.go(-1)"
-        }) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div id="backlink-div" hidden>
+                {{ govukBackLink({
+                    text: "Back",
+                    href: "javascript: window.history.go(-1)"
+                }) }}
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-third">{% block topNavigation %}{% endblock %}</div>
     </div>
 {% endblock %}
 
