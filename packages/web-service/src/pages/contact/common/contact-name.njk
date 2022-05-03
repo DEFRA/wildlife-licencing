@@ -1,0 +1,25 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'name': {
+            'string.empty': { ref: '#name', text: 'Enter your email address' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: 'Full name',
+        classes: "govuk-!-margin-top-7"
+      },
+      id: "name",
+      name: "name",
+      spellcheck: false,
+      value: payload['name'],
+      classes: "govuk-!-width-three-quarters",
+      attributes: { maxlength: 160 },
+      errorMessage: { text: 'Enter your name' } if error['name']
+    }) }}
+{% endblock %}
