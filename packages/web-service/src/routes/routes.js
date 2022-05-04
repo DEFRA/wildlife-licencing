@@ -8,8 +8,8 @@ import {
 } from '../pages/eligibility/eligibility.js'
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
-import { ecologistName } from '../pages/contact/ecologist/ecologist.js'
-import { applicantName } from '../pages/contact/applicant/applicant.js'
+import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
+import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 
 const routes = [
   ...applications,

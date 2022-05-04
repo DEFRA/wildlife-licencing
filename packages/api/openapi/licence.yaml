@@ -1293,14 +1293,10 @@ components:
     contact:
       type: object
       properties:
-        firstname:
+        fullName:
           type: string
           minLength: 1
-          maxLength: 36
-        lastname:
-          type: string
-          minLength: 1
-          maxLength: 36
+          maxLength: 160
         contactDetails:
           $ref: '#/components/schemas/contactDetails'
         address:
@@ -1433,4 +1429,3 @@ components:
           type: array
           items:
             type: object
-
