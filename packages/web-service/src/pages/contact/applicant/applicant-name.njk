@@ -1,0 +1,9 @@
+{% extends "contact-name.njk" %}
+{% set title = 'Who is the licence for?' %}
+{% set errorMap = {
+        'name': {
+            'string.empty': { ref: '#name', text: 'Enter the name of the applicant' },
+            'string.pattern.base': { ref: '#name', text: 'Enter the name of the applicant using only letters, spaces, \'-\' and \'.\'' }
+        }
+    }
+%}

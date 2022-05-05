@@ -9,6 +9,8 @@ const { cache } = REDIS
  */
 export const clearCaches = async (userId, applicationId) => {
   await cache.delete(`/user/${userId}/applications`)
+  await cache.delete(`/user/${userId}/applications/applicant`)
+  await cache.delete(`/user/${userId}/applications/ecologist`)
   if (applicationId) {
     await cache.delete(`/user/${userId}/application/${applicationId}`)
     await cache.delete(`/user/${userId}/application/${applicationId}/eligibility`)
