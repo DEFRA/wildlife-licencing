@@ -194,7 +194,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
+      await expect(() => APIRequests.APPLICANT.putById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
         .rejects.toThrowError()
     })
   })
@@ -245,7 +245,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
+      await expect(() => APIRequests.ECOLOGIST.putById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
         .rejects.toThrowError()
     })
   })
