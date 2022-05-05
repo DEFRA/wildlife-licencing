@@ -101,7 +101,8 @@ describe('the schema processes', () => {
             sdds_osgridreference: '7868962',
             sdds_addressline1: 'Winscombe',
             sdds_county: 'Somerset',
-            sdds_postcode: 'BS21 2XX'
+            sdds_postcode: 'BS21 2XX',
+            sdds_sourceremote: true
           },
           relationshipsPayload: {}
         },
@@ -113,7 +114,8 @@ describe('the schema processes', () => {
             sdds_addressline1: 'Winscombe',
             sdds_addressline2: null, // Explicit set null
             sdds_county: 'Somerset',
-            sdds_postcode: 'BS22 2XX'
+            sdds_postcode: 'BS22 2XX',
+            sdds_sourceremote: true
           },
           relationshipsPayload: {}
         },
@@ -124,7 +126,8 @@ describe('the schema processes', () => {
             sdds_osgridreference: '786896',
             sdds_addressline1: 'Winscombe',
             sdds_county: 'Somerset',
-            sdds_postcode: 'BS23 2XX'
+            sdds_postcode: 'BS23 2XX',
+            sdds_sourceremote: true
           },
           relationshipsPayload: {}
         }
