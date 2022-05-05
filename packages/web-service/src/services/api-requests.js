@@ -80,6 +80,16 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    findByUser: async userId => {
+      try {
+        debug(`Finding applications/applicant for userId: ${userId}`)
+        return API.get(`/user/${userId}/applications/applicant`)
+      } catch (error) {
+        console.error(`Error finding applications/applicant with userId ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   ECOLOGIST: {
@@ -99,6 +109,16 @@ export const APIRequests = {
         return API.put(`/user/${userId}/application/${applicationId}/ecologist`, ecologist)
       } catch (error) {
         console.error(`Error getting application/ecologist with userId ${userId} and applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    findByUser: async userId => {
+      try {
+        debug(`Finding applications/ecologist for userId: ${userId}`)
+        return API.get(`/user/${userId}/applications/ecologist`)
+      } catch (error) {
+        console.error(`Error finding applications/ecologist with userId ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
