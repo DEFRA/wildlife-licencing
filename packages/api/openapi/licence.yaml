@@ -198,6 +198,75 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user/{userId}/applications/applicant':
+    get:
+      description: Get the applicants for all applications for a user
+      summary: Get the applicants for all applications for a user
+      operationId: getApplicantsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicants'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/applications/ecologist':
+    get:
+      description: Get the ecologists for all applications for a user
+      summary: Get the ecologists for all applications for a user
+      operationId: getEcologistsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologists'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
   '/user/{userId}/application':
     post:
       description: Create a new application
@@ -1209,6 +1278,16 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
+    applicants:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact'
+
+    ecologists:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact'
+
     eligibility:
       type: object
       properties:
@@ -1293,14 +1372,10 @@ components:
     contact:
       type: object
       properties:
-        firstname:
+        fullName:
           type: string
           minLength: 1
-          maxLength: 36
-        lastname:
-          type: string
-          minLength: 1
-          maxLength: 36
+          maxLength: 160
         contactDetails:
           $ref: '#/components/schemas/contactDetails'
         address:
@@ -1433,4 +1508,3 @@ components:
           type: array
           items:
             type: object
-

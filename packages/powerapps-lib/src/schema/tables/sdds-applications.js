@@ -3,6 +3,7 @@ import { getReferenceDataIdByName } from '../../services/cache.js'
 
 export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
+  new Column('sdds_sourceremote', null, () => true, OperationType.OUTBOUND, () => 'sdds_sourceremote eq true'),
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),

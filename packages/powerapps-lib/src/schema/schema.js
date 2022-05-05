@@ -14,11 +14,12 @@ export const OperationType = Object.freeze({
 })
 
 export class Column {
-  constructor (name, srcPath, srcFunc, operationType = OperationType.INBOUND_AND_OUTBOUND) {
+  constructor (name, srcPath, srcFunc, operationType = OperationType.INBOUND_AND_OUTBOUND, filterFunc = null) {
     this.name = name
     this.srcPath = srcPath
     this.srcFunc = srcFunc
     this.operationType = operationType
+    this.filterFunc = filterFunc
   }
 }
 

@@ -31,13 +31,13 @@ const applicationSiteTableSet = createTableSet(SddsApplicationKeys, [SddsSiteKey
 const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationSiteTableSet)
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
-/* Applications Types */
+/* Application Types */
 const applicationTypesRequestPath = buildRequestPath(SddsApplicationType)
 const applicationTypesTableSet = createTableSet(SddsApplicationType)
 const applicationTypesObjectTransformer = buildObjectTransformer(SddsApplicationType, applicationTypesTableSet)
 export const applicationTypesReadStream = () => powerAppsReadStream(applicationTypesRequestPath, applicationTypesObjectTransformer)
 
-/* Application purposes */
+/* Application Purposes */
 const applicationPurposesRequestPath = buildRequestPath(SddsApplicationPurpose)
 const applicationPurposesTableSet = createTableSet(SddsApplicationPurpose)
 const applicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationPurpose, applicationPurposesTableSet)

@@ -1,0 +1,24 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: 'Full name',
+        classes: "govuk-!-margin-top-7"
+      },
+      id: "name",
+      name: "name",
+      spellcheck: false,
+      value: payload['name'] if payload['name'] else data.fullName,
+      classes: "govuk-!-width-three-quarters",
+      attributes: { maxlength: 160 },
+      errorMessage: { text: 'Enter the full name' } if error['name']
+    }) }}
+{% endblock %}

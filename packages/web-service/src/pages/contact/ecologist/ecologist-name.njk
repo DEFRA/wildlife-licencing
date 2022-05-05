@@ -1,0 +1,9 @@
+{% extends "contact-name.njk" %}
+{% set title = 'Who is the ecologist?' %}
+{% set errorMap = {
+        'name': {
+            'string.empty': { ref: '#name', text: 'Enter the name of the ecologist' },
+            'string.pattern.base': { ref: '#name', text: 'Enter the name of the ecologist using only letters, spaces, \'-\' and \'.\'' }
+        }
+    }
+%}

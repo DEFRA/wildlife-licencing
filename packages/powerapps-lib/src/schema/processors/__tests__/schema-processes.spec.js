@@ -50,8 +50,7 @@ describe('the schema processes', () => {
       expect(applicationPayload).toEqual({
         relationshipsPayload: null,
         columnPayload: {
-          firstname: 'Mr Brian',
-          lastname: 'Yak',
+          fullname: 'Mr Brian Yak',
           telephone1: '234234',
           emailaddress1: 'brian.yak@email.com',
           address1_line1: 'Old Hill',
@@ -75,6 +74,7 @@ describe('the schema processes', () => {
           sdds_applicationnumber: expect.any(String),
           sdds_descriptionofproposal: 'Badgers are proposed to be moved',
           sdds_detailsofconvictions: 'no convictions',
+          sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
         relationshipsPayload: {

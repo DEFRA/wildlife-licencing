@@ -38,13 +38,15 @@ import {
 import {
   getApplicationApplicant,
   putApplicationApplicant,
-  deleteApplicationApplicant
+  deleteApplicationApplicant,
+  getApplicantsByUserId
 } from './handlers/application/applicant/applicant.js'
 
 import {
   getApplicationEcologist,
   putApplicationEcologist,
-  deleteApplicationEcologist
+  deleteApplicationEcologist,
+  getEcologistsByUserId
 } from './handlers/application/ecologist/ecologist.js'
 
 import {
@@ -90,9 +92,11 @@ const handlers = {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
+  getApplicantsByUserId,
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
+  getEcologistsByUserId,
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
