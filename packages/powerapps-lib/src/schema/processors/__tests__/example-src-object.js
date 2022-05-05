@@ -206,6 +206,7 @@ export const initialGeneratedAssignmentsObject = [
     assignments: {
       'sdds_applicantid@odata.bind': '$4',
       sdds_applicationcategory: 100000001,
+      sdds_sourceremote: true,
       sdds_applicationnumber: '2022-500000-EPS-MIT',
       'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
@@ -294,6 +295,7 @@ export const updatedGeneratedAssignmentsObject = [
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
       sdds_detailsofconvictions: 'no convictions',
+      sdds_sourceremote: true,
       'sdds_ecologistid@odata.bind': '$5',
       sdds_whydoyouneedalicence: 'need to move some badgers'
     },
@@ -327,7 +329,7 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$expand=sdds_applicantid($select=fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid($select=fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicantid($select=fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid($select=fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid($select=name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description)'
 
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(fullname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',

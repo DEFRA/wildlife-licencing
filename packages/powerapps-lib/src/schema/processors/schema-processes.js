@@ -337,6 +337,11 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
     path += `$select=${cols.map(c => c.name).join(',')}`
   }
 
+  const filters = table.columns.filter(c => c.filterFunc)
+  if (filters.length) {
+    path += `&$filter=${filters.map(c => c.filterFunc()).join(',')}`
+  }
+
   if (table.relationships && table.relationships.length) {
     for (const relationship of table.relationships) {
       // Filter the relationships by the tables included in the table set

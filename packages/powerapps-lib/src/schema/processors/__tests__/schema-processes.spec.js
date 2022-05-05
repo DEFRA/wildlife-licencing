@@ -74,6 +74,7 @@ describe('the schema processes', () => {
           sdds_applicationnumber: expect.any(String),
           sdds_descriptionofproposal: 'Badgers are proposed to be moved',
           sdds_detailsofconvictions: 'no convictions',
+          sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
         relationshipsPayload: {
