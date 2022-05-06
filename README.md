@@ -84,8 +84,8 @@ Edit the .env files to add secrets
 
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
-If you receive the secrets, please remember to ignore them in git, by running:
-- git update-index --assume-unchanged docker/env/aqp-secrets.env
+If you receive the secrets, please remember to ignore them in git, by running  
+`git update-index --assume-unchanged docker/env/aqp-secrets.env`
 
 Alternatively set the environment variables in the running shell or your IDE
 
