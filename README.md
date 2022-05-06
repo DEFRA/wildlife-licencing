@@ -16,7 +16,7 @@ First edit the docker secret environment files to add the secret keys
 
 - docker/env/aqp-secrets.env
 
-(The secrets for the test environment may be obtained from <TBC - graham.willis@defra.gov.uk>)
+(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
 Now run the following shell commands;
 
@@ -29,7 +29,8 @@ npm run docker:stop
 ```
 
 - http://localhost:3000/openapi-ui
-- http://localhost:4000/hello
+- http://localhost:4000/login
+- http://localhost:4000/health
 
 The docker services running should be as follows:
 
@@ -81,7 +82,10 @@ node -r dotenv/config src/application-queue-processor.js
 
 Edit the .env files to add secrets
 
-(The secrets for the test environment may be obtained from <TBC - graham.willis@defra.gov.uk>)
+(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
+
+If you receive the secrets, please remember to ignore them in git, by running  
+`git update-index --assume-unchanged docker/env/aqp-secrets.env`
 
 Alternatively set the environment variables in the running shell or your IDE
 
