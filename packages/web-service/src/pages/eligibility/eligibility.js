@@ -96,7 +96,7 @@ export const landOwnerSetData = request =>
     }
   })
 
-export const landOwner = yesNoPage(LANDOWNER, null, eligibilityCompletion,
+export const landOwner = yesNoPage(LANDOWNER, null, null, eligibilityCompletion,
   landOwnerSetData, { auth: false })
 
 /**************************************************************
@@ -106,7 +106,7 @@ export const landOwnerPermissionSetData = request =>
   updateEligibilityCache(request, eligibility =>
     Object.assign(eligibility, { [HAS_LANDOWNER_PERMISSION]: isYes(request) }))
 
-export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, eligibilityCompletion,
+export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, null, eligibilityCompletion,
   landOwnerPermissionSetData, { auth: false })
 
 /**************************************************************
@@ -122,7 +122,7 @@ export const consentSetData = request =>
     }
   })
 
-export const consent = yesNoPage(CONSENT, null, eligibilityCompletion,
+export const consent = yesNoPage(CONSENT, null, null, eligibilityCompletion,
   consentSetData, { auth: false })
 
 /**************************************************************
@@ -132,7 +132,7 @@ export const consentGrantedSetData = request =>
   updateEligibilityCache(request, eligibility =>
     Object.assign(eligibility, { [PERMISSION_GRANTED]: isYes(request) }))
 
-export const consentGranted = yesNoPage(CONSENT_GRANTED, null, eligibilityCompletion,
+export const consentGranted = yesNoPage(CONSENT_GRANTED, null, null, eligibilityCompletion,
   consentGrantedSetData, { auth: false })
 
 export const notEligibleLandowner = pageRoute(NOT_ELIGIBLE_LANDOWNER.page, NOT_ELIGIBLE_LANDOWNER.uri,
