@@ -9,7 +9,9 @@ import {
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
+import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
+import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 
 const routes = [
   ...applications,
@@ -24,8 +26,10 @@ const routes = [
   ...eligibilityCheck,
   ...eligible,
   ...tasklist,
-  ...ecologistName,
+  ...applicantUser,
   ...applicantName,
+  ...ecologistUser,
+  ...ecologistName,
   ...miscRoutes
 ]
 

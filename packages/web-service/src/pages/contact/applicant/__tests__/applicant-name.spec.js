@@ -1,4 +1,3 @@
-
 describe('applicant-name', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the applicant from the database', async () => {
@@ -9,7 +8,7 @@ describe('applicant-name', () => {
         }
       }
     }))
-    const { getData } = await import('../applicant-name.js')
+    const { getApplicantData } = await import('../../common/common.js')
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -18,7 +17,7 @@ describe('applicant-name', () => {
         }))
       })
     }
-    const result = await getData(request)
+    const result = await getApplicantData(request)
     expect(result).toEqual({ fullName: 'Keith Richards' })
   })
   it('setData returns the applicant from the database', async () => {

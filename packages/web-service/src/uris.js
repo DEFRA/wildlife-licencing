@@ -17,10 +17,14 @@ export const eligibilityURIs = {
 
 export const contactURIs = {
   ECOLOGIST: {
+    USER: { uri: '/ecologist-user', page: 'ecologist-user' },
+    NAMES: { uri: '/ecologist-names', page: 'ecologist-names' },
     NAME: { uri: '/ecologist-name', page: 'ecologist-name' },
     IS_ORGANIZATION: { uri: 'ecologist-company', page: 'ecologist-company' }
   },
   APPLICANT: {
+    USER: { uri: '/applicant-user', page: 'applicant-user' },
+    NAMES: { uri: '/applicant-names', page: 'applicant-names' },
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
     IS_ORGANIZATION: { uri: 'applicant-company', page: 'applicant-company' }
   }
