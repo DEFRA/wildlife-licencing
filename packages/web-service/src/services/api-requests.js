@@ -5,6 +5,16 @@ const debug = db('web-service:api-requests')
 
 export const APIRequests = {
   USER: {
+    getById: async userId => {
+      try {
+        debug(`Finding user for userId: ${userId}`)
+        return API.get(`/user/${userId}`)
+      } catch (error) {
+        console.error(`Error finding user with userId ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     findByName: async username => {
       try {
         debug(`Finding user by username: ${username}`)

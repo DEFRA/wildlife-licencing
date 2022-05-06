@@ -3,6 +3,30 @@ describe('The API requests service', () => {
   beforeEach(() => jest.resetModules())
 
   describe('USER requests', () => {
+    it('findById calls the API connector correctly', async () => {
+      const mockGet = jest.fn(() => ({ username: 'Keith Moon' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.USER.getById('56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(mockGet).toHaveBeenCalledWith('/user/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(result).toEqual({ username: 'Keith Moon' })
+    })
+
+    it('findById rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.USER.getById('56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')).rejects.toThrow()
+    })
+
     it('findByName calls the API connector correctly', async () => {
       const mockGet = jest.fn(() => [{ user: 123 }])
       jest.doMock('@defra/wls-connectors-lib', () => ({

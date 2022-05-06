@@ -1,6 +1,11 @@
 import { contactURIs } from '../../../uris.js'
-import { checkData } from '../common/common.js'
+import { checkData, getUserData } from '../common/common.js'
 import { yesNoPage } from '../../common/yes-no.js'
-const { USER } = contactURIs.APPLICANT
+const { USER, NAME } = contactURIs.APPLICANT
 
-export const applicantUser = yesNoPage(USER, checkData, () => {}, null, null)
+export const completion = async request => {
+  const pageData = await request.cache().getPageData()
+  return pageData.payload['yes-no'] === 'yes' ? USER.uri : NAME.uri
+}
+
+export const applicantUser = yesNoPage(USER, checkData, getUserData, completion, null)

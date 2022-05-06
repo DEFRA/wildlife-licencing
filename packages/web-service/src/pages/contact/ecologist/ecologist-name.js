@@ -1,5 +1,5 @@
 import { contactURIs } from '../../../uris.js'
-import { contactNamePage } from '../common/contact-name-page.js'
+import { contactNamePage } from '../common/contact-name/contact-name-page.js'
 import { checkData, getEcologistData } from '../common/common.js'
 
 import { APIRequests } from '../../../services/api-requests.js'
