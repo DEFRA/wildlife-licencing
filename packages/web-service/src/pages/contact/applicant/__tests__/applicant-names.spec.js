@@ -56,7 +56,7 @@ describe('applicant-names', () => {
       }))
       const { applicantNamesCheckData } = await import('../applicant-names.js')
       const result = await applicantNamesCheckData(request, h)
-      expect(result).toBeUndefined()
+      expect(result).toBeNull()
     })
   })
 

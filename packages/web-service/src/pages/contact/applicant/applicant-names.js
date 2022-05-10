@@ -15,6 +15,8 @@ export const applicantNamesCheckData = async (request, h) => {
   if (!applicants) {
     return h.redirect(NAME.uri)
   }
+
+  return null
 }
 
 export const getApplicantNamesData = async request => {

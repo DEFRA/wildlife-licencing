@@ -56,7 +56,7 @@ describe('ecologist-names', () => {
       }))
       const { ecologistNamesCheckData } = await import('../ecologist-names.js')
       const result = await ecologistNamesCheckData(request, h)
-      expect(result).toBeUndefined()
+      expect(result).toBeNull()
     })
   })
 

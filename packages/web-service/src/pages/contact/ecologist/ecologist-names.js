@@ -15,6 +15,8 @@ export const ecologistNamesCheckData = async (request, h) => {
   if (!ecologists) {
     return h.redirect(NAME.uri)
   }
+
+  return null
 }
 
 export const getEcologistNamesData = async request => {
