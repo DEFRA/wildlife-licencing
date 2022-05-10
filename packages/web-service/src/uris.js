@@ -30,6 +30,8 @@ export const contactURIs = {
   }
 }
 
+export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
+
 export const ERRORS = {
   CLIENT: { page: 'client-error' },
   SERVER: { page: 'server-error' }

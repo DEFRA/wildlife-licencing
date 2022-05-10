@@ -25,6 +25,7 @@ export class HTTPResponseError extends Error {
  */
 export const checkResponseOkElseThrow = async responsePromise => {
   const response = await responsePromise
+  debug(`HTTP response code: ${JSON.stringify(response.status)}`)
   if (response.ok) {
     if (response.status === 204) {
       return null
@@ -82,7 +83,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
 
     // Run the supplied async response function
     const result = await responseFunc(responsePromise)
-    debug(`HTTP response: ${JSON.stringify(result)}`)
+    debug(`HTTP response data: ${JSON.stringify(result)}`)
     return result
   } catch (err) {
     if (err.name === 'AbortError') {

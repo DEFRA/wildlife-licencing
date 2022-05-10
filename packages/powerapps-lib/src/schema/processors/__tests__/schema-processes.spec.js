@@ -50,7 +50,7 @@ describe('the schema processes', () => {
       expect(applicationPayload).toEqual({
         relationshipsPayload: null,
         columnPayload: {
-          fullname: 'Mr Brian Yak',
+          lastname: 'Mr Brian Yak',
           telephone1: '234234',
           emailaddress1: 'brian.yak@email.com',
           address1_line1: 'Old Hill',

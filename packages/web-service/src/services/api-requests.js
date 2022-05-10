@@ -68,6 +68,16 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    submit: async (userId, applicationId) => {
+      try {
+        debug(`Submit applications by userId: ${userId} and applicationId: ${applicationId}`)
+        return API.post(`/user/${userId}/application/${applicationId}/submit`)
+      } catch (error) {
+        console.error(`Error submitting application with userId ${userId} and applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   APPLICANT: {
