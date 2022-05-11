@@ -7,16 +7,13 @@ export const getUserData = async request => {
   return APIRequests.USER.getById(userId)
 }
 
-export const getApplicantData = async request => {
-  const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
-  return APIRequests.APPLICANT.getById(userId, applicationId)
-}
+export const getApplicantData = request => getContactData('APPLICANT')(request)
+export const getEcologistData = request => getContactData('ECOLOGIST')(request)
 
-export const getEcologistData = async request => {
+const getContactData = contact => async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
-  return APIRequests.ECOLOGIST.getById(userId, applicationId)
+  return APIRequests[contact].getById(userId, applicationId)
 }
 
 export const checkData = async (request, h) => {
