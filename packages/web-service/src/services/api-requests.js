@@ -5,6 +5,16 @@ const debug = db('web-service:api-requests')
 
 export const APIRequests = {
   USER: {
+    getById: async userId => {
+      try {
+        debug(`Finding user for userId: ${userId}`)
+        return API.get(`/user/${userId}`)
+      } catch (error) {
+        console.error(`Error finding user with userId ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     findByName: async username => {
       try {
         debug(`Finding user by username: ${username}`)
@@ -58,6 +68,16 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    submit: async (userId, applicationId) => {
+      try {
+        debug(`Submit applications by userId: ${userId} and applicationId: ${applicationId}`)
+        return API.post(`/user/${userId}/application/${applicationId}/submit`)
+      } catch (error) {
+        console.error(`Error submitting application with userId ${userId} and applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   APPLICANT: {
@@ -80,6 +100,16 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    findByUser: async userId => {
+      try {
+        debug(`Finding applications/applicant for userId: ${userId}`)
+        return API.get(`/user/${userId}/applications/applicant`)
+      } catch (error) {
+        console.error(`Error finding applications/applicant with userId ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   ECOLOGIST: {
@@ -99,6 +129,16 @@ export const APIRequests = {
         return API.put(`/user/${userId}/application/${applicationId}/ecologist`, ecologist)
       } catch (error) {
         console.error(`Error getting application/ecologist with userId ${userId} and applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    findByUser: async userId => {
+      try {
+        debug(`Finding applications/ecologist for userId: ${userId}`)
+        return API.get(`/user/${userId}/applications/ecologist`)
+      } catch (error) {
+        console.error(`Error finding applications/ecologist with userId ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

@@ -1,6 +1,9 @@
-import { eligibilityURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs } from '../../uris.js'
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
-
+const {
+  APPLICANT: { USER: APPLICANT_USER },
+  ECOLOGIST: { USER: ECOLOGIST_USER }
+} = contactURIs
 // Placeholder - the badger mitigation licence
 export const A24 = 'A24 Badger'
 
@@ -79,12 +82,12 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
-            uri: '/',
+            uri: APPLICANT_USER.uri,
             status: getStatus(SECTION_TASKS.LICENCE_HOLDER)
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: '/',
+            uri: ECOLOGIST_USER.uri,
             status: getStatus(SECTION_TASKS.ECOLOGIST)
           }
         ]

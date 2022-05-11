@@ -9,7 +9,13 @@ import {
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
+import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
+import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
+import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
+import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
+
+import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
   ...applications,
@@ -24,8 +30,13 @@ const routes = [
   ...eligibilityCheck,
   ...eligible,
   ...tasklist,
-  ...ecologistName,
+  ...applicantUser,
   ...applicantName,
+  ...applicantNames,
+  ...ecologistUser,
+  ...ecologistName,
+  ...ecologistNames,
+  signOut,
   ...miscRoutes
 ]
 

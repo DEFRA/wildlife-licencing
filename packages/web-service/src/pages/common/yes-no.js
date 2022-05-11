@@ -1,11 +1,11 @@
 import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 
-export const yesNoPage = (uri, checkData, completion, setData, options) => pageRoute(
+export const yesNoPage = (uri, checkData, getData, completion, setData, options) => pageRoute(
   uri.page,
   uri.uri,
   checkData,
-  null,
+  getData,
   Joi.object({
     'yes-no': Joi.any()
       .valid('yes', 'no')

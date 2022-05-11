@@ -42,6 +42,12 @@ export const getData = async request => {
   const eligibilityStatus = await getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)
   if (eligibilityStatus === STATUS_VALUES.CANNOT_START_YET) {
     await updateStatusCache(request, SECTION_TASKS.ELIGIBILITY_CHECK, STATUS_VALUES.NOT_STARTED)
+  } else if (eligibilityStatus === STATUS_VALUES.COMPLETED) {
+    await updateStatusCache(request, SECTION_TASKS.LICENCE_HOLDER, STATUS_VALUES.NOT_STARTED)
+    await updateStatusCache(request, SECTION_TASKS.ECOLOGIST, STATUS_VALUES.NOT_STARTED)
+  } else {
+    await updateStatusCache(request, SECTION_TASKS.LICENCE_HOLDER, STATUS_VALUES.CANNOT_START_YET)
+    await updateStatusCache(request, SECTION_TASKS.ECOLOGIST, STATUS_VALUES.CANNOT_START_YET)
   }
 
   const decoratedMap = await decorateMap(request, licenceTypeMap[A24])

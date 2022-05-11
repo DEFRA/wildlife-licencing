@@ -1,4 +1,3 @@
-
 describe('ecologist-name', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the ecologist from the database', async () => {
@@ -9,7 +8,7 @@ describe('ecologist-name', () => {
         }
       }
     }))
-    const { getData } = await import('../ecologist-name.js')
+    const { getEcologistData } = await import('../../common/common.js')
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -18,7 +17,7 @@ describe('ecologist-name', () => {
         }))
       })
     }
-    const result = await getData(request)
+    const result = await getEcologistData(request)
     expect(result).toEqual({ fullName: 'Keith Richards' })
   })
 

@@ -99,11 +99,13 @@ describe('the eligibility pages', () => {
   describe('the landOwnerSetData function', () => {
     it('if \'yes\' sets isOwnerOfLand and removes hasLandOwnerPermission', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: true, hasLandOwnerPermission: true } })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await landOwnerSetData(request)
@@ -113,14 +115,17 @@ describe('the eligibility pages', () => {
           'eligibility-check': 'in-progress'
         }
       })
+      expect(mockClearPageData).toHaveBeenCalledWith(LANDOWNER_PERMISSION.page)
     })
     it('if \'no\' unsets isOwnerOfLand', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
           getData: jest.fn(() => ({ eligibility: { isOwnerOfLand: false, hasLandOwnerPermission: true } })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await landOwnerSetData(request)
@@ -130,6 +135,7 @@ describe('the eligibility pages', () => {
           'eligibility-check': 'in-progress'
         }
       })
+      expect(mockClearPageData).toHaveBeenCalledWith(LANDOWNER_PERMISSION.page)
     })
   })
 
@@ -173,11 +179,13 @@ describe('the eligibility pages', () => {
   describe('the consentSetData function', () => {
     it('if \'yes\' sets permissionsRequired', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => null),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await consentSetData(request)
@@ -187,9 +195,11 @@ describe('the eligibility pages', () => {
           'eligibility-check': 'in-progress'
         }
       })
+      expect(mockClearPageData).toHaveBeenCalledWith(CONSENT_GRANTED.page)
     })
     it('if \'no\' unsets permissionsRequired and removes permissionsGranted', async () => {
       const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
         cache: () => ({
@@ -199,7 +209,8 @@ describe('the eligibility pages', () => {
               'eligibility-check': 'in-progress'
             }
           })),
-          setData: mockSetData
+          setData: mockSetData,
+          clearPageData: mockClearPageData
         })
       }
       await consentSetData(request)
@@ -209,6 +220,7 @@ describe('the eligibility pages', () => {
           'eligibility-check': 'in-progress'
         }
       })
+      expect(mockClearPageData).toHaveBeenCalledWith(CONSENT_GRANTED.page)
     })
   })
 
