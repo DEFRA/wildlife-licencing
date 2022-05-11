@@ -1,4 +1,4 @@
-import { APPLICATIONS, contactURIs } from '../../../../uris.js'
+import { APPLICATIONS, TASKLIST, contactURIs } from '../../../../uris.js'
 const { APPLICANT: { NAME } } = contactURIs
 
 describe('applicant-names', () => {
@@ -119,6 +119,25 @@ describe('applicant-names', () => {
       await setApplicantNamesData(request)
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a',
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { foo: 'bar', fullName: 'Charlie Watts' })
+    })
+  })
+
+  describe('the completion function', () => {
+    it('will return the NAME page if the contact is new', async () => {
+      const request = {
+        cache: () => ({ getPageData: jest.fn(() => ({ payload: { contact: 'new' } })) })
+      }
+      const { completion } = await import('../applicant-names.js')
+      const result = await completion(request)
+      expect(result).toEqual(NAME.uri)
+    })
+    it('will return the TASKLIST page if the contact is not new', async () => {
+      const request = {
+        cache: () => ({ getPageData: jest.fn(() => ({ payload: { contact: '1234567' } })) })
+      }
+      const { completion } = await import('../applicant-names.js')
+      const result = await completion(request)
+      expect(result).toEqual(TASKLIST.uri)
     })
   })
 })

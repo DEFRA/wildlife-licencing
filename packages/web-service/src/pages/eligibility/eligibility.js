@@ -26,7 +26,7 @@ export const updateEligibilityCache = async (request, operator) => {
   const journeyData = await request.cache().getData() || {}
   journeyData.eligibility = journeyData.eligibility || {}
   const { eligibility } = journeyData
-  operator(eligibility)
+  await operator(eligibility)
 
   // Expediently set the task status to in-progress
   journeyData.tasks = journeyData.tasks || {}
@@ -87,7 +87,8 @@ export const eligibilityCompletion = async request => {
  * Are you the landowner?
  **************************************************************/
 export const landOwnerSetData = request =>
-  updateEligibilityCache(request, eligibility => {
+  updateEligibilityCache(request, async eligibility => {
+    await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
     if (isYes(request)) {
       Object.assign(eligibility, { [IS_OWNER_OF_LAND]: true })
       delete eligibility[HAS_LANDOWNER_PERMISSION]
@@ -100,7 +101,7 @@ export const landOwner = yesNoPage(LANDOWNER, null, null, eligibilityCompletion,
   landOwnerSetData, { auth: false })
 
 /**************************************************************
- * Do you have the landowners permission?
+ * Do you have the landowner's permission?
  **************************************************************/
 export const landOwnerPermissionSetData = request =>
   updateEligibilityCache(request, eligibility =>
@@ -113,7 +114,8 @@ export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, null, e
  * Does the work require consents?
  **************************************************************/
 export const consentSetData = request =>
-  updateEligibilityCache(request, eligibility => {
+  updateEligibilityCache(request, async eligibility => {
+    await request.cache().clearPageData(CONSENT_GRANTED.page)
     if (isYes(request)) {
       Object.assign(eligibility, { [PERMISSION_REQUIRED]: true })
     } else {
