@@ -64,6 +64,41 @@ The docker services running should be as follows:
 
 Ensure you have node version 16.13.0 or greater installed; `node --version`
 
+#### To run any package locally
+
+To be able to run a package locally it has to be taken out of the docker swarm
+To find the process id for the package you want to take out of the swarm you need to run
+
+```shell
+docker ls
+```
+
+For example we'll remove `wls_web`, but this will work for any package
+
+```shell
+docker service rm wls_web
+```
+
+You'll need to `cd` into your package 
+
+```shell
+cd packages/web-service
+```
+
+If you were to run this you should get to a point where your server is running, but you get a status 500 error. 
+
+The file `env.example` in the web-service directory needs to be copied and renamed
+
+`cp .env.example .env`
+
+still inside the web-service, you need on windows to run
+
+`node_modules/gulp/bin/gulp.js build`
+
+Problems have been faced running this in node, but git bash has been successful.
+
+Running `npm run start` from the web-service directory should now work.
+
 #### Start the API locally
 
 ```shell
