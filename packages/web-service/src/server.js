@@ -12,7 +12,7 @@ import sessionManager from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { REGISTER, eligibilityURIs } from './uris.js'
+import { REGISTER, eligibilityURIs, LOGIN } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -36,6 +36,7 @@ const additionalPageData = (request, h) => {
   if (request.method === 'get' && response.variety === 'view') {
     Object.assign(response.source.context, {
       _uri: {
+        login: LOGIN.uri,
         register: REGISTER.uri,
         landowner: eligibilityURIs.LANDOWNER.uri,
         landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,

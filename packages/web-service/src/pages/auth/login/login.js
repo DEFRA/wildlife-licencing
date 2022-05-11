@@ -15,7 +15,7 @@ export const completion = async request => {
 export const validator = async payload => {
   const userId = payload['user-id'].toLowerCase()
   Joi.assert({ 'user-id': userId }, authJoiObject)
-  const result = await APIRequests.USER.findByName(payload['user-id'])
+  const result = await APIRequests.USER.findByName(userId)
 
   // The API will have cached the result so it is cheap to get this again in the completion handler where
   // we can easily rewrite to the cache
