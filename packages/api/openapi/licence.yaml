@@ -1372,6 +1372,8 @@ components:
     contact:
       type: object
       properties:
+        sddsContactId:
+          $ref: '#/components/schemas/uuid'
         fullName:
           type: string
           minLength: 1

@@ -3,7 +3,9 @@ import { putSectionHandler } from '../application-section/put-section.js'
 import { deleteSectionHandler } from '../application-section/delete-section.js'
 import { getSectionsByUserIdHandler } from '../application-section/get-sections-by-user-id.js'
 
-export const getApplicationApplicant = getSectionHandler('applicant')
+const keyFunc = k => ({ sddsContactId: k.find(k => k.apiBasePath === 'application.applicant').powerAppsKey })
+
+export const getApplicationApplicant = getSectionHandler('applicant', keyFunc)
+export const getApplicantsByUserId = getSectionsByUserIdHandler('applicant', keyFunc)
 export const putApplicationApplicant = putSectionHandler('applicant')
 export const deleteApplicationApplicant = deleteSectionHandler('applicant')
-export const getApplicantsByUserId = getSectionsByUserIdHandler('applicant')

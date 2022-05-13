@@ -41,7 +41,12 @@ describe('The getEcologistsByUserIdHandler handler', () => {
         }
       }
     }))
-    const mockFindAll = jest.fn(() => [{ dataValues: { application: { ecologist: { fullName: 'Bob' } } } }])
+    const mockFindAll = jest.fn(() => [{
+      dataValues: {
+        application: { ecologist: { fullName: 'Bob' } },
+        targetKeys: [{ apiBasePath: 'application.ecologist', powerAppsKey: 'c663ed54-a8cb-ec11-a7b6-0022481aab5b', powerAppsTable: 'contacts' }]
+      }
+    }])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -56,8 +61,8 @@ describe('The getEcologistsByUserIdHandler handler', () => {
     const mockResponse = jest.fn(() => ({ type: mockType }))
     const h = { response: mockResponse }
     await getEcologistsByUserId(context, request, h)
-    expect(mockSave).toHaveBeenCalledWith('path', [{ fullName: 'Bob' }])
-    expect(mockResponse).toHaveBeenCalledWith([{ fullName: 'Bob' }])
+    expect(mockSave).toHaveBeenCalledWith('path', [{ fullName: 'Bob', sddsContactId: 'c663ed54-a8cb-ec11-a7b6-0022481aab5b' }])
+    expect(mockResponse).toHaveBeenCalledWith([{ fullName: 'Bob', sddsContactId: 'c663ed54-a8cb-ec11-a7b6-0022481aab5b' }])
     expect(mockType).toHaveBeenCalledWith('application/json')
     expect(mockCode).toHaveBeenCalledWith(200)
   })
