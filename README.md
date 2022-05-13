@@ -22,6 +22,7 @@ Now run the following shell commands;
 
 ```shell
 cd  wildlife-licencing
+npm i
 npm run docker:build
 npm run docker:start
 docker service ls
@@ -70,7 +71,7 @@ To be able to run a package locally it has to be taken out of the docker swarm
 To find the process id for the package you want to take out of the swarm you need to run
 
 ```shell
-docker ls
+docker service ls
 ```
 
 For example we'll remove `wls_web`, but this will work for any package
