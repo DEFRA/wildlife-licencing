@@ -1388,6 +1388,8 @@ components:
     organization:
       type: object
       properties:
+        sddsAccountId:
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           minLength: 1

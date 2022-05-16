@@ -56,7 +56,8 @@ describe('The putApplicationEcologist handler', () => {
         dataValues: {
           application: {
             ecologist: a
-          }
+          },
+          targetKeys: null
         }
       }]]))
     }

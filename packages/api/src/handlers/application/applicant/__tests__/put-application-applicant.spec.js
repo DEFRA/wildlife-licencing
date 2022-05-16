@@ -56,7 +56,8 @@ describe('The putApplicationApplicant handler', () => {
         dataValues: {
           application: {
             applicant: a
-          }
+          },
+          targetKeys: null
         }
       }]]))
     }
