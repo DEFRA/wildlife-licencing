@@ -15,6 +15,5 @@ RUN npm ci --production
 FROM wildlife_licensing/base
 WORKDIR /app
 COPY --from=builder /app/ /app/
-USER root
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+
+CMD [ "node", "src/processor.js" ]
