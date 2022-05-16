@@ -74,6 +74,108 @@ describe('The putApplicationEcologist handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
+  it('returns status 200 on a successful update with a sddsContactId', async () => {
+    models.applications = {
+      findByPk: jest.fn(() => ({ id: context.request.params.userId })),
+      update: jest.fn(() => ([1, [{
+        dataValues: {
+          application: {
+            ecologist: a
+          },
+          targetKeys: null
+        }
+      }]]))
+    }
+    cache.delete = jest.fn()
+    cache.save = jest.fn()
+    await putApplicationEcologist(context, { payload: { sddsContactId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' } }, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(models.applications.update).toHaveBeenCalledWith({
+      application: { },
+      updateStatus: 'L',
+      targetKeys: [
+        {
+          apiBasePath: 'application',
+          apiKey: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+          apiTable: 'applications',
+          powerAppsTable: 'sdds_applications'
+        },
+        {
+          apiBasePath: 'application.ecologist',
+          apiKey: null,
+          apiTable: 'applications',
+          powerAppsKey: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+          powerAppsTable: undefined
+        }
+      ]
+    },
+    { returning: ['application'], where: { id: context.request.params.applicationId } })
+    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}/ecologist`)
+    expect(h.response).toHaveBeenCalledWith(a)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
+  it('returns status 200 on a successful update with a sddsContactId and updating an existing targetKey', async () => {
+    models.applications = {
+      findByPk: jest.fn(() => ({
+        application: {
+          id: context.request.params.userId
+        },
+        targetKeys: [
+          {
+            apiBasePath: 'application',
+            apiKey: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+            apiTable: 'applications',
+            powerAppsTable: 'sdds_applications'
+          },
+          {
+            apiBasePath: 'application.ecologist',
+            apiKey: null,
+            apiTable: 'applications',
+            powerAppsKey: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+            powerAppsTable: undefined
+          }
+        ]
+      })),
+      update: jest.fn(() => ([1, [{
+        dataValues: {
+          application: {
+            ecologist: a
+          }
+        }
+      }]]))
+    }
+    cache.delete = jest.fn()
+    cache.save = jest.fn()
+    await putApplicationEcologist(context, { payload: { sddsContactId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' } }, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(models.applications.update).toHaveBeenCalledWith({
+      application: { },
+      updateStatus: 'L',
+      targetKeys: [
+        {
+          apiBasePath: 'application',
+          apiKey: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+          apiTable: 'applications',
+          powerAppsTable: 'sdds_applications'
+        },
+        {
+          apiBasePath: 'application.ecologist',
+          apiKey: null,
+          apiTable: 'applications',
+          powerAppsKey: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+          powerAppsTable: undefined
+        }
+      ]
+    },
+    { returning: ['application'], where: { id: context.request.params.applicationId } })
+    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}/ecologist`)
+    expect(h.response).toHaveBeenCalledWith(a)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
   it('returns 404 on application not found', async () => {
     models.applications = {
       findByPk: jest.fn(() => null)
