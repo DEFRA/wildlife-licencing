@@ -5,7 +5,7 @@ import { clearCaches } from '../application-cache.js'
 import { sectionKeyFunc } from './section-keys-func.js'
 const { cache } = REDIS
 
-export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsGetKeyFunc, keyFunc) => async (context, req, h) => {
+export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsKeyFunc, keyFunc, removeKeyFunc) => async (context, req, h) => {
   try {
     const { userId, applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
@@ -18,14 +18,15 @@ export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsGetKeyFunc,
     await clearCaches(userId, applicationId)
     const sequelize = SEQUELIZE.getSequelize()
 
-    let targetKeys = application.targetKeys
+    let targetKeys = application.dataValues.targetKeys
     const powerAppsKey = sddsGetKeyFunc ? sddsGetKeyFunc(req) : null
     if (powerAppsKey) {
-      // (targetKeys, applicationId, section, powerAppsKey, powerAppsTable)
       targetKeys = sectionKeyFunc(targetKeys, applicationId, section, powerAppsKey)
-      if (removeSddsGetKeyFunc) {
-        removeSddsGetKeyFunc(req)
+      if (removeSddsKeyFunc) {
+        removeSddsKeyFunc(req)
       }
+    } else if (removeKeyFunc) {
+      targetKeys = removeKeyFunc(targetKeys)
     }
 
     const [, updatedApplication] = await models.applications.update({
