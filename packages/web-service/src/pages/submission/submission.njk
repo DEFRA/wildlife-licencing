@@ -1,0 +1,19 @@
+{% extends "information-page.njk" %}
+{% set mainClasses = "govuk-main-wrapper--1" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: "Application sent"
+      }) }}
+
+      <h2 class="govuk-heading-m">What happens next</h2>
+
+      <p class="govuk-body">
+        Natural England will review your application and contact you if they need more information. 
+      </p>
+    </div>
+  </div>
+{% endblock %}

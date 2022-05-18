@@ -2,6 +2,8 @@ import applications from '../pages/applications/applications.js'
 import login from '../pages/auth/login/login.js'
 import register from '../pages/auth/register/register.js'
 import miscRoutes from './misc-routes.js'
+import declaration from '../pages/declaration/declaration.js'
+import submisison from '../pages/submission/submission.js'
 import {
   consent, consentGranted, eligibilityCheck, eligible, landOwner,
   landOwnerPermission, notEligibleLandowner, notEligibleProject
@@ -21,6 +23,8 @@ const routes = [
   ...applications,
   ...login,
   ...register,
+  ...declaration,
+  ...submisison, 
   ...landOwner,
   ...landOwnerPermission,
   ...consent,
