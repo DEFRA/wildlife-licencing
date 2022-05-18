@@ -13,7 +13,7 @@ export const getApplicantOrganizationsByUserId =
   getSectionsByUserIdHandler(apiBasePath, keyFunc(apiBasePath, sddsKey))
 
 export const putApplicationApplicantOrganization =
-  putSectionHandler(apiBasePath, sddsGetKeyFunc(sddsKey), removeSddsKeyFunc(apiBasePath, sddsKey),
+  putSectionHandler(apiBasePath, sddsGetKeyFunc(sddsKey), removeSddsKeyFunc(sddsKey),
     keyFunc(apiBasePath, sddsKey), removeKeyFunc(apiBasePath))
 
 export const deleteApplicationApplicantOrganization =

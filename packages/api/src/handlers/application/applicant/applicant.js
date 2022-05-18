@@ -11,6 +11,6 @@ export const getApplicationApplicant = getSectionHandler(apiBasePath, keyFunc(ap
 export const getApplicantsByUserId = getSectionsByUserIdHandler(apiBasePath, keyFunc(apiBasePath, sddsKey))
 
 export const putApplicationApplicant = putSectionHandler(apiBasePath, sddsGetKeyFunc(sddsKey),
-  removeSddsKeyFunc(apiBasePath, sddsKey), keyFunc(apiBasePath, sddsKey), removeKeyFunc(apiBasePath))
+  removeSddsKeyFunc(sddsKey), keyFunc(apiBasePath, sddsKey), removeKeyFunc(apiBasePath))
 
 export const deleteApplicationApplicant = deleteSectionHandler(apiBasePath, removeKeyFunc(apiBasePath))

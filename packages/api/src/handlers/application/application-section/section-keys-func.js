@@ -4,14 +4,14 @@
  * @param sddsKey
  * @returns {function(*): null}
  */
-export const keyFunc = (apiBasePath, sddsKey) => k => {
-  const result = k?.find(k => k.apiBasePath === `application.${apiBasePath}`)
+export const keyFunc = (apiBasePath, sddsKey) => tk => {
+  const result = tk?.find(k => k.apiBasePath === `application.${apiBasePath}`)
   return result ? { [sddsKey]: result.powerAppsKey } : null
 }
 
-export const removeKeyFunc = apiBasePath => k => k?.filter(k => k.apiBasePath !== `application.${apiBasePath}`) || null
+export const removeKeyFunc = apiBasePath => tk => tk?.filter(k => k.apiBasePath !== `application.${apiBasePath}`) || null
 export const sddsGetKeyFunc = sddsKey => req => req.payload[sddsKey] || null
-export const removeSddsKeyFunc = (apiBasePath, sddsKey) => req => delete req.payload[sddsKey]
+export const removeSddsKeyFunc = sddsKey => req => delete req.payload[sddsKey]
 
 /**
  * Decorate the targetKeys object on the application table if that key has been retrieved from elsewhere, for instance

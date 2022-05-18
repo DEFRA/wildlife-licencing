@@ -11,6 +11,6 @@ export const getApplicationEcologist = getSectionHandler(apiBasePath, keyFunc(ap
 export const getEcologistsByUserId = getSectionsByUserIdHandler(apiBasePath, keyFunc(apiBasePath, sddsKey))
 
 export const putApplicationEcologist = putSectionHandler(apiBasePath, sddsGetKeyFunc(sddsKey),
-  removeSddsKeyFunc(apiBasePath, sddsKey), keyFunc(apiBasePath, sddsKey), removeKeyFunc(apiBasePath))
+  removeSddsKeyFunc(sddsKey), keyFunc(apiBasePath, sddsKey), removeKeyFunc(apiBasePath))
 
 export const deleteApplicationEcologist = deleteSectionHandler(apiBasePath, removeKeyFunc(apiBasePath))

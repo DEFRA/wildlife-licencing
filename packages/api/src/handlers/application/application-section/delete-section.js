@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { clearCaches } from '../application-cache.js'
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
 
-export const deleteSectionHandler = (section, removeKeyFunc) => async (context, req, h) => {
+export const deleteSectionHandler = (section, removeKeyFunc) => async (context, _req, h) => {
   try {
     const { userId, applicationId } = context.request.params
     const result = await models.applications.findByPk(applicationId)

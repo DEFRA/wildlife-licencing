@@ -63,7 +63,7 @@ describe('applicant-handlers', () => {
   describe('removeSddsKeyFunc', () => {
     it('removes the key from the payload', async () => {
       const req = { payload: { sddsContactId: 'c9f70b15-15d5-ec11-a7b5-0022481a8a39' } }
-      removeSddsKeyFunc(apiBasePath, sddsKey)(req)
+      removeSddsKeyFunc(sddsKey)(req)
       expect(req).toEqual({ payload: { } })
     })
   })
