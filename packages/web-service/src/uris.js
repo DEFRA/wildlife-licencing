@@ -3,8 +3,8 @@ export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const LOGIN = { uri: '/login', page: 'login' }
 export const REGISTER = { uri: '/register', page: 'register' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
-export const DECLARATION = { uri: '/declaration', page: 'declaration'}
-export const SUBMISSION = { uri: '/submission', page: 'submission'}
+export const DECLARATION = { uri: '/declaration', page: 'declaration' }
+export const SUBMISSION = { uri: '/submission', page: 'submission' }
 
 export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },
