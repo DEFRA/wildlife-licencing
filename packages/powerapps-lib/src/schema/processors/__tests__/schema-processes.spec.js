@@ -36,8 +36,8 @@ describe('the schema processes', () => {
         .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
 
       expect(tableSet.map(t => t.basePath))
-        .toEqual(['application.sites', 'application.applicant', 'application.applicant.organization',
-          'application.ecologist', 'application.ecologist.organization', 'application'])
+        .toEqual(['application.sites', 'application.applicant', 'application.applicantOrganization',
+          'application.ecologist', 'application.ecologistOrganization', 'application'])
     })
   })
 

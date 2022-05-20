@@ -266,6 +266,73 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user/{userId}/applications/applicant-organization':
+    get:
+      description: Get the applicant organizations for all applications for a user
+      summary: Get the applicants organizations for all applications for a user
+      operationId: getApplicantOrganizationsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organizations'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{userId}/applications/ecologist-organization':
+    get:
+      description: Get the applicant ecologist organizations for all ecologists for a user
+      summary: Get the applicants ecologist organizations for all ecologists for a user
+      operationId: getEcologistOrganizationsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organizations'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
   '/user/{userId}/application':
     post:
@@ -729,6 +796,228 @@ paths:
       description: Delete the application ecologist details
       summary: Delete the ecologist details for an application
       operationId: deleteApplicationEcologist
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Applicant Organization
+  ################################################################################################
+  '/user/{userId}/application/{applicationId}/applicant-organization':
+    put:
+      description: Update the application applicant organization details
+      summary: Create or update the application applicant organization details
+      operationId: putApplicationApplicantOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organization'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organization'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application applicant organization details
+      summary: Get the applicant organization details for an application
+      operationId: getApplicationApplicantOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organization'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application applicant organization details
+      summary: Delete the applicant organization details for an application
+      operationId: deleteApplicationApplicantOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  ################################################################################################
+  # Ecologist Organization
+  ################################################################################################
+  '/user/{userId}/application/{applicationId}/ecologist-organization':
+    put:
+      description: Update the application ecologist organization details
+      summary: Create or update the application ecologist organization details
+      operationId: putApplicationEcologistOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organization'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organization'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application ecologist organization details
+      summary: Get the ecologist organization details for an application
+      operationId: getApplicationEcologistOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organization'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application ecologist organization details
+      summary: Delete the ecologist organization details for an application
+      operationId: deleteApplicationEcologistOrganization
       parameters:
         - name: userId
           in: path
@@ -1269,8 +1558,12 @@ components:
           $ref: '#/components/schemas/eligibility'
         applicant:
           $ref: '#/components/schemas/contact'
+        applicantOrganization:
+          $ref: '#/components/schemas/organization'
         ecologist:
           $ref: '#/components/schemas/contact'
+        ecologistOrganization:
+          $ref: '#/components/schemas/organization'
         submitted:
           $ref: '#/components/schemas/timestamp'
         createdAt:
@@ -1287,6 +1580,11 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/contact'
+
+    organizations:
+      type: array
+      items:
+        $ref: '#/components/schemas/organization'
 
     eligibility:
       type: object
@@ -1372,6 +1670,8 @@ components:
     contact:
       type: object
       properties:
+        sddsContactId:
+          $ref: '#/components/schemas/uuid'
         fullName:
           type: string
           minLength: 1
@@ -1380,20 +1680,16 @@ components:
           $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
-        organization:
-          $ref: '#/components/schemas/organization'
 
     organization:
       type: object
       properties:
+        sddsAccountId:
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           minLength: 1
           maxLength: 36
-        contactDetails:
-          $ref: '#/components/schemas/contactDetails'
-        address:
-          $ref: '#/components/schemas/address'
 
     address:
       type: object
