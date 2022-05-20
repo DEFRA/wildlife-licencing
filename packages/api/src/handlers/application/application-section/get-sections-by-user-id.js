@@ -3,10 +3,11 @@ import { APPLICATION_JSON } from '../../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const getSectionsByUserIdHandler = section => async (context, req, h) => {
+export const getSectionsByUserIdHandler = (section, keyFunc) => async (context, req, h) => {
   try {
     const { userId } = context.request.params
     const saved = await cache.restore(req.path)
+
     if (saved) {
       return h.response(JSON.parse(saved))
         .type(APPLICATION_JSON)
@@ -17,7 +18,10 @@ export const getSectionsByUserIdHandler = section => async (context, req, h) => 
       where: { userId }
     })
 
-    const result = applications.map(a => a.dataValues.application[section]).filter(a => a)
+    const result = applications
+      .map(a => ({ data: a.dataValues.application[section], keys: a.dataValues.targetKeys }))
+      .filter(a => a.data)
+      .map(a => keyFunc ? Object.assign(a.data, keyFunc(a.keys)) : a.data)
 
     // Check the user/applicant exists
     if (!result.length) {
