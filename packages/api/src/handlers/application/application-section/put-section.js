@@ -2,9 +2,10 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
 import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
 import { clearCaches } from '../application-cache.js'
+import { sectionKeyFunc } from './section-keys-func.js'
 const { cache } = REDIS
 
-export const putSectionHandler = section => async (context, req, h) => {
+export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsKeyFunc, keyFunc, removeKeyFunc) => async (context, req, h) => {
   try {
     const { userId, applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
@@ -17,8 +18,20 @@ export const putSectionHandler = section => async (context, req, h) => {
     await clearCaches(userId, applicationId)
     const sequelize = SEQUELIZE.getSequelize()
 
+    let targetKeys = application.dataValues.targetKeys
+    const powerAppsKey = sddsGetKeyFunc ? sddsGetKeyFunc(req) : null
+    if (powerAppsKey) {
+      targetKeys = sectionKeyFunc(targetKeys, applicationId, section, powerAppsKey)
+      if (removeSddsKeyFunc) {
+        removeSddsKeyFunc(req)
+      }
+    } else if (removeKeyFunc) {
+      targetKeys = removeKeyFunc(targetKeys)
+    }
+
     const [, updatedApplication] = await models.applications.update({
       application: sequelize.fn('jsonb_set', sequelize.col('application'), `{${section}}`, JSON.stringify(req.payload), true),
+      targetKeys: targetKeys,
       updateStatus: 'L'
     }, {
       where: {
@@ -28,6 +41,10 @@ export const putSectionHandler = section => async (context, req, h) => {
     })
 
     const result = updatedApplication[0].dataValues.application[section]
+
+    if (keyFunc) {
+      Object.assign(result, keyFunc(targetKeys))
+    }
 
     // Cache
     await cache.save(req.path, result)

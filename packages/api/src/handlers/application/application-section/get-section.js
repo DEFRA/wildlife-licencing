@@ -3,7 +3,7 @@ import { APPLICATION_JSON } from '../../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const getSectionHandler = section => async (context, req, h) => {
+export const getSectionHandler = (section, keyFunc) => async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const saved = await cache.restore(req.path)
@@ -21,6 +21,11 @@ export const getSectionHandler = section => async (context, req, h) => {
     }
 
     const res = result.dataValues.application[section] || {}
+
+    if (keyFunc && result.dataValues.targetKeys) {
+      Object.assign(res, keyFunc(result.dataValues.targetKeys))
+    }
+
     await cache.save(req.path, res)
     return h.response(res)
       .type(APPLICATION_JSON)
