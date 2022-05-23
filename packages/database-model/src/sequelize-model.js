@@ -9,7 +9,8 @@ const models = {}
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(50), allowNull: false }
+    username: { type: DataTypes.STRING(50), allowNull: false },
+    identity: { type: DataTypes.UUID }
   }, {
     timestamps: true,
     indexes: [
@@ -66,10 +67,55 @@ async function defineApplications (sequelize) {
   })
 }
 
+async function defineUserRoles (sequelize) {
+  models.userRoles = await sequelize.define('user-roles', {
+    role: { type: DataTypes.STRING(20), primaryKey: true }
+  }, {
+    timestamps: false,
+    indexes: [
+      { unique: true, fields: ['role'], name: 'user_roles_uk' }
+    ]
+  })
+}
+
+async function defineApplicationUsers (sequelize) {
+  models.applicationUsers = await sequelize.define('application-users', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.users,
+        key: 'id'
+      }
+    },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    role: {
+      type: DataTypes.STRING(20),
+      references: {
+        model: models.userRoles,
+        key: 'role'
+      }
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'application_user_user_fk' },
+      { unique: false, fields: ['application_id'], name: 'application_user_application_fk' },
+      { unique: false, fields: ['role'], name: 'application_user_role_fk' }
+    ]
+  })
+}
+
 async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    userId: {
+    userId: { // TODO Remove
       type: DataTypes.UUID,
       references: {
         model: models.users,
@@ -142,6 +188,8 @@ const createModels = async () => {
   await defineUsers(sequelize)
   await defineSites(sequelize)
   await defineApplications(sequelize)
+  await defineUserRoles(sequelize)
+  await defineApplicationUsers(sequelize)
   await defineApplicationSites(sequelize)
   await defineApplicationTypes(sequelize)
   await defineApplicationPurposes(sequelize)
@@ -151,10 +199,15 @@ const createModels = async () => {
   await models.users.sync()
   await models.sites.sync()
   await models.applications.sync()
+  await models.userRoles.sync()
+  await models.applicationUsers.sync()
   await models.applicationSites.sync()
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
   await models.optionSets.sync()
+
+  // Create user roles
+  await models.userRoles.upsert({ role: 'USER' })
 
   debug('Created database model')
 }

@@ -491,6 +491,100 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# Application-user
+################################################################################################
+  '/application-user':
+    post:
+      description: Create and store an application user relationship
+      summary: Create a new user with a generated ID
+      operationId: postApplicationUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationUser'
+      responses:
+        201:
+          description: The application-user relationship has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+        400:
+          description: Bad request. UserId or applicationId not found. Role not recognized.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application-user/{applicationUserId}':
+    get:
+      description: Retrieve an application-user
+      summary: Retrieve an application-user
+      operationId: getApplicationUserById
+      parameters:
+        - name: applicationUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+        400:
+          description: Bad request. Application-user ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      description: Delete an application-user
+      summary: Delete an application-user
+      operationId: deleteApplicationUserById
+      parameters:
+        - name: applicationUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application-user object has been deleted
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Eligibility
 ################################################################################################
   '/user/{userId}/application/{applicationId}/eligibility':
@@ -1566,6 +1660,28 @@ components:
           $ref: '#/components/schemas/organization'
         submitted:
           $ref: '#/components/schemas/timestamp'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    applicationUser:
+      type: object
+      additionalProperties: false
+      required:
+        - userId
+        - applicationId
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        role:
+          type: string
+          enum:
+            - USER
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

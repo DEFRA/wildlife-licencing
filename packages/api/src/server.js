@@ -29,6 +29,12 @@ import {
 } from './handlers/application/application.js'
 
 import {
+  postApplicationUser,
+  getApplicationUserById,
+  deleteApplicationUserById
+} from './handlers/application-user/application-user.js'
+
+import {
   getApplicationSitesByUserId,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
@@ -88,15 +94,18 @@ const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 
 // Split out to comply with sonar-cube line restriction on functions
 const handlers = {
+  // User handlers
   getUserByUserId,
   getUsers,
   postUser,
   deleteUser,
+  // SIte handlers
   getSitesByUserId,
   getSiteBySiteId,
   postSite,
   putSite,
   deleteSite,
+  // Application handlers
   getApplicationByApplicationId,
   getApplicationsByUserId,
   postApplication,
@@ -123,10 +132,16 @@ const handlers = {
   putApplicationEligibility,
   deleteApplicationEligibility,
   postApplicationSubmit,
+  // Application-user handlers
+  postApplicationUser,
+  getApplicationUserById,
+  deleteApplicationUserById,
+  // Application site handlers
   getApplicationSitesByUserId,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite,
+  // Miscellaneous handlers
   getApplicationTypes,
   getApplicationPurposes,
   getOptionSets,
