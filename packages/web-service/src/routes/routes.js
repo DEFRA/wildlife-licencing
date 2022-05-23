@@ -24,7 +24,7 @@ const routes = [
   ...login,
   ...register,
   ...declaration,
-  ...submisison, 
+  ...submisison,
   ...landOwner,
   ...landOwnerPermission,
   ...consent,

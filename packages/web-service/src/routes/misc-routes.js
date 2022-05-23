@@ -1,6 +1,5 @@
 import { APPLICATIONS, HEALTH } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
-import submitApplication from '../handlers/submit-application.js'
 
 import path from 'path'
 import __dirname from '../../dirname.cjs'
@@ -32,10 +31,5 @@ export default [
     method: 'GET',
     path: '/application/create',
     handler: createApplication
-  },
-  {
-    method: 'GET',
-    path: '/application/submit',
-    handler: submitApplication
   }
 ]
