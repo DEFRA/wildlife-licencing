@@ -20,7 +20,7 @@ import {
 
 import {
   getApplicationByApplicationId,
-  getApplicationsByUserId,
+  getApplications,
   postApplication,
   putApplication,
   deleteApplication,
@@ -107,7 +107,7 @@ const handlers = {
   deleteSite,
   // Application handlers
   getApplicationByApplicationId,
-  getApplicationsByUserId,
+  getApplications,
   postApplication,
   putApplication,
   deleteApplication,

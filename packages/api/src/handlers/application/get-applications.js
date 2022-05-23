@@ -1,34 +1,38 @@
-
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 import { prepareResponse } from './application-proc.js'
-import { checkCache, checkUser } from '../utils.js'
 const { cache } = REDIS
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
-    if (!await checkUser(context)) {
-      return h.response().code(404)
-    }
+    // The cache key includes the search parameters
+    const params = new URLSearchParams(req.query)
+    const key = params.toString().length ? `${req.path}?${params.toString()}` : req.path
+    const saved = await cache.restore(key)
 
-    const result = await checkCache(req)
-
-    if (result) {
-      return h.response(result)
+    if (saved) {
+      return h.response(JSON.parse(saved))
         .type(APPLICATION_JSON)
         .code(200)
     }
 
+    const where = req.query
     const applications = await models.applications.findAll({
-      where: {
-        userId: context.request.params.userId
+      ...where && {
+        include: {
+          model: models.applicationUsers,
+          attributes: [],
+          where
+        }
       }
     })
 
     const responseBody = applications.map(a => prepareResponse(a.dataValues))
+    if (responseBody.length) {
+      await cache.save(key, responseBody)
+    }
 
-    await cache.save(req.path, responseBody)
     return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(200)

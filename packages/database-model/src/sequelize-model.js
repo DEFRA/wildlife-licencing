@@ -9,8 +9,7 @@ const models = {}
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(50), allowNull: false },
-    identity: { type: DataTypes.UUID }
+    username: { type: DataTypes.STRING(50), allowNull: false }
   }, {
     timestamps: true,
     indexes: [
@@ -195,6 +194,8 @@ const createModels = async () => {
   await defineApplicationPurposes(sequelize)
   await defineOptionSets(sequelize)
   await defineApplicationRefSeq(sequelize)
+
+  models.applications.hasMany(models.applicationUsers)
 
   await models.users.sync()
   await models.sites.sync()
