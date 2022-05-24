@@ -341,18 +341,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application':
+  '/application':
     post:
       description: Create a new application
       summary: Create a new application for an existing userId
       operationId: postApplication
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
       requestBody:
         required: true
         content:
@@ -377,18 +370,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application/{applicationId}':
+  '/application/{applicationId}':
     get:
       description: Get an application
       summary: Get an application
       operationId: getApplicationByApplicationId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -419,15 +406,9 @@ paths:
 
     put:
       description: Update an application
-      summary: Create or update an application for a given appilcationId and an existing userId
+      summary: Create or update an application for a given applicationId
       operationId: putApplication
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -454,7 +435,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/application'
         400:
-          description: Bad request. user ID must be a uuid
+          description: Bad request.
         404:
           description: Not found
         500:
@@ -469,12 +450,6 @@ paths:
       summary: Delete an application
       operationId: deleteApplication
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application

@@ -12,7 +12,7 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    await clearCaches(userId, applicationId)
+    await clearCaches(applicationId)
     const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
     const job = await applicationQueue.add({
       userId, applicationId

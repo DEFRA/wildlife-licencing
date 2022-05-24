@@ -7,21 +7,13 @@ const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    const { userId, applicationId } = context.request.params
-    const user = await models.users.findByPk(context.request.params.userId)
-
-    // Check the user exists
-    if (!user) {
-      return h.response().code(404)
-    }
-
-    await clearCaches(userId, applicationId)
+    const { applicationId } = context.request.params
+    await clearCaches(applicationId)
 
     const [application, created] = await models.applications.findOrCreate({
       where: { id: context.request.params.applicationId },
       defaults: {
         id: applicationId,
-        userId: userId,
         application: req.payload,
         updateStatus: 'L'
       }
