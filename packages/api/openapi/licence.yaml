@@ -1240,6 +1240,100 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+################################################################################################
+# Site-user
+################################################################################################
+  '/site-users':
+    post:
+      description: Create and store an site user relationship
+      summary: Create a new site-user with a generated ID
+      operationId: postSiteUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/siteUser'
+      responses:
+        201:
+          description: The site-user relationship has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/siteUser'
+        400:
+          description: Bad request. UserId or siteId not found. Role not recognized.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/site-users/{siteUserId}':
+    get:
+      description: Retrieve a site-user
+      summary: Retrieve a site-user
+      operationId: getSiteUserById
+      parameters:
+        - name: siteUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/siteUser'
+        400:
+          description: Bad request. Site-user ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An site-user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an site-user
+      summary: Delete an site-user
+      operationId: deleteSiteUserById
+      parameters:
+        - name: siteUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The site-user object has been deleted
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 ################################################################################################
 # Application Sites
@@ -1592,6 +1686,26 @@ components:
         userId:
           $ref: '#/components/schemas/uuid'
         applicationId:
+          $ref: '#/components/schemas/uuid'
+        role:
+          $ref: '#/components/schemas/roles'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    siteUser:
+      type: object
+      additionalProperties: false
+      required:
+        - userId
+        - siteId
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        siteId:
           $ref: '#/components/schemas/uuid'
         role:
           $ref: '#/components/schemas/roles'

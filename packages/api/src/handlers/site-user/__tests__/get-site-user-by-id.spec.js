@@ -11,7 +11,7 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-describe('get-application-user-by-id-handler', () => {
+describe('get-site-user-by-id-handler', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.clearAllMocks()
@@ -27,19 +27,19 @@ describe('get-application-user-by-id-handler', () => {
         cache: {
           restore: jest.fn(() => JSON.stringify({
             userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-            applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+            siteId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
             role: 'USER'
           }))
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const getSiteUser = (await import('../get-site-user-by-id.js')).default
+    await getSiteUser(context, { }, h)
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(h.response).toHaveBeenCalledWith({
       userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-      applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+      siteId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
       role: 'USER'
     })
     expect(typeFunc).toHaveBeenCalledWith('application/json')
@@ -48,11 +48,11 @@ describe('get-application-user-by-id-handler', () => {
   it('returns the result from the database', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           findByPk: jest.fn(() => ({
             dataValues: {
               userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-              applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+              siteId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
               id: 'eb14153e-7425-4e4c-bcc4-acd8ee1933c3',
               role: 'USER',
               ...ts
@@ -70,25 +70,25 @@ describe('get-application-user-by-id-handler', () => {
       }
     }))
     const mockSave = jest.fn()
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const getSiteUser = (await import('../get-site-user-by-id.js')).default
+    await getSiteUser(context, { }, h)
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(h.response).toHaveBeenCalledWith({
       id: 'eb14153e-7425-4e4c-bcc4-acd8ee1933c3',
       userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-      applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+      siteId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
       role: 'USER',
       ...tsR
     })
     expect(typeFunc).toHaveBeenCalledWith('application/json')
-    expect(mockSave).toHaveBeenCalledWith('/application-user/1ee0737e-f97d-4f79-8225-81b6014ce37e', expect.any(Object))
+    expect(mockSave).toHaveBeenCalledWith('/site-user/1ee0737e-f97d-4f79-8225-81b6014ce37e', expect.any(Object))
   })
 
-  it('returns a status 404 if no application-user found', async () => {
+  it('returns a status 404 if no site-user found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           findByPk: jest.fn(() => null)
         }
       }
@@ -100,14 +100,14 @@ describe('get-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const getSiteUser = (await import('../get-site-user-by-id.js')).default
+    await getSiteUser(context, { }, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
 
-  it('throws with any model error', async () => {
+  it.only('throws with any model error', async () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
@@ -118,15 +118,15 @@ describe('get-application-user-by-id-handler', () => {
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           findByPk: jest.fn(() => { throw new Error() })
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const getSiteUser = (await import('../get-site-user-by-id.js')).default
     await expect(async () => {
-      await getApplicationUser(context, { }, h)
+      await getSiteUser(context, { }, h)
     }).rejects.toThrow()
   })
 })

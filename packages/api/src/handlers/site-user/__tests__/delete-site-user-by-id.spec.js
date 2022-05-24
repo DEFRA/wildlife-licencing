@@ -2,7 +2,7 @@ const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
 const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 
-describe('delete-application-user-by-id-handler', () => {
+describe('delete-site-user-by-id-handler', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.clearAllMocks()
@@ -11,7 +11,7 @@ describe('delete-application-user-by-id-handler', () => {
   it('returns status 204 on a successful delete', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           destroy: jest.fn(() => 1)
         }
       }
@@ -24,16 +24,16 @@ describe('delete-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
-    await deleteApplicationUser(context, { }, h)
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const deleteSiteUser = (await import('../delete-site-user-by-id.js')).default
+    await deleteSiteUser(context, { }, h)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
   it('returns status 404 on a unsuccessful delete', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           destroy: jest.fn(() => 0)
         }
       }
@@ -46,9 +46,9 @@ describe('delete-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
-    await deleteApplicationUser(context, { }, h)
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const deleteSiteUser = (await import('../delete-site-user-by-id.js')).default
+    await deleteSiteUser(context, { }, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
@@ -62,15 +62,15 @@ describe('delete-application-user-by-id-handler', () => {
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applicationUsers: {
+        siteUsers: {
           destroy: jest.fn(() => { throw new Error() })
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
+    const context = { request: { params: { siteUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
+    const deleteSiteUser = (await import('../delete-site-user-by-id.js')).default
     await expect(async () => {
-      await deleteApplicationUser(context, { }, h)
+      await deleteSiteUser(context, { }, h)
     }).rejects.toThrow()
   })
 })

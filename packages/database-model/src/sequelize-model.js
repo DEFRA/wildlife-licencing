@@ -111,6 +111,40 @@ async function defineApplicationUsers (sequelize) {
   })
 }
 
+async function defineSiteUsers (sequelize) {
+  models.siteUsers = await sequelize.define('site-users', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.users,
+        key: 'id'
+      }
+    },
+    siteId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.sites,
+        key: 'id'
+      }
+    },
+    role: {
+      type: DataTypes.STRING(20),
+      references: {
+        model: models.userRoles,
+        key: 'role'
+      }
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'site_user_user_fk' },
+      { unique: false, fields: ['site_id'], name: 'site_user_site_fk' },
+      { unique: false, fields: ['role'], name: 'site_user_role_fk' }
+    ]
+  })
+}
+
 async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -184,25 +218,39 @@ async function defineApplicationRefSeq (sequelize) {
 const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
 
+  // Define the tables
   await defineUsers(sequelize)
-  await defineSites(sequelize)
-  await defineApplications(sequelize)
   await defineUserRoles(sequelize)
+
+  await defineApplications(sequelize)
+  await defineSites(sequelize)
+
   await defineApplicationUsers(sequelize)
+  await defineSiteUsers(sequelize)
+
   await defineApplicationSites(sequelize)
+
   await defineApplicationTypes(sequelize)
   await defineApplicationPurposes(sequelize)
   await defineOptionSets(sequelize)
   await defineApplicationRefSeq(sequelize)
 
+  // Create associations
   models.applications.hasMany(models.applicationUsers)
+  models.sites.hasMany(models.siteUsers)
 
+  // Synchronize the model
   await models.users.sync()
-  await models.sites.sync()
-  await models.applications.sync()
   await models.userRoles.sync()
+
+  await models.applications.sync()
+  await models.sites.sync()
+
   await models.applicationUsers.sync()
+  await models.siteUsers.sync()
+
   await models.applicationSites.sync()
+
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
   await models.optionSets.sync()

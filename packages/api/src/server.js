@@ -35,6 +35,12 @@ import {
 } from './handlers/application-user/application-user.js'
 
 import {
+  postSiteUser,
+  getSiteUserById,
+  deleteSiteUserById
+} from './handlers/site-user/site-user.js'
+
+import {
   getApplicationSitesByUserId,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
@@ -99,12 +105,17 @@ const handlers = {
   getUsers,
   postUser,
   deleteUser,
-  // SIte handlers
+  // Site handlers
   getSitesByUserId,
   getSiteBySiteId,
   postSite,
   putSite,
   deleteSite,
+  // Site-user handlers
+  postSiteUser,
+  getSiteUserById,
+  deleteSiteUserById,
+
   // Application handlers
   getApplicationByApplicationId,
   getApplications,
