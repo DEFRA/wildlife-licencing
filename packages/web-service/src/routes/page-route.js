@@ -2,7 +2,7 @@ import handler from '../handlers/page-handler.js'
 
 /**
  * Wrapper which creates a pair of handlers conforming to the pattern of the page handler functions in
- * src/handlers/page-handler.js, it creates a GET, POST and POST validator
+ * src/handlers/page-handler.js, it creates a GET, POST and an error validator
  * @param view - The view name, always the name of the nunjunks template
  * @param path - The URI which the handler responds on
  * @param checkData - A function of the form h = checkData(request, h) =>  allowing the service to check that page
