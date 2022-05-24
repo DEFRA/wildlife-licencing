@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION } from '../../uris.js'
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 const {
   APPLICANT: { USER: APPLICANT_USER },
@@ -122,7 +122,7 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.SEND_APPLICATION,
-            uri: '/',
+            uri: DECLARATION.uri,
             status: getStatus(SECTION_TASKS.SEND_APPLICATION)
           }
         ]
