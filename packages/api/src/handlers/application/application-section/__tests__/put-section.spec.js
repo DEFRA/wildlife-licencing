@@ -11,8 +11,7 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
-      applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb78'
+      userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77'
     }
   }
 }

@@ -569,18 +569,12 @@ paths:
 ################################################################################################
 # Eligibility
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/eligibility':
+  '/application/{applicationId}/eligibility':
     put:
       description: Update the application eligibility details
       summary: Create or update the application eligibility details
       operationId: putApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -616,12 +610,6 @@ paths:
       summary: Get the eligibility details for an application
       operationId: getApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -651,12 +639,6 @@ paths:
       summary: Delete the eligibility details for an application
       operationId: deleteApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -680,18 +662,12 @@ paths:
 ################################################################################################
 # Applicants
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/applicant':
+  '/application/{applicationId}/applicant':
     put:
       description: Update the application applicant details
       summary: Create or update the application applicant details
       operationId: putApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -727,12 +703,6 @@ paths:
       summary: Get the applicant details for an application
       operationId: getApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -762,12 +732,6 @@ paths:
       summary: Delete the applicant details for an application
       operationId: deleteApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -791,18 +755,12 @@ paths:
 ################################################################################################
 # Ecologists / Agent
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/ecologist':
+  '/application/{applicationId}/ecologist':
     put:
       description: Update the application ecologist details
       summary: Create or update the application ecologist details
       operationId: putApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -838,12 +796,6 @@ paths:
       summary: Get the ecologist details for an application
       operationId: getApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -873,12 +825,6 @@ paths:
       summary: Delete the ecologist details for an application
       operationId: deleteApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -902,18 +848,12 @@ paths:
   ################################################################################################
   # Applicant Organization
   ################################################################################################
-  '/user/{userId}/application/{applicationId}/applicant-organization':
+  '/application/{applicationId}/applicant-organization':
     put:
       description: Update the application applicant organization details
       summary: Create or update the application applicant organization details
       operationId: putApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -949,12 +889,6 @@ paths:
       summary: Get the applicant organization details for an application
       operationId: getApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -984,12 +918,6 @@ paths:
       summary: Delete the applicant organization details for an application
       operationId: deleteApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1013,18 +941,12 @@ paths:
   ################################################################################################
   # Ecologist Organization
   ################################################################################################
-  '/user/{userId}/application/{applicationId}/ecologist-organization':
+  '/application/{applicationId}/ecologist-organization':
     put:
       description: Update the application ecologist organization details
       summary: Create or update the application ecologist organization details
       operationId: putApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1060,12 +982,6 @@ paths:
       summary: Get the ecologist organization details for an application
       operationId: getApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1095,12 +1011,6 @@ paths:
       summary: Delete the ecologist organization details for an application
       operationId: deleteApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
