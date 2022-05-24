@@ -45,28 +45,28 @@ import {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
-  getApplicantsByUserId
+  getApplicants
 } from './handlers/application/applicant/applicant.js'
 
 import {
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
-  getEcologistsByUserId
+  getEcologists
 } from './handlers/application/ecologist/ecologist.js'
 
 import {
   getApplicationApplicantOrganization,
   putApplicationApplicantOrganization,
   deleteApplicationApplicantOrganization,
-  getApplicantOrganizationsByUserId
+  getApplicantOrganizations
 } from './handlers/application/applicant-organization/applicant-organization.js'
 
 import {
   getApplicationEcologistOrganization,
   putApplicationEcologistOrganization,
   deleteApplicationEcologistOrganization,
-  getEcologistOrganizationsByUserId
+  getEcologistOrganizations
 } from './handlers/application/ecologist-organization/ecologist-organization.js'
 
 import {
@@ -115,19 +115,19 @@ const handlers = {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
-  getApplicantsByUserId,
+  getApplicants,
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
   getApplicationApplicantOrganization,
   putApplicationApplicantOrganization,
   deleteApplicationApplicantOrganization,
-  getApplicantOrganizationsByUserId,
-  getEcologistsByUserId,
+  getApplicantOrganizations,
+  getEcologists,
   getApplicationEcologistOrganization,
   putApplicationEcologistOrganization,
   deleteApplicationEcologistOrganization,
-  getEcologistOrganizationsByUserId,
+  getEcologistOrganizations,
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,

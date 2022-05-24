@@ -40,7 +40,7 @@ describe('The getApplication handler', () => {
     models.applications = {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
-    await getApplications({ }, { query: null, path }, h)
+    await getApplications({ }, { query: { }, path }, h)
     expect(models.applications.findAll).toHaveBeenCalledWith({ })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
