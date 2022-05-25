@@ -11,11 +11,11 @@ import {
 } from './handlers/user/user.js'
 
 import {
-  getSitesByUserId,
   getSiteBySiteId,
   postSite,
   putSite,
-  deleteSite
+  deleteSite,
+  getSites
 } from './handlers/site/site.js'
 
 import {
@@ -106,8 +106,8 @@ const handlers = {
   postUser,
   deleteUser,
   // Site handlers
-  getSitesByUserId,
   getSiteBySiteId,
+  getSites,
   postSite,
   putSite,
   deleteSite,
