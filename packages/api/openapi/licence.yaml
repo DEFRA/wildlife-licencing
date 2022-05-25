@@ -1458,18 +1458,12 @@ paths:
 ################################################################################################
 # Submission
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/submit':
+  '/application/{applicationId}/submit':
     post:
       description: Queue the application for submission
       summary: Queue the application for submission
       operationId: postApplicationSubmit
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
