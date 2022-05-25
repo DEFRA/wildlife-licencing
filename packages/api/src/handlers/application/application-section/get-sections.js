@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
 
-export const getSectionsHandler = (section, keyFunc) => async (context, req, h) => {
+export const getSectionsHandler = (section, keyFunc) => async (_context, req, h) => {
   try {
     const where = req.query
     const applications = await models.applications.findAll(Object.keys(where).length
