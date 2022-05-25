@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { siteUserId } = context.request.params
     await cache.delete(`/site-user/${siteUserId}`)

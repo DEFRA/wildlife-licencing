@@ -5,7 +5,7 @@ import { prepareResponse } from './application-site-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const { applicationId, siteId } = req.payload
     const application = await models.applications.findByPk(applicationId)
@@ -17,7 +17,7 @@ export default async (context, req, h) => {
         .code(400)
     }
 
-    // If the site does not exists return a bad request and error
+    // If the site does not exist return a bad request and error
     const site = await models.sites.findByPk(siteId)
     if (!site) {
       return h.response({ code: 400, error: { description: `siteId: ${siteId} not found` } })

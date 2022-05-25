@@ -5,7 +5,7 @@ import { prepareResponse } from './application-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const { dataValues } = await models.applications.create({
       id: uuidv4(),

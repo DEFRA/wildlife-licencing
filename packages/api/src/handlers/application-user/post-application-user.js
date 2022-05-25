@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const { userId, applicationId, role } = req.payload
     const user = await models.users.findByPk(userId)

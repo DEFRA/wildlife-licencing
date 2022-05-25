@@ -78,7 +78,7 @@ export const postProcess = async targetKeys => {
  * @param applicationId
  * @returns {Promise<{application: any}>}
  */
-export const buildApiObject = async (applicationId) => {
+export const buildApiObject = async applicationId => {
   try {
     const applicationResult = await models.applications.findByPk(applicationId)
 

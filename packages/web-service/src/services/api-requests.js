@@ -72,7 +72,7 @@ export const APIRequests = {
       const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}`)
       return applicationUsers.map(au => au.role)
     },
-    getById: async (applicationId) => {
+    getById: async applicationId => {
       try {
         debug(`Get applications by applicationId: ${applicationId}`)
         return API.get(`/application/${applicationId}`)
@@ -94,7 +94,7 @@ export const APIRequests = {
     }
   },
   APPLICANT: {
-    getById: async (applicationId) => {
+    getById: async applicationId => {
       try {
         debug(`Get application/applicant FOR applicationId: ${applicationId}`)
         return API.get(`/application/${applicationId}/applicant`)
@@ -126,7 +126,7 @@ export const APIRequests = {
     }
   },
   ECOLOGIST: {
-    getById: async (applicationId) => {
+    getById: async applicationId => {
       try {
         debug(`Get application/ecologist for and applicationId: ${applicationId}`)
         return API.get(`/application/${applicationId}/ecologist`)

@@ -22,7 +22,6 @@ export default async (context, req, h) => {
         .code(404)
     }
 
-    // const responseBody = prepareResponse(dataValues)
     const response = prepareResponse(applicationUser.dataValues)
     await cache.save(`/application-user/${applicationUserId}`, response)
     return h.response(response)
