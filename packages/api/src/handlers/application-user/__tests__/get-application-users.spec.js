@@ -11,7 +11,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6'
     }
   }
 }
@@ -29,37 +28,37 @@ const tsR = {
 jest.mock('@defra/wls-database-model')
 
 let models
-let getApplicationSites
+let getApplicationUsers
 const applicationJson = 'application/json'
 
-describe('The getApplicationSites handler', () => {
+describe('The getApplicationUsers handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationSites = (await import('../get-application-sites.js')).default
+    getApplicationUsers = (await import('../get-application-users.js')).default
   })
 
-  it('returns an array of application-sites and status 200', async () => {
-    models.applicationSites = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
-    await getApplicationSites(context, { query: {} }, h)
-    expect(models.applicationSites.findAll).toHaveBeenCalledWith({ })
+  it('returns an array of application-users and status 200', async () => {
+    models.applicationUsers = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    await getApplicationUsers(context, { query: {} }, h)
+    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({ })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns an array of application-sites and status 200 - with a query', async () => {
-    models.applicationSites = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
-    await getApplicationSites(context, { query: { foo: 'bar' } }, h)
-    expect(models.applicationSites.findAll).toHaveBeenCalledWith({ where: { foo: 'bar' } })
+    models.applicationUsers = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    await getApplicationUsers(context, { query: { foo: 'bar' } }, h)
+    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({ where: { foo: 'bar' } })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applicationSites = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applicationUsers = { findAll: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
-      await getApplicationSites(context, { query: {} }, h)
+      await getApplicationUsers(context, { query: {} }, h)
     }).rejects.toThrow()
   })
 })

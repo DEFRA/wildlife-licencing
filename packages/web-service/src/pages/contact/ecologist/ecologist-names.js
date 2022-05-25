@@ -2,6 +2,8 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import { contactNamesPage } from '../common/contact-names/contact-names-page.js'
 import { checkData } from '../common/common.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { DEFAULT_ROLE } from '../../../constants.js'
+
 const { NAMES, NAME } = contactURIs.ECOLOGIST
 
 export const ecologistNamesCheckData = async (request, h) => {
@@ -11,7 +13,7 @@ export const ecologistNamesCheckData = async (request, h) => {
   }
 
   const { userId } = await request.cache().getData()
-  const ecologists = await APIRequests.ECOLOGIST.findByUser(userId)
+  const ecologists = await APIRequests.ECOLOGIST.findByUser(userId, DEFAULT_ROLE)
   if (!ecologists) {
     return h.redirect(NAME.uri)
   }
@@ -21,7 +23,7 @@ export const ecologistNamesCheckData = async (request, h) => {
 
 export const getEcologistNamesData = async request => {
   const { userId } = await request.cache().getData()
-  const ecologists = await APIRequests.ECOLOGIST.findByUser(userId)
+  const ecologists = await APIRequests.ECOLOGIST.findByUser(userId, DEFAULT_ROLE)
   return [...new Set(ecologists.map(a => a.fullName))]
     .sort((a, b) => a.localeCompare(b.fullName, 'en'))
     .map(e => ({ id: Buffer.from(e).toString('base64'), fullName: e }))

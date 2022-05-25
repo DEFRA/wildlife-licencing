@@ -29,6 +29,7 @@ import {
 } from './handlers/application/application.js'
 
 import {
+  getApplicationUsers,
   postApplicationUser,
   getApplicationUserById,
   deleteApplicationUserById
@@ -143,10 +144,13 @@ const handlers = {
   putApplicationEligibility,
   deleteApplicationEligibility,
   postApplicationSubmit,
+
   // Application-user handlers
+  getApplicationUsers,
   postApplicationUser,
   getApplicationUserById,
   deleteApplicationUserById,
+
   // Application site handlers
   getApplicationSites,
   getApplicationSiteByApplicationSiteId,

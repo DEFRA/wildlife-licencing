@@ -498,6 +498,53 @@ paths:
 ################################################################################################
 # Application-user
 ################################################################################################
+  '/application-users':
+    get:
+      description: Get a list application-users
+      summary: Get a list application-users
+      operationId: getApplicationUsers
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUsers'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
   '/application-user':
     post:
       description: Create and store an application user relationship
@@ -1633,6 +1680,11 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    applicationUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationUser'
 
     applicationUser:
       type: object
