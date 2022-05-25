@@ -1317,18 +1317,11 @@ paths:
 ################################################################################################
 # Application Sites
 ################################################################################################
-  '/user/{userId}/application-site':
+  '/application-site':
     post:
       description: Create a new application-site relationship
-      summary: Create a new application-site relationship for an existing userId, applicationId and SiteId
+      summary: Create a new application-site relationship for an existing applicationId and siteId
       operationId: postApplicationSite
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
       requestBody:
         required: true
         content:
@@ -1363,16 +1356,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application-sites':
+  '/application-sites':
     get:
       description: Get the application-sites
       summary: Get a list of application-site relationships for a user
-      operationId: getApplicationSitesByUserId
+      operationId: getApplicationSites
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: siteId
+          in: query
+          description: ID of the site
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -1397,18 +1396,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application-site/{applicationSiteId}':
+  '/application-site/{applicationSiteId}':
     get:
       description: Get an application-site by id
       summary:  Get an application-site by id
       operationId: getApplicationSiteByApplicationSiteId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationSiteId
           in: path
           description: ID of the application-site
@@ -1442,12 +1435,6 @@ paths:
       summary:  Get an application-site by id
       operationId: deleteApplicationSiteByApplicationSiteId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationSiteId
           in: path
           description: ID of the application-site

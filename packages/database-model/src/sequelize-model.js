@@ -6,6 +6,17 @@ const debug = db('database-model:define')
 
 const models = {}
 
+async function defineUserRoles (sequelize) {
+  models.userRoles = await sequelize.define('user-roles', {
+    role: { type: DataTypes.STRING(20), primaryKey: true }
+  }, {
+    timestamps: false,
+    indexes: [
+      { unique: true, fields: ['role'], name: 'user_roles_uk' }
+    ]
+  })
+}
+
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -21,13 +32,6 @@ async function defineUsers (sequelize) {
 async function defineSites (sequelize) {
   models.sites = await sequelize.define('sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    userId: {
-      type: DataTypes.UUID,
-      references: {
-        model: models.users,
-        key: 'id'
-      }
-    },
     site: { type: DataTypes.JSONB },
     targetKeys: { type: DataTypes.JSONB },
     sddsSiteId: { type: DataTypes.UUID },
@@ -36,7 +40,6 @@ async function defineSites (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['user_id'], name: 'site_user_fk' },
       { unique: true, fields: ['sdds_site_id'], name: 'site_sdds_id_uk' }
     ]
   })
@@ -45,13 +48,6 @@ async function defineSites (sequelize) {
 async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    userId: {
-      type: DataTypes.UUID,
-      references: {
-        model: models.users,
-        key: 'id'
-      }
-    },
     application: { type: DataTypes.JSONB },
     targetKeys: { type: DataTypes.JSONB },
     sddsApplicationId: { type: DataTypes.UUID },
@@ -60,19 +56,7 @@ async function defineApplications (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['user_id'], name: 'application_user_fk' },
       { unique: true, fields: ['sdds_application_id'], name: 'application_sdds_id_uk' }
-    ]
-  })
-}
-
-async function defineUserRoles (sequelize) {
-  models.userRoles = await sequelize.define('user-roles', {
-    role: { type: DataTypes.STRING(20), primaryKey: true }
-  }, {
-    timestamps: false,
-    indexes: [
-      { unique: true, fields: ['role'], name: 'user_roles_uk' }
     ]
   })
 }
@@ -148,13 +132,6 @@ async function defineSiteUsers (sequelize) {
 async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    userId: { // TODO Remove
-      type: DataTypes.UUID,
-      references: {
-        model: models.users,
-        key: 'id'
-      }
-    },
     applicationId: {
       type: DataTypes.UUID,
       references: {
@@ -174,10 +151,9 @@ async function defineApplicationSites (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['user_id'], name: 'application_site_user_fk' },
       { unique: false, fields: ['application_id'], name: 'application_site_application_fk' },
       { unique: false, fields: ['site_id'], name: 'application_site_site_fk' },
-      { unique: true, fields: ['user_id', 'application_id', 'site_id'], name: 'application_site_uk' },
+      { unique: true, fields: ['application_id', 'site_id'], name: 'application_site_uk' },
       { unique: true, fields: ['sdds_application_id', 'sdds_site_id'], name: 'sdds_application_site_uk' }
     ]
   })

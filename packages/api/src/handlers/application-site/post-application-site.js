@@ -2,21 +2,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { prepareResponse } from './application-site-proc.js'
-import { clearCaches } from './application-site-cache.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    const { userId } = context.request.params
-    await clearCaches(userId)
-    const user = await models.users.findByPk(userId)
-
-    // Check the user exists
-    if (!user) {
-      return h.response().code(404)
-    }
-
     const { applicationId, siteId } = req.payload
     const application = await models.applications.findByPk(applicationId)
 
@@ -37,7 +27,7 @@ export default async (context, req, h) => {
 
     // If the user-application-site already exists then return a conflict and error
     const applicationSite = await models.applicationSites.findOne({
-      where: { userId, applicationId, siteId }
+      where: { applicationId, siteId }
     })
 
     if (applicationSite) {
@@ -47,7 +37,6 @@ export default async (context, req, h) => {
     }
 
     const { dataValues } = await models.applicationSites.create({
-      userId,
       siteId,
       applicationId,
       id: uuidv4(),
@@ -55,7 +44,7 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/user/${dataValues.userId}/application-site/${dataValues.id}`, responseBody)
+    await cache.save(`/application-site/${dataValues.id}`, responseBody)
     return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(201)
