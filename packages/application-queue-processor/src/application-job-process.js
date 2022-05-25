@@ -75,7 +75,6 @@ export const postProcess = async targetKeys => {
  * each request method (POST, PATCH...). They are decorated by the response
  * from Power Apps and finally written back into the database tables
  *
- * @param userId
  * @param applicationId
  * @returns {Promise<{application: any}>}
  */
