@@ -59,7 +59,7 @@ describe('get-section-handler', () => {
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
 
-  it.only('returns a status 200 with the section data with target keys', async () => {
+  it('returns a status 200 with the section data with target keys', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {

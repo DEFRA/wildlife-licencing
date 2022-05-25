@@ -176,6 +176,30 @@ describe('The API requests service', () => {
         .rejects.toThrowError()
     })
 
+    it('findRoles calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ['USER'])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.APPLICATION.findRoles('9913c6c2-1cdf-4582-a591-92c058d0e07d', 'USER')
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=9913c6c2-1cdf-4582-a591-92c058d0e07d&applicationId=USER')
+    })
+
+    it('findRoles rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.APPLICATION.findRoles('9913c6c2-1cdf-4582-a591-92c058d0e07d', 'USER'))
+        .rejects.toThrowError()
+    })
+
     it('submit calls the API correctly', async () => {
       const mockSubmit = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -184,8 +208,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICATION.submit('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
-      expect(mockSubmit).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/submit')
+      await APIRequests.APPLICATION.submit('9913c6c2-1cdf-4582-a591-92c058d0e07d')
+      expect(mockSubmit).toHaveBeenCalledWith('/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/submit')
     })
 
     it('submit rethrows an error', async () => {

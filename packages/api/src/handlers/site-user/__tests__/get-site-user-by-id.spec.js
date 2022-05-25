@@ -107,7 +107,7 @@ describe('get-site-user-by-id-handler', () => {
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
 
-  it.only('throws with any model error', async () => {
+  it('throws with any model error', async () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
