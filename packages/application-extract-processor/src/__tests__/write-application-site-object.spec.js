@@ -117,24 +117,6 @@ describe('The application extract processor: write-application-site-object', () 
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
   })
 
-  it('assigns a user from the application to the site', async () => {
-    const newFoundSite = Object.assign({}, foundSite)
-    newFoundSite.dataValues.userId = null
-    const mockUpdate = jest.fn()
-    jest.doMock('@defra/wls-database-model', () => ({
-      models: {
-        sites: { findOne: jest.fn(() => newFoundSite), update: mockUpdate },
-        applications: { findOne: jest.fn(() => foundApplication) },
-        applicationSites: { findOne: jest.fn(() => foundApplicationSite) }
-      }
-    }))
-    const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    await writeApplicationSiteObject({ data })
-    expect(mockUpdate).toHaveBeenCalledWith({
-      userId: foundApplication.dataValues.userId
-    }, { where: { id: newFoundSite.dataValues.id } })
-  })
-
   it('returns with an error on an exception', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {

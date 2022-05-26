@@ -1,12 +1,13 @@
 import pageRoute from '../../routes/page-route.js'
 import { TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
-
+import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService as applicationService } from '../../services/application.js'
 import {
   licenceTypeMap, A24, getStatus, SECTION_TASKS, updateStatusCache,
   STATUS_VALUES, decorateMap, getProgress
 } from './licence-type-map.js'
+import Boom from '@hapi/boom'
 
 export const getApplication = async request => {
   const journeyData = await request.cache().getData()
@@ -21,7 +22,7 @@ export const getApplication = async request => {
 
   // If a parameter has been supplied
   if (id) {
-    // Check that the parameter is written into the cache as the current parameter
+    // Check that the parameter is written into the cache as the current applicationId
     Object.assign(journeyData, { applicationId: id })
     await request.cache().setData(journeyData)
     applicationId = id
@@ -30,8 +31,14 @@ export const getApplication = async request => {
     applicationId = journeyData.applicationId ? journeyData.applicationId : await applicationService.createApplication(request)
   }
 
+  // Ensure that this user has access to the application
+  const roles = await APIRequests.APPLICATION.findRoles(userId, applicationId)
+
+  if (!roles.includes(DEFAULT_ROLE)) {
+    throw Boom.unauthorized(`User ${userId} as no authorization to view applicationId: ${applicationId}`)
+  }
   // Get the application reference number
-  return APIRequests.APPLICATION.getById(userId, applicationId)
+  return APIRequests.APPLICATION.getById(applicationId)
 }
 
 export const getData = async request => {

@@ -48,7 +48,7 @@ describe('The postApplicationSubmit handler', () => {
     cache.delete = jest.fn(() => null)
     await postApplicationSubmit(context, req, h)
 
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}`)
+    expect(cache.delete).toHaveBeenCalledWith(`/application/${context.request.params.applicationId}`)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(204)
   })

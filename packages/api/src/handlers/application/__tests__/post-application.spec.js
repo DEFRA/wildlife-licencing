@@ -48,30 +48,19 @@ describe('The postApplication handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.applications = { create: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo', ...ts } })) }
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.applications = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } })) }
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
     await postApplication(context, req, h)
     expect(models.applications.create).toHaveBeenCalledWith({
       id: expect.any(String),
-      userId: context.request.params.userId,
       updateStatus: 'L',
       application: (({ ...l }) => l)(req.payload)
     })
-    expect(cache.save).toHaveBeenCalledWith('/user/foo/application/bar', { id: 'bar', ...tsR })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
+    expect(cache.save).toHaveBeenCalledWith('/application/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
-  })
-
-  it('returns a 404 with an unknown userId', async () => {
-    models.users = { findByPk: jest.fn(async () => null) }
-    await postApplication(context, req, h)
-    expect(h.response).toHaveBeenCalled()
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws with an insert error', async () => {

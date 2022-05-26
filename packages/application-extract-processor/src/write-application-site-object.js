@@ -4,27 +4,6 @@ import pkg from 'sequelize'
 const { Sequelize } = pkg
 const Op = Sequelize.Op
 
-/**
- * If a site was created on Power Apps and does not have a user assigned then the user
- * Can be transferred from the application to the site.
- * It is possible that a site without a user is created in Power Apps
- * and subsequently assigned to an application created in the API with a user
- * In this case the user can be assigned to the site. The site may also
- * be attached to a user-less application is which case we ignore.
- * @param site
- * @param application
- * @returns {Promise<void>}
- */
-async function updateOwnership (site, application) {
-  if (!site.dataValues.userId && application.dataValues.userId) {
-    await models.sites.update({
-      userId: application.dataValues.userId
-    }, {
-      where: { id: site.dataValues.id }
-    })
-  }
-}
-
 async function doSite (data, s, application, site, counter) {
   // Test if the application-site exists using the power Apps Keys
   const applicationSitePAKeys = await models.applicationSites.findOne({
@@ -73,8 +52,6 @@ async function doSite (data, s, application, site, counter) {
       counter.update++
     }
   }
-
-  await updateOwnership(site, application)
 }
 
 /**

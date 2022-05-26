@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = '/user/uuid/application-sites/uuid'
+const path = '/application-sites/uuid'
 const req = { path }
 
 /*
@@ -17,7 +17,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6',
       applicationSiteId: '1bfe075b-377e-472b-b160-a6a454648e23'
     }
   }
@@ -50,7 +49,6 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('returns an application-site and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     await getApplicationSiteByApplicationSiteId(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -60,7 +58,6 @@ describe('The getApplicationByApplicationId handler', () => {
   it('returns an application-site and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applicationSites = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getApplicationSiteByApplicationSiteId(context, req, h)
     expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
@@ -72,17 +69,7 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('returns a status 404 on application-site not found', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applicationSites = { findByPk: jest.fn(() => null) }
-    await getApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
-    expect(h.response).toHaveBeenCalled()
-    expect(codeFunc).toHaveBeenCalledWith(404)
-  })
-
-  it('returns a status 404 on user not found', async () => {
-    cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => null) }
     await getApplicationSiteByApplicationSiteId(context, req, h)
     expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
     expect(h.response).toHaveBeenCalled()
@@ -91,7 +78,6 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applicationSites = { findByPk: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
       await getApplicationSiteByApplicationSiteId(context, req, h)

@@ -2,7 +2,7 @@
  * Mock the hapi request object
  */
 
-const path = 'user/uuid/application-site/uuid'
+const path = '/application-site/uuid'
 const req = { path }
 
 /*
@@ -18,7 +18,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6',
       applicationSiteId: '1bfe075b-377e-472b-b160-a6a454648e23'
     }
   }
@@ -35,7 +34,6 @@ describe('The deleteApplicationSiteByApplicationSiteId handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-
     deleteApplicationSiteByApplicationSiteId = (await import('../delete-application-site-by-application-site-id.js')).default
   })
 
@@ -44,7 +42,7 @@ describe('The deleteApplicationSiteByApplicationSiteId handler', () => {
     models.applicationSites = { destroy: jest.fn(() => 1) }
     await deleteApplicationSiteByApplicationSiteId(context, req, h)
     expect(models.applicationSites.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationSiteId } })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application-site/${context.request.params.applicationSiteId}`)
+    expect(cache.delete).toHaveBeenCalledWith(path)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 

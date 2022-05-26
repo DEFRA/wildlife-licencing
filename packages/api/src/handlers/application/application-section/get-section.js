@@ -15,7 +15,7 @@ export const getSectionHandler = (section, keyFunc) => async (context, req, h) =
 
     const result = await models.applications.findByPk(applicationId)
 
-    // Check the user exists
+    // Check the Application exists
     if (!result) {
       return h.response().code(404)
     }
@@ -31,7 +31,7 @@ export const getSectionHandler = (section, keyFunc) => async (context, req, h) =
       .type(APPLICATION_JSON)
       .code(200)
   } catch (err) {
-    console.error('Error updating the APPLICATIONS table', err)
+    console.error('Error select from the APPLICATIONS table', err)
     throw new Error(err.message)
   }
 }

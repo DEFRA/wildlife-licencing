@@ -4,7 +4,7 @@ import { SEQUELIZE } from '@defra/wls-connectors-lib'
 
 export const deleteSectionHandler = (section, removeKeyFunc) => async (context, _req, h) => {
   try {
-    const { userId, applicationId } = context.request.params
+    const { applicationId } = context.request.params
     const result = await models.applications.findByPk(applicationId)
 
     // Check the application exists
@@ -12,7 +12,7 @@ export const deleteSectionHandler = (section, removeKeyFunc) => async (context, 
       return h.response().code(404)
     }
 
-    await clearCaches(userId, applicationId)
+    await clearCaches(applicationId)
     const sequelize = SEQUELIZE.getSequelize()
     let targetKeys = result.dataValues.targetKeys
     if (removeKeyFunc && targetKeys) {

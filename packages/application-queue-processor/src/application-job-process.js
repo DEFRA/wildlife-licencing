@@ -75,11 +75,10 @@ export const postProcess = async targetKeys => {
  * each request method (POST, PATCH...). They are decorated by the response
  * from Power Apps and finally written back into the database tables
  *
- * @param userId
  * @param applicationId
  * @returns {Promise<{application: any}>}
  */
-export const buildApiObject = async (userId, applicationId) => {
+export const buildApiObject = async applicationId => {
   try {
     const applicationResult = await models.applications.findByPk(applicationId)
 
@@ -97,7 +96,7 @@ export const buildApiObject = async (userId, applicationId) => {
       : [new BaseKeyMapping('applications', applicationId, 'application', 'sdds_applications')]
 
     const applicationSites = await models.applicationSites.findAll({
-      where: { userId, applicationId }
+      where: { applicationId }
     })
 
     if (applicationSites.length) {
@@ -134,8 +133,8 @@ export const buildApiObject = async (userId, applicationId) => {
  */
 export const applicationJobProcess = async job => {
   try {
-    const { userId, applicationId } = job.data
-    const apiObject = await buildApiObject(userId, applicationId)
+    const { applicationId } = job.data
+    const apiObject = await buildApiObject(applicationId)
 
     if (!apiObject) {
       console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)

@@ -1,16 +1,12 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { prepareResponse } from './application-site-proc.js'
-import { checkCache, checkUser } from '../utils.js'
+import { checkCache } from '../utils.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    if (!await checkUser(context)) {
-      return h.response().code(404)
-    }
-
     const result = await checkCache(req)
 
     if (result) {
@@ -21,7 +17,7 @@ export default async (context, req, h) => {
 
     const applicationSite = await models.applicationSites.findByPk(context.request.params.applicationSiteId)
 
-    // Check the user exists
+    // Check the application-site exists
     if (!applicationSite) {
       return h.response().code(404)
     }

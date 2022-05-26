@@ -2,6 +2,8 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { contactNamesPage } from '../common/contact-names/contact-names-page.js'
 import { checkData } from '../common/common.js'
+import { DEFAULT_ROLE } from '../../../constants.js'
+
 const { NAMES, NAME } = contactURIs.APPLICANT
 
 export const applicantNamesCheckData = async (request, h) => {
@@ -11,7 +13,7 @@ export const applicantNamesCheckData = async (request, h) => {
   }
 
   const { userId } = await request.cache().getData()
-  const applicants = await APIRequests.APPLICANT.findByUser(userId)
+  const applicants = await APIRequests.APPLICANT.findByUser(userId, DEFAULT_ROLE)
   if (!applicants) {
     return h.redirect(NAME.uri)
   }
@@ -21,7 +23,7 @@ export const applicantNamesCheckData = async (request, h) => {
 
 export const getApplicantNamesData = async request => {
   const { userId } = await request.cache().getData()
-  const applicants = await APIRequests.APPLICANT.findByUser(userId)
+  const applicants = await APIRequests.APPLICANT.findByUser(userId, DEFAULT_ROLE)
   return [...new Set(applicants.map(a => a.fullName))]
     .sort((a, b) => a.localeCompare(b.fullName, 'en'))
     .map(e => ({ id: Buffer.from(e).toString('base64'), fullName: e }))

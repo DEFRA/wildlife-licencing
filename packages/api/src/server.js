@@ -11,16 +11,16 @@ import {
 } from './handlers/user/user.js'
 
 import {
-  getSitesByUserId,
   getSiteBySiteId,
   postSite,
   putSite,
-  deleteSite
+  deleteSite,
+  getSites
 } from './handlers/site/site.js'
 
 import {
   getApplicationByApplicationId,
-  getApplicationsByUserId,
+  getApplications,
   postApplication,
   putApplication,
   deleteApplication,
@@ -29,7 +29,20 @@ import {
 } from './handlers/application/application.js'
 
 import {
-  getApplicationSitesByUserId,
+  getApplicationUsers,
+  postApplicationUser,
+  getApplicationUserById,
+  deleteApplicationUserById
+} from './handlers/application-user/application-user.js'
+
+import {
+  postSiteUser,
+  getSiteUserById,
+  deleteSiteUserById
+} from './handlers/site-user/site-user.js'
+
+import {
+  getApplicationSites,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite
@@ -39,28 +52,28 @@ import {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
-  getApplicantsByUserId
+  getApplicants
 } from './handlers/application/applicant/applicant.js'
 
 import {
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
-  getEcologistsByUserId
+  getEcologists
 } from './handlers/application/ecologist/ecologist.js'
 
 import {
   getApplicationApplicantOrganization,
   putApplicationApplicantOrganization,
   deleteApplicationApplicantOrganization,
-  getApplicantOrganizationsByUserId
+  getApplicantOrganizations
 } from './handlers/application/applicant-organization/applicant-organization.js'
 
 import {
   getApplicationEcologistOrganization,
   putApplicationEcologistOrganization,
   deleteApplicationEcologistOrganization,
-  getEcologistOrganizationsByUserId
+  getEcologistOrganizations
 } from './handlers/application/ecologist-organization/ecologist-organization.js'
 
 import {
@@ -88,17 +101,25 @@ const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 
 // Split out to comply with sonar-cube line restriction on functions
 const handlers = {
+  // User handlers
   getUserByUserId,
   getUsers,
   postUser,
   deleteUser,
-  getSitesByUserId,
+  // Site handlers
   getSiteBySiteId,
+  getSites,
   postSite,
   putSite,
   deleteSite,
+  // Site-user handlers
+  postSiteUser,
+  getSiteUserById,
+  deleteSiteUserById,
+
+  // Application handlers
   getApplicationByApplicationId,
-  getApplicationsByUserId,
+  getApplications,
   postApplication,
   putApplication,
   deleteApplication,
@@ -106,27 +127,36 @@ const handlers = {
   getApplicationApplicant,
   putApplicationApplicant,
   deleteApplicationApplicant,
-  getApplicantsByUserId,
+  getApplicants,
   getApplicationEcologist,
   putApplicationEcologist,
   deleteApplicationEcologist,
   getApplicationApplicantOrganization,
   putApplicationApplicantOrganization,
   deleteApplicationApplicantOrganization,
-  getApplicantOrganizationsByUserId,
-  getEcologistsByUserId,
+  getApplicantOrganizations,
+  getEcologists,
   getApplicationEcologistOrganization,
   putApplicationEcologistOrganization,
   deleteApplicationEcologistOrganization,
-  getEcologistOrganizationsByUserId,
+  getEcologistOrganizations,
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
   postApplicationSubmit,
-  getApplicationSitesByUserId,
+
+  // Application-user handlers
+  getApplicationUsers,
+  postApplicationUser,
+  getApplicationUserById,
+  deleteApplicationUserById,
+
+  // Application site handlers
+  getApplicationSites,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite,
+  // Miscellaneous handlers
   getApplicationTypes,
   getApplicationPurposes,
   getOptionSets,

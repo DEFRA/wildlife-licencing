@@ -7,15 +7,15 @@ const { cache } = REDIS
 
 export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsKeyFunc, keyFunc, removeKeyFunc) => async (context, req, h) => {
   try {
-    const { userId, applicationId } = context.request.params
+    const { applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
 
-    // Check the user exists
+    // Check the application exists
     if (!application) {
       return h.response().code(404)
     }
 
-    await clearCaches(userId, applicationId)
+    await clearCaches(applicationId)
     const sequelize = SEQUELIZE.getSequelize()
 
     let targetKeys = application.dataValues.targetKeys

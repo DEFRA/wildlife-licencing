@@ -10,10 +10,13 @@ describe('The task-list handler', () => {
         id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
+      const mockFindRoles = jest.fn(() => ['USER'])
+
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: mockGetById
+            getById: mockGetById,
+            findRoles: mockFindRoles
           }
         }
       }))
@@ -41,10 +44,13 @@ describe('The task-list handler', () => {
         id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
+      const mockFindRoles = jest.fn(() => ['USER'])
+
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: mockGetById
+            getById: mockGetById,
+            findRoles: mockFindRoles
           }
         }
       }))
@@ -76,10 +82,13 @@ describe('The task-list handler', () => {
         id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7'
       }))
 
+      const mockFindRoles = jest.fn(() => ['USER'])
+
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: mockGetById
+            getById: mockGetById,
+            findRoles: mockFindRoles
           }
         }
       }))
@@ -113,12 +122,13 @@ describe('The task-list handler', () => {
       }))
 
       const mockCreate = jest.fn(() => ({ id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' }))
-
+      const mockFindRoles = jest.fn(() => ['USER'])
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
             getById: mockGetById,
-            create: mockCreate
+            create: mockCreate,
+            findRoles: mockFindRoles
           }
         }
       }))
@@ -176,10 +186,13 @@ describe('The task-list handler', () => {
       applicationReferenceNumber: 'REFERENCE_NUMBER'
     }))
 
+    const mockFindRoles = jest.fn(() => ['USER'])
+
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById
+          getById: mockGetById,
+          findRoles: mockFindRoles
         }
       }
     }))
@@ -251,10 +264,13 @@ describe('The task-list handler', () => {
       applicationReferenceNumber: 'REFERENCE_NUMBER'
     }))
 
+    const mockFindRoles = jest.fn(() => ['USER'])
+
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById
+          getById: mockGetById,
+          findRoles: mockFindRoles
         }
       }
     }))
@@ -326,10 +342,13 @@ describe('The task-list handler', () => {
       applicationReferenceNumber: 'REFERENCE_NUMBER'
     }))
 
+    const mockFindRoles = jest.fn(() => ['USER'])
+
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById
+          getById: mockGetById,
+          findRoles: mockFindRoles
         }
       }
     }))
@@ -385,10 +404,13 @@ describe('The task-list handler', () => {
       applicationReferenceNumber: 'REFERENCE_NUMBER'
     }))
 
+    const mockFindRoles = jest.fn(() => ['USER'])
+
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById
+          getById: mockGetById,
+          findRoles: mockFindRoles
         }
       }
     }))

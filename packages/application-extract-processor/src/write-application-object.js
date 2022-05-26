@@ -54,7 +54,7 @@ export const writeApplicationObject = async (obj, ts) => {
         counter.pending++
       }
     } else {
-      // Create a new application and user
+      // Create a new application
       baseKey.apiKey = uuidv4()
       await models.applications.create({
         id: baseKey.apiKey,

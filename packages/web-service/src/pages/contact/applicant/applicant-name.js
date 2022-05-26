@@ -6,11 +6,11 @@ const { NAME, IS_ORGANIZATION } = contactURIs.APPLICANT
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
-  const applicant = await APIRequests.APPLICANT.getById(userId, applicationId)
+  const { applicationId } = journeyData
+  const applicant = await APIRequests.APPLICANT.getById(applicationId)
   const pageData = await request.cache().getPageData()
   applicant.fullName = pageData.payload.name
-  await APIRequests.APPLICANT.putById(userId, applicationId, applicant)
+  await APIRequests.APPLICANT.putById(applicationId, applicant)
 }
 
 export const applicantName = contactNamePage(NAME, checkData, getApplicantData, IS_ORGANIZATION, setData)

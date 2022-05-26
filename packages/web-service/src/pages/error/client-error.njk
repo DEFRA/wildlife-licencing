@@ -2,6 +2,8 @@
 {% set title = '' %}
 {% if clientError.statusCode === 400 %}
     {% set title = 'Bad Request' %}
+{% elseif clientError.statusCode === 401 %}
+    {% set title = 'Unauthorized' %}
 {% elseif clientError.statusCode === 404 %}
     {% set title = 'Page not found' %}
 {% endif %}
