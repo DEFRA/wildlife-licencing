@@ -18,7 +18,6 @@ jest.mock('@defra/wls-database-model')
 
 let models
 let getUsers
-let cache
 
 const ts = {
   createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
@@ -34,26 +33,12 @@ const applicationJson = 'application/json'
 describe('The getUsers handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
-    cache = REDIS.cache
-
     getUsers = (await import('../get-users.js')).default
   })
 
-  it('returns the users and status 200 the cache', async () => {
-    cache.restore = jest.fn(() => JSON.stringify([{ foo: 'bar' }]))
-    await getUsers(context, { query: null, path: '/users' }, h)
-    expect(h.response).toHaveBeenCalledWith([{ foo: 'bar' }])
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(200)
-  })
-
   it('returns the users and status 200 the database', async () => {
-    cache.restore = jest.fn(() => null)
-    cache.save = jest.fn(() => null)
     models.users = { findAll: jest.fn(() => ([{ dataValues: { username: 'Graham', ...ts } }])) }
     await getUsers(context, { query: null, path: '/users' }, h)
-    expect(cache.save).toHaveBeenCalledWith('/users', [{ username: 'Graham', ...tsR }])
     expect(models.users.findAll).toHaveBeenCalled()
     expect(h.response).toHaveBeenCalledWith([{ username: 'Graham', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -61,11 +46,8 @@ describe('The getUsers handler', () => {
   })
 
   it('returns a singleton array of users and status 200 the database', async () => {
-    cache.restore = jest.fn(() => null)
-    cache.save = jest.fn(() => null)
     models.users = { findAll: jest.fn(() => ([{ dataValues: { username: 'Graham', ...ts } }])) }
     await getUsers(context, { query: { username: 'Graham' }, path: '/users' }, h)
-    expect(cache.save).toHaveBeenCalledWith('/users?username=Graham', [{ username: 'Graham', ...tsR }])
     expect(models.users.findAll).toHaveBeenCalledWith({ where: { username: 'Graham' } })
     expect(h.response).toHaveBeenCalledWith([{ username: 'Graham', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -73,7 +55,6 @@ describe('The getUsers handler', () => {
   })
 
   it('throws on an unexpected database error', async () => {
-    cache.restore = jest.fn(() => null)
     models.users = { findAll: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
       await getUsers(context, { query: null, path: '/users' }, h)

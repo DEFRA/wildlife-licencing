@@ -164,18 +164,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/applications':
+  '/applications':
     get:
       description: Get the applications for a user
       summary: Get the applications for a user
-      operationId: getApplicationsByUserId
+      operationId: getApplications
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -198,18 +204,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/applications/applicant':
+  '/applications/applicant':
     get:
       description: Get the applicants for all applications for a user
       summary: Get the applicants for all applications for a user
-      operationId: getApplicantsByUserId
+      operationId: getApplicants
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -232,18 +244,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/applications/ecologist':
+  '/applications/ecologist':
     get:
       description: Get the ecologists for all applications for a user
       summary: Get the ecologists for all applications for a user
-      operationId: getEcologistsByUserId
+      operationId: getEcologists
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -266,18 +284,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/applications/applicant-organization':
+  '/applications/applicant-organization':
     get:
       description: Get the applicant organizations for all applications for a user
       summary: Get the applicants organizations for all applications for a user
-      operationId: getApplicantOrganizationsByUserId
+      operationId: getApplicantOrganizations
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -300,18 +324,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/applications/ecologist-organization':
+  '/applications/ecologist-organization':
     get:
       description: Get the applicant ecologist organizations for all ecologists for a user
       summary: Get the applicants ecologist organizations for all ecologists for a user
-      operationId: getEcologistOrganizationsByUserId
+      operationId: getEcologistOrganizations
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -334,18 +364,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application':
+  '/application':
     post:
       description: Create a new application
       summary: Create a new application for an existing userId
       operationId: postApplication
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
       requestBody:
         required: true
         content:
@@ -370,18 +393,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application/{applicationId}':
+  '/application/{applicationId}':
     get:
       description: Get an application
       summary: Get an application
       operationId: getApplicationByApplicationId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -412,15 +429,9 @@ paths:
 
     put:
       description: Update an application
-      summary: Create or update an application for a given appilcationId and an existing userId
+      summary: Create or update an application for a given applicationId
       operationId: putApplication
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -447,7 +458,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/application'
         400:
-          description: Bad request. user ID must be a uuid
+          description: Bad request.
         404:
           description: Not found
         500:
@@ -462,12 +473,6 @@ paths:
       summary: Delete an application
       operationId: deleteApplication
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -491,20 +496,155 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# Application-user
+################################################################################################
+  '/application-users':
+    get:
+      description: Get a list application-users
+      summary: Get a list application-users
+      operationId: getApplicationUsers
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUsers'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+  '/application-user':
+    post:
+      description: Create and store an application user relationship
+      summary: Create a new user with a generated ID
+      operationId: postApplicationUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationUser'
+      responses:
+        201:
+          description: The application-user relationship has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+        400:
+          description: Bad request. UserId or applicationId not found. Role not recognized.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application-user/{applicationUserId}':
+    get:
+      description: Retrieve an application-user
+      summary: Retrieve an application-user
+      operationId: getApplicationUserById
+      parameters:
+        - name: applicationUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+        400:
+          description: Bad request. Application-user ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      description: Delete an application-user
+      summary: Delete an application-user
+      operationId: deleteApplicationUserById
+      parameters:
+        - name: applicationUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application-user object has been deleted
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Eligibility
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/eligibility':
+  '/application/{applicationId}/eligibility':
     put:
       description: Update the application eligibility details
       summary: Create or update the application eligibility details
       operationId: putApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -540,12 +680,6 @@ paths:
       summary: Get the eligibility details for an application
       operationId: getApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -575,12 +709,6 @@ paths:
       summary: Delete the eligibility details for an application
       operationId: deleteApplicationEligibility
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -604,18 +732,12 @@ paths:
 ################################################################################################
 # Applicants
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/applicant':
+  '/application/{applicationId}/applicant':
     put:
       description: Update the application applicant details
       summary: Create or update the application applicant details
       operationId: putApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -651,12 +773,6 @@ paths:
       summary: Get the applicant details for an application
       operationId: getApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -686,12 +802,6 @@ paths:
       summary: Delete the applicant details for an application
       operationId: deleteApplicationApplicant
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -715,18 +825,12 @@ paths:
 ################################################################################################
 # Ecologists / Agent
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/ecologist':
+  '/application/{applicationId}/ecologist':
     put:
       description: Update the application ecologist details
       summary: Create or update the application ecologist details
       operationId: putApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -762,12 +866,6 @@ paths:
       summary: Get the ecologist details for an application
       operationId: getApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -797,12 +895,6 @@ paths:
       summary: Delete the ecologist details for an application
       operationId: deleteApplicationEcologist
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -823,21 +915,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Applicant Organization
-  ################################################################################################
-  '/user/{userId}/application/{applicationId}/applicant-organization':
+################################################################################################
+# Applicant Organization
+################################################################################################
+  '/application/{applicationId}/applicant-organization':
     put:
       description: Update the application applicant organization details
       summary: Create or update the application applicant organization details
       operationId: putApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -873,12 +959,6 @@ paths:
       summary: Get the applicant organization details for an application
       operationId: getApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -908,12 +988,6 @@ paths:
       summary: Delete the applicant organization details for an application
       operationId: deleteApplicationApplicantOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -934,21 +1008,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Ecologist Organization
-  ################################################################################################
-  '/user/{userId}/application/{applicationId}/ecologist-organization':
+################################################################################################
+# Ecologist Organization
+################################################################################################
+  '/application/{applicationId}/ecologist-organization':
     put:
       description: Update the application ecologist organization details
       summary: Create or update the application ecologist organization details
       operationId: putApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -984,12 +1052,6 @@ paths:
       summary: Get the ecologist organization details for an application
       operationId: getApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1019,12 +1081,6 @@ paths:
       summary: Delete the ecologist organization details for an application
       operationId: deleteApplicationEcologistOrganization
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1048,18 +1104,24 @@ paths:
 ################################################################################################
 # Sites
 ################################################################################################
-  '/user/{userId}/sites':
+  '/sites':
     get:
-      description: Get the sites for a user
-      summary: Get the sites for a user
-      operationId: getSitesByUserId
+      description: Get a list of sites
+      summary: Get a list of sites with the ability to filter using the user-sites relation
+      operationId: getSites
       parameters:
         - name: userId
-          in: path
+          in: query
           description: ID of the user
-          required: true
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -1082,18 +1144,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/site':
+  '/site':
     post:
       description: Create a new site
       summary: Create a new site for an existing userId
       operationId: postSite
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
       requestBody:
         required: true
         content:
@@ -1108,9 +1163,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/site'
         400:
-          description: Bad request. user ID must be a uuid
-        404:
-          description: Not found
+          description: Bad request
         500:
           description: Unexpected error on server
           content:
@@ -1118,18 +1171,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/site/{siteId}':
+  '/site/{siteId}':
     get:
       description: Get a site
       summary: Get a site
       operationId: getSiteBySiteId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: siteId
           in: path
           description: ID of the site
@@ -1163,12 +1210,6 @@ paths:
       summary: Create a new site or update an existing site
       operationId: putSite
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: siteId
           in: path
           description: ID of the site
@@ -1204,12 +1245,6 @@ paths:
       summary: Delete a site
       operationId: deleteSite
       parameters:
-        - name: userId
-          in: path
-          description: ID of the site
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: siteId
           in: path
           description: ID of the site
@@ -1231,22 +1266,109 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+################################################################################################
+# Site-user
+################################################################################################
+  '/site-user':
+    post:
+      description: Create and store an site user relationship
+      summary: Create a new site-user with a generated ID
+      operationId: postSiteUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/siteUser'
+      responses:
+        201:
+          description: The site-user relationship has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/siteUser'
+        400:
+          description: Bad request. UserId or siteId not found. Role not recognized.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/site-user/{siteUserId}':
+    get:
+      description: Retrieve a site-user
+      summary: Retrieve a site-user
+      operationId: getSiteUserById
+      parameters:
+        - name: siteUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/siteUser'
+        400:
+          description: Bad request. Site-user ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An site-user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an site-user
+      summary: Delete an site-user
+      operationId: deleteSiteUserById
+      parameters:
+        - name: siteUserId
+          in: path
+          description: ID of the application-user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The site-user object has been deleted
+        400:
+          description: Bad request. user ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 ################################################################################################
 # Application Sites
 ################################################################################################
-  '/user/{userId}/application-site':
+  '/application-site':
     post:
       description: Create a new application-site relationship
-      summary: Create a new application-site relationship for an existing userId, applicationId and SiteId
+      summary: Create a new application-site relationship for an existing applicationId and siteId
       operationId: postApplicationSite
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
       requestBody:
         required: true
         content:
@@ -1281,16 +1403,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application-sites':
+  '/application-sites':
     get:
       description: Get the application-sites
       summary: Get a list of application-site relationships for a user
-      operationId: getApplicationSitesByUserId
+      operationId: getApplicationSites
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: siteId
+          in: query
+          description: ID of the site
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
       responses:
@@ -1315,18 +1443,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{userId}/application-site/{applicationSiteId}':
+  '/application-site/{applicationSiteId}':
     get:
       description: Get an application-site by id
       summary:  Get an application-site by id
       operationId: getApplicationSiteByApplicationSiteId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationSiteId
           in: path
           description: ID of the application-site
@@ -1360,12 +1482,6 @@ paths:
       summary:  Get an application-site by id
       operationId: deleteApplicationSiteByApplicationSiteId
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationSiteId
           in: path
           description: ID of the application-site
@@ -1389,18 +1505,12 @@ paths:
 ################################################################################################
 # Submission
 ################################################################################################
-  '/user/{userId}/application/{applicationId}/submit':
+  '/application/{applicationId}/submit':
     post:
       description: Queue the application for submission
       summary: Queue the application for submission
       operationId: postApplicationSubmit
       parameters:
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
         - name: applicationId
           in: path
           description: ID of the application
@@ -1570,6 +1680,56 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    applicationUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationUser'
+
+    applicationUser:
+      type: object
+      additionalProperties: false
+      required:
+        - userId
+        - applicationId
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        role:
+          $ref: '#/components/schemas/roles'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    siteUser:
+      type: object
+      additionalProperties: false
+      required:
+        - userId
+        - siteId
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        siteId:
+          $ref: '#/components/schemas/uuid'
+        role:
+          $ref: '#/components/schemas/roles'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    roles:
+      type: string
+      enum:
+        - USER
 
     applicants:
       type: array

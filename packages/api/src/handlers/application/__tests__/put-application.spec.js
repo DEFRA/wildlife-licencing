@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = 'user/uuid/application/uuid'
+const path = '/application/uuid'
 const req = {
   path,
   payload: {
@@ -23,7 +23,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
       applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb78'
     }
   }
@@ -61,7 +60,6 @@ describe('The putApplication handler', () => {
         dataValues:
           {
             id: context.request.params.applicationId,
-            userId: context.request.params.userId,
             ...ts
           }
       }, true]))
@@ -72,7 +70,6 @@ describe('The putApplication handler', () => {
     expect(models.applications.findOrCreate).toHaveBeenCalledWith({
       defaults: {
         id: expect.any(String),
-        userId: context.request.params.userId,
         updateStatus: 'L',
         application: (({ ...l }) => l)(req.payload)
       },
@@ -81,7 +78,6 @@ describe('The putApplication handler', () => {
       }
     })
     expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
     expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -108,22 +104,9 @@ describe('The putApplication handler', () => {
     },
     { returning: true, where: { id: context.request.params.applicationId } })
     expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/applications`)
     expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
-  })
-
-  it('returns a 404 where user not found', async () => {
-    cache.save = jest.fn()
-    cache.delete = jest.fn()
-    models.users = { findByPk: jest.fn(async () => null) }
-    await putApplication(context, req, h)
-    expect(cache.save).not.toHaveBeenCalled()
-    expect(cache.delete).not.toHaveBeenCalled()
-    expect(h.response).toHaveBeenCalled()
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws with an insert query error', async () => {

@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = 'user/uuid/application/uuid'
+const path = '/application/uuid'
 const req = { path }
 
 /*
@@ -44,7 +44,7 @@ describe('The deleteApplication handler', () => {
     models.applications = { destroy: jest.fn(() => 1) }
     await deleteApplication(context, req, h)
     expect(models.applications.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationId } })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/application/${context.request.params.applicationId}`)
+    expect(cache.delete).toHaveBeenCalledWith(`/application/${context.request.params.applicationId}`)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 

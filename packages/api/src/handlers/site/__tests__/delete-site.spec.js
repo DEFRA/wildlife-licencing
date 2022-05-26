@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = 'user/uuid/site/uuid'
+const path = 'site/uuid'
 const req = { path }
 
 /*
@@ -17,7 +17,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      userId: 'aac6b84d-0407-4f45-bb7e-ec855228fae6',
       siteId: '1bfe075b-377e-472b-b160-a6a454648e23'
     }
   }
@@ -34,7 +33,6 @@ describe('The deleteApplication handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-
     deleteSite = (await import('../delete-site.js')).default
   })
 
@@ -44,7 +42,6 @@ describe('The deleteApplication handler', () => {
     models.sites = { destroy: jest.fn(() => 1) }
     await deleteSite(context, req, h)
     expect(models.sites.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.siteId } })
-    expect(cache.delete).toHaveBeenCalledWith(`/user/${context.request.params.userId}/site/${context.request.params.siteId}`)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -56,7 +53,7 @@ describe('The deleteApplication handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
-  it('returns a 409 fi has application-site', async () => {
+  it('returns a 409 conflict if has application-site', async () => {
     cache.delete = jest.fn()
     models.applicationSites = { findAll: jest.fn(() => [{}]) }
     await deleteSite(context, req, h)
