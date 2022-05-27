@@ -92,25 +92,57 @@ describe('The API requests service', () => {
 
   describe('APPLICATION requests', () => {
     it('create calls the API connector correctly', async () => {
-      const mockGet = jest.fn(() => ({ ref: 'reference-number' }))
       const mockPost = jest.fn(() => ({ id: 'applicationId' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
-          post: mockPost,
-          get: mockGet
+          post: mockPost
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICATION.create('b2ddb504-c281-4f48-99de-c5357f5b86f1', 'type')
-      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=type')
+      await APIRequests.APPLICATION.create('type')
       expect(mockPost).toHaveBeenCalledWith('/application', {
-        applicationReferenceNumber: 'reference-number',
         applicationType: 'type'
       })
-      expect(mockPost).toHaveBeenCalledWith('/application-user', {
-        applicationId: 'applicationId',
-        userId: 'b2ddb504-c281-4f48-99de-c5357f5b86f1',
-        role: 'USER'
+    })
+
+    it.only('initialize calls the API connector correctly where no association exists', async () => {
+      const mockPost = jest.fn(() => ({
+        id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+        userId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+        applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        role: 'role1'
+      }))
+      const mockGet = jest.fn()
+        .mockReturnValueOnce([])
+        .mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
+        .mockReturnValue({ ref: 'REF-NO' })
+      const mockPut = jest.fn(() => ({
+        id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        applicationReferenceNumber: 'REF-NO',
+        type: 'badger'
+      }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost,
+          get: mockGet,
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
+      expect(result).toEqual({
+        application: {
+          applicationReferenceNumber: 'REF-NO',
+          id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          type: 'badger'
+        },
+        applicationUser: {
+          id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+          applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          role: 'role1',
+          userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+        }
       })
     })
 
