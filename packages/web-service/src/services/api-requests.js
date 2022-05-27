@@ -1,4 +1,3 @@
-import { DEFAULT_ROLE } from '../constants.js'
 import { API } from '@defra/wls-connectors-lib'
 import db from 'debug'
 import Boom from '@hapi/boom'
@@ -62,25 +61,28 @@ export const APIRequests = {
      * @param applicationId
      * @returns {Promise<void>}
      */
-    initialize: async (userId, applicationId) => {
+    initialize: async (userId, applicationId, role) => {
       try {
-        const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}&role=${DEFAULT_ROLE}`)
+        const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}&role=${role}`)
+        const result = {}
+
         // Associate user if no association exists
         if (!applicationUsers.length) {
-          const applicationUser = await API.post('/application-user', { userId, applicationId, role: DEFAULT_ROLE })
-          debug(`associated applicationId: ${applicationUser.applicationId} with userId: ${applicationUser.userId}`)
+          result.applicationUser = await API.post('/application-user', { userId, applicationId, role })
+          debug(`associated applicationId: ${result.applicationUser.applicationId} with userId: ${result.applicationUser.userId} using role: ${role}`)
         } else {
-          debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId}`)
+          result.applicationUser = applicationUsers[0]
+          debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId} using role: ${role}`)
         }
         // Create reference number if no reference number exists
-        const application = await API.get(`/application/${applicationId}`)
-        if (!application?.applicationReferenceNumber) {
-          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${application.applicationType}`)
-          Object.assign(application, { applicationReferenceNumber })
-          debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${application.id}`)
-          return API.put(`/application/${applicationId}`, application)
+        result.application = await API.get(`/application/${applicationId}`)
+        if (!result.application?.applicationReferenceNumber) {
+          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${result.application.applicationType}`)
+          Object.assign(result.application, { applicationReferenceNumber })
+          debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${result.application.id}`)
+          result.application = API.put(`/application/${applicationId}`, result.application)
         }
-        return application
+        return result
       } catch (error) {
         console.error(`Error creating application-user with userId ${userId} and applicationId ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })

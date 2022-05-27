@@ -1,6 +1,6 @@
 import { TASKLIST } from '../uris.js'
 import { ApplicationService } from '../services/application.js'
-import { clearPageData } from '../services/cache-operations.js'
+import { DEFAULT_ROLE } from '../constants.js'
 
 /**
  * The creation of a new application for a logged in user
@@ -10,7 +10,6 @@ import { clearPageData } from '../services/cache-operations.js'
  */
 export default async (request, h) => {
   await ApplicationService.createApplication(request)
-  await ApplicationService.associateApplication(request)
-  await clearPageData(request)
+  await ApplicationService.associateApplication(request, DEFAULT_ROLE)
   return h.redirect(TASKLIST.uri)
 }
