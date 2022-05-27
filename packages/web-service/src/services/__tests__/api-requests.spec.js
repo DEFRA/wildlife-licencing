@@ -105,7 +105,19 @@ describe('The API requests service', () => {
       })
     })
 
-    it.only('initialize calls the API connector correctly where no association exists', async () => {
+    it('create rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.APPLICATION.create('fred.flintstone@email.co.uk'))
+        .rejects.toThrowError()
+    })
+
+    it('initialize calls the API connector correctly where no association exists', async () => {
       const mockPost = jest.fn(() => ({
         id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
         userId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -114,12 +126,12 @@ describe('The API requests service', () => {
       }))
       const mockGet = jest.fn()
         .mockReturnValueOnce([])
-        .mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
+        .mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationType: 'badger' })
         .mockReturnValue({ ref: 'REF-NO' })
       const mockPut = jest.fn(() => ({
         id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         applicationReferenceNumber: 'REF-NO',
-        type: 'badger'
+        applicationType: 'badger'
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -131,11 +143,17 @@ describe('The API requests service', () => {
       const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
+
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=badger')
+      expect(mockPost).toHaveBeenCalledWith('/application-user', { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', role: 'role1', userId: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
+      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationType: 'badger' })
       expect(result).toEqual({
         application: {
           applicationReferenceNumber: 'REF-NO',
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          type: 'badger'
+          applicationType: 'badger'
         },
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
@@ -146,7 +164,91 @@ describe('The API requests service', () => {
       })
     })
 
-    it('create rethrows an error', async () => {
+    it('initialize calls the API connector correctly where an existing association exists', async () => {
+      const mockGet = jest.fn()
+        .mockReturnValueOnce([{
+          id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+          applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          role: 'role1',
+          userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+        }]).mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationType: 'badger' })
+        .mockReturnValue({ ref: 'REF-NO' })
+
+      const mockPut = jest.fn(() => ({
+        id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        applicationReferenceNumber: 'REF-NO',
+        applicationType: 'badger'
+      }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet,
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
+
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=badger')
+      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationType: 'badger' })
+      expect(result).toEqual({
+        application: {
+          applicationReferenceNumber: 'REF-NO',
+          id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          applicationType: 'badger'
+        },
+        applicationUser: {
+          id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+          applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          role: 'role1',
+          userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+        }
+      })
+    })
+
+    it('initialize calls the API connector correctly where an existing reference number exists', async () => {
+      const mockGet = jest.fn()
+        .mockReturnValueOnce([{
+          id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+          applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          role: 'role1',
+          userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+        }]).mockReturnValue({
+          id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          applicationType: 'badger',
+          applicationReferenceNumber: 'REF-NO'
+        })
+
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
+
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(result).toEqual({
+        application: {
+          applicationReferenceNumber: 'REF-NO',
+          id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          applicationType: 'badger'
+        },
+        applicationUser: {
+          id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+          applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          role: 'role1',
+          userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+        }
+      })
+    })
+
+    it('initialize rethrows an error', async () => {
       const mockGet = jest.fn(() => { throw new Error() })
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -154,7 +256,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.create('fred.flintstone@email.co.uk'))
+      await expect(() => APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1'))
         .rejects.toThrowError()
     })
 

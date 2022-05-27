@@ -80,7 +80,7 @@ export const APIRequests = {
           const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${result.application.applicationType}`)
           Object.assign(result.application, { applicationReferenceNumber })
           debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${result.application.id}`)
-          result.application = API.put(`/application/${applicationId}`, result.application)
+          result.application = API.put(`/application/${applicationId}`, (({ id, ...l }) => l)(result.application))
         }
         return result
       } catch (error) {
