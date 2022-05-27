@@ -3,11 +3,11 @@
  */
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
-import { eligibilityURIs, TASKLIST } from '../../uris.js'
+import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
 
 import pageRoute from '../../routes/page-route.js'
-import { SECTION_TASKS, STATUS_VALUES, updateStatusCache } from '../tasklist/licence-type-map.js'
-const { ELIGIBILITY_CHECK: ELIGIBILITY_CHECK_TASK } = SECTION_TASKS
+import { ApplicationService } from '../../services/application.js'
+import { APIRequests } from '../../services/api-requests.js'
 
 // The pages in the flow
 const {
@@ -20,27 +20,12 @@ const IS_OWNER_OF_LAND = 'isOwnerOfLand'
 const HAS_LANDOWNER_PERMISSION = 'hasLandOwnerPermission'
 const PERMISSION_REQUIRED = 'permissionsRequired'
 const PERMISSION_GRANTED = 'permissionsGranted'
-
-// Helper to operate on the eligibility section of the journey cache
-export const updateEligibilityCache = async (request, operator) => {
-  const journeyData = await request.cache().getData() || {}
-  journeyData.eligibility = journeyData.eligibility || {}
-  const { eligibility } = journeyData
-  await operator(eligibility)
-
-  // Expediently set the task status to in-progress
-  journeyData.tasks = journeyData.tasks || {}
-  const { tasks } = journeyData
-
-  tasks[ELIGIBILITY_CHECK_TASK] = STATUS_VALUES.IN_PROGRESS
-  await request.cache().setData(journeyData)
-}
+export const CHECK_COMPLETED = 'checkCompleted'
 
 // A state machine to determine the next page
 export const eligibilityCompletion = async request => {
   const journeyData = await request.cache().getData() || {}
-  journeyData.eligibility = journeyData.eligibility || {}
-  const { eligibility } = journeyData
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   const grantedCompletionSection = eligibilityPart => {
     if (eligibilityPart[PERMISSION_GRANTED] === undefined) {
       return CONSENT_GRANTED.uri
@@ -83,65 +68,74 @@ export const eligibilityCompletion = async request => {
   }
 }
 
+// Ensure we have created an application
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  if (!journeyData?.applicationId) {
+    return h.redirect(TASKLIST.uri)
+  }
+}
+
+export const getData = question => async request => {
+  const journeyData = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
+  return eligibility[question] || {}
+}
+
+const consolidateAnswers = async (request, eligibility) => {
+  if (eligibility[IS_OWNER_OF_LAND]) {
+    delete eligibility[HAS_LANDOWNER_PERMISSION]
+    await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
+  }
+  if (eligibility[HAS_LANDOWNER_PERMISSION]) {
+    eligibility[IS_OWNER_OF_LAND] = false
+  }
+  if (!eligibility[PERMISSION_REQUIRED]) {
+    delete eligibility[PERMISSION_GRANTED]
+    await request.cache().clearPageData(CONSENT_GRANTED.page)
+  }
+  if (eligibility[PERMISSION_GRANTED]) {
+    eligibility[PERMISSION_REQUIRED] = true
+  }
+}
+
+export const setData = question => async request => {
+  const journeyData = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
+  Object.assign(eligibility, { [question]: isYes(request), [CHECK_COMPLETED]: false })
+  await consolidateAnswers(request, eligibility)
+  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+}
+
 /**************************************************************
  * Are you the landowner?
  **************************************************************/
-export const landOwnerSetData = request =>
-  updateEligibilityCache(request, async eligibility => {
-    await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
-    if (isYes(request)) {
-      Object.assign(eligibility, { [IS_OWNER_OF_LAND]: true })
-      delete eligibility[HAS_LANDOWNER_PERMISSION]
-    } else {
-      Object.assign(eligibility, { [IS_OWNER_OF_LAND]: false })
-    }
-  })
-
-export const landOwner = yesNoPage(LANDOWNER, null, null, eligibilityCompletion,
-  landOwnerSetData, { auth: false })
+export const landOwner = yesNoPage(LANDOWNER, checkData, getData(IS_OWNER_OF_LAND), eligibilityCompletion,
+  setData(IS_OWNER_OF_LAND), { auth: { mode: 'optional' } })
 
 /**************************************************************
  * Do you have the landowner's permission?
  **************************************************************/
-export const landOwnerPermissionSetData = request =>
-  updateEligibilityCache(request, eligibility =>
-    Object.assign(eligibility, { [HAS_LANDOWNER_PERMISSION]: isYes(request) }))
-
-export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, null, null, eligibilityCompletion,
-  landOwnerPermissionSetData, { auth: false })
+export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, checkData, getData(HAS_LANDOWNER_PERMISSION), eligibilityCompletion,
+  setData(HAS_LANDOWNER_PERMISSION), { auth: { mode: 'optional' } })
 
 /**************************************************************
- * Does the work require consents?
+ * Does the work require permissions?
  **************************************************************/
-export const consentSetData = request =>
-  updateEligibilityCache(request, async eligibility => {
-    await request.cache().clearPageData(CONSENT_GRANTED.page)
-    if (isYes(request)) {
-      Object.assign(eligibility, { [PERMISSION_REQUIRED]: true })
-    } else {
-      Object.assign(eligibility, { [PERMISSION_REQUIRED]: false })
-      delete eligibility[PERMISSION_GRANTED]
-    }
-  })
-
-export const consent = yesNoPage(CONSENT, null, null, eligibilityCompletion,
-  consentSetData, { auth: false })
+export const consent = yesNoPage(CONSENT, checkData, getData(PERMISSION_REQUIRED), eligibilityCompletion,
+  setData(PERMISSION_REQUIRED), { auth: { mode: 'optional' } })
 
 /**************************************************************
- * Have the consents been granted?
+ * Have the permissions been granted?
  **************************************************************/
-export const consentGrantedSetData = request =>
-  updateEligibilityCache(request, eligibility =>
-    Object.assign(eligibility, { [PERMISSION_GRANTED]: isYes(request) }))
-
-export const consentGranted = yesNoPage(CONSENT_GRANTED, null, null, eligibilityCompletion,
-  consentGrantedSetData, { auth: false })
+export const consentGranted = yesNoPage(CONSENT_GRANTED, checkData, getData(PERMISSION_GRANTED), eligibilityCompletion,
+  setData(PERMISSION_GRANTED), { auth: { mode: 'optional' } })
 
 export const notEligibleLandowner = pageRoute(NOT_ELIGIBLE_LANDOWNER.page, NOT_ELIGIBLE_LANDOWNER.uri,
-  null, null, null, null, null, { auth: false })
+  null, null, null, null, null, { auth: { mode: 'optional' } })
 
 export const notEligibleProject = pageRoute(NOT_ELIGIBLE_PROJECT.page, NOT_ELIGIBLE_PROJECT.uri,
-  null, null, null, null, null, { auth: false })
+  null, null, null, null, null, { auth: { mode: 'optional' } })
 
 /**************************************************************
  * Check your answers (eligibilityCheck)
@@ -153,13 +147,21 @@ export const checkYourAnswersGetData = async request => {
     [PERMISSION_REQUIRED]: 2,
     [PERMISSION_GRANTED]: 3
   }
-  const { eligibility } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   // Turn into an array of key, value objects, sort and map booleans to strings to help in template
-  return Object.entries(eligibility).map(([k, v]) => ({ key: k, value: v ? 'yes' : 'no' }))
+  return Object.entries(eligibility)
+    .filter(([k, v]) => k !== CHECK_COMPLETED)
+    .map(([k, v]) => ({ key: k, value: v ? 'yes' : 'no' }))
     .sort((a, b) => orderKeys[a.key] - orderKeys[b.key])
 }
 
-export const checkYourAnswersSetData = request => updateStatusCache(request, SECTION_TASKS.ELIGIBILITY_CHECK, STATUS_VALUES.COMPLETED)
+export const checkYourAnswersSetData = async request => {
+  const journeyData = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
+  Object.assign(eligibility, { [CHECK_COMPLETED]: true })
+  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+}
 
 export const checkAnswersCompletion = () => ELIGIBLE.uri
 
@@ -169,15 +171,15 @@ export const eligibilityCheck = checkAnswersPage(
   checkYourAnswersGetData,
   checkYourAnswersSetData,
   checkAnswersCompletion,
-  { auth: false }
+  { auth: { mode: 'optional' } }
 )
 
 /**************************************************************
  * You are eligible page, sign-in
  **************************************************************/
 export const eligibleCheckData = async (request, h) => {
-  const journeyData = await request.cache().getData() || { eligibility: {} }
-  const { eligibility } = journeyData
+  const journeyData = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   if (eligibility[IS_OWNER_OF_LAND] === undefined) {
     return h.redirect(LANDOWNER.uri)
   }
@@ -187,6 +189,8 @@ export const eligibleCheckData = async (request, h) => {
   return null
 }
 
+export const eligibleCompletion = async request => request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
+
 export const eligible = pageRoute(ELIGIBLE.page, ELIGIBLE.uri, eligibleCheckData,
-  null, null, TASKLIST.uri, null, { auth: false }
+  null, null, eligibleCompletion, null, { auth: { mode: 'optional' } }
 )

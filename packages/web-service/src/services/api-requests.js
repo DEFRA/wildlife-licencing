@@ -38,21 +38,51 @@ export const APIRequests = {
     }
   },
   APPLICATION: {
-    create: async (userId, type) => {
+    /**
+     * Basic application creation - creates the record unassociated with any user and not assigned a reference number.
+     * It has only a type
+     * @param userId
+     * @param type
+     * @returns {Promise<*>}
+     */
+    create: async type => {
       try {
-        debug(`Creating new application of type: ${type} for userId: ${userId}`)
-        const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${type}`)
-        const application = await API.post('/application', { applicationReferenceNumber, applicationType: type })
-        const applicationUser = await API.post('/application-user', {
-          userId,
-          applicationId: application.id,
-          role: DEFAULT_ROLE
-        })
-        debug(`Created application ${JSON.stringify(application)}`)
-        debug(`Assigned ${applicationUser.role} to applicationId: ${applicationUser.applicationId} and userId: ${applicationUser.userId}`)
+        const application = await API.post('/application', { applicationType: type })
+        debug(`Created pre-application ${JSON.stringify(application.id)}`)
         return application
       } catch (error) {
-        console.error(`Error creating application with userId ${userId} and type ${type}`, error)
+        console.error(`Error creating pre-application of type ${type}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    /**
+     * Associates a user with the application with the default role. Sets the reference number
+     * @param userId
+     * @param applicationId
+     * @returns {Promise<void>}
+     */
+    initialize: async (userId, applicationId) => {
+      try {
+        const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}&role=${DEFAULT_ROLE}`)
+        // Associate user if no association exists
+        if (!applicationUsers.length) {
+          const applicationUser = await API.post('/application-user', { userId, applicationId, role: DEFAULT_ROLE })
+          debug(`associated applicationId: ${applicationUser.applicationId} with userId: ${applicationUser.userId}`)
+        } else {
+          debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId}`)
+        }
+        // Create reference number if no reference number exists
+        const application = await API.get(`/application/${applicationId}`)
+        if (!application?.applicationReferenceNumber) {
+          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${application.applicationType}`)
+          Object.assign(application, { applicationReferenceNumber })
+          debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${application.id}`)
+          return API.put(`/application/${applicationId}`, application)
+        }
+        return application
+      } catch (error) {
+        console.error(`Error creating application-user with userId ${userId} and applicationId ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -88,6 +118,28 @@ export const APIRequests = {
         return API.post(`/application/${applicationId}/submit`)
       } catch (error) {
         console.error(`Error submitting application for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
+  ELIGIBILITY: {
+    getById: async applicationId => {
+      try {
+        debug(`Get application/eligibility FOR applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/eligibility`)
+      } catch (error) {
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putById: async (applicationId, eligibility) => {
+      try {
+        debug(`Put application/eligibility FOR applicationId: ${applicationId} - ${JSON.stringify(eligibility)}`)
+        return API.put(`/application/${applicationId}/eligibility`, eligibility)
+      } catch (error) {
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

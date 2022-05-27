@@ -7,18 +7,21 @@ const TYPE = 'A24 Badger'
 
 export const ApplicationService = {
   createApplication: async request => {
-    const journeyData = await request.cache().getData()
-    const { userId } = journeyData
-    const application = await APIRequests.APPLICATION.create(userId, TYPE)
-    debug(`Creating new application ${JSON.stringify(application)}`)
+    const journeyData = await request.cache().getData() || {}
+    const application = await APIRequests.APPLICATION.create(TYPE)
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
     return application.id
   },
-  submitApplication: async request => {
+  associateApplication: async request => {
     const journeyData = await request.cache().getData()
     const { userId, applicationId } = journeyData
-    debug(`Submitting application... userId: ${userId}, applicationId: ${applicationId}`)
-    await APIRequests.APPLICATION.submit(userId, applicationId)
+    return APIRequests.APPLICATION.initialize(userId, applicationId)
+  },
+  submitApplication: async request => {
+    const journeyData = await request.cache().getData()
+    const { applicationId } = journeyData
+    debug(`Submitting applicationId: ${applicationId}`)
+    await APIRequests.APPLICATION.submit(applicationId)
   }
 }
