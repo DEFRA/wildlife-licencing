@@ -5,7 +5,7 @@ import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
 import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus } from './licence-type-map.js'
 
-export const getData = async request => {
+export const getApplication = async request => {
   // If there is no application then create a pre-application
   let journeyData = await request.cache().getData() || {}
 
@@ -25,6 +25,11 @@ export const getData = async request => {
   if (journeyData.userId && !journeyData.applicationUserId) {
     application = await ApplicationService.associateApplication(request, DEFAULT_ROLE)
   }
+  return application
+}
+
+export const getData = async request => {
+  const application = await getApplication(request)
 
   const status = await getTaskStatus(request)
   const decoratedMap = await decorateMap(licenceTypeMap[A24], status)

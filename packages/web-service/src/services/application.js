@@ -21,7 +21,7 @@ export const ApplicationService = {
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
     await clearPageData(request)
-    return application.id
+    return application
   },
   associateApplication: async (request, role) => {
     const journeyData = await request.cache().getData()

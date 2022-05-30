@@ -10,20 +10,16 @@ describe('The task-list handler', () => {
         id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
-      const mockFindRoles = jest.fn(() => ['USER'])
-
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: mockGetById,
-            findRoles: mockFindRoles
+            getById: mockGetById
           }
         }
       }))
 
       // Mock out the cache
       const mockGetData = jest.fn(() => ({
-        userId: uuidv4(),
         applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
@@ -36,6 +32,39 @@ describe('The task-list handler', () => {
       const { getApplication } = await import('../tasklist.js')
       const result = await getApplication(request)
       expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
+    })
+
+    it.only('creates an application', async () => {
+      // Mock out the API calls
+      const mockCreate = jest.fn(() => ({
+        id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+      }))
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            create: mockCreate
+          }
+        }
+      }))
+
+      // Mock out the cache
+      const mockGetData = jest.fn(() => ({}))
+      const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: mockGetData,
+          setData: mockSetData,
+          clearPageData: mockClearPageData
+        })
+      }
+
+      const { getApplication } = await import('../tasklist.js')
+      const result = await getApplication(request)
+      expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
+      expect(mockSetData).toHaveBeenCalledWith({})
+      expect(mockClearPageData).toHaveBeenCalledWith()
     })
 
     it('gets an application from the parameter', async () => {

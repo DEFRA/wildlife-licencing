@@ -6,7 +6,6 @@ import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
 
 import pageRoute from '../../routes/page-route.js'
-import { ApplicationService } from '../../services/application.js'
 import { APIRequests } from '../../services/api-requests.js'
 
 // The pages in the flow
