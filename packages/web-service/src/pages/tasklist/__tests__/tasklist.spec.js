@@ -1,5 +1,3 @@
-import { decorateMap, getProgress } from '../licence-type-map.js'
-
 describe('The task-list handler', () => {
   beforeEach(() => jest.resetModules())
 
