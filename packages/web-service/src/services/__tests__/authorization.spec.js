@@ -24,6 +24,20 @@ describe('The authorization scheme', () => {
     expect(result).toBe('takeover')
   })
 
+  it('Unauthorized access continues to an optionally protected page', async () => {
+    const authorization = await import('../authorization.js')
+    const { authenticate } = authorization.default()
+    const request = {
+      path: '/some-path',
+      auth: { mode: 'optional' },
+      cache: () => ({
+        getAuthData: () => null
+      })
+    }
+    const result = await authenticate(request, { continue: 'continue' })
+    expect(result).toEqual('continue')
+  })
+
   it('Authorized access calls authenticated tool-kit function the ', async () => {
     const authorization = await import('../authorization.js')
     const { authenticate } = authorization.default()

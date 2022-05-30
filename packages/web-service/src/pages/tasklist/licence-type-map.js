@@ -78,7 +78,9 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
             uri: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri, // Either a fixed uri or a function of the status to resolve the uri
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED, // returns a function of request to get the current status
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.COMPLETED
+              : STATUS_VALUES.NOT_STARTED, // returns a function of request to get the current status
             enabled: status => !status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]
@@ -89,13 +91,17 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
             uri: APPLICANT_USER.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? STATUS_VALUES.NOT_STARTED : STATUS_VALUES.CANNOT_START_YET,
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
             enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
             uri: ECOLOGIST_USER.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? STATUS_VALUES.NOT_STARTED : STATUS_VALUES.CANNOT_START_YET,
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
             enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]
@@ -131,7 +137,9 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SUBMIT,
             uri: DECLARATION.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? STATUS_VALUES.NOT_STARTED : STATUS_VALUES.CANNOT_START_YET,
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
             enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]

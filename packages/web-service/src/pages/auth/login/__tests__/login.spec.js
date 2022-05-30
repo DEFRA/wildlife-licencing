@@ -57,6 +57,19 @@ describe('login page', () => {
       expect(result).toBe('/tasklist')
     })
 
+    it('returns the tasklist page if the user is not authenticated', async () => {
+      const { completion } = await import('../login.js')
+      const result = await completion({
+        auth: {
+          isAuthenticated: false
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      })
+      expect(result).toBe('/tasklist')
+    })
+
     it('returns the applications page if no applicationId is set and the user is authenticated', async () => {
       const { completion } = await import('../login.js')
       const result = await completion({

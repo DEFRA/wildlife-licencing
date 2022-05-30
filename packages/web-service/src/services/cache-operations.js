@@ -19,4 +19,4 @@ const PAGES = findPages(top)
  * @param request
  * @returns {Promise<Awaited<*>[]>}
  */
-export const clearPageData = async request => await Promise.all(PAGES.map(async p => await request.cache().clearPageData(p)))
+export const clearPageData = async request => Promise.all(PAGES.map(async p => request.cache().clearPageData(p)))

@@ -21,7 +21,7 @@ describe('the declaration-application handler function', () => {
       }
     }))
 
-    const { setData } = (await import('../declaration.js'))
+    const { setData } = await import('../declaration.js')
     await setData(request)
 
     expect(mockGetData).toHaveBeenCalledTimes(1)

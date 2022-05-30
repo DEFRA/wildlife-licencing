@@ -73,6 +73,7 @@ export const checkData = async (request, h) => {
   if (!journeyData?.applicationId) {
     return h.redirect(TASKLIST.uri)
   }
+  return null
 }
 
 export const getData = question => async request => {
@@ -150,7 +151,7 @@ export const checkYourAnswersGetData = async request => {
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   // Turn into an array of key, value objects, sort and map booleans to strings to help in template
   return Object.entries(eligibility)
-    .filter(([k, v]) => k !== CHECK_COMPLETED)
+    .filter(([k, _v]) => k !== CHECK_COMPLETED)
     .map(([k, v]) => ({ key: k, value: v ? 'yes' : 'no' }))
     .sort((a, b) => orderKeys[a.key] - orderKeys[b.key])
 }
