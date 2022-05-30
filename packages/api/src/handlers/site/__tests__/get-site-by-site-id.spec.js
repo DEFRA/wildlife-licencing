@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = '/user/uuid/site/uuid'
+const path = '/site/uuid'
 const req = { path }
 
 /*
@@ -49,7 +49,6 @@ describe('The getSiteBySiteId handler', () => {
   })
 
   it('returns a site and status 200 from the cache', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
     await getSite(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
@@ -60,7 +59,6 @@ describe('The getSiteBySiteId handler', () => {
   it('returns a site and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.sites = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getSite(context, req, h)
     expect(models.sites.findByPk).toHaveBeenCalledWith(context.request.params.siteId)
@@ -71,30 +69,11 @@ describe('The getSiteBySiteId handler', () => {
   })
 
   it('returns a status 404 on site not found', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     cache.restore = jest.fn(() => null)
     models.sites = { findByPk: jest.fn(() => null) }
     await getSite(context, req, h)
     expect(models.sites.findByPk).toHaveBeenCalledWith(context.request.params.siteId)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
-  })
-
-  it('returns a status 404 on user not found', async () => {
-    models.users = { findByPk: jest.fn(async () => null) }
-    cache.restore = jest.fn(() => null)
-    await getSite(context, req, h)
-    expect(models.sites.findByPk).toHaveBeenCalledWith(context.request.params.siteId)
-    expect(h.response).toHaveBeenCalled()
-    expect(codeFunc).toHaveBeenCalledWith(404)
-  })
-
-  it('throws on a query error', async () => {
-    cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.sites = { findByPk: jest.fn(() => { throw new Error() }) }
-    await expect(async () => {
-      await getSite(context, req, h)
-    }).rejects.toThrow()
   })
 })

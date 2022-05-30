@@ -93,7 +93,7 @@ describe('The API requests service', () => {
   describe('APPLICATION requests', () => {
     it('create calls the API connector correctly', async () => {
       const mockGet = jest.fn(() => ({ ref: 'reference-number' }))
-      const mockPost = jest.fn()
+      const mockPost = jest.fn(() => ({ id: 'applicationId' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
           post: mockPost,
@@ -103,9 +103,14 @@ describe('The API requests service', () => {
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.APPLICATION.create('b2ddb504-c281-4f48-99de-c5357f5b86f1', 'type')
       expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=type')
-      expect(mockPost).toHaveBeenCalledWith('/user/b2ddb504-c281-4f48-99de-c5357f5b86f1/application', {
+      expect(mockPost).toHaveBeenCalledWith('/application', {
         applicationReferenceNumber: 'reference-number',
         applicationType: 'type'
+      })
+      expect(mockPost).toHaveBeenCalledWith('/application-user', {
+        applicationId: 'applicationId',
+        userId: 'b2ddb504-c281-4f48-99de-c5357f5b86f1',
+        role: 'USER'
       })
     })
 
@@ -130,7 +135,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.APPLICATION.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/applications')
+      expect(mockGet).toHaveBeenCalledWith('/applications', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(result).toEqual([{ foo: 'bar' }])
     })
 
@@ -154,8 +159,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d')
+      const result = await APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(result).toEqual([{ foo: 'bar' }])
     })
 
@@ -171,6 +176,30 @@ describe('The API requests service', () => {
         .rejects.toThrowError()
     })
 
+    it('findRoles calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ['USER'])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.APPLICATION.findRoles('9913c6c2-1cdf-4582-a591-92c058d0e07d', 'USER')
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=9913c6c2-1cdf-4582-a591-92c058d0e07d&applicationId=USER')
+    })
+
+    it('findRoles rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.APPLICATION.findRoles('9913c6c2-1cdf-4582-a591-92c058d0e07d', 'USER'))
+        .rejects.toThrowError()
+    })
+
     it('submit calls the API correctly', async () => {
       const mockSubmit = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -179,8 +208,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICATION.submit('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
-      expect(mockSubmit).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/submit')
+      await APIRequests.APPLICATION.submit('9913c6c2-1cdf-4582-a591-92c058d0e07d')
+      expect(mockSubmit).toHaveBeenCalledWith('/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/submit')
     })
 
     it('submit rethrows an error', async () => {
@@ -205,8 +234,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICANT.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/applicant')
+      const result = await APIRequests.APPLICANT.getById('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/applicant')
       expect(result).toEqual(({ foo: 'bar' }))
     })
 
@@ -230,8 +259,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.putById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d', { foo: 'bar' })
-      expect(mockPut).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/applicant', { foo: 'bar' })
+      await APIRequests.APPLICANT.putById('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/applicant', { foo: 'bar' })
     })
 
     it('putById rethrows an error', async () => {
@@ -254,8 +283,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/applications/applicant')
+      await APIRequests.APPLICANT.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
+      expect(mockGet).toHaveBeenCalledWith('/applications/applicant', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=USER')
     })
 
     it('putById findByUser an error', async () => {
@@ -281,7 +310,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.ECOLOGIST.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/ecologist')
+      expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/ecologist')
       expect(result).toEqual(({ foo: 'bar' }))
     })
 
@@ -305,8 +334,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.putById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d', { foo: 'bar' })
-      expect(mockPut).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/ecologist', { foo: 'bar' })
+      await APIRequests.ECOLOGIST.putById('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/ecologist', { foo: 'bar' })
     })
 
     it('putById rethrows an error', async () => {
@@ -329,8 +358,8 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/user/b306c67f-f5cd-4e69-9986-8390188051b3/applications/ecologist')
+      await APIRequests.ECOLOGIST.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
+      expect(mockGet).toHaveBeenCalledWith('/applications/ecologist', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=USER')
     })
 
     it('putById findByUser an error', async () => {

@@ -44,7 +44,6 @@ describe('ecologist-name', () => {
       })
     }
     await setData(request)
-    expect(mockPutById).toHaveBeenCalledWith('658c78d4-8890-4f79-a008-08fade8326d6',
-      'dad9d73e-d591-41df-9475-92c032bd3ceb', { fullName: 'Keith Richards' })
+    expect(mockPutById).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb', { fullName: 'Keith Richards' })
   })
 })
