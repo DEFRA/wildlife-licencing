@@ -7,6 +7,7 @@ describe('The authorization scheme', () => {
     const mockSetData = jest.fn()
     const request = {
       path: '/some-path',
+      auth: { mode: 'required' },
       cache: () => ({
         getAuthData: () => null,
         getData: () => null,

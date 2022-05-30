@@ -3,7 +3,7 @@ import { ApplicationService } from '../services/application.js'
 import { DEFAULT_ROLE } from '../constants.js'
 
 /**
- * The creation of a new application for a logged in user
+ * The creation of a new application for a logged-in user
  * @param request
  * @param h
  * @returns {Promise<*>}

@@ -25,7 +25,6 @@ describe('the declaration-application handler function', () => {
     await setData(request)
 
     expect(mockGetData).toHaveBeenCalledTimes(1)
-    expect(mockSubmit).toHaveBeenCalledWith('afda812d-c4df-4182-9978-19e6641c4a6e',
-      '35a6c59e-0faf-438b-b4d5-6967d8d075cb')
+    expect(mockSubmit).toHaveBeenCalledWith('35a6c59e-0faf-438b-b4d5-6967d8d075cb')
   })
 })
