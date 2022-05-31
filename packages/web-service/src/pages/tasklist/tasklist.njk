@@ -4,9 +4,11 @@
 {% set title = text.titleText['A24 Badger'] %}
 
 {% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
+    {% if data.reference %}
+        <p class="govuk-body sdds-save-link">
+            <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+        </p>
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
@@ -20,10 +22,9 @@
                     name: text.taskText[task.name],
                     href: task.uri,
                     status: text.statusText[task.status],
-                    colour: text.statusColours[task.status] if text.statusColours[task.status] else null
+                    colour: text.statusColours[task.status] if text.statusColours[task.status] else null,
+                    disabled: not task.enabled
                 }) }}
-                {# disabled: task.status === 'cannot-start' <- TODO: This line allows all links to be submitted with going "one-by-one" through the application #}
-                {# Commented just to aid early development, will be added back #}
            {% endfor %}
            {{ tld.push({ name: text.sectionText[section.name], tasks: t }) }}
         {% endfor %}
@@ -32,7 +33,9 @@
     {% if data.progress.completed !== data.progress.from %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
         <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{data.progress.completed}} of {{data.progress.from}} sections.</p>
-        <p class="govuk-body govuk-!-margin-bottom-7">Reference:<br>{{data.reference}}</p>
+        {% if data.reference %}
+            <p class="govuk-body govuk-!-margin-bottom-7">Reference:<br>{{data.reference}}</p>
+        {% endif %}
     {% endif %}
 
     {{ govukTaskList({ sections: tld }) }}

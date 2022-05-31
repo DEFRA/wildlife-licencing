@@ -7,6 +7,7 @@ describe('The authorization scheme', () => {
     const mockSetData = jest.fn()
     const request = {
       path: '/some-path',
+      auth: { mode: 'required' },
       cache: () => ({
         getAuthData: () => null,
         getData: () => null,
@@ -21,6 +22,20 @@ describe('The authorization scheme', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/login')
     expect(mockSetData).toHaveBeenCalledWith({ navigation: { requestedPage: '/some-path' } })
     expect(result).toBe('takeover')
+  })
+
+  it('Unauthorized access continues to an optionally protected page', async () => {
+    const authorization = await import('../authorization.js')
+    const { authenticate } = authorization.default()
+    const request = {
+      path: '/some-path',
+      auth: { mode: 'optional' },
+      cache: () => ({
+        getAuthData: () => null
+      })
+    }
+    const result = await authenticate(request, { continue: 'continue' })
+    expect(result).toEqual('continue')
   })
 
   it('Authorized access calls authenticated tool-kit function the ', async () => {

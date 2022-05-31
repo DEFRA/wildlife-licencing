@@ -1,10 +1,7 @@
 import pageRoute from '../../routes/page-route.js'
-import { DECLARATION } from '../../uris.js'
-import { APIRequests } from '../../services/api-requests.js'
+import { DECLARATION, SUBMISSION } from '../../uris.js'
+import { ApplicationService } from '../../services/application.js'
 
-export const setData = async request => {
-  const { userId, applicationId } = await request.cache().getData()
-  await APIRequests.APPLICATION.submit(userId, applicationId)
-}
-
-export default pageRoute(DECLARATION.page, DECLARATION.uri, setData, null, null, null, setData)
+export const setData = async request => ApplicationService.submitApplication(request)
+export default pageRoute(DECLARATION.page, DECLARATION.uri,
+  null, null, null, SUBMISSION.uri, setData)

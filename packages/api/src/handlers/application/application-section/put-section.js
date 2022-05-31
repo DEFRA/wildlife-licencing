@@ -1,7 +1,6 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../../constants.js'
 import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
-import { clearCaches } from '../application-cache.js'
 import { sectionKeyFunc } from './section-keys-func.js'
 const { cache } = REDIS
 
@@ -15,7 +14,8 @@ export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsKeyFunc, ke
       return h.response().code(404)
     }
 
-    await clearCaches(applicationId)
+    await cache.save(req.path)
+    await cache.delete(`/application/${applicationId}`)
     const sequelize = SEQUELIZE.getSequelize()
 
     let targetKeys = application.dataValues.targetKeys

@@ -1757,6 +1757,8 @@ components:
           type: boolean
         permissionsGranted:
           type: boolean
+        checkCompleted:
+          type: boolean
 
     referenceDataTypes:
       type: array
