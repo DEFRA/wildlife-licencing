@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 describe('The task-list handler', () => {
   beforeEach(() => jest.resetModules())
 
@@ -10,20 +8,16 @@ describe('The task-list handler', () => {
         id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
-      const mockFindRoles = jest.fn(() => ['USER'])
-
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: mockGetById,
-            findRoles: mockFindRoles
+            getById: mockGetById
           }
         }
       }))
 
       // Mock out the cache
       const mockGetData = jest.fn(() => ({
-        userId: uuidv4(),
         applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
@@ -38,403 +32,209 @@ describe('The task-list handler', () => {
       expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
     })
 
-    it('gets an application from the parameter', async () => {
+    it('creates an application', async () => {
+      // Mock out the API calls
+      const mockCreate = jest.fn(() => ({
+        id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+      }))
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            create: mockCreate
+          }
+        }
+      }))
+
+      // Mock out the cache
+      const mockGetData = jest.fn(() => ({}))
+      const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: mockGetData,
+          setData: mockSetData,
+          clearPageData: mockClearPageData
+        })
+      }
+
+      const { getApplication } = await import('../tasklist.js')
+      const result = await getApplication(request)
+      expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
+      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
+      expect(mockClearPageData).toHaveBeenCalled()
+    })
+
+    it('gets an application from the query parameter without causing a switch of application', async () => {
+      // Mock out the API calls
+      const mockGetById = jest.fn(() => ({
+        id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7'
+      }))
+
+      const mockFindRoles = jest.fn(() => ['USER'])
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: mockGetById,
+            findRoles: mockFindRoles
+          }
+        }
+      }))
+
+      // Mock out the cache
+      const mockGetData = jest.fn(() => ({
+        userId: '7fbfccf8-0a05-4c7a-9f53-53bed7f0a315',
+        applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7',
+        applicationUserId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+      }))
+
+      const mockSetData = jest.fn()
+
+      const request = {
+        query: { applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' },
+        cache: () => ({
+          getData: mockGetData,
+          setData: mockSetData
+        })
+      }
+
+      const { getApplication } = await import('../tasklist.js')
+      const result = await getApplication(request)
+      expect(result).toEqual({ id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' })
+    })
+
+    it('gets an application from the query parameter causing a switch of application', async () => {
+      // Mock out the API calls
+      const mockGetById = jest.fn(() => ({
+        id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
+      }))
+
+      const mockFindRoles = jest.fn(() => ['USER'])
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: mockGetById,
+            findRoles: mockFindRoles
+          }
+        }
+      }))
+
+      // Mock out the cache
+      const mockGetData = jest.fn(() => ({
+        userId: '7fbfccf8-0a05-4c7a-9f53-53bed7f0a315',
+        applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7',
+        applicationUserId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+      }))
+
+      const mockSetData = jest.fn()
+      const mockClearPageData = jest.fn()
+
+      const request = {
+        query: { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' },
+        cache: () => ({
+          getData: mockGetData,
+          setData: mockSetData,
+          clearPageData: mockClearPageData
+        })
+      }
+
+      const { getApplication } = await import('../tasklist.js')
+      const result = await getApplication(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        userId: '7fbfccf8-0a05-4c7a-9f53-53bed7f0a315'
+      })
+      expect(result).toEqual({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
+    })
+
+    it('create an application user relationship', async () => {
       // Mock out the API calls
       const mockGetById = jest.fn(() => ({
         id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
-      const mockFindRoles = jest.fn(() => ['USER'])
+      const mockInitialize = jest.fn(() => ({
+        application: { id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' },
+        applicationUser: {
+          id: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+          applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
+          userId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+        }
+      }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
             getById: mockGetById,
-            findRoles: mockFindRoles
+            initialize: mockInitialize
           }
         }
       }))
 
       // Mock out the cache
       const mockGetData = jest.fn(() => ({
-        userId: '7fbfccf8-0a05-4c7a-9f53-53bed7f0a315'
+        userId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+        applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
       }))
 
       const mockSetData = jest.fn()
 
       const request = {
-        query: { applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' },
         cache: () => ({
-          getData: mockGetData,
-          setData: mockSetData
+          setData: mockSetData,
+          getData: mockGetData
         })
       }
 
       const { getApplication } = await import('../tasklist.js')
       const result = await getApplication(request)
-      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7', userId: '7fbfccf8-0a05-4c7a-9f53-53bed7f0a315' })
+      expect(mockInitialize).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c', '8b2e3431-71f9-4c20-97f6-e5d192bfc0de', 'USER')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
+        applicationUserId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+        role: 'USER',
+        userId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+      })
       expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
     })
-
-    it('gets an application from the parameter and with a change the the cached id', async () => {
-      // Mock out the API calls
-      const mockGetById = jest.fn(() => ({
-        id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7'
-      }))
-
-      const mockFindRoles = jest.fn(() => ['USER'])
-
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICATION: {
-            getById: mockGetById,
-            findRoles: mockFindRoles
-          }
-        }
-      }))
-
-      // Mock out the cache
-      const mockGetData = jest.fn(() => ({
-        userId: 'f5d6961c-faa7-40ec-a04a-d4772c952e38',
-        applicationId: uuidv4()
-      }))
-
-      const mockSetData = jest.fn()
-
-      const request = {
-        query: { applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' },
-        cache: () => ({
-          getData: mockGetData,
-          setData: mockSetData
-        })
-      }
-
-      const { getApplication } = await import('../tasklist.js')
-      const result = await getApplication(request)
-      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7', userId: 'f5d6961c-faa7-40ec-a04a-d4772c952e38' })
-      expect(result).toEqual({ id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' })
-    })
-
-    it('creates an application from the parameter the database if id is not set in the cache', async () => {
-      // Mock out the API calls
-      const mockGetById = jest.fn(() => ({
-        id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7'
-      }))
-
-      const mockCreate = jest.fn(() => ({ id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' }))
-      const mockFindRoles = jest.fn(() => ['USER'])
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICATION: {
-            getById: mockGetById,
-            create: mockCreate,
-            findRoles: mockFindRoles
-          }
-        }
-      }))
-
-      // Mock out the cache
-      const mockGetData = jest.fn(() => ({
-        userId: 'f5d6961c-faa7-40ec-a04a-d4772c952e38'
-      }))
-
-      const mockSetData = jest.fn()
-
-      const request = {
-        cache: () => ({
-          getData: mockGetData,
-          setData: mockSetData
-        })
-      }
-
-      const { getApplication } = await import('../tasklist.js')
-      const result = await getApplication(request)
-      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7', userId: 'f5d6961c-faa7-40ec-a04a-d4772c952e38' })
-      expect(mockCreate).toHaveBeenCalled()
-
-      expect(result).toEqual({ id: '9acaf22c-b5c2-4109-9ad0-0d798dc477a7' })
-    })
-
-    it('throws if it cannot get an application', async () => {})
   })
 
-  it('the getData works as expected where the eligibility check status is \'cannot start yet\'', async () => {
-    const decoratedMap = [
-      {
-        name: 'check-before-you-start',
-        tasks: [
-          {
-            name: 'eligibility-check',
-            uri: '/eligibility-check',
-            status: 'cannot-start-yet'
-          }
-        ]
-      }]
-
-    jest.doMock('../licence-type-map.js', () => {
-      const actual = jest.requireActual('../licence-type-map.js')
-      return {
-        ...actual,
-        getStatus: () => jest.fn(() => 'cannot-start'),
-        updateStatusCache: jest.fn(),
-        decorateMap: jest.fn(() => decoratedMap)
-      }
-    })
-
-    // Mock out the API calls
-    const mockGetById = jest.fn(() => ({
-      applicationReferenceNumber: 'REFERENCE_NUMBER'
-    }))
-
-    const mockFindRoles = jest.fn(() => ['USER'])
-
+  it('the getData function returns the correct data to the template', async () => {
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById,
-          findRoles: mockFindRoles
+          getById: jest.fn(() => ({
+            id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
+            applicationReferenceNumber: 'ref'
+          }))
         }
       }
-    }))
-
-    const { getData } = await import('../tasklist.js')
-
-    // Mock out the cache
-    const mockGetData = jest.fn(() => ({
-      userId: uuidv4(),
-      applicationId: uuidv4()
     }))
 
     const request = {
       cache: () => ({
-        getData: mockGetData
+        getData: jest.fn(() => ({
+          applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+        }))
       })
     }
 
-    const result = await getData(request)
-    expect(result).toEqual({
-      reference: 'REFERENCE_NUMBER',
-      licenceType: 'A24 Badger',
-      licenceTypeMap: decoratedMap,
-      progress: { completed: 0, from: 1 }
-    })
-  })
-
-  it('the getData works as expected where the eligibility check status is \'in-progress\'', async () => {
-    const decoratedMap = [
-      {
-        name: 'check-before-you-start',
-        tasks: [
-          {
-            name: 'eligibility-check',
-            uri: '/eligibility-check',
-            status: 'in-progress'
-          }
-        ]
-      },
-      {
-        name: 'contact-details',
-        tasks: [
-          {
-            name: 'licence-holder',
-            uri: '/applicant-user',
-            status: 'cannot-start'
-          },
-          {
-            name: 'ecologist',
-            uri: '/ecologist-user',
-            status: 'cannot-start'
-          }
-        ]
-      }
-    ]
-
-    jest.doMock('../licence-type-map.js', () => {
-      const actual = jest.requireActual('../licence-type-map.js')
-      return {
-        ...actual,
-        getStatus: () => jest.fn(() => 'in-progress'),
-        updateStatusCache: jest.fn(),
-        decorateMap: jest.fn(() => decoratedMap)
-      }
-    })
-
-    // Mock out the API calls
-    const mockGetById = jest.fn(() => ({
-      applicationReferenceNumber: 'REFERENCE_NUMBER'
-    }))
-
-    const mockFindRoles = jest.fn(() => ['USER'])
-
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        APPLICATION: {
-          getById: mockGetById,
-          findRoles: mockFindRoles
-        }
-      }
+    jest.doMock('../licence-type-map.js', () => ({
+      getTaskStatus: jest.fn(() => 'task-status'),
+      decorateMap: jest.fn(() => 'decorated-map'),
+      getProgress: jest.fn(() => 'progress'),
+      licenceTypeMap: [],
+      A24: 'a24'
     }))
 
     const { getData } = await import('../tasklist.js')
-
-    // Mock out the cache
-    const mockGetData = jest.fn(() => ({
-      userId: uuidv4(),
-      applicationId: uuidv4()
-    }))
-
-    const request = {
-      cache: () => ({
-        getData: mockGetData
-      })
-    }
-
     const result = await getData(request)
     expect(result).toEqual({
-      reference: 'REFERENCE_NUMBER',
-      licenceType: 'A24 Badger',
-      licenceTypeMap: decoratedMap,
-      progress: { completed: 0, from: 3 }
-    })
-  })
-
-  it('the getData works as expected where the eligibility check status is \'complete\'', async () => {
-    const decoratedMap = [
-      {
-        name: 'check-before-you-start',
-        tasks: [
-          {
-            name: 'eligibility-check',
-            uri: '/eligibility-check',
-            status: 'completed'
-          }
-        ]
-      },
-      {
-        name: 'contact-details',
-        tasks: [
-          {
-            name: 'licence-holder',
-            uri: '/applicant-user',
-            status: 'not-started'
-          },
-          {
-            name: 'ecologist',
-            uri: '/ecologist-user',
-            status: 'not-started'
-          }
-        ]
-      }
-    ]
-
-    jest.doMock('../licence-type-map.js', () => {
-      const actual = jest.requireActual('../licence-type-map.js')
-      return {
-        ...actual,
-        getStatus: () => jest.fn(() => 'completed'),
-        updateStatusCache: jest.fn(),
-        decorateMap: jest.fn(() => decoratedMap)
-      }
-    })
-
-    // Mock out the API calls
-    const mockGetById = jest.fn(() => ({
-      applicationReferenceNumber: 'REFERENCE_NUMBER'
-    }))
-
-    const mockFindRoles = jest.fn(() => ['USER'])
-
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        APPLICATION: {
-          getById: mockGetById,
-          findRoles: mockFindRoles
-        }
-      }
-    }))
-
-    const { getData } = await import('../tasklist.js')
-
-    // Mock out the cache
-    const mockGetData = jest.fn(() => ({
-      userId: uuidv4(),
-      applicationId: uuidv4()
-    }))
-
-    const request = {
-      cache: () => ({
-        getData: mockGetData
-      })
-    }
-
-    const result = await getData(request)
-    expect(result).toEqual({
-      reference: 'REFERENCE_NUMBER',
-      licenceType: 'A24 Badger',
-      licenceTypeMap: decoratedMap,
-      progress: { completed: 1, from: 3 }
-    })
-  })
-
-  it('the getData works as expected where a task status is set', async () => {
-    const decoratedMap = [
-      {
-        name: 'check-before-you-start',
-        tasks: [
-          {
-            name: 'eligibility-check',
-            uri: '/eligibility-check',
-            status: 'completed'
-          }
-        ]
-      }]
-
-    jest.doMock('../licence-type-map.js', () => {
-      const actual = jest.requireActual('../licence-type-map.js')
-      return {
-        ...actual,
-        getStatus: () => jest.fn(() => 'completed'),
-        updateStatusCache: jest.fn(),
-        decorateMap: jest.fn(() => decoratedMap)
-      }
-    })
-
-    // Mock out the API calls
-    const mockGetById = jest.fn(() => ({
-      applicationReferenceNumber: 'REFERENCE_NUMBER'
-    }))
-
-    const mockFindRoles = jest.fn(() => ['USER'])
-
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        APPLICATION: {
-          getById: mockGetById,
-          findRoles: mockFindRoles
-        }
-      }
-    }))
-
-    const { getData } = await import('../tasklist.js')
-
-    // Mock out the cache
-    const mockGetData = jest.fn(() => ({
-      userId: uuidv4(),
-      applicationId: uuidv4()
-    }))
-
-    const request = {
-      cache: () => ({
-        getData: mockGetData
-      })
-    }
-
-    const result = await getData(request)
-    expect(result).toEqual({
-      licenceType: 'A24 Badger',
-      licenceTypeMap: decoratedMap,
-      reference: 'REFERENCE_NUMBER',
-      progress: { completed: 1, from: 1 }
+      licenceType: 'a24',
+      licenceTypeMap: 'decorated-map',
+      progress: 'progress',
+      reference: 'ref'
     })
   })
 })

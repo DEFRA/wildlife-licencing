@@ -37,7 +37,7 @@ export const REDIS = {
       const res = await client.get(key, {
         EX: CACHE_EXPIRE_SECONDS
       })
-      debug(`Redis RESTORE: ${key}: ${res}`)
+      debug(`Redis RESTORE: ${key}: ${res || 'not-found'}`)
       return res
     },
     delete: async key => {

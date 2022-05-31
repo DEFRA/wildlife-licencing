@@ -26,7 +26,10 @@ export const getSectionHandler = (section, keyFunc) => async (context, req, h) =
       Object.assign(res, keyFunc(result.dataValues.targetKeys))
     }
 
-    await cache.save(req.path, res)
+    if (Object.keys(res).length) {
+      await cache.save(req.path, res)
+    }
+
     return h.response(res)
       .type(APPLICATION_JSON)
       .code(200)
