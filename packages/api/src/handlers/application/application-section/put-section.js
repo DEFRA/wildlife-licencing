@@ -14,7 +14,8 @@ export const putSectionHandler = (section, sddsGetKeyFunc, removeSddsKeyFunc, ke
       return h.response().code(404)
     }
 
-    await cache.save(req.path)
+    // Delete the section and the overall application. Retains other sections
+    await cache.delete(req.path)
     await cache.delete(`/application/${applicationId}`)
     const sequelize = SEQUELIZE.getSequelize()
 
