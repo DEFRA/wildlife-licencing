@@ -50,6 +50,20 @@ const additionalPageData = (request, h) => {
   return h.continue
 }
 
+// Add default headers
+export const addDefaultHeaders = (request, h) => {
+  if (!isStaticResource(request)) {
+    request.response.header('X-Frame-Options', 'DENY')
+    request.response.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    request.response.header('X-XSS-Protection', '1; mode=block')
+    request.response.header('Expires', '0')
+  }
+  request.response.header('X-Content-Type-Options', 'nosniff')
+  request.response.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+
+  return h.continue
+}
+
 const GOVUK_FRONTEND = 'govuk-frontend'
 const sessionCookieOptions = {
   ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
@@ -61,20 +75,6 @@ const sessionCookieOptions = {
   clearInvalid: true,
   strictHeader: true,
   path: '/'
-}
-
-// Add default headers
-const addDefaultHeaders = (request, h) => {
-  if (!isStaticResource(request)) {
-    request.response.header('X-Frame-Options', 'DENY')
-    request.response.header('Cache-Control', 'no-cache, no-store, must-revalidate')
-    request.response.header('X-XSS-Protection', '1; mode=block')
-    request.response.header('Expires', '0')
-  }
-  request.response.header('X-Content-Type-Options', 'nosniff')
-  request.response.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
-
-  return h.continue
 }
 
 /**
