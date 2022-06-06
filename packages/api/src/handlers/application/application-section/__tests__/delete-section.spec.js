@@ -20,7 +20,7 @@ const request = {
   path: 'path'
 }
 
-describe('get-section-handler', () => {
+describe('delete-section-handler', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.clearAllMocks()
@@ -51,7 +51,8 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          delete: jest.fn()
+          delete: jest.fn(),
+          save: jest.fn()
         }
       },
       SEQUELIZE: {
@@ -85,7 +86,8 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          delete: jest.fn()
+          delete: jest.fn(),
+          save: jest.fn()
         }
       },
       SEQUELIZE: {
