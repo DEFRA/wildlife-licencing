@@ -8,20 +8,18 @@ jest.mock('@defra/wls-queue-defs', () => ({
   queueDefinitions: { APPLICATION_QUEUE: {} }
 }))
 
-const userId = '903ecac0-f4cb-4fd8-a853-557a02ddde0c'
 const siteId = '883feb82-dd3c-461b-a8c2-4ce47cfb4d6a'
 const applicationId = 'b1847e67-07fa-4c51-af03-cb51f5126939'
 
 const job = {
   data: {
-    userId, applicationId
+    applicationId
   }
 }
 
 const applicationResultInitial = {
   dataValues: {
     id: applicationId,
-    userId: userId,
     application: { foo: 'bar' },
     targetKeys: null,
     sddsApplicationId: null,
@@ -32,7 +30,6 @@ const applicationResultInitial = {
 const applicationSitesResultInitial = [{
   dataValues: {
     id: '79015868-4149-420c-90f5-356dc2d06184',
-    userId: userId,
     applicationId: applicationId,
     siteId: siteId,
     sddsApplicationId: null,
@@ -43,7 +40,6 @@ const applicationSitesResultInitial = [{
 const sitesResultInitial = [{
   dataValues: {
     id: siteId,
-    userId: userId,
     site: { foo: 'bar2' },
     targetKeys: null,
     sddsSiteId: null
@@ -110,7 +106,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const result = await buildApiObject(job.data.userId, job.data.applicationId)
+      const result = await buildApiObject(job.data.applicationId)
       expect(result).toBeNull()
     })
 
@@ -122,7 +118,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const { data, keys } = await buildApiObject(job.data.userId, job.data.applicationId)
+      const { data, keys } = await buildApiObject(job.data.applicationId)
       expect(data).toEqual({ application: { id: job.data.applicationId, foo: 'bar' } })
       const expectedKeys = [{ apiKey: job.data.applicationId, apiTable: 'applications', apiBasePath: 'application', powerAppsTable: 'sdds_applications' }]
       expect(keys).toEqual(expectedKeys)
@@ -137,7 +133,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const { data, keys } = await buildApiObject(job.data.userId, job.data.applicationId)
+      const { data, keys } = await buildApiObject(job.data.applicationId)
       expect(data).toEqual({
         application: {
           id: job.data.applicationId,
@@ -165,7 +161,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const { keys } = await buildApiObject(job.data.userId, job.data.applicationId)
+      const { keys } = await buildApiObject(job.data.applicationId)
       const expectedKeys = [
         {
           apiKey: applicationId,
@@ -196,7 +192,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      await expect(async () => await buildApiObject(0, 0)).rejects.toThrow()
+      await expect(async () => await buildApiObject(0)).rejects.toThrow()
     })
   })
 

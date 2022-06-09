@@ -1,0 +1,15 @@
+{% extends 'information-page.njk' %}
+{% from "button/macro.njk" import govukButton %}
+
+{% set title = "Declaration" %}
+
+{% block pageContent %}
+    <p class="govuk-body">By submitting this application you are hereby declaring this information is upto date and correct to the best of your knowledge. </p>
+    {{ govukButton({
+        attributes: { id: "continue" },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Confirm',
+        classes: "govuk-!-margin-top-5"
+    })}}
+{% endblock %}

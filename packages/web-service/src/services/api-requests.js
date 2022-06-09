@@ -2,7 +2,6 @@ import { API } from '@defra/wls-connectors-lib'
 import db from 'debug'
 import Boom from '@hapi/boom'
 const debug = db('web-service:api-requests')
-
 export const APIRequests = {
   USER: {
     getById: async userId => {
@@ -38,13 +37,54 @@ export const APIRequests = {
     }
   },
   APPLICATION: {
-    create: async (userId, type) => {
+    /**
+     * Basic application creation - creates the record unassociated with any user and not assigned a reference number.
+     * It has only a type
+     * @param userId
+     * @param type
+     * @returns {Promise<*>}
+     */
+    create: async type => {
       try {
-        debug(`Creating new application of type: ${type} for userId: ${userId}`)
-        const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${type}`)
-        return API.post(`/user/${userId}/application`, { applicationReferenceNumber, applicationType: type })
+        const application = await API.post('/application', { applicationType: type })
+        debug(`Created pre-application ${JSON.stringify(application.id)}`)
+        return application
       } catch (error) {
-        console.error(`Error creating application with userId ${userId} and type ${type}`, error)
+        console.error(`Error creating pre-application of type ${type}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    /**
+     * Associates a user with the application with the default role. Sets the reference number
+     * @param userId
+     * @param applicationId
+     * @returns {Promise<void>}
+     */
+    initialize: async (userId, applicationId, role) => {
+      try {
+        const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}&role=${role}`)
+        const result = {}
+
+        // Associate user if no association exists
+        if (!applicationUsers.length) {
+          result.applicationUser = await API.post('/application-user', { userId, applicationId, role })
+          debug(`associated applicationId: ${result.applicationUser.applicationId} with userId: ${result.applicationUser.userId} using role: ${role}`)
+        } else {
+          result.applicationUser = applicationUsers[0]
+          debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId} using role: ${role}`)
+        }
+        // Create reference number if no reference number exists
+        result.application = await API.get(`/application/${applicationId}`)
+        if (!result.application?.applicationReferenceNumber) {
+          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${result.application.applicationType}`)
+          Object.assign(result.application, { applicationReferenceNumber })
+          debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${result.application.id}`)
+          result.application = API.put(`/application/${applicationId}`, (({ id, ...l }) => l)(result.application))
+        }
+        return result
+      } catch (error) {
+        console.error(`Error creating application-user with userId ${userId} and applicationId ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -52,93 +92,120 @@ export const APIRequests = {
     findByUser: async userId => {
       try {
         debug(`Finding applications for userId: ${userId}`)
-        return API.get(`/user/${userId}/applications`)
+        return API.get('/applications', `userId=${userId}`)
       } catch (error) {
         console.error(`Error finding application with userId ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    getById: async (userId, applicationId) => {
+    findRoles: async (userId, applicationId) => {
+      debug(`Testing the existence of application for userId: ${userId} applicationId: ${applicationId}`)
+      const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}`)
+      return applicationUsers.map(au => au.role)
+    },
+    getById: async applicationId => {
       try {
-        debug(`Get applications by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.get(`/user/${userId}/application/${applicationId}`)
+        debug(`Get applications by applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}`)
       } catch (error) {
-        console.error(`Error getting application with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error getting application by applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    submit: async (userId, applicationId) => {
+    submit: async applicationId => {
       try {
-        debug(`Submit applications by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.post(`/user/${userId}/application/${applicationId}/submit`)
+        debug(`Submit application for applicationId: ${applicationId}`)
+        return API.post(`/application/${applicationId}/submit`)
       } catch (error) {
-        console.error(`Error submitting application with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error submitting application for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
+  ELIGIBILITY: {
+    getById: async applicationId => {
+      try {
+        debug(`Get application/eligibility FOR applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/eligibility`)
+      } catch (error) {
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putById: async (applicationId, eligibility) => {
+      try {
+        debug(`Put application/eligibility FOR applicationId: ${applicationId} - ${JSON.stringify(eligibility)}`)
+        return API.put(`/application/${applicationId}/eligibility`, eligibility)
+      } catch (error) {
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     }
   },
   APPLICANT: {
-    getById: async (userId, applicationId) => {
+    getById: async applicationId => {
       try {
-        debug(`Get application/applicant by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.get(`/user/${userId}/application/${applicationId}/applicant`)
+        debug(`Get application/applicant FOR applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/applicant`)
       } catch (error) {
-        console.error(`Error getting application/applicant with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    putById: async (userId, applicationId, applicant) => {
+    putById: async (applicationId, applicant) => {
       try {
-        debug(`Pet application/applicant by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.put(`/user/${userId}/application/${applicationId}/applicant`, applicant)
+        debug(`Put application/applicant for applicationId: ${applicationId}`)
+        return API.put(`/application/${applicationId}/applicant`, applicant)
       } catch (error) {
-        console.error(`Error getting application/applicant with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    findByUser: async userId => {
+    findByUser: async (userId, role) => {
       try {
         debug(`Finding applications/applicant for userId: ${userId}`)
-        return API.get(`/user/${userId}/applications/applicant`)
+        return API.get('/applications/applicant', `userId=${userId}&role=${role}`)
       } catch (error) {
-        console.error(`Error finding applications/applicant with userId ${userId}`, error)
+        console.error(`Finding applications/applicant for userId: ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     }
   },
   ECOLOGIST: {
-    getById: async (userId, applicationId) => {
+    getById: async applicationId => {
       try {
-        debug(`Get application/ecologist by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.get(`/user/${userId}/application/${applicationId}/ecologist`)
+        debug(`Get application/ecologist for and applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/ecologist`)
       } catch (error) {
-        console.error(`Error getting application/ecologist with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error getting application/ecologist for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    putById: async (userId, applicationId, ecologist) => {
+    putById: async (applicationId, ecologist) => {
       try {
-        debug(`Pet application/ecologist by userId: ${userId} and applicationId: ${applicationId}`)
-        return API.put(`/user/${userId}/application/${applicationId}/ecologist`, ecologist)
+        debug(`Put application/ecologist for applicationId: ${applicationId}`)
+        return API.put(`/application/${applicationId}/ecologist`, ecologist)
       } catch (error) {
-        console.error(`Error getting application/ecologist with userId ${userId} and applicationId: ${applicationId}`, error)
+        console.error(`Error getting application/ecologist for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    findByUser: async userId => {
+    findByUser: async (userId, role) => {
       try {
         debug(`Finding applications/ecologist for userId: ${userId}`)
-        return API.get(`/user/${userId}/applications/ecologist`)
+        return API.get('/applications/ecologist', `userId=${userId}&role=${role}`)
       } catch (error) {
-        console.error(`Error finding applications/ecologist with userId ${userId}`, error)
+        console.error(`Finding applications/ecologist for userId: ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

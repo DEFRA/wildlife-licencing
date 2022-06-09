@@ -8,17 +8,16 @@
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <link href="/public/stylesheets/main.css" rel="stylesheet" type="text/css" />
-    <meta http-equiv="Cache-Control" content="no-store" />
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="-1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+  <link href="/public/stylesheets/main.css" rel="stylesheet" type="text/css"/>
+  <meta http-equiv="Cache-Control" content="no-store"/>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
 {% endblock %}
 
 {% block header %}
-    {% set _signedIn = myData.signedIn == "true" %}
 
-<header class="govuk-header " role="banner" data-module="govuk-header">
+  <header class="govuk-header " role="banner" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
       <div class="govuk-header__logo">
         <a href="/" class="govuk-header__link govuk-header__link--homepage">
@@ -33,36 +32,14 @@
           </span>
         </a>
       </div>
-
-{# <p class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</p> #}
-
-        
-
-      <style>
-        .govuk-header__link--service-name {
-            width: 70%;
-            float: left;
-            box-sizing: border-box;
-        }
-        .signout-link {
-            width: 30%;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            padding: 5px 0;
-            text-align: right;
-            float: right;
-            box-sizing: border-box;
-        }
-    </style>
-
+      
       <div class="govuk-header__content">
-       <a href="/" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
+        <a href="/" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
 
-        {% if loggedIn %}        
-              <a class="govuk-header__link signout-link" href="/sign-out">
-                Sign out
-              </a>
+        {% if credentials %}
+          <a class="govuk-header__link signout-link" href="{{ _uri.signOut }}">
+            Sign out
+          </a>
         {% endif %}
 
       </div>
@@ -71,40 +48,45 @@
 {% endblock %}
 
 {% block beforeContent %}
-    {{ govukPhaseBanner({
+  {{ govukPhaseBanner({
       tag: {
         text: "alpha"
       },
       html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
     }) }}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <div id="backlink-div" hidden>
-                {{ govukBackLink({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div id="backlink-div" hidden>
+        {{ govukBackLink({
                     text: "Back",
                     href: "javascript: window.history.go(-1)"
                 }) }}
-            </div>
-        </div>
-        <div class="govuk-grid-column-one-third">{% block topNavigation %}{% endblock %}</div>
+      </div>
     </div>
+    <div class="govuk-grid-column-one-third">
+      {% block topNavigation %}{% endblock %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block bodyStart %}{% endblock %}
 
 {% block footer %}
-    {{ govukFooter({
+  {{ govukFooter({
         classes: "no-print"
     }) }}
 {% endblock %}
 
 {% block bodyEnd %}
-    <script src="/public/javascript/all-min.js"></script>
-    <script nonce={{nonce}}>window.GOVUKFrontend.initAll()</script>
-    <script nonce={{nonce}}>(function () {
-        const backLinkDiv = document.getElementById('backlink-div')
-        backLinkDiv.removeAttribute('hidden')
+  <script src="/public/javascript/all-min.js"></script>
+  <script nonce={{nonce}}>
+    window.GOVUKFrontend.initAll()
+  </script>
+  <script nonce={{nonce}}>
+    (function () {
+      const backLinkDiv = document.getElementById('backlink-div')
+      backLinkDiv.removeAttribute('hidden')
     })()
-    </script>
+  </script>
 {% endblock %}

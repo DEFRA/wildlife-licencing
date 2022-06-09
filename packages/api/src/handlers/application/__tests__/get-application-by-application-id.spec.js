@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = '/user/uuid/application/uuid'
+const path = '/application/uuid'
 const req = { path }
 
 /*
@@ -72,17 +72,7 @@ describe('The getApplicationByApplicationId handler', () => {
 
   it('returns a status 404 on application not found', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
     models.applications = { findByPk: jest.fn(() => null) }
-    await getApplication(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(h.response).toHaveBeenCalled()
-    expect(codeFunc).toHaveBeenCalledWith(404)
-  })
-
-  it('returns a status 404 on user not found', async () => {
-    cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => null) }
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
     expect(h.response).toHaveBeenCalled()

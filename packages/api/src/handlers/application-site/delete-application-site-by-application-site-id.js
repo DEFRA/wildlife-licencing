@@ -1,9 +1,9 @@
 import { models } from '@defra/wls-database-model'
-import { clearCaches } from './application-site-cache.js'
+import { REDIS } from '@defra/wls-connectors-lib'
+const { cache } = REDIS
 
-export default async (context, _req, h) => {
-  const { userId, applicationSiteId } = context.request.params
-  await clearCaches(userId, applicationSiteId)
+export default async (context, req, h) => {
+  const { applicationSiteId } = context.request.params
   const count = await models.applicationSites.destroy({
     where: {
       id: applicationSiteId
@@ -11,6 +11,7 @@ export default async (context, _req, h) => {
   })
   if (count === 1) {
     // Return no content
+    await cache.delete(req.path)
     return h.response().code(204)
   } else {
     // Not found

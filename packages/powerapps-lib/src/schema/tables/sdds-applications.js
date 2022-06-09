@@ -26,7 +26,7 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Applicant organization
   new Relationship('sdds_application_organisationid_Account', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_organisationid', 'applicant.organization'),
+    RelationshipType.MANY_TO_ONE, 'sdds_organisationid', 'applicantOrganization'),
 
   // Ecologist
   new Relationship('sdds_application_ecologistid_Contact', 'contacts',
@@ -34,7 +34,7 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Ecologist organization
   new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologist.organization'),
+    RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization'),
 
   // Application Type
   new Relationship('sdds_ApplicationTypes_sdds_applicationtyp', 'sdds_applicationtypeses',

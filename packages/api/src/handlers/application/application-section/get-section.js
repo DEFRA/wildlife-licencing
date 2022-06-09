@@ -3,7 +3,7 @@ import { APPLICATION_JSON } from '../../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const getSectionHandler = section => async (context, req, h) => {
+export const getSectionHandler = (section, keyFunc) => async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const saved = await cache.restore(req.path)
@@ -15,18 +15,26 @@ export const getSectionHandler = section => async (context, req, h) => {
 
     const result = await models.applications.findByPk(applicationId)
 
-    // Check the user exists
+    // Check the Application exists
     if (!result) {
       return h.response().code(404)
     }
 
     const res = result.dataValues.application[section] || {}
-    await cache.save(req.path, res)
+
+    if (keyFunc && result.dataValues.targetKeys) {
+      Object.assign(res, keyFunc(result.dataValues.targetKeys))
+    }
+
+    if (Object.keys(res).length) {
+      await cache.save(req.path, res)
+    }
+
     return h.response(res)
       .type(APPLICATION_JSON)
       .code(200)
   } catch (err) {
-    console.error('Error updating the APPLICATIONS table', err)
+    console.error('Error select from the APPLICATIONS table', err)
     throw new Error(err.message)
   }
 }

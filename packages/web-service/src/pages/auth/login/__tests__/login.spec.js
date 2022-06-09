@@ -42,15 +42,53 @@ describe('login page', () => {
   })
 
   describe('the completion', () => {
-    it('returns the applications page', async () => {
+    it('returns the tasklist page an applicationId is set and the user is authenticated', async () => {
       const { completion } = await import('../login.js')
-      const result = await completion({ cache: () => ({ getData: jest.fn() }) })
+      const result = await completion({
+        auth: {
+          isAuthenticated: true
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '7b1215e5-5426-4ef9-b412-a3df1b9c29be'
+          }))
+        })
+      })
+      expect(result).toBe('/tasklist')
+    })
+
+    it('returns the tasklist page if the user is not authenticated', async () => {
+      const { completion } = await import('../login.js')
+      const result = await completion({
+        auth: {
+          isAuthenticated: false
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      })
+      expect(result).toBe('/tasklist')
+    })
+
+    it('returns the applications page if no applicationId is set and the user is authenticated', async () => {
+      const { completion } = await import('../login.js')
+      const result = await completion({
+        auth: {
+          isAuthenticated: true
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      })
       expect(result).toBe('/applications')
     })
 
     it('returns the page requested', async () => {
       const { completion } = await import('../login.js')
       const result = await completion({
+        auth: {
+          isAuthenticated: true
+        },
         cache: () => ({ getData: jest.fn(() => ({ navigation: { requestedPage: '/page' } })) })
       })
       expect(result).toBe('/page')

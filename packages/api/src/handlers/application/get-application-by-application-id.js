@@ -2,15 +2,11 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 import { prepareResponse } from './application-proc.js'
-import { checkCache, checkUser } from '../utils.js'
+import { checkCache } from '../utils.js'
 const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    if (!await checkUser(context)) {
-      return h.response().code(404)
-    }
-
     const result = await checkCache(req)
 
     if (result) {

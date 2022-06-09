@@ -1,4 +1,7 @@
-import { eligibilityURIs, contactURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION } from '../../uris.js'
+import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
+import { APIRequests } from '../../services/api-requests.js'
+
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 const {
   APPLICANT: { USER: APPLICANT_USER },
@@ -16,7 +19,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
-  SEND_APPLICATION: 'send-application'
+  SUBMIT: 'send-application'
 }
 
 // The expected status values for tasks
@@ -27,39 +30,43 @@ export const STATUS_VALUES = {
   CANNOT_START_YET: 'cannot-start'
 }
 
-// Used throughout the service to update the status of a given task
-export const updateStatusCache = async (request, task, status) => {
-  const journeyData = await request.cache().getData() || {}
-  journeyData.tasks = journeyData.tasks || {}
-  const { tasks } = journeyData
-  tasks[task] = status
-  await request.cache().setData(journeyData)
-}
-
-// Returns a function of the request to get the current status of a task
-export const getStatus = task => async request => {
-  const journeyData = await request.cache().getData()
-  return journeyData?.tasks?.[task] || STATUS_VALUES.CANNOT_START_YET
-}
-
 // Return a progress object containing the number of completed tasks of total tasks )
-export const getProgress = decoratedMap => ({
-  completed: decoratedMap.flatMap(s => s.tasks).filter(t => t.status === STATUS_VALUES.COMPLETED).length,
-  from: decoratedMap.flatMap(s => s.tasks).length
+export const getProgress = status => ({
+  completed: Object.values(status).filter(s => s).length,
+  from: Object.keys(status).length
 })
 
+export const getTaskStatus = async request => {
+  const journeyData = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
+  return {
+    [SECTION_TASKS.ELIGIBILITY_CHECK]: application?.eligibility?.[CHECK_COMPLETED] || false,
+    [SECTION_TASKS.LICENCE_HOLDER]: false,
+    [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.WORK_ACTIVITY]: false,
+    [SECTION_TASKS.PERMISSIONS]: false,
+    [SECTION_TASKS.SITES]: false,
+    [SECTION_TASKS.SETTS]: false,
+    [SECTION_TASKS.SUBMIT]: false
+  }
+}
+
 // A function to take the static map for a given licence type and decorate it using the current cache state
-export const decorateMap = (request, currentLicenceTypeMap) => Promise.all(currentLicenceTypeMap.sections.map(async s => ({
+export const decorateMap = (currentLicenceTypeMap, taskStatus) => currentLicenceTypeMap.sections.map(s => ({
   ...s,
-  tasks: await Promise.all(s.tasks.map(async t => ({
+  tasks: s.tasks.map(t => ({
     ...t,
     ...(typeof t.uri === 'function' && {
-      uri: await t.uri(request)
+      uri: t.uri(taskStatus)
     }),
-    status: await t.status(request)
-  })))
+    ...(typeof t.status === 'function' && {
+      status: t.status(taskStatus)
+    }),
+    ...(typeof t.enabled === 'function' && {
+      enabled: t.enabled(taskStatus)
+    })
+  }))
 }))
-)
 
 // A map of the sections and tasks by licence type
 export const licenceTypeMap = {
@@ -70,10 +77,11 @@ export const licenceTypeMap = {
         tasks: [ // The set of tasks in this section
           {
             name: SECTION_TASKS.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
-            uri: async request => await (getStatus(SECTION_TASKS.ELIGIBILITY_CHECK)(request)) === STATUS_VALUES.COMPLETED
-              ? ELIGIBILITY_CHECK.uri
-              : LANDOWNER.uri, // Either a fixed uri or a function of the request to resolve the uri
-            status: getStatus(SECTION_TASKS.ELIGIBILITY_CHECK) // returns a function of request to get the current status
+            uri: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri, // Either a fixed uri or a function of the status to resolve the uri
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.COMPLETED
+              : STATUS_VALUES.NOT_STARTED, // returns a function of request to get the current status
+            enabled: status => !status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]
       },
@@ -83,12 +91,18 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
             uri: APPLICANT_USER.uri,
-            status: getStatus(SECTION_TASKS.LICENCE_HOLDER)
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
+            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
             uri: ECOLOGIST_USER.uri,
-            status: getStatus(SECTION_TASKS.ECOLOGIST)
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
+            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]
       },
@@ -98,22 +112,22 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.WORK_ACTIVITY,
             uri: '/',
-            status: getStatus(SECTION_TASKS.WORK_ACTIVITY)
+            status: () => STATUS_VALUES.CANNOT_START_YET
           },
           {
             name: SECTION_TASKS.PERMISSIONS,
             uri: '/',
-            status: getStatus(SECTION_TASKS.PERMISSIONS)
+            status: () => STATUS_VALUES.CANNOT_START_YET
           },
           {
             name: SECTION_TASKS.SITES,
             uri: '/',
-            status: getStatus(SECTION_TASKS.SITES)
+            status: () => STATUS_VALUES.CANNOT_START_YET
           },
           {
             name: SECTION_TASKS.SETTS,
             uri: '/',
-            status: getStatus(SECTION_TASKS.SETTS)
+            status: () => STATUS_VALUES.CANNOT_START_YET
           }
         ]
       },
@@ -121,9 +135,12 @@ export const licenceTypeMap = {
         name: 'apply',
         tasks: [
           {
-            name: SECTION_TASKS.SEND_APPLICATION,
-            uri: '/',
-            status: getStatus(SECTION_TASKS.SEND_APPLICATION)
+            name: SECTION_TASKS.SUBMIT,
+            uri: DECLARATION.uri,
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+              ? STATUS_VALUES.NOT_STARTED
+              : STATUS_VALUES.CANNOT_START_YET,
+            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
           }
         ]
       }
