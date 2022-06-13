@@ -163,7 +163,11 @@ export const checkYourAnswersSetData = async request => {
   await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
 }
 
-export const checkAnswersCompletion = () => ELIGIBLE.uri
+export const checkAnswersCompletion = async request => {
+  // Rerun the general completion router to check all the answers are still Ok
+  const result = await eligibilityCompletion(request)
+  return result === ELIGIBILITY_CHECK.uri ? ELIGIBLE.uri : result
+}
 
 export const eligibilityCheck = checkAnswersPage(
   ELIGIBILITY_CHECK,
