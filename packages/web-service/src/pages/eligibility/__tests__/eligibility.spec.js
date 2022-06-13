@@ -335,10 +335,61 @@ describe('the eligibility pages', () => {
       })
   })
 
-  it('the checkYourAnswersCompletion function always returns the eligible page', async () => {
+  it('the checkYourAnswersCompletion function returns the eligible page if the answers are consistent', async () => {
+    const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: jest.fn(() => ({
+            permissionsGranted: true,
+            isOwnerOfLand: false,
+            hasLandOwnerPermission: true,
+            permissionsRequired: true
+          }))
+        }
+      }
+    }))
     const { checkAnswersCompletion } = await import('../eligibility.js')
-    const result = checkAnswersCompletion()
+    const result = await checkAnswersCompletion(request)
     expect(result).toEqual(ELIGIBLE.uri)
+  })
+
+  it('the checkYourAnswersCompletion function redirects to the not eligible landowner dropout', async () => {
+    const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: jest.fn(() => ({
+            permissionsGranted: true,
+            isOwnerOfLand: false,
+            hasLandOwnerPermission: false,
+            permissionsRequired: true
+          }))
+        }
+      }
+    }))
+    const { checkAnswersCompletion } = await import('../eligibility.js')
+    const result = await checkAnswersCompletion(request)
+    expect(result).toEqual(NOT_ELIGIBLE_LANDOWNER.uri)
+  })
+
+  it('the checkYourAnswersCompletion function redirects to the not eligible permissions dropout', async () => {
+    const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: jest.fn(() => ({
+            permissionsGranted: false,
+            isOwnerOfLand: false,
+            hasLandOwnerPermission: true,
+            permissionsRequired: true
+          }))
+        }
+      }
+    }))
+    const { checkAnswersCompletion } = await import('../eligibility.js')
+    const result = await checkAnswersCompletion(request)
+    expect(result).toEqual(NOT_ELIGIBLE_PROJECT.uri)
   })
 
   describe('the eligibleCheckData function', () => {
