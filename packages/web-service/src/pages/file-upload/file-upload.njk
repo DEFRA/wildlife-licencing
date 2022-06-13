@@ -1,0 +1,29 @@
+{% extends "layout.njk" %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "button/macro.njk" import govukButton %}
+{% block pageTitle %}File upload PoC{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
+        <form enctype="multipart/form-data" method="post">
+            {% call govukFieldset({
+              legend: {
+                html: '<h1 class="govuk-heading-xl">' + title + '</h1>',
+                classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-0",
+                isPageHeading: true
+              }
+            }) %}
+            <input type="file" name="file-upload">
+            {{ govukButton({
+                attributes: { id: 'continue' },
+                preventDoubleClick: true,
+                name: 'continue',
+                text: buttonText if buttonText else 'Continue',
+                classes: "govuk-!-margin-top-5"
+            }) }}
+            {% endcall %}
+        </form>
+    </div>
+</div>
+{% endblock %}

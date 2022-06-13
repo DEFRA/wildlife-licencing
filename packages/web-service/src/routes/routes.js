@@ -10,6 +10,8 @@ import {
 } from '../pages/eligibility/eligibility.js'
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
+import { fileUpload } from '../pages/file-upload/file-upload.js'
+
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
 import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
@@ -40,6 +42,7 @@ const routes = [
   ...ecologistUser,
   ...ecologistName,
   ...ecologistNames,
+  ...fileUpload,
   signOut,
   ...miscRoutes
 ]

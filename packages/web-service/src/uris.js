@@ -38,3 +38,7 @@ export const ERRORS = {
   CLIENT: { page: 'client-error' },
   SERVER: { page: 'server-error' }
 }
+
+export const FILE_UPLOAD = {
+  uri: '/file-upload', page: 'file-upload'
+}
