@@ -41,6 +41,45 @@ describe('login page', () => {
     })
   })
 
+  describe('the checkData', () => {
+    it('returns the tasklist page if the user is logged in and there is an applicationId', async () => {
+      const { checkData } = await import('../login.js')
+      const mockRedirect = jest.fn()
+      await checkData({
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732',
+            applicationId: '7b1215e5-5426-4ef9-b412-a3df1b9c29be'
+          }))
+        })
+      }, { redirect: mockRedirect })
+      expect(mockRedirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('returns the applications page page if the user is logged in and there is no applicationId', async () => {
+      const { checkData } = await import('../login.js')
+      const mockRedirect = jest.fn()
+      await checkData({
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+          }))
+        })
+      }, { redirect: mockRedirect })
+      expect(mockRedirect).toHaveBeenCalledWith('/applications')
+    })
+
+    it('returns null if the userId is not set', async () => {
+      const { checkData } = await import('../login.js')
+      const result = await checkData({
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      }, { })
+      expect(result).toBeNull()
+    })
+  })
+
   describe('the completion', () => {
     it('returns the tasklist page an applicationId is set and the user is authenticated', async () => {
       const { completion } = await import('../login.js')
