@@ -1,6 +1,39 @@
-import { createServer, init } from '../server'
+import { createServer, init, addDefaultHeaders } from '../server'
 
-describe('The WEB server', () => {
+describe('the WEB server', () => {
+  describe('the default header function', () => {
+    it('adds a correct set of response headers - not static', async () => {
+      const mockHeader = jest.fn()
+      const result = await addDefaultHeaders({
+        path: 'not-static',
+        response: {
+          header: mockHeader
+        }
+      }, {
+        continue: 'continue'
+      })
+      expect(result).toEqual('continue')
+      expect(mockHeader).toHaveBeenCalledWith('X-Frame-Options', 'DENY')
+      expect(mockHeader).toHaveBeenCalledWith('X-Content-Type-Options', 'nosniff')
+      expect(mockHeader).toHaveBeenCalledWith('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+    })
+
+    it('adds a correct set of response headers - static', async () => {
+      const mockHeader = jest.fn()
+      const result = await addDefaultHeaders({
+        path: '/public/static.js',
+        response: {
+          header: mockHeader
+        }
+      }, {
+        continue: 'continue'
+      })
+      expect(result).toEqual('continue')
+      expect(mockHeader).toHaveBeenCalledWith('X-Content-Type-Options', 'nosniff')
+      expect(mockHeader).toHaveBeenCalledWith('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+    })
+  })
+
   it('starts', done => {
     createServer().then(s => {
       init(s).then(() => {

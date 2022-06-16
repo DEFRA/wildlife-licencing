@@ -54,5 +54,19 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export default pageRoute(LOGIN.page, LOGIN.uri, null, null,
+// Do not allow the login page if the user is logged in
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData() || {}
+  if (journeyData.userId) {
+    if (journeyData.applicationId) {
+      return h.redirect(TASKLIST.uri)
+    } else {
+      return h.redirect(APPLICATIONS.uri)
+    }
+  } else {
+    return null
+  }
+}
+
+export default pageRoute(LOGIN.page, LOGIN.uri, checkData, null,
   validator, completion, setData, { auth: false })
