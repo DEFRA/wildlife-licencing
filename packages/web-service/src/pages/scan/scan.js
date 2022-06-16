@@ -12,8 +12,8 @@ const ClamScan = new NodeClam().init({
 
 ClamScan.then(async clamscan => {
   try {
-    const version = await clamscan.getVersion();
-    console.log(version)
+    const {isInfected, file, viruses} = await clamscan.isInfected('../../virus.txt')
+    console.log(isInfected, file, viruses)
   } catch (err) {
     console.log(err)
   }
