@@ -52,16 +52,15 @@ const additionalPageData = (request, h) => {
 
 // Add default headers
 export const addDefaultHeaders = (request, h) => {
-  // TODO - not handling Boom
-  if (request.response.header) {
+  if (!request.response.isBoom) {
     if (!isStaticResource(request)) {
       request.response.header('X-Frame-Options', 'DENY')
       request.response.header('Cache-Control', 'no-cache, no-store, must-revalidate')
       request.response.header('X-XSS-Protection', '1; mode=block')
       request.response.header('Expires', '0')
     }
-    request.response?.header('X-Content-Type-Options', 'nosniff')
-    request.response?.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+    request.response.header('X-Content-Type-Options', 'nosniff')
+    request.response.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   }
   return h.continue
 }

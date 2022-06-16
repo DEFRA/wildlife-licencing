@@ -21,7 +21,7 @@ describe('the eligibility pages', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/tasklist')
   })
 
-  it('the getData function returns the eligibility data from the API', async () => {
+  it('the getData function returns the eligibility data from the API (and clears the answer)', async () => {
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -29,16 +29,19 @@ describe('the eligibility pages', () => {
         }))
       })
     }
+    const mockPut = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         ELIGIBILITY: {
-          getById: jest.fn(() => ({ question: 'answer' }))
+          getById: jest.fn(() => ({ question: 'answer' })),
+          putById: mockPut
         }
       }
     }))
     const { getData } = await import('../eligibility.js')
     const result = await getData('question')(request)
-    expect(result).toEqual('answer')
+    expect(mockPut).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { checkCompleted: false })
+    expect(result).toBeNull()
   })
 
   describe('the setData function', () => {
@@ -163,8 +166,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(LANDOWNER.uri)
     })
 
@@ -177,8 +180,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(LANDOWNER_PERMISSION.uri)
     })
 
@@ -191,8 +194,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(CONSENT.uri)
     })
 
@@ -205,8 +208,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(NOT_ELIGIBLE_LANDOWNER.uri)
     })
 
@@ -219,8 +222,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(CONSENT.uri)
     })
 
@@ -233,8 +236,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(ELIGIBILITY_CHECK.uri)
     })
 
@@ -247,8 +250,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(CONSENT_GRANTED.uri)
     })
 
@@ -261,8 +264,8 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(NOT_ELIGIBLE_PROJECT.uri)
     })
 
@@ -275,12 +278,12 @@ describe('the eligibility pages', () => {
           }
         }
       }))
-      const { eligibilityCompletion } = await import('../eligibility.js')
-      const result = await eligibilityCompletion(request)
+      const { eligibilityStateMachine } = await import('../eligibility.js')
+      const result = await eligibilityStateMachine(request)
       expect(result).toEqual(ELIGIBILITY_CHECK.uri)
     })
 
-    it('the checkYourAnswersGetData function \'yes\' sets isOwnerOfLand and removes hasLandOwnerPermission', async () => {
+    it('the checkYourAnswersGetData function sets  \'yes\' for isOwnerOfLand and removes hasLandOwnerPermission', async () => {
       const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -304,6 +307,76 @@ describe('the eligibility pages', () => {
         { key: 'permissionsGranted', value: 'yes' }
       ])
     })
+
+    it('the checkYourAnswersGetData function sets \'-\'  for isOwnerOfLand and removes hasLandOwnerPermission', async () => {
+      const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ELIGIBILITY: {
+            getById: jest.fn(() => ({
+              permissionsGranted: true,
+              hasLandOwnerPermission: true,
+              permissionsRequired: true
+            }))
+          }
+        }
+      }))
+
+      const { checkYourAnswersGetData } = await import('../eligibility.js')
+      const result = await checkYourAnswersGetData(request)
+      expect(result).toEqual([
+        { key: 'isOwnerOfLand', value: '-' },
+        { key: 'hasLandOwnerPermission', value: 'yes' },
+        { key: 'permissionsRequired', value: 'yes' },
+        { key: 'permissionsGranted', value: 'yes' }
+      ])
+    })
+
+    it('the checkYourAnswersGetData function removes unneeded hasLandOwnerPermission', async () => {
+      const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ELIGIBILITY: {
+            getById: jest.fn(() => ({
+              isOwnerOfLand: true,
+              permissionsGranted: true,
+              hasLandOwnerPermission: true,
+              permissionsRequired: true
+            }))
+          }
+        }
+      }))
+
+      const { checkYourAnswersGetData } = await import('../eligibility.js')
+      const result = await checkYourAnswersGetData(request)
+      expect(result).toEqual([
+        { key: 'isOwnerOfLand', value: 'yes' },
+        { key: 'permissionsRequired', value: 'yes' },
+        { key: 'permissionsGranted', value: 'yes' }
+      ])
+    })
+  })
+
+  it('the checkYourAnswersGetData function removes unneeded permissionsGranted', async () => {
+    const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: jest.fn(() => ({
+            isOwnerOfLand: true,
+            permissionsGranted: true,
+            permissionsRequired: false
+          }))
+        }
+      }
+    }))
+
+    const { checkYourAnswersGetData } = await import('../eligibility.js')
+    const result = await checkYourAnswersGetData(request)
+    expect(result).toEqual([
+      { key: 'isOwnerOfLand', value: 'yes' },
+      { key: 'permissionsRequired', value: 'no' }
+    ])
   })
 
   it('the checkYourAnswersSetData function sets the check completed flag', async () => {
