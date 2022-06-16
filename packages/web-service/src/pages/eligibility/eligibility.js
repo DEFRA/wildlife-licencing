@@ -21,8 +21,8 @@ const PERMISSION_REQUIRED = 'permissionsRequired'
 const PERMISSION_GRANTED = 'permissionsGranted'
 export const CHECK_COMPLETED = 'checkCompleted'
 
-// A state machine to determine the next page
-export const eligibilityCompletion = async request => {
+// A state machine to determine the next page required
+export const eligibilityStateMachine = async request => {
   const journeyData = await request.cache().getData() || {}
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   const grantedCompletionSection = eligibilityPart => {
@@ -73,13 +73,17 @@ export const checkData = async (request, h) => {
   if (!journeyData?.applicationId) {
     return h.redirect(TASKLIST.uri)
   }
-  return null
 }
 
 export const getData = question => async request => {
   const journeyData = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  return eligibility[question] || {}
+  // const previous = eligibility[question] || {}
+  // By going on to the page you are un-answering the question
+  delete eligibility[question]
+  Object.assign(eligibility, { [CHECK_COMPLETED]: false })
+  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+  return null
 }
 
 const consolidateAnswers = async (request, eligibility) => {
@@ -110,25 +114,25 @@ export const setData = question => async request => {
 /**************************************************************
  * Are you the landowner?
  **************************************************************/
-export const landOwner = yesNoPage(LANDOWNER, checkData, getData(IS_OWNER_OF_LAND), eligibilityCompletion,
+export const landOwner = yesNoPage(LANDOWNER, checkData, getData(IS_OWNER_OF_LAND), eligibilityStateMachine,
   setData(IS_OWNER_OF_LAND), { auth: { mode: 'optional' } })
 
 /**************************************************************
  * Do you have the landowner's permission?
  **************************************************************/
-export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, checkData, getData(HAS_LANDOWNER_PERMISSION), eligibilityCompletion,
+export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, checkData, getData(HAS_LANDOWNER_PERMISSION), eligibilityStateMachine,
   setData(HAS_LANDOWNER_PERMISSION), { auth: { mode: 'optional' } })
 
 /**************************************************************
  * Does the work require permissions?
  **************************************************************/
-export const consent = yesNoPage(CONSENT, checkData, getData(PERMISSION_REQUIRED), eligibilityCompletion,
+export const consent = yesNoPage(CONSENT, checkData, getData(PERMISSION_REQUIRED), eligibilityStateMachine,
   setData(PERMISSION_REQUIRED), { auth: { mode: 'optional' } })
 
 /**************************************************************
  * Have the permissions been granted?
  **************************************************************/
-export const consentGranted = yesNoPage(CONSENT_GRANTED, checkData, getData(PERMISSION_GRANTED), eligibilityCompletion,
+export const consentGranted = yesNoPage(CONSENT_GRANTED, checkData, getData(PERMISSION_GRANTED), eligibilityStateMachine,
   setData(PERMISSION_GRANTED), { auth: { mode: 'optional' } })
 
 export const notEligibleLandowner = pageRoute(NOT_ELIGIBLE_LANDOWNER.page, NOT_ELIGIBLE_LANDOWNER.uri,
@@ -150,10 +154,27 @@ export const checkYourAnswersGetData = async request => {
   const journeyData = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
   // Turn into an array of key, value objects, sort and map booleans to strings to help in template
-  return Object.entries(eligibility)
-    .filter(([k, _v]) => k !== CHECK_COMPLETED)
-    .map(([k, v]) => ({ key: k, value: v ? 'yes' : 'no' }))
-    .sort((a, b) => orderKeys[a.key] - orderKeys[b.key])
+  const prt = a => {
+    if (a === undefined) {
+      return '-'
+    } else {
+      return a ? 'yes' : 'no'
+    }
+  }
+
+  const unneeded = q => {
+    if (q === HAS_LANDOWNER_PERMISSION && eligibility[IS_OWNER_OF_LAND]) {
+      return false
+    } if (q === PERMISSION_GRANTED && !eligibility[PERMISSION_REQUIRED]) {
+      return false
+    }
+    return true
+  }
+
+  return Object.keys(orderKeys)
+    .sort((a, b) => orderKeys[a] - orderKeys[b])
+    .filter(q => unneeded(q))
+    .map(q => ({ key: q, value: prt(eligibility[q]) }))
 }
 
 export const checkYourAnswersSetData = async request => {
@@ -164,14 +185,14 @@ export const checkYourAnswersSetData = async request => {
 }
 
 export const checkAnswersCompletion = async request => {
-  // Rerun the general completion router to check all the answers are still Ok
-  const result = await eligibilityCompletion(request)
+  // Rerun the state machine to check all the answers are still Ok
+  const result = await eligibilityStateMachine(request)
   return result === ELIGIBILITY_CHECK.uri ? ELIGIBLE.uri : result
 }
 
 export const eligibilityCheck = checkAnswersPage(
   ELIGIBILITY_CHECK,
-  null,
+  checkData,
   checkYourAnswersGetData,
   checkYourAnswersSetData,
   checkAnswersCompletion,
