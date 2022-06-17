@@ -25,6 +25,20 @@ import {
 } from './handlers/account/account.js'
 
 import {
+  getApplicationContacts,
+  postApplicationContact,
+  getApplicationContactById,
+  deleteApplicationContactById
+} from './handlers/application-contact/application-contact.js'
+
+import {
+  getApplicationAccounts,
+  postApplicationAccount,
+  getApplicationAccountById,
+  deleteApplicationAccountById
+} from './handlers/application-account/application-account.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -131,6 +145,18 @@ const handlers = {
   getAccountByAccountId,
   putAccount,
   deleteAccount,
+
+  // application-contact handlers
+  getApplicationContacts,
+  postApplicationContact,
+  getApplicationContactById,
+  deleteApplicationContactById,
+
+  // application account handlers
+  getApplicationAccounts,
+  postApplicationAccount,
+  getApplicationAccountById,
+  deleteApplicationAccountById,
 
   // Site handlers
   getSiteBySiteId,
