@@ -125,6 +125,270 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+################################################################################################
+# Contacts
+################################################################################################
+  '/contact':
+    post:
+      description: Create and store contact
+      summary: Create a new contact with a generated ID
+      operationId: postContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        201:
+          description: The contact has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request. Username required
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/contact/{contactId}':
+    get:
+      description: Retrieve a contact
+      summary: Retrieve a contact
+      operationId: getContactByContactId
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request. User ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: A contact with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Update a contact
+      summary: Create or update a contact
+      operationId: putContact
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        200:
+          description: The contact object has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        201:
+          description: The contact object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request.
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete contact
+      summary:  Delete the contact on the provided ID
+      operationId: deleteContact
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The contact object has been deleted
+        400:
+          description: Bad request. contact ID must be a uuid
+        404:
+          description: Not found
+        409:
+          description: Conflict
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
+# Accounts
+################################################################################################
+  '/account':
+    post:
+      description: Create and store account
+      summary: Create a new account with a generated ID
+      operationId: postAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/account'
+      responses:
+        201:
+          description: The account has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+        400:
+          description: Bad request. Username required
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/account/{accountId}':
+    get:
+      description: Retrieve a account
+      summary: Retrieve a account
+      operationId: getAccountByAccountId
+      parameters:
+        - name: accountId
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+        400:
+          description: Bad request. User ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: A account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Update a account
+      summary: Create or update a account
+      operationId: putAccount
+      parameters:
+        - name: accountId
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/account'
+      responses:
+        200:
+          description: The account object has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+        201:
+          description: The account object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+        400:
+          description: Bad request.
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete account
+      summary:  Delete the account on the provided ID
+      operationId: deleteAccount
+      parameters:
+        - name: accountId
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The account object has been deleted
+        400:
+          description: Bad request. account ID must be a uuid
+        404:
+          description: Not found
+        409:
+          description: Conflict
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 
 ################################################################################################
 # Applications
@@ -1831,7 +2095,10 @@ components:
 
     contact:
       type: object
+      additionalProperties: false
       properties:
+        id:
+          $ref: '#/components/schemas/uuid'
         sddsContactId:
           $ref: '#/components/schemas/uuid'
         fullName:
@@ -1842,7 +2109,12 @@ components:
           $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
+# TODO Get rid of organization
     organization:
       type: object
       properties:
@@ -1852,6 +2124,23 @@ components:
           type: string
           minLength: 1
           maxLength: 36
+
+    account:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        sddsAccountId:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 36
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     address:
       type: object

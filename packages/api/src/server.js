@@ -11,6 +11,20 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  postContact,
+  getContactByContactId,
+  putContact,
+  deleteContact
+} from './handlers/contact/contact.js'
+
+import {
+  postAccount,
+  getAccountByAccountId,
+  putAccount,
+  deleteAccount
+} from './handlers/account/account.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -106,6 +120,18 @@ const handlers = {
   getUsers,
   postUser,
   deleteUser,
+  // Contact handlers
+  postContact,
+  getContactByContactId,
+  putContact,
+  deleteContact,
+
+  // account handlers
+  postAccount,
+  getAccountByAccountId,
+  putAccount,
+  deleteAccount,
+
   // Site handlers
   getSiteBySiteId,
   getSites,

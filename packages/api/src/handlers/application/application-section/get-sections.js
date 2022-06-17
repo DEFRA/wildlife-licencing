@@ -15,7 +15,10 @@ export const getSectionsHandler = (section, keyFunc) => async (_context, req, h)
       : {})
 
     const result = applications
-      .map(a => ({ data: a.dataValues.application[section], keys: a.dataValues.targetKeys }))
+      .map(a => ({
+        data: Object.assign(a.dataValues.application[section], { id: a.id }),
+        keys: a.dataValues.targetKeys
+      }))
       .filter(a => a.data)
       .map(a => keyFunc ? Object.assign(a.data, keyFunc(a.keys)) : a.data)
 
