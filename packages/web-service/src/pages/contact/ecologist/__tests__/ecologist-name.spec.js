@@ -31,7 +31,7 @@ describe('ecologist-name', () => {
         }
       }
     }))
-    const { setData } = await import('../ecologist-name.js')
+    const { setEcologistData } = await import('../../common/common.js')
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -43,7 +43,7 @@ describe('ecologist-name', () => {
         }))
       })
     }
-    await setData(request)
+    await setEcologistData(request)
     expect(mockPutById).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb', { fullName: 'Keith Richards' })
   })
 })

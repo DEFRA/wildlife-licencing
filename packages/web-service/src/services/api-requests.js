@@ -128,7 +128,7 @@ export const APIRequests = {
   ELIGIBILITY: {
     getById: async applicationId => {
       try {
-        debug(`Get application/eligibility FOR applicationId: ${applicationId}`)
+        debug(`Get application/eligibility for applicationId: ${applicationId}`)
         return API.get(`/application/${applicationId}/eligibility`)
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
@@ -138,7 +138,7 @@ export const APIRequests = {
     },
     putById: async (applicationId, eligibility) => {
       try {
-        debug(`Put application/eligibility FOR applicationId: ${applicationId} - ${JSON.stringify(eligibility)}`)
+        debug(`Put application/eligibility for applicationId: ${applicationId} - ${JSON.stringify(eligibility)}`)
         return API.put(`/application/${applicationId}/eligibility`, eligibility)
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
@@ -150,7 +150,7 @@ export const APIRequests = {
   APPLICANT: {
     getById: async applicationId => {
       try {
-        debug(`Get application/applicant FOR applicationId: ${applicationId}`)
+        debug(`Get application/applicant for applicationId: ${applicationId}`)
         return API.get(`/application/${applicationId}/applicant`)
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
@@ -168,10 +168,62 @@ export const APIRequests = {
         throw error
       }
     },
+    deleteById: async applicationId => {
+      try {
+        debug(`Delete application/applicant for applicationId: ${applicationId}`)
+        return API.delete(`/application/${applicationId}/applicant`)
+      } catch (error) {
+        console.error(`Error deleting application/applicant for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     findByUser: async (userId, role) => {
       try {
         debug(`Finding applications/applicant for userId: ${userId}`)
         return API.get('/applications/applicant', `userId=${userId}&role=${role}`)
+      } catch (error) {
+        console.error(`Finding applications/applicant for userId: ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
+  APPLICANT_ORGANIZATION: {
+    getById: async applicationId => {
+      try {
+        debug(`Get application/applicant-organization for applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/applicant-organization`)
+      } catch (error) {
+        console.error(`Error getting application/applicant-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putById: async (applicationId, organization) => {
+      try {
+        debug(`Put application/applicant-organization for applicationId: ${applicationId}`)
+        return API.put(`/application/${applicationId}/applicant-organization`, organization)
+      } catch (error) {
+        console.error(`Error getting application/applicant-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    deleteById: async applicationId => {
+      try {
+        debug(`Delete application/applicant-organization for applicationId: ${applicationId}`)
+        return API.delete(`/application/${applicationId}/applicant-organization`)
+      } catch (error) {
+        console.error(`Error deleting application/applicant-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    findByUser: async (userId, role) => {
+      try {
+        debug(`Finding applications/applicant-organizations for userId: ${userId}`)
+        return API.get('/applications/applicant-organization', `userId=${userId}&role=${role}`)
       } catch (error) {
         console.error(`Finding applications/applicant for userId: ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -200,10 +252,62 @@ export const APIRequests = {
         throw error
       }
     },
+    deleteById: async applicationId => {
+      try {
+        debug(`Delete application/ecologist for applicationId: ${applicationId}`)
+        return API.delete(`/application/${applicationId}/ecologist`)
+      } catch (error) {
+        console.error(`Error deleting application/ecologist for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     findByUser: async (userId, role) => {
       try {
         debug(`Finding applications/ecologist for userId: ${userId}`)
         return API.get('/applications/ecologist', `userId=${userId}&role=${role}`)
+      } catch (error) {
+        console.error(`Finding applications/ecologist for userId: ${userId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
+  ECOLOGIST_ORGANIZATION: {
+    getById: async applicationId => {
+      try {
+        debug(`Get application/ecologist-organization for applicationId: ${applicationId}`)
+        return API.get(`/application/${applicationId}/ecologist-organization`)
+      } catch (error) {
+        console.error(`Error getting application/ecologist-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putById: async (applicationId, organization) => {
+      try {
+        debug(`Put application/ecologist-organization for applicationId: ${applicationId}`)
+        return API.put(`/application/${applicationId}/ecologist-organization`, organization)
+      } catch (error) {
+        console.error(`Error getting application/ecologist-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    deleteById: async applicationId => {
+      try {
+        debug(`Delete ecologist-organization for applicationId: ${applicationId}`)
+        return API.delete(`/application/${applicationId}/ecologist-organization`)
+      } catch (error) {
+        console.error(`Error deleting application/ecologist-organization for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    findByUser: async (userId, role) => {
+      try {
+        debug(`Finding applications/applicant-organizations for userId: ${userId}`)
+        return API.get('/applications/ecologist-organization', `userId=${userId}&role=${role}`)
       } catch (error) {
         console.error(`Finding applications/ecologist for userId: ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })

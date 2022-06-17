@@ -20,6 +20,7 @@ describe('applicant-name', () => {
     const result = await getApplicantData(request)
     expect(result).toEqual({ fullName: 'Keith Richards' })
   })
+
   it('setData returns the applicant from the database', async () => {
     const mockPutById = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
@@ -30,7 +31,7 @@ describe('applicant-name', () => {
         }
       }
     }))
-    const { setData } = await import('../applicant-name.js')
+    const { setApplicantData } = await import('../../common/common.js')
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -42,7 +43,7 @@ describe('applicant-name', () => {
         }))
       })
     }
-    await setData(request)
+    await setApplicantData(request)
     expect(mockPutById).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb', { fullName: 'Keith Richards' })
   })
 })
