@@ -1,6 +1,8 @@
 # Dependency directories
 node_modules/
 
+docker/env/
+
 # Ignore any hidden files/folders (starting with a .)
 **/.*
 # except the github, dockerignore, npmignore and husky.
