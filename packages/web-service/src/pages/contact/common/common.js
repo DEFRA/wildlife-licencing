@@ -20,23 +20,29 @@ export const setEcologistOrganizationData = request => setContactOrganizationDat
 const getContactData = contact => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  return APIRequests[contact].getById(applicationId)
+  return APIRequests[contact].getByApplicationId(applicationId)
 }
 
 const setContactData = contact => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const c = await APIRequests[contact].getById(applicationId)
   const pageData = await request.cache().getPageData()
-  c.fullName = pageData.payload.name
-  await APIRequests[contact].putById(applicationId, c)
+  const existingContact = await APIRequests[contact].getByApplicationId(applicationId)
+  if (!existingContact) {
+    const newContact = {}
+    newContact.fullName = pageData.payload.name
+    await APIRequests[contact].create(applicationId, newContact)
+  } else {
+    existingContact.fullName = pageData.payload.name
+    await APIRequests[contact].update(applicationId, existingContact)
+  }
 }
 
 const getContactOrganizationData = (contact, contactOrganization) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   return {
-    contact: await APIRequests[contact].getById(applicationId),
+    contact: await APIRequests[contact].getByApplicationId(applicationId),
     organization: await APIRequests[contactOrganization].getById(applicationId)
   }
 }

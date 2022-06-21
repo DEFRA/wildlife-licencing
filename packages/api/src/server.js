@@ -27,12 +27,14 @@ import {
 } from './handlers/account/account.js'
 
 import {
+  getApplicationContacts,
   postApplicationContact,
   getApplicationContactById,
   deleteApplicationContactById
 } from './handlers/application-contact/application-contact.js'
 
 import {
+  getApplicationAccounts,
   postApplicationAccount,
   getApplicationAccountById,
   deleteApplicationAccountById
@@ -116,11 +118,13 @@ const handlers = {
   deleteAccount,
 
   // application-contact handlers
+  getApplicationContacts,
   postApplicationContact,
   getApplicationContactById,
   deleteApplicationContactById,
 
   // application account handlers
+  getApplicationAccounts,
   postApplicationAccount,
   getApplicationAccountById,
   deleteApplicationAccountById,

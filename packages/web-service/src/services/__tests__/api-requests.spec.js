@@ -420,7 +420,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICANT.getById('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const result = await APIRequests.APPLICANT.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/applicant')
       expect(result).toEqual(({ foo: 'bar' }))
     })
@@ -433,7 +433,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.getById('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      await expect(() => APIRequests.APPLICANT.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -445,7 +445,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.putById('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      await APIRequests.APPLICANT.create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3/applicant', { foo: 'bar' })
     })
 
@@ -457,7 +457,7 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.putById('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
+      await expect(() => APIRequests.APPLICANT.create('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
         .rejects.toThrowError()
     })
 

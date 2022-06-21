@@ -2,6 +2,12 @@ import { API } from '@defra/wls-connectors-lib'
 import db from 'debug'
 import Boom from '@hapi/boom'
 const debug = db('web-service:api-requests')
+
+const contactRoles = {
+  APPLICANT: 'APPLICANT',
+  ECOLOGIST: 'ECOLOGIST'
+}
+
 export const APIRequests = {
   USER: {
     getById: async userId => {
@@ -148,22 +154,44 @@ export const APIRequests = {
     }
   },
   APPLICANT: {
-    getById: async applicationId => {
+    getByApplicationId: async applicationId => {
       try {
-        debug(`Get application/applicant for applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}/applicant`)
+        debug(`Get applicant contact for an application id applicationId: ${applicationId}`)
+        const contacts = await API.get('/contacts', `applicationId=${applicationId}&role=${contactRoles.APPLICANT}`)
+        return contacts[0]
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    putById: async (applicationId, applicant) => {
+    create: async (applicationId, applicant) => {
       try {
-        debug(`Put application/applicant for applicationId: ${applicationId}`)
-        return API.put(`/application/${applicationId}/applicant`, applicant)
+        debug(`Creating applicant for applicationId: ${applicationId}`)
+        const contact = await API.post('/contact', applicant)
+        const applicationContact = {
+          contactId: contact.id,
+          applicationId: applicationId,
+          contactRole: contactRoles.APPLICANT
+        }
+        await API.post('/application-contact', applicationContact)
+        return contact
       } catch (error) {
-        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
+        console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    update: async (applicationId, applicant) => {
+      try {
+        // TODO Need an API to get the application contacts by application
+
+        // debug(`Updating the applicant for applicationId: ${applicationId}`)
+        // // const contact  API.get('/contacts', `userId=${userId}&role=${contactRoles.APPLICANT}`)
+        // const applicationContact = await API.get('/application-contact')
+        // return API.put('/contact/${contactId}', applicationContact)
+      } catch (error) {
+        console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -178,12 +206,12 @@ export const APIRequests = {
         throw error
       }
     },
-    findByUser: async (userId, role) => {
+    findByUser: async userId => {
       try {
-        debug(`Finding applications/applicant for userId: ${userId}`)
-        return API.get('/applications/applicant', `userId=${userId}&role=${role}`)
+        debug(`Finding applicants for userId: ${userId}`)
+        return API.get('/contacts', `userId=${userId}&role=${contactRoles.APPLICANT}`)
       } catch (error) {
-        console.error(`Finding applications/applicant for userId: ${userId}`, error)
+        console.error(`Finding applicants for userId: ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

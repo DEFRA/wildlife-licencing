@@ -14,7 +14,7 @@ export const applicantNamesCheckData = async (request, h) => {
 
   const { userId } = await request.cache().getData()
   const applicants = await APIRequests.APPLICANT.findByUser(userId, DEFAULT_ROLE)
-  if (!applicants) {
+  if (!applicants.length) {
     return h.redirect(NAME.uri)
   }
 
@@ -34,9 +34,9 @@ export const setApplicantNamesData = async request => {
   if (contact !== 'new') {
     const name = Buffer.from(contact, 'base64').toString('utf8')
     const { userId, applicationId } = await request.cache().getData()
-    const applicant = await APIRequests.APPLICANT.getById(userId, applicationId)
+    const applicant = await APIRequests.APPLICANT.getByApplicationId(userId, applicationId)
     Object.assign(applicant, { fullName: name })
-    await APIRequests.APPLICANT.putById(userId, applicationId, applicant)
+    await APIRequests.APPLICANT.create(userId, applicationId, applicant)
   }
 }
 

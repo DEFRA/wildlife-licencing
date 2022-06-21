@@ -518,6 +518,46 @@ paths:
 ################################################################################################
 # Application-account
 ################################################################################################
+  '/applications-accounts':
+    get:
+      description: Get applications-accounts
+      summary: Get applications-accounts
+      operationId: getApplicationAccounts
+      parameters:
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: The role
+          required: false
+          schema:
+            $ref: '#/components/schemas/accountRoles'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccounts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/application-account':
     post:
       description: Create and store an application account relationship
@@ -612,6 +652,46 @@ paths:
 ################################################################################################
 # Application-contact
 ################################################################################################
+  '/applications-contacts':
+    get:
+      description: Get applications-contacts
+      summary: Get applications-contacts
+      operationId: getApplicationContacts
+      parameters:
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: The role
+          required: false
+          schema:
+            $ref: '#/components/schemas/contactRoles'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContacts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/application-contact':
     post:
       description: Create and store an application contact relationship

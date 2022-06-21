@@ -14,7 +14,7 @@ export const ecologistNamesCheckData = async (request, h) => {
 
   const { userId } = await request.cache().getData()
   const ecologists = await APIRequests.ECOLOGIST.findByUser(userId, DEFAULT_ROLE)
-  if (!ecologists) {
+  if (!ecologists.length) {
     return h.redirect(NAME.uri)
   }
 

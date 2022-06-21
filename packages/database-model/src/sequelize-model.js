@@ -217,40 +217,6 @@ async function defineApplicationAccounts (sequelize) {
   })
 }
 
-async function defineSiteUsers (sequelize) {
-  models.siteUsers = await sequelize.define('site-users', {
-    id: { type: DataTypes.UUID, primaryKey: true },
-    userId: {
-      type: DataTypes.UUID,
-      references: {
-        model: models.users,
-        key: 'id'
-      }
-    },
-    siteId: {
-      type: DataTypes.UUID,
-      references: {
-        model: models.sites,
-        key: 'id'
-      }
-    },
-    role: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: models.userRoles,
-        key: 'role'
-      }
-    }
-  }, {
-    timestamps: true,
-    indexes: [
-      { unique: false, fields: ['user_id'], name: 'site_user_user_fk' },
-      { unique: false, fields: ['site_id'], name: 'site_user_site_fk' },
-      { unique: false, fields: ['role'], name: 'site_user_role_fk' }
-    ]
-  })
-}
-
 async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -331,7 +297,6 @@ const createModels = async () => {
   await defineSites(sequelize)
 
   await defineApplicationUsers(sequelize)
-  await defineSiteUsers(sequelize)
 
   await defineApplicationSites(sequelize)
   await defineApplicationContacts(sequelize)
@@ -348,9 +313,6 @@ const createModels = async () => {
   models.users.belongsToMany(models.applications, { through: models.applicationUsers })
   models.applications.belongsToMany(models.users, { through: models.applicationUsers })
 
-  // TODO remove this relationship
-  models.sites.hasMany(models.siteUsers)
-
   // Synchronize the model
   await models.users.sync()
   await models.userRoles.sync()
@@ -364,7 +326,6 @@ const createModels = async () => {
   await models.sites.sync()
 
   await models.applicationUsers.sync()
-  await models.siteUsers.sync()
 
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
