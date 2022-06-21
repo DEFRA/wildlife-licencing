@@ -7,7 +7,7 @@ const { cache } = REDIS
 
 export default async (_context, req, h) => {
   try {
-    const { applicationId, contactId, role } = req.payload
+    const { applicationId, contactId, contactRole } = req.payload
     const application = await models.applications.findByPk(applicationId)
     if (!application) {
       return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } }).code(400)
@@ -20,7 +20,7 @@ export default async (_context, req, h) => {
 
     // If the user-application-site already exists then return a conflict and error
     const applicationContact = await models.applicationContacts.findOne({
-      where: { applicationId, contactId, role }
+      where: { applicationId, contactId, contactRole }
     })
 
     if (applicationContact) {
@@ -28,7 +28,7 @@ export default async (_context, req, h) => {
         code: 409,
         error: {
           description: 'an application-contact already exists for applicationId: ' +
-            `${applicationId}, contactId: ${contactId} and role: ${role}`
+            `${applicationId}, contactId: ${contactId} and role: ${contactRole}`
         }
       })
         .type(APPLICATION_JSON)
@@ -39,7 +39,7 @@ export default async (_context, req, h) => {
       id: uuidv4(),
       applicationId,
       contactId,
-      role
+      contactRole
     })
 
     const response = prepareResponse(dataValues)

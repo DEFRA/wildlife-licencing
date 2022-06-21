@@ -1,7 +1,7 @@
 /*
  * Mock the hapi request object
  */
-const path = '/application-sites/uuid'
+const path = '/application-accounts/uuid'
 const req = { path }
 
 /*
@@ -17,7 +17,7 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const context = {
   request: {
     params: {
-      applicationSiteId: '1bfe075b-377e-472b-b160-a6a454648e23'
+      applicationAccountId: '1bfe075b-377e-472b-b160-a6a454648e23'
     }
   }
 }
@@ -35,52 +35,52 @@ const tsR = {
 jest.mock('@defra/wls-database-model')
 
 let models
-let getApplicationSiteByApplicationSiteId
+let getApplicationAccountByApplicationAccountId
 let cache
 const applicationJson = 'application/json'
-describe('The getApplicationSiteByApplicationSiteId handler', () => {
+describe('The getApplicationAccountByApplicationAccountId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
 
-    getApplicationSiteByApplicationSiteId = (await import('../get-application-site-by-application-site-id.js')).default
+    getApplicationAccountByApplicationAccountId = (await import('../get-application-account-by-application-account-id.js')).default
   })
 
-  it('returns an application-site and status 200 from the cache', async () => {
+  it('returns an application-account and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
-    await getApplicationSiteByApplicationSiteId(context, req, h)
+    await getApplicationAccountByApplicationAccountId(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns an application-site and status 200 from the database', async () => {
+  it('returns an application-account and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.applicationSites = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
-    await getApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
+    models.applicationAccounts = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    await getApplicationAccountByApplicationAccountId(context, req, h)
+    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(context.request.params.applicationAccountId)
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns a status 404 on application-site not found', async () => {
+  it('returns a status 404 on application-account not found', async () => {
     cache.restore = jest.fn(() => null)
-    models.applicationSites = { findByPk: jest.fn(() => null) }
-    await getApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
+    models.applicationAccounts = { findByPk: jest.fn(() => null) }
+    await getApplicationAccountByApplicationAccountId(context, req, h)
+    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(context.request.params.applicationAccountId)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applicationSites = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.applicationAccounts = { findByPk: jest.fn(() => { throw new Error() }) }
     await expect(async () => {
-      await getApplicationSiteByApplicationSiteId(context, req, h)
+      await getApplicationAccountByApplicationAccountId(context, req, h)
     }).rejects.toThrow()
   })
 })

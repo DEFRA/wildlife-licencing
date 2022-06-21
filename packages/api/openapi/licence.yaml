@@ -124,103 +124,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
 ################################################################################################
-# Contacts
+# Accounts
 ################################################################################################
-  '/contact':
-    post:
-      description: Create and store contact
-      summary: Create a new contact with a generated ID
-      operationId: postContact
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/contact'
-      responses:
-        201:
-          description: The contact has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/contact'
-        400:
-          description: Bad request. Username required
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-  '/contact/{contactId}':
+  '/accounts':
     get:
-      description: Retrieve a contact
-      summary: Retrieve a contact
-      operationId: getContactByContactId
+      description: Get a list accounts
+      summary: Get a list accounts
+      operationId: getAccounts
       parameters:
-        - name: contactId
-          in: path
-          description: ID of the contact
-          required: true
+        - name: userId
+          in: query
+          description: ID of the user
+          required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: role of the account
+          required: false
+          schema:
+            $ref: '#/components/schemas/accountRoles'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/contact'
-        400:
-          description: Bad request. User ID must be a uuid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        404:
-          description: A contact with the specified ID was not found.
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-    put:
-      description: Update a contact
-      summary: Create or update a contact
-      operationId: putContact
-      parameters:
-        - name: contactId
-          in: path
-          description: ID of the contact
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/contact'
-      responses:
-        200:
-          description: The contact object has been updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/contact'
-        201:
-          description: The contact object has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/contact'
+                $ref: '#/components/schemas/accounts'
         400:
           description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         404:
           description: Not found
         500:
@@ -230,36 +173,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-    delete:
-      description: Delete contact
-      summary:  Delete the contact on the provided ID
-      operationId: deleteContact
-      parameters:
-        - name: contactId
-          in: path
-          description: ID of the contact
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        204:
-          description: The contact object has been deleted
-        400:
-          description: Bad request. contact ID must be a uuid
-        404:
-          description: Not found
-        409:
-          description: Conflict
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-################################################################################################
-# Accounts
-################################################################################################
   '/account':
     post:
       description: Create and store account
@@ -389,6 +302,183 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+################################################################################################
+# Contacts
+################################################################################################
+  '/contacts':
+    get:
+      description: Get a list contacts
+      summary: Get a list contacts
+      operationId: getContacts
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: applicationId
+          in: query
+          description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: role
+          in: query
+          description: role of the contact
+          required: false
+          schema:
+            $ref: '#/components/schemas/contactRoles'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contacts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/contact':
+    post:
+      description: Create and store contact
+      summary: Create a new contact with a generated ID
+      operationId: postContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        201:
+          description: The contact has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request. Username required
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/contact/{contactId}':
+    get:
+      description: Retrieve a contact
+      summary: Retrieve a contact
+      operationId: getContactByContactId
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request. User ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: A contact with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Update a contact
+      summary: Create or update a contact
+      operationId: putContact
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+      responses:
+        200:
+          description: The contact object has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        201:
+          description: The contact object has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+        400:
+          description: Bad request.
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete contact
+      summary:  Delete the contact on the provided ID
+      operationId: deleteContact
+      parameters:
+        - name: contactId
+          in: path
+          description: ID of the contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The contact object has been deleted
+        400:
+          description: Bad request. contact ID must be a uuid
+        404:
+          description: Not found
+        409:
+          description: Conflict
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 ################################################################################################
 # Applications
@@ -808,7 +898,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
   '/application-user':
     post:
       description: Create and store an application user relationship
@@ -901,196 +990,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
-# Application-contact
-################################################################################################
-  '/application-contacts':
-    get:
-      description: Get a list application-contacts
-      summary: Get a list application-contacts
-      operationId: getApplicationContacts
-      parameters:
-        - name: contactId
-          in: query
-          description: ID of the contact
-          required: false
-          schema:
-            $ref: '#/components/schemas/uuid'
-        - name: applicationId
-          in: query
-          description: ID of the contact
-          required: false
-          schema:
-            $ref: '#/components/schemas/uuid'
-        - name: role
-          in: query
-          description: ID of the contact
-          required: false
-          schema:
-            $ref: '#/components/schemas/roles'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/applicationContacts'
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-
-  '/application-contact':
-    post:
-      description: Create and store an application contact relationship
-      summary: Create a new contact with a generated ID
-      operationId: postApplicationContact
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/applicationContact'
-      responses:
-        201:
-          description: The application-contact relationship has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/applicationContact'
-        400:
-          description: Bad request. ContactId or applicationId not found. Role not recognized.
-        409:
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-  '/application-contact/{applicationContactId}':
-    get:
-      description: Retrieve an application-contact
-      summary: Retrieve an application-contact
-      operationId: getApplicationContactById
-      parameters:
-        - name: applicationContactId
-          in: path
-          description: ID of the application-contact
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/applicationContact'
-        400:
-          description: Bad request. Application-contact ID must be a uuid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        404:
-          description: An application-contact with the specified ID was not found.
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-    delete:
-      description: Delete an application-contact
-      summary: Delete an application-contact
-      operationId: deleteApplicationContactById
-      parameters:
-        - name: applicationContactId
-          in: path
-          description: ID of the application-contact
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        204:
-          description: The application-contact object has been deleted
-        400:
-          description: Bad request. contact ID must be a uuid
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-################################################################################################
 # Application-account
 ################################################################################################
-  '/application-accounts':
-    get:
-      description: Get a list application-accounts
-      summary: Get a list application-accounts
-      operationId: getApplicationAccounts
-      parameters:
-        - name: accountId
-          in: query
-          description: ID of the account
-          required: false
-          schema:
-            $ref: '#/components/schemas/uuid'
-        - name: applicationId
-          in: query
-          description: ID of the account
-          required: false
-          schema:
-            $ref: '#/components/schemas/uuid'
-        - name: role
-          in: query
-          description: ID of the account
-          required: false
-          schema:
-            $ref: '#/components/schemas/roles'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/applicationAccounts'
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-
-
   '/application-account':
     post:
       description: Create and store an application account relationship
@@ -1173,6 +1074,101 @@ paths:
           description: The application-account object has been deleted
         400:
           description: Bad request. account ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
+# Application-contact
+################################################################################################
+  '/application-contact':
+    post:
+      description: Create and store an application contact relationship
+      summary: Create a new contact with a generated ID
+      operationId: postApplicationContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationContact'
+      responses:
+        201:
+          description: The application-contact relationship has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+        400:
+          description: Bad request. ContactId or applicationId not found. Role not recognized.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application-contact/{applicationContactId}':
+    get:
+      description: Retrieve an application-contact
+      summary: Retrieve an application-contact
+      operationId: getApplicationContactById
+      parameters:
+        - name: applicationContactId
+          in: path
+          description: ID of the application-contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+        400:
+          description: Bad request. Application-contact ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-contact with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an application-contact
+      summary: Delete an application-contact
+      operationId: deleteApplicationContactById
+      parameters:
+        - name: applicationContactId
+          in: path
+          description: ID of the application-contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The application-contact object has been deleted
+        400:
+          description: Bad request. contact ID must be a uuid
         404:
           description: Not found
         500:
@@ -2147,7 +2143,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
 components:
 ################################################################################################
 # Schemas
@@ -2172,6 +2167,76 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    roles:
+      type: string
+      enum:
+        - USER
+
+    accounts:
+      type: array
+      items:
+        $ref: '#/components/schemas/account'
+
+    account:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 36
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    contacts:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact'
+
+    contact:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 160
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    contactDetails:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        phone:
+          $ref: '#/components/schemas/phone'
+
+    contactRoles:
+      type: string
+      enum:
+        - APPLICANT
+        - ECOLOGIST
+        - NAMED-INDIVIDUAL
+
+    accountRoles:
+      type: string
+      enum:
+        - APPLICANT-ORGANIZATION
+        - ECOLOGIST-ORGANIZATION
 
     applications:
       type: array
@@ -2263,7 +2328,7 @@ components:
       required:
         - applicationId
         - contactId
-        - role
+        - contactRole
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -2271,7 +2336,7 @@ components:
           $ref: '#/components/schemas/uuid'
         contactId:
           $ref: '#/components/schemas/uuid'
-        role:
+        contactRole:
           $ref: '#/components/schemas/contactRoles'
         createdAt:
           $ref: '#/components/schemas/timestamp'
@@ -2289,7 +2354,7 @@ components:
       required:
         - applicationId
         - accountId
-        - role
+        - accountRole
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -2297,19 +2362,12 @@ components:
           $ref: '#/components/schemas/uuid'
         accountId:
           $ref: '#/components/schemas/uuid'
-        role:
-          $ref: '#/components/schemas/contactRoles'
+        accountRole:
+          $ref: '#/components/schemas/accountRoles'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
-
-    contactRoles:
-      type: string
-      enum:
-        - APPLICANT
-        - ECOLOGIST
-        - NAMED-INDIVIDUAL
 
     siteUser:
       type: object
@@ -2330,11 +2388,6 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
-
-    roles:
-      type: string
-      enum:
-        - USER
 
     applicants:
       type: array
@@ -2426,36 +2479,9 @@ components:
         description:
           type: string
 
-    contactDetails:
-      type: object
-      properties:
-        email:
-          $ref: '#/components/schemas/email'
-        phone:
-          $ref: '#/components/schemas/phone'
 
-    contact:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        sddsContactId:
-          $ref: '#/components/schemas/uuid'
-        fullName:
-          type: string
-          minLength: 1
-          maxLength: 160
-        contactDetails:
-          $ref: '#/components/schemas/contactDetails'
-        address:
-          $ref: '#/components/schemas/address'
-        createdAt:
-          $ref: '#/components/schemas/timestamp'
-        updatedAt:
-          $ref: '#/components/schemas/timestamp'
 
-# TODO Get rid of organization
+    # TODO Get rid of organization
     organization:
       type: object
       properties:
@@ -2466,22 +2492,6 @@ components:
           minLength: 1
           maxLength: 36
 
-    account:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        sddsAccountId:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type: string
-          minLength: 1
-          maxLength: 36
-        createdAt:
-          $ref: '#/components/schemas/timestamp'
-        updatedAt:
-          $ref: '#/components/schemas/timestamp'
 
     address:
       type: object

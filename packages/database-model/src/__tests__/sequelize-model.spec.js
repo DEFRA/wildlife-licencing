@@ -6,7 +6,12 @@ jest.mock('@defra/wls-connectors-lib')
 describe('The sequential model', () => {
   it('Creates the model', async () => {
     const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
-    const mockDefine = jest.fn(() => ({ sync: jest.fn(), upsert: jest.fn(), hasMany: jest.fn() }))
+    const mockDefine = jest.fn(() => ({
+      sync: jest.fn(),
+      upsert: jest.fn(),
+      hasMany: jest.fn(),
+      belongsToMany: jest.fn()
+    }))
     const mockQuery = jest.fn()
     SEQUELIZE.getSequelize = jest.fn(() => ({
       define: mockDefine,

@@ -1,10 +1,8 @@
 import postApplicationContact from './post-application-contact.js'
-const getApplicationContacts = () => ({})
-const getApplicationContactById = () => ({})
-const deleteApplicationContactById = () => ({})
+import getApplicationContactById from './get-application-contact-by-application-contact-id.js'
+import deleteApplicationContactById from './delete-application-contact-by-application-contact-id.js'
 
 export {
-  getApplicationContacts,
   postApplicationContact,
   getApplicationContactById,
   deleteApplicationContactById
