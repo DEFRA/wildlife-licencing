@@ -64,45 +64,11 @@ import {
 } from './handlers/application-user/application-user.js'
 
 import {
-  postSiteUser,
-  getSiteUserById,
-  deleteSiteUserById
-} from './handlers/site-user/site-user.js'
-
-import {
   getApplicationSites,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite
 } from './handlers/application-site/application-site.js'
-
-import {
-  getApplicationApplicant,
-  putApplicationApplicant,
-  deleteApplicationApplicant,
-  getApplicants
-} from './handlers/application/applicant/applicant.js'
-
-import {
-  getApplicationEcologist,
-  putApplicationEcologist,
-  deleteApplicationEcologist,
-  getEcologists
-} from './handlers/application/ecologist/ecologist.js'
-
-import {
-  getApplicationApplicantOrganization,
-  putApplicationApplicantOrganization,
-  deleteApplicationApplicantOrganization,
-  getApplicantOrganizations
-} from './handlers/application/applicant-organization/applicant-organization.js'
-
-import {
-  getApplicationEcologistOrganization,
-  putApplicationEcologistOrganization,
-  deleteApplicationEcologistOrganization,
-  getEcologistOrganizations
-} from './handlers/application/ecologist-organization/ecologist-organization.js'
 
 import {
   getApplicationEligibility,
@@ -165,10 +131,6 @@ const handlers = {
   postSite,
   putSite,
   deleteSite,
-  // Site-user handlers
-  postSiteUser,
-  getSiteUserById,
-  deleteSiteUserById,
 
   // Application handlers
   getApplicationByApplicationId,
@@ -177,22 +139,6 @@ const handlers = {
   putApplication,
   deleteApplication,
   getApplicationReference,
-  getApplicationApplicant,
-  putApplicationApplicant,
-  deleteApplicationApplicant,
-  getApplicants,
-  getApplicationEcologist,
-  putApplicationEcologist,
-  deleteApplicationEcologist,
-  getApplicationApplicantOrganization,
-  putApplicationApplicantOrganization,
-  deleteApplicationApplicantOrganization,
-  getApplicantOrganizations,
-  getEcologists,
-  getApplicationEcologistOrganization,
-  putApplicationEcologistOrganization,
-  deleteApplicationEcologistOrganization,
-  getEcologistOrganizations,
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
