@@ -29,6 +29,7 @@ import {
 import {
   getApplicationContacts,
   postApplicationContact,
+  putApplicationContactById,
   getApplicationContactById,
   deleteApplicationContactById
 } from './handlers/application-contact/application-contact.js'
@@ -121,6 +122,7 @@ const handlers = {
   getApplicationContacts,
   postApplicationContact,
   getApplicationContactById,
+  putApplicationContactById,
   deleteApplicationContactById,
 
   // application account handlers

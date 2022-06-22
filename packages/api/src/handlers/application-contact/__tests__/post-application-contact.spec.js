@@ -13,7 +13,7 @@ describe('post-application-contact-handler', () => {
     jest.clearAllMocks()
   })
 
-  it('returns a status 400 bad request if no user found', async () => {
+  it('returns a status 400 bad request if no application found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -35,7 +35,7 @@ describe('post-application-contact-handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
 
-  it('returns a status 400 bad request if no site found', async () => {
+  it('returns a status 400 bad request if no contact found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {

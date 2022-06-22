@@ -23,10 +23,7 @@ export const applicantNamesCheckData = async (request, h) => {
 
 export const getApplicantNamesData = async request => {
   const { userId } = await request.cache().getData()
-  const applicants = await APIRequests.APPLICANT.findByUser(userId, DEFAULT_ROLE)
-  return [...new Set(applicants.map(a => a.fullName))]
-    .sort((a, b) => a.localeCompare(b.fullName, 'en'))
-    .map(e => ({ id: Buffer.from(e).toString('base64'), fullName: e }))
+  return APIRequests.APPLICANT.findByUser(userId, DEFAULT_ROLE)
 }
 
 export const setApplicantNamesData = async request => {

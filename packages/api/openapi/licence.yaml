@@ -518,10 +518,10 @@ paths:
 ################################################################################################
 # Application-account
 ################################################################################################
-  '/applications-accounts':
+  '/application-accounts':
     get:
-      description: Get applications-accounts
-      summary: Get applications-accounts
+      description: Get application-accounts
+      summary: Get application-accounts
       operationId: getApplicationAccounts
       parameters:
         - name: applicationId
@@ -652,10 +652,10 @@ paths:
 ################################################################################################
 # Application-contact
 ################################################################################################
-  '/applications-contacts':
+  '/application-contacts':
     get:
-      description: Get applications-contacts
-      summary: Get applications-contacts
+      description: Get application-contacts
+      summary: Get application-contacts
       operationId: getApplicationContacts
       parameters:
         - name: applicationId
@@ -739,6 +739,51 @@ paths:
             $ref: '#/components/schemas/uuid'
       responses:
         200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+        400:
+          description: Bad request. Application-contact ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-contact with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Create of update an application-contact
+      summary: Create of update an application-contact
+      operationId: putApplicationContactById
+      parameters:
+        - name: applicationContactId
+          in: path
+          description: ID of the application-contact
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationContact'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+        201:
           description: Success
           content:
             application/json:

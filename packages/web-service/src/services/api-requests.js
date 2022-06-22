@@ -184,12 +184,9 @@ export const APIRequests = {
     },
     update: async (applicationId, applicant) => {
       try {
-        // TODO Need an API to get the application contacts by application
-
-        // debug(`Updating the applicant for applicationId: ${applicationId}`)
-        // // const contact  API.get('/contacts', `userId=${userId}&role=${contactRoles.APPLICANT}`)
-        // const applicationContact = await API.get('/application-contact')
-        // return API.put('/contact/${contactId}', applicationContact)
+        debug(`Updating the applicant for applicationId: ${applicationId}`)
+        const applicationContacts = await API.get('/application-contacts', `applicationId=${applicationId}&role=${contactRoles.APPLICANT}`)
+        return API.put(`/contact/${applicationContacts[0].contactId}`, applicant)
       } catch (error) {
         console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
