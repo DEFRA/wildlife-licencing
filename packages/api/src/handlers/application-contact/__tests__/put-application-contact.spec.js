@@ -44,7 +44,38 @@ const applicationJson = 'application/json'
 describe('The putApplicationContact handler', () => {
   beforeEach(() => { jest.resetModules() })
 
-  it.only('returns a 201 on successful create', async () => {
+  it('returns a 400 on application not found', async () => {
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findByPk: jest.fn(() => null)
+        }
+      }
+    }))
+    const putApplicationContact = (await import('../put-application-contact.js')).default
+    await putApplicationContact(context, req, h)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(400)
+  })
+
+  it('returns a 400 on contact not found', async () => {
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+        },
+        contacts: {
+          findByPk: jest.fn(() => null)
+        }
+      }
+    }))
+    const putApplicationContact = (await import('../put-application-contact.js')).default
+    await putApplicationContact(context, req, h)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(400)
+  })
+
+  it('returns a 201 on successful create', async () => {
     const mockSave = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
@@ -107,13 +138,17 @@ describe('The putApplicationContact handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  // it('throws with an update query error', async () => {
-  //   models.contacts = {
-  //     findOrCreate: jest.fn(async () => ([{}, false])),
-  //     update: jest.fn(async () => { throw new Error() })
-  //   }
-  //   await expect(async () => {
-  //     await putContact(context, req, h)
-  //   }).rejects.toThrow()
-  // })
+  it('throws with an update query error', async () => {
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findByPk: jest.fn(() => { throw new Error() })
+        }
+      }
+    }))
+    const putApplicationContact = (await import('../put-application-contact.js')).default
+    await expect(async () => {
+      await putApplicationContact(context, req, h)
+    }).rejects.toThrow()
+  })
 })

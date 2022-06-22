@@ -11,12 +11,16 @@ export default async (context, req, h) => {
 
     const application = await models.applications.findByPk(applicationId)
     if (!application) {
-      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } }).code(400)
+      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } })
+        .type(APPLICATION_JSON)
+        .code(400)
     }
 
     const contact = await models.contacts.findByPk(contactId)
     if (!contact) {
-      return h.response({ code: 400, error: { description: `contactId: ${contactId} not found` } }).code(400)
+      return h.response({ code: 400, error: { description: `contactId: ${contactId} not found` } })
+        .type(APPLICATION_JSON)
+        .code(400)
     }
 
     const [applicationContact, created] = await models.applicationContacts.findOrCreate({
