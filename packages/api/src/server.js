@@ -38,6 +38,7 @@ import {
   getApplicationAccounts,
   postApplicationAccount,
   getApplicationAccountById,
+  putApplicationAccountById,
   deleteApplicationAccountById
 } from './handlers/application-account/application-account.js'
 
@@ -129,6 +130,7 @@ const handlers = {
   getApplicationAccounts,
   postApplicationAccount,
   getApplicationAccountById,
+  putApplicationAccountById,
   deleteApplicationAccountById,
 
   // Site handlers

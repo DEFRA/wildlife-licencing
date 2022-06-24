@@ -624,6 +624,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+
+    put:
+      description: Create of update an application-account
+      summary: Create of update an application-account
+      operationId: putApplicationAccountById
+      parameters:
+        - name: applicationAccountId
+          in: path
+          description: ID of the application-account
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationAccount'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+        400:
+          description: Bad request. Application-account ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
     delete:
       description: Delete an application-account
       summary: Delete an application-account

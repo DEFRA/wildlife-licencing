@@ -8,6 +8,134 @@ const contactRoles = {
   ECOLOGIST: 'ECOLOGIST'
 }
 
+const accountRoles = {
+  'APPLICANT-ORGANIZATION': 'APPLICANT-ORGANIZATION',
+  'ECOLOGIST-ORGANIZATION': 'ECOLOGIST-ORGANIZATION'
+}
+
+const getContactByApplicationId = async (role, applicationId) => {
+  try {
+    debug(`Get ${role} contact for an application id applicationId: ${applicationId}`)
+    const [contact] = await API.get('/contacts', `applicationId=${applicationId}&role=${role}`)
+    return contact
+  } catch (error) {
+    console.error(`Error getting ${role}/applicant for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const createContact = async (role, applicationId, payload) => {
+  try {
+    const contact = await API.post('/contact', payload)
+    // If we have a contact assigned to the application, update it
+    const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+    if (applicationContact) {
+      await API.put(`/application-contact/${applicationContact.id}`, {
+        contactId: contact.id,
+        applicationId: applicationId,
+        contactRole: role
+      })
+    } else {
+      await API.post('/application-contact', {
+        contactId: contact.id,
+        applicationId: applicationId,
+        contactRole: role
+      })
+    }
+    debug(`Created ${role} ${contact.id} for applicationId: ${applicationId}`)
+    return contact
+  } catch (error) {
+    console.error(`Error creating ${role} for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const assignContact = async (role, applicationId, contactId) => {
+  const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+  if (applicationContact.contactId !== contactId) {
+    debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
+    applicationContact.contactId = contactId
+    await API.put(`/application-contact/${applicationContact.id}`, {
+      contactId,
+      applicationId,
+      contactRole: role
+    })
+  }
+}
+
+const unAssignContact = async (role, applicationId) => {
+  const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+  if (applicationContact) {
+    debug(`Un-assigning ${role} contact ${applicationContact.contactId} from applicationId: ${applicationId}`)
+    await API.delete(`/application-contact/${applicationContact.id}`)
+  }
+}
+
+const updateContact = async (role, applicationId, contact) => {
+  try {
+    debug(`Updating the ${role} for applicationId: ${applicationId}`)
+    const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+    return API.put(`/contact/${applicationContact.contactId}`, contact)
+  } catch (error) {
+    console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const findContactByUser = async (role, userId) => {
+  try {
+    debug(`Finding ${role}'s for userId: ${userId}`)
+    return API.get('/contacts', `userId=${userId}&role=${role}`)
+  } catch (error) {
+    console.error(`Finding ${role}'s for userId: ${userId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const getAccountByApplicationId = async (accountRole, applicationId) => {
+  const [account] = await API.get('/accounts', `applicationId=${applicationId}&role=${accountRole}`)
+  return account
+}
+
+const createAccount = async (accountRole, applicationId, payload) => {
+  try {
+    const account = await API.post('/account', payload)
+    // If we have an account assigned to the application, update it
+    const [applicationAccount] = await API.get('/application-accounts', `applicationId=${applicationId}&role=${accountRole}`)
+    if (applicationAccount) {
+      await API.put(`/application-account/${applicationAccount.id}`, {
+        accountId: account.id,
+        applicationId: applicationId,
+        accountRole: accountRole
+      })
+    } else {
+      await API.post('/application-account', {
+        accountId: account.id,
+        applicationId: applicationId,
+        accountRole: accountRole
+      })
+    }
+    debug(`Created ${accountRole} ${account.id} for applicationId: ${applicationId}`)
+    return account
+  } catch (error) {
+    console.error(`Error creating ${accountRole} for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const unAssignAccount = async (accountRole, applicationId) => {
+  const [applicationAccount] = await API.get('/application-accounts', `applicationId=${applicationId}&role=${accountRole}`)
+  if (applicationAccount) {
+    debug(`Un-assigning ${accountRole} contact ${applicationAccount.contactId} from applicationId: ${applicationId}`)
+    await API.delete(`/application-contact/${applicationAccount.id}`)
+  }
+}
+
 export const APIRequests = {
   USER: {
     getById: async userId => {
@@ -154,190 +282,29 @@ export const APIRequests = {
     }
   },
   APPLICANT: {
-    getByApplicationId: async applicationId => {
-      try {
-        debug(`Get applicant contact for an application id applicationId: ${applicationId}`)
-        const contacts = await API.get('/contacts', `applicationId=${applicationId}&role=${contactRoles.APPLICANT}`)
-        return contacts[0]
-      } catch (error) {
-        console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    create: async (applicationId, applicant) => {
-      try {
-        debug(`Creating applicant for applicationId: ${applicationId}`)
-        const contact = await API.post('/contact', applicant)
-        const applicationContact = {
-          contactId: contact.id,
-          applicationId: applicationId,
-          contactRole: contactRoles.APPLICANT
-        }
-        await API.post('/application-contact', applicationContact)
-        return contact
-      } catch (error) {
-        console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    update: async (applicationId, applicant) => {
-      try {
-        debug(`Updating the applicant for applicationId: ${applicationId}`)
-        const applicationContacts = await API.get('/application-contacts', `applicationId=${applicationId}&role=${contactRoles.APPLICANT}`)
-        return API.put(`/contact/${applicationContacts[0].contactId}`, applicant)
-      } catch (error) {
-        console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    deleteById: async applicationId => {
-      try {
-        debug(`Delete application/applicant for applicationId: ${applicationId}`)
-        return API.delete(`/application/${applicationId}/applicant`)
-      } catch (error) {
-        console.error(`Error deleting application/applicant for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    findByUser: async userId => {
-      try {
-        debug(`Finding applicants for userId: ${userId}`)
-        return API.get('/contacts', `userId=${userId}&role=${contactRoles.APPLICANT}`)
-      } catch (error) {
-        console.error(`Finding applicants for userId: ${userId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    }
-  },
-  APPLICANT_ORGANIZATION: {
-    getById: async applicationId => {
-      try {
-        debug(`Get application/applicant-organization for applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}/applicant-organization`)
-      } catch (error) {
-        console.error(`Error getting application/applicant-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    putById: async (applicationId, organization) => {
-      try {
-        debug(`Put application/applicant-organization for applicationId: ${applicationId}`)
-        return API.put(`/application/${applicationId}/applicant-organization`, organization)
-      } catch (error) {
-        console.error(`Error getting application/applicant-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    deleteById: async applicationId => {
-      try {
-        debug(`Delete application/applicant-organization for applicationId: ${applicationId}`)
-        return API.delete(`/application/${applicationId}/applicant-organization`)
-      } catch (error) {
-        console.error(`Error deleting application/applicant-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    findByUser: async (userId, role) => {
-      try {
-        debug(`Finding applications/applicant-organizations for userId: ${userId}`)
-        return API.get('/applications/applicant-organization', `userId=${userId}&role=${role}`)
-      } catch (error) {
-        console.error(`Finding applications/applicant for userId: ${userId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    }
+    getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.APPLICANT, applicationId),
+    create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
+    assign: async (applicationId, contactId) => assignContact(contactRoles.APPLICANT, applicationId, contactId),
+    unAssign: async applicationId => unAssignContact(contactRoles.APPLICANT, applicationId),
+    update: async (applicationId, applicant) => updateContact(contactRoles.APPLICANT, applicationId, applicant),
+    findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
   },
   ECOLOGIST: {
-    getById: async applicationId => {
-      try {
-        debug(`Get application/ecologist for and applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}/ecologist`)
-      } catch (error) {
-        console.error(`Error getting application/ecologist for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    putById: async (applicationId, ecologist) => {
-      try {
-        debug(`Put application/ecologist for applicationId: ${applicationId}`)
-        return API.put(`/application/${applicationId}/ecologist`, ecologist)
-      } catch (error) {
-        console.error(`Error getting application/ecologist for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    deleteById: async applicationId => {
-      try {
-        debug(`Delete application/ecologist for applicationId: ${applicationId}`)
-        return API.delete(`/application/${applicationId}/ecologist`)
-      } catch (error) {
-        console.error(`Error deleting application/ecologist for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    findByUser: async (userId, role) => {
-      try {
-        debug(`Finding applications/ecologist for userId: ${userId}`)
-        return API.get('/applications/ecologist', `userId=${userId}&role=${role}`)
-      } catch (error) {
-        console.error(`Finding applications/ecologist for userId: ${userId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    }
+    getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.ECOLOGIST, applicationId),
+    create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
+    assign: async (applicationId, contactId) => assignContact(contactRoles.ECOLOGIST, applicationId, contactId),
+    unAssign: async applicationId => unAssignContact(contactRoles.ECOLOGIST, applicationId),
+    update: async (applicationId, applicant) => updateContact(contactRoles.ECOLOGIST, applicationId, applicant),
+    findByUser: async userId => findContactByUser(contactRoles.ECOLOGIST, userId)
+  },
+  APPLICANT_ORGANIZATION: {
+    create: async (applicationId, payload) => createAccount(accountRoles['APPLICANT-ORGANIZATION'], applicationId, payload),
+    unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANIZATION'], applicationId),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANIZATION'], applicationId)
   },
   ECOLOGIST_ORGANIZATION: {
-    getById: async applicationId => {
-      try {
-        debug(`Get application/ecologist-organization for applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}/ecologist-organization`)
-      } catch (error) {
-        console.error(`Error getting application/ecologist-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    putById: async (applicationId, organization) => {
-      try {
-        debug(`Put application/ecologist-organization for applicationId: ${applicationId}`)
-        return API.put(`/application/${applicationId}/ecologist-organization`, organization)
-      } catch (error) {
-        console.error(`Error getting application/ecologist-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    deleteById: async applicationId => {
-      try {
-        debug(`Delete ecologist-organization for applicationId: ${applicationId}`)
-        return API.delete(`/application/${applicationId}/ecologist-organization`)
-      } catch (error) {
-        console.error(`Error deleting application/ecologist-organization for applicationId: ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
-    findByUser: async (userId, role) => {
-      try {
-        debug(`Finding applications/applicant-organizations for userId: ${userId}`)
-        return API.get('/applications/ecologist-organization', `userId=${userId}&role=${role}`)
-      } catch (error) {
-        console.error(`Finding applications/ecologist for userId: ${userId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    }
+    create: async (applicationId, payload) => createAccount(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId, payload),
+    unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId)
   }
 }

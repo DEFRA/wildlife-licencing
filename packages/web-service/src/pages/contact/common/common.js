@@ -7,59 +7,6 @@ export const getUserData = async request => {
   return APIRequests.USER.getById(userId)
 }
 
-export const getApplicantData = request => getContactData('APPLICANT')(request)
-export const setApplicantData = request => setContactData('APPLICANT')(request)
-export const getEcologistData = request => getContactData('ECOLOGIST')(request)
-export const setEcologistData = request => setContactData('ECOLOGIST')(request)
-
-export const getApplicantOrganizationData = request => getContactOrganizationData('APPLICANT', 'APPLICANT_ORGANIZATION')(request)
-export const setApplicantOrganizationData = request => setContactOrganizationData('APPLICANT_ORGANIZATION')(request)
-export const getEcologistOrganizationData = request => getContactOrganizationData('ECOLOGIST', 'ECOLOGIST_ORGANIZATION')(request)
-export const setEcologistOrganizationData = request => setContactOrganizationData('ECOLOGIST_ORGANIZATION')(request)
-
-const getContactData = contact => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  return APIRequests[contact].getByApplicationId(applicationId)
-}
-
-const setContactData = contact => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  const pageData = await request.cache().getPageData()
-  const existingContact = await APIRequests[contact].getByApplicationId(applicationId)
-  if (!existingContact) {
-    const newContact = {}
-    newContact.fullName = pageData.payload.name
-    await APIRequests[contact].create(applicationId, newContact)
-  } else {
-    existingContact.fullName = pageData.payload.name
-    await APIRequests[contact].update(applicationId, existingContact)
-  }
-}
-
-const getContactOrganizationData = (contact, contactOrganization) => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  return {
-    contact: await APIRequests[contact].getByApplicationId(applicationId),
-    organization: await APIRequests[contactOrganization].getById(applicationId)
-  }
-}
-
-const setContactOrganizationData = contactOrganization => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  const c = await APIRequests[contactOrganization].getById(applicationId)
-  const pageData = await request.cache().getPageData()
-  if (pageData.payload['is-organization'] === 'yes') {
-    c.name = pageData.payload['organization-name']
-    await APIRequests[contactOrganization].putById(applicationId, c)
-  } else {
-    await APIRequests[contactOrganization].deleteById(applicationId)
-  }
-}
-
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.applicationId) {
