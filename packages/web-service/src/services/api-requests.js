@@ -54,9 +54,8 @@ const createContact = async (role, applicationId, payload) => {
 
 const assignContact = async (role, applicationId, contactId) => {
   const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
-  if (applicationContact.contactId !== contactId) {
+  if (applicationContact && applicationContact.contactId !== contactId) {
     debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
-    applicationContact.contactId = contactId
     await API.put(`/application-contact/${applicationContact.id}`, {
       contactId,
       applicationId,
