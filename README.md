@@ -122,6 +122,13 @@ Edit the .env files to add secrets
 
 If you receive the secrets, please remember to ignore them in git, by running  
 `git update-index --assume-unchanged docker/env/aqp-secrets.env`
+`git update-index --assume-unchanged docker/env/aep-secrets.env`
+`git update-index --assume-unchanged docker/env/aep.env`
+`git update-index --assume-unchanged docker/env/api.env`
+`git update-index --assume-unchanged docker/env/aqp.env`
+`git update-index --assume-unchanged docker/env/rep-secrets.env`
+`git update-index --assume-unchanged docker/env/rep.env`
+`git update-index --assume-unchanged docker/env/web-secrets.env`
 
 Alternatively set the environment variables in the running shell or your IDE
 
