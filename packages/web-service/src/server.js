@@ -8,7 +8,7 @@ import path from 'path'
 import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
 import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
-import sessionManager from './session-cache/session-manager.js'
+import sessionManager, { isStaticResource } from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
@@ -46,6 +46,21 @@ const additionalPageData = (request, h) => {
       },
       credentials: request.auth.credentials
     })
+  }
+  return h.continue
+}
+
+// Add default headers
+export const addDefaultHeaders = (request, h) => {
+  if (!request.response.isBoom) {
+    if (!isStaticResource(request)) {
+      request.response.header('X-Frame-Options', 'DENY')
+      request.response.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+      request.response.header('X-XSS-Protection', '1; mode=block')
+      request.response.header('Expires', '0')
+    }
+    request.response.header('X-Content-Type-Options', 'nosniff')
+    request.response.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   }
   return h.continue
 }
@@ -114,6 +129,7 @@ const init = async server => {
 
   // Add additional data used by all pages
   server.ext('onPreResponse', additionalPageData)
+  server.ext('onPreResponse', addDefaultHeaders)
 
   // Register the dynamic routes
   await server.route(routes)
