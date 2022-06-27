@@ -1,14 +1,14 @@
-import { isOrganization } from '../common/is-organization/is-organization.js'
+import { isOrganisation } from '../common/is-organisation/is-organisation.js'
 import { contactURIs } from '../../../uris.js'
 import { checkData } from '../common/common.js'
 import { getContactAccountData, setContactAccountData } from '../common/account/account.js'
-const { IS_ORGANIZATION } = contactURIs.APPLICANT
+const { IS_ORGANISATION } = contactURIs.APPLICANT
 
-export const getApplicantOrganizationData = request => getContactAccountData('APPLICANT', 'APPLICANT_ORGANIZATION')(request)
-export const setApplicantOrganizationData = request => setContactAccountData('APPLICANT_ORGANIZATION')(request)
+export const getApplicantOrganisationData = request => getContactAccountData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+export const setApplicantOrganisationData = request => setContactAccountData('APPLICANT_ORGANISATION')(request)
 
-export const applicantOrganisation = isOrganization(IS_ORGANIZATION,
+export const applicantOrganisation = isOrganisation(IS_ORGANISATION,
   checkData,
-  getApplicantOrganizationData,
-  IS_ORGANIZATION,
-  setApplicantOrganizationData)
+  getApplicantOrganisationData,
+  IS_ORGANISATION,
+  setApplicantOrganisationData)

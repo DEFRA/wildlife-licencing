@@ -1721,8 +1721,8 @@ components:
     accountRoles:
       type: string
       enum:
-        - APPLICANT-ORGANIZATION
-        - ECOLOGIST-ORGANIZATION
+        - APPLICANT-ORGANISATION
+        - ECOLOGIST-ORGANISATION
 
     applications:
       type: array

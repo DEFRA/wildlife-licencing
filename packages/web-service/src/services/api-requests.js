@@ -9,8 +9,8 @@ const contactRoles = {
 }
 
 const accountRoles = {
-  'APPLICANT-ORGANIZATION': 'APPLICANT-ORGANIZATION',
-  'ECOLOGIST-ORGANIZATION': 'ECOLOGIST-ORGANIZATION'
+  'APPLICANT-ORGANISATION': 'APPLICANT-ORGANISATION',
+  'ECOLOGIST-ORGANISATION': 'ECOLOGIST-ORGANISATION'
 }
 
 const getContactByApplicationId = async (role, applicationId) => {
@@ -296,14 +296,14 @@ export const APIRequests = {
     update: async (applicationId, applicant) => updateContact(contactRoles.ECOLOGIST, applicationId, applicant),
     findByUser: async userId => findContactByUser(contactRoles.ECOLOGIST, userId)
   },
-  APPLICANT_ORGANIZATION: {
-    create: async (applicationId, payload) => createAccount(accountRoles['APPLICANT-ORGANIZATION'], applicationId, payload),
-    unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANIZATION'], applicationId),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANIZATION'], applicationId)
+  APPLICANT_ORGANISATION: {
+    create: async (applicationId, payload) => createAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, payload),
+    unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANISATION'], applicationId)
   },
-  ECOLOGIST_ORGANIZATION: {
-    create: async (applicationId, payload) => createAccount(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId, payload),
-    unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANIZATION'], applicationId)
+  ECOLOGIST_ORGANISATION: {
+    create: async (applicationId, payload) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, payload),
+    unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId)
   }
 }

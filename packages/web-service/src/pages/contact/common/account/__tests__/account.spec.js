@@ -6,7 +6,7 @@ describe('account', () => {
         APPLICANT: {
           getByApplicationId: jest.fn(() => ({ fullName: 'Bloggs' }))
         },
-        APPLICANT_ORGANIZATION: {
+        APPLICANT_ORGANISATION: {
           getByApplicationId: jest.fn(() => ({ name: '123 Ltd.' }))
         }
       }
@@ -20,7 +20,7 @@ describe('account', () => {
       })
     }
     const { getContactAccountData } = await import('../account.js')
-    const exampleGetAccountData = getContactAccountData('APPLICANT', 'APPLICANT_ORGANIZATION')
+    const exampleGetAccountData = getContactAccountData('APPLICANT', 'APPLICANT_ORGANISATION')
     const result = await exampleGetAccountData(request)
     expect(result).toEqual({
       contact: {
@@ -36,7 +36,7 @@ describe('account', () => {
     const mockCreate = jest.fn()
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT_ORGANIZATION: {
+        APPLICANT_ORGANISATION: {
           create: mockCreate
         }
       }
@@ -49,24 +49,24 @@ describe('account', () => {
         })),
         getPageData: jest.fn(() => ({
           payload: {
-            'is-organization': 'yes',
-            'organization-name': 'XYZ ltd.'
+            'is-organisation': 'yes',
+            'organisation-name': 'XYZ ltd.'
           }
         }))
       })
     }
 
     const { setContactAccountData } = await import('../account.js')
-    const exampleSetAccountData = setContactAccountData('APPLICANT_ORGANIZATION')
+    const exampleSetAccountData = setContactAccountData('APPLICANT_ORGANISATION')
     await exampleSetAccountData(request)
     expect(mockCreate).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb', { name: 'XYZ ltd.' })
   })
 
-  it('setContactAccountData removes the applicant organization from the database', async () => {
+  it('setContactAccountData removes the applicant organisation from the database', async () => {
     const mockUnAssign = jest.fn()
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT_ORGANIZATION: {
+        APPLICANT_ORGANISATION: {
           unAssign: mockUnAssign
         }
       }
@@ -79,13 +79,13 @@ describe('account', () => {
         })),
         getPageData: jest.fn(() => ({
           payload: {
-            'is-organization': 'no'
+            'is-organisation': 'no'
           }
         }))
       })
     }
     const { setContactAccountData } = await import('../account.js')
-    const exampleSetAccountData = setContactAccountData('APPLICANT_ORGANIZATION')
+    const exampleSetAccountData = setContactAccountData('APPLICANT_ORGANISATION')
     await exampleSetAccountData(request)
 
     expect(mockUnAssign).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb')

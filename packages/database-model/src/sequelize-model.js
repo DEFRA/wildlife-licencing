@@ -342,8 +342,8 @@ const createModels = async () => {
   await models.contactRoles.upsert({ contactRole: 'APPLICANT' })
   await models.contactRoles.upsert({ contactRole: 'ECOLOGIST' })
   await models.contactRoles.upsert({ contactRole: 'NAMED-INDIVIDUAL' })
-  await models.accountRoles.upsert({ accountRole: 'APPLICANT-ORGANIZATION' })
-  await models.accountRoles.upsert({ accountRole: 'ECOLOGIST-ORGANIZATION' })
+  await models.accountRoles.upsert({ accountRole: 'APPLICANT-ORGANISATION' })
+  await models.accountRoles.upsert({ accountRole: 'ECOLOGIST-ORGANISATION' })
 
   debug('Created database model')
 }

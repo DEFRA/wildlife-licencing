@@ -16,5 +16,5 @@ export const setContactData = contact => async request => {
     fullName: pageData.payload.name
   })
 
-  await request.cache().clearPageData(contactURIs[contact].IS_ORGANIZATION.page)
+  await request.cache().clearPageData(contactURIs[contact].IS_ORGANISATION.page)
 }

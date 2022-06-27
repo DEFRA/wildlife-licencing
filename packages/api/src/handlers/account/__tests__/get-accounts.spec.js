@@ -97,8 +97,8 @@ describe('The getAccounts handler', () => {
       }
     }))
     const getAccounts = (await import('../get-accounts.js')).default
-    await getAccounts({ }, { query: { role: 'ECOLOGIST-ORGANIZATION' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('and aa.account_role = \'ECOLOGIST-ORGANIZATION\''), expect.any(Object))
+    await getAccounts({ }, { query: { role: 'ECOLOGIST-ORGANISATION' }, path }, h)
+    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('and aa.account_role = \'ECOLOGIST-ORGANISATION\''), expect.any(Object))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

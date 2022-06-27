@@ -22,13 +22,13 @@ export const contactURIs = {
     USER: { uri: '/ecologist-user', page: 'ecologist-user' },
     NAMES: { uri: '/ecologist-names', page: 'ecologist-names' },
     NAME: { uri: '/ecologist-name', page: 'ecologist-name' },
-    IS_ORGANIZATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' }
+    IS_ORGANISATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' }
   },
   APPLICANT: {
     USER: { uri: '/applicant-user', page: 'applicant-user' },
     NAMES: { uri: '/applicant-names', page: 'applicant-names' },
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
-    IS_ORGANIZATION: { uri: '/applicant-organisation', page: 'applicant-organisation' }
+    IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' }
   }
 }
 
