@@ -18,8 +18,8 @@ import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
-import { applicantCompany } from '../pages/contact/applicant/applicant-company.js'
-import { ecologistCompany } from '../pages/contact/ecologist/ecologist-company.js'
+import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
+import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
 
 const routes = [
   ...applications,
@@ -39,11 +39,11 @@ const routes = [
   ...applicantUser,
   ...applicantName,
   ...applicantNames,
-  ...applicantCompany,
+  ...applicantOrganisation,
   ...ecologistUser,
   ...ecologistName,
   ...ecologistNames,
-  ...ecologistCompany,
+  ...ecologistOrganisation,
   signOut,
   ...miscRoutes
 ]
