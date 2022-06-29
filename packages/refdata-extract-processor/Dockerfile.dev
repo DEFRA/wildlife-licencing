@@ -6,3 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+
+USER root
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
