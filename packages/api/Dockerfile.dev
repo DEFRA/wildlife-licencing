@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . .
 RUN npm ci
 EXPOSE 3000
-CMD ["node", "src/api-service.js"]
+CMD [ "node", "src/api-service.js" ]
