@@ -81,7 +81,6 @@ services:
     env_file:
       - "./env/scan.env"
     deploy:
-      mode: global
       restart_policy:
         condition: on-failure
     volumes:

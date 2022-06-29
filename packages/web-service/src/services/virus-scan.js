@@ -3,7 +3,6 @@ import NodeClam from 'clamscan'
 const options = {
   removeInfected: false,
   scanRecursively: false,
-  debug_mode: true,
   clamscan: {
     path: '/usr/bin/clamscan', // Path to clamscan binary on your server
     db: null, // Path to a custom virus definition database
@@ -13,11 +12,9 @@ const options = {
   clamdscan: {
     socket: null,
     host: 'host.docker.internal',
-    config_file: '/etc/clamav/clamd.conf',
     port: 3310,
     timeout: 60000,
-    localFallback: true,
-    multiscan: true,
+    multiscan: false,
     active: true,
     path: '/usr/bin/clamdscan'
   },
@@ -26,15 +23,17 @@ const options = {
 
 const ClamScan = new NodeClam().init(JSON.parse(JSON.stringify(options)))
 
-export default async function ScanFile (filename = 'eicar.com') {
+export async function scanFile (filename) {
   ClamScan.then(async (clamscan) => {
-    try {
-      const { file, isInfected, viruses } = await clamscan.isInfected(`/scandir/${filename}`)
-      console.log(file, isInfected, viruses)
-    } catch (err) {
-      console.log(err)
+    if (filename.length > 0) {
+      try {
+        const { isInfected } = await clamscan.isInfected(`/scandir/${filename}`)
+        return isInfected
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      throw new Error('File name must be provided')
     }
   })
 }
-
-ScanFile()
