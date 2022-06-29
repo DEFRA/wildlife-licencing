@@ -24,10 +24,10 @@ const options = {
 const ClamScan = new NodeClam().init(JSON.parse(JSON.stringify(options)))
 
 export async function scanFile (filename) {
-  ClamScan.then(async (clamscan) => {
+  return ClamScan.then(async (clamscan) => {
     if (filename.length > 0) {
       try {
-        const { isInfected } = await clamscan.isInfected(`/scandir/${filename}`)
+        const { isInfected } = await clamscan.isInfected(`./${filename}`)
         return isInfected
       } catch (err) {
         console.error(err)
