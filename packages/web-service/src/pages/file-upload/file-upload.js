@@ -3,8 +3,8 @@ import { FILE_UPLOAD } from '../../uris.js'
 import fs from 'fs'
 
 const setData = (request) => {
-  const currentFileName = process.env.SCAN_DIR + '/' + request.payload['file-upload'].path.split('\\').pop()
-  const newFileName = process.env.SCAN_DIR + '/' + request.payload['file-upload'].filename
+  const currentFileName = process.env.SCANNING_DIR + '/' + request.payload['file-upload'].path.split('\\').pop()
+  const newFileName = process.env.SCANNING_DIR + '/' + request.payload['file-upload'].filename
 
   fs.rename(currentFileName, newFileName, (err) => {
     if (err) console.log('ERROR: ' + err)
@@ -38,7 +38,7 @@ const fileUploadPageRoute = (view, path, checkData, getData, completion, setData
       },
       payload: {
         maxBytes: process.env.MAX_FILE_UPLOAD * 1_000_000,
-        uploads: 'tmp',
+        uploads: process.env.SCANNING_DIR,
         multipart: {
           output: 'file'
         },
