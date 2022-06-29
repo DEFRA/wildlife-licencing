@@ -1,14 +1,23 @@
 import handler from '../../handlers/page-handler.js'
 import { FILE_UPLOAD } from '../../uris.js'
+import { scanFile } from '../../services/virus-scan.js'
 import fs from 'fs'
 
-const setData = (request) => {
+const setData = async (request) => {
   const currentFileName = process.env.SCANNING_DIR + '/' + request.payload['file-upload'].path.split('\\').pop()
-  const newFileName = process.env.SCANNING_DIR + '/' + request.payload['file-upload'].filename
 
-  fs.rename(currentFileName, newFileName, (err) => {
-    if (err) console.log('ERROR: ' + err)
+  // We need to take a filename like: hello.txt
+  // And rename it to something like: {applicationId}.{unixTimestamp}.{originalFileName}
+  const journeyData = await request.cache().getData()
+  const applicationId = journeyData.applicationId
+  const newFileName = process.env.SCANNING_DIR + '/' + applicationId + '.' + (+new Date()) + '.' + request.payload['file-upload'].filename
+
+  fs.renameSync(currentFileName, newFileName, (err) => {
+    if (err) { console.err(err) }
   })
+
+  const doesFileHaveAVirus = await scanFile(newFileName)
+  console.log(doesFileHaveAVirus)
 }
 
 const fileUploadPageRoute = (view, path, checkData, getData, completion, setData) => [
