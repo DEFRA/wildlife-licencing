@@ -14,10 +14,22 @@ import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionS
 import { powerAppsReadStream } from './powerapps-read-stream.js'
 
 /* Applications */
-const applicationRequestPath = buildRequestPath(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
-const applicationTableSet = createTableSet(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
+const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
+const applicationTableSet = createTableSet(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
 const applicationObjectTransformer = buildObjectTransformer(SddsApplication, applicationTableSet)
 export const applicationReadStream = () => powerAppsReadStream(applicationRequestPath, applicationObjectTransformer)
+
+/* Contacts */
+const contactsRequestPath = buildRequestPath(Contact)
+const contactsTableSet = createTableSet(Contact)
+const contactsObjectTransformer = buildObjectTransformer(Contact, contactsTableSet)
+export const contactsReadStream = () => powerAppsReadStream(contactsRequestPath, contactsObjectTransformer)
+
+/* Contacts */
+const accountsRequestPath = buildRequestPath(Account)
+const accountsTableSet = createTableSet(Account)
+const accountsObjectTransformer = buildObjectTransformer(Account, accountsTableSet)
+export const accountsReadStream = () => powerAppsReadStream(accountsRequestPath, accountsObjectTransformer)
 
 /* Sites */
 const sitesRequestPath = buildRequestPath(SddsSite)

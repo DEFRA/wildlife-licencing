@@ -23,7 +23,6 @@ export const writeSiteObject = async (obj, ts) => {
       if ((s.updateStatus === 'P' && ts > s.updatedAt) || (s.updateStatus === 'U' && hash(data.sites) !== hash(s.site))) {
         await models.sites.update({
           site: data.sites,
-          targetKeys: (({ contentId, ...t }) => t)(keys[0]),
           updateStatus: 'U'
         }, {
           where: {
@@ -41,7 +40,6 @@ export const writeSiteObject = async (obj, ts) => {
       await models.sites.create({
         id: baseKey.apiKey,
         site: data.sites,
-        targetKeys: (({ contentId, ...t }) => t)(keys[0]),
         updateStatus: 'U',
         sddsSiteId: baseKey.powerAppsKey
       })

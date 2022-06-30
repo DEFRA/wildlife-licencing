@@ -41,7 +41,6 @@ export const writeApplicationObject = async (obj, ts) => {
       if ((a.updateStatus === 'P' && ts > a.updatedAt) || (a.updateStatus === 'U' && hash(data.application) !== hash(a.application))) {
         await models.applications.update({
           application: data.application,
-          targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
           updateStatus: 'U'
         }, {
           where: {
@@ -59,7 +58,6 @@ export const writeApplicationObject = async (obj, ts) => {
       await models.applications.create({
         id: baseKey.apiKey,
         application: data.application,
-        targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
         updateStatus: 'U',
         sddsApplicationId: baseKey.powerAppsKey
       })

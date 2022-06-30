@@ -2,6 +2,8 @@ import { applicationUpdate } from './batch-update/application-update.js'
 import {
   applicationReadStream,
   sitesReadStream,
+  contactsReadStream,
+  accountsReadStream,
   applicationSitesReadStream,
   applicationTypesReadStream,
   applicationPurposesReadStream,
@@ -15,6 +17,8 @@ export {
   applicationUpdate,
   applicationReadStream,
   sitesReadStream,
+  contactsReadStream,
+  accountsReadStream,
   applicationSitesReadStream,
   applicationPurposesReadStream,
   applicationTypesReadStream,
