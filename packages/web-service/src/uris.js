@@ -42,3 +42,6 @@ export const ERRORS = {
 export const FILE_UPLOAD = {
   uri: '/file-upload', page: 'file-upload'
 }
+export const CHECK_YOUR_ANSWERS = {
+  uri: '/check-your-answers', page: 'check-your-answers'
+}

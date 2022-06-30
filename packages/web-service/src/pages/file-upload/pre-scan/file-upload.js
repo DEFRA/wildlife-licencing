@@ -1,25 +1,44 @@
-import handler from '../../handlers/page-handler.js'
-import { FILE_UPLOAD } from '../../uris.js'
-import { scanFile } from '../../services/virus-scan.js'
+import handler from '../../../handlers/page-handler.js'
+import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
+import { scanFile } from '../../../services/virus-scan.js'
+import Joi from 'joi'
 import fs from 'fs'
 
 const setData = async (request) => {
   const currentFileName = process.env.SCANNING_DIR + '/' + request.payload['file-upload'].path.split('\\').pop()
 
   // We need to take a filename like: hello.txt
-  // And rename it to something like: {applicationId}.{unixTimestamp}.{originalFileName}
-  const journeyData = await request.cache().getData()
-  const applicationId = journeyData.applicationId
-  const newFileName = process.env.SCANNING_DIR + '/' + applicationId + '.' + (+new Date()) + '.' + request.payload['file-upload'].filename
+  // And rename it to something like: {unixTimestamp}.{originalFileName}
+  // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
+  // It also stops collisions if multiple users all upload files with the same name
+  const newFileName = process.env.SCANNING_DIR + '/' + (+new Date()) + '.' + request.payload['file-upload'].filename
 
   fs.renameSync(currentFileName, newFileName, (err) => {
     if (err) { console.err(err) }
   })
 
-  const doesFileHaveAVirus = await scanFile(newFileName)
-  console.log(doesFileHaveAVirus)
+  const virusPresent = await scanFile(newFileName)
+  await request.cache().setPageData({ virusPresent })
 }
 
+const completion = async (request) => {
+  const { virusPresent } = await request.cache().getPageData()
+
+  if (virusPresent) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Unauthorized: email address not found',
+      path: ['scan-file'],
+      type: 'unauthorized',
+      context: {
+        label: 'scan-file',
+        value: 'I dont get this but I think I need it',
+        key: 'scan-file'
+      }
+    }], null)
+  } else {
+    return CHECK_YOUR_ANSWERS.uri
+  }
+}
 const fileUploadPageRoute = (view, path, checkData, getData, completion, setData) => [
   {
     method: 'GET',
@@ -58,4 +77,4 @@ const fileUploadPageRoute = (view, path, checkData, getData, completion, setData
   }
 ]
 
-export const fileUpload = fileUploadPageRoute(FILE_UPLOAD.page, FILE_UPLOAD.uri, null, null, FILE_UPLOAD.uri, setData)
+export const fileUpload = fileUploadPageRoute(FILE_UPLOAD.page, FILE_UPLOAD.uri, null, null, completion, setData)
