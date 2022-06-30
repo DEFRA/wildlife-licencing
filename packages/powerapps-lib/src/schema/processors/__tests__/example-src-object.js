@@ -1,78 +1,89 @@
 export const srcObj = {
   application: {
-    id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
-    applicationReferenceNumber: '2022-500000-EPS-MIT',
-    proposalDescription: 'Badgers are proposed to be moved',
-    detailsOfConvictions: 'no convictions',
-    licenceReason: 'need to move some badgers',
-    applicationType: 'MIT BAT A045',
-    applicationPurpose: 'Keeping badgers in zoological gardens or collections',
-    applicationCategory: 100000001,
-    applicant: {
-      fullName: 'Bob Slaigh',
-      address: {
-        houseNumber: '2123',
-        addrline1: 'the grove',
-        addrline2: 'henleaze',
-        county: 'bristol',
-        town: 'briztol',
-        postcode: 'bs1999'
-      },
-      contactDetails: {
-        email: 'me@email.com',
-        phone: '16542'
-      }
+    data: {
+      id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
+      applicationReferenceNumber: '2022-500000-EPS-MIT',
+      proposalDescription: 'Badgers are proposed to be moved',
+      detailsOfConvictions: 'no convictions',
+      licenceReason: 'need to move some badgers',
+      applicationType: 'MIT BAT A045',
+      applicationPurpose: 'Keeping badgers in zoological gardens or collections',
+      applicationCategory: 100000001
     },
-    ecologist: {
-      fullName: 'Mr Brian Yak',
-      address: {
-        houseNumber: '2123',
-        addrline1: 'Old Hill',
-        addrline2: 'Stapleton',
-        addrline3: 'Nr. Bristol',
-        county: 'Somerset',
-        town: 'Bristol',
-        postcode: 'bs11 1pw'
+    keys: {
+      apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
+      sddsKey: null
+    },
+    applicant: {
+      data: {
+        fullName: 'Bob Slaigh',
+        address: {
+          houseNumber: '2123',
+          addrline1: 'the grove',
+          addrline2: 'henleaze',
+          county: 'bristol',
+          town: 'briztol',
+          postcode: 'bs1999'
+        },
+        contactDetails: {
+          email: 'me@email.com',
+          phone: '16542'
+        }
       },
-      contactDetails: {
-        email: 'brian.yak@email.com',
-        phone: '234234'
+      keys: {
+        apiKey: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+        sddsKey: null
       }
     },
     sites: [
       {
-        id: '842fc15b-2858-4349-86ea-b33a0629a30b',
-        name: 'The badger set 1',
-        address: {
-          houseNumber: 'The fields',
-          addrline1: 'Winscombe',
-          county: 'Somerset',
-          postcode: 'bs21 2XX'
+        data: {
+          name: 'The badger set 1',
+          address: {
+            houseNumber: 'The fields',
+            addrline1: 'Winscombe',
+            county: 'Somerset',
+            postcode: 'bs21 2XX'
+          },
+          gridReference: '7868962'
         },
-        gridReference: '7868962'
+        keys: {
+          apiKey: '842fc15b-2858-4349-86ea-b33a0629a30b',
+          sddsKey: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'
+        }
       },
       {
-        id: '15385397-6df3-45f8-9c98-4551815bbfa0',
-        name: 'The badger set 2',
-        address: {
-          houseNumber: 'The fields',
-          addrline1: 'Winscombe',
-          addrline2: null, // Explicit set of null
-          county: 'Somerset',
-          postcode: 'bs22 2XX'
+        data: {
+          name: 'The badger set 2',
+          address: {
+            houseNumber: 'The fields',
+            addrline1: 'Winscombe',
+            addrline2: null, // Explicit set of null
+            county: 'Somerset',
+            postcode: 'bs22 2XX'
+          },
+          gridReference: '7868962'
         },
-        gridReference: '7868962'
+        keys: {
+          apiKey: '15385397-6df3-45f8-9c98-4551815bbfa0',
+          sddsKey: null
+        }
       },
       {
-        id: '27e20450-f414-445e-995b-8d7caf53ab2c',
-        name: 'The badger set 3',
-        address: {
-          houseNumber: 'The fields',
-          addrline1: 'Winscombe',
-          county: 'Somerset',
-          postcode: 'bs23 2XX'
+        data: {
+          name: 'The badger set 3',
+          address: {
+            houseNumber: 'The fields',
+            addrline1: 'Winscombe',
+            county: 'Somerset',
+            postcode: 'bs23 2XX'
+          },
+          gridReference: '786896'
         },
-        gridReference: '786896'
+        keys: {
+          apiKey: '27e20450-f414-445e-995b-8d7caf53ab2c',
+          sddsKey: null
+        }
       }
     ]
   }
@@ -167,7 +178,7 @@ export const initialGeneratedAssignmentsObject = [
       sdds_name: 'The badger set 1'
     }),
     contentId: 1,
-    method: 'POST',
+    method: 'PATCH',
     table: 'sdds_sites'
   }),
   expect.objectContaining({
@@ -195,14 +206,6 @@ export const initialGeneratedAssignmentsObject = [
     table: 'contacts'
   }),
   expect.objectContaining({
-    assignments: expect.objectContaining({
-      emailaddress1: 'brian.yak@email.com'
-    }),
-    contentId: 5,
-    method: 'POST',
-    table: 'contacts'
-  }),
-  expect.objectContaining({
     assignments: {
       'sdds_applicantid@odata.bind': '$4',
       sdds_applicationcategory: 100000001,
@@ -212,10 +215,9 @@ export const initialGeneratedAssignmentsObject = [
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
       sdds_detailsofconvictions: 'no convictions',
-      'sdds_ecologistid@odata.bind': '$5',
       sdds_whydoyouneedalicence: 'need to move some badgers'
     },
-    contentId: 6,
+    contentId: 5,
     method: 'POST',
     table: 'sdds_applications'
   }),
@@ -223,25 +225,25 @@ export const initialGeneratedAssignmentsObject = [
     assignments: {
       '@odata.id': '$1'
     },
-    contentId: 7,
+    contentId: 6,
     method: 'POST',
-    table: '$6/sdds_application_sdds_site_sdds_site/$ref'
+    table: '$5/sdds_application_sdds_site_sdds_site/$ref'
   }),
   expect.objectContaining({
     assignments: {
       '@odata.id': '$2'
     },
-    contentId: 8,
+    contentId: 7,
     method: 'POST',
-    table: '$6/sdds_application_sdds_site_sdds_site/$ref'
+    table: '$5/sdds_application_sdds_site_sdds_site/$ref'
   }),
   expect.objectContaining({
     assignments: {
       '@odata.id': '$3'
     },
-    contentId: 9,
+    contentId: 8,
     method: 'POST',
-    table: '$6/sdds_application_sdds_site_sdds_site/$ref'
+    table: '$5/sdds_application_sdds_site_sdds_site/$ref'
   })
 ]
 

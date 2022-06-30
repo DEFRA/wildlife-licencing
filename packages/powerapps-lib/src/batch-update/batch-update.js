@@ -7,24 +7,22 @@ const debug = db('powerapps-lib:batch-update')
 
 /**
  * Update/insert data to microsoft powerapps
- * @returns {Promise<void>} - the key object to write down into the database
+ * @returns {Promise<[]>} - the key object to write down into the database
  * Throws either a recoverable or an unrecoverable error depending on the status
  * (1) 5XX are all recoverable
  * (2) 4XX are all unrecoverable except authorization errors 401 and client timeout 408
  * (3) Unexpected errors such as network errors are recoverable
  * Redirections (3XX are not expected)
- * @param srcJson - A JSON structure holding the JSON data to be transformed and POSTED to Power Apps
- * @param targetKeysJson - A JSON structure holding the target key data - for an update PATCH
- * @param model - The model to use to create the batch update
+ * @param payload - A JSON structure holding the JSON data to be transformed and POSTED to Power Apps
  */
-export const batchUpdate = async (srcObj, targetKeys, tableSet) => {
+export const batchUpdate = async (payload, tableSet) => {
   const requestHandle = openBatchRequest(tableSet, clientUrl)
-  const batchRequestBody = await createBatchRequest(requestHandle, srcObj, targetKeys)
+  const batchRequestBody = await createBatchRequest(requestHandle, payload)
   debug(`Batch request body for batchId ${requestHandle.batchId}: \n---Start ---\n${batchRequestBody}\n---End ---`)
   try {
     const responseText = await POWERAPPS.batchRequest(requestHandle, batchRequestBody)
     debug(`Batch request response body for batchId ${requestHandle.batchId}:  \n---Start ---\n${responseText}\n---End ---`)
-    return createKeyObject(requestHandle, responseText, targetKeys)
+    return createKeyObject(requestHandle, responseText, payload)
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
       if (err.response.status === 401 || err.response.status === 408 || err.response.status >= 500) {

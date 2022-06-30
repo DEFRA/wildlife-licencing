@@ -45,21 +45,17 @@ describe('the schema processes', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [Contact, Account])
-      const ecologist = tableSet.find(ts => ts.basePath === 'application.ecologist')
-      const applicationPayload = await createTableColumnsPayload(ecologist, srcObj)
-      expect(applicationPayload).toEqual({
-        relationshipsPayload: null,
-        columnPayload: {
-          lastname: 'Mr Brian Yak',
-          telephone1: '234234',
-          emailaddress1: 'brian.yak@email.com',
-          address1_line1: 'Old Hill',
-          address1_line2: 'Stapleton',
-          address1_line3: 'Nr. Bristol',
-          address1_county: 'Somerset',
-          address1_city: 'Bristol',
-          address1_postalcode: 'BS11 1PW'
-        }
+      const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
+      const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
+      expect(columnPayload).toEqual({
+        address1_city: 'briztol',
+        address1_county: 'bristol',
+        address1_line1: 'the grove',
+        address1_line2: 'henleaze',
+        address1_postalcode: 'BS1999',
+        emailaddress1: 'me@email.com',
+        lastname: 'Bob Slaigh',
+        telephone1: '16542'
       })
     })
 
@@ -217,18 +213,11 @@ describe('the schema processes', () => {
   })
 
   describe('the createBatchRequestObjects function', () => {
-    it('can produce a set of insert objects from a table set and source data', async () => {
+    it('can produce a set of insert and objects from a table set and source data', async () => {
       const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
-      const results = await createBatchRequestObjects(srcObj, initialKeys, tableSet)
+      const results = await createBatchRequestObjects(srcObj, tableSet)
       expect(results).toEqual(initialGeneratedAssignmentsObject)
-    })
-
-    it('can produce a set of update objects from a table set and source data', async () => {
-      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
-      const results = await createBatchRequestObjects(srcObj, updateKeys, tableSet)
-      expect(results).toEqual(updatedGeneratedAssignmentsObject)
     })
   })
 

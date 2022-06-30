@@ -85,7 +85,6 @@ async function defineSites (sequelize) {
   models.sites = await sequelize.define('sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
     site: { type: DataTypes.JSONB },
-    targetKeys: { type: DataTypes.JSONB },
     sddsSiteId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
@@ -101,7 +100,6 @@ async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
     application: { type: DataTypes.JSONB },
-    targetKeys: { type: DataTypes.JSONB },
     sddsApplicationId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }

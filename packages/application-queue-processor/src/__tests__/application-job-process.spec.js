@@ -8,7 +8,6 @@ jest.mock('@defra/wls-queue-defs', () => ({
   queueDefinitions: { APPLICATION_QUEUE: {} }
 }))
 
-const siteId = '883feb82-dd3c-461b-a8c2-4ce47cfb4d6a'
 const applicationId = 'b1847e67-07fa-4c51-af03-cb51f5126939'
 
 const job = {
@@ -16,83 +15,6 @@ const job = {
     applicationId
   }
 }
-
-const applicationResultInitial = {
-  dataValues: {
-    id: applicationId,
-    application: { foo: 'bar' },
-    targetKeys: null,
-    sddsApplicationId: null,
-    submitted: null
-  }
-}
-
-const applicationSitesResultInitial = [{
-  dataValues: {
-    id: '79015868-4149-420c-90f5-356dc2d06184',
-    applicationId: applicationId,
-    siteId: siteId,
-    sddsApplicationId: null,
-    sddsSiteId: null
-  }
-}]
-
-const sitesResultInitial = [{
-  dataValues: {
-    id: siteId,
-    site: { foo: 'bar2' },
-    targetKeys: null,
-    sddsSiteId: null
-  }
-}]
-
-const applicationKeys = [
-  {
-    apiKey: applicationResultInitial.dataValues.id,
-    apiTable: 'applications',
-    powerAppsKey: '2b6759f9-268f-ec11-b400-000d3a8728b2',
-    powerAppsTable: 'sdds_applications'
-  },
-  {
-    apiKey: null,
-    apiTable: 'applications',
-    powerAppsKey: '296759f9-268f-ec11-b400-000d3a8728b2',
-    powerAppsTable: 'contacts'
-  }
-]
-
-const siteKey = {
-  apiKey: sitesResultInitial[0].dataValues.id,
-  apiTable: 'sites',
-  powerAppsKey: '286759f9-268f-ec11-b400-000d3a8728b2',
-  powerAppsTable: 'sdds_sites'
-}
-
-const targetKeyResponse = [
-  {
-    apiTable: 'applications',
-    apiKey: '4fd6f85a-10bf-4bef-be97-d9737e1bc381',
-    apiBasePath: 'application',
-    powerAppsTable: 'sdds_applications',
-    contentId: 3,
-    powerAppsKey: '7ca97d43-0390-ec11-b400-000d3a872ae7'
-  },
-  {
-    apiTable: 'applications',
-    apiKey: null,
-    apiBasePath: 'application.applicant',
-    powerAppsTable: 'contacts',
-    contentId: 2,
-    powerAppsKey: '2f9216b9-0990-ec11-b400-000d3a8728b2'
-  }, {
-    apiTable: 'sites',
-    apiKey: 'f4ee294d-2c94-4868-93c3-80467a737f7b',
-    apiBasePath: 'application.sites',
-    powerAppsTable: 'sdds_sites',
-    contentId: 1,
-    powerAppsKey: 'ad748889-0390-ec11-b400-000d3a8728b2'
-  }
-]
 
 describe('The application job processor', () => {
   beforeEach(() => jest.resetModules())
@@ -110,79 +32,129 @@ describe('The application job processor', () => {
       expect(result).toBeNull()
     })
 
-    it('correctly creates a simple application with no sites and no keys', async () => {
+    it('correctly creates a application payload', async () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
-          applications: { findByPk: jest.fn(() => applicationResultInitial) },
-          applicationSites: { findAll: jest.fn(() => []) }
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: { findAll: jest.fn(() => []) },
+          applicationContacts: { findAll: jest.fn(() => []) }
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const { data, keys } = await buildApiObject(job.data.applicationId)
-      expect(data).toEqual({ application: { id: job.data.applicationId, foo: 'bar' } })
-      const expectedKeys = [{ apiKey: job.data.applicationId, apiTable: 'applications', apiBasePath: 'application', powerAppsTable: 'sdds_applications' }]
-      expect(keys).toEqual(expectedKeys)
-    })
-
-    it('correctly creates an application with sites and no keys', async () => {
-      jest.doMock('@defra/wls-database-model', () => ({
-        models: {
-          applications: { findByPk: jest.fn(() => applicationResultInitial) },
-          applicationSites: { findAll: jest.fn(() => applicationSitesResultInitial) },
-          sites: { findAll: jest.fn(() => sitesResultInitial) }
-        }
-      }))
-      const { buildApiObject } = await import('../application-job-process.js')
-      const { data, keys } = await buildApiObject(job.data.applicationId)
-      expect(data).toEqual({
+      const payload = await buildApiObject(job.data.applicationId)
+      expect(payload).toEqual({
         application: {
-          id: job.data.applicationId,
-          foo: 'bar',
-          sites: [{ id: siteId, foo: 'bar2' }]
+          data: { foo: 'bar' },
+          keys: {
+            apiKey: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+            sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+          }
         }
       })
-      const expectedKeys = [
-        { apiKey: job.data.applicationId, apiTable: 'applications', apiBasePath: 'application', powerAppsTable: 'sdds_applications' },
-        { apiKey: siteId, apiTable: 'sites', apiBasePath: 'application.sites', powerAppsTable: 'sdds_sites' }
-      ]
-      expect(keys).toEqual(expectedKeys)
     })
 
-    it('correctly creates an application with sites and keys', async () => {
-      const applicationResultKeys = Object.assign({}, applicationResultInitial)
-      applicationResultKeys.dataValues.targetKeys = applicationKeys
-      const sitesResultKeys = Object.assign([], sitesResultInitial)
-      sitesResultKeys[0].dataValues.targetKeys = siteKey
+    it('correctly creates a application payload with an applicant', async () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
-          applications: { findByPk: jest.fn(() => applicationResultKeys) },
-          applicationSites: { findAll: jest.fn(() => applicationSitesResultInitial) },
-          sites: { findAll: jest.fn(() => sitesResultKeys) }
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: { findAll: jest.fn(() => []) },
+          applicationContacts: { findAll: jest.fn(() => [{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb' }]) },
+          contacts: {
+            findByPk: jest.fn(() => ({
+              id: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+              sddsContactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+              contact: { name: 'contact 1' }
+            }))
+          }
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      const { keys } = await buildApiObject(job.data.applicationId)
-      const expectedKeys = [
-        {
-          apiKey: applicationId,
-          apiTable: 'applications',
-          powerAppsKey: '2b6759f9-268f-ec11-b400-000d3a8728b2',
-          powerAppsTable: 'sdds_applications'
-        },
-        {
-          apiKey: null,
-          apiTable: 'applications',
-          powerAppsKey: '296759f9-268f-ec11-b400-000d3a8728b2',
-          powerAppsTable: 'contacts'
-        },
-        {
-          apiKey: siteId,
-          apiTable: 'sites',
-          powerAppsKey: '286759f9-268f-ec11-b400-000d3a8728b2',
-          powerAppsTable: 'sdds_sites'
+      const payload = await buildApiObject(job.data.applicationId)
+      expect(payload).toEqual(expect.objectContaining({
+        application:
+          {
+            data: { foo: 'bar' },
+            keys: {
+              apiKey: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            },
+            applicant:
+              {
+                data: { name: 'contact 1' },
+                keys: {
+                  apiKey: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+                  sddsKey: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+                }
+              }
+          }
+      }
+      ))
+    })
+
+    it('correctly creates an application with sites', async () => {
+      jest.doMock('@defra/wls-database-model', () => ({
+        models: {
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationContacts: {
+            findAll: jest.fn(() => [])
+          },
+          applicationSites: {
+            findAll: jest.fn(() => [{
+              id: '79015868-4149-420c-90f5-356dc2d06184',
+              applicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              siteId: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              sddsSiteId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
+            }])
+          },
+          sites: {
+            findAll: jest.fn(() => [{
+              id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+              site: { name: 'Site 1' },
+              sddsSiteId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
+            }])
+          }
         }
-      ]
-      expect(keys).toEqual(expectedKeys)
+      }))
+
+      const { buildApiObject } = await import('../application-job-process.js')
+      const payload = await buildApiObject(job.data.applicationId)
+      expect(payload).toEqual(expect.objectContaining({
+        application:
+          {
+            data: { foo: 'bar' },
+            keys:
+              {
+                apiKey: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+                sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+              },
+            sites: [{
+              data: { name: 'Site 1' },
+              keys: {
+                apiKey: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+                sddsKey: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
+              }
+            }]
+          }
+      }))
     })
 
     it('throws an error on bad data', async () => {
@@ -192,7 +164,7 @@ describe('The application job processor', () => {
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
-      await expect(async () => await buildApiObject(0)).rejects.toThrow()
+      await expect(buildApiObject(0)).rejects.toThrow()
     })
   })
 
@@ -204,54 +176,45 @@ describe('The application job processor', () => {
       }))
     })
 
-    it('Updates normally when passed a set of target keys', async () => {
+    it('Updates correctly when passed the set of target keys', async () => {
       const mockApplicationsUpdate = jest.fn(() => {})
-      const mockApplicationSitesUpdate = jest.fn(() => {})
-      const mockSitesUpdate = jest.fn(() => {})
+      const mockContactsUpdate = jest.fn(() => {})
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           applications: { update: mockApplicationsUpdate },
-          sites: { update: mockSitesUpdate },
-          applicationSites: { update: mockApplicationSitesUpdate }
+          contacts: { update: mockContactsUpdate }
         }
       }))
 
       const { postProcess } = await import('../application-job-process.js')
-      await postProcess(targetKeyResponse)
-      expect(mockApplicationsUpdate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sddsApplicationId: '7ca97d43-0390-ec11-b400-000d3a872ae7',
-          targetKeys: [
-            expect.objectContaining({ powerAppsKey: targetKeyResponse[0].powerAppsKey }),
-            expect.objectContaining({ powerAppsKey: targetKeyResponse[1].powerAppsKey })
-          ]
-        }),
-        expect.objectContaining({ where: { id: targetKeyResponse[0].apiKey } }))
-      expect(mockApplicationSitesUpdate).toHaveBeenCalledWith({
-        sddsApplicationId: targetKeyResponse[0].powerAppsKey,
-        sddsSiteId: targetKeyResponse[2].powerAppsKey
-      }, {
-        where: {
-          applicationId: targetKeyResponse[0].apiKey,
-          siteId: targetKeyResponse[2].apiKey
+      await postProcess([{
+        apiTableName: 'contacts',
+        keys: {
+          apiKey: '656f6707-13e3-459d-8f1e-b1b30df79c09',
+          sddsKey: 'f59e6275-adf7-ec11-82e6-002248c5c17e'
         }
-      })
-      expect(mockSitesUpdate).toHaveBeenCalledWith(expect.objectContaining({
-        sddsSiteId: targetKeyResponse[2].powerAppsKey,
-        targetKeys: expect.objectContaining({
-          apiKey: targetKeyResponse[2].apiKey,
-          powerAppsTable: 'sdds_sites'
-        })
-      }), {
-        where: {
-          id: targetKeyResponse[2].apiKey
+      },
+      {
+        apiTableName: 'applications',
+        keys: {
+          apiKey: 'e8fa7a0d-d8dd-4016-9ef3-1503bbffc059',
+          sddsKey: '64f65a7b-adf7-ec11-82e6-002248c5c17e'
         }
-      })
+      }
+      ])
+      expect(mockApplicationsUpdate).toHaveBeenCalledWith(expect.objectContaining({
+        sddsApplicationId: '64f65a7b-adf7-ec11-82e6-002248c5c17e',
+        updateStatus: 'P'
+      }), { where: { id: 'e8fa7a0d-d8dd-4016-9ef3-1503bbffc059' } })
+      expect(mockContactsUpdate).toHaveBeenCalledWith(expect.objectContaining({
+        sddsContactId: 'f59e6275-adf7-ec11-82e6-002248c5c17e',
+        updateStatus: 'P'
+      }), { where: { id: '656f6707-13e3-459d-8f1e-b1b30df79c09' } })
     })
 
     it('throws an error on bad data', async () => {
       const { postProcess } = await import('../application-job-process.js')
-      await expect(async () => await postProcess(0)).rejects.toThrow()
+      await expect(postProcess(0)).rejects.toThrow()
     })
   })
 
@@ -265,14 +228,24 @@ describe('The application job processor', () => {
 
     it('Resolves when no error', async () => {
       jest.doMock('@defra/wls-powerapps-lib', () => ({
-        applicationUpdate: jest.fn(() => targetKeyResponse),
+        applicationUpdate: jest.fn(() => [{
+          apiTableName: 'contacts',
+          keys: {
+            apiKey: '656f6707-13e3-459d-8f1e-b1b30df79c09',
+            sddsKey: 'f59e6275-adf7-ec11-82e6-002248c5c17e'
+          }
+        }]),
         BaseKeyMapping: BaseKeyMapping
       }))
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
-          applications: { findByPk: jest.fn(() => applicationResultInitial), update: jest.fn() },
-          applicationSites: { findAll: jest.fn(() => []), update: jest.fn() },
-          sites: { update: jest.fn() }
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -303,8 +276,15 @@ describe('The application job processor', () => {
       })
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
-          applications: { findByPk: jest.fn(() => applicationResultInitial) },
-          applicationSites: { findAll: jest.fn(() => []) }
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: { findAll: jest.fn(() => []) },
+          applicationContacts: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -321,8 +301,15 @@ describe('The application job processor', () => {
       })
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
-          applications: { findByPk: jest.fn(() => applicationResultInitial) },
-          applicationSites: { findAll: jest.fn(() => []) }
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: { findAll: jest.fn(() => []) },
+          applicationContacts: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')

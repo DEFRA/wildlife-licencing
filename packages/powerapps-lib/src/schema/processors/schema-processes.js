@@ -52,12 +52,10 @@ export const createTableSet = (table, include = [], path = table.basePath, relat
 
 /**
  * For a given table and API src data generate the set of objects which will later be rendered to
- * the update text.
- *
- * It handles the function fields and can process array data where it appears in the srcObj
- * @param table - the table to action
- * @param srcObj - The API src object
- * @returns {Promise<*[]|null>}
+ * the update text. * @param table
+ * @param srcObj
+ * @param tableSet
+ * @returns {Promise<null|*[]|{relationshipsPayload: null|{}, id: *, columnPayload: {}}>}
  */
 export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
   const result = []
@@ -68,7 +66,7 @@ export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
   }
 
   const base = get(srcObj, table.basePath)
-  // If its an array create each item in turn at the clone depth
+  // If it's an array create each item in turn at the clone depth
   if (Array.isArray(base)) {
     for (const item of base) {
       const tempObj = {}
@@ -88,16 +86,16 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   const columnPayload = { }
 
   // Look for the API id in the payload to associate with the contentId
-  const id = get(srcObj, `${table.basePath}.id`)
+  const id = get(srcObj, `${table.basePath}.keys.apiKey`)
   for (const column of table.columns) {
     if (OperationType.outbound(column.operationType)) {
       // If the path is not set then it is (only) possible to run the function un-parametrized
       if (column.srcFunc && !column.srcPath) {
         Object.assign(columnPayload, { [column.name]: await column.srcFunc() })
-      } else if (has(srcObj, `${table.basePath}.${column.srcPath}`)) {
+      } else if (has(srcObj, `${table.basePath}.data.${column.srcPath}`)) {
         // If the path is set then set the column directly or via the function
         // This may set null (where allowed by the Open API spec or given by the source function)
-        const param = get(srcObj, `${table.basePath}.${column.srcPath}`)
+        const param = get(srcObj, `${table.basePath}.data.${column.srcPath}`)
         Object.assign(columnPayload, { [column.name]: column.srcFunc ? await column.srcFunc(param) : param })
       }
     }
@@ -109,7 +107,7 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
 
 const createTableRelationsPayloadRefRelationships = async (srcObj, table, relationship, result) => {
   let value
-  const param = get(srcObj, `${table.basePath}.${relationship.srcPath}`)
+  const param = get(srcObj, `${table.basePath}.data.${relationship.srcPath}`)
   if (relationship.srcFunc) {
     if (relationship.srcPath) { // Expecting a parameter
       value = param ? await relationship.srcFunc(param) : null
@@ -219,42 +217,34 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
 }
 
 /**
- * Decorate the target keys object.
- * The target keys object is read from the database, decorated here with the contentId
- * Then decorated with the Power Apps keys in the response object
- * and written back down to the database
- * @param targetKeys
+ * Locate the sddsKey from within the payload or null
+ * @param payload
  * @param tableColumnsPayloads
  * @param contentId
  * @param table
- * @returns {null|*}
+ * @returns {null|string|*}
  */
-function updateTargetKeys (targetKeys, tableColumnsPayloads, contentId, table) {
-  const key = targetKeys.find(tk => tk.apiKey === tableColumnsPayloads?.id) ||
-    targetKeys.find(tk => tk.apiBasePath === table.basePath)
-
-  if (key) {
-    key.powerAppsTable = table.name
-    key.contentId = contentId
-    key.apiBasePath = table.basePath
-    return key.powerAppsKey
-  } else {
-    targetKeys.push(new BaseKeyMapping(table.apiTable, null, table.basePath, table.name, contentId))
-    return null
+function getKeys (payload, tableColumnsPayloads, contentId, table) {
+  const item = get(payload, table.basePath)
+  if (item) {
+    return Array.isArray(item) ? item.find(i => i.keys.apiKey === tableColumnsPayloads.id).keys : item.keys
   }
+  return null
 }
 
-function assignColumns (targetKeys, tableColumnsPayload, contentId, table, updateObjects) {
+function assignColumns (payload, tableColumnsPayload, contentId, table, updateObjects) {
   // Decorate the target keys object with the contentId
-  const powerAppsId = updateTargetKeys(targetKeys, tableColumnsPayload, contentId, table)
+  const keys = getKeys(payload, tableColumnsPayload, contentId, table)
   updateObjects.push({
     table: table.name,
+    apiTable: table.apiTable,
+    apiKey: keys.apiKey,
     relationshipName: table.relationshipName,
     contentId: contentId,
     assignments: Object.assign(tableColumnsPayload.columnPayload,
       substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-    powerAppsId: powerAppsId,
-    method: powerAppsId ? Methods.PATCH : Methods.POST
+    powerAppsId: keys.sddsKey,
+    method: keys?.sddsKey ? Methods.PATCH : Methods.POST
   })
   contentId++
   return contentId
@@ -264,12 +254,11 @@ function assignColumns (targetKeys, tableColumnsPayload, contentId, table, updat
  * Generates a set of objects to enable the subsequent generation of
  * the batch update payload text. Wraps and processes the results of the
  * createTableColumnsPayload and createTableRelationshipsPayload process
- * @param srcObj - The source data object
- * @param targetKeys - The target keys
+ * @param payload - The source data object
  * @param tableSet - The set of tables involved the update
  * @returns {Promise<void>} - the built update object
  */
-export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) => {
+export const createBatchRequestObjects = async (payload, tableSet) => {
   // Built as each table in the set is processed, contains all the field assignments
   // and relationship bindings as well as the target keys and request method
   const updateObjects = []
@@ -278,16 +267,16 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
   for (const table of tableSet) {
     const currentContentId = contentId
     // Gathers the table columns, assignments and relationship bindings
-    const tableColumnsPayloads = await createTableColumnsPayload(table, srcObj, tableSet)
+    const tableColumnsPayloads = await createTableColumnsPayload(table, payload, tableSet)
     // If required fields are not set then will have a null here and this table is omitted from the update
     if (tableColumnsPayloads) {
       // In the case where a relationship is m2m this will be an array. e.g. sites
       if (Array.isArray(tableColumnsPayloads)) {
         for (const tableColumnsPayload of tableColumnsPayloads) {
-          contentId = assignColumns(targetKeys, tableColumnsPayload, contentId, table, updateObjects)
+          contentId = assignColumns(payload, tableColumnsPayload, contentId, table, updateObjects)
         }
       } else {
-        contentId = assignColumns(targetKeys, tableColumnsPayloads, contentId, table, updateObjects)
+        contentId = assignColumns(payload, tableColumnsPayloads, contentId, table, updateObjects)
       }
     }
 
@@ -308,14 +297,7 @@ export const createBatchRequestObjects = async (srcObj, targetKeys, tableSet) =>
     }
   }
 
-  // Filter out the fields no longer used and return the update object
-  return updateObjects.map(u => ({
-    contentId: u.contentId,
-    table: u.table,
-    assignments: u.assignments,
-    method: u.method,
-    powerAppsId: u.powerAppsId
-  }))
+  return updateObjects
 }
 
 /**
