@@ -36,7 +36,6 @@ export const powerAppsReadStream = (requestPath, objectTransformer) => {
     }
   })
 
-  // The stream starts flow on pipe
   stream.pipe(transformStream)
 
   // Return immediately

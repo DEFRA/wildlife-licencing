@@ -8,6 +8,7 @@
  */
 const dbIterator = async (s, ts, objectWriter) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+
   for await (const obj of s.iterator({ destroyOnReturn: true })) {
     const { insert, update, pending, error } = await objectWriter(obj, ts)
     counter.insert += insert
@@ -15,6 +16,7 @@ const dbIterator = async (s, ts, objectWriter) => {
     counter.pending += pending
     counter.error += error
   }
+
   return counter
 }
 
