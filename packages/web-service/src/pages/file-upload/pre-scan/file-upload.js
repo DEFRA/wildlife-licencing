@@ -1,7 +1,7 @@
 import handler from '../../../handlers/page-handler.js'
 import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
 import { scanFile } from '../../../services/virus-scan.js'
-import Joi from 'joi'
+// import Joi from 'joi'
 import fs from 'fs'
 
 const setData = async (request) => {
@@ -18,27 +18,32 @@ const setData = async (request) => {
   })
 
   const virusPresent = await scanFile(newFileName)
-  await request.cache().setAuthData({ virusPresent })
+  await request.cache().setData({ virusPresent })
 }
 
 const completion = async (request) => {
-  const { virusPresent } = await request.cache().getAuthData()
+  const { virusPresent } = await request.cache().getData()
 
   if (virusPresent) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Unauthorized: email address not found',
-      path: ['scan-file'],
-      type: 'unauthorized',
-      context: {
-        label: 'scan-file',
-        value: 'I dont get this but I think I need it',
-        key: 'scan-file'
-      }
-    }], null)
+    // clear error, return to page
   } else {
     return CHECK_YOUR_ANSWERS.uri
   }
 }
+
+const validator = async () => {
+  // throw new Joi.ValidationError('ValidationError', [{
+  //   message: 'Unauthorized: email address not found',
+  //   path: ['scan-file'],
+  //   type: 'unauthorized',
+  //   context: {
+  //     label: 'scan-file',
+  //     value: 'I dont get this but I think I need it',
+  //     key: 'scan-file'
+  //   }
+  // }], null)
+}
+
 const fileUploadPageRoute = (view, path, checkData, getData, completion, setData) => [
   {
     method: 'GET',
@@ -77,4 +82,4 @@ const fileUploadPageRoute = (view, path, checkData, getData, completion, setData
   }
 ]
 
-export const fileUpload = fileUploadPageRoute(FILE_UPLOAD.page, FILE_UPLOAD.uri, null, null, completion, setData)
+export const fileUpload = fileUploadPageRoute(FILE_UPLOAD.page, FILE_UPLOAD.uri, null, validator, completion, setData)

@@ -4,7 +4,7 @@ import pageRoute from '../../../routes/page-route.js'
 const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
   // If not, bounce the user back to the file-upload page
-  const authData = await request.cache().getAuthData() || {}
+  const authData = await request.cache().getData() || {}
 
   if (authData.virusPresent !== false) {
     return h.redirect(FILE_UPLOAD.uri)
