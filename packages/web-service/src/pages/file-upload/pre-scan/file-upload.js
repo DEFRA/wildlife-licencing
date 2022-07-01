@@ -18,11 +18,11 @@ const setData = async (request) => {
   })
 
   const virusPresent = await scanFile(newFileName)
-  await request.cache().setPageData({ virusPresent })
+  await request.cache().setAuthData({ virusPresent })
 }
 
 const completion = async (request) => {
-  const { virusPresent } = await request.cache().getPageData()
+  const { virusPresent } = await request.cache().getAuthData()
 
   if (virusPresent) {
     throw new Joi.ValidationError('ValidationError', [{
