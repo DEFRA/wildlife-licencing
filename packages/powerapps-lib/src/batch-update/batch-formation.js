@@ -72,10 +72,13 @@ export const createBatchRequest = async (requestHandle, payload) => {
 const preComplied = (n =>
   ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
 
-/*
- * Create a key array from the response body text
+/**
+ * Create a key array from the response body text and the batch request object
+ * @param requestHandle
+ * @param responseBody
+ * @returns {*[]}
  */
-export const createKeyObject = (requestHandle, responseBody, payload) => {
+export const createKeyObject = (requestHandle, responseBody) => {
   const result = []
   const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
   for (const batchRequestObject of requestHandle.batchRequestObjects) {

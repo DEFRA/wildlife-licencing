@@ -331,8 +331,7 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicantid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid($select=name),sdds_ecologistid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid($select=name),sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description)'
-
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description),sdds_applicantid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode&$filter=sdds_sourceremote eq true),sdds_organisationid($select=name&$filter=sdds_sourceremote eq true),sdds_ecologistid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode&$filter=sdds_sourceremote eq true),sdds_ecologistorganisationid($select=name&$filter=sdds_sourceremote eq true)'
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
   '@odata.etag': 'W/"3285321"',
@@ -450,7 +449,7 @@ export const applicationResponseTransformedKeys = [
   {
     apiBasePath: 'application.applicant',
     apiKey: null,
-    apiTable: 'applications',
+    apiTable: 'contacts',
     contentId: null,
     powerAppsKey: '88797550-818a-ec11-93b0-0022481b4422',
     powerAppsTable: 'contacts'
@@ -458,7 +457,7 @@ export const applicationResponseTransformedKeys = [
   {
     apiBasePath: 'application.ecologist',
     apiKey: null,
-    apiTable: 'applications',
+    apiTable: 'contacts',
     contentId: null,
     powerAppsKey: '8a797550-818a-ec11-93b0-0022481b4422',
     powerAppsTable: 'contacts'
@@ -466,7 +465,7 @@ export const applicationResponseTransformedKeys = [
   {
     apiBasePath: 'application.ecologistOrganization',
     apiKey: null,
-    apiTable: 'applications',
+    apiTable: 'accounts',
     contentId: null,
     powerAppsKey: '8c797550-818a-ec11-93b0-0022481b4422',
     powerAppsTable: 'accounts'

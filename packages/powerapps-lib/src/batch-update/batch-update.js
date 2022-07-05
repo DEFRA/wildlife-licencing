@@ -22,7 +22,7 @@ export const batchUpdate = async (payload, tableSet) => {
   try {
     const responseText = await POWERAPPS.batchRequest(requestHandle, batchRequestBody)
     debug(`Batch request response body for batchId ${requestHandle.batchId}:  \n---Start ---\n${responseText}\n---End ---`)
-    return createKeyObject(requestHandle, responseText, payload)
+    return createKeyObject(requestHandle, responseText)
   } catch (err) {
     if (err instanceof POWERAPPS.HTTPResponseError) {
       if (err.response.status === 401 || err.response.status === 408 || err.response.status >= 500) {

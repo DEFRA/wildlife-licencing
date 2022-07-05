@@ -245,11 +245,26 @@ describe('The application job processor', () => {
               application: { foo: 'bar' },
               sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
             }))
+          },
+          applicationContacts: {
+            findAll: jest.fn(() => [{
+              contactId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+            }])
+          },
+          contacts: {
+            findByPk: jest.fn(() => ({
+              id: 'e6b8de2e-51dc-4196-aa69-5725b3aff732',
+              contact: { foo: 'bar' },
+              sddsContactId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: {
+            findAll: jest.fn(() => [])
           }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
-      await expect(applicationJobProcess(job)).resolves
+      await expect(() => applicationJobProcess(job)).resolves
     })
 
     it('Resolves where no application found in database', async () => {
