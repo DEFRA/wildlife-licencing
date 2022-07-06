@@ -20,13 +20,11 @@ export const writeAccountObject = async (obj, ts) => {
 
     // Update or insert a new account
     if (account) {
-      // const s = site.dataValues
-      // baseKey.apiKey = s.id
-      // // (a) If pending and not changed since the start of the extract
-      // // (b) If updatable and with a material change in the payload
+      // (a) If pending and not changed since the start of the extract
+      // (b) If updatable and with a material change in the payload
       if ((account.updateStatus === 'P' && ts > account.updatedAt) || (account.updateStatus === 'U' && hash(data.accounts) !== hash(account.account))) {
         await models.accounts.update({
-          account: data.sites,
+          account: data.accounts,
           updateStatus: 'U'
         }, {
           where: {

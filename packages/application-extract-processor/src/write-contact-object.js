@@ -16,13 +16,11 @@ export const writeContactObject = async (obj, ts) => {
 
     // Update or insert a new contact
     if (contact) {
-      // const s = site.dataValues
-      // baseKey.apiKey = s.id
-      // // (a) If pending and not changed since the start of the extract
-      // // (b) If updatable and with a material change in the payload
+      // (a) If pending and not changed since the start of the extract
+      // (b) If updatable and with a material change in the payload
       if ((contact.updateStatus === 'P' && ts > contact.updatedAt) || (contact.updateStatus === 'U' && hash(data.contacts) !== hash(contact.contact))) {
         await models.contacts.update({
-          contact: data.sites,
+          contact: data.contacts,
           updateStatus: 'U'
         }, {
           where: {
