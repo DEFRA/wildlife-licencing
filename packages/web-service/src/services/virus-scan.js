@@ -13,7 +13,6 @@ const options = {
   },
   preference: 'clamdscan'
 }
-console.log(process.env)
 const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
@@ -21,7 +20,6 @@ export async function scanFile (filename) {
     return ClamScan.then(async (clamscan) => {
       try {
         const dir = `../..${process.env.SCANDIR}/${filename}`
-        console.log(dir)
         const { isInfected } = await clamscan.isInfected(dir)
         if (isInfected) {
           fs.unlinkSync(dir, err => {
@@ -42,5 +40,3 @@ export async function scanFile (filename) {
     throw new Error('Please provide a filename.')
   }
 }
-
-scanFile('eicar.com')
