@@ -758,7 +758,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.APPLICANT_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
+      expect(mockDelete).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
     })
 
     it('unAssign does nothing where there is no existing relationship', async () => {
@@ -1135,7 +1135,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ECOLOGIST_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
+      expect(mockDelete).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
     })
 
     it('unAssign does nothing where there is no existing relationship', async () => {

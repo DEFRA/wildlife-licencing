@@ -13,10 +13,27 @@ const accountRoles = {
   'ECOLOGIST-ORGANISATION': 'ECOLOGIST-ORGANISATION'
 }
 
+const apiUrls = {
+  USERS: '/users',
+  USER: '/user',
+  APPLICATION: '/application',
+  APPLICATIONS: '/applications',
+  APPLICATION_USER: '/application-user',
+  APPLICATION_USERS: '/application-users',
+  CONTACTS: '/contacts',
+  CONTACT: '/contact',
+  APPLICATION_CONTACTS: '/application-contacts',
+  APPLICATION_CONTACT: '/application-contact',
+  ACCOUNTS: '/accounts',
+  ACCOUNT: '/account',
+  APPLICATION_ACCOUNTS: '/application-accounts',
+  APPLICATION_ACCOUNT: '/application-account'
+}
+
 const getContactByApplicationId = async (role, applicationId) => {
   try {
     debug(`Get ${role} contact for an application id applicationId: ${applicationId}`)
-    const [contact] = await API.get('/contacts', `applicationId=${applicationId}&role=${role}`)
+    const [contact] = await API.get(apiUrls.CONTACTS, `applicationId=${applicationId}&role=${role}`)
     return contact
   } catch (error) {
     console.error(`Error getting ${role}/applicant for applicationId: ${applicationId}`, error)
@@ -27,17 +44,17 @@ const getContactByApplicationId = async (role, applicationId) => {
 
 const createContact = async (role, applicationId, payload) => {
   try {
-    const contact = await API.post('/contact', payload)
+    const contact = await API.post(apiUrls.CONTACT, payload)
     // If we have a contact assigned to the application, update it
-    const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
     if (applicationContact) {
-      await API.put(`/application-contact/${applicationContact.id}`, {
+      await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
         contactId: contact.id,
         applicationId: applicationId,
         contactRole: role
       })
     } else {
-      await API.post('/application-contact', {
+      await API.post(apiUrls.APPLICATION_CONTACT, {
         contactId: contact.id,
         applicationId: applicationId,
         contactRole: role
@@ -53,10 +70,10 @@ const createContact = async (role, applicationId, payload) => {
 }
 
 const assignContact = async (role, applicationId, contactId) => {
-  const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
   if (applicationContact && applicationContact.contactId !== contactId) {
     debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
-    await API.put(`/application-contact/${applicationContact.id}`, {
+    await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
       contactId,
       applicationId,
       contactRole: role
@@ -65,18 +82,18 @@ const assignContact = async (role, applicationId, contactId) => {
 }
 
 const unAssignContact = async (role, applicationId) => {
-  const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
+  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
   if (applicationContact) {
     debug(`Un-assigning ${role} contact ${applicationContact.contactId} from applicationId: ${applicationId}`)
-    await API.delete(`/application-contact/${applicationContact.id}`)
+    await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
   }
 }
 
 const updateContact = async (role, applicationId, contact) => {
   try {
     debug(`Updating the ${role} for applicationId: ${applicationId}`)
-    const [applicationContact] = await API.get('/application-contacts', `applicationId=${applicationId}&role=${role}`)
-    return API.put(`/contact/${applicationContact.contactId}`, contact)
+    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    return API.put(`${apiUrls.CONTACT}/${applicationContact.contactId}`, contact)
   } catch (error) {
     console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
     Boom.boomify(error, { statusCode: 500 })
@@ -87,7 +104,7 @@ const updateContact = async (role, applicationId, contact) => {
 const findContactByUser = async (role, userId) => {
   try {
     debug(`Finding ${role}'s for userId: ${userId}`)
-    return API.get('/contacts', `userId=${userId}&role=${role}`)
+    return API.get(apiUrls.CONTACTS, `userId=${userId}&role=${role}`)
   } catch (error) {
     console.error(`Finding ${role}'s for userId: ${userId}`, error)
     Boom.boomify(error, { statusCode: 500 })
@@ -96,23 +113,23 @@ const findContactByUser = async (role, userId) => {
 }
 
 const getAccountByApplicationId = async (accountRole, applicationId) => {
-  const [account] = await API.get('/accounts', `applicationId=${applicationId}&role=${accountRole}`)
+  const [account] = await API.get(apiUrls.ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
   return account
 }
 
 const createAccount = async (accountRole, applicationId, payload) => {
   try {
-    const account = await API.post('/account', payload)
+    const account = await API.post(apiUrls.ACCOUNT, payload)
     // If we have an account assigned to the application, update it
-    const [applicationAccount] = await API.get('/application-accounts', `applicationId=${applicationId}&role=${accountRole}`)
+    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
     if (applicationAccount) {
-      await API.put(`/application-account/${applicationAccount.id}`, {
+      await API.put(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`, {
         accountId: account.id,
         applicationId: applicationId,
         accountRole: accountRole
       })
     } else {
-      await API.post('/application-account', {
+      await API.post(apiUrls.APPLICATION_ACCOUNT, {
         accountId: account.id,
         applicationId: applicationId,
         accountRole: accountRole
@@ -128,10 +145,10 @@ const createAccount = async (accountRole, applicationId, payload) => {
 }
 
 const unAssignAccount = async (accountRole, applicationId) => {
-  const [applicationAccount] = await API.get('/application-accounts', `applicationId=${applicationId}&role=${accountRole}`)
+  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
   if (applicationAccount) {
-    debug(`Un-assigning ${accountRole} contact ${applicationAccount.contactId} from applicationId: ${applicationId}`)
-    await API.delete(`/application-contact/${applicationAccount.id}`)
+    debug(`Un-assigning ${accountRole} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
+    await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
   }
 }
 
@@ -150,7 +167,7 @@ export const APIRequests = {
     findByName: async username => {
       try {
         debug(`Finding user by username: ${username}`)
-        const users = await API.get('/users', `username=${username}`)
+        const users = await API.get(apiUrls.USERS, `username=${username}`)
         return users.length === 1 ? users[0] : null
       } catch (error) {
         console.error(`Error fetching user ${username}`, error)
@@ -161,7 +178,7 @@ export const APIRequests = {
     create: async username => {
       try {
         debug(`Creating new user: ${username}`)
-        await API.post('/user', { username })
+        await API.post(apiUrls.USER, { username })
       } catch (error) {
         console.error(`Error creating user ${username}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -179,7 +196,7 @@ export const APIRequests = {
      */
     create: async type => {
       try {
-        const application = await API.post('/application', { applicationType: type })
+        const application = await API.post(apiUrls.APPLICATION, { applicationType: type })
         debug(`Created pre-application ${JSON.stringify(application.id)}`)
         return application
       } catch (error) {
@@ -196,24 +213,24 @@ export const APIRequests = {
      */
     initialize: async (userId, applicationId, role) => {
       try {
-        const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}&role=${role}`)
+        const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}&role=${role}`)
         const result = {}
 
         // Associate user if no association exists
         if (!applicationUsers.length) {
-          result.applicationUser = await API.post('/application-user', { userId, applicationId, role })
+          result.applicationUser = await API.post(apiUrls.APPLICATION_USER, { userId, applicationId, role })
           debug(`associated applicationId: ${result.applicationUser.applicationId} with userId: ${result.applicationUser.userId} using role: ${role}`)
         } else {
           result.applicationUser = applicationUsers[0]
           debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId} using role: ${role}`)
         }
         // Create reference number if no reference number exists
-        result.application = await API.get(`/application/${applicationId}`)
+        result.application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
         if (!result.application?.applicationReferenceNumber) {
           const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${result.application.applicationType}`)
           Object.assign(result.application, { applicationReferenceNumber })
           debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${result.application.id}`)
-          result.application = API.put(`/application/${applicationId}`, (({ id, ...l }) => l)(result.application))
+          result.application = API.put(`${apiUrls.APPLICATION}/${applicationId}`, (({ id, ...l }) => l)(result.application))
         }
         return result
       } catch (error) {
@@ -225,7 +242,7 @@ export const APIRequests = {
     findByUser: async userId => {
       try {
         debug(`Finding applications for userId: ${userId}`)
-        return API.get('/applications', `userId=${userId}`)
+        return API.get(apiUrls.APPLICATIONS, `userId=${userId}`)
       } catch (error) {
         console.error(`Error finding application with userId ${userId}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -234,13 +251,13 @@ export const APIRequests = {
     },
     findRoles: async (userId, applicationId) => {
       debug(`Testing the existence of application for userId: ${userId} applicationId: ${applicationId}`)
-      const applicationUsers = await API.get('/application-users', `userId=${userId}&applicationId=${applicationId}`)
+      const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
       return applicationUsers.map(au => au.role)
     },
     getById: async applicationId => {
       try {
         debug(`Get applications by applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}`)
+        return API.get(`${apiUrls.APPLICATION}/${applicationId}`)
       } catch (error) {
         console.error(`Error getting application by applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -250,7 +267,7 @@ export const APIRequests = {
     submit: async applicationId => {
       try {
         debug(`Submit application for applicationId: ${applicationId}`)
-        return API.post(`/application/${applicationId}/submit`)
+        return API.post(`${apiUrls.APPLICATION}/${applicationId}/submit`)
       } catch (error) {
         console.error(`Error submitting application for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -262,7 +279,7 @@ export const APIRequests = {
     getById: async applicationId => {
       try {
         debug(`Get application/eligibility for applicationId: ${applicationId}`)
-        return API.get(`/application/${applicationId}/eligibility`)
+        return API.get(`${apiUrls.APPLICATION}/${applicationId}/eligibility`)
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
@@ -272,7 +289,7 @@ export const APIRequests = {
     putById: async (applicationId, eligibility) => {
       try {
         debug(`Put application/eligibility for applicationId: ${applicationId} - ${JSON.stringify(eligibility)}`)
-        return API.put(`/application/${applicationId}/eligibility`, eligibility)
+        return API.put(`${apiUrls.APPLICATION}/${applicationId}/eligibility`, eligibility)
       } catch (error) {
         console.error(`Error getting application/applicant for applicationId: ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })

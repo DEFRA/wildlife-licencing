@@ -27,10 +27,10 @@ export default async (context, req, h) => {
       where: { id: applicationContactId },
       defaults: {
         id: applicationContactId,
+        updateStatus: 'L',
         applicationId,
         contactId,
-        contactRole,
-        updateStatus: 'L'
+        contactRole
       }
     })
 

@@ -2,7 +2,7 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './application-account-proc.js'
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   try {
     const where = req.query
     const applicationAccounts = await models.applicationAccounts.findAll(((where.applicationId || where.role) && {

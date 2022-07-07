@@ -220,11 +220,10 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
  * Locate the sddsKey from within the payload or null
  * @param payload
  * @param tableColumnsPayloads
- * @param contentId
  * @param table
  * @returns {null|string|*}
  */
-function getKeys (payload, tableColumnsPayloads, contentId, table) {
+function getKeys (payload, tableColumnsPayloads, table) {
   const item = get(payload, table.basePath)
   if (item) {
     return Array.isArray(item) ? item.find(i => i.keys.apiKey === tableColumnsPayloads.id).keys : item.keys
@@ -234,7 +233,7 @@ function getKeys (payload, tableColumnsPayloads, contentId, table) {
 
 function assignColumns (payload, tableColumnsPayload, contentId, table, updateObjects) {
   // Decorate the target keys object with the contentId
-  const keys = getKeys(payload, tableColumnsPayload, contentId, table)
+  const keys = getKeys(payload, tableColumnsPayload, table)
   updateObjects.push({
     table: table.name,
     apiTable: table.apiTable,
