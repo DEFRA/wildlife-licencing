@@ -89,6 +89,60 @@ export const buildApiObject = async applicationId => {
       })
     }
 
+    // Add the ecologist details
+    const [applicationEcologistContact] = await models.applicationContacts.findAll({
+      where: { applicationId, contactRole: 'ECOLOGIST' }
+    })
+
+    if (applicationEcologistContact) {
+      const applicantContact = await models.contacts.findByPk(applicationEcologistContact.contactId)
+      Object.assign(payload.application, {
+        ecologist: {
+          data: applicantContact.contact,
+          keys: {
+            apiKey: applicantContact.id,
+            sddsKey: applicantContact.sddsContactId
+          }
+        }
+      })
+    }
+
+    // Add the applicant organization details
+    const [applicationApplicantAccount] = await models.applicationAccounts.findAll({
+      where: { applicationId, accountRole: 'APPLICANT-ORGANISATION' }
+    })
+
+    if (applicationApplicantAccount) {
+      const applicantAccount = await models.accounts.findByPk(applicationApplicantAccount.accountId)
+      Object.assign(payload.application, {
+        applicantOrganization: {
+          data: applicantAccount.account,
+          keys: {
+            apiKey: applicantAccount.id,
+            sddsKey: applicantAccount.sddsAccountId
+          }
+        }
+      })
+    }
+
+    // Add the ecologist organization details
+    const [applicationEcologistAccount] = await models.applicationAccounts.findAll({
+      where: { applicationId, accountRole: 'ECOLOGIST-ORGANISATION' }
+    })
+
+    if (applicationEcologistAccount) {
+      const applicantAccount = await models.accounts.findByPk(applicationEcologistAccount.accountId)
+      Object.assign(payload.application, {
+        ecologistOrganization: {
+          data: applicantAccount.account,
+          keys: {
+            apiKey: applicantAccount.id,
+            sddsKey: applicantAccount.sddsAccountId
+          }
+        }
+      })
+    }
+
     // Add in the application sites
     const applicationSites = await models.applicationSites.findAll({
       where: { applicationId }

@@ -20,7 +20,7 @@ export const writeApplicationAccountObject = async obj => {
       // If the applications is not (yet) in the database do nothing
       if (application) {
         if (data.application.applicantOrganization) {
-          // Get the contact record
+          // Get the account record
           const applicantOrganization = await models.accounts.findOne({
             where: { sdds_account_id: data.application.applicantOrganization.accountId }
           })
@@ -54,7 +54,7 @@ export const writeApplicationAccountObject = async obj => {
             const applicationEcologistOrganization = await models.applicationAccounts.findOne({
               where: {
                 applicationId: application.id,
-                contactId: ecologistOrganization.id,
+                accountId: ecologistOrganization.id,
                 accountRole: roles['ECOLOGIST-ORGANISATION']
               }
             })
@@ -73,7 +73,7 @@ export const writeApplicationAccountObject = async obj => {
     }
     return counter
   } catch (error) {
-    console.error('Error updating APPLICATION-CONTACTS', error)
+    console.error('Error updating APPLICATION-ACCOUNTS', error)
     return { insert: 0, update: 0, pending: 0, error: 1 }
   }
 }
