@@ -36,6 +36,104 @@ export const postProcess = async targetKeys => {
   }
 }
 
+const doApplicant = async (applicationId, payload) => {
+  const [applicationApplicantContact] = await models.applicationContacts.findAll({
+    where: { applicationId, contactRole: 'APPLICANT' }
+  })
+
+  if (applicationApplicantContact) {
+    const applicantContact = await models.contacts.findByPk(applicationApplicantContact.contactId)
+    Object.assign(payload.application, {
+      applicant: {
+        data: applicantContact.contact,
+        keys: {
+          apiKey: applicantContact.id,
+          sddsKey: applicantContact.sddsContactId
+        }
+      }
+    })
+  }
+}
+
+const doEcologist = async (applicationId, payload) => {
+  const [applicationEcologistContact] = await models.applicationContacts.findAll({
+    where: { applicationId, contactRole: 'ECOLOGIST' }
+  })
+
+  if (applicationEcologistContact) {
+    const applicantContact = await models.contacts.findByPk(applicationEcologistContact.contactId)
+    Object.assign(payload.application, {
+      ecologist: {
+        data: applicantContact.contact,
+        keys: {
+          apiKey: applicantContact.id,
+          sddsKey: applicantContact.sddsContactId
+        }
+      }
+    })
+  }
+}
+
+const doApplicantOrganisation = async (applicationId, payload) => {
+  const [applicationApplicantAccount] = await models.applicationAccounts.findAll({
+    where: { applicationId, accountRole: 'APPLICANT-ORGANISATION' }
+  })
+
+  if (applicationApplicantAccount) {
+    const applicantAccount = await models.accounts.findByPk(applicationApplicantAccount.accountId)
+    Object.assign(payload.application, {
+      applicantOrganization: {
+        data: applicantAccount.account,
+        keys: {
+          apiKey: applicantAccount.id,
+          sddsKey: applicantAccount.sddsAccountId
+        }
+      }
+    })
+  }
+}
+
+const doEcologistOrganisation = async (applicationId, payload) => {
+  const [applicationEcologistAccount] = await models.applicationAccounts.findAll({
+    where: { applicationId, accountRole: 'ECOLOGIST-ORGANISATION' }
+  })
+
+  if (applicationEcologistAccount) {
+    const applicantAccount = await models.accounts.findByPk(applicationEcologistAccount.accountId)
+    Object.assign(payload.application, {
+      ecologistOrganization: {
+        data: applicantAccount.account,
+        keys: {
+          apiKey: applicantAccount.id,
+          sddsKey: applicantAccount.sddsAccountId
+        }
+      }
+    })
+  }
+}
+
+const doSites = async (applicationId, payload) => {
+  const applicationSites = await models.applicationSites.findAll({
+    where: { applicationId }
+  })
+
+  if (applicationSites.length) {
+    const sitesFound = await models.sites.findAll({
+      where: { id: applicationSites.map(s => s.siteId) }
+    })
+
+    const sites = sitesFound.map(s => ({
+      data: s.site,
+      keys: {
+        apiKey: s.id,
+        sddsKey: s.sddsSiteId
+      }
+    }))
+
+    Object.assign(payload.application, { sites })
+  }
+}
+
 /**
  * Merge the application, contacts, accounts and sites into a single API payload object
  * Read the keys object and add to each section
@@ -72,97 +170,19 @@ export const buildApiObject = async applicationId => {
     }
 
     // Add the applicant details
-    const [applicationApplicantContact] = await models.applicationContacts.findAll({
-      where: { applicationId, contactRole: 'APPLICANT' }
-    })
-
-    if (applicationApplicantContact) {
-      const applicantContact = await models.contacts.findByPk(applicationApplicantContact.contactId)
-      Object.assign(payload.application, {
-        applicant: {
-          data: applicantContact.contact,
-          keys: {
-            apiKey: applicantContact.id,
-            sddsKey: applicantContact.sddsContactId
-          }
-        }
-      })
-    }
+    await doApplicant(applicationId, payload)
 
     // Add the ecologist details
-    const [applicationEcologistContact] = await models.applicationContacts.findAll({
-      where: { applicationId, contactRole: 'ECOLOGIST' }
-    })
-
-    if (applicationEcologistContact) {
-      const applicantContact = await models.contacts.findByPk(applicationEcologistContact.contactId)
-      Object.assign(payload.application, {
-        ecologist: {
-          data: applicantContact.contact,
-          keys: {
-            apiKey: applicantContact.id,
-            sddsKey: applicantContact.sddsContactId
-          }
-        }
-      })
-    }
+    await doEcologist(applicationId, payload)
 
     // Add the applicant organization details
-    const [applicationApplicantAccount] = await models.applicationAccounts.findAll({
-      where: { applicationId, accountRole: 'APPLICANT-ORGANISATION' }
-    })
-
-    if (applicationApplicantAccount) {
-      const applicantAccount = await models.accounts.findByPk(applicationApplicantAccount.accountId)
-      Object.assign(payload.application, {
-        applicantOrganization: {
-          data: applicantAccount.account,
-          keys: {
-            apiKey: applicantAccount.id,
-            sddsKey: applicantAccount.sddsAccountId
-          }
-        }
-      })
-    }
+    await doApplicantOrganisation(applicationId, payload)
 
     // Add the ecologist organization details
-    const [applicationEcologistAccount] = await models.applicationAccounts.findAll({
-      where: { applicationId, accountRole: 'ECOLOGIST-ORGANISATION' }
-    })
-
-    if (applicationEcologistAccount) {
-      const applicantAccount = await models.accounts.findByPk(applicationEcologistAccount.accountId)
-      Object.assign(payload.application, {
-        ecologistOrganization: {
-          data: applicantAccount.account,
-          keys: {
-            apiKey: applicantAccount.id,
-            sddsKey: applicantAccount.sddsAccountId
-          }
-        }
-      })
-    }
+    await doEcologistOrganisation(applicationId, payload)
 
     // Add in the application sites
-    const applicationSites = await models.applicationSites.findAll({
-      where: { applicationId }
-    })
-
-    if (applicationSites.length) {
-      const sitesFound = await models.sites.findAll({
-        where: { id: applicationSites.map(s => s.siteId) }
-      })
-
-      const sites = sitesFound.map(s => ({
-        data: s.site,
-        keys: {
-          apiKey: s.id,
-          sddsKey: s.sddsSiteId
-        }
-      }))
-
-      Object.assign(payload.application, { sites })
-    }
+    await doSites(applicationId, payload)
 
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload
