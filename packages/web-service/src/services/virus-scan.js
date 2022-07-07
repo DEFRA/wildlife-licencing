@@ -16,27 +16,23 @@ const options = {
 const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
-  if (filename) {
-    return ClamScan.then(async (clamscan) => {
-      try {
-        const dir = `../..${process.env.SCANDIR}/${filename}`
-        const { isInfected } = await clamscan.isInfected(dir)
-        if (isInfected) {
-          fs.unlinkSync(dir, err => {
-            if (err) {
-              console.error(err)
-              throw err
-            }
-            console.log('The file was deleted.')
-          })
-        }
-        return isInfected
-      } catch (err) {
-        console.error(err.message)
-        throw new Error(err)
+  return ClamScan.then(async (clamscan) => {
+    try {
+      const dir = `../..${process.env.SCANDIR}/${filename}`
+      const { isInfected } = await clamscan.isInfected(dir)
+      if (isInfected) {
+        fs.unlinkSync(dir, err => {
+          if (err) {
+            console.error(err)
+            throw err
+          }
+          console.log('The file was deleted.')
+        })
       }
-    })
-  } else {
-    throw new Error('Please provide a filename.')
-  }
+      return isInfected
+    } catch (err) {
+      console.error(err.message)
+      throw new Error(err)
+    }
+  })
 }

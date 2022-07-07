@@ -3,15 +3,6 @@ describe('The virus scanning service', () => {
   beforeEach(() => jest.resetModules())
 
   describe('Scan file request', () => {
-    it('throws an error if no filename provided', async () => {
-      const mockScan = { isInfected: false }
-      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-        return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
-      })
-      )
-      const { scanFile } = await import('../virus-scan.js')
-      await expect(() => scanFile()).rejects.toThrow('Please provide a filename.')
-    })
     it('returns a boolean when initialised successfully', async () => {
       const mockScan = { isInfected: false }
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
