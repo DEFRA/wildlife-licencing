@@ -5,35 +5,42 @@ import * as fs from 'fs'
 const options = {
   clamdscan: {
     socket: null,
-    host: process.env.CS_HOST || 'host.docker.internal',
-    port: process.env.CS_PORT || 3310,
-    timeout: 60000,
+    host: process.env.CS_HOST,
+    port: process.env.CS_PORT,
+    timeout: parseInt(process.env.CS_TIMEOUT),
     multiscan: false,
     active: true
   },
   preference: 'clamdscan'
 }
-
+console.log(process.env)
 const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
   if (filename) {
     return ClamScan.then(async (clamscan) => {
       try {
-        const dir = `./${filename}`
+        const dir = `../..${process.env.SCANDIR}/${filename}`
+        console.log(dir)
         const { isInfected } = await clamscan.isInfected(dir)
         if (isInfected) {
           fs.unlinkSync(dir, err => {
-            if (err) throw err
-            console.log('the file was deleted.')
+            if (err) {
+              console.error(err)
+              throw err
+            }
+            console.log('The file was deleted.')
           })
         }
         return isInfected
       } catch (err) {
+        console.error(err.message)
         throw new Error(err)
       }
-})
+    })
   } else {
-    throw new Error('Needs a filename')
+    throw new Error('Please provide a filename.')
   }
 }
+
+scanFile('eicar.com')

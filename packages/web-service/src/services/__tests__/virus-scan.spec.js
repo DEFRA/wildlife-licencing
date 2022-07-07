@@ -4,9 +4,13 @@ describe('The virus scanning service', () => {
 
   describe('Scan file request', () => {
     it('throws an error if no filename provided', async () => {
+      const mockScan = { isInfected: false }
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
+      })
+      )
       const { scanFile } = await import('../virus-scan.js')
-
-      await expect(() => scanFile()).rejects.toThrow()
+      await expect(() => scanFile()).rejects.toThrow('Please provide a filename.')
     })
     it('returns a boolean when initialised successfully', async () => {
       const mockScan = { isInfected: false }
@@ -47,9 +51,9 @@ describe('The virus scanning service', () => {
       const mockNull = jest.fn((filename, callback) => callback(null))
       jest.doMock('fs', () => ({ unlinkSync: mockNull }))
       const { scanFile } = await import('../virus-scan.js')
-      let logSpy = jest.spyOn(console, 'log')
+      const logSpy = jest.spyOn(console, 'log')
       await scanFile('text.txt')
-      await expect(logSpy).toHaveBeenCalledWith('the file was deleted.')
+      await expect(logSpy).toHaveBeenCalledWith('The file was deleted.')
     })
   })
 })
