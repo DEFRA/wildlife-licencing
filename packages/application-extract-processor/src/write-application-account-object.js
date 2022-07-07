@@ -11,7 +11,7 @@ export const writeApplicationAccountObject = async obj => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
 
   try {
-    if (data.application.applicant || data.application.ecologist) {
+    if (data.application.applicantOrganization || data.application.ecologistOrganization) {
       // Find the application record using the Power Apps keys
       const application = await models.applications.findOne({
         where: { sdds_application_id: data.application.id }
@@ -63,7 +63,7 @@ export const writeApplicationAccountObject = async obj => {
                 id: uuidv4(),
                 applicationId: application.id,
                 accountId: ecologistOrganization.id,
-                contactRole: roles['ECOLOGIST-ORGANISATION']
+                accountRole: roles['ECOLOGIST-ORGANISATION']
               })
               counter.insert++
             }
