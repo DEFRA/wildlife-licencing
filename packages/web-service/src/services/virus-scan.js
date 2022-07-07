@@ -14,9 +14,10 @@ const options = {
   preference: 'clamdscan'
 }
 
+const ClamScan = new NodeClam().init(options)
+
 export async function scanFile (filename) {
   if (filename) {
-    const ClamScan = new NodeClam().init(options)
     return ClamScan.then(async (clamscan) => {
       try {
         const dir = `./${filename}`
@@ -31,7 +32,7 @@ export async function scanFile (filename) {
       } catch (err) {
         throw new Error(err)
       }
-    })
+})
   } else {
     throw new Error('Needs a filename')
   }
