@@ -43,12 +43,11 @@ const batchEnd = requestHandle => `--batch_${requestHandle.batchId}--\n`
  * See https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/execute-batch-operations-using-web-api
  * @returns  {Promise<string>} - the text of the batch request body
  * @param requestHandle - Object containing the current request state
- * @param srcObj - The data to be serialized
- * @param targetKeys - The key set
+ * @param payload - The data to be serialized
  */
-export const createBatchRequest = async (requestHandle, srcObj, targetKeys) => {
+export const createBatchRequest = async (requestHandle, payload) => {
   // Generate the data required for the batch update
-  requestHandle.batchRequestObjects = await createBatchRequestObjects(srcObj, targetKeys, requestHandle.tableSet)
+  requestHandle.batchRequestObjects = await createBatchRequestObjects(payload, requestHandle.tableSet)
 
   // Build the batch update request body
   const changeId = uuidv4()
@@ -73,13 +72,27 @@ export const createBatchRequest = async (requestHandle, srcObj, targetKeys) => {
 const preComplied = (n =>
   ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
 
-/*
- * Create a key object from the response body text
+/**
+ * Create a key array from the response body text and the batch request object
+ * @param requestHandle
+ * @param responseBody
+ * @returns {*[]}
  */
-export const createKeyObject = (requestHandle, responseBody, targetKeys) => {
+export const createKeyObject = (requestHandle, responseBody) => {
+  const result = []
   const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
-  targetKeys.forEach(tk => {
-    tk.powerAppsKey = strippedResponseBody.match(preComplied[tk.contentId])?.groups?.eid
-  })
-  return targetKeys
+  for (const batchRequestObject of requestHandle.batchRequestObjects) {
+    const sddsId = strippedResponseBody.match(preComplied[batchRequestObject.contentId])?.groups?.eid
+    if (sddsId) {
+      result.push({
+        apiTableName: batchRequestObject.apiTable,
+        keys: {
+          apiKey: batchRequestObject.apiKey,
+          sddsKey: sddsId
+        }
+      })
+    }
+  }
+
+  return result
 }

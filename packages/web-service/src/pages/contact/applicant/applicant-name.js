@@ -1,16 +1,11 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
-import { checkData, getApplicantData } from '../common/common.js'
-import { APIRequests } from '../../../services/api-requests.js'
-const { NAME, IS_ORGANIZATION } = contactURIs.APPLICANT
+import { checkData } from '../common/common.js'
+import { getContactData, setContactData } from '../common/contact-name/contact-name.js'
 
-export const setData = async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  const applicant = await APIRequests.APPLICANT.getById(applicationId)
-  const pageData = await request.cache().getPageData()
-  applicant.fullName = pageData.payload.name
-  await APIRequests.APPLICANT.putById(applicationId, applicant)
-}
+const { NAME, IS_ORGANISATION } = contactURIs.APPLICANT
 
-export const applicantName = contactNamePage(NAME, checkData, getApplicantData, IS_ORGANIZATION, setData)
+export const getApplicantData = request => getContactData('APPLICANT')(request)
+export const setApplicantData = request => setContactData('APPLICANT')(request)
+
+export const applicantName = contactNamePage(NAME, checkData, getApplicantData, IS_ORGANISATION.uri, setApplicantData)

@@ -1,5 +1,13 @@
-import { Table, Column } from '../schema.js'
+import { Table, Column, OperationType } from '../schema.js'
 
 export const Account = new Table('accounts', [
+  new Column('sdds_sourceremote', null, () => true, OperationType.OUTBOUND, () => 'sdds_sourceremote eq true'),
   new Column('name', 'name')
-], null, null, 'applications', 'accountid')
+], null, 'accounts', 'accounts', 'accountid')
+
+const cp = Table.copy(Account)
+cp.columns = [
+  new Column('accountid', 'accountId', () => true, OperationType.INBOUND)
+]
+
+export const AccountKeys = cp

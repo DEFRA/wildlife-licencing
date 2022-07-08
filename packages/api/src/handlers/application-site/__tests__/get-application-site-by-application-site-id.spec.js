@@ -38,7 +38,7 @@ let models
 let getApplicationSiteByApplicationSiteId
 let cache
 const applicationJson = 'application/json'
-describe('The getApplicationByApplicationId handler', () => {
+describe('The getApplicationSiteByApplicationSiteId handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS

@@ -3,8 +3,8 @@
 
 <div hidden>
     {% set items = [] %}
-    {% for contact in data %}
-        {{ items.push({ value: contact.id, text: contact.fullName }) }}
+    {% for contact in data.contacts %}
+        {{ items.push({ value: contact.id, text: contact.fullName, checked: contact.id === data.contact.id }) }}
     {% endfor %}
     {{ items.push({ divider: "or" }) }}
     {{ items.push({ value: 'new', text: addText }) }}
