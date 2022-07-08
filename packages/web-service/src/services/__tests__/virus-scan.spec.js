@@ -12,13 +12,16 @@ describe('The virus scanning service', () => {
       const { scanFile } = await import('../virus-scan.js')
       expect(await scanFile('text.txt')).toBe(false)
     })
-    it('throws error when clamscan fails', async () => {
+    it('throws error and deletes file when clamscan fails', async () => {
+      const mockNull = jest.fn((filename, callback) => callback(null))
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve({ isInfected: () => { throw new Error() } }) })
       })
       )
+      jest.doMock('fs', () => ({ unlinkSync: mockNull }))
       const { scanFile } = await import('../virus-scan.js')
       await expect(() => scanFile('text.txt')).rejects.toThrowError()
+      await expect(mockNull).toHaveBeenCalledTimes(1)
     })
     it('throws an error if file could not be deleted', async () => {
       const mockScan = { isInfected: true }
@@ -33,7 +36,7 @@ describe('The virus scanning service', () => {
       await expect(async () => await scanFile('text.txt')).rejects.toThrowError('the file could not be deleted.')
       await expect(logSpy).toHaveBeenCalledTimes(0)
     })
-    it('deletes a file successfully', async () => {
+    it('deletes the file successfully', async () => {
       const mockScan = { isInfected: true }
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
@@ -44,7 +47,7 @@ describe('The virus scanning service', () => {
       const { scanFile } = await import('../virus-scan.js')
       const logSpy = jest.spyOn(console, 'log')
       await scanFile('text.txt')
-      await expect(logSpy).toHaveBeenCalledWith('The file was deleted.')
+      await expect(logSpy).toHaveBeenCalledWith('The file contained a virus, so it was deleted.')
     })
   })
 })
