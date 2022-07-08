@@ -30,7 +30,7 @@ describe('the schema processes', () => {
   describe('the createTableSet function', () => {
     it('can determine the correct batch update sequence with a set of tables', async () => {
       const { createTableSet } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
+      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
         .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
@@ -44,22 +44,19 @@ describe('the schema processes', () => {
   describe('the createTableColumnsPayload function', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [Contact, Account])
-      const ecologist = tableSet.find(ts => ts.basePath === 'application.ecologist')
-      const applicationPayload = await createTableColumnsPayload(ecologist, srcObj)
-      expect(applicationPayload).toEqual({
-        relationshipsPayload: null,
-        columnPayload: {
-          lastname: 'Mr Brian Yak',
-          telephone1: '234234',
-          emailaddress1: 'brian.yak@email.com',
-          address1_line1: 'Old Hill',
-          address1_line2: 'Stapleton',
-          address1_line3: 'Nr. Bristol',
-          address1_county: 'Somerset',
-          address1_city: 'Bristol',
-          address1_postalcode: 'BS11 1PW'
-        }
+      const tableSet = createTableSet(SddsApplicationKeys, [Contact, Account])
+      const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
+      const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
+      expect(columnPayload).toEqual({
+        address1_city: 'briztol',
+        address1_county: 'bristol',
+        address1_line1: 'the grove',
+        address1_line2: 'henleaze',
+        address1_postalcode: 'BS1999',
+        emailaddress1: 'me@email.com',
+        lastname: 'Bob Slaigh',
+        telephone1: '16542',
+        sdds_sourceremote: true
       })
     })
 
@@ -68,15 +65,15 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
       const applicationPayload = await createTableColumnsPayload(SddsApplication, srcObj, tableSet)
       expect(applicationPayload).toEqual({
-        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         columnPayload: {
           sdds_applicationcategory: 100000001,
-          sdds_applicationnumber: expect.any(String),
+          sdds_applicationnumber: '2022-500000-EPS-MIT',
           sdds_descriptionofproposal: 'Badgers are proposed to be moved',
           sdds_detailsofconvictions: 'no convictions',
           sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
+        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
           'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
@@ -90,7 +87,7 @@ describe('the schema processes', () => {
 
     it('can create the batch update columns for sites; an array of items', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [SddsSite])
+      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
       const sitesPayloads = await createTableColumnsPayload(site, srcObj)
       expect(sitesPayloads).toEqual([
@@ -211,24 +208,17 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTableMMRelationshipsPayloads(SddsApplication, [updateObjects])
+      const result = await createTableMMRelationshipsPayloads(SddsApplicationKeys, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_application_sdds_site_sdds_site' }])
     })
   })
 
   describe('the createBatchRequestObjects function', () => {
-    it('can produce a set of insert objects from a table set and source data', async () => {
+    it('can produce a set of insert and objects from a table set and source data', async () => {
       const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
-      const results = await createBatchRequestObjects(srcObj, initialKeys, tableSet)
+      const results = await createBatchRequestObjects(srcObj, tableSet)
       expect(results).toEqual(initialGeneratedAssignmentsObject)
-    })
-
-    it('can produce a set of update objects from a table set and source data', async () => {
-      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
-      const results = await createBatchRequestObjects(srcObj, updateKeys, tableSet)
-      expect(results).toEqual(updatedGeneratedAssignmentsObject)
     })
   })
 

@@ -12,6 +12,6 @@ export const clearCaches = async applicationId => {
   await cache.delete(`/application/${applicationId}/eligibility`)
   await cache.delete(`/application/${applicationId}/applicant`)
   await cache.delete(`/application/${applicationId}/ecologist`)
-  await cache.delete(`/application/${applicationId}/applicant-organization`)
-  await cache.delete(`/application/${applicationId}/ecologist-organization`)
+  await cache.delete(`/application/${applicationId}/applicant-organisation`)
+  await cache.delete(`/application/${applicationId}/ecologist-organisation`)
 }

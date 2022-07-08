@@ -5,15 +5,21 @@ import { prepareResponse } from './application-proc.js'
 export default async (_context, req, h) => {
   try {
     const where = req.query
-    const applications = await models.applications.findAll(Object.keys(where).length
-      ? {
-          include: {
-            model: models.applicationUsers,
-            attributes: [],
-            where
-          }
-        }
-      : {})
+    const applications = await models.applications.findAll({
+      include: {
+        model: models.users,
+        attributes: [],
+        through: {
+          attributes: [],
+          ...(where.role && {
+            where: { role: where.role }
+          })
+        },
+        ...(where.userId && {
+          where: { id: where.userId }
+        })
+      }
+    })
 
     const responseBody = applications.map(a => prepareResponse(a.dataValues))
     return h.response(responseBody)

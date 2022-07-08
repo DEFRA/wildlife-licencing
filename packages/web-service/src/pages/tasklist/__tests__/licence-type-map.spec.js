@@ -1,7 +1,6 @@
 import {
   A24,
   licenceTypeMap,
-  STATUS_VALUES,
   SECTION_TASKS,
   getProgress,
   decorateMap

@@ -41,7 +41,14 @@ describe('The getApplication handler', () => {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
     await getApplications({ }, { query: { }, path }, h)
-    expect(models.applications.findAll).toHaveBeenCalledWith({ })
+    expect(models.applications.findAll).toHaveBeenCalledWith(expect.objectContaining({
+      include: {
+        attributes: [],
+        through: {
+          attributes: []
+        }
+      }
+    }))
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -52,15 +59,14 @@ describe('The getApplication handler', () => {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
     await getApplications({ }, { query: { role: 'USER', userId: '6877f11b-3755-49bc-8a15-9070c756d1ad' }, path }, h)
-    expect(models.applications.findAll).toHaveBeenCalledWith({
-      include: {
-        attributes: [],
-        where: {
-          role: 'USER',
-          userId: '6877f11b-3755-49bc-8a15-9070c756d1ad'
+    expect(models.applications.findAll).toHaveBeenCalledWith(expect.objectContaining({
+      include:
+        {
+          attributes: [],
+          through: { attributes: [], where: { role: 'USER' } },
+          where: { id: '6877f11b-3755-49bc-8a15-9070c756d1ad' }
         }
-      }
-    })
+    }))
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)

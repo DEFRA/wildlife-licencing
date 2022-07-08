@@ -14,16 +14,53 @@ An outline of the data object for an application update
 ```json
 {
   "application": {
-    "id": "",
-    "applicatant": {
-      "organization": {}
+    "data": {
+      "eligibility": {
+        "isOwnerOfLand": true
+      },
+      "applicationType": "A24 Badger",
+      "applicationReferenceNumber": "2022-500100-A24-BAD"
     },
-    "ecologist": {
-      "organization": {}
+    "keys": {
+      "apiKey": "e8fa7a0d-d8dd-4016-9ef3-1503bbffc059",
+      "sddsKey": "3601e312-d9f6-ec11-82e6-002248c5c17e"
+    },
+    "applicant": {
+      "data": {
+        "fullName": "sss"
+      },
+      "keys": {
+        "apiKey": "656f6707-13e3-459d-8f1e-b1b30df79c09",
+        "sddsKey": null
+      }
     },
     "sites": [
       {
-        "id": ""
+        "data": {
+          "name": "Site 1"
+        },
+        "keys": {
+          "apiKey": "fb893da1-cac2-4131-b9ed-5b518ebe1123",
+          "sddsKey": null
+        }
+      },
+      {
+        "data": {
+          "name": "Site 2"
+        },
+        "keys": {
+          "apiKey": "37619baf-be3f-4be3-a6d3-4e530290cc7c",
+          "sddsKey": null
+        }
+      },
+      {
+        "data": {
+          "name": "Site 3"
+        },
+        "keys": {
+          "apiKey": "42598407-4b66-492b-9b30-ca71d4db3ce0",
+          "sddsKey": null
+        }
       }
     ]
   }
@@ -40,52 +77,11 @@ Reference data may be referred to by name, and global option sets must be addres
 }
 ```
 
-An example of the keys object for applications
-```json
-[
-  {
-    "apiKey": "8d382932-36ba-4969-84f5-380f4f6830c1",
-    "apiTable": "applications",
-    "apiBasePath": "application",
-    "powerAppsKey": "8f75e48d-1393-ec11-b400-0022481ac7f1",
-    "powerAppsTable": "sdds_applications"
-  },
-  {
-    "apiKey": null,
-    "apiTable": "applications",
-    "apiBasePath": "application.applicant",
-    "powerAppsKey": "8c75e48d-1393-ec11-b400-0022481ac7f1",
-    "powerAppsTable": "contacts"
-  },
-  {
-    "apiKey": null,
-    "apiTable": "applications",
-    "apiBasePath": "application.applicant.organization",
-    "powerAppsKey": "3c390f71-2193-ec11-b400-0022481ac7f1",
-    "powerAppsTable": "accounts"
-  },
-  {
-    "apiKey": null,
-    "apiTable": "applications",
-    "apiBasePath": "application.ecologist",
-    "powerAppsKey": "2bdfc7fa-2293-ec11-b400-0022481ac5ab",
-    "powerAppsTable": "contacts"
-  },
-  {
-    "apiKey": null,
-    "apiTable": "applications",
-    "apiBasePath": "application.ecologist.organization",
-    "powerAppsKey": "2edfc7fa-2293-ec11-b400-0022481ac5ab",
-    "powerAppsTable": "accounts"
-  }
-]
-```
+(3) The data JSON objects is passed to __batchUpdate__ in ```packages/powerapps-lib/src/batch-update/batch-update.js```. This first creates a batch request handle which stores the newly generated batchId. The batch request body is then generated. The heavy lifting is done by  __createBatchRequestObjects__ in ```packages/powerapps-lib/src/schema/processors/schema-processes.js``` which creates a sequential array of objects, each representing a single operation within the batch and contains details of all the assignments, the relationship bindings, and the creation of many-to-many relationships.
 
-(3) The keys and data JSON objects are passed to __batchUpdate__ in ```packages/powerapps-lib/src/batch-update/batch-update.js```. This first creates a batch request handle which stores the newly generated batchId. The batch request body is then generated. The heavy lifting is done by  __createBatchRequestObjects__ in ```packages/powerapps-lib/src/schema/processors/schema-processes.js``` which creates a sequential array of objects, each representing a single operation within the batch and contains details of all the assignments, the relationship bindings, and the creation of many-to-many relationships.
+(4) The response is then parsed for errors and any errors are logged. If there are no errors then the dataverse keys are retrieved from the response and returned to the queue processor in an array.
 
-(4) The response is then parsed for errors and any errors are logged. If there are no errors then the dataverse keys are retrieved from the response and are used to decorate the keys object, which is returned to the queue processor.
-
-(5) The keys object is parsed and filtered into the sets pertaining to the applications and sites tables and written down into the database.
+(5) The keys returned are written down into the database.
 
 (6) If the batch request does not succeed then an exception will be thrown; either a recoverable error exception or an unrecoverable error exception. Recoverable errors will return a Promise.reject will will prompt the queue processor to retry. Unrecoverable errors are logged and removed from the queue by returning Promise.resolve. Request errors are classified as follows;
 - 5XX are all recoverable
@@ -104,6 +100,3 @@ The following example illustrates the applications inbound process, but it is co
 (2) The schema object is used to create a transformer function and a request path. The request path is an expansion of the schema into a nested ODATA query, and the transformer function is inserted into the stream to produce a sequence of single objects compliant with the API source data-structure.
 
 (3) The database writer wraps the stream and a function to write the data into the database.
-
-
-

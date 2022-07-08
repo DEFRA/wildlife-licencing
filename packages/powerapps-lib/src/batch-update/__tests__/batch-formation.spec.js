@@ -34,32 +34,34 @@ describe('Batch query formation', () => {
   })
 
   it('decorates the key object from the response', async () => {
-    const { openBatchRequest, createKeyObject } = await import('../batch-formation.js')
-    const keySet = [{
-      apiTable: 'applications',
-      apiKey: '8d382932-36ba-4969-84f5-380f4f6830c1',
-      apiBasePath: 'application',
-      powerAppsTable: 'sdds_applications',
-      contentId: 2
-    },
-    {
-      apiTable: 'applications',
-      apiKey: null,
-      apiBasePath: 'application.applicant',
-      powerAppsTable: 'contacts',
-      contentId: 1
-    }]
+    jest.doMock('../../schema/processors/schema-processes.js', () => ({
+      Methods: Methods,
+      createBatchRequestObjects: () => ([
+        { contentId: 1, apiTable: 'tab1', apiKey: '123' },
+        { contentId: 2, apiTable: 'tab2', apiKey: '456' },
+        { contentId: 3, apiTable: 'tab3', apiKey: '789' }
+      ])
+    }))
+    const { openBatchRequest, createKeyObject, createBatchRequest } = await import('../batch-formation.js')
     const response = fs.readFileSync(path.join(__dirname, './batch-response-body.txt'), { encoding: 'utf8' })
     const handle = openBatchRequest([], 'foo')
-    const result = createKeyObject(handle, response, keySet)
+    await createBatchRequest(handle, {}, {})
+    const result = createKeyObject(handle, response)
     expect(result).toEqual([
-      expect.objectContaining({
-        powerAppsKey: '8f75e48d-1393-ec11-b400-0022481ac7f1',
-        powerAppsTable: 'sdds_applications'
-      }), expect.objectContaining({
-        powerAppsKey: '8c75e48d-1393-ec11-b400-0022481ac7f1',
-        powerAppsTable: 'contacts'
-      })
+      {
+        apiTableName: 'tab1',
+        keys: {
+          apiKey: '123',
+          sddsKey: '8c75e48d-1393-ec11-b400-0022481ac7f1'
+        }
+      },
+      {
+        apiTableName: 'tab2',
+        keys: {
+          apiKey: '456',
+          sddsKey: '8f75e48d-1393-ec11-b400-0022481ac7f1'
+        }
+      }
     ])
   })
 })

@@ -1,6 +1,81 @@
 describe('The task-list handler', () => {
   beforeEach(() => jest.resetModules())
 
+  describe('the checkData function', () => {
+    it('returns null if not authenticated', async () => {
+      const request = {
+        auth: { isAuthenticated: false }
+      }
+      const { checkData } = await import('../tasklist.js')
+      const result = await checkData(request)
+      expect(result).toBeNull()
+    })
+
+    it('returns null if redirecting to an application', async () => {
+      const request = {
+        auth: { isAuthenticated: true },
+        query: { applicationId: '123' }
+      }
+      const { checkData } = await import('../tasklist.js')
+      const result = await checkData(request)
+      expect(result).toBeNull()
+    })
+
+    it('returns null if an application is set in the journey', async () => {
+      const request = {
+        auth: { isAuthenticated: true },
+        query: {},
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: '123' }))
+        })
+      }
+      const { checkData } = await import('../tasklist.js')
+      const result = await checkData(request)
+      expect(result).toBeNull()
+    })
+
+    it('returns a redirect to the applications page if no application is set in the journey and the user has an application', async () => {
+      const request = {
+        auth: { isAuthenticated: true },
+        query: {},
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            findByUser: jest.fn(() => [{ id: '123' }])
+          }
+        }
+      }))
+      const { checkData } = await import('../tasklist.js')
+      const mockRedirect = jest.fn(() => '/applications')
+      const result = await checkData(request, { redirect: () => mockRedirect })
+      expect(result()).toEqual('/applications')
+    })
+
+    it('returns null if no application is set in the journey and the user has no applications', async () => {
+      const request = {
+        auth: { isAuthenticated: true },
+        query: {},
+        cache: () => ({
+          getData: jest.fn(() => ({}))
+        })
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            findByUser: jest.fn(() => [])
+          }
+        }
+      }))
+      const { checkData } = await import('../tasklist.js')
+      const result = await checkData(request)
+      expect(result).toBeNull()
+    })
+  })
+
   describe('the getApplication function', () => {
     it('gets an application from the cache', async () => {
       // Mock out the API calls

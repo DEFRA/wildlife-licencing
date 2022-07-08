@@ -1,0 +1,58 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block topNavigation %}
+    <p class="govuk-body sdds-save-link">
+        <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+    </p>
+{% endblock %}
+
+{% set errorMap = {
+        'is-organisation': {
+            'any.required': { ref: '#is-organisation', text: noneSelected }
+        },
+        'organisation-name': {
+            'string.empty': { ref: '#organisation-name', text: noneNamed },
+            'string.pattern.base': { ref: '#organisation-name', text: badName }
+        }
+    }
+%}
+
+{% set organisationName %}
+    {{ govukInput({
+      id: "organisation-name",
+      name: "organisation-name",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: "Name of organisation"
+      },
+      value: payload['organisation-name'] if payload['organisation-name'] else data.account.name,
+      attributes: { maxlength: 160 }
+    }) }}
+{% endset -%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "is-organisation",
+      name: "is-organisation",
+      errorMessage: {
+        text: noneSelected
+      } if error['is-organisation'] === 'any.required',
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: payload['is-organisation'] === 'yes' or data.account.name,
+          conditional: {
+            html: organisationName
+          }
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: payload['is-organisation'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

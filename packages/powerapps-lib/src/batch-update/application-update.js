@@ -9,5 +9,4 @@ const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
  * or UPDATE an application in Power Apps
  * Calls the batch update for the application
  */
-export const applicationUpdate = async (applicationJson, targetKeysJson) =>
-  batchUpdate(applicationJson, targetKeysJson, tableSet)
+export const applicationUpdate = async payload => batchUpdate(payload, tableSet)

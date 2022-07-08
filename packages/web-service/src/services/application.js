@@ -35,7 +35,7 @@ export const ApplicationService = {
   // and does not associate
   switchApplication: async (request, id) => {
     const journeyData = await request.cache().getData()
-    if (journeyData.applicationId && id !== journeyData.applicationId) {
+    if (!journeyData.applicationId || (journeyData.applicationId && id !== journeyData.applicationId)) {
       journeyData.applicationId = id
       delete journeyData.applicationUserId
       delete journeyData.role

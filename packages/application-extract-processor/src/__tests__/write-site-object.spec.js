@@ -39,7 +39,7 @@ describe('The application extract processor: write-site-object', () => {
     const { writeSiteObject } = await import('../write-site-object.js')
     const result = await writeSiteObject({ data, keys }, new Date())
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
-    expect(mockUpdate).toHaveBeenCalledWith({ site: { ...data.sites }, targetKeys: keys[0], updateStatus: 'U' }, expect.any(Object))
+    expect(mockUpdate).toHaveBeenCalledWith({ site: { ...data.sites }, updateStatus: 'U' }, expect.any(Object))
   })
 
   it('makes an update on a found, unlocked site, if data has changed', async () => {
@@ -52,7 +52,7 @@ describe('The application extract processor: write-site-object', () => {
     const { writeSiteObject } = await import('../write-site-object.js')
     const result = await writeSiteObject({ data, keys }, new Date())
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
-    expect(mockUpdate).toHaveBeenCalledWith({ site: { ...data.sites }, targetKeys: keys[0], updateStatus: 'U' }, expect.any(Object))
+    expect(mockUpdate).toHaveBeenCalledWith({ site: { ...data.sites }, updateStatus: 'U' }, expect.any(Object))
   })
 
   it('ignores an update on a found, unlocked site, if data has not changed)', async () => {
@@ -95,7 +95,6 @@ describe('The application extract processor: write-site-object', () => {
       id: expect.any(String),
       sddsSiteId: 'add63e12-510f-ec11-b6e6-000d3a0cc807',
       site: { ...data.sites },
-      targetKeys: expect.any(Object),
       updateStatus: 'U'
     })
   })

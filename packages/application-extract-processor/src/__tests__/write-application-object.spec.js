@@ -34,8 +34,7 @@ describe('The application extract processor: write-application-object', () => {
 
     expect(mockUpdate).toHaveBeenCalledWith({
       application: TEST_APPLICATION,
-      updateStatus: 'U',
-      targetKeys: keysArr
+      updateStatus: 'U'
     }, {
       returning: false,
       where: {
@@ -79,8 +78,7 @@ describe('The application extract processor: write-application-object', () => {
 
     expect(mockUpdate).toHaveBeenCalledWith({
       application: TEST_APPLICATION,
-      updateStatus: 'U',
-      targetKeys: keysArr
+      updateStatus: 'U'
     }, {
       returning: false,
       where: {
@@ -183,15 +181,10 @@ describe('The application extract processor: write-application-object', () => {
       keys: keysArr
     }, Date.now())
 
-    const newKeysArray = [
-      Object.assign({}, { apiKey: expect.any(String) }, keysArr[0])
-    ]
-
     expect(mockCreate).toHaveBeenCalledWith({
       id: expect.any(String),
       application: TEST_APPLICATION,
       updateStatus: 'U',
-      targetKeys: newKeysArray,
       sddsApplicationId: '743da832-786d-ec11-8943-000d3a86e24e'
     })
 

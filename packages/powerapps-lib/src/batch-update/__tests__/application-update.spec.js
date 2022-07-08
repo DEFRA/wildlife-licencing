@@ -4,8 +4,8 @@ describe('The application update wrapper', () => {
     const mockBatchUpdate = jest.fn()
     jest.doMock('../batch-update.js', () => ({ batchUpdate: mockBatchUpdate }))
     const { applicationUpdate } = await import('../application-update.js')
-    await applicationUpdate({ src: 'src' }, { keys: 'keys' })
+    await applicationUpdate({ src: 'src' })
     expect(mockBatchUpdate).toHaveBeenLastCalledWith(
-      { src: 'src' }, { keys: 'keys' }, expect.any(Array))
+      { src: 'src' }, expect.any(Array))
   })
 })
