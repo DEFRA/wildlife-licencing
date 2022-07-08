@@ -17,7 +17,7 @@ const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
   const dir = `.${process.env.SCANDIR}/${filename}`
-  return ClamScan.then(async (clamscan) => {
+  return ClamScan.then(async clamscan => {
     try {
       const { isInfected } = await clamscan.isInfected(dir)
       if (isInfected) {
@@ -32,10 +32,10 @@ export async function scanFile (filename) {
       return isInfected
     } catch (err) {
       console.error(err.message)
-      fs.unlinkSync(dir, err => {
-        if (err) {
-          console.error(err)
-          throw err
+      fs.unlinkSync(dir, delErr => {
+        if (delErr) {
+          console.error(delErr)
+          throw delErr
         }
       })
       console.error(err.message)
