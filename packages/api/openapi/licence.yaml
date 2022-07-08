@@ -1335,6 +1335,46 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# Habitat-Sites. Initially badger sett.
+################################################################################################
+  '/application/{applicationId}/habitat-site':
+    post:
+      description: Create a new habitat site for an application
+      summary: uses one of the habitat schemas depending on species
+      operationId: postHabitatSite
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/badgerSett'
+
+      responses:
+        201:
+          description: The habitat object has been created
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSett'
+        400:
+          description: Bad request
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Sites
 ################################################################################################
   '/sites':
@@ -1920,6 +1960,50 @@ components:
         - ECOLOGIST
         - NAMED-INDIVIDUAL
 
+    habitatSite:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        activityId:
+          $ref: '#/components/schemas/uuid'
+        speciesId:
+          $ref: '#/components/schemas/uuid'
+        methodIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/option'
+        startDate:
+          $ref: '#/components/schemas/date'
+        endDate:
+          $ref: '#/components/schemas/date'
+        gridReference:
+          $ref: '#/components/schemas/gridReference'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    badgerSett:
+      allOf:
+        - $ref: '#/components/schemas/habitatSite'
+        - type: object
+          properties:
+            settType:
+              $ref: '#/components/schemas/option'
+            active:
+              type: boolean
+            willReopen:
+              type: boolean
+            numberOfEntrances:
+              type: number
+              minimum: 1
+              maximum: 100
+
     sites:
       type: array
       items:
@@ -2066,12 +2150,23 @@ components:
       example: 2021-12-06T15:56:46.825Z
       pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z$
 
+    date:
+      type: string
+      readOnly: true
+      example: 2021-12-06
+      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+
     uuid:
       type: string
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
       example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
       minLength: 36
       maxLength: 36
+
+    option:
+      type: integer
+      minimum: 100000000
+      maximum: 999999999
 
     email:
       type: string
