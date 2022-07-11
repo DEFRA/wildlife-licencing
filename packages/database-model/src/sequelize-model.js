@@ -96,6 +96,28 @@ async function defineSites (sequelize) {
   })
 }
 
+async function defineHabitatSites (sequelize) {
+  models.habitatSites = await sequelize.define('habitat-sites', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    habitatSite: { type: DataTypes.JSONB },
+    sddsHabitatSiteId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' }
+    ]
+  })
+}
+
 async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -293,6 +315,7 @@ const createModels = async () => {
   // Define te applications and sites
   await defineApplications(sequelize)
   await defineSites(sequelize)
+  await defineHabitatSites(sequelize)
 
   await defineApplicationUsers(sequelize)
 
@@ -321,6 +344,7 @@ const createModels = async () => {
   await models.accounts.sync()
 
   await models.applications.sync()
+  await models.habitatSites.sync()
   await models.sites.sync()
 
   await models.applicationUsers.sync()

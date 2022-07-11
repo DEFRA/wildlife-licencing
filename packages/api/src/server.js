@@ -81,6 +81,13 @@ import {
 } from './handlers/application/eligibility/eligibility.js'
 
 import {
+  postHabitatSite,
+  getHabitatSiteByHabitatSiteId,
+  putHabitatSite,
+  deleteHabitatSite
+} from './handlers/habitat-site/habitat-site.js'
+
+import {
   getApplicationTypes,
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
@@ -163,6 +170,13 @@ const handlers = {
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite,
+
+  // Habitat site handlers
+  postHabitatSite,
+  getHabitatSiteByHabitatSiteId,
+  putHabitatSite,
+  deleteHabitatSite,
+
   // Miscellaneous handlers
   getApplicationTypes,
   getApplicationPurposes,
