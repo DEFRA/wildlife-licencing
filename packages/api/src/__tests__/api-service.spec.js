@@ -23,6 +23,7 @@ describe('The wrapper: api-service', () => {
           done()
         })
       } catch (e) {
+        console.error(e)
         done(e)
       }
     })
@@ -59,6 +60,7 @@ describe('The wrapper: api-service', () => {
           done()
         })
       } catch (e) {
+        console.error(e)
         done(e)
       }
     })
