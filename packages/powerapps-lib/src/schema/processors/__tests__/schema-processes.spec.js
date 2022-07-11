@@ -7,10 +7,7 @@ import {
 
 import {
   srcObj,
-  initialKeys,
   initialGeneratedAssignmentsObject,
-  updateKeys,
-  updatedGeneratedAssignmentsObject,
   expectedApplicationRequestPath,
   applicationResponseObject,
   applicationResponseTransformedDataObject,
@@ -210,6 +207,24 @@ describe('the schema processes', () => {
       }
       const result = await createTableMMRelationshipsPayloads(SddsApplicationKeys, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_application_sdds_site_sdds_site' }])
+    })
+  })
+
+  describe('the createTable1MRelationshipsPayloads function', () => {
+    it('creates a correct many-to-many post statement object', async () => {
+      const { createTable1MRelationshipsPayloads } = await import('../schema-processes.js')
+      const updateObjects = {
+        table: 'sdds_licensableactions',
+        relationshipName: 'sdds_licensableaction_applicationid_sdds_',
+        contentId: 1,
+        assignments: {
+          sdds_species: 'This place'
+        },
+        powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
+        method: 'PATCH'
+      }
+      const result = await createTable1MRelationshipsPayloads(SddsApplication, [updateObjects])
+      expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })
 

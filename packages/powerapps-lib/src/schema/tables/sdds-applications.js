@@ -48,7 +48,7 @@ export const SddsApplication = new Table('sdds_applications', [
   new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization'),
 
-  // Licensable actions
+  // Licensable actions - does this need to be in the extractors?
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
     RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites')
 
