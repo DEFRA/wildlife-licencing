@@ -154,6 +154,43 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
 }
 
 /**
+ * Generate the update objects for the one-to-many relationships on any
+ * given table in the set
+ * @param table - The table
+ * @param tableSet - The set of tables in the update
+ * @param srcObj - The source object
+ * @param updateObjects - The set of update objects being built
+ * @returns {Promise<null|*[]>}
+ */
+export const createTable1MRelationshipsPayloads = async (table, updateObjects) => {
+  const result = []
+
+  if (!table.relationships) {
+    return null
+  }
+
+  const o2mRelationships = table.relationships
+    .filter(r => r.type === RelationshipType.ONE_TO_MANY)
+
+  if (!o2mRelationships.length) {
+    return null
+  }
+
+  for (const relationship of o2mRelationships) {
+    // Only set up where the target is in the update
+    const rel = updateObjects.filter(u => u.relationshipName === relationship.name)
+    if (rel.length) {
+      rel.forEach(r => result.push({
+        name: relationship.name,
+        assignments: { '@odata.id': `$${r.contentId}` }
+      }))
+    }
+  }
+
+  return result
+}
+
+/**
  * Generate the update objects for the many-to-many relationships on any
  * given table in the set
  * @param table - The table
@@ -279,7 +316,23 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
       }
     }
 
-    // Handle m2m relationships. These are a separate requests occurring after the containing
+    // Handle 1-m relationships. These are a separate requests occurring after the containing
+    // (driving) table request
+    const table12MRelationshipsPayloads = await createTable1MRelationshipsPayloads(table, updateObjects)
+    if (table12MRelationshipsPayloads && table12MRelationshipsPayloads.length) {
+      for (const m of table12MRelationshipsPayloads) {
+        updateObjects.push({
+          table: `$${currentContentId}/${m.name}/$ref`,
+          relationshipName: table.relationshipName,
+          contentId: contentId,
+          assignments: m.assignments,
+          method: Methods.POST
+        })
+        contentId++
+      }
+    }
+
+    // Handle m-m relationships. These are a separate requests occurring after the containing
     // (driving) table request
     const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, updateObjects)
     if (tableM2MRelationshipsPayloads && tableM2MRelationshipsPayloads.length) {

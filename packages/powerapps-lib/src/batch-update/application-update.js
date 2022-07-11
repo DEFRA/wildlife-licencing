@@ -1,8 +1,9 @@
 import { batchUpdate } from './batch-update.js'
 import { SddsApplication, Contact, Account, SddsSite } from '../schema/tables/tables.js'
 import { createTableSet } from '../schema/processors/schema-processes.js'
+import { SddsLicensableactions } from '../schema/tables/sdds-licensableactions.js'
 
-const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
+const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite, SddsLicensableactions])
 
 /**
  * On submit INSERT an application into Power Apps

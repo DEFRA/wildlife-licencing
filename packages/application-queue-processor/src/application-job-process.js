@@ -15,7 +15,8 @@ export const postProcess = async targetKeys => {
     applications: { sddsKey: 'sddsApplicationId' },
     sites: { sddsKey: 'sddsSiteId' },
     contacts: { sddsKey: 'sddsContactId' },
-    accounts: { sddsKey: 'sddsAccountId' }
+    accounts: { sddsKey: 'sddsAccountId' },
+    habitatSites: { sddsKey: 'sddsHabitatSiteId' }
   }
 
   try {
@@ -134,6 +135,24 @@ const doSites = async (applicationId, payload) => {
   }
 }
 
+const doHabitatSites = async (applicationId, payload) => {
+  const habitatSites = await models.habitatSites.findAll({
+    where: { applicationId }
+  })
+
+  if (habitatSites.length) {
+    const sites = habitatSites.map(s => ({
+      data: s.habitatSite,
+      keys: {
+        apiKey: s.id,
+        sddsKey: s.sddsSiteId
+      }
+    }))
+
+    Object.assign(payload.application, { habitatSites: sites })
+  }
+}
+
 /**
  * Merge the application, contacts, accounts and sites into a single API payload object
  * Read the keys object and add to each section
@@ -183,6 +202,9 @@ export const buildApiObject = async applicationId => {
 
     // Add in the application sites
     await doSites(applicationId, payload)
+
+    // Add in the habitat sites (licensable actions)
+    await doHabitatSites(applicationId, payload)
 
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload
