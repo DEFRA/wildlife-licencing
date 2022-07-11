@@ -16,7 +16,7 @@ const options = {
 const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
-  const dir = `.${process.env.SCANDIR}/${filename}`
+  const dir = `${process.env.SCANDIR}/${filename}`
   return ClamScan.then(async clamscan => {
     try {
       const { isInfected } = await clamscan.isInfected(dir)
