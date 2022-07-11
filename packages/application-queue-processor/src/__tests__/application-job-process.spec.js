@@ -44,7 +44,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
@@ -71,6 +72,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'APPLICANT' }])
@@ -118,6 +120,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([])
@@ -165,6 +168,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationAccounts: {
             findAll: jest.fn()
               .mockReturnValueOnce([{ accountId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'APPLICANT-ORGANISATION' }])
@@ -212,6 +216,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationAccounts: {
             findAll: jest.fn()
               .mockReturnValueOnce([])
@@ -260,6 +265,7 @@ describe('The application job processor', () => {
           },
           applicationContacts: { findAll: jest.fn(() => []) },
           applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationSites: {
             findAll: jest.fn(() => [{
               id: '79015868-4149-420c-90f5-356dc2d06184',
@@ -404,7 +410,8 @@ describe('The application job processor', () => {
           },
           applicationSites: {
             findAll: jest.fn(() => [])
-          }
+          },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -444,7 +451,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -470,7 +478,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')

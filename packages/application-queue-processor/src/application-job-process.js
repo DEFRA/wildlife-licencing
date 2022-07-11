@@ -145,7 +145,7 @@ const doHabitatSites = async (applicationId, payload) => {
       data: s.habitatSite,
       keys: {
         apiKey: s.id,
-        sddsKey: s.sddsSiteId
+        sddsKey: s.sddsHabitatSiteId
       }
     }))
 
