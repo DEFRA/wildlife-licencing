@@ -9,11 +9,11 @@ export default async (context, req, h) => {
     const { applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
 
-    // If the application does not exist return a bad request and error
+    // If the application does not exist return a not found and error
     if (!application) {
-      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } })
+      return h.response({ code: 404, error: { description: `applicationId: ${applicationId} not found` } })
         .type(APPLICATION_JSON)
-        .code(400)
+        .code(404)
     }
 
     const { dataValues } = await models.habitatSites.create({

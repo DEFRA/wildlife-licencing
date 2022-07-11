@@ -69,6 +69,16 @@ describe('The postHabitatSite handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
+  it('returns a 404 on application not found', async () => {
+    models.applications = {
+      findByPk: jest.fn(() => null)
+    }
+    cache.delete = jest.fn()
+    await postHabitatSite(context, req, h)
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(404)
+  })
+
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
