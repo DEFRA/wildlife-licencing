@@ -188,31 +188,9 @@ describe('the schema processes', () => {
     })
   })
 
-  describe('the createTableMMRelationshipsPayloads function', () => {
+  describe('the createTableRelationshipsPayloads function', () => {
     it('creates a correct many-to-many post statement object', async () => {
-      const { createTableMMRelationshipsPayloads } = await import('../schema-processes.js')
-      const updateObjects = {
-        table: 'sdds_sites',
-        relationshipName: 'sdds_application_sdds_site_sdds_site',
-        contentId: 1,
-        assignments: {
-          sdds_name: 'Cow field',
-          sdds_osgridreference: '234765',
-          sdds_addressline1: 'Nr Henleaze',
-          sdds_town: 'Bristol',
-          sdds_postcode: 'BS22 1QA'
-        },
-        powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
-        method: 'PATCH'
-      }
-      const result = await createTableMMRelationshipsPayloads(SddsApplicationKeys, [updateObjects])
-      expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_application_sdds_site_sdds_site' }])
-    })
-  })
-
-  describe('the createTable1MRelationshipsPayloads function', () => {
-    it('creates a correct many-to-many post statement object', async () => {
-      const { createTable1MRelationshipsPayloads } = await import('../schema-processes.js')
+      const { createTableRelationshipsPayloads } = await import('../schema-processes.js')
       const updateObjects = {
         table: 'sdds_licensableactions',
         relationshipName: 'sdds_licensableaction_applicationid_sdds_',
@@ -223,7 +201,7 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTable1MRelationshipsPayloads(SddsApplication, [updateObjects])
+      const result = await createTableRelationshipsPayloads(SddsApplication, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })
