@@ -70,6 +70,8 @@ services:
       - "4000:4000"
     env_file:
       - ./env/web.env
+    volumes:
+      - scandir:/scandir
     deploy:
       mode: replicated
       replicas: 1
