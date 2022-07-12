@@ -6,76 +6,74 @@ const roles = {
   'ECOLOGIST-ORGANISATION': 'ECOLOGIST-ORGANISATION'
 }
 
-const doApplicantOrganisation = async (data, application, counter) => {
-  if (data.application.applicantOrganization) {
-    // Get the account record
-    const applicantOrganization = await models.accounts.findOne({
-      where: { sdds_account_id: data.application.applicantOrganization.accountId }
-    })
+const doApplicantOrganisation = async (applicationId, sddsApplicationId, sddsAccountId, counter) => {
+  const applicantOrganisation = await models.accounts.findOne({
+    where: { sdds_account_id: sddsAccountId }
+  })
 
-    if (applicantOrganization) {
-      const applicationApplicantOrganization = await models.applicationAccounts.findOne({
-        where: {
-          applicationId: application.id,
-          accountId: applicantOrganization.id,
-          accountRole: roles['APPLICANT-ORGANISATION']
-        }
-      })
-      if (!applicationApplicantOrganization) {
-        await models.applicationAccounts.create({
-          id: uuidv4(),
-          applicationId: application.id,
-          accountId: applicantOrganization.id,
-          accountRole: roles['APPLICANT-ORGANISATION']
-        })
-        counter.insert++
+  if (applicantOrganisation) {
+    const applicationApplicantOrganisation = await models.applicationAccounts.findOne({
+      where: {
+        applicationId: applicationId,
+        accountId: applicantOrganisation.id,
+        accountRole: roles['APPLICANT-ORGANISATION']
       }
+    })
+    if (!applicationApplicantOrganisation) {
+      await models.applicationAccounts.create({
+        id: uuidv4(),
+        applicationId: applicationId,
+        accountId: applicantOrganisation.id,
+        accountRole: roles['APPLICANT-ORGANISATION']
+      })
+      counter.insert++
     }
   }
 }
 
-const doEcologistOrganisation = async (data, application, counter) => {
-  if (data.application.ecologistOrganization) {
-    const ecologistOrganization = await models.accounts.findOne({
-      where: { sdds_account_id: data.application.ecologistOrganization.accountId }
-    })
+const doEcologistOrganisation = async (applicationId, sddsApplicationId, sddsAccountId, counter) => {
+  const ecologistOrganisation = await models.accounts.findOne({
+    where: { sdds_account_id: sddsAccountId }
+  })
 
-    if (ecologistOrganization) {
-      const applicationEcologistOrganization = await models.applicationAccounts.findOne({
-        where: {
-          applicationId: application.id,
-          accountId: ecologistOrganization.id,
-          accountRole: roles['ECOLOGIST-ORGANISATION']
-        }
-      })
-      if (!applicationEcologistOrganization) {
-        await models.applicationAccounts.create({
-          id: uuidv4(),
-          applicationId: application.id,
-          accountId: ecologistOrganization.id,
-          accountRole: roles['ECOLOGIST-ORGANISATION']
-        })
-        counter.insert++
+  if (ecologistOrganisation) {
+    const applicationApplicantOrganisation = await models.applicationAccounts.findOne({
+      where: {
+        applicationId: applicationId,
+        accountId: ecologistOrganisation.id,
+        accountRole: roles['ECOLOGIST-ORGANISATION']
       }
+    })
+    if (!applicationApplicantOrganisation) {
+      await models.applicationAccounts.create({
+        id: uuidv4(),
+        applicationId: applicationId,
+        accountId: ecologistOrganisation.id,
+        accountRole: roles['ECOLOGIST-ORGANISATION']
+      })
+      counter.insert++
     }
   }
 }
 
-export const writeApplicationAccountObject = async obj => {
-  const { data } = obj
+export const writeApplicationAccountObject = async ({ _data, keys }) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
 
+  const sddsApplicationId = keys.find(k => k.apiBasePath === 'application')?.powerAppsKey
+  const sddsApplicantAccountId = keys.find(k => k.apiBasePath === 'application.applicantOrganization')?.powerAppsKey
+  const sddsEcologistAccountId = keys.find(k => k.apiBasePath === 'application.ecologistOrganization')?.powerAppsKey
+
   try {
-    if (data.application.applicantOrganization || data.application.ecologistOrganization) {
+    if (sddsApplicantAccountId || sddsEcologistAccountId) {
       // Find the application record using the Power Apps keys
       const application = await models.applications.findOne({
-        where: { sdds_application_id: data.application.id }
+        where: { sdds_application_id: sddsApplicationId }
       })
 
       // If the applications is not (yet) in the database do nothing
       if (application) {
-        await doApplicantOrganisation(data, application, counter)
-        await doEcologistOrganisation(data, application, counter)
+        await doApplicantOrganisation(application.id, sddsApplicationId, sddsApplicantAccountId, counter)
+        await doEcologistOrganisation(application.id, sddsApplicationId, sddsEcologistAccountId, counter)
       }
     }
     return counter

@@ -9,7 +9,8 @@ import {
   applicationSitesReadStream,
   applicationTypesReadStream,
   applicationPurposesReadStream,
-  globalOptionSetReadStream
+  globalOptionSetReadStream,
+  licensableActionsReadStream
 } from './read-streams/read-streams.js'
 
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
@@ -26,6 +27,7 @@ export {
   applicationSitesReadStream,
   applicationPurposesReadStream,
   applicationTypesReadStream,
+  licensableActionsReadStream,
   globalOptionSetReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,

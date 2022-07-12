@@ -331,7 +331,7 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description),sdds_applicantid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode&$filter=sdds_sourceremote eq true),sdds_organisationid($select=name&$filter=sdds_sourceremote eq true),sdds_ecologistid($select=lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode&$filter=sdds_sourceremote eq true),sdds_ecologistorganisationid($select=name&$filter=sdds_sourceremote eq true)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid)'
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
   '@odata.etag': 'W/"3285321"',
@@ -478,13 +478,11 @@ export const applicationSiteResponseObject = {
   sdds_application_sdds_site_sdds_site: [
     {
       '@odata.etag': 'W/"3374594"',
-      sdds_siteid: '286759f9-268f-ec11-b400-000d3a8728b2',
-      statecode: 0
+      sdds_siteid: '286759f9-268f-ec11-b400-000d3a8728b2'
     },
     {
       '@odata.etag': 'W/"3374595"',
-      sdds_siteid: 'd0d79386-fd8f-ec11-b400-000d3a872ae7',
-      statecode: 0
+      sdds_siteid: 'd0d79386-fd8f-ec11-b400-000d3a872ae7'
     }
   ],
   'sdds_application_sdds_site_sdds_site@odata.nextLink': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/sdds_applications(2b6759f9-268f-ec11-b400-000d3a8728b2)/sdds_application_sdds_site_sdds_site?$select=sdds_siteid,statecode'

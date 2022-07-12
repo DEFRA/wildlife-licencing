@@ -136,7 +136,7 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
     .map(r => r.name)
 
   for (const relationship of table.relationships) {
-    if (relationship.type === RelationshipType.MANY_TO_ONE) {
+    if (relationship.type === RelationshipType.MANY_TO_ONE && OperationType.outbound(relationship.operationType)) {
       // If the relationship is found in our table set, attempt to bind the value
       if (relationshipSet.includes(relationship.name)) {
         // The value will be replaced by the content index in the final parse
@@ -169,6 +169,7 @@ export const createTableRelationshipsPayloads = async (table, updateObjects) => 
 
   const relationships = table.relationships
     .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
+    .filter(r => OperationType.outbound(r.operationType))
 
   if (!relationships.length) {
     return null
@@ -323,12 +324,20 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
 
   if (table.relationships && table.relationships.length) {
     for (const relationship of table.relationships) {
-      // Filter the relationships by the tables included in the table set
-      const nextTable = include.find(i => i.name === relationship.relatedTable)
-      if (nextTable) {
-        const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
-        path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
-        delim = ','
+      // Check the relationship is inbound
+      if (OperationType.inbound(relationship.operationType)) {
+        // Filter the relationships by the tables included in the table set
+        const nextTable = include.find(i => i.name === relationship.relatedTable)
+        if (nextTable) {
+          // If the relationship is keyOnly then do not expand beyond the named key
+          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+          if (relationship.keyOnly) {
+            path += `${delim}${navigationProperty}($select=${nextTable.keyName})`
+          } else {
+            path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
+          }
+          delim = ','
+        }
       }
     }
   }

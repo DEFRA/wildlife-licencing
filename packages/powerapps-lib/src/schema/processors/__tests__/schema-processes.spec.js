@@ -2,7 +2,7 @@ import {
   SddsApplication,
   SddsSite,
   Contact,
-  Account, SddsApplicationType, SddsApplicationPurpose, SddsApplicationKeys, SddsSiteKeys
+  Account, SddsApplicationType, SddsApplicationPurpose
 } from '../../tables/tables.js'
 
 import {
@@ -27,7 +27,7 @@ describe('the schema processes', () => {
   describe('the createTableSet function', () => {
     it('can determine the correct batch update sequence with a set of tables', async () => {
       const { createTableSet } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite, Contact, Account])
+      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
         .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
@@ -41,7 +41,7 @@ describe('the schema processes', () => {
   describe('the createTableColumnsPayload function', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [Contact, Account])
+      const tableSet = createTableSet(SddsApplication, [Contact, Account])
       const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
       const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
       expect(columnPayload).toEqual({
@@ -84,7 +84,7 @@ describe('the schema processes', () => {
 
     it('can create the batch update columns for sites; an array of items', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite])
+      const tableSet = createTableSet(SddsApplication, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
       const sitesPayloads = await createTableColumnsPayload(site, srcObj)
       expect(sitesPayloads).toEqual([
@@ -235,14 +235,40 @@ describe('the schema processes', () => {
       })
     })
 
-    it('build function to process an application-site response element', async () => {
+    it.only('build function to process an application-site response element', async () => {
       const { buildObjectTransformer, createTableSet } = await import('../schema-processes.js')
-      const applicationSiteTableSet = createTableSet(SddsApplicationKeys, [SddsSiteKeys])
-      const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationSiteTableSet)
+      const applicationSiteTableSet = createTableSet(SddsApplication, [SddsSite])
+      const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplication, applicationSiteTableSet)
       expect(applicationSiteObjectTransformer).toEqual(expect.any(Function))
       await expect(applicationSiteObjectTransformer(applicationSiteResponseObject)).resolves.toEqual({
-        data: applicationSiteResponseTransformedDataObject,
-        keys: applicationSiteResponseTransformedKeys
+        data: expect.any(Object),
+        keys: [
+          {
+            apiBasePath: 'application',
+            apiKey: null,
+            apiTable: 'applications',
+            contentId: null,
+            powerAppsKey: '2b6759f9-268f-ec11-b400-000d3a8728b2',
+            powerAppsTable: 'sdds_applications'
+          },
+          {
+            apiBasePath: 'application.sites',
+            apiKey: null,
+            apiTable: 'sites',
+            contentId: null,
+            powerAppsKey: '286759f9-268f-ec11-b400-000d3a8728b2',
+            powerAppsTable: 'sdds_sites'
+          },
+          {
+            apiBasePath: 'application.sites',
+            apiKey: null,
+            apiTable: 'sites',
+            contentId: null,
+            powerAppsKey: 'd0d79386-fd8f-ec11-b400-000d3a872ae7',
+            powerAppsTable: 'sdds_sites'
+          }
+
+        ]
       })
     })
   })

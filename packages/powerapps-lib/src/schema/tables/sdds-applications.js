@@ -28,57 +28,33 @@ export const SddsApplication = new Table('sdds_applications', [
     s => getReferenceDataIdByName('sdds_applicationpurposes', s),
     s => s.sdds_name),
 
-  // Site
+  // Sites
   new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',
-    RelationshipType.MANY_TO_MANY, null, 'sites'),
+    RelationshipType.MANY_TO_MANY, null, 'sites', null, null,
+    OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Applicant
   new Relationship('sdds_application_applicantid_Contact', 'contacts',
-    RelationshipType.MANY_TO_ONE, 'sdds_applicantid', 'applicant'),
+    RelationshipType.MANY_TO_ONE, 'sdds_applicantid', 'applicant',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Applicant organization
   new Relationship('sdds_application_organisationid_Account', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_organisationid', 'applicantOrganization'),
+    RelationshipType.MANY_TO_ONE, 'sdds_organisationid', 'applicantOrganization',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Ecologist
   new Relationship('sdds_application_ecologistid_Contact', 'contacts',
-    RelationshipType.MANY_TO_ONE, 'sdds_ecologistid', 'ecologist'),
+    RelationshipType.MANY_TO_ONE, 'sdds_ecologistid', 'ecologist',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Ecologist organization
   new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization'),
+    RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Licensable actions - does this need to be in the extractors?
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
     RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites')
 
 ], 'application', 'applications', 'sdds_applicationid')
-
-/*
- * Export a column with only the primary keys - helper for M2M relationships
- */
-const cp = Table.copy(SddsApplication)
-cp.columns = [new Column('sdds_applicationid', 'id', null, OperationType.INBOUND)]
-cp.relationships = [
-  // Site
-  new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',
-    RelationshipType.MANY_TO_MANY, null, 'sites'),
-
-  // Applicant
-  new Relationship('sdds_application_applicantid_Contact', 'contacts',
-    RelationshipType.MANY_TO_ONE, 'sdds_applicantid', 'applicant'),
-
-  // Applicant organization
-  new Relationship('sdds_application_organisationid_Account', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_organisationid', 'applicantOrganization'),
-
-  // Ecologist
-  new Relationship('sdds_application_ecologistid_Contact', 'contacts',
-    RelationshipType.MANY_TO_ONE, 'sdds_ecologistid', 'ecologist'),
-
-  // Ecologist organization
-  new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
-    RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization')
-]
-
-export const SddsApplicationKeys = cp
