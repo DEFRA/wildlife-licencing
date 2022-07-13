@@ -11,6 +11,9 @@ import {
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
 import { powerAppsReadStream } from './powerapps-read-stream.js'
+import { Table } from '../schema/schema.js'
+
+const SddsApplicationRelations = Table.relations(SddsApplication)
 
 /* Applications */
 const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
@@ -31,15 +34,15 @@ const accountsObjectTransformer = buildObjectTransformer(Account, accountsTableS
 export const accountsReadStream = () => powerAppsReadStream(accountsRequestPath, accountsObjectTransformer)
 
 /* Application contacts */
-const applicationContactsRequestPath = buildRequestPath(SddsApplication, [Contact])
-const applicationContactsTableSet = createTableSet(SddsApplication, [Contact])
-const applicationContactsObjectTransformer = buildObjectTransformer(SddsApplication, applicationContactsTableSet)
+const applicationContactsRequestPath = buildRequestPath(SddsApplicationRelations, [Contact])
+const applicationContactsTableSet = createTableSet(SddsApplicationRelations, [Contact])
+const applicationContactsObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationContactsTableSet)
 export const applicationContactsReadStream = () => powerAppsReadStream(applicationContactsRequestPath, applicationContactsObjectTransformer)
 
 /* Application accounts */
-const applicationAccountsRequestPath = buildRequestPath(SddsApplication, [Account])
-const applicationAccountsTableSet = createTableSet(SddsApplication, [Account])
-const applicationAccountsObjectTransformer = buildObjectTransformer(SddsApplication, applicationAccountsTableSet)
+const applicationAccountsRequestPath = buildRequestPath(SddsApplicationRelations, [Account])
+const applicationAccountsTableSet = createTableSet(SddsApplicationRelations, [Account])
+const applicationAccountsObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationAccountsTableSet)
 export const applicationAccountsReadStream = () => powerAppsReadStream(applicationAccountsRequestPath, applicationAccountsObjectTransformer)
 
 /* Sites */
@@ -49,9 +52,9 @@ const sitesObjectTransformer = buildObjectTransformer(SddsSite, sitesTableSet)
 export const sitesReadStream = () => powerAppsReadStream(sitesRequestPath, sitesObjectTransformer)
 
 /* Application-sites */
-const applicationSiteRequestPath = buildRequestPath(SddsApplication, [SddsSite])
-const applicationSiteTableSet = createTableSet(SddsApplication, [SddsSite])
-const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplication, applicationSiteTableSet)
+const applicationSiteRequestPath = buildRequestPath(SddsApplicationRelations, [SddsSite])
+const applicationSiteTableSet = createTableSet(SddsApplicationRelations, [SddsSite])
+const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationSiteTableSet)
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
 /* Licensable actions */

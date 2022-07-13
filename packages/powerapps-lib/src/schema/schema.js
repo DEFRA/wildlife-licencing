@@ -82,4 +82,22 @@ export class Table {
     }
     return null
   }
+
+  /**
+   * Helper function for where you want to extract relations. It replaces the columns with
+   * just the primary key column
+   * @param obj
+   * @returns {Table|null}
+   */
+  static relations (obj) {
+    if (obj) {
+      const copy = new Table()
+      Object.assign(copy, cloneDeep(obj))
+      copy.columns = [
+        new Column(copy.keyName)
+      ]
+      return copy
+    }
+    return null
+  }
 }
