@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
 
-const doApplicant = async (applicationId, sddsApplicationId, sddsContactId, counter) => {
+const doApplicant = async (applicationId, sddsContactId, counter) => {
   const applicant = await models.contacts.findOne({
     where: { sdds_contact_id: sddsContactId }
   })
@@ -26,7 +26,7 @@ const doApplicant = async (applicationId, sddsApplicationId, sddsContactId, coun
   }
 }
 
-const doEcologist = async (applicationId, sddsApplicationId, sddsContactId, counter) => {
+const doEcologist = async (applicationId, sddsContactId, counter) => {
   const ecologist = await models.contacts.findOne({
     where: { sdds_contact_id: sddsContactId }
   })
@@ -67,8 +67,8 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
 
       // If the applications is not (yet) in the database do nothing
       if (application) {
-        await doApplicant(application.id, sddsApplicationId, sddsApplicantContactId, counter)
-        await doEcologist(application.id, sddsApplicationId, sddsEcologistContactId, counter)
+        await doApplicant(application.id, sddsApplicantContactId, counter)
+        await doEcologist(application.id, sddsEcologistContactId, counter)
       }
     }
     return counter

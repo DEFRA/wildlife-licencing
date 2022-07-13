@@ -6,7 +6,7 @@ const roles = {
   'ECOLOGIST-ORGANISATION': 'ECOLOGIST-ORGANISATION'
 }
 
-const doApplicantOrganisation = async (applicationId, sddsApplicationId, sddsAccountId, counter) => {
+const doApplicantOrganisation = async (applicationId, sddsAccountId, counter) => {
   const applicantOrganisation = await models.accounts.findOne({
     where: { sdds_account_id: sddsAccountId }
   })
@@ -31,7 +31,7 @@ const doApplicantOrganisation = async (applicationId, sddsApplicationId, sddsAcc
   }
 }
 
-const doEcologistOrganisation = async (applicationId, sddsApplicationId, sddsAccountId, counter) => {
+const doEcologistOrganisation = async (applicationId, sddsAccountId, counter) => {
   const ecologistOrganisation = await models.accounts.findOne({
     where: { sdds_account_id: sddsAccountId }
   })
@@ -72,8 +72,8 @@ export const writeApplicationAccountObject = async ({ _data, keys }) => {
 
       // If the applications is not (yet) in the database do nothing
       if (application) {
-        await doApplicantOrganisation(application.id, sddsApplicationId, sddsApplicantAccountId, counter)
-        await doEcologistOrganisation(application.id, sddsApplicationId, sddsEcologistAccountId, counter)
+        await doApplicantOrganisation(application.id, sddsApplicantAccountId, counter)
+        await doEcologistOrganisation(application.id, sddsEcologistAccountId, counter)
       }
     }
     return counter
