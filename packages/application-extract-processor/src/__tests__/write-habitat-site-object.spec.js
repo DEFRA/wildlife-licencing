@@ -1,6 +1,6 @@
 const data = {
   habitatSite: {
-    name: 'Desctructive',
+    name: 'Destructive',
     startDate: '2022-01-29',
     endDate: '2022-02-03'
   }
@@ -75,7 +75,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
       applicationId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
       habitatSite: {
         endDate: '2022-02-03',
-        name: 'Desctructive',
+        name: 'Destructive',
         startDate: '2022-01-29'
       },
       id: expect.any(String),
@@ -85,7 +85,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
   })
 
-  it.only('makes an update on a found, pending habitat-site with a timestamp older than the extract start time', async () => {
+  it('makes an update on a found, pending habitat-site with a timestamp older than the extract start time', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockUpdate = jest.fn()
     models.applications = {
@@ -109,7 +109,87 @@ describe('The application extract processor: write-habitat-site-object', () => {
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
   })
 
-  it('makes an update on a found, unlocked habitat-site, if data has changed', async () => {})
-  it('ignores an update on a found, unlocked habitat-site, if data has not changed', async () => {})
-  it('does not make an update on a found, pending habitat-site with a timestamp newer than the extract', async () => {})
+  it('makes an update on a found, unlocked habitat-site, if data has changed', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockUpdate = jest.fn()
+    models.applications = {
+      findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
+    }
+    models.habitatSites = {
+      findOne: jest.fn(() => ({
+        id: '9487013e-abf5-4f42-95fa-15ad404570a1',
+        updateStatus: 'U',
+        updatedAt: new Date(2020, 0, 1),
+        habitatSite: {
+          name: 'Destructive 2',
+          startDate: '2022-01-29',
+          endDate: '2022-02-03'
+        }
+      })),
+      update: mockUpdate
+    }
+    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
+    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    expect(mockUpdate).toHaveBeenCalledWith({
+      habitatSite: data.habitatSite,
+      updateStatus: 'U'
+    }, { returning: false, where: { id: '9487013e-abf5-4f42-95fa-15ad404570a1' } })
+    expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
+  })
+
+  it('ignores an update on a found, unlocked habitat-site, if data has not changed', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockUpdate = jest.fn()
+    models.applications = {
+      findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
+    }
+    models.habitatSites = {
+      findOne: jest.fn(() => ({
+        id: '9487013e-abf5-4f42-95fa-15ad404570a1',
+        updateStatus: 'U',
+        updatedAt: new Date(2020, 0, 1),
+        habitatSite: data.habitatSite
+      })),
+      update: mockUpdate
+    }
+    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
+    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    expect(mockUpdate).not.toHaveBeenCalled()
+    expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
+  })
+
+  it('does not make an update on a found, pending habitat-site with a timestamp newer than the extract', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockUpdate = jest.fn()
+    models.applications = {
+      findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
+    }
+    models.habitatSites = {
+      findOne: jest.fn(() => ({
+        id: '9487013e-abf5-4f42-95fa-15ad404570a1',
+        updateStatus: 'P',
+        updatedAt: new Date(2022, 0, 2),
+        habitatSite: {
+          name: 'Destructive 2',
+          startDate: '2022-01-29',
+          endDate: '2022-02-03'
+        }
+      })),
+      update: mockUpdate
+    }
+    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
+    const result = await writeHabitatSiteObject({ data, keys }, new Date(2022, 0, 1))
+    expect(mockUpdate).not.toHaveBeenCalled()
+    expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
+  })
+
+  it('records an error on an exception', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    models.applications = {
+      findOne: jest.fn(() => { throw new Error() })
+    }
+    const { writeSiteObject } = await import('../write-site-object.js')
+    const result = await writeSiteObject({ data, keys }, new Date())
+    expect(result).toEqual({ error: 1, insert: 0, pending: 0, update: 0 })
+  })
 })
