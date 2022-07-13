@@ -12,7 +12,7 @@ import {
   applicationResponseObject,
   applicationResponseTransformedDataObject,
   applicationResponseTransformedKeys,
-  applicationSiteResponseObject, applicationSiteResponseTransformedDataObject, applicationSiteResponseTransformedKeys
+  applicationSiteResponseObject
 } from './example-src-object.js'
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
@@ -235,7 +235,7 @@ describe('the schema processes', () => {
       })
     })
 
-    it.only('build function to process an application-site response element', async () => {
+    it('build function to process an application-site response element', async () => {
       const { buildObjectTransformer, createTableSet } = await import('../schema-processes.js')
       const applicationSiteTableSet = createTableSet(SddsApplication, [SddsSite])
       const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplication, applicationSiteTableSet)
