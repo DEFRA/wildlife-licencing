@@ -1,5 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
-import { TASKLIST } from '../../uris.js'
+import { FILE_UPLOAD, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
@@ -34,6 +34,9 @@ export const getData = async request => {
   const status = await getTaskStatus(request)
   const decoratedMap = await decorateMap(licenceTypeMap[A24], status)
   const progress = getProgress(status)
+
+  // If you navigate to the TASKLIST page, we need to ensure we've cleared all the error states on the file-upload page
+  await request.cache().clearPageData(FILE_UPLOAD.page)
 
   return {
     reference: application?.applicationReferenceNumber,

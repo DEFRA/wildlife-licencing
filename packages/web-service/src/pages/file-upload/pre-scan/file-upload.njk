@@ -1,17 +1,23 @@
 {% extends "layout.njk" %}
+
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "fieldset/macro.njk" import govukFieldset %}
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "input/macro.njk" import govukInput %}
+
 
 {% set errorMap = {
         'scan-file': {
-          'unauthorized': { ref: '#scan-file', text: 'Enter your email address' }
+          'no-file-chosen'     : { ref: '#scan-file', text: 'You must choose a file to upload.' },
+          'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
+          'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' }
         }
     }
 %}
 
-{% block pageTitle %}Upload a work schedule{% endblock %}
+{% set title = 'Upload a work schedule' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block topNavigation %}
 <p class="govuk-body sdds-save-link">
@@ -50,18 +56,23 @@
               }
             }) %}
 
-            <input type="file" name="file-upload">
-            
+
+            {{ govukFileUpload({
+              id: "scan-file",
+              name: "scan-file",
+              label: {
+              text: "Upload a file"
+              },
+              errorMessage: { text: 'Upload a different file.' } if error['scan-file']
+            }) }}
+
             <div> <!-- Div user here to "push" the button onto a newline, otherwise it displays next to the file upload button, which is incorrect -->
               {{ govukButton({
                   attributes: { id: 'continue' },
                   preventDoubleClick: true,
-                  id: "scan-file",
-                  name: "scan-file",
                   text: 'Continue',
-                  classes: "govuk-!-margin-top-5",
-                  errorMessage: { text: 'This is a message that needs to show' } if error['scan-file']
-              }) }}
+                  classes: "govuk-!-margin-top-5"
+                }) }}
             </div>
             
             {% endcall %}
