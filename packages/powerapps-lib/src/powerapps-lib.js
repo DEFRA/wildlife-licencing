@@ -13,8 +13,11 @@ import {
   licensableActionsReadStream,
   activitiesReadStream,
   methodsReadStream,
+  speciesReadStream,
   activityMethodsReadStream,
-  applicationTypeActivitiesReadStream
+  applicationTypeActivitiesReadStream,
+  applicationTypeSpeciesReadStream,
+  applicationTypeApplicationPurposesReadStream
 } from './read-streams/read-streams.js'
 
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
@@ -35,8 +38,11 @@ export {
   globalOptionSetReadStream,
   activitiesReadStream,
   methodsReadStream,
+  speciesReadStream,
   activityMethodsReadStream,
   applicationTypeActivitiesReadStream,
+  applicationTypeSpeciesReadStream,
+  applicationTypeApplicationPurposesReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,
   BaseKeyMapping

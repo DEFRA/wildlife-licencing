@@ -5,16 +5,20 @@ import {
   applicationPurposesReadStream,
   activitiesReadStream,
   methodsReadStream,
+  speciesReadStream,
   globalOptionSetReadStream,
   activityMethodsReadStream,
-  applicationTypeActivitiesReadStream
+  applicationTypeActivitiesReadStream,
+  applicationTypeSpeciesReadStream,
+  applicationTypeApplicationPurposesReadStream
 } from '@defra/wls-powerapps-lib'
 import { databaseWriter } from './database-writer.js'
 
 import {
   writeApplicationTypes, writeApplicationPurposes,
-  writeActivities, writeMethods, writeActivityMethods,
-  writeApplicationTypeActivities, writeOptionSets
+  writeActivities, writeMethods, writeSpecies, writeActivityMethods,
+  writeApplicationTypeActivities, writeApplicationTypeSpecies,
+  writeApplicationApplicationPurpose, writeOptionSets
 } from './write-object.js'
 
 const extracts = async () => {
@@ -22,8 +26,11 @@ const extracts = async () => {
   await databaseWriter(applicationPurposesReadStream(), writeApplicationPurposes, 'Application Purposes')
   await databaseWriter(activitiesReadStream(), writeActivities, 'Activities')
   await databaseWriter(methodsReadStream(), writeMethods, 'Methods')
+  await databaseWriter(speciesReadStream(), writeSpecies, 'Species')
   await databaseWriter(activityMethodsReadStream(), writeActivityMethods, 'Activity-Methods')
   await databaseWriter(applicationTypeActivitiesReadStream(), writeApplicationTypeActivities, 'Application type Activities')
+  await databaseWriter(applicationTypeSpeciesReadStream(), writeApplicationTypeSpecies, 'Application type Species')
+  await databaseWriter(applicationTypeApplicationPurposesReadStream(), writeApplicationApplicationPurpose, 'Application type Application Purposes')
   await databaseWriter(globalOptionSetReadStream(), writeOptionSets, 'Option sets')
 }
 

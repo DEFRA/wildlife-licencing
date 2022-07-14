@@ -50,6 +50,14 @@ export const writeMethods = async obj => {
   })
 }
 
+export const writeSpecies = async obj => {
+  const { data, keys } = obj
+  const v = Object.values(data)[0]
+  return generalUpsert(models.species, keys[0].powerAppsKey, {
+    name: v?.name
+  })
+}
+
 export const writeActivityMethods = async ({ keys }) => {
   const activityId = keys.find(k => k.apiTable === 'activities').powerAppsKey
   const methodIds = keys.filter(k => k.apiTable === 'methods').map(k => k.powerAppsKey)
@@ -87,4 +95,43 @@ export const writeApplicationTypeActivities = async ({ keys }) => {
 
   await applicationType.setActivities(activities)
   return { update: await applicationType.countActivities() }
+}
+
+export const writeApplicationTypeSpecies = async ({ keys }) => {
+  const applicationTypeId = keys.find(k => k.apiTable === 'applicationTypes').powerAppsKey
+  const speciesIds = keys.filter(k => k.apiTable === 'species').map(k => k.powerAppsKey)
+
+  const applicationType = await models.applicationTypes.findOne({
+    where: { id: applicationTypeId }
+  })
+
+  const species = await models.species.findAll({
+    where: {
+      id: {
+        [Op.in]: speciesIds
+      }
+    }
+  })
+
+  await applicationType.setSpecies(species)
+  return { update: await applicationType.countSpecies() }
+}
+
+export const writeApplicationApplicationPurpose = async ({ keys }) => {
+  const applicationTypeId = keys.find(k => k.apiTable === 'applicationTypes').powerAppsKey
+  const purposeIds = keys.filter(k => k.apiTable === 'applicationPurposes').map(k => k.powerAppsKey)
+
+  const applicationType = await models.applicationTypes.findOne({
+    where: { id: applicationTypeId }
+  })
+
+  const purposes = await models.applicationPurposes.findAll({
+    where: {
+      id: {
+        [Op.in]: purposeIds
+      }
+    }
+  })
+  await applicationType['setApplication-purposes'](purposes)
+  return { update: await applicationType['countApplication-purposes']() }
 }

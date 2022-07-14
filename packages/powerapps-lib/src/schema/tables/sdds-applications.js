@@ -18,15 +18,13 @@ export const SddsApplication = new Table('sdds_applications', [
 ], [
   // Application Type
   new Relationship('sdds_ApplicationTypes_sdds_applicationtyp', 'sdds_applicationtypeses',
-    RelationshipType.MANY_TO_ONE, 'sdds_applicationtypesid', 'applicationType',
-    s => getReferenceDataIdByName('sdds_applicationtypeses', s),
-    s => s.sdds_applicationname),
+    RelationshipType.MANY_TO_ONE, 'sdds_applicationtypesid', 'applicationTypeId',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Application purpose
   new Relationship('sdds_application_applicationpurpose_sdds_', 'sdds_applicationpurposes',
-    RelationshipType.MANY_TO_ONE, 'sdds_applicationpurpose', 'applicationPurpose',
-    s => getReferenceDataIdByName('sdds_applicationpurposes', s),
-    s => s.sdds_name),
+    RelationshipType.MANY_TO_ONE, 'sdds_applicationpurpose', 'applicationPurposeId',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Sites
   new Relationship('sdds_application_sdds_site_sdds_site', 'sdds_sites',

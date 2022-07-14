@@ -293,6 +293,10 @@ async function defineMethods (sequelize) {
   models.methods = await sequelize.define('methods', ReferenceDataType.attributes, ReferenceDataType.options)
 }
 
+async function defineSpecies (sequelize) {
+  models.species = await sequelize.define('species', ReferenceDataType.attributes, ReferenceDataType.options)
+}
+
 async function activityMethods (sequelize) {
   models.activityMethods = await sequelize.define('activity-methods', {
     activityId: {
@@ -327,6 +331,44 @@ async function applicationTypeActivities (sequelize) {
     indexes: [
       { unique: false, fields: ['application_type_id'], name: 'application_type_activities_application_type_fk' },
       { unique: false, fields: ['activity_id'], name: 'application_type_activities_activities_fk' }
+    ]
+  })
+}
+
+async function applicationTypeSpecies (sequelize) {
+  models.applicationTypeSpecies = await sequelize.define('application-type-species', {
+    applicationTypeId: {
+      type: DataTypes.UUID,
+      references: { model: models.applicationTypes, key: 'id' }
+    },
+    speciesId: {
+      type: DataTypes.UUID,
+      references: { model: models.species, key: 'id' }
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_type_id'], name: 'application_type_species_application_type_fk' },
+      { unique: false, fields: ['species_id'], name: 'application_type_species_species_fk' }
+    ]
+  })
+}
+
+async function applicationTypeApplicationPurposes (sequelize) {
+  models.applicationTypeApplicationPurposes = await sequelize.define('application-type-application-purposes', {
+    applicationTypeId: {
+      type: DataTypes.UUID,
+      references: { model: models.applicationTypes, key: 'id' }
+    },
+    applicationPurposeId: {
+      type: DataTypes.UUID,
+      references: { model: models.applicationPurposes, key: 'id' }
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_type_id'], name: 'application_type_application_purpose_application_type_fk' },
+      { unique: false, fields: ['application_purpose_id'], name: 'application_type_application_purpose_application_purpose_fk' }
     ]
   })
 }
@@ -374,8 +416,11 @@ const createModels = async () => {
   await defineApplicationPurposes(sequelize)
   await defineActivities(sequelize)
   await defineMethods(sequelize)
+  await defineSpecies(sequelize)
   await activityMethods(sequelize)
   await applicationTypeActivities(sequelize)
+  await applicationTypeSpecies(sequelize)
+  await applicationTypeApplicationPurposes(sequelize)
 
   await defineOptionSets(sequelize)
   await defineApplicationRefSeq(sequelize)
@@ -392,6 +437,14 @@ const createModels = async () => {
   // Application type <> activities
   models.applicationTypes.belongsToMany(models.activities, { through: models.applicationTypeActivities })
   models.activities.belongsToMany(models.applicationTypes, { through: models.applicationTypeActivities })
+
+  // Application type <> species
+  models.applicationTypes.belongsToMany(models.species, { through: models.applicationTypeSpecies })
+  models.species.belongsToMany(models.applicationTypes, { through: models.applicationTypeSpecies })
+
+  // Application type <> purposes
+  models.applicationTypes.belongsToMany(models.applicationPurposes, { through: models.applicationTypeApplicationPurposes })
+  models.applicationPurposes.belongsToMany(models.applicationTypes, { through: models.applicationTypeApplicationPurposes })
 
   // Synchronize the model
   await models.users.sync()
@@ -416,8 +469,11 @@ const createModels = async () => {
   await models.applicationPurposes.sync()
   await models.activities.sync()
   await models.methods.sync()
+  await models.species.sync()
   await models.activityMethods.sync()
   await models.applicationTypeActivities.sync()
+  await models.applicationTypeSpecies.sync()
+  await models.applicationTypeApplicationPurposes.sync()
 
   await models.optionSets.sync()
 

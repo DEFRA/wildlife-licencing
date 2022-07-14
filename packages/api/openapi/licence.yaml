@@ -252,6 +252,12 @@ paths:
           description: Bad request. user ID must be a uuid
         404:
           description: Not found
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         500:
           description: Unexpected error on server
           content:
@@ -327,6 +333,12 @@ paths:
           description: Bad request.
         404:
           description: Not found
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         500:
           description: Unexpected error on server
           content:
@@ -368,10 +380,10 @@ paths:
       operationId: getApplicationReference
       parameters:
         - in: query
-          name: applicationType
+          name: applicationTypeId
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/uuid'
       responses:
         200:
           description: The next reference number
@@ -384,7 +396,7 @@ paths:
                     type: string
 
         404:
-          description: Not found - ensure refernce data extract has run
+          description: Not found - ensure reference data extract has run
           content:
             application/json:
               schema:
@@ -1894,6 +1906,9 @@ components:
     application:
       type: object
       additionalProperties: false
+      required:
+        - applicationTypeId
+        - applicationPurposeId
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -1915,14 +1930,10 @@ components:
           maxLength: 300
         applicationCategory:
           type: number
-        applicationType:
-          type: string
-          minLength: 1
-          maxLength: 300
-        applicationPurpose:
-          type: string
-          minLength: 1
-          maxLength: 300
+        applicationTypeId:
+          $ref: '#/components/schemas/uuid'
+        applicationPurposeId:
+          $ref: '#/components/schemas/uuid'
         eligibility:
           $ref: '#/components/schemas/eligibility'
         submitted:

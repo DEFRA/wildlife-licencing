@@ -4,7 +4,8 @@ import { clearPageData } from './cache-operations.js'
 const debug = db('web-service:application-service')
 
 // This will be replaced by a selected type
-const TYPE = 'A24 Badger'
+const TYPE = { desc: 'A24 Badger', key: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' }
+const PURPOSE = { desc: 'Development', key: '3db073af-201b-ec11-b6e7-0022481a8f18' }
 
 /**
  * Cache and API operations concerning applications.
@@ -17,7 +18,7 @@ const TYPE = 'A24 Badger'
 export const ApplicationService = {
   createApplication: async request => {
     const journeyData = await request.cache().getData() || {}
-    const application = await APIRequests.APPLICATION.create(TYPE)
+    const application = await APIRequests.APPLICATION.create(TYPE.key, PURPOSE.key)
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
     await clearPageData(request)

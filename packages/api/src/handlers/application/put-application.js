@@ -8,6 +8,19 @@ const { cache } = REDIS
 export default async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
+    const { applicationTypeId, applicationPurposeId } = req.payload
+    const applicationTypeApplicationPurpose = await models.applicationTypeApplicationPurposes.findOne({
+      where: {
+        applicationTypeId, applicationPurposeId
+      }
+    })
+
+    if (!applicationTypeApplicationPurpose) {
+      return h.response({ code: 409, error: { description: `Invalid application type: ${applicationTypeId} for purpose: ${applicationPurposeId}` } })
+        .type(APPLICATION_JSON)
+        .code(409)
+    }
+
     await clearCaches(applicationId)
 
     const [application, created] = await models.applications.findOrCreate({

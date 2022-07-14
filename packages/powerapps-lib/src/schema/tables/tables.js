@@ -7,8 +7,10 @@ import { SddsApplicationType } from './sdds-application-types.js'
 import { SddsLicensableActions } from './sdds-licensable-actions.js'
 import { SddsLicenseActivities } from './sdds-license-activities.js'
 import { SddsLicenseMethods } from './sdds-licensemethods.js'
+import { SddsSpecies } from './sdds-species.js'
+
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
-  SddsLicenseActivities, SddsLicenseMethods
+  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies
 }
