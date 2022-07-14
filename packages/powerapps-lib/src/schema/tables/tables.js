@@ -5,8 +5,10 @@ import { Account } from './account.js'
 import { SddsApplicationPurpose } from './sdds-application-purpose.js'
 import { SddsApplicationType } from './sdds-application-types.js'
 import { SddsLicensableActions } from './sdds-licensable-actions.js'
-
+import { SddsLicenseActivities } from './sdds-license-activities.js'
+import { SddsLicenseMethods } from './sdds-licensemethods.js'
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
-  Contact, Account, SddsApplicationPurpose, SddsApplicationType
+  Contact, Account, SddsApplicationPurpose, SddsApplicationType,
+  SddsLicenseActivities, SddsLicenseMethods
 }

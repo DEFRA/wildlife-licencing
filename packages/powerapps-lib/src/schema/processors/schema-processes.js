@@ -345,11 +345,11 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
   return path
 }
 
-function buildObjectTransformerColumn (column, s, value) {
+function buildObjectTransformerColumn (column, src, value) {
   if (OperationType.inbound(column.operationType) && column.srcPath) {
-    const val = s[column.name]
-    if (val) {
-      Object.assign(value, { [column.srcPath]: val })
+    const value = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
+    if (value) {
+      Object.assign(value, { [column.srcPath]: value })
     }
   }
 }
@@ -369,10 +369,10 @@ const buildArrayObjectTransformer = (src, t, data) => {
 function buildObjectObjectTransformer (t, src, data) {
   for (const column of t.columns) {
     if (OperationType.inbound(column.operationType) && column.srcPath) {
-      const value = src[column.name]
+      const value = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
       // The inbound stream does not set null values
       if (value) {
-        set(data, `${t.basePath}.${column.srcPath}`, src[column.name])
+        set(data, `${t.basePath}.${column.srcPath}`, value)
       }
     }
   }
