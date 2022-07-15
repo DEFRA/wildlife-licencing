@@ -68,6 +68,10 @@ export const validator = async payload => {
   }
 
   if (payload['scan-file'].bytes >= 30_000_000) {
+    fs.unlinkSync(payload['scan-file'].path, err => {
+      if (err) throw err
+    })
+
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the file was too large',
       path: ['scan-file'],
