@@ -5,19 +5,20 @@ import Joi from 'joi'
 import fs from 'fs'
 
 const setData = async (request) => {
-  const currentFileName = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
+  const currentFilePlusDirectory = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
 
   // We need to take a filename like: hello.txt
   // And rename it to something like: {unixTimestamp}.{originalFileName}
   // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
   // It also stops collisions if multiple users all upload files with the same name
-  const newFileName = process.env.SCANNING_DIR + '/' + (+new Date()) + '.' + request.payload['scan-file'].filename
+  const newFilename = (+new Date()) + '.' + request.payload['scan-file'].filename
+  const newFilenamePlusDirectory = process.env.SCANNING_DIR + '/' + newFilename
 
-  fs.renameSync(currentFileName, newFileName, (err) => {
+  fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, (err) => {
     if (err) { console.err(err) }
   })
 
-  const virusPresent = await scanFile(newFileName)
+  const virusPresent = await scanFile(newFilename)
   if (virusPresent) {
     await request.cache().setPageData({
       payload: request.payload,
@@ -36,9 +37,13 @@ const setData = async (request) => {
 }
 
 const completion = async (request) => {
-  // If we get to here (without a joi validationn error) - we can send the users straight onto the next page in the flow
-  await request.cache().setData(Object.assign(await request.cache().getPageData() || {}, { filename: request.payload['scan-file'].filename }))
-  return CHECK_YOUR_ANSWERS.uri
+  const journeyData = await request.cache().getPageData()
+  if (journeyData.error) {
+    return FILE_UPLOAD.uri
+  } else {
+    await request.cache().setData(Object.assign(await request.cache().getPageData() || {}, { filename: request.payload['scan-file'].filename }))
+    return CHECK_YOUR_ANSWERS.uri
+  }
 }
 
 export const validator = async payload => {
