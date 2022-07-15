@@ -5,8 +5,6 @@ import Joi from 'joi'
 import fs from 'fs'
 
 const setData = async (request) => {
-  await request.cache().clearPageData(FILE_UPLOAD.page)
-
   const currentFileName = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
 
   // We need to take a filename like: hello.txt
@@ -38,14 +36,9 @@ const setData = async (request) => {
 }
 
 const completion = async (request) => {
-  const cache = await request.cache().getPageData() || {}
-
-  if (cache.error) {
-    return FILE_UPLOAD.uri
-  } else {
-    await request.cache().setData(Object.assign(await request.cache().getPageData(), { filename: request.payload['scan-file'].filename }))
-    return CHECK_YOUR_ANSWERS.uri
-  }
+  // If we get to here (without a joi validationn error) - we can send the users straight onto the next page in the flow
+  await request.cache().setData(Object.assign(await request.cache().getPageData() || {}, { filename: request.payload['scan-file'].filename }))
+  return CHECK_YOUR_ANSWERS.uri
 }
 
 export const validator = async payload => {
@@ -58,7 +51,7 @@ export const validator = async payload => {
     })
 
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: the file contains a virus',
+      message: 'Error: no file has been uploaded',
       path: ['scan-file'],
       type: 'no-file-chosen',
       context: {
@@ -71,7 +64,7 @@ export const validator = async payload => {
 
   if (payload['scan-file'].bytes >= 30_000_000) {
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: the file contains a virus',
+      message: 'Error: the file was too large',
       path: ['scan-file'],
       type: 'file-too-big',
       context: {

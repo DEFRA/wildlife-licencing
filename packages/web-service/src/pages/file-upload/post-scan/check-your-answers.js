@@ -15,6 +15,8 @@ const checkData = async (request, h) => {
   return null
 }
 
-// const completion = async () => {}
+const getData = async request => {
+  return request.cache(FILE_UPLOAD).getData()
+}
 
-export const checkYourAnswers = pageRoute(CHECK_YOUR_ANSWERS.page, CHECK_YOUR_ANSWERS.uri, checkData, null, null, /* completion */ null)
+export const checkYourAnswers = pageRoute(CHECK_YOUR_ANSWERS.page, CHECK_YOUR_ANSWERS.uri, checkData, getData)
