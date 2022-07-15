@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import * as pkg from 'object-hash'
 import { models } from '@defra/wls-database-model'
 const hash = pkg.default
+
 /**
  * (1) if an application has un-submitted user entered data it will have an update-status code of 'L' locked - indicating
  * that the user has altered the data. This prevents the extract update from overwriting any changes.
@@ -26,7 +27,6 @@ export const writeApplicationObject = async (obj, ts) => {
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'applications')
-
     const application = await models.applications.findOne({
       where: { sdds_application_id: baseKey.powerAppsKey }
     })
@@ -41,7 +41,6 @@ export const writeApplicationObject = async (obj, ts) => {
       if ((a.updateStatus === 'P' && ts > a.updatedAt) || (a.updateStatus === 'U' && hash(data.application) !== hash(a.application))) {
         await models.applications.update({
           application: data.application,
-          targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
           updateStatus: 'U'
         }, {
           where: {
@@ -59,7 +58,6 @@ export const writeApplicationObject = async (obj, ts) => {
       await models.applications.create({
         id: baseKey.apiKey,
         application: data.application,
-        targetKeys: keys.map(k => (({ contentId, ...t }) => t)(k)),
         updateStatus: 'U',
         sddsApplicationId: baseKey.powerAppsKey
       })
@@ -68,7 +66,7 @@ export const writeApplicationObject = async (obj, ts) => {
 
     return counter
   } catch (error) {
-    console.error('Error updating applications', error)
+    console.error('Error updating APPLICATIONS', error)
     return { insert: 0, update: 0, pending: 0, error: 1 }
   }
 }

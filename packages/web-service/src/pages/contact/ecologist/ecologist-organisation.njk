@@ -1,0 +1,5 @@
+{% extends "is-organisation.njk" %}
+{% set title = 'Is ' + data.contact.fullName + ' part of an organisation?' %}
+{% set noneSelected = 'Select yes if the ecologist is part of an organisation' %}
+{% set noneNamed = 'Enter the name of the organisation for ' + data.contact.fullName %}
+{% set badName = 'Enter the name of the applicant\'s organisation using only letters, numbers, spaces, \'-\' and \'.\'' %}

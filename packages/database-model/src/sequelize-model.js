@@ -17,6 +17,28 @@ async function defineUserRoles (sequelize) {
   })
 }
 
+async function defineContactRoles (sequelize) {
+  models.contactRoles = await sequelize.define('contact-roles', {
+    contactRole: { type: DataTypes.STRING(30), primaryKey: true }
+  }, {
+    timestamps: false,
+    indexes: [
+      { unique: true, fields: ['contact_role'], name: 'contact_roles_uk' }
+    ]
+  })
+}
+
+async function defineAccountRoles (sequelize) {
+  models.accountRoles = await sequelize.define('account-roles', {
+    accountRole: { type: DataTypes.STRING(30), primaryKey: true }
+  }, {
+    timestamps: false,
+    indexes: [
+      { unique: true, fields: ['account_role'], name: 'account_roles_uk' }
+    ]
+  })
+}
+
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -29,11 +51,40 @@ async function defineUsers (sequelize) {
   })
 }
 
+async function defineContacts (sequelize) {
+  models.contacts = await sequelize.define('contacts', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    contact: { type: DataTypes.JSONB },
+    sddsContactId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['sdds_contact_id'], name: 'contact_sdds_id_uk' }
+    ]
+  })
+}
+
+async function defineAccounts (sequelize) {
+  models.accounts = await sequelize.define('accounts', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    account: { type: DataTypes.JSONB },
+    sddsAccountId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['sdds_account_id'], name: 'account_sdds_id_uk' }
+    ]
+  })
+}
+
 async function defineSites (sequelize) {
   models.sites = await sequelize.define('sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
     site: { type: DataTypes.JSONB },
-    targetKeys: { type: DataTypes.JSONB },
     sddsSiteId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
@@ -45,11 +96,32 @@ async function defineSites (sequelize) {
   })
 }
 
+async function defineHabitatSites (sequelize) {
+  models.habitatSites = await sequelize.define('habitat-sites', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    habitatSite: { type: DataTypes.JSONB },
+    sddsHabitatSiteId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' }
+    ]
+  })
+}
+
 async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
     application: { type: DataTypes.JSONB },
-    targetKeys: { type: DataTypes.JSONB },
     sddsApplicationId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
@@ -95,36 +167,72 @@ async function defineApplicationUsers (sequelize) {
   })
 }
 
-async function defineSiteUsers (sequelize) {
-  models.siteUsers = await sequelize.define('site-users', {
+async function defineApplicationContacts (sequelize) {
+  models.applicationContacts = await sequelize.define('application-contacts', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    userId: {
+    applicationId: {
       type: DataTypes.UUID,
       references: {
-        model: models.users,
+        model: models.applications,
         key: 'id'
       }
     },
-    siteId: {
+    contactId: {
       type: DataTypes.UUID,
       references: {
-        model: models.sites,
+        model: models.contacts,
         key: 'id'
       }
     },
-    role: {
-      type: DataTypes.STRING(20),
+    contactRole: {
+      type: DataTypes.STRING(30),
       references: {
-        model: models.userRoles,
-        key: 'role'
+        model: models.contactRoles,
+        key: 'contact_role'
       }
     }
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['user_id'], name: 'site_user_user_fk' },
-      { unique: false, fields: ['site_id'], name: 'site_user_site_fk' },
-      { unique: false, fields: ['role'], name: 'site_user_role_fk' }
+      { unique: true, fields: ['application_id', 'contact_id', 'contact_role'], name: 'application_contact_uk' },
+      { unique: false, fields: ['application_id'], name: 'application_contact_application_fk' },
+      { unique: false, fields: ['contact_id'], name: 'application_contact_contact_fk' },
+      { unique: false, fields: ['contact_role'], name: 'application_contact_role_fk' }
+    ]
+  })
+}
+
+async function defineApplicationAccounts (sequelize) {
+  models.applicationAccounts = await sequelize.define('application-accounts', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    accountId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.accounts,
+        key: 'id'
+      }
+    },
+    accountRole: {
+      type: DataTypes.STRING(30),
+      references: {
+        model: models.accountRoles,
+        key: 'account_role'
+      }
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['application_id', 'account_id', 'account_role'], name: 'application_account_uk' },
+      { unique: false, fields: ['application_id'], name: 'application_account_application_fk' },
+      { unique: false, fields: ['account_id'], name: 'application_account_account_fk' },
+      { unique: false, fields: ['account_role'], name: 'application_account_role_fk' }
     ]
   })
 }
@@ -198,34 +306,52 @@ const createModels = async () => {
   await defineUsers(sequelize)
   await defineUserRoles(sequelize)
 
+  // Define the account and contact tables
+  await defineContactRoles(sequelize)
+  await defineAccountRoles(sequelize)
+  await defineContacts(sequelize)
+  await defineAccounts(sequelize)
+
+  // Define te applications and sites
   await defineApplications(sequelize)
   await defineSites(sequelize)
+  await defineHabitatSites(sequelize)
 
   await defineApplicationUsers(sequelize)
-  await defineSiteUsers(sequelize)
 
   await defineApplicationSites(sequelize)
+  await defineApplicationContacts(sequelize)
+  await defineApplicationAccounts(sequelize)
 
+  // Define other things
   await defineApplicationTypes(sequelize)
   await defineApplicationPurposes(sequelize)
   await defineOptionSets(sequelize)
   await defineApplicationRefSeq(sequelize)
 
-  // Create associations
-  models.applications.hasMany(models.applicationUsers)
-  models.sites.hasMany(models.siteUsers)
+  // Create M:M associations
+  // users <> applications
+  models.users.belongsToMany(models.applications, { through: models.applicationUsers })
+  models.applications.belongsToMany(models.users, { through: models.applicationUsers })
 
   // Synchronize the model
   await models.users.sync()
   await models.userRoles.sync()
 
+  await models.contactRoles.sync()
+  await models.accountRoles.sync()
+  await models.contacts.sync()
+  await models.accounts.sync()
+
   await models.applications.sync()
+  await models.habitatSites.sync()
   await models.sites.sync()
 
   await models.applicationUsers.sync()
-  await models.siteUsers.sync()
 
   await models.applicationSites.sync()
+  await models.applicationContacts.sync()
+  await models.applicationAccounts.sync()
 
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
@@ -233,6 +359,13 @@ const createModels = async () => {
 
   // Create user roles
   await models.userRoles.upsert({ role: 'USER' })
+
+  // Create the contact roles
+  await models.contactRoles.upsert({ contactRole: 'APPLICANT' })
+  await models.contactRoles.upsert({ contactRole: 'ECOLOGIST' })
+  await models.contactRoles.upsert({ contactRole: 'NAMED-INDIVIDUAL' })
+  await models.accountRoles.upsert({ accountRole: 'APPLICANT-ORGANISATION' })
+  await models.accountRoles.upsert({ accountRole: 'ECOLOGIST-ORGANISATION' })
 
   debug('Created database model')
 }

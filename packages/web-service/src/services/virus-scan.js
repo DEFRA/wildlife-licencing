@@ -1,39 +1,45 @@
+import 'dotenv/config'
 import NodeClam from 'clamscan'
+import * as fs from 'fs'
 
 const options = {
-  removeInfected: false,
-  scanRecursively: false,
-  clamscan: {
-    path: '/usr/bin/clamscan', // Path to clamscan binary on your server
-    db: null, // Path to a custom virus definition database
-    scanArchives: true, // If true, scan archives (ex. zip, rar, tar, dmg, iso, etc...)
-    active: true // If true, this module will consider using the clamscan binary
-  },
   clamdscan: {
     socket: null,
-    host: 'host.docker.internal',
-    port: 3310,
-    timeout: 60000,
+    host: process.env.CS_HOST,
+    port: process.env.CS_PORT,
+    timeout: parseInt(process.env.CS_TIMEOUT),
     multiscan: false,
-    active: true,
-    path: '/usr/bin/clamdscan'
+    active: true
   },
   preference: 'clamdscan'
 }
-
-const ClamScan = new NodeClam().init(JSON.parse(JSON.stringify(options)))
+const ClamScan = new NodeClam().init(options)
 
 export async function scanFile (filename) {
-  return ClamScan.then(async (clamscan) => {
-    if (filename.length > 0) {
-      try {
-        const { isInfected } = await clamscan.isInfected(`./${filename}`)
-        return isInfected
-      } catch (err) {
-        console.error(err)
+  const dir = `${process.env.SCANDIR}/${filename}`
+  return ClamScan.then(async clamscan => {
+    try {
+      const { isInfected } = await clamscan.isInfected(dir)
+      if (isInfected) {
+        fs.unlinkSync(dir, err => {
+          if (err) {
+            console.error(err)
+            throw err
+          }
+          console.log('The file contained a virus, so it was deleted.')
+        })
       }
-    } else {
-      throw new Error('File name must be provided')
+      return isInfected
+    } catch (err) {
+      console.error(err.message)
+      fs.unlinkSync(dir, delErr => {
+        if (delErr) {
+          console.error(delErr)
+          throw delErr
+        }
+      })
+      console.error(err.message)
+      throw new Error(err)
     }
   })
 }

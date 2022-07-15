@@ -11,6 +11,38 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  getContacts,
+  postContact,
+  getContactByContactId,
+  putContact,
+  deleteContact
+} from './handlers/contact/contact.js'
+
+import {
+  getAccounts,
+  postAccount,
+  getAccountByAccountId,
+  putAccount,
+  deleteAccount
+} from './handlers/account/account.js'
+
+import {
+  getApplicationContacts,
+  postApplicationContact,
+  putApplicationContactById,
+  getApplicationContactById,
+  deleteApplicationContactById
+} from './handlers/application-contact/application-contact.js'
+
+import {
+  getApplicationAccounts,
+  postApplicationAccount,
+  getApplicationAccountById,
+  putApplicationAccountById,
+  deleteApplicationAccountById
+} from './handlers/application-account/application-account.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -36,12 +68,6 @@ import {
 } from './handlers/application-user/application-user.js'
 
 import {
-  postSiteUser,
-  getSiteUserById,
-  deleteSiteUserById
-} from './handlers/site-user/site-user.js'
-
-import {
   getApplicationSites,
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
@@ -49,38 +75,17 @@ import {
 } from './handlers/application-site/application-site.js'
 
 import {
-  getApplicationApplicant,
-  putApplicationApplicant,
-  deleteApplicationApplicant,
-  getApplicants
-} from './handlers/application/applicant/applicant.js'
-
-import {
-  getApplicationEcologist,
-  putApplicationEcologist,
-  deleteApplicationEcologist,
-  getEcologists
-} from './handlers/application/ecologist/ecologist.js'
-
-import {
-  getApplicationApplicantOrganization,
-  putApplicationApplicantOrganization,
-  deleteApplicationApplicantOrganization,
-  getApplicantOrganizations
-} from './handlers/application/applicant-organization/applicant-organization.js'
-
-import {
-  getApplicationEcologistOrganization,
-  putApplicationEcologistOrganization,
-  deleteApplicationEcologistOrganization,
-  getEcologistOrganizations
-} from './handlers/application/ecologist-organization/ecologist-organization.js'
-
-import {
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility
 } from './handlers/application/eligibility/eligibility.js'
+
+import {
+  postHabitatSite,
+  getHabitatSiteByHabitatSiteId,
+  putHabitatSite,
+  deleteHabitatSite
+} from './handlers/habitat-site/habitat-site.js'
 
 import {
   getApplicationTypes,
@@ -106,16 +111,41 @@ const handlers = {
   getUsers,
   postUser,
   deleteUser,
+
+  // Contact handlers
+  getContacts,
+  postContact,
+  getContactByContactId,
+  putContact,
+  deleteContact,
+
+  // account handlers
+  getAccounts,
+  postAccount,
+  getAccountByAccountId,
+  putAccount,
+  deleteAccount,
+
+  // application-contact handlers
+  getApplicationContacts,
+  postApplicationContact,
+  getApplicationContactById,
+  putApplicationContactById,
+  deleteApplicationContactById,
+
+  // application account handlers
+  getApplicationAccounts,
+  postApplicationAccount,
+  getApplicationAccountById,
+  putApplicationAccountById,
+  deleteApplicationAccountById,
+
   // Site handlers
   getSiteBySiteId,
   getSites,
   postSite,
   putSite,
   deleteSite,
-  // Site-user handlers
-  postSiteUser,
-  getSiteUserById,
-  deleteSiteUserById,
 
   // Application handlers
   getApplicationByApplicationId,
@@ -124,22 +154,6 @@ const handlers = {
   putApplication,
   deleteApplication,
   getApplicationReference,
-  getApplicationApplicant,
-  putApplicationApplicant,
-  deleteApplicationApplicant,
-  getApplicants,
-  getApplicationEcologist,
-  putApplicationEcologist,
-  deleteApplicationEcologist,
-  getApplicationApplicantOrganization,
-  putApplicationApplicantOrganization,
-  deleteApplicationApplicantOrganization,
-  getApplicantOrganizations,
-  getEcologists,
-  getApplicationEcologistOrganization,
-  putApplicationEcologistOrganization,
-  deleteApplicationEcologistOrganization,
-  getEcologistOrganizations,
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
@@ -156,6 +170,13 @@ const handlers = {
   getApplicationSiteByApplicationSiteId,
   deleteApplicationSiteByApplicationSiteId,
   postApplicationSite,
+
+  // Habitat site handlers
+  postHabitatSite,
+  getHabitatSiteByHabitatSiteId,
+  putHabitatSite,
+  deleteHabitatSite,
+
   // Miscellaneous handlers
   getApplicationTypes,
   getApplicationPurposes,

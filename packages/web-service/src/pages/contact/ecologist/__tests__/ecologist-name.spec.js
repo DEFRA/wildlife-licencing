@@ -1,49 +1,22 @@
+
 describe('ecologist-name', () => {
   beforeEach(() => jest.resetModules())
-  it('getData returns the ecologist from the database', async () => {
-    jest.doMock('../../../../services/api-requests.js', () => ({
-      APIRequests: {
-        ECOLOGIST: {
-          getById: jest.fn(() => ({ fullName: 'Keith Richards' }))
-        }
-      }
+  it('getEcologistData calls the underlying contact functions', async () => {
+    const mockGetContactData = jest.fn()
+    jest.doMock('../../common/contact-name/contact-name.js', () => ({
+      getContactData: () => mockGetContactData
     }))
-    const { getEcologistData } = await import('../../common/common.js')
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({
-          applicationId: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
-          userId: '658c78d4-8890-4f79-a008-08fade8326d6'
-        }))
-      })
-    }
-    const result = await getEcologistData(request)
-    expect(result).toEqual({ fullName: 'Keith Richards' })
+    const { getEcologistData } = await import('../ecologist-name.js')
+    getEcologistData({ foo: 'bar' })
+    expect(mockGetContactData).toHaveBeenCalledWith({ foo: 'bar' })
   })
-
-  it('setData returns the ecologist from the database', async () => {
-    const mockPutById = jest.fn()
-    jest.doMock('../../../../services/api-requests.js', () => ({
-      APIRequests: {
-        ECOLOGIST: {
-          getById: jest.fn(() => ({ fullName: 'Keith Richards' })),
-          putById: mockPutById
-        }
-      }
+  it('setEcologistData calls the underlying contact functions', async () => {
+    const mockSetContactData = jest.fn()
+    jest.doMock('../../common/contact-name/contact-name.js', () => ({
+      setContactData: () => mockSetContactData
     }))
-    const { setData } = await import('../ecologist-name.js')
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({
-          applicationId: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
-          userId: '658c78d4-8890-4f79-a008-08fade8326d6'
-        })),
-        getPageData: jest.fn(() => ({
-          payload: { name: 'Keith Richards' }
-        }))
-      })
-    }
-    await setData(request)
-    expect(mockPutById).toHaveBeenCalledWith('dad9d73e-d591-41df-9475-92c032bd3ceb', { fullName: 'Keith Richards' })
+    const { setEcologistData } = await import('../ecologist-name.js')
+    setEcologistData({ foo: 'bar' })
+    expect(mockSetContactData).toHaveBeenCalledWith({ foo: 'bar' })
   })
 })
