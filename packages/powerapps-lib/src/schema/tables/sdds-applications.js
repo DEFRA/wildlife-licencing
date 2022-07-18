@@ -1,5 +1,4 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import { getReferenceDataIdByName } from '../../services/cache.js'
 
 export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
@@ -51,7 +50,7 @@ export const SddsApplication = new Table('sdds_applications', [
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
-  // Licensable actions - does this need to be in the extractors?
+  // Licensable actions
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
     RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites')
 

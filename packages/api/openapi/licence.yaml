@@ -1379,6 +1379,12 @@ paths:
                   - $ref: '#/components/schemas/badgerSett'
         400:
           description: Bad request
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         500:
           description: Unexpected error on server
           content:
@@ -1470,6 +1476,12 @@ paths:
           description: Bad request.
         404:
           description: Not found
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         500:
           description: Unexpected error on server
           content:
@@ -2095,6 +2107,10 @@ components:
 
     habitatSite:
       type: object
+      required:
+        - activityId
+        - speciesId
+        - methodIds
       properties:
         id:
           $ref: '#/components/schemas/uuid'

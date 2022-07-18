@@ -2,6 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 import { prepareResponse } from './habitat-site-proc.js'
+import { validateRelations } from './validate-relations.js'
 const { cache } = REDIS
 
 export default async (context, req, h) => {
@@ -14,6 +15,15 @@ export default async (context, req, h) => {
     // Check the application id exists
     if (!application) {
       return h.response().code(404)
+    }
+
+    const applicationType = await models.applicationTypes.findByPk(application.application.applicationTypeId)
+    const { activityId, speciesId, methodIds, settType } = req.payload
+    const err = await validateRelations(h, applicationType, activityId, speciesId, methodIds, settType)
+    if (err) {
+      return h.response({ code: 409, error: err })
+        .type(APPLICATION_JSON)
+        .code(409)
     }
 
     const [habitatSite, created] = await models.habitatSites.findOrCreate({

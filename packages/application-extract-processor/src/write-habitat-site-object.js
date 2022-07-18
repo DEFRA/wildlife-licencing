@@ -38,14 +38,18 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   try {
     const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
+    const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
+    const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
 
-    // Look for the application - if it does not exist then ignore
-    if (sddsApplicationId) {
+    // Look for the application, activity and method - if it does not have all 3 then ignore it
+    if (sddsApplicationId && activityId && speciesId) {
       const application = await models.applications.findOne({
         where: { sdds_application_id: sddsApplicationId }
       })
 
       if (application) {
+        Object.assign(data.habitatSite, { activityId })
+        Object.assign(data.habitatSite, { speciesId })
         const sddsHabitatSiteIds = keys.filter(k => k.apiTable === 'habitatSites').map(k => k.powerAppsKey)
         // Create or update the habitable sites
         for (const sddsHabitatSiteId of sddsHabitatSiteIds) {

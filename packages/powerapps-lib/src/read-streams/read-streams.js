@@ -60,8 +60,8 @@ const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationR
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
 /* Licensable actions */
-const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplication])
-const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplication])
+const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
+const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
@@ -115,7 +115,7 @@ const applicationTypeSpeciesTableSet = createTableSet(SddsApplicationTypeRelatio
 const applicationTypeSpeciesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeSpeciesTableSet)
 export const applicationTypeSpeciesReadStream = () => powerAppsReadStream(applicationTypeSpeciesRequestPath, applicationTypeSpeciesObjectTransformer)
 
-/* Application Type-Species */
+/* Application Type-Purposes */
 const applicationTypeApplicationPurposesRequestPath = buildRequestPath(SddsApplicationTypeRelations, [SddsApplicationPurpose])
 const applicationTypeApplicationPurposesTableSet = createTableSet(SddsApplicationTypeRelations, [SddsApplicationPurpose])
 const applicationTypeApplicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeApplicationPurposesTableSet)
