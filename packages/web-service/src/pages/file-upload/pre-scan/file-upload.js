@@ -37,7 +37,7 @@ const setData = async (request) => {
 }
 
 const completion = async (request) => {
-  const journeyData = await request.cache().getPageData()
+  const journeyData = await request.cache().getPageData() || {}
   if (journeyData.error) {
     return FILE_UPLOAD.uri
   } else {
