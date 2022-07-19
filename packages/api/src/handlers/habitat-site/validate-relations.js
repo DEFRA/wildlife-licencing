@@ -1,9 +1,8 @@
 import { models } from '@defra/wls-database-model'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pkg from 'sequelize'
 const { Sequelize } = pkg
 const Op = Sequelize.Op
-
-const A24 = '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
 
 /**
  * Ensure that the activities, species and methods are allowed for the habitat-site for this application type.
@@ -39,7 +38,7 @@ export const validateRelations = async (applicationType, activityId, speciesId, 
     error = { description: `Invalid species: ${speciesId} for application type: ${applicationType.id}` }
   } else if (!await activity.hasMethods(methods)) {
     error = { description: `Invalid methods: ${methodIds.join(', ')} for activity: ${activity.id}` }
-  } else if (applicationType.id === A24) {
+  } else if (applicationType.id === PowerPlatformKeys.APPLICATION_TYPES.A24) {
     const settTypes = await models.optionSets.findByPk('sdds_setttype')
     if (!settTypes.json.map(v => v.value).find(v => v === settType)) {
       error = { description: `Invalid settType: ${settType}` }
