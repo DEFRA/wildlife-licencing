@@ -119,7 +119,8 @@ export const applicationTypeSpeciesReadStream = () => powerAppsReadStream(applic
 const applicationTypeApplicationPurposesRequestPath = buildRequestPath(SddsApplicationTypeRelations, [SddsApplicationPurpose])
 const applicationTypeApplicationPurposesTableSet = createTableSet(SddsApplicationTypeRelations, [SddsApplicationPurpose])
 const applicationTypeApplicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeApplicationPurposesTableSet)
-export const applicationTypeApplicationPurposesReadStream = () => powerAppsReadStream(applicationTypeApplicationPurposesRequestPath, applicationTypeApplicationPurposesObjectTransformer)
+export const applicationTypeApplicationPurposesReadStream = () =>
+  powerAppsReadStream(applicationTypeApplicationPurposesRequestPath, applicationTypeApplicationPurposesObjectTransformer)
 
 /* Global option sets */
 export const globalOptionSetReadStream = () =>

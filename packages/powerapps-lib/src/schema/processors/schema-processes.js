@@ -298,6 +298,29 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
   return updateObjects
 }
 
+export const buildRequestPathRelationships = (table, include, path, delim) => {
+  if (table.relationships && table.relationships.length) {
+    for (const relationship of table.relationships) {
+      // Check the relationship is inbound
+      if (OperationType.inbound(relationship.operationType)) {
+        // Filter the relationships by the tables included in the table set
+        const nextTable = include.find(i => i.name === relationship.relatedTable)
+        if (nextTable) {
+          // If the relationship is keyOnly then do not expand beyond the named key
+          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+          if (relationship.keyOnly) {
+            path += `${delim}${navigationProperty}($select=${nextTable.keyName})`
+          } else {
+            path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
+          }
+          delim = ','
+        }
+      }
+    }
+  }
+  return path
+}
+
 /**
  * Generate a multi-level request path based on a given table and set of included tables
  * with a atomic GET request to the ODATA interface
@@ -322,34 +345,16 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
     path += `&$filter=${filters.map(c => c.filterFunc()).join(',')}`
   }
 
-  if (table.relationships && table.relationships.length) {
-    for (const relationship of table.relationships) {
-      // Check the relationship is inbound
-      if (OperationType.inbound(relationship.operationType)) {
-        // Filter the relationships by the tables included in the table set
-        const nextTable = include.find(i => i.name === relationship.relatedTable)
-        if (nextTable) {
-          // If the relationship is keyOnly then do not expand beyond the named key
-          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
-          if (relationship.keyOnly) {
-            path += `${delim}${navigationProperty}($select=${nextTable.keyName})`
-          } else {
-            path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
-          }
-          delim = ','
-        }
-      }
-    }
-  }
+  path = buildRequestPathRelationships(table, include, path, delim)
 
   return path
 }
 
 function buildObjectTransformerColumn (column, src, value) {
   if (OperationType.inbound(column.operationType) && column.srcPath) {
-    const value = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
-    if (value) {
-      Object.assign(value, { [column.srcPath]: value })
+    const val = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
+    if (val) {
+      Object.assign(value, { [column.srcPath]: val })
     }
   }
 }

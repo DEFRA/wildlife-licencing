@@ -1,7 +1,7 @@
 import { Column, OperationType, Relationship, RelationshipType, Table } from '../schema.js'
 
 export const SddsLicensableActions = new Table('sdds_licensableactions', [
-  new Column('sdds_method', 'methodIds', m => m.join(','), m => m && m.split(',').map(m => parseInt(m))),
+  new Column('sdds_method', 'methodIds', m => m.join(','), m => m && m.split(',').map(m2 => parseInt(m2))),
   new Column('sdds_osgridref', 'gridReference'),
   new Column('sdds_setttype', 'settType'),
   new Column('sdds_proposedstartdate', 'startDate'),
