@@ -17,10 +17,6 @@ import {
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
 
-jest.mock('../../../services/cache.js', () => ({
-  getReferenceDataIdByName: jest.fn(() => '001')
-}))
-
 describe('the schema processes', () => {
   beforeEach(() => jest.resetModules())
 
@@ -62,6 +58,7 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
       const applicationPayload = await createTableColumnsPayload(SddsApplication, srcObj, tableSet)
       expect(applicationPayload).toEqual({
+        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         columnPayload: {
           sdds_applicationcategory: 100000001,
           sdds_applicationnumber: '2022-500000-EPS-MIT',
@@ -70,11 +67,8 @@ describe('the schema processes', () => {
           sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
-        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
-          'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
-          'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
           'sdds_ecologistid@odata.bind': 'sdds_application_ecologistid_Contact',
           'sdds_ecologistorganisationid@odata.bind': 'sdds_application_ecologistorganisationid_',
           'sdds_organisationid@odata.bind': 'sdds_application_organisationid_Account'

@@ -1,4 +1,4 @@
-import { REDIS, SEQUELIZE } from '@defra/wls-connectors-lib'
+import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
@@ -28,7 +28,6 @@ const extracts = async () => {
 }
 
 const proc = async () => {
-  await REDIS.initialiseConnection()
   await SEQUELIZE.initialiseConnection()
   await createModels()
   await extracts()

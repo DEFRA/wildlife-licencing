@@ -20,7 +20,7 @@ export default async (context, req, h) => {
 
     const applicationType = await models.applicationTypes.findByPk(application.application.applicationTypeId)
     const { activityId, speciesId, methodIds, settType } = req.payload
-    const err = await validateRelations(h, applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
     if (err) {
       return h.response({ code: 409, error: err })
         .type(APPLICATION_JSON)

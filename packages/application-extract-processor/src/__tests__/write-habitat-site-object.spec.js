@@ -13,22 +13,31 @@ const keys = [
     apiBasePath: 'habitatSite',
     powerAppsTable: 'sdds_licensableactions',
     contentId: null,
-    powerAppsKey: '843a2a44-3180-ec11-8d21-000d3a0ca1c0'
+    powerAppsKey: '858b9fad-7106-ed11-82e4-002248c5c45b'
   },
   {
     apiTable: 'applications',
     apiKey: null,
-    apiBasePath: 'habitatSite.sddsApplicationId',
+    apiBasePath: 'habitatSite.applicationId',
     powerAppsTable: 'sdds_applications',
     contentId: null,
-    powerAppsKey: '694b683d-85bc-4685-b1c5-d9a4708fa642'
+    powerAppsKey: 'fc1a9675-db01-ed11-82e5-002248c5c45b'
   },
   {
-    apiTable: 'applications',
+    apiTable: 'activities',
     apiKey: null,
-    apiBasePath: 'habitatSite.sddsApplicationId',
-    powerAppsTable: 'sdds_applications',
-    contentId: null
+    apiBasePath: 'habitatSite.activityId',
+    powerAppsTable: 'sdds_licenseactivities',
+    contentId: null,
+    powerAppsKey: '68855554-59ed-ec11-bb3c-000d3a0cee24'
+  },
+  {
+    apiTable: 'species',
+    apiKey: null,
+    apiBasePath: 'habitatSite.speciesId',
+    powerAppsTable: 'sdds_species',
+    contentId: null,
+    powerAppsKey: 'fedb14b6-53a8-ec11-9840-0022481aca85'
   }
 ]
 
@@ -37,7 +46,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
 
   it('does nothing if no application key found', async () => {
     const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data: {}, keys: [] }, null)
+    const result = await writeHabitatSiteObject({ data: {}, keys: [keys[0]] }, null)
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
@@ -49,12 +58,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
     const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
     const result = await writeHabitatSiteObject({
       data: {},
-      keys: [
-        {
-          apiTable: 'applications',
-          powerAppsKey: '694b683d-85bc-4685-b1c5-d9a4708fa642'
-        }
-      ]
+      keys: keys
     }, null)
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
@@ -76,10 +80,12 @@ describe('The application extract processor: write-habitat-site-object', () => {
       habitatSite: {
         endDate: '2022-02-03',
         name: 'Destructive',
-        startDate: '2022-01-29'
+        startDate: '2022-01-29',
+        activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
       },
       id: expect.any(String),
-      sddsHabitatSiteId: '843a2a44-3180-ec11-8d21-000d3a0ca1c0',
+      sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',
       updateStatus: 'U'
     })
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })

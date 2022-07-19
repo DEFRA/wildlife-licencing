@@ -6,9 +6,9 @@ export const srcObj = {
       proposalDescription: 'Badgers are proposed to be moved',
       detailsOfConvictions: 'no convictions',
       licenceReason: 'need to move some badgers',
-      applicationType: 'MIT BAT A045',
-      applicationPurpose: 'Keeping badgers in zoological gardens or collections',
-      applicationCategory: 100000001
+      applicationCategory: 100000001,
+      applicationType: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+      applicationPurpose: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42'
     },
     keys: {
       apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
@@ -211,8 +211,6 @@ export const initialGeneratedAssignmentsObject = [
       sdds_applicationcategory: 100000001,
       sdds_sourceremote: true,
       sdds_applicationnumber: '2022-500000-EPS-MIT',
-      'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
-      'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
       sdds_detailsofconvictions: 'no convictions',
       sdds_whydoyouneedalicence: 'need to move some badgers'
@@ -331,7 +329,8 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix),sdds_applicationpurpose($select=sdds_name,sdds_description),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationtypesid),sdds_applicationpurpose($select=sdds_applicationpurposeid),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid)'
+
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
   '@odata.etag': 'W/"3285321"',
@@ -382,22 +381,15 @@ export const applicationResponseObject = {
     accountid: '8c797550-818a-ec11-93b0-0022481b4422'
   },
   sdds_applicationtypesid: {
-    '@odata.etag': 'W/"3283675"',
-    sdds_applicationname: 'A24 Badger',
-    sdds_description: 'Any application that has got to do with a badger sett.',
     sdds_applicationtypesid: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
   },
   sdds_applicationpurpose: {
-    '@odata.etag': 'W/"2843256"',
-    sdds_name: 'Keeping badgers in zoological gardens or collections',
-    sdds_description: 'Under section 10(1)(b) of the Act licences can be issued for the purpose of any zoological collection to take badgers or to sell badgers',
     sdds_applicationpurposeid: '81bbe720-9975-ec11-8943-0022481aacb0'
   }
 }
 
 export const applicationResponseTransformedDataObject = {
   application: {
-    applicationReferenceNumber: '2022-500000-EPS-MIT',
     applicant: {
       address: {
         addrline1: 'the grove',
@@ -413,8 +405,7 @@ export const applicationResponseTransformedDataObject = {
       fullName: 'Robert Plant'
     },
     applicationCategory: 100000001,
-    applicationPurpose: 'Keeping badgers in zoological gardens or collections',
-    applicationType: 'A24 Badger',
+    applicationReferenceNumber: '2022-500000-EPS-MIT',
     ecologist: {
       address: {
         addrline1: 'Old Hill',
@@ -437,6 +428,7 @@ export const applicationResponseTransformedDataObject = {
     proposalDescription: 'Removal of badgers by dogs'
   }
 }
+
 export const applicationResponseTransformedKeys = [
   {
     apiBasePath: 'application',
@@ -445,6 +437,22 @@ export const applicationResponseTransformedKeys = [
     contentId: null,
     powerAppsKey: '8d797550-818a-ec11-93b0-0022481b4422',
     powerAppsTable: 'sdds_applications'
+  },
+  {
+    apiBasePath: 'application.applicationTypeId',
+    apiKey: null,
+    apiTable: 'applicationTypes',
+    contentId: null,
+    powerAppsKey: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+    powerAppsTable: 'sdds_applicationtypeses'
+  },
+  {
+    apiBasePath: 'application.applicationPurposeId',
+    apiKey: null,
+    apiTable: 'applicationPurposes',
+    contentId: null,
+    powerAppsKey: '81bbe720-9975-ec11-8943-0022481aacb0',
+    powerAppsTable: 'sdds_applicationpurposes'
   },
   {
     apiBasePath: 'application.applicant',

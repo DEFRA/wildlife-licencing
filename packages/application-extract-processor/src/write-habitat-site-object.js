@@ -37,6 +37,7 @@ const doHabitatSite = async (sddsHabitatSiteId, ts, data, counter, application) 
 export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   try {
+    const sddsHabitatSiteId = keys.find(k => k.apiTable === 'habitatSites').powerAppsKey
     const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
     const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
     const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
@@ -50,11 +51,8 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
       if (application) {
         Object.assign(data.habitatSite, { activityId })
         Object.assign(data.habitatSite, { speciesId })
-        const sddsHabitatSiteIds = keys.filter(k => k.apiTable === 'habitatSites').map(k => k.powerAppsKey)
         // Create or update the habitable sites
-        for (const sddsHabitatSiteId of sddsHabitatSiteIds) {
-          await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
-        }
+        await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
       }
     }
 
