@@ -58,7 +58,6 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
       const applicationPayload = await createTableColumnsPayload(SddsApplication, srcObj, tableSet)
       expect(applicationPayload).toEqual({
-        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         columnPayload: {
           sdds_applicationcategory: 100000001,
           sdds_applicationnumber: '2022-500000-EPS-MIT',
@@ -67,8 +66,11 @@ describe('the schema processes', () => {
           sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
+        id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
+          'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(256f23ef-9775-ec11-8943-0022481aacb0)',
+          'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(9d62e5b8-9c77-ec11-8d21-000d3a87431b)',
           'sdds_ecologistid@odata.bind': 'sdds_application_ecologistid_Contact',
           'sdds_ecologistorganisationid@odata.bind': 'sdds_application_ecologistorganisationid_',
           'sdds_organisationid@odata.bind': 'sdds_application_organisationid_Account'
@@ -80,7 +82,7 @@ describe('the schema processes', () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
-      const sitesPayloads = await createTableColumnsPayload(site, srcObj)
+      const sitesPayloads = await createTableColumnsPayload(site, srcObj, tableSet)
       expect(sitesPayloads).toEqual([
         {
           id: '842fc15b-2858-4349-86ea-b33a0629a30b',
@@ -211,8 +213,13 @@ describe('the schema processes', () => {
 
   describe('the buildRequestPath function', () => {
     it('generates the correct request path for the main application extract', async () => {
+      // Force expansion for coverage
       const { buildRequestPath } = await import('../schema-processes.js')
-      const applicationRequestPath = buildRequestPath(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
+      const SddsApplicationExpanded = Object.assign(SddsApplication)
+      const rel = SddsApplicationExpanded.relationships.find(r => r.relatedTable === 'sdds_applicationtypeses')
+      rel.keyOnly = false
+      const applicationRequestPath = buildRequestPath(SddsApplicationExpanded, [Contact, Account,
+        SddsApplicationType, SddsApplicationPurpose])
       expect(applicationRequestPath).toBe(expectedApplicationRequestPath)
     })
   })

@@ -7,8 +7,8 @@ export const srcObj = {
       detailsOfConvictions: 'no convictions',
       licenceReason: 'need to move some badgers',
       applicationCategory: 100000001,
-      applicationType: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-      applicationPurpose: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42'
+      applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+      applicationPurposeId: '256f23ef-9775-ec11-8943-0022481aacb0'
     },
     keys: {
       apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
@@ -89,89 +89,6 @@ export const srcObj = {
   }
 }
 
-export const initialKeys = [{
-  apiTable: 'applications',
-  apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
-  apiBasePath: 'application',
-  powerAppsTable: 'sdds_applications',
-  powerAppsKey: null
-},
-{
-  apiTable: 'applications',
-  apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
-  apiBasePath: 'application.applicant',
-  powerAppsTable: 'contacts',
-  powerAppsKey: null
-},
-{
-  apiTable: 'applications',
-  apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
-  apiBasePath: 'application.application.ecologist',
-  powerAppsTable: 'contacts',
-  powerAppsKey: null
-},
-{
-  apiTable: 'sites',
-  apiKey: '842fc15b-2858-4349-86ea-b33a0629a30b',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites'
-},
-{
-  apiTable: 'sites',
-  apiKey: '15385397-6df3-45f8-9c98-4551815bbfa0',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites'
-},
-{
-  apiTable: 'sites',
-  apiKey: '27e20450-f414-445e-995b-8d7caf53ab2c',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites'
-}]
-
-export const updateKeys = [{
-  apiTable: 'applications',
-  apiKey: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
-  apiBasePath: 'application',
-  powerAppsTable: 'sdds_applications',
-  powerAppsKey: 'd32e4cca-1cf7-4d77-a3a2-1e43ac90767b'
-},
-{
-  apiTable: 'applications',
-  apiKey: null,
-  apiBasePath: 'application.applicant',
-  powerAppsTable: 'contacts',
-  powerAppsKey: '2b0ff9c1-4724-4954-95cf-bd52a5980dd9'
-},
-{
-  apiTable: 'applications',
-  apiKey: null,
-  apiBasePath: 'application.ecologist',
-  powerAppsTable: 'contacts',
-  powerAppsKey: '2b0ff9c1-4724-4954-95cf-bd52a5980dd9'
-},
-{
-  apiTable: 'sites',
-  apiKey: '842fc15b-2858-4349-86ea-b33a0629a30b',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites',
-  powerAppsKey: 'c5fb592f-15e5-4879-ab33-ac4033619fc6'
-},
-{
-  apiTable: 'sites',
-  apiKey: '15385397-6df3-45f8-9c98-4551815bbfa0',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites',
-  powerAppsKey: '7a1e056e-4cb9-4fb4-beae-ae5ff600e989'
-},
-{
-  apiTable: 'sites',
-  apiKey: '27e20450-f414-445e-995b-8d7caf53ab2c',
-  powerAppsTable: 'sdds_sites',
-  apiBasePath: 'application.sites',
-  powerAppsKey: 'cea890f9-a104-44c0-9415-2b60fefd84c6'
-}]
-
 export const initialGeneratedAssignmentsObject = [
   expect.objectContaining({
     assignments: expect.objectContaining({
@@ -208,6 +125,8 @@ export const initialGeneratedAssignmentsObject = [
   expect.objectContaining({
     assignments: {
       'sdds_applicantid@odata.bind': '$4',
+      'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(9d62e5b8-9c77-ec11-8d21-000d3a87431b)',
+      'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(256f23ef-9775-ec11-8943-0022481aacb0)',
       sdds_applicationcategory: 100000001,
       sdds_sourceremote: true,
       sdds_applicationnumber: '2022-500000-EPS-MIT',
@@ -329,7 +248,7 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationtypesid),sdds_applicationpurpose($select=sdds_applicationpurposeid),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix;$expand=sdds_applicationtypes_sdds_applicationpur($select=sdds_applicationpurposeid)),sdds_applicationpurpose($select=sdds_applicationpurposeid),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid)'
 
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',

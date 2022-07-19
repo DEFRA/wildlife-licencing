@@ -190,7 +190,7 @@ export const createTableRelationshipsPayloads = async (table, updateObjects) => 
 }
 
 /**
- * Helper function to replace the relationships with there positional parameter ContentId in
+ * Helper function to replace the relationships with their positional parameter ContentId in
  * createBatchRequestObjects
  * @param tableRelationshipsPayload
  * @param updateObjects

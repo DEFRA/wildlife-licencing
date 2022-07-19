@@ -20,7 +20,7 @@ export const SddsApplication = new Table('sdds_applications', [
     RelationshipType.MANY_TO_ONE, 'sdds_applicationtypesid', 'applicationTypeId',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
-  // Application purpose
+  // Application purpose (note the key name - no id)
   new Relationship('sdds_application_applicationpurpose_sdds_', 'sdds_applicationpurposes',
     RelationshipType.MANY_TO_ONE, 'sdds_applicationpurpose', 'applicationPurposeId',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
