@@ -1392,6 +1392,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/application/{applicationId}/habitat-sites':
+    get:
+      description: lists the habitat sites for an application
+      summary: uses one of the habitat schemas depending on species
+      operationId: getHabitatSitesByApplicationId
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSetts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/application/{applicationId}/habitat-site/{habitatSiteId}':
     get:
       description: Retrieve a habitat site
@@ -2136,6 +2171,11 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    badgerSetts:
+      type: array
+      items:
+        $ref: '#/components/schemas/badgerSett'
 
     badgerSett:
       allOf:
