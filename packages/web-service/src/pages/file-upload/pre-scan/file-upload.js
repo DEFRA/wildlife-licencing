@@ -5,14 +5,14 @@ import Joi from 'joi'
 import fs from 'fs'
 
 const setData = async (request) => {
-  const currentFilePlusDirectory = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
+  const currentFilePlusDirectory = process.env.SCANDIR + '/' + request.payload['scan-file'].path.split('\\').pop()
 
   // We need to take a filename like: hello.txt
   // And rename it to something like: {unixTimestamp}.{originalFileName}
   // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
   // It also stops collisions if multiple users all upload files with the same name
   const newFilename = (+new Date()) + '.' + request.payload['scan-file'].filename
-  const newFilenamePlusDirectory = process.env.SCANNING_DIR + '/' + newFilename
+  const newFilenamePlusDirectory = process.env.SCANDIR + '/' + newFilename
 
   fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, (err) => {
     if (err) { console.err(err) }
@@ -117,8 +117,8 @@ const fileUploadPageRoute = (view, path, checkData, getData, validator, completi
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
         // So for files 30 - 40mb - we'll raise a joi error
         // For files 40mb and above - we won't even accept the file, we'll just redirect the user to an error page inside `client-error.njk`
-        maxBytes: (process.env.MAX_FILE_UPLOAD * 1_333_334),
-        uploads: process.env.SCANNING_DIR,
+        maxBytes: (process.env.MAX_FILE_UPLOAD_SIZE_MB * 1_333_334),
+        uploads: process.env.SCANDIR,
         multipart: {
           output: 'file'
         },

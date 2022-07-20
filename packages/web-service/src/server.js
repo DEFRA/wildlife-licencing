@@ -136,8 +136,8 @@ const init = async server => {
   await server.route(routes)
 
   // If the directory doesn't exist to hold our files we need to scan, create it
-  if (!fs.existsSync('./' + process.env.SCANNING_DIR)) {
-    fs.mkdirSync('./' + process.env.SCANNING_DIR)
+  if (!fs.existsSync('./' + process.env.SCANDIR)) {
+    fs.mkdirSync('./' + process.env.SCANDIR)
   }
 
   // Log any errors
