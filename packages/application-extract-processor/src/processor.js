@@ -1,8 +1,8 @@
-import { REDIS, SEQUELIZE } from '@defra/wls-connectors-lib'
+import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
-  applicationAccountsReadStream
+  applicationAccountsReadStream, licensableActionsReadStream
 } from '@defra/wls-powerapps-lib'
 
 import { createModels } from '@defra/wls-database-model'
@@ -14,6 +14,7 @@ import { writeContactObject } from './write-contact-object.js'
 import { writeAccountObject } from './write-account-object.js'
 import { writeApplicationAccountObject } from './write-application-account-object.js'
 import { writeApplicationContactObject } from './write-application-contact-object.js'
+import { writeHabitatSiteObject } from './write-habitat-site-object.js'
 
 const extracts = async () => {
   await databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites')
@@ -23,10 +24,10 @@ const extracts = async () => {
   await databaseWriter(applicationContactsReadStream(), writeApplicationContactObject, new Date(), 'Application-Contacts')
   await databaseWriter(applicationAccountsReadStream(), writeApplicationAccountObject, new Date(), 'Application-Accounts')
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
+  await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
 }
 
 const proc = async () => {
-  await REDIS.initialiseConnection()
   await SEQUELIZE.initialiseConnection()
   await createModels()
   await extracts()

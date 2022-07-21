@@ -4,13 +4,13 @@ import pkg from 'sequelize'
 const { Sequelize } = pkg
 const Op = Sequelize.Op
 
-async function doSite (data, s, application, site, counter) {
+async function doSite (application, site, counter) {
   // Test if the application-site exists using the power Apps Keys
   const applicationSitePAKeys = await models.applicationSites.findOne({
     where: {
       [Op.and]: [
-        { sdds_application_id: data.application.id },
-        { sdds_site_id: s.id }
+        { sdds_application_id: application.sddsApplicationId },
+        { sdds_site_id: site.sddsSiteId }
       ]
     }
   })
@@ -21,8 +21,8 @@ async function doSite (data, s, application, site, counter) {
     const applicationSiteApiKeys = await models.applicationSites.findOne({
       where: {
         [Op.and]: [
-          { application_id: application.dataValues.id },
-          { site_id: site.dataValues.id }
+          { application_id: application.id },
+          { site_id: site.id }
         ]
       }
     })
@@ -32,20 +32,19 @@ async function doSite (data, s, application, site, counter) {
     if (!applicationSiteApiKeys) {
       await models.applicationSites.create({
         id: uuidv4(),
-        userId: application.userId,
-        applicationId: application.dataValues.id,
-        sddsApplicationId: data.application.id,
-        siteId: site.dataValues.id,
-        sddsSiteId: s.id
+        applicationId: application.id,
+        sddsApplicationId: application.sddsApplicationId,
+        siteId: site.id,
+        sddsSiteId: site.sddsSiteId
       })
       counter.insert++
     } else {
       await models.applicationSites.update({
-        sddsApplicationId: data.application.id,
-        sddsSiteId: s.id
+        sddsApplicationId: application.sddsApplicationId,
+        sddsSiteId: site.sddsSiteId
       }, {
         where: {
-          id: applicationSiteApiKeys.dataValues.id
+          id: applicationSiteApiKeys.id
         },
         returning: false
       })
@@ -59,27 +58,29 @@ async function doSite (data, s, application, site, counter) {
  * @param obj
  * @returns {Promise<{pending: number, insert: number, update: number, error: number}>}
  */
-export const writeApplicationSiteObject = async obj => {
-  const { data } = obj
+export const writeApplicationSiteObject = async ({ _data, keys }) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+
+  const sddsApplicationId = keys.find(k => k.apiTable === 'applications').powerAppsKey
+  const sddsSiteIds = keys.filter(k => k.apiTable === 'sites').map(k => k.powerAppsKey)
 
   try {
     // Find the application record using the Power Apps keys
     const application = await models.applications.findOne({
-      where: { sdds_application_id: data.application.id }
+      where: { sdds_application_id: sddsApplicationId }
     })
 
     // If the applications is not (yet) in the database do nothing
     if (application) {
-      for (const s of data.application.sites) {
+      for (const sddsSiteId of sddsSiteIds) {
         // Find the site record using the Power Apps keys
         const site = await models.sites.findOne({
-          where: { sdds_site_id: s.id }
+          where: { sdds_site_id: sddsSiteId }
         })
 
         // If these records are (yet) not in the database then do nothing
         if (site) {
-          await doSite(data, s, application, site, counter)
+          await doSite(application, site, counter)
         }
       }
     }

@@ -1,7 +1,6 @@
 {
   "packages": [
-    "packages/*",
-    "packages/eps/*"
+    "packages/*"
   ],
   "version": "2.4.0-alpha.0",
   "npmClient": "npm",

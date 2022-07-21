@@ -136,7 +136,7 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
     .map(r => r.name)
 
   for (const relationship of table.relationships) {
-    if (relationship.type === RelationshipType.MANY_TO_ONE) {
+    if (relationship.type === RelationshipType.MANY_TO_ONE && OperationType.outbound(relationship.operationType)) {
       // If the relationship is found in our table set, attempt to bind the value
       if (relationshipSet.includes(relationship.name)) {
         // The value will be replaced by the content index in the final parse
@@ -154,29 +154,28 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
 }
 
 /**
- * Generate the update objects for the many-to-many relationships on any
+ * Generate the update objects for the one-to-many and the many-to-many relationships on any
  * given table in the set
  * @param table - The table
- * @param tableSet - The set of tables in the update
- * @param srcObj - The source object
  * @param updateObjects - The set of update objects being built
  * @returns {Promise<null|*[]>}
  */
-export const createTableMMRelationshipsPayloads = async (table, updateObjects) => {
+export const createTableRelationshipsPayloads = async (table, updateObjects) => {
   const result = []
 
   if (!table.relationships) {
     return null
   }
 
-  const m2mRelationships = table.relationships
-    .filter(r => r.type === RelationshipType.MANY_TO_MANY)
+  const relationships = table.relationships
+    .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
+    .filter(r => OperationType.outbound(r.operationType))
 
-  if (!m2mRelationships.length) {
+  if (!relationships.length) {
     return null
   }
 
-  for (const relationship of m2mRelationships) {
+  for (const relationship of relationships) {
     // Only set up where the target is in the update
     const rel = updateObjects.filter(u => u.relationshipName === relationship.name)
     if (rel.length) {
@@ -191,7 +190,7 @@ export const createTableMMRelationshipsPayloads = async (table, updateObjects) =
 }
 
 /**
- * Helper function to replace the relationships with there positional parameter ContentId in
+ * Helper function to replace the relationships with their positional parameter ContentId in
  * createBatchRequestObjects
  * @param tableRelationshipsPayload
  * @param updateObjects
@@ -279,11 +278,11 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
       }
     }
 
-    // Handle m2m relationships. These are a separate requests occurring after the containing
+    // Handle 1:M amd M:M relationships. These are a separate requests occurring after the containing
     // (driving) table request
-    const tableM2MRelationshipsPayloads = await createTableMMRelationshipsPayloads(table, updateObjects)
-    if (tableM2MRelationshipsPayloads && tableM2MRelationshipsPayloads.length) {
-      for (const m of tableM2MRelationshipsPayloads) {
+    const tableRelationshipsPayloads = await createTableRelationshipsPayloads(table, updateObjects)
+    if (tableRelationshipsPayloads && tableRelationshipsPayloads.length) {
+      for (const m of tableRelationshipsPayloads) {
         updateObjects.push({
           table: `$${currentContentId}/${m.name}/$ref`,
           relationshipName: table.relationshipName,
@@ -297,6 +296,29 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
   }
 
   return updateObjects
+}
+
+export const buildRequestPathRelationships = (table, include, path, delim) => {
+  if (table.relationships && table.relationships.length) {
+    for (const relationship of table.relationships) {
+      // Check the relationship is inbound
+      if (OperationType.inbound(relationship.operationType)) {
+        // Filter the relationships by the tables included in the table set
+        const nextTable = include.find(i => i.name === relationship.relatedTable)
+        if (nextTable) {
+          // If the relationship is keyOnly then do not expand beyond the named key
+          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+          if (relationship.keyOnly) {
+            path += `${delim}${navigationProperty}($select=${nextTable.keyName})`
+          } else {
+            path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
+          }
+          delim = ','
+        }
+      }
+    }
+  }
+  return path
 }
 
 /**
@@ -323,24 +345,14 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
     path += `&$filter=${filters.map(c => c.filterFunc()).join(',')}`
   }
 
-  if (table.relationships && table.relationships.length) {
-    for (const relationship of table.relationships) {
-      // Filter the relationships by the tables included in the table set
-      const nextTable = include.find(i => i.name === relationship.relatedTable)
-      if (nextTable) {
-        const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
-        path += `${delim}${navigationProperty}(${buildRequestPath(nextTable, include, false, ';$expand=')})`
-        delim = ','
-      }
-    }
-  }
+  path = buildRequestPathRelationships(table, include, path, delim)
 
   return path
 }
 
-function buildObjectTransformerColumn (column, s, value) {
+function buildObjectTransformerColumn (column, src, value) {
   if (OperationType.inbound(column.operationType) && column.srcPath) {
-    const val = s[column.name]
+    const val = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
     if (val) {
       Object.assign(value, { [column.srcPath]: val })
     }
@@ -362,10 +374,10 @@ const buildArrayObjectTransformer = (src, t, data) => {
 function buildObjectObjectTransformer (t, src, data) {
   for (const column of t.columns) {
     if (OperationType.inbound(column.operationType) && column.srcPath) {
-      const value = src[column.name]
+      const value = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
       // The inbound stream does not set null values
       if (value) {
-        set(data, `${t.basePath}.${column.srcPath}`, src[column.name])
+        set(data, `${t.basePath}.${column.srcPath}`, value)
       }
     }
   }

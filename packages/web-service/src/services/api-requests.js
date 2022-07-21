@@ -194,13 +194,13 @@ export const APIRequests = {
      * @param type
      * @returns {Promise<*>}
      */
-    create: async type => {
+    create: async (applicationTypeId, applicationPurposeId) => {
       try {
-        const application = await API.post(apiUrls.APPLICATION, { applicationType: type })
+        const application = await API.post(apiUrls.APPLICATION, { applicationTypeId, applicationPurposeId })
         debug(`Created pre-application ${JSON.stringify(application.id)}`)
         return application
       } catch (error) {
-        console.error(`Error creating pre-application of type ${type}`, error)
+        console.error(`Error creating pre-application of type ${applicationTypeId} for ${applicationPurposeId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -227,7 +227,7 @@ export const APIRequests = {
         // Create reference number if no reference number exists
         result.application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
         if (!result.application?.applicationReferenceNumber) {
-          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationType=${result.application.applicationType}`)
+          const { ref: applicationReferenceNumber } = await API.get('/applications/get-reference', `applicationTypeId=${result.application.applicationTypeId}`)
           Object.assign(result.application, { applicationReferenceNumber })
           debug(`Assign reference number ${applicationReferenceNumber} to applicationId: ${result.application.id}`)
           result.application = API.put(`${apiUrls.APPLICATION}/${applicationId}`, (({ id, ...l }) => l)(result.application))

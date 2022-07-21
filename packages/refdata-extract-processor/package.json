@@ -33,6 +33,7 @@
     "@defra/wls-database-model": "^2.4.0-alpha.0",
     "@defra/wls-powerapps-lib": "^2.4.0-alpha.0",
     "debug": "^4.3.3",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "sequelize": "^6.12.5"
   }
 }

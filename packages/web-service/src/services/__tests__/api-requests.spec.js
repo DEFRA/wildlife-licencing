@@ -99,9 +99,10 @@ describe('The API requests service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICATION.create('type')
+      await APIRequests.APPLICATION.create('9d62e5b8-9c77-ec11-8d21-000d3a87431b', '3db073af-201b-ec11-b6e7-0022481a8f18')
       expect(mockPost).toHaveBeenCalledWith('/application', {
-        applicationType: 'type'
+        applicationPurposeId: '3db073af-201b-ec11-b6e7-0022481a8f18',
+        applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
       })
     })
 
@@ -126,12 +127,12 @@ describe('The API requests service', () => {
       }))
       const mockGet = jest.fn()
         .mockReturnValueOnce([])
-        .mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationType: 'badger' })
+        .mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
         .mockReturnValue({ ref: 'REF-NO' })
       const mockPut = jest.fn(() => ({
         id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         applicationReferenceNumber: 'REF-NO',
-        applicationType: 'badger'
+        applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -146,14 +147,14 @@ describe('The API requests service', () => {
 
       expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
-      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=badger')
+      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationTypeId=9d62e5b8-9c77-ec11-8d21-000d3a87431b')
       expect(mockPost).toHaveBeenCalledWith('/application-user', { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', role: 'role1', userId: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
-      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationType: 'badger' })
+      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
       expect(result).toEqual({
         application: {
           applicationReferenceNumber: 'REF-NO',
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          applicationType: 'badger'
+          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
         },
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
@@ -171,13 +172,13 @@ describe('The API requests service', () => {
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
           role: 'role1',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
-        }]).mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationType: 'badger' })
+        }]).mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
         .mockReturnValue({ ref: 'REF-NO' })
 
       const mockPut = jest.fn(() => ({
         id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         applicationReferenceNumber: 'REF-NO',
-        applicationType: 'badger'
+        applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -191,13 +192,13 @@ describe('The API requests service', () => {
 
       expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
-      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationType=badger')
-      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationType: 'badger' })
+      expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationTypeId=9d62e5b8-9c77-ec11-8d21-000d3a87431b')
+      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
       expect(result).toEqual({
         application: {
           applicationReferenceNumber: 'REF-NO',
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          applicationType: 'badger'
+          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
         },
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
@@ -217,7 +218,7 @@ describe('The API requests service', () => {
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }]).mockReturnValue({
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          applicationType: 'badger',
+          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           applicationReferenceNumber: 'REF-NO'
         })
 
@@ -237,7 +238,7 @@ describe('The API requests service', () => {
         application: {
           applicationReferenceNumber: 'REF-NO',
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          applicationType: 'badger'
+          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
         },
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',

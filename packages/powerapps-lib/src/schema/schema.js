@@ -14,10 +14,12 @@ export const OperationType = Object.freeze({
 })
 
 export class Column {
-  constructor (name, srcPath, srcFunc, operationType = OperationType.INBOUND_AND_OUTBOUND, filterFunc = null) {
+  constructor (name, srcPath, srcFunc, tgtFunc,
+    operationType = OperationType.INBOUND_AND_OUTBOUND, filterFunc = null) {
     this.name = name
     this.srcPath = srcPath
     this.srcFunc = srcFunc
+    this.tgtFunc = tgtFunc
     this.operationType = operationType
     this.filterFunc = filterFunc
   }
@@ -30,7 +32,21 @@ export const RelationshipType = Object.freeze({
 })
 
 export class Relationship {
-  constructor (name, relatedTable, type, lookupColumnName, srcPath, srcFunc, tgtFunc) {
+  /**
+   * Relationship constructor
+   * @param name - The name given to the relationship in the power platform
+   * @param relatedTable - The related power platform table name
+   * @param type - The relationship cardinality
+   * @param lookupColumnName - The column name in the owning table (not required for M:M)
+   * @param srcPath - The path into the source structure
+   * @param srcFunc - A function operating on the data at source path (OUTBOUND)
+   * @param tgtFunc - A function operating on the data at source path (INBOUND)
+   * @param operationType - dictate if the relation expanded on INBOUND, OUTBOUND or both operations
+   * @param keyOnly - If the relation is expanded on the INBOUND operation then expand only the keys -
+   * do not traverse. Ignored for the outbound operation
+   */
+  constructor (name, relatedTable, type, lookupColumnName, srcPath, srcFunc,
+    tgtFunc, operationType = OperationType.INBOUND_AND_OUTBOUND, keyOnly = false) {
     this.name = name
     this.relatedTable = relatedTable
     this.type = type
@@ -38,6 +54,8 @@ export class Relationship {
     this.srcPath = srcPath
     this.srcFunc = srcFunc
     this.tgtFunc = tgtFunc
+    this.operationType = operationType
+    this.keyOnly = keyOnly
   }
 }
 
@@ -63,6 +81,24 @@ export class Table {
       const mapping = new Table()
       Object.assign(mapping, cloneDeep(obj))
       return mapping
+    }
+    return null
+  }
+
+  /**
+   * Helper function for where you want to extract relations. It replaces the columns with
+   * just the primary key column
+   * @param obj
+   * @returns {Table|null}
+   */
+  static relations (obj) {
+    if (obj) {
+      const copy = new Table()
+      Object.assign(copy, cloneDeep(obj))
+      copy.columns = [
+        new Column(copy.keyName)
+      ]
+      return copy
     }
     return null
   }

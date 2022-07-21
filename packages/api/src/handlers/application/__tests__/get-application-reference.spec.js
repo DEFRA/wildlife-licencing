@@ -6,7 +6,7 @@ const path = 'applications/get-reference?applicationType=A24%20badger'
 const req = {
   path,
   query: {
-    applicationType: 'A24 badger'
+    applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
   }
 }
 
@@ -42,7 +42,7 @@ describe('The getApplicationReference handler', () => {
   it('returns a new reference and status 200 where type is found in cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify([
       {
-        id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
+        id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
         createdAt: '2022-02-21T14:15:19.822Z',
         updatedAt: '2022-02-28T09:01:52.301Z',
         name: 'A24 badger',
@@ -67,7 +67,7 @@ describe('The getApplicationReference handler', () => {
       findAll: jest.fn(() => [
         {
           dataValues: {
-            id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
+            id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
             json: {
               name: 'A24 badger',
               refNoSuffix: 'EPS-MIT'
@@ -110,7 +110,7 @@ describe('The getApplicationReference handler', () => {
       findAll: jest.fn(() => [
         {
           dataValues: {
-            id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
+            id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
             json: {
               name: 'A24 badger'
             },

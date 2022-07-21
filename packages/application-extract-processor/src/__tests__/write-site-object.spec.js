@@ -55,7 +55,7 @@ describe('The application extract processor: write-site-object', () => {
     expect(mockUpdate).toHaveBeenCalledWith({ site: { ...data.sites }, updateStatus: 'U' }, expect.any(Object))
   })
 
-  it('ignores an update on a found, unlocked site, if data has not changed)', async () => {
+  it('ignores an update on a found, unlocked site, if data has not changed', async () => {
     const mockUpdate = jest.fn()
     const unlockedResult = Object.assign({}, findOneResult)
     unlockedResult.dataValues.updateStatus = 'U'

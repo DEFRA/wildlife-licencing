@@ -1,19 +1,21 @@
-
 import {
   SddsApplication,
-  SddsApplicationKeys,
   SddsApplicationType,
   SddsApplicationPurpose,
   Contact,
-  ContactKeys,
   Account,
-  AccountKeys,
   SddsSite,
-  SddsSiteKeys
+  SddsLicensableActions,
+  SddsLicenseActivities,
+  SddsLicenseMethods,
+  SddsSpecies
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
 import { powerAppsReadStream } from './powerapps-read-stream.js'
+import { Table } from '../schema/schema.js'
+
+const SddsApplicationRelations = Table.relations(SddsApplication)
 
 /* Applications */
 const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
@@ -34,15 +36,15 @@ const accountsObjectTransformer = buildObjectTransformer(Account, accountsTableS
 export const accountsReadStream = () => powerAppsReadStream(accountsRequestPath, accountsObjectTransformer)
 
 /* Application contacts */
-const applicationContactsRequestPath = buildRequestPath(SddsApplicationKeys, [ContactKeys])
-const applicationContactsTableSet = createTableSet(SddsApplicationKeys, [ContactKeys])
-const applicationContactsObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationContactsTableSet)
+const applicationContactsRequestPath = buildRequestPath(SddsApplicationRelations, [Contact])
+const applicationContactsTableSet = createTableSet(SddsApplicationRelations, [Contact])
+const applicationContactsObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationContactsTableSet)
 export const applicationContactsReadStream = () => powerAppsReadStream(applicationContactsRequestPath, applicationContactsObjectTransformer)
 
 /* Application accounts */
-const applicationAccountsRequestPath = buildRequestPath(SddsApplicationKeys, [AccountKeys])
-const applicationAccountsTableSet = createTableSet(SddsApplicationKeys, [AccountKeys])
-const applicationAccountsObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationAccountsTableSet)
+const applicationAccountsRequestPath = buildRequestPath(SddsApplicationRelations, [Account])
+const applicationAccountsTableSet = createTableSet(SddsApplicationRelations, [Account])
+const applicationAccountsObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationAccountsTableSet)
 export const applicationAccountsReadStream = () => powerAppsReadStream(applicationAccountsRequestPath, applicationAccountsObjectTransformer)
 
 /* Sites */
@@ -52,10 +54,16 @@ const sitesObjectTransformer = buildObjectTransformer(SddsSite, sitesTableSet)
 export const sitesReadStream = () => powerAppsReadStream(sitesRequestPath, sitesObjectTransformer)
 
 /* Application-sites */
-const applicationSiteRequestPath = buildRequestPath(SddsApplicationKeys, [SddsSiteKeys])
-const applicationSiteTableSet = createTableSet(SddsApplicationKeys, [SddsSiteKeys])
-const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationSiteTableSet)
+const applicationSiteRequestPath = buildRequestPath(SddsApplicationRelations, [SddsSite])
+const applicationSiteTableSet = createTableSet(SddsApplicationRelations, [SddsSite])
+const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationRelations, applicationSiteTableSet)
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
+
+/* Licensable actions */
+const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
+const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
+const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
+export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
 /* Application Types */
 const applicationTypesRequestPath = buildRequestPath(SddsApplicationType)
@@ -68,6 +76,51 @@ const applicationPurposesRequestPath = buildRequestPath(SddsApplicationPurpose)
 const applicationPurposesTableSet = createTableSet(SddsApplicationPurpose)
 const applicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationPurpose, applicationPurposesTableSet)
 export const applicationPurposesReadStream = () => powerAppsReadStream(applicationPurposesRequestPath, applicationPurposesObjectTransformer)
+
+/* Activities */
+const activitiesRequestPath = buildRequestPath(SddsLicenseActivities)
+const activitiesTableSet = createTableSet(SddsLicenseActivities)
+const activitiesObjectTransformer = buildObjectTransformer(SddsLicenseActivities, activitiesTableSet)
+export const activitiesReadStream = () => powerAppsReadStream(activitiesRequestPath, activitiesObjectTransformer)
+
+/* Methods */
+const methodsRequestPath = buildRequestPath(SddsLicenseMethods)
+const methodsTableSet = createTableSet(SddsLicenseMethods)
+const methodsObjectTransformer = buildObjectTransformer(SddsLicenseMethods, methodsTableSet)
+export const methodsReadStream = () => powerAppsReadStream(methodsRequestPath, methodsObjectTransformer)
+
+/* Species */
+const speciesRequestPath = buildRequestPath(SddsSpecies)
+const speciesTableSet = createTableSet(SddsSpecies)
+const speciesObjectTransformer = buildObjectTransformer(SddsSpecies, speciesTableSet)
+export const speciesReadStream = () => powerAppsReadStream(speciesRequestPath, speciesObjectTransformer)
+
+/* Activity-Method */
+const SddsLicenseActivitiesRelations = Table.relations(SddsLicenseActivities)
+const activityMethodsRequestPath = buildRequestPath(SddsLicenseActivitiesRelations, [SddsLicenseMethods])
+const activityMethodsTableSet = createTableSet(SddsLicenseActivitiesRelations, [SddsLicenseMethods])
+const activityMethodsObjectTransformer = buildObjectTransformer(SddsLicenseActivitiesRelations, activityMethodsTableSet)
+export const activityMethodsReadStream = () => powerAppsReadStream(activityMethodsRequestPath, activityMethodsObjectTransformer)
+
+/* Application Type-Activities */
+const SddsApplicationTypeRelations = Table.relations(SddsApplicationType)
+const applicationTypeActivitiesRequestPath = buildRequestPath(SddsApplicationTypeRelations, [SddsLicenseActivities])
+const applicationTypeActivitiesTableSet = createTableSet(SddsApplicationTypeRelations, [SddsLicenseActivities])
+const applicationTypeActivitiesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeActivitiesTableSet)
+export const applicationTypeActivitiesReadStream = () => powerAppsReadStream(applicationTypeActivitiesRequestPath, applicationTypeActivitiesObjectTransformer)
+
+/* Application Type-Species */
+const applicationTypeSpeciesRequestPath = buildRequestPath(SddsApplicationTypeRelations, [SddsSpecies])
+const applicationTypeSpeciesTableSet = createTableSet(SddsApplicationTypeRelations, [SddsSpecies])
+const applicationTypeSpeciesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeSpeciesTableSet)
+export const applicationTypeSpeciesReadStream = () => powerAppsReadStream(applicationTypeSpeciesRequestPath, applicationTypeSpeciesObjectTransformer)
+
+/* Application Type-Purposes */
+const applicationTypeApplicationPurposesRequestPath = buildRequestPath(SddsApplicationTypeRelations, [SddsApplicationPurpose])
+const applicationTypeApplicationPurposesTableSet = createTableSet(SddsApplicationTypeRelations, [SddsApplicationPurpose])
+const applicationTypeApplicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeApplicationPurposesTableSet)
+export const applicationTypeApplicationPurposesReadStream = () =>
+  powerAppsReadStream(applicationTypeApplicationPurposesRequestPath, applicationTypeApplicationPurposesObjectTransformer)
 
 /* Global option sets */
 export const globalOptionSetReadStream = () =>

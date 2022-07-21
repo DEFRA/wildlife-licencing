@@ -6,7 +6,9 @@ const req = {
   path,
   payload: {
     proposalDescription: 'a proposal',
-    detailsOfConvictions: 'convictions'
+    detailsOfConvictions: 'convictions',
+    applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+    applicationPurposeId: '3db073af-201b-ec11-b6e7-0022481a8f18'
   }
 }
 
@@ -64,6 +66,7 @@ describe('The putApplication handler', () => {
           }
       }, true]))
     }
+    models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
     cache.delete = jest.fn()
     await putApplication(context, req, h)
@@ -95,6 +98,7 @@ describe('The putApplication handler', () => {
         }
       }]]))
     }
+    models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
     cache.delete = jest.fn()
     await putApplication(context, req, h)
@@ -109,8 +113,16 @@ describe('The putApplication handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
+  it('returns 409 with an invalid type-purpose', async () => {
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => null) }
+    await putApplication(context, req, h)
+    expect(codeFunc).toHaveBeenCalledWith(409)
+  })
+
   it('throws with an insert query error', async () => {
     models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     models.applications = { findOrCreate: jest.fn(async () => { throw new Error() }) }
     await expect(async () => {
       await putApplication(context, req, h)
@@ -119,6 +131,7 @@ describe('The putApplication handler', () => {
 
   it('throws with an update query error', async () => {
     models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     models.applications = {
       findOrCreate: jest.fn(async () => ([{}, false])),
       update: jest.fn(async () => { throw new Error() })

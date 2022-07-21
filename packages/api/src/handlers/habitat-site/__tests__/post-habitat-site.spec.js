@@ -41,14 +41,23 @@ const applicationJson = 'application/json'
 describe('The postHabitatSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
+    jest.mock('../validate-relations.js', () => ({ validateRelations: jest.fn(null) }))
     postHabitatSite = (await import('../post-habitat-site.js')).default
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
   })
 
   it('returns a 201 on successful create', async () => {
+    models.applicationTypes = {
+      findByPk: jest.fn(() => ({ id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' }))
+    }
     models.applications = {
-      findByPk: jest.fn(() => ({ id: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' }))
+      findByPk: jest.fn(() => ({
+        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
+        application: {
+          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
+        }
+      }))
     }
     models.habitatSites = {
       create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))

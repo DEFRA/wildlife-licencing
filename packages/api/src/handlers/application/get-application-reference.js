@@ -9,7 +9,7 @@ const TYPES_CACHE = 'application/types'
 
 export default async (_context, req, h) => {
   try {
-    const { applicationType } = req.query
+    const { applicationTypeId } = req.query
     let response
     const cached = await cache.restore(TYPES_CACHE)
     const today = new Date()
@@ -32,7 +32,7 @@ export default async (_context, req, h) => {
       return h.response().code(404)
     }
 
-    const suffix = response.find(r => applicationType.toUpperCase() === r.name.toUpperCase())?.refNoSuffix
+    const suffix = response.find(r => applicationTypeId === r.id)?.refNoSuffix
 
     if (!suffix) {
       return h.response().code(404)

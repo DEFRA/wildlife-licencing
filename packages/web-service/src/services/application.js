@@ -1,10 +1,8 @@
 import { APIRequests } from './api-requests.js'
 import db from 'debug'
 import { clearPageData } from './cache-operations.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const debug = db('web-service:application-service')
-
-// This will be replaced by a selected type
-const TYPE = 'A24 Badger'
 
 /**
  * Cache and API operations concerning applications.
@@ -17,7 +15,8 @@ const TYPE = 'A24 Badger'
 export const ApplicationService = {
   createApplication: async request => {
     const journeyData = await request.cache().getData() || {}
-    const application = await APIRequests.APPLICATION.create(TYPE)
+    const application = await APIRequests.APPLICATION.create(PowerPlatformKeys.APPLICATION_TYPES.A24,
+      PowerPlatformKeys.APPLICATION_PURPOSES.DEVELOPMENT)
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
     await clearPageData(request)
