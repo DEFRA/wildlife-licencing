@@ -1,24 +1,27 @@
+import Joi from 'joi'
+import fs from 'fs'
+import path from 'path'
 import handler, { errorShim } from '../../../handlers/page-handler.js'
 import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
 import { scanFile } from '../../../services/virus-scan.js'
-import Joi from 'joi'
-import fs from 'fs'
+import { MAX_FILE_UPLOAD_SIZE_MB } from '../../../constants.js'
 
 const setData = async (request) => {
-  const currentFilePlusDirectory = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
-
+  // const currentFilePlusDirectory = process.env.SCANNING_DIR + '/' + request.payload['scan-file'].path.split('\\').pop()
+  // TODO Please check on windows, use path for path operations
+  const currentFilePlusDirectory = path.join(process.env.SCANDIR, path.basename(request.payload['scan-file'].path))
   // We need to take a filename like: hello.txt
   // And rename it to something like: {unixTimestamp}.{originalFileName}
   // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
   // It also stops collisions if multiple users all upload files with the same name
   const newFilename = (+new Date()) + '.' + request.payload['scan-file'].filename
-  const newFilenamePlusDirectory = process.env.SCANNING_DIR + '/' + newFilename
+  const newFilenamePlusDirectory = path.join(process.env.SCANDIR, newFilename)
 
   fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, (err) => {
     if (err) { console.err(err) }
   })
 
-  const virusPresent = await scanFile(newFilename)
+  const virusPresent = await scanFile(newFilenamePlusDirectory)
   if (virusPresent) {
     await request.cache().setPageData({
       payload: request.payload,
@@ -41,6 +44,7 @@ const completion = async (request) => {
   if (journeyData.error) {
     return FILE_UPLOAD.uri
   } else {
+    // TODO split into separate statements please for readability
     await request.cache().setData(Object.assign(await request.cache().getPageData() || {}, { filename: request.payload['scan-file'].filename }))
     return CHECK_YOUR_ANSWERS.uri
   }
@@ -67,7 +71,7 @@ export const validator = async payload => {
     }], null)
   }
 
-  if (payload['scan-file'].bytes >= 30_000_000) {
+  if (payload['scan-file'].bytes >= MAX_FILE_UPLOAD_SIZE_MB) {
     fs.unlinkSync(payload['scan-file'].path, err => {
       if (err) throw err
     })
@@ -115,15 +119,14 @@ const fileUploadPageRoute = (view, path, checkData, getData, validator, completi
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
-        // So for files 30 - 40mb - we'll raise a joi error
-        // For files 40mb and above - we won't even accept the file, we'll just redirect the user to an error page inside `client-error.njk`
-        maxBytes: (process.env.MAX_FILE_UPLOAD * 1_333_334),
-        uploads: process.env.SCANNING_DIR,
+        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_MB + 1Mb
+        maxBytes: (MAX_FILE_UPLOAD_SIZE_MB + 1) * 1024 * 1024,
+        uploads: process.env.SCANDIR,
         multipart: {
           output: 'file'
         },
         parse: true,
-        timeout: 10000
+        timeout: 10000 // TODO Parameterize this please
       }
     }
   }
