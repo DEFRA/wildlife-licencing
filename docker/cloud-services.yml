@@ -73,20 +73,15 @@ services:
   # Scanner. Used by the front-end to check for viruses before sending to S3.
   # Port is default: 3310
   ##############################################################################################################
-
   clamd_container:
     image: clamav/clamav
     ports: 
       - "3310:3310"
-    env_file:
-      - "./env/scan.env"
     deploy:
       restart_policy:
         condition: on-failure
     volumes:
       - virus-db:/var/lib/clamav
-      - scandir:/scandir
 
 volumes:
   virus-db:
-  scandir:
