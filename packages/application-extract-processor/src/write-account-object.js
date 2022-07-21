@@ -13,7 +13,6 @@ export const writeAccountObject = async (obj, ts) => {
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'accounts')
-    // baseKey.apiBasePath = 'application.sites'
     const account = await models.accounts.findOne({
       where: { sdds_account_id: baseKey.powerAppsKey }
     })

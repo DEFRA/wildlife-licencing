@@ -27,6 +27,12 @@ export const writeApplicationObject = async (obj, ts) => {
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'applications')
+    const applicationTypeId = keys.find(k => k.apiTable === 'applicationTypes')?.powerAppsKey
+    const applicationPurposeId = keys.find(k => k.apiTable === 'applicationPurposes')?.powerAppsKey
+
+    applicationTypeId && Object.assign(data.application, { applicationTypeId })
+    applicationPurposeId && Object.assign(data.application, { applicationPurposeId })
+
     const application = await models.applications.findOne({
       where: { sdds_application_id: baseKey.powerAppsKey }
     })

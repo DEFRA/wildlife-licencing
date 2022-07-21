@@ -12,4 +12,31 @@ describe('The table object', () => {
     const copy = Table.copy(null)
     expect(copy).toBeNull()
   })
+
+  it('the relationships function will replace the columns with the pk column ', () => {
+    const table = new Table('name', ['rel'],
+      ['1'], 'basePath', 'apiTable', 'keyname')
+    const relations = Table.relations(table)
+    expect(relations).toEqual({
+      apiTable: 'apiTable',
+      basePath: 'basePath',
+      columns: [
+        {
+          filterFunc: null,
+          name: 'keyname',
+          operationType: 'inbound-and-outbound'
+        }
+      ],
+      keyName: 'keyname',
+      name: 'name',
+      relationships: [
+        '1'
+      ]
+    })
+  })
+
+  it('the relationships function returns null given null', () => {
+    const relations = Table.relations(null)
+    expect(relations).toBeNull()
+  })
 })
