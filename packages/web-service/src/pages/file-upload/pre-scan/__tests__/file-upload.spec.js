@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../../uris.js'
 
 describe('the file-upload page handler', () => {
   beforeEach(() => jest.resetModules())
@@ -68,5 +69,35 @@ describe('the file-upload page handler', () => {
     const { setData } = await import('../file-upload.js')
     await setData(request)
     expect(request.cache().getPageData()).toStrictEqual(errorObject)
+  })
+
+  it('a file that has no error, redirects to check-your-answers', async () => {
+    const request = {
+      payload: {
+        'scan-file': {
+          filename: 'eicar.txt'
+        }
+      },
+      cache: () => (
+        {
+          getPageData: () => { return {} },
+          setData: jest.fn()
+        }
+      )
+    }
+    const { completion } = await import('../file-upload.js')
+    expect(await completion(request)).toBe(CHECK_YOUR_ANSWERS.uri)
+  })
+
+  it('a file that has errors, redirects to file-upload uri', async () => {
+    const request = {
+      cache: () => (
+        {
+          getPageData: () => { return { error: true } }
+        }
+      )
+    }
+    const { completion } = await import('../file-upload.js')
+    expect(await completion(request)).toBe(FILE_UPLOAD.uri)
   })
 })

@@ -17,7 +17,9 @@ export const setData = async (request) => {
   const newFilenamePlusDirectory = path.join(process.env.SCANDIR, newFilename)
 
   fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, (err) => {
-    if (err) { console.err(err) }
+    if (err) {
+      console.err(err)
+    }
   })
 
   const virusPresent = await scanFile(newFilenamePlusDirectory)
@@ -38,7 +40,7 @@ export const setData = async (request) => {
   }
 }
 
-const completion = async (request) => {
+export const completion = async (request) => {
   const journeyData = await request.cache().getPageData() || {}
   if (journeyData.error) {
     return FILE_UPLOAD.uri
@@ -51,13 +53,15 @@ const completion = async (request) => {
 }
 
 export const validator = async payload => {
+  const throwError = (err) => { throw err }
+
   // The user hasn't attached a file in their request
   if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
     // Hapi generates a has for a filename, and still attempts to store what the user has sent (an empty file)
     // In this instance, we need to wipe the temporary file and throw a joi error
     fs.unlinkSync(payload['scan-file'].path, err => {
       if (err) {
-        throw err
+        throwError(err)
       }
     })
 
@@ -75,9 +79,7 @@ export const validator = async payload => {
 
   if (payload['scan-file'].bytes >= MAX_FILE_UPLOAD_SIZE_MB) {
     fs.unlinkSync(payload['scan-file'].path, err => {
-      if (err) {
-        throw err
-      }
+      throwError(err)
     })
 
     throw new Joi.ValidationError('ValidationError', [{
