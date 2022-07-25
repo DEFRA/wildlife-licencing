@@ -53,7 +53,9 @@ export const completion = async (request) => {
 }
 
 export const validator = async payload => {
-  const throwError = (err) => { throw err }
+  const throwError = (err) => {
+    throw err
+  }
 
   // The user hasn't attached a file in their request
   if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
