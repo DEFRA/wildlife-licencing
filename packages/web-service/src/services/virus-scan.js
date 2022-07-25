@@ -4,10 +4,10 @@ import * as fs from 'fs'
 
 const options = {
   clamdscan: {
-    socket: null,
-    host: process.env.CS_HOST,
-    port: process.env.CS_PORT,
-    timeout: parseInt(process.env.CS_TIMEOUT),
+    socket: false,
+    host: process.env.CS_HOST || 'host.docker.internal',
+    port: process.env.CS_PORT || 3310,
+    timeout: parseInt(process.env.CS_TIMEOUT) || 60000,
     multiscan: false,
     active: true
   },
@@ -15,13 +15,12 @@ const options = {
 }
 const ClamScan = new NodeClam().init(options)
 
-export async function scanFile (filename) {
-  const dir = `${process.env.SCANDIR}/${filename}`
+export async function scanFile (filepath) {
   return ClamScan.then(async clamscan => {
     try {
-      const { isInfected } = await clamscan.isInfected(dir)
+      const { isInfected } = await clamscan.isInfected(filepath)
       if (isInfected) {
-        fs.unlinkSync(dir, err => {
+        fs.unlinkSync(filepath, err => {
           if (err) {
             console.error(err)
             throw err
@@ -32,7 +31,7 @@ export async function scanFile (filename) {
       return isInfected
     } catch (err) {
       console.error(err.message)
-      fs.unlinkSync(dir, delErr => {
+      fs.unlinkSync(filepath, delErr => {
         if (delErr) {
           console.error(delErr)
           throw delErr
