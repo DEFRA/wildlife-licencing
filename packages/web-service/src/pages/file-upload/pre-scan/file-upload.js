@@ -56,7 +56,9 @@ export const validator = async payload => {
     // Hapi generates a has for a filename, and still attempts to store what the user has sent (an empty file)
     // In this instance, we need to wipe the temporary file and throw a joi error
     fs.unlinkSync(payload['scan-file'].path, err => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
     })
 
     throw new Joi.ValidationError('ValidationError', [{
@@ -73,7 +75,9 @@ export const validator = async payload => {
 
   if (payload['scan-file'].bytes >= MAX_FILE_UPLOAD_SIZE_MB) {
     fs.unlinkSync(payload['scan-file'].path, err => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
     })
 
     throw new Joi.ValidationError('ValidationError', [{
@@ -89,28 +93,28 @@ export const validator = async payload => {
   }
 }
 
-const fileUploadPageRoute = (view, path, checkData, getData, validator, completion, setData) => [
+const fileUploadPageRoute = (view, fileUploadPath, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData) => [
   {
     method: 'GET',
-    path: path,
+    path: fileUploadPath,
     handler: handler(view, checkData, getData).get
   },
   {
     method: 'POST',
-    path: path,
+    path: fileUploadPath,
     handler: async (request, h) => {
-      if (setData) {
-        await setData(request)
+      if (fileUploadSetData) {
+        await fileUploadSetData(request)
       }
-      if (typeof completion === 'function') {
-        return h.redirect(await completion(request))
+      if (typeof fileUploadCompletion === 'function') {
+        return h.redirect(await fileUploadCompletion(request))
       } else {
-        return h.redirect(completion)
+        return h.redirect(fileUploadCompletion)
       }
     },
     options: {
       validate: {
-        payload: validator,
+        payload: fileUploadValidator,
         failAction: handler().error
       },
       plugins: {
