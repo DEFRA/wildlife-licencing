@@ -1,41 +1,49 @@
-const data = {
-  application: {
-    id: '2b6759f9-268f-ec11-b400-000d3a8728b2-Trackit',
-    sites: [
-      {
-        id: '286759f9-268f-ec11-b400-000d3a8728b2-Trackit'
-      }
-    ]
+
+const keys = [
+  {
+    apiTable: 'applications',
+    apiKey: null,
+    apiBasePath: 'application',
+    powerAppsTable: 'sdds_applications',
+    contentId: null,
+    powerAppsKey: 'fc1a9675-db01-ed11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'sites',
+    apiKey: null,
+    apiBasePath: 'application.sites',
+    powerAppsTable: 'sdds_sites',
+    contentId: null,
+    powerAppsKey: '94d69d6f-db01-ed11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'sites',
+    apiKey: null,
+    apiBasePath: 'application.sites',
+    powerAppsTable: 'sdds_sites',
+    contentId: null,
+    powerAppsKey: '97d69d6f-db01-ed11-82e5-002248c5c45b'
   }
-}
+]
 
 const foundApplication = {
-  dataValues: {
-    id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
-    userId: '903ecac0-f4cb-4fd8-a853-557a02ddde0c',
-    sddsApplicationId: '2b6759f9-268f-ec11-b400-000d3a8728b2',
-    applications: { foo: 'bar' }
-  }
+  id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+  sddsApplicationId: 'fc1a9675-db01-ed11-82e5-002248c5c45b',
+  applications: { foo: 'bar' }
 }
 
 const foundSite = {
-  dataValues: {
-    id: '286759f9-268f-ec11-b400-000d3a8728b2',
-    userId: '903ecac0-f4cb-4fd8-a853-557a02ddde0c',
-    site: { foo: 'bar' },
-    sddsSiteId: '286759f9-268f-ec11-b400-000d3a8728b2'
-  }
+  id: '286759f9-268f-ec11-b400-000d3a8728b2',
+  site: { foo: 'bar' },
+  sddsSiteId: '94d69d6f-db01-ed11-82e5-002248c5c45b'
 }
 
 const foundApplicationSite = {
-  dataValues: {
-    id: '79015868-4149-420c-90f5-356dc2d06184',
-    userId: '903ecac0-f4cb-4fd8-a853-557a02ddde0c',
-    applicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
-    siteId: '286759f9-268f-ec11-b400-000d3a8728b2',
-    sddsApplicationId: '2b6759f9-268f-ec11-b400-000d3a8728b2',
-    sddsSiteId: '286759f9-268f-ec11-b400-000d3a8728b2'
-  }
+  id: '79015868-4149-420c-90f5-356dc2d06184',
+  applicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+  siteId: '286759f9-268f-ec11-b400-000d3a8728b2',
+  sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+  sddsSiteId: '94d69d6f-db01-ed11-82e5-002248c5c45b'
 }
 
 describe('The application extract processor: write-application-site-object', () => {
@@ -48,7 +56,17 @@ describe('The application extract processor: write-application-site-object', () 
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data: { application: { id: '2b6759f9-268f-ec11-b400-000d3a8728b2', sites: [] } } })
+    const result = await writeApplicationSiteObject({
+      data: { },
+      keys: [{
+        apiTable: 'applications',
+        apiKey: null,
+        apiBasePath: 'application',
+        powerAppsTable: 'sdds_applications',
+        contentId: null,
+        powerAppsKey: 'fc1a9675-db01-ed11-82e5-002248c5c45b'
+      }]
+    })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
@@ -60,7 +78,7 @@ describe('The application extract processor: write-application-site-object', () 
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { }, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
@@ -73,7 +91,7 @@ describe('The application extract processor: write-application-site-object', () 
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { }, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
@@ -81,16 +99,16 @@ describe('The application extract processor: write-application-site-object', () 
     const mockUpdate = jest.fn()
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        sites: { findOne: jest.fn(() => foundSite) },
+        sites: { findOne: jest.fn().mockReturnValueOnce(foundSite).mockReturnValue(null) },
         applications: { findOne: jest.fn(() => foundApplication) },
         applicationSites: { findOne: jest.fn().mockReturnValueOnce(null).mockReturnValueOnce(foundApplicationSite), update: mockUpdate }
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { }, keys })
     expect(mockUpdate).toHaveBeenCalledWith({
-      sddsApplicationId: data.application.id,
-      sddsSiteId: data.application.sites[0].id
+      sddsApplicationId: 'fc1a9675-db01-ed11-82e5-002248c5c45b',
+      sddsSiteId: '94d69d6f-db01-ed11-82e5-002248c5c45b'
     }, expect.any(Object))
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
   })
@@ -99,18 +117,18 @@ describe('The application extract processor: write-application-site-object', () 
     const mockCreate = jest.fn()
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        sites: { findOne: jest.fn(() => foundSite) },
+        sites: { findOne: jest.fn().mockReturnValueOnce(foundSite).mockReturnValue(null) },
         applications: { findOne: jest.fn(() => foundApplication) },
         applicationSites: { findOne: jest.fn(() => null), create: mockCreate }
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { }, keys })
     const expected = {
-      sddsApplicationId: data.application.id,
-      sddsSiteId: data.application.sites[0].id,
-      applicationId: foundApplication.dataValues.id,
-      siteId: foundSite.dataValues.id,
+      sddsApplicationId: 'fc1a9675-db01-ed11-82e5-002248c5c45b',
+      sddsSiteId: '94d69d6f-db01-ed11-82e5-002248c5c45b',
+      applicationId: foundApplication.id,
+      siteId: foundSite.id,
       id: expect.any(String)
     }
     expect(mockCreate).toHaveBeenCalledWith(expected)
@@ -124,7 +142,7 @@ describe('The application extract processor: write-application-site-object', () 
       }
     }))
     const { writeApplicationSiteObject } = await import('../write-application-site-object.js')
-    const result = await writeApplicationSiteObject({ data })
+    const result = await writeApplicationSiteObject({ data: { }, keys })
     expect(result).toEqual({ error: 1, insert: 0, pending: 0, update: 0 })
   })
 })

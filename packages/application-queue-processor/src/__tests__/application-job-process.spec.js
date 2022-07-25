@@ -44,7 +44,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { buildApiObject } = await import('../application-job-process.js')
@@ -71,6 +72,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'APPLICANT' }])
@@ -118,6 +120,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([])
@@ -165,6 +168,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationAccounts: {
             findAll: jest.fn()
               .mockReturnValueOnce([{ accountId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'APPLICANT-ORGANISATION' }])
@@ -212,6 +216,7 @@ describe('The application job processor', () => {
             }))
           },
           applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationAccounts: {
             findAll: jest.fn()
               .mockReturnValueOnce([])
@@ -260,6 +265,7 @@ describe('The application job processor', () => {
           },
           applicationContacts: { findAll: jest.fn(() => []) },
           applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
           applicationSites: {
             findAll: jest.fn(() => [{
               id: '79015868-4149-420c-90f5-356dc2d06184',
@@ -299,6 +305,62 @@ describe('The application job processor', () => {
             }]
           }
       }))
+    })
+
+    it('correctly creates an application with habitat sites', async () => {
+      jest.doMock('@defra/wls-database-model', () => ({
+        models: {
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationContacts: { findAll: jest.fn(() => []) },
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: {
+            findAll: jest.fn(() => [{
+              id: '79015868-4149-420c-90f5-356dc2d06184',
+              applicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              habitatSiteId: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+              sddsHabitatSiteId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              habitatSite: { name: 'Site 1' }
+            }])
+          },
+          applicationSites: {
+            findAll: jest.fn(() => [])
+          },
+          sites: {
+            findAll: jest.fn(() => [])
+          }
+        }
+      }))
+
+      const { buildApiObject } = await import('../application-job-process.js')
+      const payload = await buildApiObject(job.data.applicationId)
+      expect(payload).toEqual({
+        application: {
+          data: {
+            foo: 'bar'
+          },
+          habitatSites: [
+            {
+              data: {
+                name: 'Site 1'
+              },
+              keys: {
+                apiKey: '79015868-4149-420c-90f5-356dc2d06184',
+                sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+              }
+            }
+          ],
+          keys: {
+            apiKey: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+            sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+          }
+        }
+      })
     })
 
     it('throws an error on bad data', async () => {
@@ -404,7 +466,8 @@ describe('The application job processor', () => {
           },
           applicationSites: {
             findAll: jest.fn(() => [])
-          }
+          },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -444,7 +507,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')
@@ -470,7 +534,8 @@ describe('The application job processor', () => {
           },
           applicationSites: { findAll: jest.fn(() => []) },
           applicationContacts: { findAll: jest.fn(() => []) },
-          applicationAccounts: { findAll: jest.fn(() => []) }
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) }
         }
       }))
       const { applicationJobProcess } = await import('../application-job-process.js')

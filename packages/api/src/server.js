@@ -83,6 +83,7 @@ import {
 import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
+  getHabitatSitesByApplicationId,
   putHabitatSite,
   deleteHabitatSite
 } from './handlers/habitat-site/habitat-site.js'
@@ -174,6 +175,7 @@ const handlers = {
   // Habitat site handlers
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
+  getHabitatSitesByApplicationId,
   putHabitatSite,
   deleteHabitatSite,
 

@@ -2,27 +2,20 @@ import {
   SddsApplication,
   SddsSite,
   Contact,
-  Account, SddsApplicationType, SddsApplicationPurpose, SddsApplicationKeys, SddsSiteKeys
+  Account, SddsApplicationType, SddsApplicationPurpose
 } from '../../tables/tables.js'
 
 import {
   srcObj,
-  initialKeys,
   initialGeneratedAssignmentsObject,
-  updateKeys,
-  updatedGeneratedAssignmentsObject,
   expectedApplicationRequestPath,
   applicationResponseObject,
   applicationResponseTransformedDataObject,
   applicationResponseTransformedKeys,
-  applicationSiteResponseObject, applicationSiteResponseTransformedDataObject, applicationSiteResponseTransformedKeys
+  applicationSiteResponseObject
 } from './example-src-object.js'
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
-
-jest.mock('../../../services/cache.js', () => ({
-  getReferenceDataIdByName: jest.fn(() => '001')
-}))
 
 describe('the schema processes', () => {
   beforeEach(() => jest.resetModules())
@@ -30,7 +23,7 @@ describe('the schema processes', () => {
   describe('the createTableSet function', () => {
     it('can determine the correct batch update sequence with a set of tables', async () => {
       const { createTableSet } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite, Contact, Account])
+      const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
         .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
@@ -44,7 +37,7 @@ describe('the schema processes', () => {
   describe('the createTableColumnsPayload function', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [Contact, Account])
+      const tableSet = createTableSet(SddsApplication, [Contact, Account])
       const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
       const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
       expect(columnPayload).toEqual({
@@ -76,8 +69,8 @@ describe('the schema processes', () => {
         id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
-          'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
-          'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
+          'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(256f23ef-9775-ec11-8943-0022481aacb0)',
+          'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(9d62e5b8-9c77-ec11-8d21-000d3a87431b)',
           'sdds_ecologistid@odata.bind': 'sdds_application_ecologistid_Contact',
           'sdds_ecologistorganisationid@odata.bind': 'sdds_application_ecologistorganisationid_',
           'sdds_organisationid@odata.bind': 'sdds_application_organisationid_Account'
@@ -87,9 +80,9 @@ describe('the schema processes', () => {
 
     it('can create the batch update columns for sites; an array of items', async () => {
       const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
-      const tableSet = createTableSet(SddsApplicationKeys, [SddsSite])
+      const tableSet = createTableSet(SddsApplication, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
-      const sitesPayloads = await createTableColumnsPayload(site, srcObj)
+      const sitesPayloads = await createTableColumnsPayload(site, srcObj, tableSet)
       expect(sitesPayloads).toEqual([
         {
           id: '842fc15b-2858-4349-86ea-b33a0629a30b',
@@ -191,25 +184,21 @@ describe('the schema processes', () => {
     })
   })
 
-  describe('the createTableMMRelationshipsPayloads function', () => {
+  describe('the createTableRelationshipsPayloads function', () => {
     it('creates a correct many-to-many post statement object', async () => {
-      const { createTableMMRelationshipsPayloads } = await import('../schema-processes.js')
+      const { createTableRelationshipsPayloads } = await import('../schema-processes.js')
       const updateObjects = {
-        table: 'sdds_sites',
-        relationshipName: 'sdds_application_sdds_site_sdds_site',
+        table: 'sdds_licensableactions',
+        relationshipName: 'sdds_licensableaction_applicationid_sdds_',
         contentId: 1,
         assignments: {
-          sdds_name: 'Cow field',
-          sdds_osgridreference: '234765',
-          sdds_addressline1: 'Nr Henleaze',
-          sdds_town: 'Bristol',
-          sdds_postcode: 'BS22 1QA'
+          sdds_species: 'This place'
         },
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTableMMRelationshipsPayloads(SddsApplicationKeys, [updateObjects])
-      expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_application_sdds_site_sdds_site' }])
+      const result = await createTableRelationshipsPayloads(SddsApplication, [updateObjects])
+      expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })
 
@@ -224,8 +213,13 @@ describe('the schema processes', () => {
 
   describe('the buildRequestPath function', () => {
     it('generates the correct request path for the main application extract', async () => {
+      // Force expansion for coverage
       const { buildRequestPath } = await import('../schema-processes.js')
-      const applicationRequestPath = buildRequestPath(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
+      const SddsApplicationExpanded = Object.assign(SddsApplication)
+      const rel = SddsApplicationExpanded.relationships.find(r => r.relatedTable === 'sdds_applicationtypeses')
+      rel.keyOnly = false
+      const applicationRequestPath = buildRequestPath(SddsApplicationExpanded, [Contact, Account,
+        SddsApplicationType, SddsApplicationPurpose])
       expect(applicationRequestPath).toBe(expectedApplicationRequestPath)
     })
   })
@@ -244,12 +238,38 @@ describe('the schema processes', () => {
 
     it('build function to process an application-site response element', async () => {
       const { buildObjectTransformer, createTableSet } = await import('../schema-processes.js')
-      const applicationSiteTableSet = createTableSet(SddsApplicationKeys, [SddsSiteKeys])
-      const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationKeys, applicationSiteTableSet)
+      const applicationSiteTableSet = createTableSet(SddsApplication, [SddsSite])
+      const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplication, applicationSiteTableSet)
       expect(applicationSiteObjectTransformer).toEqual(expect.any(Function))
       await expect(applicationSiteObjectTransformer(applicationSiteResponseObject)).resolves.toEqual({
-        data: applicationSiteResponseTransformedDataObject,
-        keys: applicationSiteResponseTransformedKeys
+        data: expect.any(Object),
+        keys: [
+          {
+            apiBasePath: 'application',
+            apiKey: null,
+            apiTable: 'applications',
+            contentId: null,
+            powerAppsKey: '2b6759f9-268f-ec11-b400-000d3a8728b2',
+            powerAppsTable: 'sdds_applications'
+          },
+          {
+            apiBasePath: 'application.sites',
+            apiKey: null,
+            apiTable: 'sites',
+            contentId: null,
+            powerAppsKey: '286759f9-268f-ec11-b400-000d3a8728b2',
+            powerAppsTable: 'sdds_sites'
+          },
+          {
+            apiBasePath: 'application.sites',
+            apiKey: null,
+            apiTable: 'sites',
+            contentId: null,
+            powerAppsKey: 'd0d79386-fd8f-ec11-b400-000d3a872ae7',
+            powerAppsTable: 'sdds_sites'
+          }
+
+        ]
       })
     })
   })

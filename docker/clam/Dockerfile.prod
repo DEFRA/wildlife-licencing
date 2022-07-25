@@ -1,0 +1,5 @@
+####################################################################################################################################
+# Build a local image on the standard clamav image as the pipeline does not want to get the image directly from docker-hub.
+####################################################################################################################################
+FROM clamav/clamav:stable
+EXPOSE 3310

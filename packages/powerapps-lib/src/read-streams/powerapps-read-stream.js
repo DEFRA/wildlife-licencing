@@ -1,5 +1,7 @@
 import { Readable, Transform } from 'stream'
 import { POWERAPPS } from '@defra/wls-connectors-lib'
+import db from 'debug'
+const debug = db('powerapps-lib:powerapps-read-stream')
 
 async function * fetcher (path) {
   let p = path
@@ -18,6 +20,7 @@ async function * fetcher (path) {
 }
 
 export const powerAppsReadStream = (requestPath, objectTransformer) => {
+  debug(`Open stream for reading with: ${requestPath}`)
   const stream = Readable.from(fetcher(requestPath))
   /*
    * Use a transform stream to apply the Power Apps to API transformation

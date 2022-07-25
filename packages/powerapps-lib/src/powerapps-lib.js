@@ -9,7 +9,15 @@ import {
   applicationSitesReadStream,
   applicationTypesReadStream,
   applicationPurposesReadStream,
-  globalOptionSetReadStream
+  globalOptionSetReadStream,
+  licensableActionsReadStream,
+  activitiesReadStream,
+  methodsReadStream,
+  speciesReadStream,
+  activityMethodsReadStream,
+  applicationTypeActivitiesReadStream,
+  applicationTypeSpeciesReadStream,
+  applicationTypeApplicationPurposesReadStream
 } from './read-streams/read-streams.js'
 
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
@@ -26,7 +34,15 @@ export {
   applicationSitesReadStream,
   applicationPurposesReadStream,
   applicationTypesReadStream,
+  licensableActionsReadStream,
   globalOptionSetReadStream,
+  activitiesReadStream,
+  methodsReadStream,
+  speciesReadStream,
+  activityMethodsReadStream,
+  applicationTypeActivitiesReadStream,
+  applicationTypeSpeciesReadStream,
+  applicationTypeApplicationPurposesReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,
   BaseKeyMapping

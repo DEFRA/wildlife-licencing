@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-refdata-extract-processor",
-  "version": "2.4.0-alpha.0",
+  "version": "2.5.0-alpha.0",
   "description": "Interface to Microsoft Dynamics. Extract processor for reference data.",
   "main": "src/processor.js",
   "type": "module",
@@ -30,9 +30,10 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^2.3.0-alpha.0",
-    "@defra/wls-database-model": "^2.4.0-alpha.0",
-    "@defra/wls-powerapps-lib": "^2.4.0-alpha.0",
+    "@defra/wls-database-model": "^2.5.0-alpha.0",
+    "@defra/wls-powerapps-lib": "^2.5.0-alpha.0",
     "debug": "^4.3.3",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "sequelize": "^6.12.5"
   }
 }
