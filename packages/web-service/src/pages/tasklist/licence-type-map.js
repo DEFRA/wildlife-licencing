@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOAD } from '../../uris.js'
 import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -133,7 +133,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.FILE_UPLOAD,
-            uri: '/file-upload',
+            uri: FILE_UPLOAD.uri,
             status: () => STATUS_VALUES.NOT_STARTED,
             enabled: true
           }
