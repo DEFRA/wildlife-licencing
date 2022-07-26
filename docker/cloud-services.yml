@@ -74,7 +74,7 @@ services:
   # Port is default: 3310
   ##############################################################################################################
   clamd_container:
-    image: clamav/clamav
+    image: clamav/clamav:0.105.0
     ports: 
       - "3310:3310"
     volumes:
