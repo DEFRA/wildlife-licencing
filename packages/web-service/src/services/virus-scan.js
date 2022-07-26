@@ -1,4 +1,3 @@
-// import 'dotenv/config'
 import NodeClam from 'clamscan'
 import * as fs from 'fs'
 

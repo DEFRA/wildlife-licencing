@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { MAX_FILE_UPLOAD_SIZE_MB } from '../../../../constants.js'
 import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../../uris.js'
 
 describe('the file-upload page handler', () => {
@@ -34,6 +35,18 @@ describe('the file-upload page handler', () => {
       expect(e.message).toBe('ValidationError')
       expect(e.details[0].message).toBe('Error: the file was too large')
     }
+  })
+
+  it('a file thats is not too big, causes no error', async () => {
+    jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
+
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.txt', path: 'scandir/' } }
+    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+      return ({ init: () => Promise.resolve() })
+    }))
+
+    const { validator } = await import('../file-upload.js')
+    expect(async () => await validator(payload)).not.toThrow()
   })
 
   it('a file that contains a virus causes a joi error', async () => {

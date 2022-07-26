@@ -6,17 +6,17 @@ import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
 
-export const setData = async (request) => {
+export const setData = async request => {
   const currentFilePlusDirectory = path.join(process.env.SCANDIR, path.basename(request.payload['scan-file'].path))
 
   // We need to take a filename like: hello.txt
   // And rename it to something like: {unixTimestamp}.{originalFileName}
   // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
   // It also stops collisions if multiple users all upload files with the same name
-  const newFilename = (+new Date()) + '.' + request.payload['scan-file'].filename
+  const newFilename = `${+new Date()}.${request.payload['scan-file'].filename}`
   const newFilenamePlusDirectory = path.join(process.env.SCANDIR, newFilename)
 
-  fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, (err) => {
+  fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, err => {
     if (err) {
       console.err(err)
     }
@@ -40,7 +40,7 @@ export const setData = async (request) => {
   }
 }
 
-export const completion = async (request) => {
+export const completion = async request => {
   const journeyData = await request.cache().getPageData() || {}
   if (journeyData.error) {
     return FILE_UPLOAD.uri
