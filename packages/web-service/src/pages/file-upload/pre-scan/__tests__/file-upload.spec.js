@@ -100,4 +100,58 @@ describe('the file-upload page handler', () => {
     const { completion } = await import('../file-upload.js')
     expect(await completion(request)).toBe(FILE_UPLOAD.uri)
   })
+
+  it('the handler function calls completion and setData once', async () => {
+    const h = {
+      redirect: () => {}
+    }
+    const mockSetData = jest.fn()
+    const mockCompletion = jest.fn()
+
+    const { fileUploadPageRoute } = await import('../file-upload.js')
+    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion, mockSetData)
+    await arr[1].handler({}, h)
+    expect(mockSetData).toHaveBeenCalledTimes(1)
+    expect(mockCompletion).toHaveBeenCalledTimes(1)
+  })
+
+  it('the handler function calls completion and setData once - and also redirects', async () => {
+    const redirect = jest.fn()
+    const h = {
+      redirect
+    }
+    const mockSetData = jest.fn()
+    const mockCompletion = jest.fn()
+
+    const { fileUploadPageRoute } = await import('../file-upload.js')
+    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion, mockSetData)
+    await arr[1].handler({}, h)
+    expect(mockSetData).toHaveBeenCalledTimes(1)
+    expect(mockCompletion).toHaveBeenCalledTimes(1)
+    expect(redirect).toHaveBeenCalledTimes(1)
+  })
+
+  it('if you dont pass setdata - validator is still called', async () => {
+    const h = {
+      redirect: () => {}
+    }
+    const mockCompletion = jest.fn()
+
+    const { fileUploadPageRoute } = await import('../file-upload.js')
+    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion)
+    await arr[1].handler({}, h)
+    expect(mockCompletion).toHaveBeenCalledTimes(1)
+  })
+
+  it('if you dont pass validator - setdata is still called', async () => {
+    const h = {
+      redirect: () => {}
+    }
+    const mockSetData = jest.fn()
+
+    const { fileUploadPageRoute } = await import('../file-upload.js')
+    const arr = fileUploadPageRoute(null, '/path', null, null, null, null, mockSetData)
+    await arr[1].handler({}, h)
+    expect(mockSetData).toHaveBeenCalledTimes(1)
+  })
 })

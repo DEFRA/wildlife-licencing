@@ -87,7 +87,7 @@ export const validator = async payload => {
   }
 }
 
-const fileUploadPageRoute = (view, fileUploadPath, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData) => [
+export const fileUploadPageRoute = (view, fileUploadPath, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData) => [
   {
     method: 'GET',
     path: fileUploadPath,
