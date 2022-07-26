@@ -9,6 +9,9 @@ describe('the file-upload page handler', () => {
 
     const payload = { 'scan-file': { bytes: 0, filename: '', path: 'scandir/' } }
     try {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
       const { validator } = await import('../file-upload.js')
       expect(await validator(payload))
     } catch (e) {
@@ -22,6 +25,9 @@ describe('the file-upload page handler', () => {
 
     const payload = { 'scan-file': { bytes: 32_000_0000, filename: 'ok.txt', path: 'scandir/' } }
     try {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
       const { validator } = await import('../file-upload.js')
       expect(await validator(payload))
     } catch (e) {
@@ -85,6 +91,9 @@ describe('the file-upload page handler', () => {
         }
       )
     }
+    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+      return ({ init: () => Promise.resolve() })
+    }))
     const { completion } = await import('../file-upload.js')
     expect(await completion(request)).toBe(CHECK_YOUR_ANSWERS.uri)
   })

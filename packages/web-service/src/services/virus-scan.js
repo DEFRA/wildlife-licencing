@@ -1,11 +1,11 @@
-import 'dotenv/config'
+// import 'dotenv/config'
 import NodeClam from 'clamscan'
 import * as fs from 'fs'
 
 const options = {
   clamdscan: {
     socket: false,
-    host: process.env.CS_HOST || 'host.docker.internal',
+    host: process.env.CS_HOST,
     port: process.env.CS_PORT || 3310,
     timeout: parseInt(process.env.CS_TIMEOUT) || 60000,
     multiscan: false,

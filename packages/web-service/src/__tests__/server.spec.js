@@ -1,8 +1,11 @@
-import { createServer, init, addDefaultHeaders } from '../server'
-
 describe('the WEB server', () => {
+  beforeEach(() => jest.resetModules())
   describe('the default header function', () => {
     it('adds a correct set of response headers - not static', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
+      const { addDefaultHeaders } = await import('../server')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({
         path: 'not-static',
@@ -19,6 +22,10 @@ describe('the WEB server', () => {
     })
 
     it('adds a correct set of response headers - static', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
+      const { addDefaultHeaders } = await import('../server')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({
         path: '/public/static.js',
@@ -34,56 +41,57 @@ describe('the WEB server', () => {
     })
   })
 
-  it('starts', done => {
-    createServer().then(s => {
-      init(s).then(() => {
-        expect(s.info.port).toEqual(4000)
-        s.events.on('stop', () => done())
-        s.stop()
-      })
-    })
+  it('starts', async () => {
+    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+      return ({ init: () => Promise.resolve() })
+    }))
+    const { createServer, init } = await import('../server')
+    const s = await createServer()
+    await init(s)
+    expect(s.info.port).toEqual(4000)
+    await s.stop()
   })
 
-  it('handles a request', done => {
-    createServer().then(s => {
-      init(s).then(() => {
-        s.events.on('stop', () => done())
-        s.inject({
-          method: 'GET',
-          url: '/hello'
-        })
-          .then(r => {
-            expect(r).toBe('Hello World!')
-            s.stop()
-          })
-          .catch(e => {
-            console.log(e)
-            s.stop()
-          })
-      })
+  it('handles a request', async () => {
+    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+      return ({ init: () => Promise.resolve() })
+    }))
+    const { createServer, init } = await import('../server')
+    const s = await createServer()
+    await init(s)
+    const r = await s.inject({
+      method: 'GET',
+      url: '/health'
     })
+    expect(r.payload).toBe('healthy!')
+    await s.stop()
   })
 
   it.each([
     ['SIGINT', 130],
     ['SIGTERM', 137]
   ])('shuts down on %s', (signal, code, done) => {
-    createServer().then(s => {
-      init(s).then(() => {
-        s.events.on('stop', () => done())
-        const serverStopSpy = jest
-          .spyOn(s, 'stop')
-          .mockImplementation(jest.fn())
-        const processStopSpy = jest
-          .spyOn(process, 'exit')
-          .mockImplementation(jest.fn())
-        process.exit = processStopSpy
-        process.emit(signal)
-        setImmediate(async () => {
-          expect(serverStopSpy).toHaveBeenCalled()
-          expect(processStopSpy).toHaveBeenCalledWith(code)
-          jest.restoreAllMocks()
-          done()
+    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+      return ({ init: () => Promise.resolve() })
+    }))
+    import('../server').then(({ createServer, init }) => {
+      createServer().then(s => {
+        init(s).then(() => {
+          s.events.on('stop', () => done())
+          const serverStopSpy = jest
+            .spyOn(s, 'stop')
+            .mockImplementation(jest.fn())
+          const processStopSpy = jest
+            .spyOn(process, 'exit')
+            .mockImplementation(jest.fn())
+          process.exit = processStopSpy
+          process.emit(signal)
+          setImmediate(async () => {
+            expect(serverStopSpy).toHaveBeenCalled()
+            expect(processStopSpy).toHaveBeenCalledWith(code)
+            jest.restoreAllMocks()
+            done()
+          })
         })
       })
     })
