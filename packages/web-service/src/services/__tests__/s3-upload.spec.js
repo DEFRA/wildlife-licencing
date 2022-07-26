@@ -8,10 +8,10 @@ describe('The virus scanning service', () => {
       const errSpy = jest.spyOn(console, 'error')
       jest.doMock('@aws-sdk/client-s3', () => ({
         S3: jest.fn().mockImplementation(() => ({
-            headBucket: jest.fn((bucketName, callback) => mockHead),
-            createBucket: jest.fn((bucketName, callback) => mockCreate)
-          }))
+          headBucket: jest.fn((bucketName, callback) => mockHead),
+          createBucket: jest.fn((bucketName, callback) => mockCreate)
         }))
+      }))
       const { S3FileUpload } = await import('../s3-upload.js')
       await S3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
       await expect(errSpy).toHaveBeenCalledTimes(1)

@@ -5,6 +5,8 @@ export const REGISTER = { uri: '/register', page: 'register' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
+export const CHECK_YOUR_ANSWERS = { uri: '/check-your-answers', page: 'check-your-answers' }
+export const FILE_UPLOAD = { uri: '/file-upload', page: 'file-upload' }
 
 export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },

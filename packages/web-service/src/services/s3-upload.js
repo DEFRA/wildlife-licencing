@@ -16,6 +16,7 @@ export async function S3FileUpload (applicationName, fileName, file) {
       s3inst.createBucket({ Bucket: applicationName }, async (err, data) => {
         if (err) {
           console.error(err)
+          return false
         } else {
           const file2go = fs.readFileSync(file)
           await s3inst.putObject({
@@ -24,7 +25,7 @@ export async function S3FileUpload (applicationName, fileName, file) {
             Bucket: applicationName,
             Key: fileName
           })
-          return data
+          return true
         }
       })
     } else {
@@ -35,6 +36,7 @@ export async function S3FileUpload (applicationName, fileName, file) {
         Bucket: applicationName,
         Key: fileName
       })
+      return true
     }
   })
 }

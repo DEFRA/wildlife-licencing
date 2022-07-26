@@ -2,8 +2,7 @@ import { CHECK_YOUR_ANSWERS, FILE_UPLOAD, TASKLIST } from '../../../uris.js'
 import pageRoute from '../../../routes/page-route.js'
 import { S3FileUpload } from '../../../services/s3-upload.js'
 
-const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
+export const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
   // If not, bounce the user back to the file-upload page
   const authData = await request.cache(FILE_UPLOAD).getData() || {}
@@ -16,15 +15,18 @@ const checkData = async (request, h) => {
   return null
 }
 
-const getData = async request => {
+export const getData = async request => {
   return request.cache(FILE_UPLOAD).getData()
 }
 
-const completion = async request => {
+export const completion = async (request, h) => {
   const { applicationId, path, fileName } = await request.cache(FILE_UPLOAD).getData() || {}
-  console.log(await request.cache().getData())
-  S3FileUpload(applicationId, fileName, path)
-  return TASKLIST.uri
+  if (applicationId && path && fileName) {
+    const successBool = S3FileUpload(applicationId, fileName, path)
+    return successBool ? TASKLIST.uri : FILE_UPLOAD.uri
+  } else {
+    return FILE_UPLOAD.uri
+  }
 }
 
 export const checkYourAnswers = pageRoute(CHECK_YOUR_ANSWERS.page, CHECK_YOUR_ANSWERS.uri, checkData, getData, null, completion, null)
