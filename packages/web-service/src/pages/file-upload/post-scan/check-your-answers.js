@@ -15,11 +15,9 @@ export const checkData = async (request, h) => {
   return null
 }
 
-export const getData = async request => {
-  return request.cache(FILE_UPLOAD).getData()
-}
+export const getData = async request => request.cache(FILE_UPLOAD).getData()
 
-export const completion = async (request) => {
+export const completion = async request => {
   const { applicationId, path, fileName } = await request.cache(FILE_UPLOAD).getData() || {}
   if (applicationId && path && fileName) {
     const successBool = S3FileUpload(applicationId, fileName, path)
