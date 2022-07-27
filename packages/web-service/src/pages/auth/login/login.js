@@ -68,5 +68,4 @@ export const checkData = async (request, h) => {
   }
 }
 
-export default pageRoute(LOGIN.page, LOGIN.uri, checkData, null,
-  validator, completion, setData, { auth: false })
+export default pageRoute({ page: LOGIN.page, uri: LOGIN.uri, checkData, validator, completion, setData, options: { auth: false } })

@@ -88,15 +88,15 @@ export const validator = async payload => {
   }
 }
 
-export const fileUploadPageRoute = (view, fileUploadPath, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData) => [
+export const fileUploadPageRoute = ({ view, fileUploadUri, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData }) => [
   {
     method: 'GET',
-    path: fileUploadPath,
+    path: fileUploadUri,
     handler: handler(view, checkData, getData).get
   },
   {
     method: 'POST',
-    path: fileUploadPath,
+    path: fileUploadUri,
     handler: async (request, h) => {
       if (fileUploadSetData) {
         await fileUploadSetData(request)
@@ -131,4 +131,10 @@ export const fileUploadPageRoute = (view, fileUploadPath, checkData, getData, fi
   }
 ]
 
-export const fileUpload = fileUploadPageRoute(FILE_UPLOAD.page, FILE_UPLOAD.uri, null, null, validator, completion, setData)
+export const fileUpload = fileUploadPageRoute({
+  view: FILE_UPLOAD.page,
+  fileUploadUri: FILE_UPLOAD.uri,
+  validator,
+  completion,
+  setData
+})

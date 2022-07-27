@@ -7,7 +7,7 @@ describe('the WEB server', () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
       }))
-      const { addDefaultHeaders } = await import('../server')
+      const { addDefaultHeaders } = await import('../server.js')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({
         path: 'not-static',
@@ -27,7 +27,7 @@ describe('the WEB server', () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
       }))
-      const { addDefaultHeaders } = await import('../server')
+      const { addDefaultHeaders } = await import('../server.js')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({
         path: '/public/static.js',
@@ -48,7 +48,7 @@ describe('the WEB server', () => {
       return ({ init: () => Promise.resolve() })
     }))
     jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
-    const { createServer, init } = await import('../server')
+    const { createServer, init } = await import('../server.js')
     const s = await createServer()
     await init(s)
     expect(s.info.port).toEqual(4000)
@@ -60,7 +60,7 @@ describe('the WEB server', () => {
       return ({ init: () => Promise.resolve() })
     }))
     jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
-    const { createServer, init } = await import('../server')
+    const { createServer, init } = await import('../server.js')
     const s = await createServer()
     await init(s)
     const r = await s.inject({
@@ -79,7 +79,7 @@ describe('the WEB server', () => {
       return ({ init: () => Promise.resolve() })
     }))
     jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
-    import('../server').then(({ createServer, init }) => {
+    import('../server.js').then(({ createServer, init }) => {
       createServer().then(s => {
         init(s).then(() => {
           s.events.on('stop', () => done())

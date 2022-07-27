@@ -7,8 +7,11 @@ const { IS_ORGANISATION } = contactURIs.APPLICANT
 export const getApplicantOrganisationData = request => getContactAccountData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
 export const setApplicantOrganisationData = request => setContactAccountData('APPLICANT_ORGANISATION')(request)
 
-export const applicantOrganisation = isOrganisation(IS_ORGANISATION,
+export const applicantOrganisation = isOrganisation({
+  page: IS_ORGANISATION.page,
+  uri: IS_ORGANISATION.uri,
   checkData,
   getApplicantOrganisationData,
   IS_ORGANISATION,
-  setApplicantOrganisationData)
+  setApplicantOrganisationData
+})
