@@ -9,6 +9,12 @@ import {
   landOwnerPermission, notEligibleLandowner, notEligibleProject
 } from '../pages/eligibility/eligibility.js'
 
+import habitatStart from '../pages/habitat/habitat-start.js'
+import habitatTypes from '../pages/habitat/habitat-types.js'
+import habitatActions from '../pages/habitat/habitat-actions.js'
+import habitatReopening from '../pages/habitat/habitat-reopening.js'
+import habitatEntrances from '../pages/habitat/habitat-entrances.js'
+import habitatActive from '../pages/habitat/habitat-active.js'
 import { tasklist } from '../pages/tasklist/tasklist.js'
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
@@ -23,6 +29,12 @@ import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-orga
 
 const routes = [
   ...applications,
+  ...habitatStart,
+  ...habitatTypes,
+  ...habitatReopening,
+  ...habitatEntrances,
+  ...habitatActive,
+  ...habitatActions,
   ...login,
   ...register,
   ...declaration,

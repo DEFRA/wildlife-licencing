@@ -34,6 +34,15 @@ export const contactURIs = {
   }
 }
 
+export const habitatURIs = {
+  START: { uri: '/habitat-start', page: 'habitat-start' },
+  TYPES: { uri: '/habitat-types', page: 'habitat-types' },
+  ACTIONS: { uri: '/habitat-actions', page: 'habitat-actions' },
+  ACTIVE: { uri: '/habitat-active', page: 'habitat-active' },
+  REOPENING: { uri: '/habitat-reopening', page: 'habitat-reopening' },
+  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' }
+}
+
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {

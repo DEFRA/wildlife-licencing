@@ -12,7 +12,7 @@ import sessionManager, { isStaticResource } from './session-cache/session-manage
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT } from './uris.js'
+import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, habitatURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -42,7 +42,8 @@ const additionalPageData = (request, h) => {
         landowner: eligibilityURIs.LANDOWNER.uri,
         landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
         consent: eligibilityURIs.CONSENT.uri,
-        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri
+        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
+        habitatStart: habitatURIs.START.uri
       },
       credentials: request.auth.credentials
     })

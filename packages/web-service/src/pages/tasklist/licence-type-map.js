@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, habitatURIs } from '../../uris.js'
 import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -122,12 +122,14 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SITES,
             uri: '/',
-            status: () => STATUS_VALUES.CANNOT_START_YET
+            status: () => STATUS_VALUES.CANNOT_START_YET,
+            
           },
           {
             name: SECTION_TASKS.SETTS,
-            uri: '/',
-            status: () => STATUS_VALUES.CANNOT_START_YET
+            uri: habitatURIs.START.uri,
+            status: () => STATUS_VALUES.NOT_STARTED,
+            enabled: status => true
           }
         ]
       },
