@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 describe('the WEB server', () => {
   beforeEach(() => jest.resetModules())
   describe('the default header function', () => {
@@ -45,6 +47,7 @@ describe('the WEB server', () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
+    jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
     const { createServer, init } = await import('../server')
     const s = await createServer()
     await init(s)
@@ -56,6 +59,7 @@ describe('the WEB server', () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
+    jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
     const { createServer, init } = await import('../server')
     const s = await createServer()
     await init(s)
@@ -74,6 +78,7 @@ describe('the WEB server', () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
+    jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
     import('../server').then(({ createServer, init }) => {
       createServer().then(s => {
         init(s).then(() => {
