@@ -38,3 +38,10 @@ export const ERRORS = {
   CLIENT: { page: 'client-error' },
   SERVER: { page: 'server-error' }
 }
+
+export const FILE_UPLOAD = {
+  uri: '/file-upload', page: 'file-upload'
+}
+export const CHECK_YOUR_ANSWERS = {
+  uri: '/check-your-answers', page: 'check-your-answers'
+}

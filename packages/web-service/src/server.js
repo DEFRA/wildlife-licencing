@@ -1,3 +1,4 @@
+import fs from 'fs'
 import 'dotenv/config'
 import Hapi from '@hapi/hapi'
 import HapiInert from '@hapi/inert'
@@ -133,6 +134,11 @@ const init = async server => {
 
   // Register the dynamic routes
   await server.route(routes)
+
+  // If the directory doesn't exist to hold our files we need to scan, create it
+  if (!fs.existsSync(process.env.SCANDIR)) {
+    fs.mkdirSync(process.env.SCANDIR)
+  }
 
   // Log any errors
   server.ext('onPreResponse', errorHandler)

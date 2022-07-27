@@ -6,6 +6,8 @@
     {% set title = 'Unauthorized' %}
 {% elseif clientError.statusCode === 404 %}
     {% set title = 'Page not found' %}
+{% elseif clientError.statusCode === 413 %}
+    {% set title = 'The file uploaded was too big' %}
 {% endif %}
 
 {% block pageContent %}

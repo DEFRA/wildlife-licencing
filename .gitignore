@@ -35,3 +35,6 @@ docker/volumes/postgres/*
 
 # Ignore generated public files
 packages/eps/web-service/public/
+
+# Ignore virus scan folder
+packages/web-service/scandir

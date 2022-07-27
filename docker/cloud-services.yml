@@ -77,11 +77,11 @@ services:
     image: clamav/clamav:0.105.0
     ports: 
       - "3310:3310"
+    volumes:
+      - virus-db:/var/lib/clamav # named volume for signatures
     deploy:
       restart_policy:
         condition: on-failure
-    volumes:
-      - virus-db:/var/lib/clamav
 
 volumes:
   virus-db:

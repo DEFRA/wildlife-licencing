@@ -39,7 +39,8 @@ describe('The task-list handler', () => {
         auth: { isAuthenticated: true },
         query: {},
         cache: () => ({
-          getData: jest.fn(() => ({}))
+          getData: jest.fn(() => ({})),
+          clearPageData: jest.fn()
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -291,7 +292,8 @@ describe('The task-list handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({
           applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
-        }))
+        })),
+        clearPageData: jest.fn()
       })
     }
 

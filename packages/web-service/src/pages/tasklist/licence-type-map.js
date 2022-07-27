@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOAD } from '../../uris.js'
 import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -19,6 +19,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
+  FILE_UPLOAD: 'file-upload',
   SUBMIT: 'send-application'
 }
 
@@ -47,6 +48,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: false,
+    [SECTION_TASKS.FILE_UPLOAD]: true,
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -128,6 +130,12 @@ export const licenceTypeMap = {
             name: SECTION_TASKS.SETTS,
             uri: '/',
             status: () => STATUS_VALUES.CANNOT_START_YET
+          },
+          {
+            name: SECTION_TASKS.FILE_UPLOAD,
+            uri: FILE_UPLOAD.uri,
+            status: () => STATUS_VALUES.NOT_STARTED,
+            enabled: true
           }
         ]
       },
