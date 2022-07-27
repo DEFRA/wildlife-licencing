@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import fs from 'fs'
 import path from 'path'
+import Boom from '@hapi/boom'
 import handler, { errorShim } from '../../../handlers/page-handler.js'
 import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
 import { scanFile } from '../../../services/virus-scan.js'
@@ -17,9 +18,9 @@ export const setData = async request => {
   const newFilenamePlusDirectory = path.join(process.env.SCANDIR, newFilename)
 
   fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, err => {
-    if (err) {
-      console.err(err)
-    }
+    console.error('file can\'t be renamed to include unix-timestamp', err)
+    Boom.boomify(err, { statusCode: 500 })
+    throw err
   })
 
   const virusPresent = await scanFile(newFilenamePlusDirectory)
