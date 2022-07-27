@@ -3,7 +3,7 @@ import fs from 'fs'
 const accountID = '514125100797'
 const region = 'eu-west-2'
 
-export async function s3FileUpload (applicationName, fileName, file) {
+export async function s3FileUpload (applicationName, fileName, path) {
   const s3inst = new S3({
     region: region,
     credentials: {
@@ -18,24 +18,23 @@ export async function s3FileUpload (applicationName, fileName, file) {
           console.error(createErr)
           return false
         }
-        const file2go = fs.readFileSync(file)
+        const file = fs.readFileSync(path)
         await s3inst.putObject({
           ACL: 'bucket-owner-full-control',
-          Body: file2go,
+          Body: file,
           Bucket: applicationName,
           Key: fileName
         })
         return true
       })
-    } else {
-      const file2go = fs.readFileSync(file)
-      await s3inst.putObject({
-        ACL: 'bucket-owner-full-control',
-        Body: file2go,
-        Bucket: applicationName,
-        Key: fileName
-      })
-      return true
     }
+    const file = fs.readFileSync(path)
+    await s3inst.putObject({
+      ACL: 'bucket-owner-full-control',
+      Body: file,
+      Bucket: applicationName,
+      Key: fileName
+    })
+    return true
   })
 }

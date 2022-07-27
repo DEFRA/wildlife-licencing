@@ -9,10 +9,15 @@ describe('The virus scanning service', () => {
       const mockCreateBucket = jest.fn((b, f) => {
         f(new Error(), null) // error, data
       })
+      jest.doMock('fs', () => ({
+        readFileSync: jest.fn(() => 'file-content')
+      }))
+      const mockPutObject = jest.fn()
       jest.doMock('@aws-sdk/client-s3', () => ({
         S3: jest.fn(() => ({
           headBucket: mockHeadBucket,
-          createBucket: mockCreateBucket
+          createBucket: mockCreateBucket,
+          putObject: mockPutObject
         }))
       }))
       const errSpy = jest.spyOn(console, 'error')
