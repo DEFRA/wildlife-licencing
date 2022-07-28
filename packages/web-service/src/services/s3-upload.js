@@ -28,10 +28,10 @@ export async function s3FileUpload (applicationName, fileName, path) {
         return true
       })
     }
-    const file = fs.readFileSync(path)
+    const addFile = fs.readFileSync(path)
     await s3inst.putObject({
       ACL: 'bucket-owner-full-control',
-      Body: file,
+      Body: addFile,
       Bucket: applicationName,
       Key: fileName
     })
