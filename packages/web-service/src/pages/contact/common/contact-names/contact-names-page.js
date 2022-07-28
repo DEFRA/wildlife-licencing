@@ -6,7 +6,7 @@ export const contactNamesPage = ({ page, uri, checkData, getData, completion, se
   uri,
   checkData,
   getData,
-  validator: Joi.object({}).options({ abortEarly: false, allowUnknown: true }),
   completion,
-  setData
+  setData,
+  validator: Joi.object({}).options({ abortEarly: false, allowUnknown: true })
 })

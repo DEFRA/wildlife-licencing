@@ -11,7 +11,7 @@ export const completion = async request => {
 export const ecologistUser = yesNoPage({
   page: USER.page,
   uri: USER.uri,
-  checkData,
   getData: getUserData,
+  checkData,
   completion
 })

@@ -7,9 +7,9 @@ export const contactNamePage = ({ page, uri, checkData, getData, completion, set
   uri,
   checkData,
   getData,
+  completion,
+  setData,
   validator: Joi.object({
     name: Joi.string().trim().pattern(nameReg).required()
-  }).options({ abortEarly: false, allowUnknown: true }),
-  completion,
-  setData
+  }).options({ abortEarly: false, allowUnknown: true })
 })
