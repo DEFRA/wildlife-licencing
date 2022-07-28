@@ -114,32 +114,58 @@ export const setData = question => async request => {
 /**************************************************************
  * Are you the landowner?
  **************************************************************/
-export const landOwner = yesNoPage(LANDOWNER, checkData, getData(IS_OWNER_OF_LAND), eligibilityStateMachine,
-  setData(IS_OWNER_OF_LAND), { auth: { mode: 'optional' } })
+export const landOwner = yesNoPage({
+  page: LANDOWNER.page,
+  uri: LANDOWNER.uri,
+  checkData,
+  getData: getData(IS_OWNER_OF_LAND),
+  completion: eligibilityStateMachine,
+  setData: setData(IS_OWNER_OF_LAND),
+  options: { auth: { mode: 'optional' } }
+})
 
 /**************************************************************
  * Do you have the landowner's permission?
  **************************************************************/
-export const landOwnerPermission = yesNoPage(LANDOWNER_PERMISSION, checkData, getData(HAS_LANDOWNER_PERMISSION), eligibilityStateMachine,
-  setData(HAS_LANDOWNER_PERMISSION), { auth: { mode: 'optional' } })
+export const landOwnerPermission = yesNoPage({
+  page: LANDOWNER_PERMISSION.page,
+  uri: LANDOWNER_PERMISSION.uri,
+  checkData,
+  getData: getData(HAS_LANDOWNER_PERMISSION),
+  completion: eligibilityStateMachine,
+  setData: setData(HAS_LANDOWNER_PERMISSION),
+  options: { auth: { mode: 'optional' } }
+})
 
 /**************************************************************
  * Does the work require permissions?
  **************************************************************/
-export const consent = yesNoPage(CONSENT, checkData, getData(PERMISSION_REQUIRED), eligibilityStateMachine,
-  setData(PERMISSION_REQUIRED), { auth: { mode: 'optional' } })
+export const consent = yesNoPage({
+  page: CONSENT.page,
+  uri: CONSENT.uri,
+  checkData,
+  getData: getData(PERMISSION_REQUIRED),
+  eligibilityStateMachine,
+  setData: setData(PERMISSION_REQUIRED),
+  options: { auth: { mode: 'optional' } }
+})
 
 /**************************************************************
  * Have the permissions been granted?
  **************************************************************/
-export const consentGranted = yesNoPage(CONSENT_GRANTED, checkData, getData(PERMISSION_GRANTED), eligibilityStateMachine,
-  setData(PERMISSION_GRANTED), { auth: { mode: 'optional' } })
+export const consentGranted = yesNoPage({
+  page: CONSENT_GRANTED.page,
+  uri: CONSENT_GRANTED.uri,
+  checkData,
+  getData: getData(PERMISSION_GRANTED),
+  eligibilityStateMachine,
+  setData: setData(PERMISSION_GRANTED),
+  options: { auth: { mode: 'optional' } }
+})
 
-export const notEligibleLandowner = pageRoute(NOT_ELIGIBLE_LANDOWNER.page, NOT_ELIGIBLE_LANDOWNER.uri,
-  null, null, null, null, null, { auth: { mode: 'optional' } })
+export const notEligibleLandowner = pageRoute({ page: NOT_ELIGIBLE_LANDOWNER.page, uri: NOT_ELIGIBLE_LANDOWNER.uri, options: { auth: { mode: 'optional' } } })
 
-export const notEligibleProject = pageRoute(NOT_ELIGIBLE_PROJECT.page, NOT_ELIGIBLE_PROJECT.uri,
-  null, null, null, null, null, { auth: { mode: 'optional' } })
+export const notEligibleProject = pageRoute({ page: NOT_ELIGIBLE_PROJECT.page, uri: NOT_ELIGIBLE_PROJECT.uri, options: { auth: { mode: 'optional' } } })
 
 /**************************************************************
  * Check your answers (eligibilityCheck)
@@ -191,13 +217,15 @@ export const checkAnswersCompletion = async request => {
 }
 
 export const eligibilityCheck = checkAnswersPage(
-  ELIGIBILITY_CHECK,
-  checkData,
-  checkYourAnswersGetData,
-  checkYourAnswersSetData,
-  checkAnswersCompletion,
-  { auth: { mode: 'optional' } }
-)
+  {
+    page: ELIGIBILITY_CHECK.page,
+    uri: ELIGIBILITY_CHECK.uri,
+    checkData,
+    checkYourAnswersGetData,
+    checkYourAnswersSetData,
+    checkAnswersCompletion,
+    options: { auth: { mode: 'optional' } }
+  })
 
 /**************************************************************
  * You are eligible page, sign-in
@@ -216,6 +244,10 @@ export const eligibleCheckData = async (request, h) => {
 
 export const eligibleCompletion = async request => request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
 
-export const eligible = pageRoute(ELIGIBLE.page, ELIGIBLE.uri, eligibleCheckData,
-  null, null, eligibleCompletion, null, { auth: { mode: 'optional' } }
-)
+export const eligible = pageRoute({
+  page: ELIGIBLE.page,
+  uri: ELIGIBLE.uri,
+  checkData: eligibleCheckData,
+  completion: eligibleCompletion,
+  options: { auth: { mode: 'optional' } }
+})

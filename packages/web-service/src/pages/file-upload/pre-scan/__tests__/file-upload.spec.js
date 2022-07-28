@@ -131,7 +131,7 @@ describe('the file-upload page handler', () => {
     const mockCompletion = jest.fn()
 
     const { fileUploadPageRoute } = await import('../file-upload.js')
-    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion, mockSetData)
+    const arr = fileUploadPageRoute({ view: '', fileUploadPath: '/path', fileUploadCompletion: mockCompletion, fileUploadSetData: mockSetData })
     await arr[1].handler({}, h)
     expect(mockSetData).toHaveBeenCalledTimes(1)
     expect(mockCompletion).toHaveBeenCalledTimes(1)
@@ -146,7 +146,7 @@ describe('the file-upload page handler', () => {
     const mockCompletion = jest.fn()
 
     const { fileUploadPageRoute } = await import('../file-upload.js')
-    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion, mockSetData)
+    const arr = fileUploadPageRoute({ view: '', uri: '/path', fileUploadCompletion: mockCompletion, fileUploadSetData: mockSetData })
     await arr[1].handler({}, h)
     expect(mockSetData).toHaveBeenCalledTimes(1)
     expect(mockCompletion).toHaveBeenCalledTimes(1)
@@ -160,7 +160,7 @@ describe('the file-upload page handler', () => {
     const mockCompletion = jest.fn()
 
     const { fileUploadPageRoute } = await import('../file-upload.js')
-    const arr = fileUploadPageRoute(null, '/path', null, null, null, mockCompletion)
+    const arr = fileUploadPageRoute({ view: '', uri: '/path', fileUploadCompletion: mockCompletion })
     await arr[1].handler({}, h)
     expect(mockCompletion).toHaveBeenCalledTimes(1)
   })
@@ -172,7 +172,7 @@ describe('the file-upload page handler', () => {
     const mockSetData = jest.fn()
 
     const { fileUploadPageRoute } = await import('../file-upload.js')
-    const arr = fileUploadPageRoute(null, '/path', null, null, null, null, mockSetData)
+    const arr = fileUploadPageRoute({ view: '', uri: '/path', fileUploadSetData: mockSetData })
     await arr[1].handler({}, h)
     expect(mockSetData).toHaveBeenCalledTimes(1)
   })

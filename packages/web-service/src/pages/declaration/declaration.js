@@ -3,5 +3,4 @@ import { DECLARATION, SUBMISSION } from '../../uris.js'
 import { ApplicationService } from '../../services/application.js'
 
 export const setData = async request => ApplicationService.submitApplication(request)
-export default pageRoute(DECLARATION.page, DECLARATION.uri,
-  null, null, null, SUBMISSION.uri, setData)
+export default pageRoute({ page: DECLARATION.page, uri: DECLARATION.uri, completion: SUBMISSION.uri, setData })
