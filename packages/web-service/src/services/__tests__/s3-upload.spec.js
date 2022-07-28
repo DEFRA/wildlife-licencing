@@ -9,15 +9,20 @@ describe('The virus scanning service', () => {
       const mockCreateBucket = jest.fn((b, f) => {
         f(new Error(), null) // error, data
       })
+      jest.doMock('fs', () => ({
+        readFileSync: jest.fn(() => 'file-content')
+      }))
+      const mockPutObject = jest.fn()
       jest.doMock('@aws-sdk/client-s3', () => ({
         S3: jest.fn(() => ({
           headBucket: mockHeadBucket,
-          createBucket: mockCreateBucket
+          createBucket: mockCreateBucket,
+          putObject: mockPutObject
         }))
       }))
       const errSpy = jest.spyOn(console, 'error')
-      const { S3FileUpload } = await import('../s3-upload.js')
-      await S3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
+      const { s3FileUpload } = await import('../s3-upload.js')
+      await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
       expect(errSpy).toHaveBeenCalled()
     })
     it('Creates bucket if application bucket does not already exist and uploads file to new bucket', async () => {
@@ -38,8 +43,8 @@ describe('The virus scanning service', () => {
           putObject: mockPutObject
         }))
       }))
-      const { S3FileUpload } = await import('../s3-upload.js')
-      await S3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
+      const { s3FileUpload } = await import('../s3-upload.js')
+      await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
       expect(mockHeadBucket).toHaveBeenCalled()
       expect(mockCreateBucket).toHaveBeenCalled()
       expect(mockPutObject).toHaveBeenCalledWith({
@@ -64,8 +69,8 @@ describe('The virus scanning service', () => {
           putObject: mockPutObject
         }))
       }))
-      const { S3FileUpload } = await import('../s3-upload.js')
-      await S3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
+      const { s3FileUpload } = await import('../s3-upload.js')
+      await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
       expect(mockHeadBucket).toHaveBeenCalled()
       expect(mockCreateBucket).toHaveBeenCalledTimes(0)
       expect(mockPutObject).toHaveBeenCalledWith({
