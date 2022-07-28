@@ -11,8 +11,8 @@ export const setApplicantData = request => setContactData('APPLICANT')(request)
 export const applicantName = contactNamePage({
   page: NAME.page,
   uri: NAME.uri,
+  completion: IS_ORGANISATION.uri,
   checkData,
   getData: getApplicantData,
-  completion: IS_ORGANISATION.uri,
   setData: setApplicantData
 })
