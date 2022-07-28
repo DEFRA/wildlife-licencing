@@ -1,22 +1,24 @@
 import { S3 } from '@aws-sdk/client-s3'
 import fs from 'fs'
-const accountID = '514125100797'
+import Boom from '@hapi/boom'
+const accountID = '-------'
 const region = 'eu-west-2'
 
 export async function s3FileUpload (applicationName, fileName, path) {
   const s3inst = new S3({
     region: region,
     credentials: {
-      secretAccessKey: '0fSeWQAZAi0KeIhydPWEpwZcihCV09nfp5/gx/ly',
-      accessKeyId: 'AKIAXPNB6O366AJDMFPQ'
+      accessKeyId: '-----',
+      secretAccessKey: '-----'
     }
   })
   s3inst.headBucket({ Bucket: applicationName, ExpectedBucketOwner: accountID }, async err => {
     if (err) {
       s3inst.createBucket({ Bucket: applicationName }, async createErr => {
         if (createErr) {
-          console.error(createErr)
-          return false
+          console.error('Message', createErr)
+          Boom.boomify(createErr, { statusCode: 500 })
+          throw createErr
         }
         const file = fs.readFileSync(path)
         await s3inst.putObject({
