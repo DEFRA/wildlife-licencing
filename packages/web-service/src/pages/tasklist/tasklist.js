@@ -68,4 +68,4 @@ export const checkData = async (request, h) => {
   return null
 }
 
-export const tasklist = pageRoute({ page: TASKLIST.page, uri: TASKLIST.uri, options: { auth: { mode: 'optional' }, checkData, getData } })
+export const tasklist = pageRoute({ page: TASKLIST.page, uri: TASKLIST.uri, options: { auth: { mode: 'optional' } }, checkData, getData })

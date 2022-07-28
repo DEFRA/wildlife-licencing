@@ -12,7 +12,7 @@ export const applicantName = contactNamePage({
   page: NAME.page,
   uri: NAME.uri,
   completion: IS_ORGANISATION.uri,
-  checkData,
   getData: getApplicantData,
-  setData: setApplicantData
+  setData: setApplicantData,
+  checkData
 })

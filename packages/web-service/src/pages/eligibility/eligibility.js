@@ -133,8 +133,8 @@ export const landOwnerPermission = yesNoPage({
   options: { auth: { mode: 'optional' } },
   getData: getData(HAS_LANDOWNER_PERMISSION),
   setData: setData(HAS_LANDOWNER_PERMISSION),
-  checkData,
-  completion: eligibilityStateMachine
+  completion: eligibilityStateMachine,
+  checkData
 })
 
 /**************************************************************
