@@ -8,4 +8,4 @@ export const completion = async request => {
   return pageData.payload['yes-no'] === 'yes' ? USER.uri : NAMES.uri
 }
 
-export const applicantUser = yesNoPage({ page: USER.page, uri: USER.uri, checkData, getData: getUserData, completion })
+export const applicantUser = yesNoPage({ page: USER.page, uri: USER.uri, getData: getUserData, checkData, completion })

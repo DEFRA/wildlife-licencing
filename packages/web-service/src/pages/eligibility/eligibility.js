@@ -117,11 +117,11 @@ export const setData = question => async request => {
 export const landOwner = yesNoPage({
   page: LANDOWNER.page,
   uri: LANDOWNER.uri,
-  checkData,
+  options: { auth: { mode: 'optional' } },
   getData: getData(IS_OWNER_OF_LAND),
   completion: eligibilityStateMachine,
   setData: setData(IS_OWNER_OF_LAND),
-  options: { auth: { mode: 'optional' } }
+  checkData
 })
 
 /**************************************************************
@@ -130,11 +130,11 @@ export const landOwner = yesNoPage({
 export const landOwnerPermission = yesNoPage({
   page: LANDOWNER_PERMISSION.page,
   uri: LANDOWNER_PERMISSION.uri,
-  checkData,
+  options: { auth: { mode: 'optional' } },
   getData: getData(HAS_LANDOWNER_PERMISSION),
-  completion: eligibilityStateMachine,
   setData: setData(HAS_LANDOWNER_PERMISSION),
-  options: { auth: { mode: 'optional' } }
+  completion: eligibilityStateMachine,
+  checkData
 })
 
 /**************************************************************
@@ -143,11 +143,11 @@ export const landOwnerPermission = yesNoPage({
 export const consent = yesNoPage({
   page: CONSENT.page,
   uri: CONSENT.uri,
-  checkData,
   getData: getData(PERMISSION_REQUIRED),
-  eligibilityStateMachine,
   setData: setData(PERMISSION_REQUIRED),
-  options: { auth: { mode: 'optional' } }
+  options: { auth: { mode: 'optional' } },
+  completion: eligibilityStateMachine,
+  checkData
 })
 
 /**************************************************************
@@ -156,11 +156,11 @@ export const consent = yesNoPage({
 export const consentGranted = yesNoPage({
   page: CONSENT_GRANTED.page,
   uri: CONSENT_GRANTED.uri,
-  checkData,
+  options: { auth: { mode: 'optional' } },
   getData: getData(PERMISSION_GRANTED),
-  eligibilityStateMachine,
   setData: setData(PERMISSION_GRANTED),
-  options: { auth: { mode: 'optional' } }
+  completion: eligibilityStateMachine,
+  checkData
 })
 
 export const notEligibleLandowner = pageRoute({ page: NOT_ELIGIBLE_LANDOWNER.page, uri: NOT_ELIGIBLE_LANDOWNER.uri, options: { auth: { mode: 'optional' } } })
@@ -220,11 +220,11 @@ export const eligibilityCheck = checkAnswersPage(
   {
     page: ELIGIBILITY_CHECK.page,
     uri: ELIGIBILITY_CHECK.uri,
+    options: { auth: { mode: 'optional' } },
     checkData,
     checkYourAnswersGetData,
     checkYourAnswersSetData,
-    checkAnswersCompletion,
-    options: { auth: { mode: 'optional' } }
+    checkAnswersCompletion
   })
 
 /**************************************************************

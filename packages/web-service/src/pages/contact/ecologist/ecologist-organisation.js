@@ -10,8 +10,8 @@ export const setEcologistOrganisationData = request => setContactAccountData('EC
 export const ecologistOrganisation = isOrganisation({
   page: IS_ORGANISATION.page,
   uri: IS_ORGANISATION.uri,
-  checkData,
   getData: getEcologistOrganisationData,
   completion: IS_ORGANISATION,
-  setData: setEcologistOrganisationData
+  setData: setEcologistOrganisationData,
+  checkData
 })
