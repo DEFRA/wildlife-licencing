@@ -7,8 +7,11 @@ const { IS_ORGANISATION } = contactURIs.ECOLOGIST
 export const getEcologistOrganisationData = request => getContactAccountData('ECOLOGIST', 'ECOLOGIST_ORGANISATION')(request)
 export const setEcologistOrganisationData = request => setContactAccountData('ECOLOGIST_ORGANISATION')(request)
 
-export const ecologistOrganisation = isOrganisation(IS_ORGANISATION,
+export const ecologistOrganisation = isOrganisation({
+  page: IS_ORGANISATION.page,
+  uri: IS_ORGANISATION.uri,
   checkData,
-  getEcologistOrganisationData,
-  IS_ORGANISATION,
-  setEcologistOrganisationData)
+  getData: getEcologistOrganisationData,
+  completion: IS_ORGANISATION,
+  setData: setEcologistOrganisationData
+})

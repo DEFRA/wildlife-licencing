@@ -8,4 +8,10 @@ export const completion = async request => {
   return pageData.payload['yes-no'] === 'yes' ? USER.uri : NAMES.uri
 }
 
-export const ecologistUser = yesNoPage(USER, checkData, getUserData, completion)
+export const ecologistUser = yesNoPage({
+  page: USER.page,
+  uri: USER.uri,
+  checkData,
+  getData: getUserData,
+  completion
+})

@@ -1,12 +1,12 @@
 import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 
-export const yesNoPage = (uri, checkData, getData, completion, setData, options) => pageRoute(
-  uri.page,
-  uri.uri,
+export const yesNoPage = ({ page, uri, checkData, getData, completion, setData, options }) => pageRoute({
+  page,
+  uri,
   checkData,
   getData,
-  Joi.object({
+  validator: Joi.object({
     'yes-no': Joi.any()
       .valid('yes', 'no')
       .required()
@@ -14,6 +14,6 @@ export const yesNoPage = (uri, checkData, getData, completion, setData, options)
   completion,
   setData,
   options
-)
+})
 
 export const isYes = request => request.payload['yes-no'] === 'yes'

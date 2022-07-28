@@ -3,8 +3,8 @@ import handler from '../handlers/page-handler.js'
 /**
  * Wrapper which creates a pair of handlers conforming to the pattern of the page handler functions in
  * src/handlers/page-handler.js, it creates a GET, POST and an error validator
- * @param view - The view name, always the name of the nunjunks template
- * @param path - The URI which the handler responds on
+ * @param page - The view name, always the name of the nunjunks template
+ * @param uri - The URI which the handler responds on
  * @param checkData - A function of the form h = checkData(request, h) =>  allowing the service to check that page
  * requirements are met before the page is displayed.
  * If the function returns a non-null the get handler will return the result immediately,
@@ -20,16 +20,16 @@ import handler from '../handlers/page-handler.js'
  * {path, handler: ((function(*=, *): Promise<*>)|*), method: string, options: (*&{validate:
  * {payload, failAction: ((function(*, *, *=): Promise<*|undefined>)|*)}})}]}
  */
-export default (view, path, checkData, getData, validator, completion, setData, options = {}) => [
+export default ({ page, uri, checkData, getData, validator, completion, setData, options = {} }) => [
   {
     method: 'GET',
-    path: path,
-    handler: handler(view, checkData, getData).get,
+    path: uri,
+    handler: handler(page, checkData, getData).get,
     options
   },
   {
     method: 'POST',
-    path: path,
+    path: uri,
     handler: handler(null, null, null, completion, setData).post,
     options: {
       ...options,

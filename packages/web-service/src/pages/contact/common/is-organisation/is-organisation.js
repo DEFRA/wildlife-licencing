@@ -12,12 +12,12 @@ const schema = Joi.object({
   })
 }).options({ abortEarly: false, allowUnknown: true })
 
-export const isOrganisation = (uri, checkData, getData, completion, setData) => pageRoute(
-  uri.page,
-  uri.uri,
+export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }) => pageRoute({
+  page,
+  uri,
   checkData,
   getData,
   schema,
   completion,
   setData
-)
+})

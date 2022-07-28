@@ -7,5 +7,11 @@ export const getEcologistNamesData = getContactNamesData('ECOLOGIST')
 export const setEcologistNamesData = setContactNamesData('ECOLOGIST')
 export const ecologistNamesCompletion = contactNamesCompletion('ECOLOGIST')
 
-export const ecologistNames = contactNamesPage(contactURIs.ECOLOGIST.NAMES,
-  ecologistNamesCheckData, getEcologistNamesData, ecologistNamesCompletion, setEcologistNamesData)
+export const ecologistNames = contactNamesPage({
+  page: contactURIs.ECOLOGIST.NAMES.page,
+  uri: contactURIs.ECOLOGIST.NAMES.uri,
+  checkData: ecologistNamesCheckData,
+  getData: getEcologistNamesData,
+  completion: ecologistNamesCompletion,
+  setData: setEcologistNamesData
+})

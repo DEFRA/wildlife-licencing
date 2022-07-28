@@ -7,5 +7,11 @@ export const getApplicantNamesData = getContactNamesData('APPLICANT')
 export const setApplicantNamesData = setContactNamesData('APPLICANT')
 export const applicantNamesCompletion = contactNamesCompletion('APPLICANT')
 
-export const applicantNames = contactNamesPage(contactURIs.APPLICANT.NAMES,
-  applicantNamesCheckData, getApplicantNamesData, applicantNamesCompletion, setApplicantNamesData)
+export const applicantNames = contactNamesPage({
+  page: contactURIs.APPLICANT.NAMES.page,
+  uri: contactURIs.APPLICANT.NAMES.uri,
+  checkData: applicantNamesCheckData,
+  getData: getApplicantNamesData,
+  completion: applicantNamesCompletion,
+  setData: setApplicantNamesData
+})

@@ -8,4 +8,11 @@ const { NAME, IS_ORGANISATION } = contactURIs.ECOLOGIST
 export const getEcologistData = request => getContactData('ECOLOGIST')(request)
 export const setEcologistData = request => setContactData('ECOLOGIST')(request)
 
-export const ecologistName = contactNamePage(NAME, checkData, getEcologistData, IS_ORGANISATION.uri, setEcologistData)
+export const ecologistName = contactNamePage({
+  page: NAME.page,
+  uri: NAME.uri,
+  checkData,
+  getData: getEcologistData,
+  completion: IS_ORGANISATION.uri,
+  setData: setEcologistData
+})
