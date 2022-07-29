@@ -1,0 +1,12 @@
+{% extends "information-page.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% set title = 'Tell us about each badger sett the work will affect' %}
+
+{% block pageContent %}
+<p class="govuk-body">You can add more than one sett.</p>
+
+{{ govukButton({
+  text: 'Add the first sett',
+  href: '/habitat-types'
+}) }}
+{% endblock %}

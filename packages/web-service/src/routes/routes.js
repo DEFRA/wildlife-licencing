@@ -19,6 +19,8 @@ import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 
+import habitatStart from '../pages/habitat/habitat-start.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
 import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
@@ -47,6 +49,7 @@ const routes = [
   ...ecologistNames,
   ...fileUpload,
   ...ecologistOrganisation,
+  ...habitatStart,
   signOut,
   ...miscRoutes
 ]
