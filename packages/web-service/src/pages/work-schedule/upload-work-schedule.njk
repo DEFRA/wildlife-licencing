@@ -6,10 +6,9 @@
 {% from "error-summary.njk" import errorSummary %}
 {% from "input/macro.njk" import govukInput %}
 
-
 {% set errorMap = {
         'scan-file': {
-          'no-file-chosen'     : { ref: '#scan-file', text: 'You must choose a file to upload.' },
+          'no-file-chosen' : { ref: '#scan-file', text: 'You must choose a file to upload.' },
           'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
           'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' }
         }
@@ -74,7 +73,7 @@
                   classes: "govuk-!-margin-top-5"
                 }) }}
             </div>
-            
+
             {% endcall %}
         </form>
     </div>

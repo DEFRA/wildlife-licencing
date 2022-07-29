@@ -8,9 +8,6 @@ export default {
     region: process.env.AWS_REGION,
     s3: {
       endpoint: process.env.AWS_S3_ENDPOINT
-    },
-    secretsManager: {
-      endpoint: process.env.AWS_SECRETS_MANAGER_ENDPOINT
     }
   },
   pg: {

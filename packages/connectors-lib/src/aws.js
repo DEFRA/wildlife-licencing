@@ -1,21 +1,18 @@
 import Config from './config.js'
-import { S3 } from '@aws-sdk/client-s3'
-import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
+import { S3Client, CreateBucketCommand, GetObjectCommand, PutObjectCommand, ListObjectsCommand } from '@aws-sdk/client-s3'
 
 export default function () {
   return {
-    s3: new S3({
-      apiVersion: '2006-03-01',
+    S3Client: new S3Client({
       ...(Config.aws.s3.endpoint && {
+        region: Config.aws.region,
         endpoint: Config.aws.s3.endpoint,
-        s3ForcePathStyle: true
+        forcePathStyle: true
       })
     }),
-    secretsManagerClient: new SecretsManagerClient({
-      apiVersion: '2017-10-17',
-      ...(Config.aws.secretsManager.endpoint && {
-        endpoint: Config.aws.secretsManager.endpoint
-      })
-    })
+    CreateBucketCommand,
+    GetObjectCommand,
+    PutObjectCommand,
+    ListObjectsCommand
   }
 }

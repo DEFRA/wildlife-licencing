@@ -3,26 +3,37 @@ import fs from 'fs'
 import path from 'path'
 import Boom from '@hapi/boom'
 import handler, { errorShim } from '../../../handlers/page-handler.js'
-import { CHECK_YOUR_ANSWERS, FILE_UPLOAD } from '../../../uris.js'
-import { scanFile } from '../../../services/virus-scan.js'
 import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
+import { scanFile } from '../../../services/virus-scan.js'
+import { APPLICATIONS } from '../../../uris.js'
+
+export const FILETYPES = {
+  METHOD_STATEMENT: 'method-statement'
+}
 
 export const setData = async request => {
-  const currentFilePlusDirectory = path.join(process.env.SCANDIR, path.basename(request.payload['scan-file'].path))
+  const { filename } = request.payload['scan-file']
+  const currentFilePath = path.join(process.env.SCANDIR, path.basename(request.payload['scan-file'].path))
   // We need to take a filename like: hello.txt
   // And rename it to something like: {unixTimestamp}.{originalFileName}
   // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
   // It also stops collisions if multiple users all upload files with the same name
-  const newFilename = `${+new Date()}.${request.payload['scan-file'].filename}`
-  const newFilenamePlusDirectory = path.join(process.env.SCANDIR, newFilename)
-  request.cache().setPageData({ tempPath: newFilenamePlusDirectory })
-  fs.renameSync(currentFilePlusDirectory, newFilenamePlusDirectory, err => {
+  const journeyData = await request.cache().getData()
+  const newFilename = `${+new Date()}.${journeyData.applicationId}.${filename}`
+  const newFilenamePath = path.join(process.env.SCANDIR, newFilename)
+  request.cache().setData(Object.assign(journeyData, {
+    fileUpload: {
+      filepath: newFilenamePath, filename
+    }
+  }))
+
+  fs.renameSync(currentFilePath, newFilenamePath, err => {
     console.error('file can\'t be renamed to include unix-timestamp', err)
     Boom.boomify(err, { statusCode: 500 })
     throw err
   })
 
-  const virusPresent = false
+  const virusPresent = await scanFile(newFilenamePath)
   if (virusPresent) {
     await request.cache().setPageData({
       payload: request.payload,
@@ -37,22 +48,6 @@ export const setData = async request => {
         }
       }]))
     })
-  }
-}
-
-export const completion = async request => {
-  const journeyData = await request.cache().getPageData() || {}
-  if (journeyData.error) {
-    return FILE_UPLOAD.uri
-  } else {
-    const currentCache = await request.cache().getPageData() || {}
-    const userData = await request.cache().getData()
-    const addToCache = {
-      filename: request.payload['scan-file'].filename,
-      applicationId: userData.applicationId
-    }
-    await request.cache().setData(Object.assign(currentCache, addToCache))
-    return CHECK_YOUR_ANSWERS.uri
   }
 }
 
@@ -89,7 +84,21 @@ export const validator = async payload => {
   }
 }
 
-export const fileUploadPageRoute = ({ view, fileUploadUri, checkData, getData, fileUploadValidator, fileUploadCompletion, fileUploadSetData }) => [
+/**
+ * Must have selected an application to upload a file
+ * @param request
+ * @param h
+ * @returns {Promise<null|*>}
+ */
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  if (!journeyData.applicationId) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+  return null
+}
+
+export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion }) => [
   {
     method: 'GET',
     path: fileUploadUri,
@@ -99,9 +108,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, checkData, getData, f
     method: 'POST',
     path: fileUploadUri,
     handler: async (request, h) => {
-      if (fileUploadSetData) {
-        await fileUploadSetData(request)
-      }
+      await setData(request)
       if (typeof fileUploadCompletion === 'function') {
         return h.redirect(await fileUploadCompletion(request))
       } else {
@@ -110,7 +117,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, checkData, getData, f
     },
     options: {
       validate: {
-        payload: fileUploadValidator,
+        payload: validator,
         failAction: handler().error
       },
       plugins: {
@@ -131,11 +138,3 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, checkData, getData, f
     }
   }
 ]
-
-export const fileUpload = fileUploadPageRoute({
-  view: FILE_UPLOAD.page,
-  fileUploadUri: FILE_UPLOAD.uri,
-  fileUploadValidator: validator,
-  fileUploadCompletion: completion,
-  fileUploadSetData: setData
-})

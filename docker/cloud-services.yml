@@ -58,7 +58,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3,secretsmanager,cloudformation
+      - SERVICES=s3
       - DEFAULT_REGION=eu-west-2
       - DEBUG=true
       - DATA_DIR=/tmp/localstack/data
@@ -66,8 +66,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/localstack:/tmp/localstack
-      - ./resources/localstack/localstack-init.sh:/docker-entrypoint-initaws.d/init.sh
-      - ./resources/localstack/localstack-cfn.yml:/docker-entrypoint-initaws.d/localstack-cfn.yml
 
   ##############################################################################################################
   # Scanner. Used by the front-end to check for viruses before sending to S3.

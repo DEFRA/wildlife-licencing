@@ -1,42 +1,40 @@
-import { S3 } from '@aws-sdk/client-s3'
 import fs from 'fs'
+import { AWS } from '@defra/wls-connectors-lib'
 import Boom from '@hapi/boom'
-const accountID = '-------'
-const region = 'eu-west-2'
+import { v4 as uuidv4 } from 'uuid'
+import db from 'debug'
+const debug = db('web-service:s3')
 
-export async function s3FileUpload (applicationName, fileName, path) {
-  const s3inst = new S3({
-    region: region,
-    credentials: {
-      accessKeyId: '-----',
-      secretAccessKey: '-----'
-    }
-  })
-  s3inst.headBucket({ Bucket: applicationName, ExpectedBucketOwner: accountID }, async err => {
-    if (err) {
-      s3inst.createBucket({ Bucket: applicationName }, async createErr => {
-        if (createErr) {
-          console.error('Message', createErr)
-          Boom.boomify(createErr, { statusCode: 500 })
-          throw createErr
-        }
-        const file = fs.readFileSync(path)
-        await s3inst.putObject({
-          ACL: 'bucket-owner-full-control',
-          Body: file,
-          Bucket: applicationName,
-          Key: fileName
-        })
-        return true
-      })
-    }
-    const addFile = fs.readFileSync(path)
-    await s3inst.putObject({
-      ACL: 'bucket-owner-full-control',
-      Body: addFile,
-      Bucket: applicationName,
-      Key: fileName
-    })
-    return true
-  })
+const { S3Client, CreateBucketCommand, PutObjectCommand } = AWS()
+
+const createBucket = async bucketName => {
+  try {
+    await S3Client.send(new CreateBucketCommand({ Bucket: bucketName }))
+    debug(`Successfully created a bucket: ${bucketName}`)
+  } catch (err) {
+    debug(`Found bucket: ${bucketName}`)
+  }
+}
+
+export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
+  const bucketName = `${applicationId}.${filetype}`
+  await createBucket(bucketName)
+  const fileReadStream = fs.createReadStream(filepath)
+
+  const objectKey = uuidv4()
+  const params = {
+    Bucket: bucketName,
+    ACL: 'authenticated-read',
+    Key: objectKey,
+    Body: fileReadStream
+  }
+
+  try {
+    await S3Client.send(new PutObjectCommand(params))
+    debug(`Wrote file ${filename} to bucket: ${bucketName} with key: ${objectKey}`)
+  } catch (err) {
+    console.error(`Cannot write data to s3 bucket: ${bucketName}`, err)
+    Boom.boomify(err, { statusCode: 500 })
+    throw err
+  }
 }
