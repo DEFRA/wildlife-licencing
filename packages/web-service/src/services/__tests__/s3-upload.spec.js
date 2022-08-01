@@ -1,91 +1,81 @@
 
-describe('The virus scanning service', () => {
+describe('the S3 file upload service', () => {
   beforeEach(() => jest.resetModules())
-  describe('S3 Bucket File Upload', () => {
-    it('Logs an error if a new bucket cannot be created', async () => {
-      const mockHeadBucket = jest.fn((b, f = () => true) => {
-      })
-      const mockCreateBucket = jest.fn((b, f = () => true) => {
-      })
-      jest.doMock('fs', () => ({
-        readFileSync: jest.fn(() => 'file-content')
+  describe('createBucket', () => {
+    const mockSend = jest.fn(() => { throw new Error() })
+    it('does nothing if the bucket cannot be created', async () => {
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        AWS: () => ({
+          S3Client: {
+            send: mockSend
+          }
+        })
       }))
-      const mockPutObject = jest.fn()
-      jest.doMock('@aws-sdk/client-s3', () => ({
-        S3: jest.fn(() => ({
-          headBucket: mockHeadBucket,
-          createBucket: mockCreateBucket,
-          putObject: mockPutObject
-        }))
-      }))
-      const errSpy = jest.spyOn(console, 'error')
-      const { s3FileUpload } = await import('../s3-upload.js')
-      try {
-        await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
-      } catch (e) {
-        expect(errSpy).toHaveBeenCalled()
-      }
+      const { createBucket } = await import('../s3-upload.js')
+      await expect(async () => await createBucket()).not.toThrow()
     })
-    it('Creates bucket if application bucket does not already exist and uploads file to new bucket', async () => {
-      const mockHeadBucket = jest.fn((b, f) => {
-        f(new Error(), {}) // error, data
-      })
-      const mockCreateBucket = jest.fn((b, f) => {
-        f(null, {}) // error, data
-      })
+  })
+
+  describe('s3FileUpload', () => {
+    it('sends the put command and unlinks the file', async () => {
+      const mockSend = jest.fn()
+      const mockPut = jest.fn()
+      const mockCreate = jest.fn()
       jest.doMock('fs', () => ({
-        readFileSync: jest.fn(() => 'file-content')
+        createReadStream: jest.fn(() => 'rs'),
+        unlinkSync: jest.fn()
       }))
-      const mockPutObject = jest.fn()
-      jest.doMock('@aws-sdk/client-s3', () => ({
-        S3: jest.fn(() => ({
-          headBucket: mockHeadBucket,
-          createBucket: mockCreateBucket,
-          putObject: mockPutObject
-        }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        AWS: () => ({
+          S3Client: {
+            send: mockSend
+          },
+          PutObjectCommand: mockPut,
+          CreateBucketCommand: mockCreate
+        })
       }))
       const { s3FileUpload } = await import('../s3-upload.js')
-      try {
-        await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
-      } catch {
-      }
-      expect(mockHeadBucket).toHaveBeenCalled()
-      expect(mockCreateBucket).toHaveBeenCalled()
-      expect(mockPutObject).toHaveBeenCalledWith({
-        ACL: 'bucket-owner-full-control',
-        Body: 'file-content',
-        Bucket: '0b357917-9b23-4f16-b460-bcee0ff1103f',
-        Key: 'file.txt'
+      await s3FileUpload('fedb14b6-53a8-ec11-9840-0022481aca85',
+        'hello.txt',
+        '/tmp/123',
+        'method'
+      )
+      expect(mockCreate).toHaveBeenCalledWith({ Bucket: 'fedb14b6-53a8-ec11-9840-0022481aca85.method' })
+      expect(mockPut).toHaveBeenCalledWith({
+        ACL: 'authenticated-read',
+        Body: 'rs',
+        Bucket: 'fedb14b6-53a8-ec11-9840-0022481aca85.method',
+        Key: expect.any(String)
       })
     })
-    it('Add the file to the application bucket if one already exists', async () => {
-      const mockHeadBucket = jest.fn((b, f) => {
-        f(null, {}) // error, data
-      })
+
+    it('throws an error if unable to write', async () => {
+      const mockSend = jest.fn()
+      const mockPut = jest.fn(() => { throw new Error() })
+      const mockCreate = jest.fn()
       jest.doMock('fs', () => ({
-        readFileSync: jest.fn(() => 'file-content')
+        createReadStream: jest.fn(() => 'rs'),
+        unlinkSync: jest.fn()
       }))
-      const mockPutObject = jest.fn()
-      const mockCreateBucket = jest.fn()
-      jest.doMock('@aws-sdk/client-s3', () => ({
-        S3: jest.fn(() => ({
-          headBucket: mockHeadBucket,
-          putObject: mockPutObject
-        }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        AWS: () => ({
+          S3Client: {
+            send: mockSend
+          },
+          PutObjectCommand: mockPut,
+          CreateBucketCommand: mockCreate
+        })
       }))
       const { s3FileUpload } = await import('../s3-upload.js')
       try {
-        await s3FileUpload('0b357917-9b23-4f16-b460-bcee0ff1103f', 'file.txt', '/scandir/file.txt')
-      } catch {
+        await s3FileUpload('fedb14b6-53a8-ec11-9840-0022481aca85',
+          'hello.txt',
+          '/tmp/123',
+          'method'
+        )
+      } catch (err) {
+        expect(err.output.statusCode).toEqual(500)
       }
-      expect(mockHeadBucket).toHaveBeenCalled()
-      expect(mockCreateBucket).toHaveBeenCalledTimes(0)
-      expect(mockPutObject).toHaveBeenCalledWith({
-        ACL: 'bucket-owner-full-control',
-        Body: 'file-content',
-        Bucket: '0b357917-9b23-4f16-b460-bcee0ff1103f',
-        Key: 'file.txt'
-      })
     })
   })
 })

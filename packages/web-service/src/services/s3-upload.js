@@ -7,7 +7,7 @@ const debug = db('web-service:s3')
 
 const { S3Client, CreateBucketCommand, PutObjectCommand } = AWS()
 
-const createBucket = async bucketName => {
+export const createBucket = async bucketName => {
   try {
     await S3Client.send(new CreateBucketCommand({ Bucket: bucketName }))
     debug(`Successfully created a bucket: ${bucketName}`)
