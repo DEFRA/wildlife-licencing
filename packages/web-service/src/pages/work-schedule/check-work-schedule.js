@@ -2,6 +2,7 @@ import { FILE_UPLOADS, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILETYPES } from '../common/file-upload/file-upload.js'
+
 export const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
   // If not, bounce the user back to the file-upload page
