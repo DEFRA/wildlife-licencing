@@ -17,6 +17,10 @@ export const eligibilityURIs = {
   ELIGIBLE: { uri: '/eligible', page: 'eligible' }
 }
 
+export const habitatURIs = {
+  START: { uri: '/habitat-start', page: 'habitat-start' }
+}
+
 export const contactURIs = {
   ECOLOGIST: {
     USER: { uri: '/ecologist-user', page: 'ecologist-user' },
