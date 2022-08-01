@@ -1,5 +1,5 @@
 import { FILE_UPLOADS } from '../../uris.js'
-import { fileUploadPageRoute } from '../file-upload/pre-scan/file-upload.js'
+import { fileUploadPageRoute } from '../common/file-upload/file-upload.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getPageData() || {}

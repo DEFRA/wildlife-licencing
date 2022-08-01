@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./volumes/postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: wlsuser
       POSTGRES_PASSWORD: wildl1fe
@@ -31,7 +31,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./volumes/redis:/data
+      - redis:/data
     deploy:
       restart_policy:
         condition: on-failure
@@ -65,7 +65,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./volumes/localstack:/tmp/localstack
+      - localstack:/tmp/localstack
 
   ##############################################################################################################
   # Scanner. Used by the front-end to check for viruses before sending to S3.
@@ -83,3 +83,6 @@ services:
 
 volumes:
   virus-db:
+  postgres:
+  redis:
+  localstack:

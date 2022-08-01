@@ -1,11 +1,5 @@
 import { Readable } from 'stream'
 
-jest.mock('../secrets.js', () => ({
-  SECRETS: {
-    getSecret: jest.fn(() => 'foo')
-  }
-}))
-
 jest.mock('../config.js', () => ({
   powerApps: {
     client: {

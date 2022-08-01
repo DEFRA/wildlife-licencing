@@ -21,6 +21,7 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
   await createBucket(bucketName)
   const fileReadStream = fs.createReadStream(filepath)
 
+  // The filename will be recorded by the API
   const objectKey = uuidv4()
   const params = {
     Bucket: bucketName,
@@ -32,6 +33,9 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
   try {
     await S3Client.send(new PutObjectCommand(params))
     debug(`Wrote file ${filename} to bucket: ${bucketName} with key: ${objectKey}`)
+    // Remove the temporary file
+    fs.unlinkSync(filepath)
+    debug(`Removed temporary file ${filepath}`)
   } catch (err) {
     console.error(`Cannot write data to s3 bucket: ${bucketName}`, err)
     Boom.boomify(err, { statusCode: 500 })

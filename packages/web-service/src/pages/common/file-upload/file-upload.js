@@ -1,7 +1,5 @@
 import Joi from 'joi'
 import fs from 'fs'
-import path from 'path'
-import Boom from '@hapi/boom'
 import handler, { errorShim } from '../../../handlers/page-handler.js'
 import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
@@ -12,28 +10,15 @@ export const FILETYPES = {
 }
 
 export const setData = async request => {
-  const { filename } = request.payload['scan-file']
-  const currentFilePath = path.join(process.env.SCANDIR, path.basename(request.payload['scan-file'].path))
-  // We need to take a filename like: hello.txt
-  // And rename it to something like: {unixTimestamp}.{originalFileName}
-  // So if the user uploads it to us, but doesn't submit it fully all the way to s3 - we can check the timestamp and delete it
-  // It also stops collisions if multiple users all upload files with the same name
+  const { filename, path } = request.payload['scan-file']
   const journeyData = await request.cache().getData()
-  const newFilename = `${+new Date()}.${journeyData.applicationId}.${filename}`
-  const newFilenamePath = path.join(process.env.SCANDIR, newFilename)
   request.cache().setData(Object.assign(journeyData, {
     fileUpload: {
-      filepath: newFilenamePath, filename
+      filename, path
     }
   }))
 
-  fs.renameSync(currentFilePath, newFilenamePath, err => {
-    console.error('file can\'t be renamed to include unix-timestamp', err)
-    Boom.boomify(err, { statusCode: 500 })
-    throw err
-  })
-
-  const virusPresent = await scanFile(newFilenamePath)
+  const virusPresent = await scanFile(path)
   if (virusPresent) {
     await request.cache().setPageData({
       payload: request.payload,
@@ -48,6 +33,8 @@ export const setData = async request => {
         }
       }]))
     })
+  } else {
+    await request.cache().clearPageData()
   }
 }
 

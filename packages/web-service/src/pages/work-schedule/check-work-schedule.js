@@ -1,7 +1,7 @@
 import { FILE_UPLOADS, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import { s3FileUpload } from '../../services/s3-upload.js'
-import { FILETYPES } from '../file-upload/pre-scan/file-upload.js'
+import { FILETYPES } from '../common/file-upload/file-upload.js'
 export const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
   // If not, bounce the user back to the file-upload page
@@ -22,7 +22,7 @@ export const getData = async request => {
 export const completion = async request => {
   const { applicationId, fileUpload } = await request.cache().getData()
   if (applicationId && fileUpload) {
-    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.filepath, FILETYPES.METHOD_STATEMENT)
+    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.METHOD_STATEMENT)
     return TASKLIST.uri
   } else {
     return FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri
