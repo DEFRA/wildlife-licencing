@@ -6,9 +6,6 @@ export const completion = async request => {
   if (journeyData.error) {
     return FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri
   } else {
-    const cache = await request.cache().getData()
-    cache.lastUploadedFile = request.payload['scan-file'].filename
-    await request.cache().setData(cache)
     return FILE_UPLOADS.WORK_SCHEDULE.CHECK_YOUR_ANSWERS.uri
   }
 }
