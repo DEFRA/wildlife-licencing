@@ -35,7 +35,7 @@ export default async (context, req, h) => {
         .type(APPLICATION_JSON)
         .code(201)
     } else {
-      const [, updatedApplicationUpload] = await models.applicationUploads.update({
+      const [, updatedApplicationUploads] = await models.applicationUploads.update({
         applicationId,
         filetype,
         filename,
@@ -44,7 +44,7 @@ export default async (context, req, h) => {
         where: { id: uploadId },
         returning: true
       })
-      const responseBody = prepareResponse(updatedApplicationUpload[0].dataValues)
+      const responseBody = prepareResponse(updatedApplicationUploads[0].dataValues)
       await cache.save(req.path, responseBody)
       return h.response(responseBody)
         .type(APPLICATION_JSON)
