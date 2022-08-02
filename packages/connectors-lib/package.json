@@ -24,8 +24,7 @@
     "directory": "packages/connectors-lib"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.42.0",
-    "@aws-sdk/client-secrets-manager": "^3.42.0",
+    "@aws-sdk/client-s3": "^3.137.0",
     "bull": "^4.1.1",
     "debug": "^4.3.3",
     "lodash.clonedeep": "^4.5.0",

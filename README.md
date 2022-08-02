@@ -10,7 +10,7 @@
 
 ## Getting started
 
-### To run the application as a docker swarm
+### To run the application in a local docker stack
 
 First edit the docker secret environment files to add the secret keys
 
@@ -64,6 +64,16 @@ The docker services running should be as follows:
 - wls_redis_commander
 
 Ensure you have node version 16.13.0 or greater installed; `node --version`
+
+#### Localstack
+The AWS S3 interface is simulated in the local docker stack using the localstack image
+In order to run s3 operations locally it is necessary to install the AWS CLI.
+Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+Then run ```aws configure``` to generate a fake set of credentials. (Localstack does not support IAM)
+
+An example of listing the contents of an S3 bucket 
+```aws --endpoint-url=http://localhost:4566 s3 ls 22d1d642-7ee3-4598-9d02-cc36fe64a5c8.method-statement```
+Here 4566 is the edge port for the localstack s4 interface
 
 #### To run any package locally
 
@@ -166,4 +176,3 @@ The queued data is consumed by the __Application Queue Processor__ and wrtiien i
 The __Application Extract Processor__ and the __Reference Data Extract Processor__ are used to extract data from the Power Platform and write it down to the Postgres tables.
 
 For details of the inbound and outbound processes see [powerapps-lib/README.md](packages/powerapps-lib/README.md)
-
