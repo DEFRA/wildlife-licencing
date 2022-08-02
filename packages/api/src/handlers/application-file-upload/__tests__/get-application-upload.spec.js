@@ -3,6 +3,7 @@ const applicationUpload = {
   applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
   filetype: 'MAP',
   filename: 'map.txt',
+  objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
   bucket: 'bucket-name',
   createdAt: '2022-08-02T11:53:01.291Z',
   updatedAt: '2022-08-02T12:04:04.004Z'
@@ -29,6 +30,7 @@ const req = {
   payload: {
     filetype: 'MAP',
     filename: 'map.txt',
+    objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
     bucket: 'bucket-name'
   }
 }
@@ -56,6 +58,7 @@ describe('getApplicationUpload handler', () => {
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
       bucket: 'bucket-name',
+      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
       createdAt: '2022-08-02T11:53:01.291Z',
       filename: 'map.txt',
       filetype: 'MAP',
@@ -95,6 +98,7 @@ describe('getApplicationUpload handler', () => {
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
       bucket: 'bucket-name',
+      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
       createdAt: '2022-08-02T11:53:01.291Z',
       filename: 'map.txt',
       filetype: 'MAP',
@@ -107,6 +111,7 @@ describe('getApplicationUpload handler', () => {
       {
         applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
         bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
         filename: 'map.txt',
         filetype: 'MAP',
         id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',

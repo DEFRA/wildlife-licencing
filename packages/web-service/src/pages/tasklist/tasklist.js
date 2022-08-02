@@ -37,7 +37,7 @@ export const getData = async request => {
   const progress = getProgress(status)
 
   // If you navigate to the TASKLIST page, we need to ensure we've cleared all the error states on the file-upload page
-  await request.cache().clearPageData(FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.page)
+  await request.cache().clearPageData(FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.page)
 
   return {
     reference: application?.applicationReferenceNumber,

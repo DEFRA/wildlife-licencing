@@ -99,6 +99,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       throw err
     }
   } finally {
+    debug('Request timeout clear ')
     clearTimeout(timeout)
   }
 }

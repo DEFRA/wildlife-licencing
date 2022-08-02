@@ -48,6 +48,7 @@ import {
 
 import {
   getApplicationFileUploads,
+  postApplicationFileUpload,
   getApplicationFileUpload,
   putApplicationFileUpload
 } from './handlers/application-file-upload/application-file-upload.js'
@@ -181,6 +182,7 @@ const handlers = {
 
   // Application file upload
   getApplicationFileUploads,
+  postApplicationFileUpload,
   getApplicationFileUpload,
   putApplicationFileUpload,
 

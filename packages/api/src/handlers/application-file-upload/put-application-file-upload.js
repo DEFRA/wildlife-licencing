@@ -16,7 +16,7 @@ export default async (context, req, h) => {
     }
 
     await clearCaches(applicationId)
-    const { filetype, filename, bucket } = req.payload
+    const { filetype, filename, bucket, objectKey } = req.payload
 
     const [applicationUpload, created] = await models.applicationUploads.findOrCreate({
       where: { id: uploadId },
@@ -24,7 +24,8 @@ export default async (context, req, h) => {
         applicationId,
         filetype,
         filename,
-        bucket
+        bucket,
+        objectKey
       }
     })
 
@@ -35,16 +36,17 @@ export default async (context, req, h) => {
         .type(APPLICATION_JSON)
         .code(201)
     } else {
-      const [, updatedApplicationUpload] = await models.applicationUploads.update({
+      const [, updatedApplicationUploads] = await models.applicationUploads.update({
         applicationId,
         filetype,
         filename,
-        bucket
+        bucket,
+        objectKey
       }, {
         where: { id: uploadId },
         returning: true
       })
-      const responseBody = prepareResponse(updatedApplicationUpload[0].dataValues)
+      const responseBody = prepareResponse(updatedApplicationUploads[0].dataValues)
       await cache.save(req.path, responseBody)
       return h.response(responseBody)
         .type(APPLICATION_JSON)

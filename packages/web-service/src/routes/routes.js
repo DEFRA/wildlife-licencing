@@ -11,8 +11,8 @@ import {
 } from '../pages/eligibility/eligibility.js'
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
-import { uploadWorkSchedule } from '../pages/work-schedule/upload-work-schedule.js'
-import { checkWorkSchedule } from '../pages/work-schedule/check-work-schedule.js'
+import { uploadMethodStatement } from '../pages/method-statement/upload-method-statement.js'
+import { checkMethodStatement } from '../pages/method-statement/check-method-statement.js'
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
@@ -45,8 +45,8 @@ const routes = [
   ...register,
   ...declaration,
   ...submission,
-  ...uploadWorkSchedule,
-  ...checkWorkSchedule,
+  ...uploadMethodStatement,
+  ...checkMethodStatement,
   ...landOwner,
   ...landOwnerPermission,
   ...consent,

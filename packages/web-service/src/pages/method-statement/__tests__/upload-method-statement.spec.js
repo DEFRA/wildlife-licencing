@@ -1,5 +1,5 @@
 
-describe('the upload-work-schedule page handler', () => {
+describe('the upload-method-statement page handler', () => {
   beforeEach(() => jest.resetModules())
 
   it('without error returns the check your answers page', async () => {
@@ -23,17 +23,17 @@ describe('the upload-work-schedule page handler', () => {
     jest.doMock('../../../services/virus-scan.js', () => ({
       scanFile: jest.fn(() => false)
     }))
-    const { uploadWorkSchedule } = await import('../upload-work-schedule.js')
-    const [, postRoute] = uploadWorkSchedule
+    const { uploadMethodStatement } = await import('../upload-method-statement.js')
+    const [, postRoute] = uploadMethodStatement
     const mockRedirect = jest.fn()
     const h = {
       redirect: mockRedirect
     }
     await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/check-work-schedule')
+    expect(mockRedirect).toHaveBeenCalledWith('/check-method-statement')
   })
 
-  it('with error returns the upload work-schedule page', async () => {
+  it('with error returns the upload method-statement page', async () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
@@ -54,13 +54,13 @@ describe('the upload-work-schedule page handler', () => {
     jest.doMock('../../../services/virus-scan.js', () => ({
       scanFile: jest.fn(() => true)
     }))
-    const { uploadWorkSchedule } = await import('../upload-work-schedule.js')
-    const [, postRoute] = uploadWorkSchedule
+    const { uploadMethodStatement } = await import('../upload-method-statement.js')
+    const [, postRoute] = uploadMethodStatement
     const mockRedirect = jest.fn()
     const h = {
       redirect: mockRedirect
     }
     await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/upload-work-schedule')
+    expect(mockRedirect).toHaveBeenCalledWith('/upload-method-statement')
   })
 })

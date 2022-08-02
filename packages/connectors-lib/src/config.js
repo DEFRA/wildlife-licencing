@@ -36,6 +36,7 @@ export default {
       },
       auth: {
         tokenHost: process.env.OAUTH_AUTHORITY_HOST_URL,
+        tenant: process.env.OAUTH_TENANT,
         tokenPath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/token`,
         authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
       }
@@ -47,5 +48,9 @@ export default {
       timeout: process.env.MSPA_CLIENT_TIMEOUT_MS,
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
+  },
+  graph: {
+    base: process.env.GRAPH_BASE,
+    site: process.env.GRAPH_SITE
   }
 }
