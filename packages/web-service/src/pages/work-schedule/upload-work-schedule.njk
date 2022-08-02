@@ -55,12 +55,11 @@
               }
             }) %}
 
-
             {{ govukFileUpload({
               id: "scan-file",
               name: "scan-file",
               label: {
-              text: "Upload a file"
+                text: "Upload a file"
               },
               errorMessage: { text: 'Upload a different file.' } if error['scan-file']
             }) }}
