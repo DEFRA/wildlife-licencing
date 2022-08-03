@@ -920,6 +920,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/application/{applicationId}/file-upload':
+    post:
+      description: Create the application file-upload details
+      summary: Create the application file-upload details
+      operationId: postApplicationFileUpload
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationFileUpload'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
   '/application/{applicationId}/file-upload/{uploadId}':
     put:
@@ -2185,6 +2220,7 @@ components:
         - filetype
         - filename
         - bucket
+        - objectKey
       properties:
         id:
           $ref: '#/components/schemas/uuid'
@@ -2199,6 +2235,8 @@ components:
           type: string
           minimum: 3
           maximum: 63
+        objectKey:
+          $ref: '#/components/schemas/uuid'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

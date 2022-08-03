@@ -255,11 +255,15 @@ async function defineApplicationUploads (sequelize) {
     },
     bucket: {
       type: DataTypes.STRING(63)
+    },
+    objectKey: {
+      type: DataTypes.UUID
     }
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['application_id'], name: 'application_upload_application_fk' }
+      { unique: false, fields: ['application_id'], name: 'application_upload_application_fk' },
+      { unique: true, fields: ['object_key'], name: 'application_upload_object_key_uk' }
     ]
   })
 }

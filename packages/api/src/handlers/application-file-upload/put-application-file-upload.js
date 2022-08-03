@@ -16,7 +16,7 @@ export default async (context, req, h) => {
     }
 
     await clearCaches(applicationId)
-    const { filetype, filename, bucket } = req.payload
+    const { filetype, filename, bucket, objectKey } = req.payload
 
     const [applicationUpload, created] = await models.applicationUploads.findOrCreate({
       where: { id: uploadId },
@@ -24,7 +24,8 @@ export default async (context, req, h) => {
         applicationId,
         filetype,
         filename,
-        bucket
+        bucket,
+        objectKey
       }
     })
 
@@ -39,7 +40,8 @@ export default async (context, req, h) => {
         applicationId,
         filetype,
         filename,
-        bucket
+        bucket,
+        objectKey
       }, {
         where: { id: uploadId },
         returning: true
