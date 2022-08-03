@@ -1,53 +1,64 @@
 
 describe('The virus scanning service', () => {
   beforeEach(() => jest.resetModules())
+  describe('The clam initialization', () => {
+    it('resolves when initialized', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ initialized: true })
+      })))
+      const { initializeClamScan } = await import('../virus-scan.js')
+      await expect(() => initializeClamScan()).resolves
+    })
+    it('rejects when initialization fails', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.reject(new Error())
+      })))
+      const { initializeClamScan } = await import('../virus-scan.js')
+      await expect(() => initializeClamScan()).rejects.toThrow()
+    })
+    it('rejects when uninitialized fails', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ initialized: false })
+      })))
+      const { initializeClamScan } = await import('../virus-scan.js')
+      await expect(() => initializeClamScan()).rejects.toThrow()
+    })
+  })
 
   describe('Scan file request', () => {
-    it('returns a boolean when initialised successfully', async () => {
+    it('returns a true and unlinks when scanned infected file', async () => {
+      const mockScan = { isInfected: true }
+      const mockUnlinkSync = jest.fn()
+      jest.doMock('fs', () => ({ unlinkSync: mockUnlinkSync }))
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ isInfected: () => mockScan, initialized: true })
+      })))
+      const { scanFile, initializeClamScan } = await import('../virus-scan.js')
+      await initializeClamScan()
+      expect(await scanFile('text.txt')).toBe(true)
+      await expect(mockUnlinkSync).toHaveBeenCalledWith('text.txt')
+    })
+
+    it('returns a false when scanned clean file', async () => {
       const mockScan = { isInfected: false }
-      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-        return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
-      })
-      )
-      const { scanFile } = await import('../virus-scan.js')
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ isInfected: () => mockScan, initialized: true })
+      })))
+      const { scanFile, initializeClamScan } = await import('../virus-scan.js')
+      await initializeClamScan()
       expect(await scanFile('text.txt')).toBe(false)
     })
+
     it('throws error and deletes file when clamscan fails', async () => {
-      const mockNull = jest.fn((filename, callback) => callback(null))
-      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-        return ({ init: () => Promise.resolve({ isInfected: () => { throw new Error() } }) })
-      })
-      )
-      jest.doMock('fs', () => ({ unlinkSync: mockNull }))
-      const { scanFile } = await import('../virus-scan.js')
+      const mockUnlinkSync = jest.fn()
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ isInfected: () => { throw new Error() }, initialized: true })
+      })))
+      jest.doMock('fs', () => ({ unlinkSync: mockUnlinkSync }))
+      const { scanFile, initializeClamScan } = await import('../virus-scan.js')
+      await initializeClamScan()
       await expect(() => scanFile('text.txt')).rejects.toThrowError()
-      await expect(mockNull).toHaveBeenCalledTimes(1)
-    })
-    it('throws an error if file could not be deleted', async () => {
-      const mockScan = { isInfected: true }
-      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-        return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
-      })
-      )
-      const mockError = jest.fn((filename, callback) => callback(new Error('the file could not be deleted.')))
-      jest.doMock('fs', () => ({ unlinkSync: mockError }))
-      const logSpy = jest.spyOn(console, 'log')
-      const { scanFile } = await import('../virus-scan.js')
-      await expect(async () => await scanFile('text.txt')).rejects.toThrowError('the file could not be deleted.')
-      await expect(logSpy).toHaveBeenCalledTimes(0)
-    })
-    it('deletes the file successfully', async () => {
-      const mockScan = { isInfected: true }
-      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-        return ({ init: () => Promise.resolve({ isInfected: () => mockScan }) })
-      })
-      )
-      const mockNull = jest.fn((filename, callback) => callback(null))
-      jest.doMock('fs', () => ({ unlinkSync: mockNull }))
-      const { scanFile } = await import('../virus-scan.js')
-      const logSpy = jest.spyOn(console, 'log')
-      await scanFile('text.txt')
-      await expect(logSpy).toHaveBeenCalledWith('The file contained a virus, so it was deleted.')
+      await expect(mockUnlinkSync).toHaveBeenCalledWith('text.txt')
     })
   })
 })
