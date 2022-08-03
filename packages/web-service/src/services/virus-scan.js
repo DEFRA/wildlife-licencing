@@ -22,7 +22,8 @@ export const initializeClamScan = async () => {
     if (clamScan.initialized) {
       console.log('clam virus scanner container is initialized')
     } else {
-      console.log('Clam virus scanner container is not initialized')
+      console.error('Clam virus scanner container is not initialized')
+      return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
     }
     return Promise.resolve()
   } catch (err) {

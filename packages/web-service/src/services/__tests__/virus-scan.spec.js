@@ -4,7 +4,7 @@ describe('The virus scanning service', () => {
   describe('The clam initialization', () => {
     it('resolves when initialized', async () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
-        init: () => Promise.resolve()
+        init: () => Promise.resolve({ initialized: true })
       })))
       const { initializeClamScan } = await import('../virus-scan.js')
       await expect(() => initializeClamScan()).resolves
@@ -12,6 +12,13 @@ describe('The virus scanning service', () => {
     it('rejects when initialization fails', async () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
         init: () => Promise.reject(new Error())
+      })))
+      const { initializeClamScan } = await import('../virus-scan.js')
+      await expect(() => initializeClamScan()).rejects.toThrow()
+    })
+    it('rejects when uninitialized fails', async () => {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
+        init: () => Promise.resolve({ initialized: false })
       })))
       const { initializeClamScan } = await import('../virus-scan.js')
       await expect(() => initializeClamScan()).rejects.toThrow()
@@ -24,7 +31,7 @@ describe('The virus scanning service', () => {
       const mockUnlinkSync = jest.fn()
       jest.doMock('fs', () => ({ unlinkSync: mockUnlinkSync }))
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
-        init: () => Promise.resolve({ isInfected: () => mockScan })
+        init: () => Promise.resolve({ isInfected: () => mockScan, initialized: true })
       })))
       const { scanFile, initializeClamScan } = await import('../virus-scan.js')
       await initializeClamScan()
@@ -35,7 +42,7 @@ describe('The virus scanning service', () => {
     it('returns a false when scanned clean file', async () => {
       const mockScan = { isInfected: false }
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
-        init: () => Promise.resolve({ isInfected: () => mockScan })
+        init: () => Promise.resolve({ isInfected: () => mockScan, initialized: true })
       })))
       const { scanFile, initializeClamScan } = await import('../virus-scan.js')
       await initializeClamScan()
@@ -45,7 +52,7 @@ describe('The virus scanning service', () => {
     it('throws error and deletes file when clamscan fails', async () => {
       const mockUnlinkSync = jest.fn()
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
-        init: () => Promise.resolve({ isInfected: () => { throw new Error() } })
+        init: () => Promise.resolve({ isInfected: () => { throw new Error() }, initialized: true })
       })))
       jest.doMock('fs', () => ({ unlinkSync: mockUnlinkSync }))
       const { scanFile, initializeClamScan } = await import('../virus-scan.js')
