@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOAD, habitatURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs } from '../../uris.js'
 import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -19,7 +19,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
-  FILE_UPLOAD: 'file-upload',
+  WORK_SCHEDULE: 'work-schedule',
   SUBMIT: 'send-application'
 }
 
@@ -48,7 +48,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: false,
-    [SECTION_TASKS.FILE_UPLOAD]: true,
+    [SECTION_TASKS.WORK_SCHEDULE]: true,
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -69,6 +69,12 @@ export const decorateMap = (currentLicenceTypeMap, taskStatus) => currentLicence
     })
   }))
 }))
+
+const eligibilityCheckStatus = status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+  ? STATUS_VALUES.NOT_STARTED
+  : STATUS_VALUES.CANNOT_START_YET
+
+const eligibilityCheckEnabled = status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
 
 // A map of the sections and tasks by licence type
 export const licenceTypeMap = {
@@ -93,18 +99,14 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
             uri: APPLICANT_USER.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
-              ? STATUS_VALUES.NOT_STARTED
-              : STATUS_VALUES.CANNOT_START_YET,
-            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
             uri: ECOLOGIST_USER.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
-              ? STATUS_VALUES.NOT_STARTED
-              : STATUS_VALUES.CANNOT_START_YET,
-            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           }
         ]
       },
@@ -133,10 +135,10 @@ export const licenceTypeMap = {
             enabled: true
           },
           {
-            name: SECTION_TASKS.FILE_UPLOAD,
-            uri: FILE_UPLOAD.uri,
-            status: () => STATUS_VALUES.NOT_STARTED,
-            enabled: true
+            name: SECTION_TASKS.WORK_SCHEDULE,
+            uri: FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri,
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           }
         ]
       },
@@ -146,10 +148,8 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SUBMIT,
             uri: DECLARATION.uri,
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
-              ? STATUS_VALUES.NOT_STARTED
-              : STATUS_VALUES.CANNOT_START_YET,
-            enabled: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           }
         ]
       }

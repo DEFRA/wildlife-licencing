@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-connectors-lib",
-  "version": "2.3.0-alpha.0",
+  "version": "2.6.0-alpha.0",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "private": false,
@@ -24,8 +24,7 @@
     "directory": "packages/connectors-lib"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.42.0",
-    "@aws-sdk/client-secrets-manager": "^3.42.0",
+    "@aws-sdk/client-s3": "^3.137.0",
     "bull": "^4.1.1",
     "debug": "^4.3.3",
     "lodash.clonedeep": "^4.5.0",

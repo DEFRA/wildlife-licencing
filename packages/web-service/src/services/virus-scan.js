@@ -12,32 +12,36 @@ const options = {
   },
   preference: 'clamdscan'
 }
-const ClamScan = new NodeClam().init(options)
+
+let clamScan
+
+export const initializeClamScan = async () => {
+  try {
+    const cs = new NodeClam()
+    clamScan = await cs.init(options)
+    if (clamScan.initialized) {
+      console.log('clam virus scanner container is initialized')
+    } else {
+      console.error('Clam virus scanner container is not initialized')
+      return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
+    }
+    return Promise.resolve()
+  } catch (err) {
+    console.error(err)
+    return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
+  }
+}
 
 export async function scanFile (filepath) {
-  return ClamScan.then(async clamscan => {
-    try {
-      const { isInfected } = await clamscan.isInfected(filepath)
-      if (isInfected) {
-        fs.unlinkSync(filepath, err => {
-          if (err) {
-            console.error(err)
-            throw err
-          }
-          console.log('The file contained a virus, so it was deleted.')
-        })
-      }
-      return isInfected
-    } catch (err) {
-      console.error(err.message)
-      fs.unlinkSync(filepath, delErr => {
-        if (delErr) {
-          console.error(delErr)
-          throw delErr
-        }
-      })
-      console.error(err.message)
-      throw new Error(err)
+  try {
+    const { isInfected } = await clamScan.isInfected(filepath)
+    if (isInfected) {
+      fs.unlinkSync(filepath)
     }
-  })
+    return isInfected
+  } catch (err) {
+    console.error(err.message)
+    fs.unlinkSync(filepath)
+    throw new Error(err)
+  }
 }

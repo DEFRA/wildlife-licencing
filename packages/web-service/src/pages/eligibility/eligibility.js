@@ -221,10 +221,10 @@ export const eligibilityCheck = checkAnswersPage(
     page: ELIGIBILITY_CHECK.page,
     uri: ELIGIBILITY_CHECK.uri,
     options: { auth: { mode: 'optional' } },
-    checkData,
-    checkYourAnswersGetData,
-    checkYourAnswersSetData,
-    checkAnswersCompletion
+    getData: checkYourAnswersGetData,
+    setData: checkYourAnswersSetData,
+    completion: checkAnswersCompletion,
+    checkData
   })
 
 /**************************************************************

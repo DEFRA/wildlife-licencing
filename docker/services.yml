@@ -71,9 +71,12 @@ services:
     env_file:
       - ./env/web.env
     volumes:
-      - ./volumes/clam/scandir:/scandir
+      - scandir:/scandir
     deploy:
       mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
+
+volumes:
+  scandir:

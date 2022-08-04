@@ -45,9 +45,9 @@ export const ERRORS = {
   SERVER: { page: 'server-error' }
 }
 
-export const FILE_UPLOAD = {
-  uri: '/file-upload', page: 'file-upload'
-}
-export const CHECK_YOUR_ANSWERS = {
-  uri: '/check-your-answers', page: 'check-your-answers'
+export const FILE_UPLOADS = {
+  WORK_SCHEDULE: {
+    FILE_UPLOAD: { uri: '/upload-work-schedule', page: 'upload-work-schedule' },
+    CHECK_YOUR_ANSWERS: { uri: '/check-work-schedule', page: 'check-work-schedule' }
+  }
 }
