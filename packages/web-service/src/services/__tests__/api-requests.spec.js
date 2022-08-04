@@ -1165,4 +1165,106 @@ describe('The API requests service', () => {
         .rejects.toThrowError()
     })
   })
+
+  describe('FILE_UPLOAD requests', () => {
+    it('record always posts a new record for a filetype of multiple', async () => {
+      const mockPost = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.FILE_UPLOAD.record(
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        'hello.txt',
+        { filetype: 'greetings', multiple: true },
+        'bucket-name',
+        'object-key'
+      )
+      expect(mockPost).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload',
+        {
+          bucket: 'bucket-name',
+          filename: 'hello.txt',
+          filetype: 'greetings',
+          objectKey: 'object-key'
+        })
+    })
+
+    it('record posts a record for a filetype of not-multiple where there are no un-submitted records of that filetype', async () => {
+      const mockPost = jest.fn()
+      const mockGet = jest.fn(() => [
+        { submitted: '2022-10-05T14:48:00.000Z' }
+      ])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost,
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.FILE_UPLOAD.record(
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        'hello.txt',
+        { filetype: 'greetings', multiple: false },
+        'bucket-name',
+        'object-key'
+      )
+      expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-uploads', 'filetype=greetings')
+      expect(mockPost).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload',
+        {
+          bucket: 'bucket-name',
+          filename: 'hello.txt',
+          filetype: 'greetings',
+          objectKey: 'object-key'
+        })
+    })
+
+    it('record puts a record for a filetype of not-multiple where there are un-submitted records of that filetype', async () => {
+      const mockPut = jest.fn()
+      const mockGet = jest.fn(() => [
+        { submitted: '2022-10-05T14:48:00.000Z' },
+        { id: 'e6b8de2e-51dc-4196-aa69-5725b3aff732', submitted: null }
+      ])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut,
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.FILE_UPLOAD.record(
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        'hello.txt',
+        { filetype: 'greetings', multiple: false },
+        'bucket-name',
+        'object-key'
+      )
+      expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-uploads', 'filetype=greetings')
+      expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload/e6b8de2e-51dc-4196-aa69-5725b3aff732',
+        {
+          bucket: 'bucket-name',
+          filename: 'hello.txt',
+          filetype: 'greetings',
+          objectKey: 'object-key'
+        })
+    })
+
+    it('record rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.FILE_UPLOAD.record(
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        'hello.txt',
+        { filetype: 'greetings', multiple: false },
+        'bucket-name',
+        'object-key'
+      )).rejects.toThrowError()
+    })
+  })
 })

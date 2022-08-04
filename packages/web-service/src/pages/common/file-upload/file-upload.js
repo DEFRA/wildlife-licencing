@@ -6,7 +6,10 @@ import { scanFile } from '../../../services/virus-scan.js'
 import { APPLICATIONS } from '../../../uris.js'
 
 export const FILETYPES = {
-  METHOD_STATEMENT: 'method-statement'
+  METHOD_STATEMENT: {
+    filetype: 'METHOD-STATEMENT',
+    multiple: false
+  }
 }
 
 export const setData = async request => {

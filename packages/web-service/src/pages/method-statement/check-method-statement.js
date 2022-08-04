@@ -9,7 +9,7 @@ export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData?.fileUpload) {
     // If you navigate to this page, we need to ensure we've cleared all the error states on the file-upload page (incase you navigate back)
-    return h.redirect(FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri)
+    return h.redirect(FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri)
   }
 
   return null
@@ -17,7 +17,7 @@ export const checkData = async (request, h) => {
 
 export const getData = async request => {
   const { fileUpload } = await request.cache().getData()
-  return { filename: fileUpload.filename, change: FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri }
+  return { filename: fileUpload.filename, change: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri }
 }
 
 export const completion = async request => {
@@ -26,13 +26,13 @@ export const completion = async request => {
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.METHOD_STATEMENT)
     return TASKLIST.uri
   } else {
-    return FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri
+    return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
   }
 }
 
-export const checkWorkSchedule = pageRoute({
-  page: FILE_UPLOADS.WORK_SCHEDULE.CHECK_YOUR_ANSWERS.page,
-  uri: FILE_UPLOADS.WORK_SCHEDULE.CHECK_YOUR_ANSWERS.uri,
+export const checkMethodStatement = pageRoute({
+  page: FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.page,
+  uri: FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.uri,
   checkData,
   getData,
   completion

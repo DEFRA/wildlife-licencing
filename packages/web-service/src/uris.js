@@ -44,8 +44,8 @@ export const ERRORS = {
 }
 
 export const FILE_UPLOADS = {
-  WORK_SCHEDULE: {
-    FILE_UPLOAD: { uri: '/upload-work-schedule', page: 'upload-work-schedule' },
-    CHECK_YOUR_ANSWERS: { uri: '/check-work-schedule', page: 'check-work-schedule' }
+  METHOD_STATEMENT: {
+    FILE_UPLOAD: { uri: '/upload-method-statement', page: 'upload-method-statement' },
+    CHECK_YOUR_ANSWERS: { uri: '/check-method-statement', page: 'check-method-statement' }
   }
 }

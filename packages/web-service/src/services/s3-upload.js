@@ -3,6 +3,7 @@ import { AWS } from '@defra/wls-connectors-lib'
 import Boom from '@hapi/boom'
 import { v4 as uuidv4 } from 'uuid'
 import db from 'debug'
+import { APIRequests } from './api-requests.js'
 const debug = db('web-service:s3')
 
 const { S3Client, CreateBucketCommand, PutObjectCommand } = AWS()
@@ -17,7 +18,7 @@ export const createBucket = async bucketName => {
 }
 
 export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
-  const bucketName = `${applicationId}.${filetype}`
+  const bucketName = `${applicationId}.${filetype.filetype.toLowerCase()}`
   await createBucket(bucketName)
   const fileReadStream = fs.createReadStream(filepath)
 
@@ -33,6 +34,10 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
   try {
     await S3Client.send(new PutObjectCommand(params))
     debug(`Wrote file ${filename} to bucket: ${bucketName} with key: ${objectKey}`)
+
+    // Record the file upload on the API
+    await APIRequests.FILE_UPLOAD.record(applicationId, filename, filetype, bucketName, objectKey)
+
     // Remove the temporary file
     fs.unlinkSync(filepath)
     debug(`Removed temporary file ${filepath}`)
