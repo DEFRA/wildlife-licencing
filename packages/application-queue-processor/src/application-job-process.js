@@ -222,7 +222,6 @@ export const buildApiObject = async applicationId => {
  * UnRecoverable exceptions from the PowerApp processes are ENDED - and an error reported
  *
  * @param job - The job object from the queue
- * @returns {Promise<*[]|void>}
  */
 export const applicationJobProcess = async job => {
   try {
@@ -237,14 +236,12 @@ export const applicationJobProcess = async job => {
     // Update the application and associated data in Power Apps
     const targetKeys = await applicationUpdate(payload)
     await postProcess(targetKeys)
-    return Promise.resolve()
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
-      return Promise.resolve()
     } else {
       console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error.message)
-      return Promise.reject(error)
+      throw new Error('Job fail for retry')
     }
   }
 }

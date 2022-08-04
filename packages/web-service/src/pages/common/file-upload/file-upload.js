@@ -3,7 +3,7 @@ import fs from 'fs'
 import handler, { errorShim } from '../../../handlers/page-handler.js'
 import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
-import { APPLICATIONS } from '../../../uris.js'
+import { checkApplication } from '../check-application.js'
 
 export const FILETYPES = {
   METHOD_STATEMENT: {
@@ -73,26 +73,18 @@ export const validator = async payload => {
     }], null)
   }
 }
-
 /**
  * Must have selected an application to upload a file
  * @param request
  * @param h
  * @returns {Promise<null|*>}
  */
-export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-  return null
-}
 
 export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion }) => [
   {
     method: 'GET',
     path: fileUploadUri,
-    handler: handler(view, checkData, getData).get
+    handler: handler(view, checkApplication, getData).get
   },
   {
     method: 'POST',
