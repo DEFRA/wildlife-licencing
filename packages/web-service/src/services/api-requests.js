@@ -331,7 +331,7 @@ export const APIRequests = {
     * @returns {Promise<*>}
   */
   HABITAT: {
-    create: async (applicationId) => {
+    create: async applicationId => {
       try {
         const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, { applicationId })
         debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
