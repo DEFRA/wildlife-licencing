@@ -7,7 +7,8 @@ Promise.all([
   SEQUELIZE.initialiseConnection()
     .then(() => createModels()),
   REDIS.initialiseConnection(),
-  createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
+  createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' }),
+  createQueue(queueDefinitions.FILE_QUEUE, { type: 'client' })
 ]).then(() => createServer()
   .then(s => init(s)))
   .catch(e => {

@@ -14,8 +14,13 @@ export default async (context, req, h) => {
 
     await clearCaches(applicationId)
     const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
-    const job = await applicationQueue.add({ applicationId })
-    console.log(`Queued application ${applicationId} - job: ${job.id}`)
+    const applicationJob = await applicationQueue.add({ applicationId })
+    console.log(`Queued application ${applicationId} - job: ${applicationJob.id}`)
+
+    const fileQueue = getQueue(queueDefinitions.FILE_QUEUE)
+    const fileJob = await fileQueue.add({ applicationId })
+    console.log(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
+
     return h.response().code(204)
   } catch (err) {
     console.error('Error updating into APPLICATIONS table', err)
