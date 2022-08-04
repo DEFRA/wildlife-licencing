@@ -322,5 +322,25 @@ export const APIRequests = {
     create: async (applicationId, payload) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, payload),
     unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
     getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId)
+  },
+
+  /**
+   * Basic habitat creation - creates the habitat
+    * @param applicationId
+    * @param type
+    * @returns {Promise<*>}
+  */
+  HABITAT: {
+    create: async (applicationId) => {
+      try {
+        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, { applicationId })
+        debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
+        return application
+      } catch (error) {
+        console.error(`Error creating habitat-site for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
   }
 }

@@ -1,0 +1,58 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set errorMap = {
+        'sett-selection': {
+          'no-radio-selected': { ref: '#sett-radio', text: 'You have not selected a sett type.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+{{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukRadios({
+    id: "sett-radio",
+    name: "sett-radio",
+    idPrefix: "where-do-you-live",
+    fieldset: {
+      legend: {
+        text: "What are the badgers using this sett for?",
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+    hint: {
+      text: "Select an option."
+    },
+    errorMessage: { text: "Select a sett type." } if error['sett-selection'],
+    items: [
+      {
+        value: "main",
+        text: "Main"
+      },
+      {
+        value: "annexe",
+        text: "Annexe"
+      },
+      {
+        value: "outlier",
+        text: "Outlier"
+      },
+      {
+        value: "subsidiary",
+        text: "Subsidiary"
+      }
+    ]
+  }) }}
+
+{% endblock %}
+
+
+
