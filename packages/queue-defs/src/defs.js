@@ -1,4 +1,5 @@
 const fastThenSlow = function (attemptsMade, err) {
+  console.log(`Retry attempt ${attemptsMade} with error err: ${err}`)
   if (attemptsMade < 6) {
     // Every 20 seconds for the first 2 minutes
     return 20 * 1000
@@ -40,15 +41,15 @@ export const queueDefinitions = {
         removeOnFail: false,
         priority: 1,
         attempts: 200,
-        delay: 10000,
+        timeout: 30000,
         backoff: {
           type: 'fastThenSlow'
         }
-      }
-    },
-    settings: {
-      backoffStrategies: {
-        fastThenSlow
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
       }
     }
   }

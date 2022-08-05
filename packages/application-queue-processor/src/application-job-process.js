@@ -224,8 +224,8 @@ export const buildApiObject = async applicationId => {
  * @param job - The job object from the queue
  */
 export const applicationJobProcess = async job => {
+  const { applicationId } = job.data
   try {
-    const { applicationId } = job.data
     const payload = await buildApiObject(applicationId)
 
     if (!payload) {
@@ -241,7 +241,7 @@ export const applicationJobProcess = async job => {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
     } else {
       console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error.message)
-      throw new Error('Job fail for retry')
+      throw new Error(`Application job fail for ${applicationId}`)
     }
   }
 }

@@ -18,8 +18,17 @@ export default async (context, req, h) => {
     console.log(`Queued application ${applicationId} - job: ${applicationJob.id}`)
 
     const fileQueue = getQueue(queueDefinitions.FILE_QUEUE)
-    const fileJob = await fileQueue.add({ applicationId })
-    console.log(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
+
+    const applicationUploads = await models.applicationUploads.findAll({
+      where: {
+        applicationId
+      }
+    })
+
+    for await (const upload of applicationUploads) {
+      const fileJob = await fileQueue.add({ id: upload.dataValues.id, applicationId })
+      console.log(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
+    }
 
     return h.response().code(204)
   } catch (err) {

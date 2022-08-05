@@ -28,7 +28,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@defra/wls-connectors-lib": "^2.6.0-alpha.0",
+    "debug": "^4.3.3",
     "bull": "^4.1.1"
   }
 }
