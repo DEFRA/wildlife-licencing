@@ -6,7 +6,6 @@ import pkg from 'node-fetch'
 const fetch = pkg.default
 
 const debug = db('connectors-lib:fetch')
-const abortController = new global.AbortController()
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
 export class HTTPResponseError extends Error {
@@ -60,6 +59,8 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
   const headers = headerFunc && typeof headerFunc === 'function'
     ? await headerFunc()
     : { 'Content-Type': APPLICATION_JSON, Accept: APPLICATION_JSON }
+
+  const abortController = new global.AbortController()
 
   const options = {
     headers,
