@@ -20,11 +20,13 @@ import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 
+import habitatStart from '../pages/habitat/start/habitat-start.js'
+import habitatTypes from '../pages/habitat/types/habitat-types.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
 import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
-import habitatStart from '../pages/habitat/habitat-start.js'
 
 const routes = [
   ...applications,
@@ -52,6 +54,7 @@ const routes = [
   ...ecologistNames,
   ...ecologistOrganisation,
   ...habitatStart,
+  ...habitatTypes,
   signOut,
   ...miscRoutes
 ]
