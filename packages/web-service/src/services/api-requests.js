@@ -361,6 +361,8 @@ export const APIRequests = {
         }
       } catch (error) {
         console.error(`Error getting uploads for applicationId: ${applicationId} and filetype ${filetype}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
       }
     }
   },
