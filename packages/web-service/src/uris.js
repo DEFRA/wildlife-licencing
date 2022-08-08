@@ -18,7 +18,9 @@ export const eligibilityURIs = {
 }
 
 export const habitatURIs = {
-  START: { uri: '/habitat-start', page: 'habitat-start' }
+  START: { uri: '/habitat-start', page: 'habitat-start' },
+  TYPES: { uri: '/habitat-types', page: 'habitat-types' },
+  ACTIVE: { uri: '/habitat-active', page: 'habitat-active' }
 }
 
 export const contactURIs = {

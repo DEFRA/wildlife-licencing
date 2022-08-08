@@ -361,6 +361,23 @@ export const APIRequests = {
         }
       } catch (error) {
         console.error(`Error getting uploads for applicationId: ${applicationId} and filetype ${filetype}`, error)
+      }
+    }
+  },
+  /**
+   * Basic habitat creation - creates the habitat
+    * @param applicationId
+    * @param type
+    * @returns {Promise<*>}
+  */
+  HABITAT: {
+    create: async applicationId => {
+      try {
+        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, { applicationId })
+        debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
+        return application
+      } catch (error) {
+        console.error(`Error creating habitat-site for ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

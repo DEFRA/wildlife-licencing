@@ -1166,6 +1166,34 @@ describe('The API requests service', () => {
     })
   })
 
+  describe('HABITAT requests', () => {
+    it('create calls the API connector correctly', async () => {
+      const mockPost = jest.fn(() => ({ id: 'applicationId' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.create('9d62e5b8-9c77-ec11-8d21-000d3a87431b')
+      expect(mockPost).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site', {
+        applicationId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
+      })
+    })
+
+    it('create rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.create('fred.flintstone@email.co.uk'))
+        .rejects.toThrowError()
+    })
+  })
+
   describe('FILE_UPLOAD requests', () => {
     it('record always posts a new record for a filetype of multiple', async () => {
       const mockPost = jest.fn()
