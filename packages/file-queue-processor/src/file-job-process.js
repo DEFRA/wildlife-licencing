@@ -1,6 +1,5 @@
 import { models } from '@defra/wls-database-model'
-import { AWS } from '@defra/wls-connectors-lib'
-import { initialize } from './graph-client.js'
+import { AWS, GRAPH } from '@defra/wls-connectors-lib'
 import db from 'debug'
 // const debug = db('file-queue-processor:file-job-process')
 const { S3Client, GetObjectCommand } = AWS()
@@ -8,7 +7,7 @@ const { S3Client, GetObjectCommand } = AWS()
 export class RecoverableUploadError extends Error {}
 export class UnRecoverableUploadError extends Error {}
 
-const client = initialize()
+const client = GRAPH.getClient()
 console.log(client)
 
 const details = client.api('/sites/root/drives').get()

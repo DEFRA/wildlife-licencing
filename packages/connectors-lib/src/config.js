@@ -47,5 +47,10 @@ export default {
       timeout: process.env.MSPA_CLIENT_TIMEOUT_MS,
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
+  },
+  graph: {
+    tenant: process.env.GRAPH_TENANT,
+    client: process.env.GRAPH_CLIENT,
+    secret: process.env.GRAPH_SECRET
   }
 }
