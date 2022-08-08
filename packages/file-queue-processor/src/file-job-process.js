@@ -1,11 +1,18 @@
 import { models } from '@defra/wls-database-model'
 import { AWS } from '@defra/wls-connectors-lib'
+import { initialize } from './graph-client.js'
 import db from 'debug'
 // const debug = db('file-queue-processor:file-job-process')
 const { S3Client, GetObjectCommand } = AWS()
 
 export class RecoverableUploadError extends Error {}
 export class UnRecoverableUploadError extends Error {}
+
+const client = initialize()
+console.log(client)
+
+const details = client.api('/sites/root/drives').get()
+details.then(d => console.log(d)).catch(e => console.error(e))
 
 /**
  * Process a (single) file job
