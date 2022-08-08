@@ -5,7 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set errorMap = {
-        'sett-selection': {
+        'habitat-types': {
           'no-radio-selected': { ref: '#sett-radio', text: 'You have not selected a sett type.' }
         }
     }
@@ -18,13 +18,11 @@
 {{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukRadios({
-    id: "sett-radio",
-    name: "sett-radio",
-    idPrefix: "where-do-you-live",
+    id: "settTypes-radio",
+    name: "settTypes-radio",
     fieldset: {
       legend: {
         text: "What are the badgers using this sett for?",
-        isPageHeading: true,
         classes: "govuk-fieldset__legend--l"
       }
     },
@@ -34,19 +32,19 @@
     errorMessage: { text: "Select a sett type." } if error['sett-selection'],
     items: [
       {
-        value: data.MAIN_WITH_OTHER_SETTS
+        value: data.MAIN_NO_ALTERNATIVE_SETT,
         text: "Main"
       },
       {
-        value: data.ANNEXE_OR_SUBSIDIARY
+        value: data.ANNEXE,
         text: "Annexe"
       },
       {
-        value: data.OUTLIER
+        value: data.OUTLIER,
         text: "Outlier"
       },
       {
-        value: data.ANNEXE_OR_SUBSIDIARY
+        value: data.SUBSIDIARY,
         text: "Subsidiary"
       }
     ]

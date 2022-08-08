@@ -22,6 +22,8 @@ import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 
 import habitatStart from '../pages/habitat/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/types/habitat-types.js'
+import habitatActive from '../pages/habitat/active/habitat-active.js'
+import habitatReopen from '../pages/habitat/reopen/habitat-reopen.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 
@@ -55,6 +57,8 @@ const routes = [
   ...ecologistOrganisation,
   ...habitatStart,
   ...habitatTypes,
+  ...habitatReopen,
+  ...habitatActive,
   signOut,
   ...miscRoutes
 ]
