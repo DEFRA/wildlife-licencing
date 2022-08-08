@@ -1,4 +1,6 @@
-describe('The wrapper: application-queue-processor', () => {
+import { POWERAPPS } from '@defra/wls-connectors-lib'
+
+describe('The wrapper: file-queue-processor', () => {
   afterAll(done => {
     jest.clearAllMocks()
     done()
@@ -9,7 +11,12 @@ describe('The wrapper: application-queue-processor', () => {
       try {
         jest.mock('../worker.js')
         jest.mock('@defra/wls-database-model')
-        jest.mock('@defra/wls-connectors-lib')
+        jest.mock('@defra/wls-connectors-lib', () => ({
+          AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+          SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
+          REDIS: { initialiseConnection: jest.fn() }
+        }))
+
         jest.mock('@defra/wls-queue-defs')
 
         const { worker } = require('../worker.js')
@@ -41,6 +48,11 @@ describe('The wrapper: application-queue-processor', () => {
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib')
         jest.mock('@defra/wls-queue-defs')
+        jest.mock('@defra/wls-connectors-lib', () => ({
+          AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+          SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
+          REDIS: { initialiseConnection: jest.fn() }
+        }))
 
         const { createModels } = require('@defra/wls-database-model')
         const { worker } = require('../worker.js')

@@ -25,10 +25,15 @@ const context = {
   }
 }
 
+const mockAddApplication = jest.fn(() => ({ id: 1 }))
+const mockAddFile = jest.fn(() => ({ id: 2 }))
+
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-queue-defs', () => ({
-  getQueue: jest.fn(() => ({ add: jest.fn(() => ({ id: 1 })) })),
-  queueDefinitions: { APPLICATION_QUEUE: {} }
+  getQueue: jest.fn()
+    .mockImplementationOnce(() => ({ add: mockAddApplication }))
+    .mockImplementation(() => ({ add: mockAddFile })),
+  queueDefinitions: { APPLICATION_QUEUE: {}, FILE_QUEUE: {} }
 }))
 
 let models
@@ -45,9 +50,11 @@ describe('The postApplicationSubmit handler', () => {
 
   it('returns a 204 on a successful submission', async () => {
     models.applications = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })) }
+    models.applicationUploads = { findAll: jest.fn(async () => [{ dataValues: { id: '123' } }]) }
     cache.delete = jest.fn(() => null)
     await postApplicationSubmit(context, req, h)
-
+    expect(mockAddApplication).toHaveBeenCalledWith({ applicationId: 'f8c8c4bf-724b-4c25-934f-d1e7de1e2980' })
+    expect(mockAddFile).toHaveBeenCalledWith({ applicationId: 'f8c8c4bf-724b-4c25-934f-d1e7de1e2980', id: '123' })
     expect(cache.delete).toHaveBeenCalledWith(`/application/${context.request.params.applicationId}`)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(204)
@@ -55,6 +62,7 @@ describe('The postApplicationSubmit handler', () => {
 
   it('returns a 404 on not found', async () => {
     models.applications = { findByPk: jest.fn(async () => null) }
+    models.applicationUploads = { findAll: jest.fn(async () => []) }
     await postApplicationSubmit(context, req, h)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)

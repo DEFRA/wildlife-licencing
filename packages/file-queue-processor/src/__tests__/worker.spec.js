@@ -2,7 +2,7 @@
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-connectors-lib')
 
-describe('The application job processor', () => {
+describe('The file job processor', () => {
   beforeEach(async () => {
     jest.resetModules()
   })
@@ -12,7 +12,7 @@ describe('The application job processor', () => {
   })
 
   it('returns resolve on registration', async () => {
-    jest.mock('@defra/wls-queue-defs', () => ({
+    jest.doMock('@defra/wls-queue-defs', () => ({
       getQueue: jest.fn(() => ({
         process: jest.fn(),
         isPaused: jest.fn(() => false),
@@ -24,6 +24,10 @@ describe('The application job processor', () => {
         }
       }
     }))
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' }
+    }))
     const { worker } = await import('../worker.js')
     const { queueDefinitions, getQueue } = await import('@defra/wls-queue-defs')
     await expect(worker()).resolves.not.toBeDefined()
@@ -32,7 +36,7 @@ describe('The application job processor', () => {
 
   it('returns resolve on registration and unpause queue', async () => {
     const mockResume = jest.fn()
-    jest.mock('@defra/wls-queue-defs', () => ({
+    jest.doMock('@defra/wls-queue-defs', () => ({
       getQueue: jest.fn(() => ({
         process: jest.fn(),
         isPaused: jest.fn(() => true),
@@ -43,6 +47,10 @@ describe('The application job processor', () => {
         FILE_QUEUE: {
         }
       }
+    }))
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' }
     }))
     const { worker } = await import('../worker.js')
     const { queueDefinitions, getQueue } = await import('@defra/wls-queue-defs')
