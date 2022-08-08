@@ -1,5 +1,3 @@
-import { POWERAPPS } from '@defra/wls-connectors-lib'
-
 describe('The wrapper: file-queue-processor', () => {
   afterAll(done => {
     jest.clearAllMocks()

@@ -17,7 +17,7 @@ export const fileJobProcess = async job => {
   try {
     const { bucket, objectKey, filename } = await models.applicationUploads.findByPk(id)
 
-    console.log({ bucket, objectKey, filename })
+    db(`Consume file - queue item ${{ bucket, objectKey, filename }}`)
     // Check that the file exists in the AWS bucket
 
     try {
