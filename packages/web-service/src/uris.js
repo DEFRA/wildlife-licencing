@@ -25,6 +25,8 @@ export const habitatURIs = {
   ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' },
   ACTIVE_ENTRANCES: { uri: '/habitat-active-entrances', page: 'habitat-active-entrances' },
   GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
+  WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
+  WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
   ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
   CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' }
 }
