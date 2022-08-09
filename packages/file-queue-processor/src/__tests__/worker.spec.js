@@ -26,7 +26,8 @@ describe('The file job processor', () => {
     }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
       AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
-      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' }
+      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
+      GRAPH: { getClient: jest.fn() }
     }))
     const { worker } = await import('../worker.js')
     const { queueDefinitions, getQueue } = await import('@defra/wls-queue-defs')
@@ -50,7 +51,8 @@ describe('The file job processor', () => {
     }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
       AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
-      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' }
+      SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
+      GRAPH: { getClient: jest.fn() }
     }))
     const { worker } = await import('../worker.js')
     const { queueDefinitions, getQueue } = await import('@defra/wls-queue-defs')
