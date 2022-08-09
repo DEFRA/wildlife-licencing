@@ -1,0 +1,35 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-name': {
+          'no-name-entered': { ref: '#habitat-name', text: 'Give this sett a name.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukInput({
+    id: "habitat-name",
+    name: "habitat-name",
+    label: {
+      text: "What is this sett called?",
+      classes: "govuk-label--l"
+    },
+    hint: {
+      text: "Enter a name for the sett to identify and distinguish it from other setts. You should use the name it has on your maps or within your method statement. You can enter up to 100 characters."
+    },
+    classes: "govuk-input--width-10",
+    spellcheck: false
+  }) }}
+
+{% endblock %}
