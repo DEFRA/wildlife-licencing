@@ -1,0 +1,35 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% set errorMap = {
+        'habitat-work-start': {
+          'no-date-sent': { ref: '#habitat-work-start', text: 'You have not entered a start date.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukDateInput({
+    id: "habitat-work-start",
+    namePrefix: "habitat-work-start",
+    fieldset: {
+      legend: {
+        text: "When will the work start?",
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+    hint: {
+      text: "The work must start during the licence period (from 1 May to 30 November)"
+    }
+  }) }}
+
+{% endblock %}

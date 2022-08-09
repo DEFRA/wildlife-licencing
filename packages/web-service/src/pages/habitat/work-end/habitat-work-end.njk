@@ -1,0 +1,35 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% set errorMap = {
+        'habitat-work-end': {
+          'no-date-sent': { ref: '#habitat-work-end', text: 'You have not entered an end date.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukDateInput({
+    id: "habitat-work-end",
+    namePrefix: "habitat-work-end",
+    fieldset: {
+      legend: {
+        text: "When will the work end?",
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+    hint: {
+      text: "The work must be finished before the end of licence period (30 November)."
+    }
+  }) }}
+
+{% endblock %}
