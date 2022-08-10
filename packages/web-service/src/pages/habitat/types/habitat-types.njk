@@ -1,34 +1,25 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set errorMap = {
         'habitat-types': {
-          'no-radio-selected': { ref: '#sett-radio', text: 'You have not selected a sett type.' }
+          'any.only': { ref: '#habitat-types', text: 'You have not selected an option.' }
         }
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = 'What are the badgers using this sett for?' %}
 
 {% block pageContent %}
-
-{{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukRadios({
     id: "habitat-types",
     name: "habitat-types",
-    fieldset: {
-      legend: {
-        text: "What are the badgers using this sett for?",
-        classes: "govuk-label--xl"
-      }
-    },
     hint: {
-      text: "Select an option."
+      text: "Select one."
     },
-    errorMessage: { text: "Select a sett type." } if error['sett-selection'],
+    errorMessage: { text: "Select a sett type." } if error['habitat-types'],
     items: [
       {
         value: data.MAIN_NO_ALTERNATIVE_SETT,
