@@ -27,6 +27,8 @@ import habitatReopen from '../pages/habitat/reopen/habitat-reopen.js'
 import habitatEntrances from '../pages/habitat/entrances/habitat-entrances.js'
 import habitatActiveEntrances from '../pages/habitat/active-entrances/habitat-active-entrances.js'
 import habitatGridRef from '../pages/habitat/grid-ref/habitat-grid-ref.js'
+import habitatWorkStart from '../pages/habitat/work-start/habitat-work-start.js'
+import habitatWorkEnd from '../pages/habitat/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/activities/habitat-activities.js'
 import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-habitat-answers.js'
 
@@ -66,6 +68,8 @@ const routes = [
   ...habitatGridRef,
   ...habitatTypes,
   ...habitatReopen,
+  ...habitatWorkStart,
+  ...habitatWorkEnd,
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
