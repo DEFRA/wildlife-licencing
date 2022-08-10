@@ -1,22 +1,15 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
+const nameReg = /^[/\s\p{L}-]{1,160}$/u
 
 export const completion = async _request => habitatURIs.TYPES.uri
 
-export const validator = async payload => {
-  if (payload['habitat-name'] === '') {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: no habitat name has been sent',
-      path: ['habitat-name'],
-      type: 'no-name-entered',
-      context: {
-        label: 'habitat-name',
-        value: 'Error',
-        key: 'habitat-name'
-      }
-    }], null)
-  }
-}
-
-export default pageRoute({ page: habitatURIs.NAME.page, uri: habitatURIs.NAME.uri, completion, validator })
+export default pageRoute({
+  page: habitatURIs.NAME.page,
+  uri: habitatURIs.NAME.uri,
+  completion,
+  validator: Joi.object({
+    'habitat-name': Joi.string().trim().pattern(nameReg).required()
+  }).options({ abortEarly: false, allowUnknown: true })
+})

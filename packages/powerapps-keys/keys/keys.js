@@ -20,7 +20,7 @@ export const PowerPlatformKeys = {
     SUBSIDIARY: 100000006
   },
   ACTIVITY_ID: {
-    BADGER: '68855554-59ed-ec11-bb3c-000d3a0cee24'
+    INTERFERE_WITH_BADGER_SETT: '68855554-59ed-ec11-bb3c-000d3a0cee24'
   },
   METHOD_IDS: {
     OBSTRUCT_SETT_WITH_GATES: 100000010,

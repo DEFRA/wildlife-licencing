@@ -5,7 +5,7 @@
 
 {% set errorMap = {
         'habitat-name': {
-          'no-name-entered': { ref: '#habitat-name', text: 'Give this sett a name.' }
+          'string.empty': { ref: '#habitat-name', text: 'Give this sett a name.' }
         }
     }
 %}
@@ -24,6 +24,7 @@
     id: "habitat-name",
     name: "habitat-name",
     errorMessage: { text: 'Enter a name for this sett.' } if error['habitat-name'],
+    attributes: { maxlength: 100 },
     label: {
       text: "What is this sett called?",
       classes: "govuk-label--xl"
