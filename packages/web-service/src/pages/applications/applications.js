@@ -21,11 +21,11 @@ export const getData = async request => {
         lastSaved: timestampFormatter(a.updatedAt),
         submitted: timestampFormatter(a?.submitted)
       })),
-    statuses,
     url: {
       TASKLIST: TASKLIST.uri,
       APPLICATION_SUMMARY: APPLICATION_SUMMARY.uri
-    }
+    },
+    statuses
   }
 }
 

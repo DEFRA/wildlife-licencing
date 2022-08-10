@@ -56,6 +56,17 @@ const doEcologistOrganisation = async (applicationId, sddsAccountId, counter) =>
   }
 }
 
+const process = async (application, sddsApplicantAccountId, counter, sddsEcologistAccountId) => {
+  if (application) {
+    if (sddsApplicantAccountId) {
+      await doApplicantOrganisation(application.id, sddsApplicantAccountId, counter)
+    }
+    if (sddsEcologistAccountId) {
+      await doEcologistOrganisation(application.id, sddsEcologistAccountId, counter)
+    }
+  }
+}
+
 export const writeApplicationAccountObject = async ({ _data, keys }) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
 
@@ -71,14 +82,7 @@ export const writeApplicationAccountObject = async ({ _data, keys }) => {
       })
 
       // If the applications is not (yet) in the database do nothing
-      if (application) {
-        if (sddsApplicantAccountId) {
-          await doApplicantOrganisation(application.id, sddsApplicantAccountId, counter)
-        }
-        if (sddsEcologistAccountId) {
-          await doEcologistOrganisation(application.id, sddsEcologistAccountId, counter)
-        }
-      }
+      await process(application, sddsApplicantAccountId, counter, sddsEcologistAccountId)
     }
     return counter
   } catch (error) {
