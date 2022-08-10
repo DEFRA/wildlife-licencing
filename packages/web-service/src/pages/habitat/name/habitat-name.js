@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-const nameReg = /^[/\s\p{L}-]{1,160}$/u
+const nameReg = /^[/\s0-9._,\p{L}-]{1,100}$/u
 
 export const completion = async _request => habitatURIs.TYPES.uri
 

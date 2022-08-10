@@ -4,7 +4,8 @@
 
 {% set errorMap = {
         'habitat-name': {
-          'string.empty': { ref: '#habitat-name', text: 'Give this sett a name.' }
+          'string.empty': { ref: '#habitat-name', text: 'Give this sett a name.' },
+          'string.pattern.base': { ref: '#habitat-name', text: 'The sett name must only include letters a to z, and special characters such as hyphens, spaces, commas, fullstops and underscores.' }
         }
     }
 %}
