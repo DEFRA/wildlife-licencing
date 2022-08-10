@@ -124,6 +124,7 @@ async function defineApplications (sequelize) {
     application: { type: DataTypes.JSONB },
     sddsApplicationId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
+    userSubmission: { type: DataTypes.BOOLEAN },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
     timestamps: true,

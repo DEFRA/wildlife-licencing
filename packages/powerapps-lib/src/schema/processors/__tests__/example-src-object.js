@@ -343,6 +343,9 @@ export const applicationResponseTransformedDataObject = {
     ecologistOrganization: {
       name: 'Ecologist1_Org'
     },
+    eligibility: {
+      checkCompleted: true
+    },
     licenceReason: 'New hosuing development',
     proposalDescription: 'Removal of badgers by dogs'
   }

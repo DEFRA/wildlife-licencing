@@ -16,6 +16,9 @@ export default async (context, req, h) => {
     const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
     const job = await applicationQueue.add({ applicationId })
     console.log(`Queued application ${applicationId} - job: ${job.id}`)
+
+    await models.applications.update({ userSubmission: true }, { where: { id: applicationId } })
+
     return h.response().code(204)
   } catch (err) {
     console.error('Error updating into APPLICATIONS table', err)

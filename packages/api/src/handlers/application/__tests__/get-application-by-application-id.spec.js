@@ -64,8 +64,8 @@ describe('The getApplicationByApplicationId handler', () => {
     models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
     await getApplication(context, req, h)
     expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ foo: 'bar', ...tsR }))
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ foo: 'bar', ...tsR }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

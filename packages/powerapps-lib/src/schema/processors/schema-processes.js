@@ -335,7 +335,7 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
     path += table.name
     path += '?' // Start the url query parameters
   }
-  const cols = table.columns.filter(c => OperationType.inbound(c.operationType))
+  const cols = table.columns.filter(c => OperationType.inbound(c.operationType) && c.name)
   if (cols.length) {
     path += `$select=${cols.map(c => c.name).join(',')}`
   }
@@ -352,7 +352,7 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
 
 function buildObjectTransformerColumn (column, src, value) {
   if (OperationType.inbound(column.operationType) && column.srcPath) {
-    const val = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
+    const val = column.tgtFunc ? column.tgtFunc(src[column?.name]) : src[column.name]
     if (val) {
       Object.assign(value, { [column.srcPath]: val })
     }
@@ -374,7 +374,7 @@ const buildArrayObjectTransformer = (src, t, data) => {
 function buildObjectObjectTransformer (t, src, data) {
   for (const column of t.columns) {
     if (OperationType.inbound(column.operationType) && column.srcPath) {
-      const value = column.tgtFunc ? column.tgtFunc(src[column.name]) : src[column.name]
+      const value = column.tgtFunc ? column.tgtFunc(src[column?.name]) : src[column.name]
       // The inbound stream does not set null values
       if (value) {
         set(data, `${t.basePath}.${column.srcPath}`, value)
