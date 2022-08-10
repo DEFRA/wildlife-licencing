@@ -376,7 +376,7 @@ function buildObjectObjectTransformer (t, src, data) {
     if (OperationType.inbound(column.operationType) && column.srcPath) {
       const value = column.tgtFunc ? column.tgtFunc(src[column?.name]) : src[column.name]
       // The inbound stream does not set null values
-      if (value) {
+      if (value !== null && value !== undefined) {
         set(data, `${t.basePath}.${column.srcPath}`, value)
       }
     }

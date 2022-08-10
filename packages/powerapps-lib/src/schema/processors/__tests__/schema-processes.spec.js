@@ -225,7 +225,7 @@ describe('the schema processes', () => {
   })
 
   describe('the buildObjectTransformer function', () => {
-    it('build function to process an application response element', async () => {
+    it.only('build function to process an application response element', async () => {
       const { buildObjectTransformer, createTableSet } = await import('../schema-processes.js')
       const applicationTableSet = createTableSet(SddsApplication, [Contact, Account, SddsApplicationType, SddsApplicationPurpose])
       const applicationObjectTransformer = buildObjectTransformer(SddsApplication, applicationTableSet)
