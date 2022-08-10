@@ -10,7 +10,7 @@
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = 'What is this sett called?' %}
 
 {% block topNavigation %}
   <p class="govuk-body sdds-save-link">
@@ -25,10 +25,6 @@
     name: "habitat-name",
     errorMessage: { text: 'Enter a name for this sett.' } if error['habitat-name'],
     attributes: { maxlength: 100 },
-    label: {
-      text: "What is this sett called?",
-      classes: "govuk-label--xl"
-    },
     hint: {
       text: "Enter a name for the sett to identify and distinguish it from other setts. You should use the name it has on your maps or within your method statement. You can enter up to 100 characters."
     }

@@ -8,8 +8,8 @@ export const completion = async _request => habitatURIs.TYPES.uri
 export default pageRoute({
   page: habitatURIs.NAME.page,
   uri: habitatURIs.NAME.uri,
-  completion,
   validator: Joi.object({
     'habitat-name': Joi.string().trim().pattern(nameReg).required()
-  }).options({ abortEarly: false, allowUnknown: true })
+  }).options({ abortEarly: false, allowUnknown: true }),
+  completion
 })
