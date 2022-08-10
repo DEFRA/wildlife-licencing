@@ -1,0 +1,25 @@
+{% extends "information-page.njk" %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% import "applications-text.njk" as text %}
+{% import "common-text.njk" as descriptions %}
+
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Licence application' %}
+
+{% set rows = [
+        { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
+        { key: { text: "Type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
+        { key: { text: "Reference" }, value: { text: data.application.applicationReferenceNumber } },
+        { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
+        { key: { text: "Submitted" }, value: { text: data.application.submitted } }
+    ]
+%}
+
+{% if data.statuses[data.application.statusCode] === 'GRANTED' %}
+    {{ rows.push({ key: { text: "Valid from" }, value: { html: 'TO DO' } }) }}
+    {{ rows.push({ key: { text: "Expires" }, value: { html: 'TO DO' } }) }}
+{% endif %}
+
+{% block pageContent %}
+    {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
+{% endblock %}

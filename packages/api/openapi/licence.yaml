@@ -1983,6 +1983,8 @@ components:
           $ref: '#/components/schemas/uuid'
         eligibility:
           $ref: '#/components/schemas/eligibility'
+        statusCode:
+          $ref: '#/components/schemas/option'
         submitted:
           $ref: '#/components/schemas/timestamp'
         createdAt:
@@ -2354,7 +2356,7 @@ components:
 
     option:
       type: integer
-      minimum: 100000000
+      minimum: 0
       maximum: 999999999
 
     email:

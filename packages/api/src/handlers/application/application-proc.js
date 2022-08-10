@@ -16,5 +16,6 @@ export const prepareResponse = a => Object.assign((({
 }) => l)(a), {
   createdAt: a.createdAt.toISOString(),
   updatedAt: a.updatedAt.toISOString(),
+  submitted: a.submitted?.toISOString(),
   ...a.application
 })

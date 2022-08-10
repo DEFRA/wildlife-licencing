@@ -1,4 +1,5 @@
 {% extends "information-page.njk" %}
+{% import "applications-text.njk" as text %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
@@ -31,7 +32,11 @@
 
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
-        <a href="tasklist?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+        {% if application.submitted %}
+            <a href="{{data.url.APPLICATION_SUMMARY}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+        {% else %}
+            <a href="{{data.url.TASKLIST}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+        {% endif %}
     </p>
     <p class="govuk-body govuk-!-margin-bottom-2">
     <!-- <span class="visually-hidden-desktop">Reference:<br></span> -->
@@ -41,14 +46,25 @@
 {% endmacro -%}
 
 {% macro lastSavedHtml(application) %}
-    <p class="govuk-body govuk-!-margin-bottom-2">
-        Last saved:<br>
-        {{ application.lastSaved }}
-    </p>
+    {% if application.submitted %}
+        <p class="govuk-body govuk-!-margin-bottom-2">
+            Submitted:<br>
+            {{ application.submitted }}
+        </p>
+     {% else %}
+       <p class="govuk-body govuk-!-margin-bottom-2">
+            Last saved:<br>
+            {{ application.lastSaved }}
+        </p>
+    {% endif %}
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    <strong class="govuk-tag govuk-!-margin-bottom-4">In progress</strong>
+    {% if application.submitted %}
+        {{ text.govukTaskList(application, data.statuses) }}
+    {% else %}
+        <strong class="govuk-tag govuk-tag--blue govuk-!-margin-bottom-4">IN PROGRESS</strong>
+    {% endif %}
 {% endmacro -%}
 
 {% set tableRows = [] %}
