@@ -1,0 +1,19 @@
+{%
+    set statusText = {
+        'RECEIVED': { text: 'SUBMITTED', tag: 'govuk-tag--green' },
+        'AWAITING_ALLOCATION': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag--turquoise' },
+        'ALLOCATED_FOR_ASSESSMENT': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag--turquoise' },
+        'UNDER_ASSESSMENT': { text: 'BEING ASSESSED', tag: 'govuk-tag--purple' },
+        'GRANTED': { text: 'GRANTED', tag: 'govuk-tag--green' },
+        'PAUSED': { text: 'ACTION NEEDED', tag: 'govuk-tag--grey' },
+        'NOT_GRANTED': { text: 'NOT GRANTED', tag: 'govuk-tag--orange' }
+    }
+%}
+
+{% macro govukTaskList(application, statuses) %}
+    {% if application.statusCode %}
+        <strong class="govuk-tag {{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-bottom-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
+    {% else %}
+        <strong class="govuk-tag govuk-tag--green govuk-!-margin-bottom-4">SUBMITTED</strong>
+    {% endif %}
+{% endmacro %}

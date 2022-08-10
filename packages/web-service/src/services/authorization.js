@@ -9,11 +9,11 @@ export default (_server, _options) => ({
       if (request.auth.mode === 'optional') {
         return h.continue
       } else {
-        // Save the page we are attempting to request
-        const journeyData = await request.cache().getData() || {}
-        journeyData.navigation = journeyData.navigation || {}
-        const { navigation } = journeyData
-        Object.assign(navigation, { requestedPage: request.path })
+        // Save the page we are attempting to request.
+        // Clear old journey data
+        const journeyData = {
+          navigation: { requestedPage: request.path }
+        }
         await request.cache().setData(journeyData)
         return h.redirect(LOGIN.uri).takeover()
       }

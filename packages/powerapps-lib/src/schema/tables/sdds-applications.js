@@ -1,8 +1,11 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
 
+export const columnSourceRemote = new Column('sdds_sourceremote', null, () => true, null,
+  OperationType.OUTBOUND, () => 'sdds_sourceremote eq true')
+
 export const SddsApplication = new Table('sdds_applications', [
+  columnSourceRemote,
   new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
-  new Column('sdds_sourceremote', null, () => true, null, OperationType.OUTBOUND, () => 'sdds_sourceremote eq true'),
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),
@@ -12,7 +15,9 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'),
   new Column('sdds_receivedonwerpermission', 'eligibility.hasLandOwnerPermission'),
   new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
-  new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted')
+  new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
+
+  new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND)
 
 ], [
   // Application Type

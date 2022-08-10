@@ -1,4 +1,4 @@
-import { SddsApplication } from './sdds-applications.js'
+import { SddsApplication, columnSourceRemote } from './sdds-applications.js'
 import { SddsSite } from './sdds-site.js'
 import { Contact } from './contact.js'
 import { Account } from './account.js'
@@ -12,5 +12,6 @@ import { SddsSpecies } from './sdds-species.js'
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
-  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies
+  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies,
+  columnSourceRemote
 }

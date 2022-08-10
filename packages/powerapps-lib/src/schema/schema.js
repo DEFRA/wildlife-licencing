@@ -102,4 +102,9 @@ export class Table {
     }
     return null
   }
+
+  addColumn (col) {
+    this.columns.push(col)
+    return this
+  }
 }

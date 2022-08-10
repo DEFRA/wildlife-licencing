@@ -8,14 +8,16 @@ import {
   SddsLicensableActions,
   SddsLicenseActivities,
   SddsLicenseMethods,
-  SddsSpecies
+  SddsSpecies,
+  columnSourceRemote
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
 import { powerAppsReadStream } from './powerapps-read-stream.js'
 import { Table } from '../schema/schema.js'
 
-const SddsApplicationRelations = Table.relations(SddsApplication)
+// Just the relations and the filter to indicate it was created by the service
+const SddsApplicationRelations = Table.relations(SddsApplication).addColumn(columnSourceRemote)
 
 /* Applications */
 const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])

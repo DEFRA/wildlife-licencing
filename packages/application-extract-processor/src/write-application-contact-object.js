@@ -67,8 +67,12 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
 
       // If the applications is not (yet) in the database do nothing
       if (application) {
-        await doApplicant(application.id, sddsApplicantContactId, counter)
-        await doEcologist(application.id, sddsEcologistContactId, counter)
+        if (sddsApplicantContactId) {
+          await doApplicant(application.id, sddsApplicantContactId, counter)
+        }
+        if (sddsEcologistContactId) {
+          await doEcologist(application.id, sddsEcologistContactId, counter)
+        }
       }
     }
     return counter
