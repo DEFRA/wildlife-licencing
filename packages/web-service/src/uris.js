@@ -20,10 +20,16 @@ export const eligibilityURIs = {
 
 export const habitatURIs = {
   START: { uri: '/habitat-start', page: 'habitat-start' },
+  NAME: { uri: '/habitat-name', page: 'habitat-name' },
   TYPES: { uri: '/habitat-types', page: 'habitat-types' },
-  ACTIVE: { uri: '/habitat-active', page: 'habitat-active' },
   REOPEN: { uri: '/habitat-reopen', page: 'habitat-reopen' },
-  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' }
+  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' },
+  ACTIVE_ENTRANCES: { uri: '/habitat-active-entrances', page: 'habitat-active-entrances' },
+  GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
+  WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
+  WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
+  ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
+  CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' }
 }
 
 export const contactURIs = {

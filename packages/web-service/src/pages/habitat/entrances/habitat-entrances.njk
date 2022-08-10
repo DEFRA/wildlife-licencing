@@ -1,0 +1,34 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-reopen': {
+          'no-radio-selected': { ref: '#habitat-reopen', text: 'You have not selected a choice.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukInput({
+    id: "habitat-reopen",
+    name: "habitat-reopen",
+    label: {
+      text: "How many entrance holes does the badger sett have?",
+      classes: "govuk-label--l"
+    },
+    classes: "govuk-input--width-10",
+    inputmode: "numeric",
+    pattern: "[0-9]*",
+    spellcheck: false
+  }) }}
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-active-entrances': {
+          'no-radio-selected': { ref: '#habitat-reopen', text: 'You have not selected a choice.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukInput({
+    id: "habitat-active-entrances",
+    name: "habitat-active-entrances",
+    hint: {
+      text: "Enter 0 (zero) if the sett is inactive."
+    },
+    label: {
+      text: "How many of the entrance holes are active?",
+      classes: "govuk-label--l"
+    },
+    classes: "govuk-input--width-10",
+    inputmode: "numeric",
+    pattern: "[0-9]*",
+    spellcheck: false
+  }) }}
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "standard-form.njk" %}
+
+{% from "error-summary.njk" import errorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-grid-ref': {
+          'no-reference-sent': { ref: '#habitat-grid-ref', text: 'You have not entered a grid reference.' }
+        }
+    }
+%}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+
+  {{ govukInput({
+    id: "habitat-grid-ref",
+    name: "habitat-grid-ref",
+    hint: {
+      text: "For example, NY395557. Use the grid reference for the central point of the sett if it has more than one entrance."
+    },
+    label: {
+      text: "What is the badger sett's grid reference?",
+      classes: "govuk-label--l"
+    },
+    classes: "govuk-input--width-10",
+    spellcheck: false
+  }) }}
+
+{% endblock %}
