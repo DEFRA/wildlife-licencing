@@ -2,7 +2,6 @@
 
 {% from "error-summary.njk" import errorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set errorMap = {
         'habitat-types': {
@@ -18,12 +17,12 @@
 {{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukRadios({
-    id: "settTypes-radio",
-    name: "settTypes-radio",
+    id: "habitat-types",
+    name: "habitat-types",
     fieldset: {
       legend: {
         text: "What are the badgers using this sett for?",
-        classes: "govuk-fieldset__legend--l"
+        classes: "govuk-label--xl"
       }
     },
     hint: {

@@ -1,35 +1,37 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set errorMap = {
         'habitat-name': {
-          'no-name-entered': { ref: '#habitat-name', text: 'Give this sett a name.' }
+          'string.empty': { ref: '#habitat-name', text: 'Give this sett a name.' },
+          'string.pattern.base': { ref: '#habitat-name', text: 'The sett name must only include letters a to z, and special characters such as hyphens, spaces, commas, fullstops and underscores.' }
         }
     }
 %}
 
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
-{% block pageContent %}
+{% block topNavigation %}
+  <p class="govuk-body sdds-save-link">
+      <a class="govuk-link govuk-link--no-visited-state" href="/tasklist">Save and return later</a>
+  </p>
+{% endblock %}
 
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
+{% block pageContent %}
 
   {{ govukInput({
     id: "habitat-name",
     name: "habitat-name",
+    errorMessage: { text: 'Enter a name for this sett.' } if error['habitat-name'],
+    attributes: { maxlength: 100 },
     label: {
       text: "What is this sett called?",
-      classes: "govuk-label--l"
+      classes: "govuk-label--xl"
     },
     hint: {
       text: "Enter a name for the sett to identify and distinguish it from other setts. You should use the name it has on your maps or within your method statement. You can enter up to 100 characters."
-    },
-    classes: "govuk-input--width-10",
-    spellcheck: false
+    }
   }) }}
 
 {% endblock %}
