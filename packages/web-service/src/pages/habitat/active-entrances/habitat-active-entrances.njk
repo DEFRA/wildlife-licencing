@@ -1,22 +1,18 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set errorMap = {
         'habitat-active-entrances': {
-          'no-radio-selected': { ref: '#habitat-reopen', text: 'You have not selected a choice.' }
+          'number.base': { ref: '#habitat-active-entrances', text: 'You have not entered the number of active entrance holes.' },
+          'number.integer': { ref: '#habitat-active-entrances', text: 'You have not entered an integer.' }
         }
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = 'How many of the entrance holes are active?' %}
 
 {% block pageContent %}
-
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukInput({
     id: "habitat-active-entrances",
@@ -24,11 +20,8 @@
     hint: {
       text: "Enter 0 (zero) if the sett is inactive."
     },
-    label: {
-      text: "How many of the entrance holes are active?",
-      classes: "govuk-label--l"
-    },
-    classes: "govuk-input--width-10",
+    errorMessage: { text: "Enter the number of sett holes that are active." } if error['habitat-active-entrances'],
+    classes: "govuk-input--width-5",
     inputmode: "numeric",
     pattern: "[0-9]*",
     spellcheck: false

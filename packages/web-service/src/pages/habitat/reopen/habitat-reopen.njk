@@ -1,32 +1,22 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set errorMap = {
         'habitat-reopen': {
-          'no-radio-selected': { ref: '#sett-radio', text: 'You have not selected a choice.' }
+          'any.required': { ref: '#habitat-reopen', text: 'You have not selected an option.' }
         }
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = 'Will the badger sett be reopened once development is complete?' %}
 
 {% block pageContent %}
 
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
-
   {{ govukRadios({
-    id: "settReopen-radio",
-    name: "settReopen-radio",
-    fieldset: {
-      legend: {
-        text: "Will the badger sett be reopened once development is complete?",
-        classes: "govuk-fieldset__legend--l"
-      }
-    },
-    errorMessage: { text: "Select yes if the badger sett will be reopened once development is complete." } if error['sett-active'],
+    id: "habitat-reopen",
+    name: "habitat-reopen",
+    errorMessage: { text: "Select an option." } if error['habitat-reopen'],
     items: [
       {
         value: true,
