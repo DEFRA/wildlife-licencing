@@ -9,6 +9,7 @@ import {
   SddsLicenseActivities,
   SddsLicenseMethods,
   SddsSpecies,
+  SddsLicence,
   columnSourceRemote
 } from '../schema/tables/tables.js'
 
@@ -18,6 +19,12 @@ import { Table } from '../schema/schema.js'
 
 // Just the relations and the filter to indicate it was created by the service
 const SddsApplicationRelations = Table.relations(SddsApplication).addColumn(columnSourceRemote)
+
+/* Licences */
+const licenceRequestPath = buildRequestPath(SddsLicence, [SddsApplicationRelations])
+const licenceTableSet = createTableSet(SddsLicence, [SddsApplicationRelations])
+const licenceObjectTransformer = buildObjectTransformer(SddsLicence, licenceTableSet)
+export const licenceReadStream = () => powerAppsReadStream(licenceRequestPath, licenceObjectTransformer)
 
 /* Applications */
 const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
