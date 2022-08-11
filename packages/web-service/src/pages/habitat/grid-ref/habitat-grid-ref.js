@@ -4,35 +4,11 @@ import { habitatURIs } from '../../../uris.js'
 
 export const completion = async _request => habitatURIs.WORK_START.uri
 
-export const validator = async payload => {
-  const habitatGridKey = 'habitat-grid-ref'
-  const gridRef = payload[habitatGridKey]
-
-  if (gridRef === '') {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: no grid ref has been sent',
-      path: [habitatGridKey],
-      type: 'no-reference-sent',
-      context: {
-        label: habitatGridKey,
-        value: 'Error',
-        key: habitatGridKey
-      }
-    }], null)
-  } else if (/[a-zA-Z]{2}\d{6}/.test(gridRef) === false) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: grid ref is invalid',
-      path: [habitatGridKey],
-      type: 'invalid-reference',
-      context: {
-        label: habitatGridKey,
-        value: 'Error',
-        key: habitatGridKey
-      }
-    }], null)
-  }
-
-  return null
-}
-
-export default pageRoute({ page: habitatURIs.GRID_REF.page, uri: habitatURIs.GRID_REF.uri, completion, validator })
+export default pageRoute({
+  page: habitatURIs.GRID_REF.page,
+  uri: habitatURIs.GRID_REF.uri,
+  validator: Joi.object({
+    'habitat-grid-ref': Joi.string().trim().pattern(/[a-zA-Z]{2}\d{6}/).required()
+  }).options({ abortEarly: false, allowUnknown: true }),
+  completion
+})
