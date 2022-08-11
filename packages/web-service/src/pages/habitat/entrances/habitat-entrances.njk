@@ -1,31 +1,24 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set errorMap = {
-        'habitat-reopen': {
-          'no-radio-selected': { ref: '#habitat-reopen', text: 'You have not selected a choice.' }
+        'habitat-entrances': {
+          'number.base': { ref: '#habitat-entrances', text: 'You have not entered the number of holes.' },
+          'number.integer': { ref: '#habitat-entrances', text: 'You have not entered an integer.' }
         }
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = 'How many entrance holes does the badger sett have?' %}
 
 {% block pageContent %}
 
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
-
   {{ govukInput({
-    id: "habitat-reopen",
-    name: "habitat-reopen",
-    label: {
-      text: "How many entrance holes does the badger sett have?",
-      classes: "govuk-label--l"
-    },
-    classes: "govuk-input--width-10",
+    id: "habitat-entrances",
+    name: "habitat-entrances",
+    classes: "govuk-input--width-5",
+    errorMessage: { text: "Enter the number of entrance holes for this sett." } if error['habitat-entrances'],
     inputmode: "numeric",
     pattern: "[0-9]*",
     spellcheck: false
