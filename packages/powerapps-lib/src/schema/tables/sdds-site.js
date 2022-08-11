@@ -2,7 +2,7 @@ import { Table, Column, OperationType } from '../schema.js'
 
 export const SddsSite = new Table('sdds_sites', [
   new Column('sdds_name', 'name'),
-  new Column('sdds_sourceremote', null, () => true, null, OperationType.OUTBOUND, () => 'sdds_sourceremote eq true'),
+  new Column('sdds_sourceremote', null, () => true, null, OperationType.INBOUND_AND_OUTBOUND, () => 'sdds_sourceremote eq true'),
   new Column('sdds_osgridreference', 'gridReference'),
   new Column('sdds_addressline1', 'address.addrline1'),
   new Column('sdds_addressline2', 'address.addrline2'),

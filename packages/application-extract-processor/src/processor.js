@@ -2,7 +2,8 @@ import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
-  applicationAccountsReadStream, licensableActionsReadStream
+  applicationAccountsReadStream, licensableActionsReadStream,
+  licenceReadStream
 } from '@defra/wls-powerapps-lib'
 
 import { createModels } from '@defra/wls-database-model'
@@ -15,6 +16,7 @@ import { writeAccountObject } from './write-account-object.js'
 import { writeApplicationAccountObject } from './write-application-account-object.js'
 import { writeApplicationContactObject } from './write-application-contact-object.js'
 import { writeHabitatSiteObject } from './write-habitat-site-object.js'
+import { writeLicenceObject } from './write-licence-object.js'
 
 const extracts = async () => {
   await databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites')
@@ -25,6 +27,7 @@ const extracts = async () => {
   await databaseWriter(applicationAccountsReadStream(), writeApplicationAccountObject, new Date(), 'Application-Accounts')
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
   await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
+  await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
 }
 
 const proc = async () => {
