@@ -1,8 +1,5 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set errorMap = {
@@ -12,11 +9,9 @@
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = "What is the badger sett's grid reference?" %}
 
 {% block pageContent %}
-
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukInput({
     id: "habitat-grid-ref",
@@ -24,10 +19,7 @@
     hint: {
       text: "For example, NY395557. Use the grid reference for the central point of the sett if it has more than one entrance."
     },
-    label: {
-      text: "What is the badger sett's grid reference?",
-      classes: "govuk-label--l"
-    },
+    errorMessage: { text: "Enter a national grid reference for the sett." } if error['habitat-grid-ref'],
     classes: "govuk-input--width-10",
     spellcheck: false
   }) }}

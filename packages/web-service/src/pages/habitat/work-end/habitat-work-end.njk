@@ -1,8 +1,5 @@
 {% extends "standard-form.njk" %}
 
-{% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
 {% set errorMap = {
@@ -12,21 +9,14 @@
     }
 %}
 
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+{% set title = "When will the work end?" %}
 
 {% block pageContent %}
-
-  {{ errorSummary(error, errorMap, 'There is a problem') }}
 
   {{ govukDateInput({
     id: "habitat-work-end",
     namePrefix: "habitat-work-end",
-    fieldset: {
-      legend: {
-        text: "When will the work end?",
-        classes: "govuk-fieldset__legend--l"
-      }
-    },
+    errorMessage: { text: "Enter an end date for the licenced work on this sett." } if error['habitat-work-end'],
     hint: {
       text: "The work must be finished before the end of licence period (30 November)."
     }
