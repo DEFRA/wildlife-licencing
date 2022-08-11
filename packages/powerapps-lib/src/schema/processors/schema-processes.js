@@ -346,10 +346,10 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
    * @param isFirst
    * @returns {string}
    */
-  const fDelim = (cols, isFirst) => {
-    if (cols.length === 0) {
+  const fDelim = (c, f) => {
+    if (c.length === 0) {
       return ''
-    } else if (isFirst) {
+    } else if (f) {
       return '&'
     } else {
       return ';'
