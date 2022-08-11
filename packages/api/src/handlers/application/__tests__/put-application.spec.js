@@ -80,8 +80,8 @@ describe('The putApplication handler', () => {
         id: context.request.params.applicationId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -107,8 +107,8 @@ describe('The putApplication handler', () => {
       application: (({ ...l }) => l)(req.payload)
     },
     { returning: true, where: { id: context.request.params.applicationId } })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.applicationId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.applicationId, ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

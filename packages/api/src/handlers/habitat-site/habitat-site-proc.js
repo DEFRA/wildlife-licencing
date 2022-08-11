@@ -17,3 +17,9 @@ export const prepareResponse = a => Object.assign((({
   updatedAt: a.updatedAt.toISOString(),
   ...a.habitatSite
 })
+
+export const alwaysExclude = payload => {
+  delete payload.createdAt
+  delete payload.updatedAt
+  return payload
+}

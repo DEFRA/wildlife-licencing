@@ -9,6 +9,8 @@ const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
   .map(([k, v]) => ({ [v]: k }))
   .reduce((p, c) => ({ ...p, ...c }))
 
+const sortApplications = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
@@ -20,7 +22,7 @@ export const getData = async request => {
         ...a,
         lastSaved: timestampFormatter(a.updatedAt),
         submitted: timestampFormatter(a?.submitted)
-      })),
+      })).sort(sortApplications),
     url: {
       TASKLIST: TASKLIST.uri,
       APPLICATION_SUMMARY: APPLICATION_SUMMARY.uri

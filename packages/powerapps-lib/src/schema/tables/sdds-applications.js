@@ -12,10 +12,11 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationcategory', 'applicationCategory'),
 
   // The Eligibility section
-  new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'),
+  new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
   new Column('sdds_receivedonwerpermission', 'eligibility.hasLandOwnerPermission'),
   new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
   new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
+  new Column(null, 'eligibility.checkCompleted', null, () => true, OperationType.INBOUND),
 
   new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND)
 

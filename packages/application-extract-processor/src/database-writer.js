@@ -7,7 +7,7 @@
  * @returns {Promise<unknown>}
  */
 const dbIterator = async (s, ts, objectWriter) => {
-  const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+  const counter = { read: 0, insert: 0, update: 0, pending: 0, error: 0 }
 
   for await (const obj of s.iterator({ destroyOnReturn: true })) {
     const { insert, update, pending, error } = await objectWriter(obj, ts)
@@ -15,6 +15,7 @@ const dbIterator = async (s, ts, objectWriter) => {
     counter.update += update
     counter.pending += pending
     counter.error += error
+    counter.read += 1
   }
 
   return counter
@@ -27,6 +28,7 @@ export const databaseWriter = async (s, objectWriter, ts, name) => {
   const counter = await dbIterator(s, ts, objectWriter)
 
   // Log the counters
+  console.log(`${name} total read: ${counter.read}`)
   console.log(`${name} inserted: ${counter.insert}`)
   console.log(`${name} updated: ${counter.update}`)
   console.log(`${name} locked or pending: ${counter.pending}`)
