@@ -268,6 +268,25 @@ async function defineApplicationSites (sequelize) {
   })
 }
 
+async function defineLicences (sequelize) {
+  models.licences = await sequelize.define('licences', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    licence: { type: DataTypes.JSONB }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'licence_application_fk' }
+    ]
+  })
+}
+
 const ReferenceDataType = {
   attributes: {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -403,7 +422,7 @@ const createModels = async () => {
   await defineContacts(sequelize)
   await defineAccounts(sequelize)
 
-  // Define te applications and sites
+  // Define te applications, licences and sites etc.
   await defineApplications(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
@@ -413,6 +432,8 @@ const createModels = async () => {
   await defineApplicationSites(sequelize)
   await defineApplicationContacts(sequelize)
   await defineApplicationAccounts(sequelize)
+
+  await defineLicences(sequelize)
 
   // Define other things
   await defineApplicationTypes(sequelize)
@@ -467,6 +488,7 @@ const createModels = async () => {
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()
+  await models.licences.sync()
 
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
