@@ -10,10 +10,13 @@
         { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
         { key: { text: "Type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
         { key: { text: "Reference" }, value: { text: data.application.applicationReferenceNumber } },
-        { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
-        { key: { text: "Submitted" }, value: { text: data.application.submitted } }
+        { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } }
     ]
 %}
+
+{% if data.application.submitted %}
+    {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.submitted } }) }}
+{% endif %}
 
 {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
     {{ rows.push({ key: { text: "Valid from" }, value: { html: 'TO DO' } }) }}

@@ -60,8 +60,8 @@ describe('The postApplication handler', () => {
       updateStatus: 'L',
       application: (({ ...l }) => l)(req.payload)
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/bar', { id: 'bar', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith('/application/bar', expect.objectContaining({ id: 'bar', ...tsR }))
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: 'bar', ...tsR }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

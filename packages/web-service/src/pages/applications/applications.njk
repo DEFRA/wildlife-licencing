@@ -32,7 +32,7 @@
 
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
-        {% if application.submitted %}
+        {% if application.userSubmission %}
             <a href="{{data.url.APPLICATION_SUMMARY}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% else %}
             <a href="{{data.url.TASKLIST}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
@@ -42,7 +42,9 @@
     <!-- <span class="visually-hidden-desktop">Reference:<br></span> -->
     {{ application.applicationReferenceNumber}}
     </p>
-    <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">0 of N sections completed</p>
+    {% if not application.userSubmission %}
+        <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">0 of N sections completed</p>
+    {% endif %}
 {% endmacro -%}
 
 {% macro lastSavedHtml(application) %}
@@ -60,7 +62,7 @@
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    {% if application.submitted %}
+    {% if application.userSubmission %}
         {{ text.govukTaskList(application, data.statuses) }}
     {% else %}
         <strong class="govuk-tag govuk-tag--blue govuk-!-margin-bottom-4">IN PROGRESS</strong>
@@ -75,7 +77,7 @@
             { html: applicationReferenceHtml(application) },
             { html: '<p>&nbsp<p/>' },
             { html: lastSavedHtml(application) },
-            { html: statusHtml(application) }])
+            { html: statusHtml(application), classes: "govuk-!-text-align-right" }])
          }}
      </div>
 {% endfor %}

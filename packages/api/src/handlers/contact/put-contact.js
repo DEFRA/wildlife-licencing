@@ -1,6 +1,6 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { prepareResponse } from './contact-proc.js'
+import { prepareResponse, alwaysExclude } from './contact-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
@@ -11,7 +11,7 @@ export default async (context, req, h) => {
       where: { id: context.request.params.contactId },
       defaults: {
         id: contactId,
-        contact: req.payload,
+        contact: alwaysExclude(req.payload),
         updateStatus: 'L'
       }
     })
@@ -24,7 +24,7 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedContact] = await models.contacts.update({
-        contact: req.payload,
+        contact: alwaysExclude(req.payload),
         updateStatus: 'L'
       }, {
         where: {

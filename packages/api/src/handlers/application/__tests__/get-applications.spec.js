@@ -49,7 +49,7 @@ describe('The getApplication handler', () => {
         }
       }
     }))
-    expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
+    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({ foo: 'bar', ...tsR })])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -67,7 +67,7 @@ describe('The getApplication handler', () => {
           where: { id: '6877f11b-3755-49bc-8a15-9070c756d1ad' }
         }
     }))
-    expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
+    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({ foo: 'bar', ...tsR })])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

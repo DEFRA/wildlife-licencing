@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
-import { prepareResponse } from './habitat-site-proc.js'
+import { prepareResponse, alwaysExclude } from './habitat-site-proc.js'
 import { validateRelations } from './validate-relations.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
@@ -30,7 +30,7 @@ export default async (context, req, h) => {
     const { dataValues } = await models.habitatSites.create({
       id: uuidv4(),
       applicationId: applicationId,
-      habitatSite: req.payload,
+      habitatSite: alwaysExclude(req.payload),
       updateStatus: 'L'
     })
 

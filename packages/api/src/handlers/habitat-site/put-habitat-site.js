@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
-import { prepareResponse } from './habitat-site-proc.js'
+import { prepareResponse, alwaysExclude } from './habitat-site-proc.js'
 import { validateRelations } from './validate-relations.js'
 const { cache } = REDIS
 
@@ -30,7 +30,7 @@ export default async (context, req, h) => {
       where: { id: habitatSiteId },
       defaults: {
         id: applicationId,
-        habitatSite: req.payload,
+        habitatSite: alwaysExclude(req.payload),
         updateStatus: 'L'
       }
     })
@@ -43,7 +43,7 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedHabitatSite] = await models.habitatSites.update({
-        habitatSite: req.payload,
+        habitatSite: alwaysExclude(req.payload),
         updateStatus: 'L'
       }, {
         where: {

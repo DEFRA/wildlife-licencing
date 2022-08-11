@@ -1,14 +1,14 @@
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { prepareResponse } from './application-proc.js'
+import { prepareResponse, alwaysExclude } from './application-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
 export default async (_context, req, h) => {
   try {
-    // Ensure that the application type and purpose are an allowabe combination
-    const application = req.payload
+    // Ensure that the application type and purpose are an allowable combination
+    const application = alwaysExclude(req.payload)
     const { applicationTypeId, applicationPurposeId } = application
     const applicationTypeApplicationPurpose = await models.applicationTypeApplicationPurposes.findOne({
       where: {

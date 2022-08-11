@@ -44,13 +44,20 @@ describe('The postApplicationSubmit handler', () => {
   })
 
   it('returns a 204 on a successful submission', async () => {
-    models.applications = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })) }
+    const mockUpdate = jest.fn()
+    models.applications = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })),
+      update: mockUpdate
+    }
     cache.delete = jest.fn(() => null)
     await postApplicationSubmit(context, req, h)
 
     expect(cache.delete).toHaveBeenCalledWith(`/application/${context.request.params.applicationId}`)
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(204)
+    expect(mockUpdate).toHaveBeenCalledWith({
+      userSubmission: true
+    }, expect.any(Object))
   })
 
   it('returns a 404 on not found', async () => {
