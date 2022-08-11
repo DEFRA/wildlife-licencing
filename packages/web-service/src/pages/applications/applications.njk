@@ -32,7 +32,7 @@
 
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
-        {% if application.submitted %}
+        {% if application.userSubmission %}
             <a href="{{data.url.APPLICATION_SUMMARY}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% else %}
             <a href="{{data.url.TASKLIST}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>

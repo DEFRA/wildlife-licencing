@@ -1,19 +1,34 @@
-{% extends "information-page.njk" %}
-{% set mainClasses = "govuk-main-wrapper--1" %}
-{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% extends "layout.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% from "panel/macro.njk" import govukPanel %}
+{% from "fieldset/macro.njk" import govukFieldset %}
 
 {% block content %}
-  <div class="govuk-grid-row">
+<div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {{ govukPanel({
-        titleText: "Application sent"
-      }) }}
 
-      <h2 class="govuk-heading-m">What happens next</h2>
+        <form method="post" novalidate>
+            {% call govukFieldset({}) %}
 
-      <p class="govuk-body">
-        Natural England will review your application and contact you if they need more information. 
-      </p>
+              {{ govukPanel({
+                titleText: "Application sent"
+              }) }}
+
+              <h2 class="govuk-heading-m">What happens next</h2>
+
+              <p class="govuk-body">
+                Natural England will review your application and contact you if they need more information.
+              </p>
+
+               {{ govukButton({
+                  attributes: { id: "continue" },
+                  preventDoubleClick: true,
+                  name: 'continue',
+                  text: 'View applications',
+                  classes: "govuk-!-margin-top-5"
+               }) }}
+            {% endcall %}
+        </form>
     </div>
-  </div>
+</div>
 {% endblock %}
