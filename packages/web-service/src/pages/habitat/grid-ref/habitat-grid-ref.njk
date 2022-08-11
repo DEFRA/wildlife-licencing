@@ -4,7 +4,8 @@
 
 {% set errorMap = {
         'habitat-grid-ref': {
-          'no-reference-sent': { ref: '#habitat-grid-ref', text: 'You have not entered a grid reference.' }
+          'no-reference-sent': { ref: '#habitat-grid-ref', text: 'You have not entered a grid reference.' },
+          'invalid-reference': { ref: '#habitat-grid-ref', text: 'The grid reference you have entered is not in the right format.' }
         }
     }
 %}
@@ -19,7 +20,7 @@
     hint: {
       text: "For example, NY395557. Use the grid reference for the central point of the sett if it has more than one entrance."
     },
-    errorMessage: { text: "Enter a national grid reference for the sett." } if error['habitat-grid-ref'],
+    errorMessage: { text: "Enter a national grid reference that is 2 letters and 6 digits. " } if error['habitat-grid-ref'],
     classes: "govuk-input--width-10",
     spellcheck: false
   }) }}
