@@ -7,7 +7,7 @@ const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 
 export const completion = async _request => habitatURIs.WORK_END.uri
 
-const isDate = date => {
+export const isDate = date => {
   const isValidDate = Date.parse(date)
 
   if (isNaN(isValidDate)) {
@@ -17,7 +17,7 @@ const isDate = date => {
   return true
 }
 
-const invalidDate = (day, month, year, dateString) => {
+export const invalidDate = (day, month, year, dateString) => {
   if (day > 31 || day <= 0) {
     return true
   }
@@ -83,7 +83,7 @@ export const validator = async payload => {
   }
 
   // Is this in the past?
-  if ((new Date(dateString)).getFullYear() < (new Date()).getFullYear()) {
+  if ((new Date(dateString)) < (new Date())) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date has been chosen from the past',
       path: ['habitat-work-start'],
