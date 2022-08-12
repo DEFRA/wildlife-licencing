@@ -4,7 +4,10 @@
 
 {% set errorMap = {
         'habitat-work-start': {
-          'no-date-sent': { ref: '#habitat-work-start', text: 'You have not entered a start date' }
+          'no-date-sent': { ref: '#habitat-work-start', text: 'You have not entered a start date' },
+          'invalidDate': { ref: '#habitat-work-start', text: 'You have not sent a valid date' },
+          'dateHasPassed': { ref: '#habitat-work-start', text: 'You have chosen a date in the past' },
+          'outsideLicence': { ref: '#habitat-work-start', text: 'You have chosen a date outside the licence period' }
         }
     }
 %}
