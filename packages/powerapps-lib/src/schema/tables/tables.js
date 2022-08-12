@@ -8,10 +8,11 @@ import { SddsLicensableActions } from './sdds-licensable-actions.js'
 import { SddsLicenseActivities } from './sdds-license-activities.js'
 import { SddsLicenseMethods } from './sdds-licensemethods.js'
 import { SddsSpecies } from './sdds-species.js'
+import { SddsLicence } from './sdds-licence.js'
 
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
-  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies,
+  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsLicence,
   columnSourceRemote
 }

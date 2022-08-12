@@ -12,7 +12,11 @@
 
 {% macro govukTaskList(application, statuses) %}
     {% if application.statusCode %}
-        <strong class="govuk-tag {{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-bottom-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
+        {% if statusText[statuses[application.statusCode]] %}
+            <strong class="govuk-tag {{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-bottom-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
+        {% else %}
+            <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-bottom-4">UNKNOWN</strong>
+        {% endif %}
     {% else %}
         <strong class="govuk-tag govuk-tag--green govuk-!-margin-bottom-4">SUBMITTED</strong>
     {% endif %}

@@ -340,9 +340,26 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
     path += `$select=${cols.map(c => c.name).join(',')}`
   }
 
-  const filters = table.columns.filter(c => c.filterFunc)
+  /**
+   * Function to determine the filter delimiter - which if in a nested table is delimited by ;
+   * @param cols
+   * @param isFirst
+   * @returns {string}
+   */
+  const fDelim = (c, f) => {
+    if (c.length === 0) {
+      return ''
+    } else if (f) {
+      return '&'
+    } else {
+      return ';'
+    }
+  }
+
+  const filters = table.columns.filter(c => OperationType.inbound(c.operationType) && c.filterFunc)
+
   if (filters.length) {
-    path += `&$filter=${filters.map(c => c.filterFunc()).join(',')}`
+    path += `${fDelim(cols, isFirst)}$filter=${filters.map(c => c.filterFunc()).join(',')}`
   }
 
   path = buildRequestPathRelationships(table, include, path, delim)

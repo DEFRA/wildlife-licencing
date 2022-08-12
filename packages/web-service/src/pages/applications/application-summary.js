@@ -41,7 +41,12 @@ export const getData = async request => {
   Object.assign(application, { applicationType })
   Object.assign(application, { submitted: timestampFormatter(application?.submitted) })
   const applicant = await APIRequests.APPLICANT.getByApplicationId(application.id)
-  return { application, applicant, statuses }
+  const licences = await APIRequests.LICENCES.findByApplicationId(application.id)
+  licences.forEach(licence => {
+    Object.assign(licence, { startDate: timestampFormatter(licence.startDate) })
+    Object.assign(licence, { endDate: timestampFormatter(licence.endDate) })
+  })
+  return { application, applicant, statuses, licences }
 }
 
 export default pageRoute({

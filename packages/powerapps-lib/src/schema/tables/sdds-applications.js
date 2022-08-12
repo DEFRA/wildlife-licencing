@@ -1,7 +1,7 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
 
 export const columnSourceRemote = new Column('sdds_sourceremote', null, () => true, null,
-  OperationType.OUTBOUND, () => 'sdds_sourceremote eq true')
+  OperationType.INBOUND_AND_OUTBOUND, () => 'sdds_sourceremote eq true')
 
 export const SddsApplication = new Table('sdds_applications', [
   columnSourceRemote,

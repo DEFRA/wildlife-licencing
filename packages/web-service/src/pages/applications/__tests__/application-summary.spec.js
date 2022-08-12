@@ -117,6 +117,15 @@ describe('application-summary page', () => {
             getByApplicationId: jest.fn(() => ({
               fullName: 'Joe Blogs'
             }))
+          },
+          LICENCES: {
+            findByApplicationId: jest.fn(() => [{
+              id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+              applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+              endDate: '2022-08-26',
+              startDate: '2022-08-10',
+              licenceNumber: 'LI-0016N0Z4'
+            }])
           }
         }
       }))
@@ -132,7 +141,14 @@ describe('application-summary page', () => {
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
           submitted: '10 August 2022'
-        }
+        },
+        licences: [{
+          applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+          endDate: '26 August 2022',
+          id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+          licenceNumber: 'LI-0016N0Z4',
+          startDate: '10 August 2022'
+        }]
       }))
     })
   })

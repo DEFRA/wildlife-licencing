@@ -1,7 +1,8 @@
 {% extends "information-page.njk" %}
 {% from "summary-list/macro.njk" import govukSummaryList %}
-{% import "applications-text.njk" as text %}
+{% from "table/macro.njk" import govukTable %}
 {% import "common-text.njk" as descriptions %}
+{% import "applications-text.njk" as text %}
 
 {% set widthClass = 'govuk-grid-column-two-thirds' %}
 {% set title = 'Licence application' %}
@@ -19,10 +20,25 @@
 {% endif %}
 
 {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
-    {{ rows.push({ key: { text: "Valid from" }, value: { html: 'TO DO' } }) }}
-    {{ rows.push({ key: { text: "Expires" }, value: { html: 'TO DO' } }) }}
+    {% set tableRows = [] %}
+    {% for licence in data.licences %}
+        {{ tableRows.push([  { text: licence.licenceNumber },  { text: licence.startDate }, { text: licence.endDate } ]) }}
+    {% endfor %}
 {% endif %}
 
 {% block pageContent %}
     {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
+    {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
+        {{ govukTable({
+          caption: "Granted Licences",
+          captionClasses: "govuk-table__caption--m",
+          firstCellIsHeader: true,
+          head: [
+            { text: "Licence number" },
+            { text: "Valid from" },
+            { text: "Expires" }
+          ],
+          rows: tableRows
+        }) }}
+    {% endif %}
 {% endblock %}

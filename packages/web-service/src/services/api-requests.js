@@ -342,5 +342,18 @@ export const APIRequests = {
         throw error
       }
     }
+  },
+  LICENCES: {
+    findByApplicationId: async applicationId => {
+      try {
+        const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/licences`)
+        debug(`Found licences for ${JSON.stringify(applicationId)}`)
+        return licences
+      } catch (error) {
+        console.error(`Error getting licences for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
   }
 }
