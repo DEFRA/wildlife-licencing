@@ -43,6 +43,10 @@ import {
 } from './handlers/application-account/application-account.js'
 
 import {
+  getApplicationLicences
+} from './handlers/licence/licence.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -159,6 +163,9 @@ const handlers = {
   putApplicationEligibility,
   deleteApplicationEligibility,
   postApplicationSubmit,
+
+  // Licences
+  getApplicationLicences,
 
   // Application-user handlers
   getApplicationUsers,
