@@ -31,8 +31,7 @@ export const errorHandler = (request, h) => {
       method: request.method
     }
 
-    console.error('Error processing request. Request: %j, Exception: %o', requestDetail, request.response)
-
+    console.error('Error processing request. Request: %j', requestDetail)
     return h
       .view(ERRORS.SERVER.page, {
         serverError: request.response.output.payload

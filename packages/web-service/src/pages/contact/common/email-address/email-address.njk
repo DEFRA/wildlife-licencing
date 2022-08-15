@@ -1,0 +1,33 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set errorMap = {
+        'email-address': {
+            'string.empty': { ref: '#email-address', text: 'Enter an email address' },
+            'string.email': { ref: '#email-address', text: 'You did not enter a valid email address' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: 'Email address'
+      },
+      id: "email-address",
+      name: "email-address",
+      type: "email",
+      autocomplete: "email",
+      spellcheck: false,
+      value: payload['email-address'],
+      classes: "govuk-input--width-20",
+      attributes: { maxlength: 50 },
+      errorMessage: { text: 'Enter your email address' } if error['email-address']
+    }) }}
+{% endblock %}
