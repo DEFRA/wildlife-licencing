@@ -6,13 +6,20 @@ const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } =
 
 export const completion = async _request => habitatURIs.REOPEN.uri
 
-const getData = () => {
+const getData = async request => {
   return {
     MAIN_NO_ALTERNATIVE_SETT,
     ANNEXE,
     SUBSIDIARY,
     OUTLIER
   }
+}
+
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const journeyData = await request.cache().getData()
+  console.log(journeyData, pageData)
+  request.cache().setData({ payload: Object.assign(journeyData.payload, pageData.payload) })
 }
 
 export default pageRoute({
@@ -27,5 +34,6 @@ export default pageRoute({
     ).required()
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
-  getData
+  getData,
+  setData
 })

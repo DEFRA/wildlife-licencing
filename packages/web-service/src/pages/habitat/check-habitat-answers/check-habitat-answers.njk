@@ -1,13 +1,123 @@
 {% extends "standard-form.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% from "error-summary.njk" import errorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set title = 'Check your answers' %} 
 
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
 
-  <p>Check your answers<p>
+  <h1 class="govuk-heading-m">Sett: {{data.payload['habitat-name']}}</h1>
+  
+ {{ govukSummaryList({
+  rows: [
+  {
+    key: {text: "Sett Type"},
+    value: {text: data.payload.habitatType},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Reopening sett"},
+    value: {text: data.payload.reopen},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Number of entrance holes"},
+    value: {text: data.payload['habitat-entrances']},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Number of active entrance holes"},
+    value: {text: data.payload['habitat-active-entrances']},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Sett grid reference"},
+    value: {text: data.payload['habitat-grid-ref']},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Work start date"},
+    value: {text: data.payload.startDate},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Work end date"},
+    value: {text: data.payload.endDate},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  },
+  {
+    key: {text: "Affect on badgers"},
+    value: {text: data.payload.methodTypes},
+    actions: {
+        items: [
+          {
+            href: "#",
+            text: "Change",
+            visuallyHiddenText: "name"
+          }
+        ]
+      }
+  }
+  ]
+  })}}
 
 {% endblock %}

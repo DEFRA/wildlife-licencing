@@ -4,7 +4,10 @@
 
 {% set errorMap = {
         'habitat-work-end': {
-          'no-date-sent': { ref: '#habitat-work-end', text: 'You have not entered an end date' }
+          'no-date-sent': { ref: '#habitat-work-end', text: 'You have not entered a end date' },
+          'invalidDate': { ref: '#habitat-work-end', text: 'You have not sent a valid date' },
+          'dateHasPassed': { ref: '#habitat-work-end', text: 'You have chosen a date in the past' },
+          'outsideLicence': { ref: '#habitat-work-end', text: 'You have chosen a date outside the licence period' }
         }
     }
 %}
@@ -16,10 +19,13 @@
   {{ govukDateInput({
     id: "habitat-work-end",
     namePrefix: "habitat-work-end",
+    name: "habitat-work-end",
     errorMessage: { text: "Enter an end date for the licenced work on this sett." } if error['habitat-work-end'],
     hint: {
       text: "The work must be finished before the end of licence period (30 November)."
     }
   }) }}
+
+  {{ payload | dump }}
 
 {% endblock %}

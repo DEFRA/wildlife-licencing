@@ -1,12 +1,15 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
+import { setData } from '../types/habitat-types.js'
 
 const badgerLicenceSeasonOpen = `05-01-${new Date().getFullYear()}` // 1st May
 const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 
-export const completion = async _request => habitatURIs.WORK_END.uri
-
+export const completion = async _request => {
+  console.log(_request.payload)
+  return habitatURIs.WORK_END.uri
+}
 export const isDate = date => {
   const isValidDate = Date.parse(date)
 
@@ -97,7 +100,7 @@ export const validator = async payload => {
   }
 
   // Is the start date within the licence period?
-  // Is it before when the badger licence opens and before the badger licence end?
+  // Is it after when the badger licence opens and before the badger licence end?
   if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date has been chosen from the past',
@@ -111,7 +114,15 @@ export const validator = async payload => {
     }], null)
   }
 
-  return null
+  return payload
 }
 
-export default pageRoute({ page: habitatURIs.WORK_START.page, uri: habitatURIs.WORK_START.uri, completion, validator })
+// const setData = async request => {
+//   const day = request.orig.payload['habitat-work-start-day']
+//   const month = request.orig.payload['habitat-work-start-month']
+//   const year = request.orig.payload['habitat-work-start-year']
+//   const startDate = new Date(`${month}-${day}-${year}`)
+//   request.cache().setData({ startDate })
+// }
+
+export default pageRoute({ page: habitatURIs.WORK_START.page, uri: habitatURIs.WORK_START.uri, setData, completion, validator })
