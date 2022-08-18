@@ -1,0 +1,19 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+<div hidden>
+    {% set items = [] %}
+    {% for account in data.accounts %}
+        {{ items.push({ value: account.id, text: account.name, checked: account.id === data.account.id }) }}
+    {% endfor %}
+    {{ items.push({ divider: "or" }) }}
+    {{ items.push({ value: 'new', text: addText }) }}
+</div>
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "account",
+      name: "account",
+      items: items
+    }) }}
+{% endblock %}

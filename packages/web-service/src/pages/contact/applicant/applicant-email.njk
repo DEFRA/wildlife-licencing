@@ -1,0 +1,7 @@
+{% extends "email-address.njk" %}
+
+{% if data.accountName %}
+    {% set title = 'What is ' + data.contactName + '\'s email address at ' + data.accountName + '?' %}
+{% else %}
+    {% set title = 'What is ' + data.contactName + '\'s email address?' %}
+{% endif %}

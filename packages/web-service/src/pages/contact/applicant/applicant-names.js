@@ -1,16 +1,17 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamesPage } from '../common/contact-names/contact-names-page.js'
-import { contactNamesCheckData, getContactNamesData, setContactNamesData, contactNamesCompletion } from '../common/contact-names/contact-names.js'
+import { getContactNamesData, setContactNamesData, contactNamesCompletion } from '../common/contact-names/contact-names.js'
+import { checkData } from '../common/common.js'
+import { ApiRequestEntities } from '../../../services/api-requests.js'
 
-export const applicantNamesCheckData = contactNamesCheckData('APPLICANT')
-export const getApplicantNamesData = getContactNamesData('APPLICANT')
-export const setApplicantNamesData = setContactNamesData('APPLICANT')
-export const applicantNamesCompletion = contactNamesCompletion('APPLICANT')
+export const getApplicantNamesData = getContactNamesData(ApiRequestEntities.APPLICANT)
+export const setApplicantNamesData = setContactNamesData(ApiRequestEntities.APPLICANT)
+export const applicantNamesCompletion = contactNamesCompletion(ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 
 export const applicantNames = contactNamesPage({
   page: contactURIs.APPLICANT.NAMES.page,
   uri: contactURIs.APPLICANT.NAMES.uri,
-  checkData: applicantNamesCheckData,
+  checkData: checkData,
   getData: getApplicantNamesData,
   completion: applicantNamesCompletion,
   setData: setApplicantNamesData

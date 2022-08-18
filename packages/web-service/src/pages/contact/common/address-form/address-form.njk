@@ -1,0 +1,73 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set errorMap = {
+        'address-line-1': {
+            'string.empty': { ref: '#address-line-1', text: 'Enter building and street' },
+            'string.pattern.base': { ref: '#address-line-1', text: 'Enter the building and street using only letters, numbers, spaces, \',\' \'-\' and \'.\'' }
+        },
+        'address-line-2': {
+            'string.pattern.base': { ref: '#address-line-2', text: 'Enter the locality using only letters, spaces, \',\' \'-\' and \'.\'' }
+        },
+        'address-town': {
+            'string.empty': { ref: '#address-town', text: 'Enter a town or city' },
+            'string.pattern.base': { ref: '#address-town', text: 'Enter the town or city using only letters, spaces, \',\' \'-\' and \'.\'' }
+        },
+        'address-county': {
+            'string.pattern.base': { ref: '#address-county', text: 'Enter the county using only letters and spaces' }
+        }
+    }
+%}
+
+{% block pageContent %}
+  {{ govukInput({
+    label: {
+      text: 'Building and street'
+    },
+    id: "address-line-1",
+    name: "address-line-1",
+    autocomplete: "address-line1",
+    attributes: { maxlength: "80" },
+    errorMessage: { text: 'Enter building and street' } if error['address-line-1']
+  }) }}
+
+  {{ govukInput({
+    label: {
+      text: 'Locality (optional)'
+    },
+    id: "address-line-2",
+    name: "address-line-2",
+    autocomplete: "address-line2",
+    attributes: { maxlength: "80" },
+    errorMessage: { text: 'Enter locality' } if error['address-line-2']
+  }) }}
+
+  {{ govukInput({
+    label: {
+      text: "Town or city"
+    },
+    classes: "govuk-!-width-two-thirds",
+    id: "address-town",
+    name: "address-town",
+    autocomplete: "address-level2",
+    attributes: { maxlength: "80" },
+    errorMessage: { text: 'Enter town or city' } if error['address-town']
+  }) }}
+
+  {{ govukInput({
+    label: {
+      text: "County (optional)"
+    },
+    classes: "govuk-!-width-two-thirds",
+    id: "address-county",
+    name: "address-county",
+    attributes: { maxlength: "80" },
+    errorMessage: { text: 'Enter county' } if error['address-county']
+  }) }}
+{% endblock %}
