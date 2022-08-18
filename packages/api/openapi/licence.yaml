@@ -2127,6 +2127,12 @@ components:
           type: string
           minLength: 1
           maxLength: 36
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -2360,6 +2366,8 @@ components:
           $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -2603,6 +2611,7 @@ components:
       readOnly: true
       nullable: true
       example: 2021-12-06T15:56:46.825Z
+      nullable: true
       pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z$
 
     date:

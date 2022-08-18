@@ -14,12 +14,11 @@ import { tasklist } from '../pages/tasklist/tasklist.js'
 import { uploadMethodStatement } from '../pages/method-statement/upload-method-statement.js'
 import { checkMethodStatement } from '../pages/method-statement/check-method-statement.js'
 
-import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
-import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
-import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
+import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
+import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
 
 import habitatStart from '../pages/habitat/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/types/habitat-types.js'
@@ -36,7 +35,7 @@ import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-ha
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
-import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
+import { applicantOrganisations } from '../pages/contact/applicant/applicant-organisations.js'
 
 const routes = [
   ...applications,
@@ -60,10 +59,9 @@ const routes = [
   ...applicantName,
   ...applicantNames,
   ...applicantOrganisation,
-  ...ecologistUser,
-  ...ecologistName,
-  ...ecologistNames,
-  ...ecologistOrganisation,
+  ...applicantOrganisations,
+  ...applicantEmail,
+  ...applicantCheckAnswers,
   ...habitatStart,
   ...habitatName,
   ...habitatActiveEntrances,
