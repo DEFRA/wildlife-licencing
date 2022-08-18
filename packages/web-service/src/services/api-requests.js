@@ -72,9 +72,35 @@ const createContact = async (role, applicationId, payload) => {
 const assignContact = async (role, applicationId, contactId) => {
   const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
   if (applicationContact && applicationContact.contactId !== contactId) {
-    debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
+    debug(`Reassigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
     await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
       contactId,
+      applicationId,
+      contactRole: role
+    })
+  } else if (!applicationContact) {
+    debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
+    await API.post(`${apiUrls.APPLICATION_CONTACTS}`, {
+      contactId,
+      applicationId,
+      contactRole: role
+    })
+  }
+}
+
+const assignAccount = async (role, applicationId, accountId) => {
+  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${role}`)
+  if (applicationAccount && applicationAccount.accountId !== accountId) {
+    debug(`Reassigning ${role} contact ${accountId} to applicationId: ${applicationId}`)
+    await API.put(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`, {
+      accountId,
+      applicationId,
+      contactRole: role
+    })
+  } else if (!applicationAccount) {
+    debug(`Assigning ${role} contact ${accountId} to applicationId: ${applicationId}`)
+    await API.post(`${apiUrls.APPLICATION_ACCOUNTS}`, {
+      accountId,
       applicationId,
       contactRole: role
     })
@@ -107,6 +133,17 @@ const findContactByUser = async (role, userId) => {
     return API.get(apiUrls.CONTACTS, `userId=${userId}&role=${role}`)
   } catch (error) {
     console.error(`Finding ${role}'s for userId: ${userId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+const findAccountByUser = async (accountRole, userId) => {
+  try {
+    debug(`Finding ${accountRole}'s for userId: ${userId}`)
+    return API.get(apiUrls.ACCOUNTS, `userId=${userId}&role=${accountRole}`)
+  } catch (error) {
+    console.error(`Finding ${accountRole}'s for userId: ${userId}`, error)
     Boom.boomify(error, { statusCode: 500 })
     throw error
   }
@@ -149,6 +186,18 @@ const unAssignAccount = async (accountRole, applicationId) => {
   if (applicationAccount) {
     debug(`Un-assigning ${accountRole} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
     await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
+  }
+}
+
+const updateAccount = async (accountRole, applicationId, account) => {
+  try {
+    debug(`Updating the ${accountRole} for applicationId: ${applicationId}`)
+    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
+    return API.put(`${apiUrls.ACCOUNT}/${applicationAccount.accountId}`, account)
+  } catch (error) {
+    console.error(`Error updating ${accountRole} for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
   }
 }
 
@@ -302,7 +351,7 @@ export const APIRequests = {
     create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
     assign: async (applicationId, contactId) => assignContact(contactRoles.APPLICANT, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.APPLICANT, applicationId),
-    update: async (applicationId, applicant) => updateContact(contactRoles.APPLICANT, applicationId, applicant),
+    update: async (applicationId, contact) => updateContact(contactRoles.APPLICANT, applicationId, contact),
     findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
   },
   ECOLOGIST: {
@@ -310,18 +359,24 @@ export const APIRequests = {
     create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
     assign: async (applicationId, contactId) => assignContact(contactRoles.ECOLOGIST, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.ECOLOGIST, applicationId),
-    update: async (applicationId, applicant) => updateContact(contactRoles.ECOLOGIST, applicationId, applicant),
+    update: async (applicationId, contact) => updateContact(contactRoles.ECOLOGIST, applicationId, contact),
     findByUser: async userId => findContactByUser(contactRoles.ECOLOGIST, userId)
   },
   APPLICANT_ORGANISATION: {
-    create: async (applicationId, payload) => createAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, payload),
+    create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, applicationOrganisation),
+    assign: async (applicationId, accountId) => assignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, accountId),
     unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANISATION'], applicationId)
+    update: async (applicationId, account) => updateAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, account),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANISATION'], applicationId),
+    findByUser: async userId => findAccountByUser(accountRoles['APPLICANT-ORGANISATION'], userId)
   },
   ECOLOGIST_ORGANISATION: {
-    create: async (applicationId, payload) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, payload),
+    create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, applicationOrganisation),
+    assign: async (applicationId, accountId) => assignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, accountId),
     unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId)
+    update: async (applicationId, account) => updateAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, account),
+    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
+    findByUser: async userId => findAccountByUser(accountRoles['ECOLOGIST-ORGANISATION'], userId)
   },
 
   /**
@@ -357,3 +412,6 @@ export const APIRequests = {
     }
   }
 }
+
+export const ApiRequestEntities = Object.freeze(Object.keys(APIRequests)
+  .reduce((p, c) => ({ ...p, [c]: c }), {}))

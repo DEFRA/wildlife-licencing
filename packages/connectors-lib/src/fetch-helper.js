@@ -95,8 +95,15 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       console.error('Fetch REQUEST error', err)
       throw err
     } else {
-      console.error('Unknown error thrown in fetch', err)
-      throw err
+      if (err.response) {
+        const msg = 'response error: ' + err.response.headers.get('content-type').includes(APPLICATION_JSON)
+          ? JSON.stringify(await err.response.json())
+          : await err.response.body()
+        console.error(`Unknown error thrown in fetch: ${msg}`)
+        throw new Error(msg)
+      } else {
+        throw err
+      }
     }
   } finally {
     clearTimeout(timeout)

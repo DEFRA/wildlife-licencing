@@ -9,16 +9,19 @@ export const prepareResponse = a => Object.assign((({
   account,
   targetKeys,
   sddsAccountId,
-  submitted,
   updateStatus,
+  submitted,
   ...l
 }) => l)(a), {
   createdAt: a.createdAt.toISOString(),
   updatedAt: a.updatedAt.toISOString(),
+  submitted: a.submitted?.toISOString(),
   ...a.account
 })
 
 export const alwaysExclude = payload => {
+  delete payload.id
+  delete payload.submitted
   delete payload.createdAt
   delete payload.updatedAt
   return payload
