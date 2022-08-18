@@ -21,8 +21,8 @@ export const setAccountNamesData = accountType => async request => {
 }
 
 export const accountNamesCompletion = (accountType, baseUri) => async request => {
-  const { payload: { account } } = await request.cache().getPageData()
-  if (account === 'new') {
+  const { payload: { account: accountId } } = await request.cache().getPageData()
+  if (accountId === 'new') {
     await request.cache().clearPageData(baseUri.IS_ORGANISATION.page)
     return baseUri.IS_ORGANISATION.uri
   } else {

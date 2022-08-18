@@ -6,8 +6,7 @@ import { ApiRequestEntities } from '../../../services/api-requests.js'
 
 export const getApplicantNamesData = getContactNamesData(ApiRequestEntities.APPLICANT)
 export const setApplicantNamesData = setContactNamesData(ApiRequestEntities.APPLICANT)
-export const applicantNamesCompletion = contactNamesCompletion(ApiRequestEntities.APPLICANT,
-  ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
+export const applicantNamesCompletion = contactNamesCompletion(ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 
 export const applicantNames = contactNamesPage({
   page: contactURIs.APPLICANT.NAMES.page,

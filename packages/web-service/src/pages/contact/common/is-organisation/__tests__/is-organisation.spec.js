@@ -104,7 +104,7 @@ describe('the is-organisation functions', () => {
         })
       }
       const { contactAccountCompletion } = await import('../is-organisation.js')
-      const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      const result = await contactAccountCompletion('APPLICANT', urlBase)(request)
       expect(result).toEqual('/applicant-email')
     })
     it('returns the check-answers page if the user answers \'no\' and the selected contact has already been submitted ', async () => {
@@ -129,7 +129,7 @@ describe('the is-organisation functions', () => {
         }
       }))
       const { contactAccountCompletion } = await import('../is-organisation.js')
-      const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      const result = await contactAccountCompletion('APPLICANT', urlBase)(request)
       expect(result).toEqual('/applicant-check-answers')
     })
     it('returns the email page if the user answers \'no\' and the selected contact is not yet submitted ', async () => {
@@ -154,7 +154,7 @@ describe('the is-organisation functions', () => {
         }
       }))
       const { contactAccountCompletion } = await import('../is-organisation.js')
-      const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      const result = await contactAccountCompletion('APPLICANT', urlBase)(request)
       expect(result).toEqual('/applicant-email')
     })
   })

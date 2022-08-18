@@ -26,7 +26,7 @@ export const setContactAccountData = contactOrganisation => async request => {
   }
 }
 
-export const contactAccountCompletion = (contactType, contactOrganisation, urlBase) => async request => {
+export const contactAccountCompletion = (contactType, urlBase) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const pageData = await request.cache().getPageData()

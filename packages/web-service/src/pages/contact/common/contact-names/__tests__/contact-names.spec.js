@@ -101,7 +101,7 @@ describe('contact-names', () => {
         }
       }))
       const { contactNamesCompletion } = await import('../contact-names.js')
-      const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT', 'APPLICANT_ORGANISATION',
+      const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT_ORGANISATION',
         { NAME: { uri: '/applicant-name', page: 'applicant-name' } })
       const result = await exampleContactNamesCompletion(request)
       expect(result).toEqual('/applicant-name')
@@ -125,7 +125,7 @@ describe('contact-names', () => {
         }
       }))
       const { contactNamesCompletion } = await import('../contact-names.js')
-      const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT', 'APPLICANT_ORGANISATION',
+      const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT_ORGANISATION',
         { ORGANISATIONS: { uri: '/applicant-organisations', page: 'applicant-organisations' } })
       const result = await exampleContactNamesCompletion(request)
       expect(result).toEqual('/applicant-organisations')
@@ -151,7 +151,7 @@ describe('contact-names', () => {
       }
     }))
     const { contactNamesCompletion } = await import('../contact-names.js')
-    const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT', 'APPLICANT_ORGANISATION',
+    const exampleContactNamesCompletion = contactNamesCompletion('APPLICANT_ORGANISATION',
       { IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' } })
     const result = await exampleContactNamesCompletion(request)
     expect(result).toEqual('/applicant-organisation')

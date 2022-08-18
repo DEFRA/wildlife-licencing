@@ -11,8 +11,8 @@ describe('the email-address functions', () => {
         })
       }
       const h = { redirect: jest.fn() }
-      const { checkData } = await import('../email-address.js')
-      await checkData(ApiRequestEntities.APPLICANT)(request, h)
+      const { checkEmailAddressData } = await import('../email-address.js')
+      await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/applications')
     })
     it('if no contact is selected return to the tasklist page', async () => {
@@ -29,8 +29,8 @@ describe('the email-address functions', () => {
         })
       }
       const h = { redirect: jest.fn() }
-      const { checkData } = await import('../email-address.js')
-      await checkData(ApiRequestEntities.APPLICANT)(request, h)
+      const { checkEmailAddressData } = await import('../email-address.js')
+      await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
     })
     it('if contact is selected return null', async () => {
@@ -47,8 +47,8 @@ describe('the email-address functions', () => {
         })
       }
       const h = { redirect: jest.fn() }
-      const { checkData } = await import('../email-address.js')
-      const result = await checkData(ApiRequestEntities.APPLICANT)(request, h)
+      const { checkEmailAddressData } = await import('../email-address.js')
+      const result = await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
       expect(h.redirect).not.toHaveBeenCalledWith()
       expect(result).toBeNull()
     })
@@ -71,8 +71,8 @@ describe('the email-address functions', () => {
           }
         }
       }))
-      const { getData } = await import('../email-address.js')
-      const result = await getData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      const { getEmailAddressData } = await import('../email-address.js')
+      const result = await getEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(result).toEqual({
         accountName: 'The Rolling Stones',
         contactName: 'Keith Richards',
@@ -95,8 +95,8 @@ describe('the email-address functions', () => {
           }
         }
       }))
-      const { getData } = await import('../email-address.js')
-      const result = await getData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      const { getEmailAddressData } = await import('../email-address.js')
+      const result = await getEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(result).toEqual({
         contactName: 'Keith Richards',
         email: 'keith@mail.com'
@@ -124,8 +124,8 @@ describe('the email-address functions', () => {
           }
         }
       }))
-      const { setData } = await import('../email-address.js')
-      await setData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      const { setEmailAddressData } = await import('../email-address.js')
+      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7',
         {
           contactDetails: { email: 'Keith@therollingstones.com' },
@@ -151,8 +151,8 @@ describe('the email-address functions', () => {
           }
         }
       }))
-      const { setData } = await import('../email-address.js')
-      await setData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      const { setEmailAddressData } = await import('../email-address.js')
+      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7',
         {
           contactDetails: { email: 'Keith@mail.com' },

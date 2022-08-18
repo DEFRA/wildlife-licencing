@@ -20,7 +20,7 @@ export const setContactNamesData = contactType => async request => {
   }
 }
 
-export const contactNamesCompletion = (contactType, accountType, uriBase) => async request => {
+export const contactNamesCompletion = (accountType, uriBase) => async request => {
   const { userId } = await request.cache().getData()
   const { payload: { contact: contactId } } = await request.cache().getPageData()
   if (contactId === 'new') {

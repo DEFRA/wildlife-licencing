@@ -1,9 +1,7 @@
-import pageRoute from '../../../../routes/page-route.js'
-import Joi from 'joi'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { APPLICATIONS, TASKLIST } from '../../../../uris.js'
 
-export const checkData = contactType => async (request, h) => {
+export const checkEmailAddressData = contactType => async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.applicationId) {
     return h.redirect(APPLICATIONS.uri)
@@ -16,7 +14,7 @@ export const checkData = contactType => async (request, h) => {
   return null
 }
 
-export const getData = (contactType, contactOrganisation) => async request => {
+export const getEmailAddressData = (contactType, contactOrganisation) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
@@ -28,7 +26,7 @@ export const getData = (contactType, contactOrganisation) => async request => {
   }
 }
 
-export const setData = (contactType, contactOrganisation) => async request => {
+export const setEmailAddressData = (contactType, contactOrganisation) => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const { applicationId } = journeyData
@@ -46,16 +44,3 @@ export const setData = (contactType, contactOrganisation) => async request => {
     await APIRequests[contactType].update(applicationId, contact)
   }
 }
-
-export const emailAddressPage = ({ page, uri, checkData, getData, completion, setData }) =>
-  pageRoute({
-    page,
-    uri,
-    checkData,
-    getData,
-    completion,
-    setData,
-    validator: Joi.object({
-      'email-address': Joi.string().email().required()
-    }).options({ abortEarly: false, allowUnknown: true })
-  })
