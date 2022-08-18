@@ -1,0 +1,38 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+{% from "select/macro.njk" import govukSelect %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set errorMap = {
+        'uprn': {
+            'number.base': { ref: '#address', text: 'Select an address' }
+        }
+    }
+%}
+
+{% set items = [] %}
+{{ items.push({ value: 'top', text: data.addressLookup.length + ' addresses found' }) }}
+{% for a in data.addressLookup %}
+    {{ items.push({ value: a.Address.UPRN, text: a.Address.AddressLine }) }}
+{% endfor %}
+
+{% block pageContent %}
+    <p class="govuk-body-m">Postcode {{ data.postcode }}
+    <a href="{{ data.uri.postcode }}" class="govuk-link">Change</a></p>
+    {{ govukSelect({
+      id: "address",
+      name: "uprn",
+      label: {
+        text: "Select an address"
+      },
+      items: items
+    }) }}
+    <p class="govuk-body">
+        <a href="{{ data.uri.addressForm }}" class="govuk-link">I can’t find the address in the list</a>
+    </p>
+{% endblock %}

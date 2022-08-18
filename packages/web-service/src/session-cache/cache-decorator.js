@@ -24,8 +24,8 @@ export default sessionCookieName => function () { // Preservers this pointer
     setAuthData: async obj => REDIS.cache.save(authKey, obj),
 
     // Page payload data for automated playback and errors
-    getPageData: async () => JSON.parse(await REDIS.cache.restore(pageKey)),
-    setPageData: async obj => REDIS.cache.save(pageKey, obj),
+    getPageData: async (opk = null) => JSON.parse(await REDIS.cache.restore(opk ? otherPageKey(opk) : pageKey)),
+    setPageData: async (obj, opk = null) => REDIS.cache.save(opk ? otherPageKey(opk) : pageKey, obj),
     clearPageData: async (opk = null) => REDIS.cache.delete(opk ? otherPageKey(opk) : pageKey)
   }
 }

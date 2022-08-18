@@ -19,6 +19,11 @@ import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
+import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
+import { applicantOrganisations } from '../pages/contact/applicant/applicant-organisations.js'
+import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
+import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
+import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
 import habitatStart from '../pages/habitat/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/types/habitat-types.js'
@@ -30,12 +35,9 @@ import habitatGridRef from '../pages/habitat/grid-ref/habitat-grid-ref.js'
 import habitatWorkStart from '../pages/habitat/work-start/habitat-work-start.js'
 import habitatWorkEnd from '../pages/habitat/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/activities/habitat-activities.js'
+
 import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-habitat-answers.js'
-
 import { signOut } from '../pages/sign-out/sign-out.js'
-
-import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
-import { applicantOrganisations } from '../pages/contact/applicant/applicant-organisations.js'
 
 const routes = [
   ...applications,
@@ -61,6 +63,9 @@ const routes = [
   ...applicantOrganisation,
   ...applicantOrganisations,
   ...applicantEmail,
+  ...applicantPostcode,
+  ...applicantAddress,
+  ...applicantAddressForm,
   ...applicantCheckAnswers,
   ...habitatStart,
   ...habitatName,

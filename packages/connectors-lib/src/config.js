@@ -47,5 +47,11 @@ export default {
       timeout: process.env.MSPA_CLIENT_TIMEOUT_MS,
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
+  },
+  address: {
+    url: process.env.ADDRESS_LOOKUP_URL,
+    certificatePath: process.env.ADDRESS_LOOKUP_CERTIFICATE_PATH,
+    passphrase: process.env.ADDRESS_LOOKUP_PASSPHRASE,
+    timeout: process.env.ADDRESS_LOOKUP_TIMEOUT_MS
   }
 }
