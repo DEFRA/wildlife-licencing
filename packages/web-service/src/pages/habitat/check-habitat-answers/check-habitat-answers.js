@@ -1,9 +1,10 @@
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-const { 
-  SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER }, 
-  METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT} } = PowerPlatformKeys
+const {
+  SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
+  METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
+} = PowerPlatformKeys
 const settMap = [
   {
     key: MAIN_NO_ALTERNATIVE_SETT,
@@ -51,18 +52,23 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
 
 const typeProcessor = selectedType => settMap.filter(type => JSON.stringify(type.key) === selectedType)[0].value
 const methodProcessor = selectedMethods => affectMap.filter(method => selectedMethods.includes(JSON.stringify(method.key))).map(method => '\n' + method.value)
-const dateProcessor = (day, month, year) => {
+const dateProcessor = (date) => {
+  const dateObj = new Date(date)
+  const day = dateObj.getDate()
+  const month = dateObj.getMonth()
+  const year = dateObj.getFullYear()
   return `${Number(day)} ${monthNames[month - 1]} ${year}`
 }
 
 const getData = async request => {
   const journeyData = await request.cache().getData()
-  const habitatType = typeProcessor(journeyData.payload['habitat-types'])
-  const methodTypes = methodProcessor(journeyData.payload['habitat-activities'])
-  const startDate = dateProcessor(journeyData.payload['habitat-work-start-day'], journeyData.payload['habitat-work-start-month'], journeyData.payload['habitat-work-start-year'])
-  const endDate = dateProcessor(journeyData.payload['habitat-work-end-day'], journeyData.payload['habitat-work-end-month'], journeyData.payload['habitat-work-end-year'])
-  const reopen = journeyData.payload['habitat-reopen'] ? 'Yes' : 'No'
-  const pageData = { payload: Object.assign(journeyData.payload, { habitatType, reopen, methodTypes, startDate, endDate }) }
+  const habitatType = typeProcessor(journeyData.settType)
+  const methodTypes = methodProcessor(journeyData.methodIds)
+  const startDate = dateProcessor(journeyData.startDate)
+  const endDate = dateProcessor(journeyData.endDate)
+  const reopen = journeyData.willReopen ? 'Yes' : 'No'
+  console.log(habitatType, methodTypes, startDate, endDate, reopen)
+  const pageData = Object.assign(journeyData, { habitatType, reopen, methodTypes, startDate, endDate })
   console.log(pageData)
   return pageData
 }

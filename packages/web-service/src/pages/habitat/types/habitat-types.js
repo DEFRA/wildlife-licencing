@@ -17,9 +17,10 @@ const getData = async request => {
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
+  const settType = pageData.payload['habitat-types']
   const journeyData = await request.cache().getData()
   console.log(journeyData, pageData)
-  request.cache().setData({ payload: Object.assign(journeyData.payload, pageData.payload) })
+  request.cache().setData(Object.assign(journeyData, { settType }))
 }
 
 export default pageRoute({

@@ -5,11 +5,20 @@ const nameReg = /^[/\s0-9._,\p{L}-]{1,100}$/u
 
 export const completion = async _request => habitatURIs.TYPES.uri
 
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const name = pageData.payload['habitat-name']
+  const journeyData = await request.cache().getData()
+  console.log(journeyData)
+  request.cache().setData(Object.assign(journeyData, { name }))
+}
+
 export default pageRoute({
   page: habitatURIs.NAME.page,
   uri: habitatURIs.NAME.uri,
   validator: Joi.object({
     'habitat-name': Joi.string().trim().pattern(nameReg).required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  completion
+  completion,
+  setData
 })

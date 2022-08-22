@@ -1,7 +1,6 @@
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import Joi from 'joi'
-import { setData } from '../types/habitat-types.js'
 
 const badgerLicenceSeasonOpen = `05-01-${new Date().getFullYear()}` // 1st May
 const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
@@ -130,6 +129,19 @@ export const validator = async payload => {
 
   return payload
 }
+
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const day = pageData.payload['habitat-work-end-day']
+  const month = pageData.payload['habitat-work-end-month']
+  const year = pageData.payload['habitat-work-end-year']
+  const dateString = `${month}-${day}-${year}`
+  const endDate = dateString
+  const journeyData = await request.cache().getData()
+  console.log(journeyData, pageData)
+  request.cache().setData(Object.assign(journeyData, { endDate }))
+}
+
 export const completion = async _request => habitatURIs.ACTIVITIES.uri
 
 export default pageRoute({ page: habitatURIs.WORK_END.page, uri: habitatURIs.WORK_END.uri, validator, completion, setData, checkData })

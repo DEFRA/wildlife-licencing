@@ -2223,8 +2223,10 @@ components:
           properties:
             settType:
               $ref: '#/components/schemas/option'
-            active:
-              type: boolean
+            startDate:
+              type: string
+            endDate:
+              type: string
             willReopen:
               type: boolean
             numberOfEntrances:

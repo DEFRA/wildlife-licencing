@@ -1,9 +1,16 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-import { setData } from '../types/habitat-types.js'
 
 export const completion = async _request => habitatURIs.WORK_START.uri
+
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const gridReference = pageData.payload['habitat-grid-ref']
+  const journeyData = await request.cache().getData()
+  console.log(journeyData, pageData)
+  request.cache().setData(Object.assign(journeyData, { gridReference }))
+}
 
 export default pageRoute({
   page: habitatURIs.GRID_REF.page,

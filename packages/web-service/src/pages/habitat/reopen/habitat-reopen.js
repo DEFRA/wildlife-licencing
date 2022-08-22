@@ -1,7 +1,14 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-import { setData } from '../types/habitat-types.js'
+
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const willReopen = pageData.payload['habitat-reopen']
+  const journeyData = await request.cache().getData()
+  console.log(journeyData, pageData)
+  request.cache().setData(Object.assign(journeyData, { willReopen }))
+}
 
 export const completion = async _request => habitatURIs.ENTRANCES.uri
 
