@@ -1,125 +1,13 @@
 {% extends "standard-form.njk" %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% from "error-summary.njk" import errorSummary %}
-
-{% set title = 'Check your answers' %} 
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
-{% for habitat in data %}
-  <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
 
-
-    {{ govukSummaryList({
-    rows: [
-    {
-      key: {text: "Sett Type"},
-      value: {text: habitat.habitatType},
-      actions: {
-          items: [
-            {
-              href: '#',
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Reopening sett"},
-      value: {text: habitat.reopen},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Number of entrance holes"},
-      value: {text: habitat.numberOfEntrances},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Number of active entrance holes"},
-      value: {text: habitat.activeEntrances},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Sett grid reference"},
-      value: {text: habitat.gridReference},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Work start date"},
-      value: {text: habitat.startDate},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Work end date"},
-      value: {text: habitat.endDate},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    },
-    {
-      key: {text: "Affect on badgers"},
-      value: {text: habitat.methodTypes},
-      actions: {
-          items: [
-            {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
-            }
-          ]
-        }
-    }
-    ]
-    })}}
-    {% endfor %}
+  <p>Check your answers<p>
 
 {% endblock %}
