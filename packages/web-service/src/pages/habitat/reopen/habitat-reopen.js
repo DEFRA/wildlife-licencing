@@ -6,7 +6,6 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const willReopen = pageData.payload['habitat-reopen']
   const journeyData = await request.cache().getData()
-  console.log(journeyData, pageData)
   request.cache().setData(Object.assign(journeyData, { willReopen }))
 }
 

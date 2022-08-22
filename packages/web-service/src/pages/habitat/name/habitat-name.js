@@ -9,7 +9,6 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const name = pageData.payload['habitat-name']
   const journeyData = await request.cache().getData()
-  console.log(journeyData)
   request.cache().setData(Object.assign(journeyData, { name }))
 }
 

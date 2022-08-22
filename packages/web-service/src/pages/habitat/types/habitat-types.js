@@ -6,7 +6,7 @@ const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } =
 
 export const completion = async _request => habitatURIs.REOPEN.uri
 
-const getData = async request => {
+const getData = () => {
   return {
     MAIN_NO_ALTERNATIVE_SETT,
     ANNEXE,
@@ -19,7 +19,6 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const settType = pageData.payload['habitat-types']
   const journeyData = await request.cache().getData()
-  console.log(journeyData, pageData)
   request.cache().setData(Object.assign(journeyData, { settType }))
 }
 

@@ -32,12 +32,10 @@ export const invalidDate = (day, month, year, dateString) => {
 }
 
 const checkData = async request => {
-  console.log('CD', await request.cache().getPageData())
   await request.cache().setPageData({ payload: await request.cache().getData() })
 }
 
 export const validator = async payload => {
-  console.log('v', payload)
   const day = payload['habitat-work-end-day']
   const month = payload['habitat-work-end-month']
   const year = payload['habitat-work-end-year']
@@ -138,7 +136,6 @@ export const setData = async request => {
   const dateString = `${month}-${day}-${year}`
   const endDate = dateString
   const journeyData = await request.cache().getData()
-  console.log(journeyData, pageData)
   request.cache().setData(Object.assign(journeyData, { endDate }))
 }
 

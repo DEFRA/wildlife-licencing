@@ -5,10 +5,8 @@ import { habitatURIs } from '../../../uris.js'
 const badgerLicenceSeasonOpen = `05-01-${new Date().getFullYear()}` // 1st May
 const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 
-export const completion = async _request => {
-  console.log(_request.payload)
-  return habitatURIs.WORK_END.uri
-}
+export const completion = async _request => habitatURIs.WORK_END.uri
+
 export const isDate = date => {
   const isValidDate = Date.parse(date)
 
@@ -28,7 +26,6 @@ export const invalidDate = (day, month, year, dateString) => {
     return true
   }
 
-  console.log(dateString)
   if (!(/^[\d-]*$/.test(dateString))) { // Validate we just have dashes and numbers
     return true
   }
@@ -124,7 +121,6 @@ export const setData = async request => {
   const dateString = `${month}-${day}-${year}`
   const startDate = dateString
   const journeyData = await request.cache().getData()
-  console.log(journeyData, pageData)
   request.cache().setData(Object.assign(journeyData, { startDate }))
 }
 
