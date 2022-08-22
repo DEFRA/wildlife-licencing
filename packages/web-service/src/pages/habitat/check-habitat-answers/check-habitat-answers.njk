@@ -8,7 +8,7 @@
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
-{% for habitat in data.habitatSites %}
+{% for habitat in data %}
   <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
 
 
@@ -20,7 +20,7 @@
       actions: {
           items: [
             {
-              href: "#",
+              href: '#',
               text: "Change",
               visuallyHiddenText: "name"
             }

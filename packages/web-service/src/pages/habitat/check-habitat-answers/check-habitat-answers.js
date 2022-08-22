@@ -50,8 +50,8 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
-const typeProcessor = selectedType => settMap.filter(type => JSON.stringify(type.key) === selectedType)[0].value
-const methodProcessor = selectedMethods => affectMap.filter(method => selectedMethods.includes(JSON.stringify(method.key))).map(method => '\n' + method.value)
+const typeProcessor = selectedType => settMap.filter(type => type.key === selectedType)[0].value
+const methodProcessor = selectedMethods => affectMap.filter(method => selectedMethods.includes(method.key)).map(method => '\n' + method.value)
 const dateProcessor = (date) => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()
@@ -62,14 +62,16 @@ const dateProcessor = (date) => {
 
 const getData = async request => {
   const journeyData = await request.cache().getData()
-  const habitatType = typeProcessor(journeyData.settType)
-  const methodTypes = methodProcessor(journeyData.methodIds)
-  const startDate = dateProcessor(journeyData.startDate)
-  const endDate = dateProcessor(journeyData.endDate)
-  const reopen = journeyData.willReopen ? 'Yes' : 'No'
-  console.log(habitatType, methodTypes, startDate, endDate, reopen)
-  const pageData = Object.assign(journeyData, { habitatType, reopen, methodTypes, startDate, endDate })
-  console.log(pageData)
+  const pageData = []
+  for (const habitat of journeyData) {
+    const habitatType = typeProcessor(habitat.settType)
+    const methodTypes = methodProcessor(habitat.methodIds)
+    const startDate = dateProcessor(habitat.startDate)
+    const endDate = dateProcessor(habitat.endDate)
+    const reopen = habitat.willReopen ? 'Yes' : 'No'
+    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, startDate, endDate })
+    pageData.push(habitatData)
+  }
   return pageData
 }
 
