@@ -6,9 +6,10 @@ export const completion = async _request => habitatURIs.GRID_REF.uri
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
-  const numberOfEntrances = pageData.payload['habitat-active-entrances']
+  const numberOfActiveEntrances = pageData.payload['habitat-active-entrances']
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { numberOfEntrances }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { numberOfActiveEntrances })
+  request.cache().setData(journeyData)
 }
 
 export default pageRoute({

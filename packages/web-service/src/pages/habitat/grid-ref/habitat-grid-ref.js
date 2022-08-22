@@ -8,7 +8,8 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const gridReference = pageData.payload['habitat-grid-ref']
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { gridReference }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { gridReference })
+  request.cache().setData(journeyData)
 }
 
 export default pageRoute({

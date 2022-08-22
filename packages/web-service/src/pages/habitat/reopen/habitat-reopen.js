@@ -6,7 +6,8 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const willReopen = pageData.payload['habitat-reopen']
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { willReopen }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { willReopen })
+  request.cache().setData(journeyData)
 }
 
 export const completion = async _request => habitatURIs.ENTRANCES.uri

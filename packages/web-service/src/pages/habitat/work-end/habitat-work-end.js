@@ -133,12 +133,12 @@ export const setData = async request => {
   const day = pageData.payload['habitat-work-end-day']
   const month = pageData.payload['habitat-work-end-month']
   const year = pageData.payload['habitat-work-end-year']
-  const dateString = `${month}-${day}-${year}`
-  const endDate = dateString
+  const workEnd = `${month}-${day}-${year}`
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { endDate }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { workEnd })
+  request.cache().setData(journeyData)
 }
 
-export const completion = async _request => habitatURIs.ACTIVITIES.uri
+export const completion = async request => habitatURIs.ACTIVITIES.uri
 
 export default pageRoute({ page: habitatURIs.WORK_END.page, uri: habitatURIs.WORK_END.uri, validator, completion, setData, checkData })
