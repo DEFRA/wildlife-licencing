@@ -24,13 +24,14 @@ export default async (_context, req, h) => {
           ${userClause} ${roleClause} ${applicationClause})`
 
     const result = await sequelize.query(qryStr, { type: sequelize.QueryTypes.SELECT })
+    // Response from this query is slightly different to sequelize fetch
     const responseBody = result.map(a => ({
       id: a.id,
       ...a.contact,
       createdAt: a.created_at.toISOString(),
-      updatedAt: a.updated_at.toISOString()
+      updatedAt: a.updated_at.toISOString(),
+      submitted: a.submitted?.toISOString()
     }))
-
     return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(200)

@@ -27,26 +27,4 @@ describe('contact common', () => {
       expect(result).toBeNull()
     })
   })
-
-  describe('checkData', () => {
-    it('getUserData returns the applicant user from the database', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          USER: {
-            getById: jest.fn(() => ({ username: 'Mick Jagger' }))
-          }
-        }
-      }))
-      const { getUserData } = await import('../../common/common.js')
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '658c78d4-8890-4f79-a008-08fade8326d6'
-          }))
-        })
-      }
-      const result = await getUserData(request)
-      expect(result).toEqual({ username: 'Mick Jagger' })
-    })
-  })
 })
