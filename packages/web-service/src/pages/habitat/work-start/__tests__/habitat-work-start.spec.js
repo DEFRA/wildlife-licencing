@@ -1,3 +1,4 @@
+
 describe('The habitat work start page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -137,6 +138,27 @@ describe('The habitat work start page', () => {
         expect(e.message).toBe('ValidationError')
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
+    })
+    it('constructs the date correctly', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({}),
+          getPageData: () => ({
+            payload: {
+              'habitat-work-start-day': 10,
+              'habitat-work-start-month': 7,
+              'habitat-work-start-year': 2022
+            }
+          })
+        })
+      }
+      const { setData } = await import('../habitat-work-start.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        startDate: '7-10-2022'
+      })
     })
   })
 })

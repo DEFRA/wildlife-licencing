@@ -6,5 +6,24 @@ describe('The habitat entrances page', () => {
       const { completion } = await import('../habitat-entrances.js')
       expect(await completion()).toBe('/habitat-active-entrances')
     })
+    it('sets the entrance data correctly', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({}),
+          getPageData: () => ({
+            payload: {
+              'habitat-entrances': 99
+            }
+          })
+        })
+      }
+      const { setData } = await import('../habitat-entrances.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        numberOfEntrances: 99
+      })
+    })
   })
 })
