@@ -11,7 +11,9 @@ describe('The habitat reopen page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-reopen': true
@@ -22,7 +24,8 @@ describe('The habitat reopen page', () => {
       const { setData } = await import('../habitat-reopen.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        willReopen: true
+        habitatData:
+          { willReopen: true }
       })
     })
   })

@@ -144,7 +144,9 @@ describe('The habitat work start page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-work-start-day': 10,
@@ -157,7 +159,8 @@ describe('The habitat work start page', () => {
       const { setData } = await import('../habitat-work-start.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        startDate: '7-10-2022'
+        habitatData:
+          { workStart: '7-10-2022' }
       })
     })
   })

@@ -11,7 +11,9 @@ describe('The habitat grid ref page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-grid-ref': 'NY123456'
@@ -22,7 +24,8 @@ describe('The habitat grid ref page', () => {
       const { setData } = await import('../habitat-grid-ref.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        gridReference: 'NY123456'
+        habitatData:
+          { gridReference: 'NY123456' }
       })
     })
   })

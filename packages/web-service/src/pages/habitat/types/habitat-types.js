@@ -4,7 +4,7 @@ import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
-export const completion = async _request => habitatURIs.REOPEN.uri
+export const completion = async request => habitatURIs.REOPEN.uri
 
 const getData = () => {
   return {
@@ -17,9 +17,10 @@ const getData = () => {
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
-  const settType = pageData.payload['habitat-types']
+  const settType = parseInt(pageData.payload['habitat-types'])
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { settType }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { settType })
+  request.cache().setData(journeyData)
 }
 
 export default pageRoute({

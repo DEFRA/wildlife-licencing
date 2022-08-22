@@ -8,7 +8,8 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const numberOfEntrances = pageData.payload['habitat-entrances']
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, { numberOfEntrances }))
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { numberOfEntrances })
+  request.cache().setData(journeyData)
 }
 
 export default pageRoute({

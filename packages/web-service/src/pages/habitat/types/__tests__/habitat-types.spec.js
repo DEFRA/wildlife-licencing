@@ -11,7 +11,9 @@ describe('The habitat types page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-types': '100000011'
@@ -22,7 +24,8 @@ describe('The habitat types page', () => {
       const { setData } = await import('../habitat-types.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        settType: '100000011'
+        habitatData:
+          { settType: 100000011 }
       })
     })
   })

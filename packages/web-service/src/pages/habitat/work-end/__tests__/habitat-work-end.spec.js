@@ -151,7 +151,9 @@ describe('The habitat work end page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-work-end-day': 10,
@@ -164,7 +166,8 @@ describe('The habitat work end page', () => {
       const { setData } = await import('../habitat-work-end.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        endDate: '7-10-2022'
+        habitatData:
+          { workEnd: '7-10-2022' }
       })
     })
   })

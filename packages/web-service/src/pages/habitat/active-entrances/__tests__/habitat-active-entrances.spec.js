@@ -12,7 +12,9 @@ describe('The habitat active entrances page', () => {
       const request = {
         cache: () => ({
           setData: mockSetData,
-          getData: () => ({}),
+          getData: () => ({
+            habitatData: {}
+          }),
           getPageData: () => ({
             payload: {
               'habitat-active-entrances': 99
@@ -23,7 +25,8 @@ describe('The habitat active entrances page', () => {
       const { setData } = await import('../habitat-active-entrances.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        activeEntrances: 99
+        habitatData:
+        { numberOfActiveEntrances: 99 }
       })
     })
   })
