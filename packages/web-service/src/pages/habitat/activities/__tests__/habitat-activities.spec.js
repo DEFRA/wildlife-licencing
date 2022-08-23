@@ -1,3 +1,4 @@
+
 describe('The habitat activities page', () => {
   beforeEach(() => jest.resetModules())
 

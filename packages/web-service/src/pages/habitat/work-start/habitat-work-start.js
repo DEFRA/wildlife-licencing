@@ -33,17 +33,14 @@ export const validator = async payload => {
   if (day === '' || month === '' || year === '') {
     throwJoiError('Error: no date has been sent', 'no-date-sent')
   }
-
   // We can immediately return on these values
   if (invalidDate(day, month, dateString)) {
     throwJoiError('Error: the start date is invalid', 'invalidDate')
   }
-
   // Ensure the date conforms to a Date() object in JS
   if (!isDate(dateString)) {
     throwJoiError('Error: a start date cant be parsed from this string', 'invalidDate')
   }
-
   // Is this in the past?
   if ((new Date(dateString)) < (new Date())) {
     throwJoiError('Error: a start date has been chosen from the past', 'dateHasPassed')

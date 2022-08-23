@@ -28,5 +28,27 @@ describe('The habitat name page', () => {
           { name: 'Badgerland' }
       })
     })
+    it('sets the name correctly if no journey data exists', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({
+            habitatData: undefined
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-name': 'Badgerland'
+            }
+          })
+        })
+      }
+      const { setData } = await import('../habitat-name.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        habitatData:
+          { name: 'Badgerland' }
+      })
+    })
   })
 })

@@ -7,7 +7,7 @@ import { isDate } from '../../../utils/is-date.js'
 const badgerLicenceSeasonOpen = `05-01-${new Date().getFullYear()}` // 1st May
 const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 
-const checkData = async request => {
+export const checkData = async request => {
   await request.cache().setPageData({ payload: await request.cache().getData() })
 }
 
@@ -55,13 +55,13 @@ export const validator = async payload => {
   // Is the start date within the licence period?
   // Is it after when the badger licence opens and before the badger licence end?
   if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
-    throwJoiError('Error: a date has been chosen from the past', 'outsideLicence')
+    throwJoiError('Error: an end date has been chosen outside the licence period', 'outsideLicence')
   }
-
+  // !! Need to pass start date in here !!
   // Is the finish date after the start date?
-  if (!new Date(dateString)) {
-    throwJoiError('Error: an end date has been chosen before the start date', 'endDateBeforeStart')
-  }
+  // if (!new Date(dateString)) {
+  //   throwJoiError('Error: an end date has been chosen before the start date', 'endDateBeforeStart')
+  // }
 
   return payload
 }

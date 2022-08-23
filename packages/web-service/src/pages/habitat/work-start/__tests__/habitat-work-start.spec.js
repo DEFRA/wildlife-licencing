@@ -7,7 +7,16 @@ describe('The habitat work start page', () => {
       const { completion } = await import('../habitat-work-start.js')
       expect(await completion()).toBe('/habitat-work-end')
     })
-
+    it('throws an error if a date can not be parsed', async () => {
+      try {
+        const payload = { 'habitat-work-start-day': '12---', 'habitat-work-start-month': '5----', 'habitat-work-start-year': (new Date().getFullYear()) }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
+      }
+    })
     it('if the user doesnt input a day - it raises an error', async () => {
       try {
         const payload = { 'habitat-work-start-day': '', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
@@ -106,7 +115,6 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
-
     it('you cant pass a string as a day', async () => {
       try {
         const payload = { 'habitat-work-start-day': 'aa', 'habitat-work-start-month': '1', 'habitat-work-start-year': (new Date().getFullYear()) }
@@ -137,6 +145,26 @@ describe('The habitat work start page', () => {
       } catch (e) {
         expect(e.message).toBe('ValidationError')
         expect(e.details[0].message).toBe('Error: the date is invalid')
+      }
+    })
+    it('you cant pass a past date', async () => {
+      try {
+        const payload = { 'habitat-work-start-day': new Date().getDate() - 1, 'habitat-work-start-month': new Date().getMonth(), 'habitat-work-start-year': new Date().getFullYear() }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
+      }
+    })
+    it('you cant pass a date outside of the license season', async () => {
+      try {
+        const payload = { 'habitat-work-start-day': 31, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: an end date has been chosen outside the licence period')
       }
     })
     it('constructs the date correctly', async () => {
