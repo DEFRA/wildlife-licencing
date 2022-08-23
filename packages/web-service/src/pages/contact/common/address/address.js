@@ -32,17 +32,18 @@ export const setAddressData = (contactType, contactOrganisation) => async reques
   }
 }
 
-const mapLookedUpAddress = lookupAddress => Object.assign({ },
-  {
-    ...(!!lookupAddress.SubBuildingName && { subBuildingName: lookupAddress.SubBuildingName }),
-    ...(!!lookupAddress.BuildingName && { buildingName: lookupAddress.BuildingName }),
-    ...(!!lookupAddress.BuildingNumber && { buildingNumber: lookupAddress.BuildingNumber }),
-    ...(!!lookupAddress.Street && { street: lookupAddress.Street }),
-    ...(!!lookupAddress.Town && { town: lookupAddress.Town }),
-    ...(!!lookupAddress.County && { county: lookupAddress.County }),
-    ...{ postcode: lookupAddress.Postcode },
-    ...(!!lookupAddress.Country && { country: lookupAddress.Country }),
-    ...(!!lookupAddress.XCoordinate && { xCoordinate: lookupAddress.XCoordinate }),
-    ...(!!lookupAddress.YCoordinate && { yCoordinate: lookupAddress.YCoordinate }),
-    ...(!!lookupAddress.UPRN && { uprn: lookupAddress.UPRN })
-  })
+const ifPresent = (lookupAddress, apiKey, luKey) => (!!lookupAddress[luKey] && { [apiKey]: lookupAddress[luKey] })
+
+export const mapLookedUpAddress = lookupAddress => Object.assign({ }, {
+  ...ifPresent(lookupAddress, 'subBuildingName', 'SubBuildingName'),
+  ...ifPresent(lookupAddress, 'buildingName', 'BuildingName'),
+  ...ifPresent(lookupAddress, 'buildingNumber', 'BuildingNumber'),
+  ...ifPresent(lookupAddress, 'street', 'Street'),
+  ...ifPresent(lookupAddress, 'town', 'Town'),
+  ...ifPresent(lookupAddress, 'county', 'County'),
+  ...ifPresent(lookupAddress, 'postcode', 'Postcode'),
+  ...ifPresent(lookupAddress, 'country', 'Country'),
+  ...ifPresent(lookupAddress, 'xCoordinate', 'XCoordinate'),
+  ...ifPresent(lookupAddress, 'yCoordinate', 'YCoordinate'),
+  ...ifPresent(lookupAddress, 'uprn', 'UPRN')
+})

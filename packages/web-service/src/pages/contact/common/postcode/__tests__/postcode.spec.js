@@ -64,8 +64,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      const urlBase = { ADDRESS: { uri: '/applicant-address', page: 'applicant-address' } }
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7', {
         address: { postcode: 'SW1W 0NY' },
         name: 'The Rolling Stones'
@@ -100,8 +99,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      const urlBase = { ADDRESS: { uri: '/applicant-address', page: 'applicant-address' } }
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7', {
         address: { postcode: 'SW1W 0NY' },
         fullName: 'Keith Richards'
@@ -135,8 +133,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      const urlBase = { ADDRESS: { uri: '/applicant-address', page: 'applicant-address' } }
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
     })
     it('sets the contact postcode and looks up the address, deleting the address lookup cache data when the addressLookup throws an exception', async () => {
@@ -166,8 +163,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      const urlBase = { ADDRESS: { uri: '/applicant-address', page: 'applicant-address' } }
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
     })
   })

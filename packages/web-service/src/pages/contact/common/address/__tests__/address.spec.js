@@ -111,4 +111,15 @@ describe('the address functions', () => {
       })
     })
   })
+
+  describe('mapLookedUpAddress', () => {
+    it('sets each element', async () => {
+      const { mapLookedUpAddress } = await import('../address.js')
+      expect(mapLookedUpAddress({})).toEqual({})
+      expect(mapLookedUpAddress({ Postcode: '' })).toEqual({ })
+      expect(mapLookedUpAddress({ Postcode: 'BS9' })).toEqual({ postcode: 'BS9' })
+      expect(mapLookedUpAddress({ Postcode: 'BS9', Country: 'England' }))
+        .toEqual({ postcode: 'BS9', country: 'England' })
+    })
+  })
 })

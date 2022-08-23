@@ -11,6 +11,6 @@ export const applicantPostcode = postcodePage({
   uri: POSTCODE.uri,
   checkData: checkData,
   getData: getPostcodeData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
-  setData: setPostcodeData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
+  setData: setPostcodeData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
   completion: postcodeCompletion(contactURIs.APPLICANT)
 })
