@@ -10,7 +10,7 @@ export const getPostcodeData = (contactType, contactOrganisation, uriBase) => as
     contactName: contact?.fullName,
     accountName: account?.name,
     postcode: account?.address?.postcode || contact?.address?.postcode,
-    uri: { addressForm: uriBase.ADDRESS_FORM.uri }
+    uri: { addressForm: `${uriBase.ADDRESS_FORM.uri}?no-postcode=true` }
   }
 }
 

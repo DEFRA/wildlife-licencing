@@ -29,7 +29,7 @@ describe('the postcode functions', () => {
         contactName: 'Keith Richards',
         postcode: 'SW1W 0NY',
         uri: {
-          addressForm: '/applicant-address-form'
+          addressForm: '/applicant-address-form?no-postcode=true'
         }
       })
     })
