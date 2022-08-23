@@ -3,19 +3,6 @@ describe('The habitat work end page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat-work-end page', () => {
-    it('sets pageData correctly in checkData', async () => {
-      const mockGetData = jest.fn(() => null)
-      const mockSet = jest.fn()
-      const request = {
-        cache: () => ({
-          setPageData: mockSet,
-          getData: mockGetData
-        })
-      }
-      const { checkData } = await import('../habitat-work-end.js')
-      await checkData(request)
-      expect(mockSet).toHaveBeenCalledWith({ payload: null })
-    })
     it('returns true if date is a number', async () => {
       const date = '11-07-2022'
       const notDate = 'badgers'
@@ -23,6 +10,7 @@ describe('The habitat work end page', () => {
       expect(isDate(date)).toBe(true)
       expect(isDate(notDate)).toBe(false)
     })
+
     it('the habitat-work-end page forwards onto habitat-activities', async () => {
       const { completion } = await import('../habitat-work-end.js')
       expect(await completion()).toBe('/habitat-activities')
@@ -170,6 +158,7 @@ describe('The habitat work end page', () => {
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
+
     it('you cant pass a past date', async () => {
       try {
         const payload = { 'habitat-work-end-day': new Date().getDate() - 1, 'habitat-work-end-month': new Date().getMonth(), 'habitat-work-end-year': new Date().getFullYear() }
@@ -180,6 +169,7 @@ describe('The habitat work end page', () => {
         expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
+
     it('you cant pass a date outside of the license season', async () => {
       try {
         const payload = { 'habitat-work-end-day': 31, 'habitat-work-end-month': 11, 'habitat-work-end-year': new Date().getFullYear() }
@@ -187,9 +177,10 @@ describe('The habitat work end page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: an end date has been chosen outside the licence period')
+        expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
       }
     })
+
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
       const request = {

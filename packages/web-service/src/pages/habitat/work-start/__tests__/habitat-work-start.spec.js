@@ -14,7 +14,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a start date cant be parsed from this string')
+        expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
       }
     })
     it('if the user doesnt input a day - it raises an error', async () => {
@@ -57,7 +57,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -68,7 +68,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -79,7 +79,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -90,7 +90,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -101,7 +101,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -112,7 +112,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
     it('you cant pass a string as a day', async () => {
@@ -122,7 +122,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -133,7 +133,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
 
@@ -144,7 +144,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the start date is invalid')
+        expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
     it('you cant pass a past date', async () => {
@@ -154,7 +154,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a start date has been chosen from the past')
+        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
     it('you cant pass a date outside of the license season', async () => {
@@ -164,7 +164,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a start date has been chosen outside the licence period')
+        expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
       }
     })
     it('constructs the date correctly', async () => {
