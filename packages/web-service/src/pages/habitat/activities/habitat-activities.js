@@ -4,7 +4,6 @@ import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const { METHOD_IDS: { DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES } } = PowerPlatformKeys
 
-
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
 export const getData = async _request => {
@@ -17,7 +16,7 @@ export const getData = async _request => {
   }
 }
 
-const validator = async payload => {
+export const validator = async payload => {
   if (!payload['habitat-activities']) {
     const activities = 'habitat-activities'
 
