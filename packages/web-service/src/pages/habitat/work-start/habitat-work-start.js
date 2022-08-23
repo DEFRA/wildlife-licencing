@@ -10,14 +10,15 @@ const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 export const completion = async _request => habitatURIs.WORK_END.uri
 
 export const throwJoiError = (message, type) => {
+  const habitatStart = 'habitat-work-start'
   throw new Joi.ValidationError('ValidationError', [{
     message: message,
-    path: ['habitat-work-start'],
+    path: [habitatStart],
     type: type,
     context: {
-      label: 'habitat-work-start',
+      label: habitatStart,
       value: 'Error',
-      key: 'habitat-work-start'
+      key: habitatStart
     }
   }], null)
 }

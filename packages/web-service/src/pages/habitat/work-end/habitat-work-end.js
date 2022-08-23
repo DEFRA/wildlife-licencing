@@ -12,14 +12,16 @@ const checkData = async request => {
 }
 
 export const throwJoiError = (message, type) => {
+  const habitatEnd = 'habitat-work-end'
+
   throw new Joi.ValidationError('ValidationError', [{
     message: message,
-    path: ['habitat-work-end'],
+    path: [habitatEnd],
     type: type,
     context: {
-      label: 'habitat-work-end',
+      label: habitatEnd,
       value: 'Error',
-      key: 'habitat-work-end'
+      key: habitatEnd
     }
   }], null)
 }
