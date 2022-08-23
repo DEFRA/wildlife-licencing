@@ -22,7 +22,8 @@ describe('the address functions', () => {
         })
       }
       const urlBase = {
-        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' },
+        POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' }
       }
       const { getAddressData } = await import('../address.js')
       const result = await getAddressData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
@@ -38,7 +39,8 @@ describe('the address functions', () => {
         contactName: 'Keith Richards',
         postcode: 'SW1W 0NY',
         uri: {
-          addressForm: '/applicant-address-form'
+          addressForm: '/applicant-address-form',
+          postcode: '/applicant-postcode'
         }
       })
     })

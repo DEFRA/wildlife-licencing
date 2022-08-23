@@ -9,7 +9,7 @@ export const getAddressData = (contactType, contactOrganisation, uriBase) => asy
     contactName: contact?.fullName,
     accountName: account?.name,
     postcode: account?.address?.postcode || contact?.address?.postcode,
-    uri: { addressForm: uriBase.ADDRESS_FORM.uri },
+    uri: { addressForm: uriBase.ADDRESS_FORM.uri, postcode: uriBase.POSTCODE.uri },
     addressLookup: journeyData?.addressLookup
   }
 }

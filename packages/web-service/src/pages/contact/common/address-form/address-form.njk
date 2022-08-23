@@ -21,6 +21,9 @@
         },
         'address-county': {
             'string.pattern.base': { ref: '#address-county', text: 'Enter the county using only letters and spaces' }
+        },
+        'address-postcode': {
+            'string.pattern.base': { ref: '#address-postcode', text: 'Enter a valid UK postcode' }
         }
     }
 %}
@@ -70,4 +73,17 @@
     attributes: { maxlength: "80" },
     errorMessage: { text: 'Enter county' } if error['address-county']
   }) }}
+
+  {% if data.postCode %}
+    {{ govukInput({
+      label: {
+        text: "Postcode"
+      },
+      classes: "govuk-!-width-one-quarter",
+      id: "address-postcode",
+      name: "address-postcode",
+      attributes: { maxlength: "10" },
+      errorMessage: { text: 'Enter postcode' } if error['address-postcode']
+    }) }}
+  {% endif %}
 {% endblock %}

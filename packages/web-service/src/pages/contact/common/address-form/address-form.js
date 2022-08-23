@@ -7,7 +7,8 @@ export const getAddressFormData = (contactType, contactOrganisation) => async re
   const account = await APIRequests[contactOrganisation].getByApplicationId(applicationId)
   return {
     contactName: contact?.fullName,
-    accountName: account?.name
+    accountName: account?.name,
+    postCode: !request.query['no-postcode']
   }
 }
 
@@ -33,5 +34,6 @@ const mapInputAddress = inputAddress => Object.assign({ },
     ...(!!inputAddress['address-line-1'] && { addressLine1: inputAddress['address-line-1'] }),
     ...(!!inputAddress['address-line-2'] && { addressLine2: inputAddress['address-line-2'] }),
     ...(!!inputAddress['address-town'] && { town: inputAddress['address-town'] }),
-    ...(!!inputAddress['address-county'] && { county: inputAddress['address-county'] })
+    ...(!!inputAddress['address-county'] && { county: inputAddress['address-county'] }),
+    ...(!!inputAddress['address-postcode'] && { postcode: inputAddress['address-postcode'] })
   })

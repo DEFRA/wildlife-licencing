@@ -18,13 +18,17 @@ describe('the address-form functions', () => {
           getData: jest.fn(() => ({
             applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
           }))
-        })
+        }),
+        query: {
+          'no-postcode': true
+        }
       }
       const { getAddressFormData } = await import('../address-form.js')
       const result = await getAddressFormData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(result).toEqual({
         accountName: 'The Rolling Stones',
-        contactName: 'Keith Richards'
+        contactName: 'Keith Richards',
+        postCode: false
       })
     })
   })

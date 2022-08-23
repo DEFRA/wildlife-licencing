@@ -22,6 +22,8 @@
 {% endfor %}
 
 {% block pageContent %}
+    <p class="govuk-body-m">Postcode {{ data.postcode }}
+    <a href="{{ data.uri.postcode }}" class="govuk-link">Change</a></p>
     {{ govukSelect({
       id: "address",
       name: "uprn",
