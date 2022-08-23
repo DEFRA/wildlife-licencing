@@ -4,7 +4,7 @@ import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
-export const completion = async request => habitatURIs.REOPEN.uri
+export const completion = async _request => habitatURIs.REOPEN.uri
 
 const getData = () => {
   return {
