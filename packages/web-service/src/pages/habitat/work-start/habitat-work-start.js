@@ -48,8 +48,8 @@ export const validator = async payload => {
 
   // Is the start date within the licence period?
   // Is it after when the badger licence opens and before the badger licence end?
-  if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
-    throwJoiError('Error: a date has been chosen outside the licence period', 'outsideLicence')
+  if ((new Date(dateString)) > (new Date(badgerLicenceSeasonClose)) || (new Date(dateString)) < (new Date(badgerLicenceSeasonOpen))) {
+    throwJoiError('Error: an end date has been chosen outside the licence period', 'outsideLicence')
   }
 
   return payload
