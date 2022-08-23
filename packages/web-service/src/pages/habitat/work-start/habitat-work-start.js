@@ -10,11 +10,7 @@ export const completion = async _request => habitatURIs.WORK_END.uri
 export const isDate = date => {
   const isValidDate = Date.parse(date)
 
-  if (isNaN(isValidDate)) {
-    return false
-  }
-
-  return true
+  return !isNaN(isValidDate)
 }
 
 export const invalidDate = (day, month, year, dateString) => {
@@ -26,14 +22,11 @@ export const invalidDate = (day, month, year, dateString) => {
     return true
   }
 
-  if (!(/^[\d-]*$/.test(dateString))) { // Validate we just have dashes and numbers
-    return true
-  }
-
-  return false
+  return !(/^[\d-]*$/.test(dateString)) // Validate we just have dashes and numbers
 }
 
 export const validator = async payload => {
+  const habitatWorkStart = 'habitat-work-start'
   const day = payload['habitat-work-start-day']
   const month = payload['habitat-work-start-month']
   const year = payload['habitat-work-start-year']
@@ -43,54 +36,51 @@ export const validator = async payload => {
   if (day === '' || month === '' || year === '') {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no date has been sent',
-      path: ['habitat-work-start'],
+      path: [habitatWorkStart],
       type: 'no-date-sent',
       context: {
-        label: 'habitat-work-start',
+        label: habitatWorkStart,
         value: 'Error',
-        key: 'habitat-work-start'
+        key: habitatWorkStart
       }
     }], null)
   }
-
   // We can immediately return on these values
   if (invalidDate(day, month, year, dateString)) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the date is invalid',
-      path: ['habitat-work-start'],
+      path: [habitatWorkStart],
       type: 'invalidDate',
       context: {
-        label: 'habitat-work-start',
+        label: habitatWorkStart,
         value: 'Error',
-        key: 'habitat-work-start'
+        key: habitatWorkStart
       }
     }], null)
   }
-
   // Ensure the date conforms to a Date() object in JS
   if (!isDate(dateString)) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date cant be parsed from this string',
-      path: ['habitat-work-start'],
+      path: [habitatWorkStart],
       type: 'invalidDate',
       context: {
-        label: 'habitat-work-start',
+        label: habitatWorkStart,
         value: 'Error',
-        key: 'habitat-work-start'
+        key: habitatWorkStart
       }
     }], null)
   }
-
   // Is this in the past?
   if ((new Date(dateString)) < (new Date())) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date has been chosen from the past',
-      path: ['habitat-work-start'],
+      path: [habitatWorkStart],
       type: 'dateHasPassed',
       context: {
-        label: 'habitat-work-start',
+        label: habitatWorkStart,
         value: 'Error',
-        key: 'habitat-work-start'
+        key: habitatWorkStart
       }
     }], null)
   }
@@ -100,12 +90,12 @@ export const validator = async payload => {
   if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date has been chosen from the past',
-      path: ['habitat-work-start'],
+      path: [habitatWorkStart],
       type: 'outsideLicence',
       context: {
-        label: 'habitat-work-start',
+        label: habitatWorkStart,
         value: 'Error',
-        key: 'habitat-work-start'
+        key: habitatWorkStart
       }
     }], null)
   }

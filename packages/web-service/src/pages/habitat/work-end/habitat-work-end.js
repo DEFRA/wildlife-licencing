@@ -8,11 +8,7 @@ const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
 export const isDate = date => {
   const isValidDate = Date.parse(date)
 
-  if (isNaN(isValidDate)) {
-    return false
-  }
-
-  return true
+  return !isNaN(isValidDate)
 }
 
 export const invalidDate = (day, month, year, dateString) => {
@@ -24,18 +20,15 @@ export const invalidDate = (day, month, year, dateString) => {
     return true
   }
 
-  if (!(/^[\d-]*$/.test(dateString))) { // Validate we just have dashes and numbers
-    return true
-  }
-
-  return false
+  return !(/^[\d-]*$/.test(dateString)) // Validate we just have dashes and numbers
 }
 
-const checkData = async request => {
+export const checkData = async request => {
   await request.cache().setPageData({ payload: await request.cache().getData() })
 }
 
 export const validator = async payload => {
+  const habitatWorkEnd = 'habitat-work-end'
   const day = payload['habitat-work-end-day']
   const month = payload['habitat-work-end-month']
   const year = payload['habitat-work-end-year']
@@ -44,12 +37,12 @@ export const validator = async payload => {
   if (day === '' || month === '' || year === '') {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no date has been sent',
-      path: ['habitat-work-end'],
+      path: [habitatWorkEnd],
       type: 'no-date-sent',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }
@@ -58,12 +51,12 @@ export const validator = async payload => {
   if (invalidDate(day, month, year, dateString)) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the date is invalid',
-      path: ['habitat-work-end'],
+      path: [habitatWorkEnd],
       type: 'invalidDate',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }
@@ -72,26 +65,27 @@ export const validator = async payload => {
   if (!isDate(dateString)) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: a date cant be parsed from this string',
-      path: ['habitat-work-end'],
+      path: [habitatWorkEnd],
       type: 'invalidDate',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }
 
+  const pastError = 'Error: a date has been chosen from the past'
   // Is this in the past?
   if ((new Date(dateString)) < (new Date())) {
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: a date has been chosen from the past',
-      path: ['habitat-work-end'],
+      message: pastError,
+      path: [habitatWorkEnd],
       type: 'dateHasPassed',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }
@@ -100,13 +94,13 @@ export const validator = async payload => {
   // Is it after when the badger licence opens and before the badger licence end?
   if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: a date has been chosen from the past',
-      path: ['habitat-work-end'],
+      message: pastError,
+      path: [habitatWorkEnd],
       type: 'outsideLicence',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }
@@ -114,13 +108,13 @@ export const validator = async payload => {
   // Is the finish date after the start date?
   if (!new Date(dateString)) {
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: a date has been chosen from the past',
-      path: ['habitat-work-end'],
+      message: pastError,
+      path: [habitatWorkEnd],
       type: 'outsideLicence',
       context: {
-        label: 'habitat-work-end',
+        label: habitatWorkEnd,
         value: 'Error',
-        key: 'habitat-work-end'
+        key: habitatWorkEnd
       }
     }], null)
   }

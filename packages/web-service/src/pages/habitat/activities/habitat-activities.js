@@ -16,16 +16,17 @@ export const getData = async _request => {
   }
 }
 
-const validator = async payload => {
-  if (!payload['habitat-activities']) {
+export const validator = async payload => {
+  const activities = 'habitat-activities'
+  if (!payload[activities]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
-      path: ['habitat-activities'],
+      path: [activities],
       type: 'no-checkbox-selected',
       context: {
-        label: 'habitat-activities',
+        label: activities,
         value: 'Error',
-        key: 'habitat-activities'
+        key: activities
       }
     }], null)
   }

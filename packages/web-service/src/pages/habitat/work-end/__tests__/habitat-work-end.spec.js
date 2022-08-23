@@ -3,6 +3,19 @@ describe('The habitat work end page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat-work-end page', () => {
+    it('sets pageData correctly in checkData', async () => {
+      const mockGetData = jest.fn(() => null)
+      const mockSet = jest.fn()
+      const request = {
+        cache: () => ({
+          setPageData: mockSet,
+          getData: mockGetData
+        })
+      }
+      const { checkData } = await import('../habitat-work-end.js')
+      await checkData(request)
+      expect(mockSet).toHaveBeenCalledWith({ payload: null })
+    })
     it('returns true if date is a number', async () => {
       const date = '11-07-2022'
       const notDate = 'badgers'
