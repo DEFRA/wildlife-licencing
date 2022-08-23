@@ -17,7 +17,7 @@ describe('The habitat activities page', () => {
 
     it('if the user doesnt fill a checkbox - it raises an error', async () => {
       try {
-        const payload = { 'habitat-activities': 'Obstruct the sett with a gate' }
+        const payload = { 'habitat-activities': '' }
         const { validator } = await import('../habitat-activities.js')
         expect(await validator(payload))
       } catch (e) {
