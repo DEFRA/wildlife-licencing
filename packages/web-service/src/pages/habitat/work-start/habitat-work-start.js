@@ -36,23 +36,23 @@ export const validator = async payload => {
 
   // We can immediately return on these values
   if (invalidDate(day, month, dateString)) {
-    throwJoiError('Error: the date is invalid', 'invalidDate')
+    throwJoiError('Error: the start date is invalid', 'invalidDate')
   }
 
   // Ensure the date conforms to a Date() object in JS
   if (!isDate(dateString)) {
-    throwJoiError('Error: a date cant be parsed from this string', 'invalidDate')
+    throwJoiError('Error: a start date cant be parsed from this string', 'invalidDate')
   }
 
   // Is this in the past?
   if ((new Date(dateString)) < (new Date())) {
-    throwJoiError('Error: a date has been chosen from the past', 'dateHasPassed')
+    throwJoiError('Error: a start date has been chosen from the past', 'dateHasPassed')
   }
 
   // Is the start date within the licence period?
   // Is it after when the badger licence opens and before the badger licence end?
-  if ((new Date(dateString)) > (new Date(badgerLicenceSeasonClose)) || (new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) ) {
-    throwJoiError('Error: an end date has been chosen outside the licence period', 'outsideLicence')
+  if ((new Date(dateString)) > (new Date(badgerLicenceSeasonClose)) || (new Date(dateString)) < (new Date(badgerLicenceSeasonOpen))) {
+    throwJoiError('Error: a start date has been chosen outside the licence period', 'outsideLicence')
   }
 
   return payload
