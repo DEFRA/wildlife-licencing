@@ -17,8 +17,9 @@ export const getData = async _request => {
 }
 
 export const validator = async payload => {
-  const activities = 'habitat-activities'
-  if (!payload[activities]) {
+  if (!payload['habitat-activities']) {
+    const activities = 'habitat-activities'
+
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
       path: [activities],

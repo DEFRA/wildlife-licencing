@@ -19,7 +19,7 @@ describe('The habitat work end page', () => {
     it('returns true if date is a number', async () => {
       const date = '11-07-2022'
       const notDate = 'badgers'
-      const { isDate } = await import('../habitat-work-end.js')
+      const { isDate } = await import('../../../../utils/is-date.js')
       expect(isDate(date)).toBe(true)
       expect(isDate(notDate)).toBe(false)
     })

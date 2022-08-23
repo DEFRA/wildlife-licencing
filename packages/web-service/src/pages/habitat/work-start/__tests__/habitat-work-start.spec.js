@@ -106,13 +106,6 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
-    it('returns true if date is a number', async () => {
-      const date = '11-07-2022'
-      const notDate = 'badgers'
-      const { isDate } = await import('../habitat-work-start.js')
-      expect(isDate(date)).toBe(true)
-      expect(isDate(notDate)).toBe(false)
-    })
     it('you cant pass a string as a day', async () => {
       try {
         const payload = { 'habitat-work-start-day': 'aa', 'habitat-work-start-month': '1', 'habitat-work-start-year': (new Date().getFullYear()) }

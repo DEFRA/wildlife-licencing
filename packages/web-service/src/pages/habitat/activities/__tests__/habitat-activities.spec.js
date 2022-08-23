@@ -14,9 +14,10 @@ describe('The habitat activities page', () => {
       const { METHOD_IDS } = PowerPlatformKeys
       expect(await getData()).toEqual(METHOD_IDS)
     })
-    it('if the user doesnt input a method - it raises an error', async () => {
+
+    it('if the user doesnt fill a checkbox - it raises an error', async () => {
       try {
-        const payload = {}
+        const payload = { 'habitat-activities': 'Obstruct the sett with a gate' }
         const { validator } = await import('../habitat-activities.js')
         expect(await validator(payload))
       } catch (e) {
@@ -24,15 +25,11 @@ describe('The habitat activities page', () => {
         expect(e.details[0].message).toBe('Error: no way of affecting the sett has been selected')
       }
     })
-    it('if the user does input a method - it returns nothing', async () => {
-      try {
-        const payload = { 'habitat-activities': 'move the badgers' }
-        const { validator } = await import('../habitat-activities.js')
-        expect(await validator(payload)).toBe(undefined)
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: no way of affecting the sett has been selected')
-      }
+
+    it('if the user fills out a checkbox - validator returns nothing', async () => {
+      const payload = { 'habitat-activities': 'Obstruct the sett with a gate' }
+      const { validator } = await import('../habitat-activities.js')
+      expect(await validator(payload)).toBe(undefined)
     })
   })
 })
