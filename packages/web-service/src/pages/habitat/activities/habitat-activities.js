@@ -22,13 +22,14 @@ export const getData = async _request => {
     DISTURB_A_SETT
   }
 }
+const pageName = 'habitat-activities'
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const habData = journeyData.habitatData
   const id = habData.id || uuidv4()
-  const methodIds = pageData.payload['habitat-activities'].map(method => parseInt(method))
+  const methodIds = pageData.payload[pageName].map(method => parseInt(method))
   const active = habData.numberOfEntrances > 0 && habData.numberOfActiveEntrances > 0
   const speciesId = BADGER
   const activityId = INTERFERE_WITH_BADGER_SETT
@@ -38,8 +39,8 @@ export const setData = async request => {
 }
 
 export const validator = async payload => {
-  if (!payload['habitat-activities']) {
-    const activities = 'habitat-activities'
+  if (!payload[pageName]) {
+    const activities = pageName
 
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
