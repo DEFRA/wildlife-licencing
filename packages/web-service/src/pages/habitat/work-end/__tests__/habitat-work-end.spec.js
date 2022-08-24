@@ -11,9 +11,32 @@ describe('The habitat work end page', () => {
       expect(isDate(notDate)).toBe(false)
     })
 
-    it('the habitat-work-end page forwards onto habitat-activities', async () => {
+    it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getPageData: () => {
+              return {}
+            }
+          }
+        }
+      }
       const { completion } = await import('../habitat-work-end.js')
-      expect(await completion()).toBe('/habitat-activities')
+      expect(await completion(request)).toBe('/habitat-activities')
+    })
+
+    it('the habitat-work-end page stays on the habitat-work-end page if there are errors', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getPageData: () => {
+              return { error: 'there were problems with user input' }
+            }
+          }
+        }
+      }
+      const { completion } = await import('../habitat-work-end.js')
+      expect(await completion(request)).toBe('/habitat-work-end')
     })
 
     it('if the user doesnt input a day - it raises an error', async () => {
@@ -179,6 +202,44 @@ describe('The habitat work end page', () => {
         expect(e.message).toBe('ValidationError')
         expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
       }
+    })
+
+    it('you cant pass an end date before the start date', async () => {
+      const setPgData = jest.fn()
+      const joiError = {
+        error: {
+          'habitat-work-end': 'endDateBeforeStart'
+        },
+        payload: undefined
+      }
+
+      const request = {
+        cache: () => {
+          return {
+            getPageData: () => {
+              return {
+                payload: {
+                  'habitat-work-end-day': '10',
+                  'habitat-work-end-month': '10',
+                  'habitat-work-end-year': '3021'
+                }
+              }
+            },
+            getData: () => {
+              return {
+                habitatData: {
+                  workStart: '10-10-3022'
+                }
+              }
+            },
+            setPageData: setPgData
+          }
+        }
+      }
+
+      const { setData } = await import('../habitat-work-end.js')
+      await setData(request)
+      expect(setPgData).toHaveBeenCalledWith(joiError)
     })
 
     it('constructs the date correctly', async () => {

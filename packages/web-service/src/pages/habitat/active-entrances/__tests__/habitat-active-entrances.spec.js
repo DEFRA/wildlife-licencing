@@ -3,10 +3,34 @@ describe('The habitat active entrances page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat-active-entrances page', () => {
-    it('the habitat-active-entrances page forwards onto habitat-grid-ref page', async () => {
+    it('the habitat-active-entrances page forwards onto habitat-grid-ref page if theres no errors', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getPageData: () => {
+              return {}
+            }
+          }
+        }
+      }
       const { completion } = await import('../habitat-active-entrances.js')
-      expect(await completion()).toBe('/habitat-grid-ref')
+      expect(await completion(request)).toBe('/habitat-grid-ref')
     })
+
+    it('the habitat-active-entrances page stays on the habitat-active-entrances page if there are errors', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getPageData: () => {
+              return { error: 'there were problems with user input' }
+            }
+          }
+        }
+      }
+      const { completion } = await import('../habitat-active-entrances.js')
+      expect(await completion(request)).toBe('/habitat-active-entrances')
+    })
+
     it('sets the active entrance data correctly', async () => {
       const mockSetData = jest.fn()
       const request = {
