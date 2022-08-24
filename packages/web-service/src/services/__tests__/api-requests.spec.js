@@ -801,7 +801,7 @@ describe('The API requests service', () => {
       expect(mockPut).toHaveBeenCalledWith('/application-account/8a3e8c32-0138-402c-8913-87e78ed44ebd', {
         accountId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactRole: 'APPLICANT-ORGANISATION'
+        accountRole: 'APPLICANT-ORGANISATION'
       })
     })
 
@@ -828,7 +828,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.APPLICANT_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
-      expect(mockPost).toHaveBeenCalledWith('/application-accounts', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', contactRole: 'APPLICANT-ORGANISATION' })
+      expect(mockPost).toHaveBeenCalledWith('/application-account', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', accountRole: 'APPLICANT-ORGANISATION' })
     })
 
     it('assign rethrows on error', async () => {
@@ -1037,7 +1037,11 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ECOLOGIST.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
-      expect(mockPost).toHaveBeenCalledWith('/application-contacts', { applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', contactRole: 'ECOLOGIST' })
+      expect(mockPost).toHaveBeenCalledWith('/application-contact', {
+        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+        contactRole: 'ECOLOGIST'
+      })
     })
 
     it('assign rethrows an error', async () => {
@@ -1281,7 +1285,7 @@ describe('The API requests service', () => {
       expect(mockPut).toHaveBeenCalledWith('/application-account/8a3e8c32-0138-402c-8913-87e78ed44ebd', {
         accountId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactRole: 'ECOLOGIST-ORGANISATION'
+        accountRole: 'ECOLOGIST-ORGANISATION'
       })
     })
 
@@ -1308,7 +1312,7 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ECOLOGIST_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
-      expect(mockPost).toHaveBeenCalledWith('/application-accounts', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', contactRole: 'ECOLOGIST-ORGANISATION' })
+      expect(mockPost).toHaveBeenCalledWith('/application-account', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', accountRole: 'ECOLOGIST-ORGANISATION' })
     })
 
     it('assign rethrows on error', async () => {
