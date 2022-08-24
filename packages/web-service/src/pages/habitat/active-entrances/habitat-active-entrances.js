@@ -15,20 +15,21 @@ export const completion = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
+  const habitatActiveEntrances = 'habitat-active-entrances'
+  const numberOfActiveEntrances = pageData.payload[habitatActiveEntrances]
 
-  const numberOfActiveEntrances = pageData.payload['habitat-active-entrances']
   const totalEntrances = journeyData.habitatData.numberOfEntrances
   if (numberOfActiveEntrances > totalEntrances) {
     await request.cache().setPageData({
       payload: request.payload,
       error: errorShim(new Joi.ValidationError('ValidationError', [{
         message: 'Error: the user has entered more active holes than total holes',
-        path: ['habitat-active-entrances'],
+        path: [habitatActiveEntrances],
         type: 'tooManyActiveHoles',
         context: {
-          label: 'habitat-active-entrances',
+          label: habitatActiveEntrances,
           value: 'Error',
-          key: 'habitat-active-entrances'
+          key: habitatActiveEntrances
         }
       }]))
     })

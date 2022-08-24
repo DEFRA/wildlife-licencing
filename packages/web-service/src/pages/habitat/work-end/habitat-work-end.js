@@ -13,7 +13,8 @@ export const validator = async payload => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const data = pageData.payload
-  const workEnd = `${data['habitat-work-end-month']}-${data['habitat-work-end-day']}-${data['habitat-work-end-year']}`
+  const habitatWorkEnd = 'habitat-work-end'
+  const workEnd = `${data[`${habitatWorkEnd}-month`]}-${data[`${habitatWorkEnd}-day`]}-${data[`${habitatWorkEnd}-year`]}`
 
   // Is the finish date before the start date?
   // Ideally we should do this in the `validator`, but it doesn't have access
@@ -24,12 +25,12 @@ export const setData = async request => {
       payload: request.payload,
       error: errorShim(new Joi.ValidationError('ValidationError', [{
         message: 'Error: the user has entered an end date before the start date',
-        path: ['habitat-work-end'],
+        path: [habitatWorkEnd],
         type: 'endDateBeforeStart',
         context: {
-          label: 'habitat-work-end',
+          label: habitatWorkEnd,
           value: 'Error',
-          key: 'habitat-work-end'
+          key: habitatWorkEnd
         }
       }]))
     })
