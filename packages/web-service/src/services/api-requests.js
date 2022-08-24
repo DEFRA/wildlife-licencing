@@ -386,13 +386,23 @@ export const APIRequests = {
     * @returns {Promise<*>}
   */
   HABITAT: {
-    create: async applicationId => {
+    create: async (applicationId, payload) => {
       try {
-        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, { applicationId })
+        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, payload)
         debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
         return application
       } catch (error) {
         console.error(`Error creating habitat-site for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getHabitatsById: async applicationId => {
+      try {
+        const habitats = await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
+        return habitats
+      } catch (error) {
+        console.error(`Error retrieving applications for ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

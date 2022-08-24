@@ -9,7 +9,8 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const name = pageData.payload['habitat-name']
   const journeyData = await request.cache().getData()
-  journeyData.habitatData = Object.assign(journeyData.habitatData || {}, { name })
+  const applicationId = journeyData.applicationId
+  journeyData.habitatData = Object.assign(journeyData.habitatData || {}, { name, applicationId })
   request.cache().setData(journeyData)
 }
 

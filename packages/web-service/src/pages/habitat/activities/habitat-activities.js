@@ -2,7 +2,14 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-const { METHOD_IDS: { DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES } } = PowerPlatformKeys
+import { APIRequests } from '../../../services/api-requests.js'
+import { v4 as uuidv4 } from 'uuid'
+
+const {
+  METHOD_IDS: { DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES },
+  SPECIES: { BADGER },
+  ACTIVITY_ID: { INTERFERE_WITH_BADGER_SETT }
+} = PowerPlatformKeys
 
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
@@ -14,6 +21,20 @@ export const getData = async _request => {
     DESTROY_A_SETT,
     DISTURB_A_SETT
   }
+}
+
+export const setData = async request => {
+  const pageData = await request.cache().getPageData()
+  const journeyData = await request.cache().getData()
+  const id = journeyData.habitatData.id ? journeyData.habitatData.id : uuidv4()
+  const methodIds = pageData.payload['habitat-activities'].map(method => parseInt(method))
+  const active = journeyData.habitatData.numberOfEntrances > 0 && journeyData.habitatData.numberOfActiveEntrances > 0
+  const speciesId = BADGER
+  const activityId = INTERFERE_WITH_BADGER_SETT
+  Object.assign(journeyData.habitatData, { id, methodIds, active, speciesId, activityId })
+  console.log(journeyData.habitatData)
+  await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
+  request.cache().setData(journeyData)
 }
 
 export const validator = async payload => {
@@ -33,4 +54,4 @@ export const validator = async payload => {
   }
 }
 
-export default pageRoute({ page: habitatURIs.ACTIVITIES.page, uri: habitatURIs.ACTIVITIES.uri, validator, completion, getData })
+export default pageRoute({ page: habitatURIs.ACTIVITIES.page, uri: habitatURIs.ACTIVITIES.uri, validator, completion, getData, setData })
