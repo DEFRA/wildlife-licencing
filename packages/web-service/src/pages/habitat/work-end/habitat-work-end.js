@@ -14,7 +14,7 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const data = pageData.payload
   const habitatWorkEnd = 'habitat-work-end'
-  const workEnd = `${data[`${habitatWorkEnd}-month`]}-${data[`${habitatWorkEnd}-day`]}-${data[`${habitatWorkEnd}-year`]}`
+  const workEnd = `${data['habitat-work-end-month']}-${data['habitat-work-end-day']}-${data['habitat-work-end-year']}`
 
   // Is the finish date before the start date?
   // Ideally we should do this in the `validator`, but it doesn't have access
