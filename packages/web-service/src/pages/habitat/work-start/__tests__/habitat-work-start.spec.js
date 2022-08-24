@@ -167,6 +167,26 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
       }
     })
+    it('you can pass a date in future license seasons', async () => {
+      try {
+        const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() + 10 }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload)).toBe(payload)
+      } catch (e) {
+        expect(e.message).toBe(undefined)
+        expect(e.details[0].message).toBe(undefined)
+      }
+    })
+    it('you cant pass today\'s date', async () => {
+      try {
+        const payload = { 'habitat-work-start-day': new Date().getDate(), 'habitat-work-start-month': new Date().getMonth() + 1, 'habitat-work-start-year': new Date().getFullYear() }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: today\'s date cannot be chosen')
+      }
+    })
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
       const request = {

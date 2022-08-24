@@ -2,6 +2,7 @@
 import Joi from 'joi'
 import { isDate } from './is-date.js'
 import { invalidDate } from './invalid-date.js'
+export const midnightString = `${new Date().getFullYear()}-0${new Date().getMonth() < 11 ? new Date().getMonth() + 1 : 0}-${new Date().getDate()}T00:00`
 
 const throwJoiError = (pageName, message, type) => {
   throw new Joi.ValidationError('ValidationError', [{
@@ -17,12 +18,12 @@ const throwJoiError = (pageName, message, type) => {
 }
 
 export const validateDates = (payload, pageName) => {
-  const badgerLicenceSeasonOpen = `05-01-${new Date().getFullYear()}` // 1st May
-  const badgerLicenceSeasonClose = `11-30-${new Date().getFullYear()}` // 30th Nov
-
   const day = payload[`${pageName}-day`]
   const month = payload[`${pageName}-month`]
   const year = payload[`${pageName}-year`]
+
+  const chosenSeasonOpen = `05-01-${year}`
+  const chosenSeasonClose = `11-30-${year}`
 
   const dateString = `${month}-${day}-${year}`
 
@@ -43,12 +44,15 @@ export const validateDates = (payload, pageName) => {
 
   // Is this in the past?
   if ((new Date(dateString)) < (new Date())) {
+    if ((new Date(dateString)) >= (new Date(midnightString))) {
+      throwJoiError(pageName, 'Error: today\'s date cannot be chosen', 'todaysDate')
+    }
     throwJoiError(pageName, 'Error: a date has been chosen from the past', 'dateHasPassed')
   }
 
   // Is the start date within the licence period?
   // Is it after when the badger licence opens and before the badger licence end?
-  if ((new Date(dateString)) < (new Date(badgerLicenceSeasonOpen)) || (new Date(dateString)) > (new Date(badgerLicenceSeasonClose))) {
+  if ((new Date(dateString)) < (new Date(chosenSeasonOpen)) || (new Date(dateString)) > (new Date(chosenSeasonClose))) {
     throwJoiError(pageName, 'Error: a date has been chosen outside the licence period', 'outsideLicence')
   }
 }
