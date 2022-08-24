@@ -67,7 +67,7 @@ describe('the email-address functions', () => {
             getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
           },
           APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', email: 'Keith@therollingstones.com' }))
+            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', contactDetails: { email: 'Keith@therollingstones.com' } }))
           }
         }
       }))
@@ -88,7 +88,7 @@ describe('the email-address functions', () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', email: 'keith@mail.com' }))
+            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
           },
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => null)
@@ -158,11 +158,6 @@ describe('the email-address functions', () => {
           contactDetails: { email: 'Keith@mail.com' },
           fullName: 'Keith Richards'
         })
-    })
-  })
-
-  describe('completion', () => {
-    it('TODO', async () => {
     })
   })
 })

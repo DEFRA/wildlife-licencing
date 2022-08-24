@@ -80,7 +80,7 @@ const assignContact = async (role, applicationId, contactId) => {
     })
   } else if (!applicationContact) {
     debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
-    await API.post(`${apiUrls.APPLICATION_CONTACTS}`, {
+    await API.post(`${apiUrls.APPLICATION_CONTACT}`, {
       contactId,
       applicationId,
       contactRole: role
@@ -95,14 +95,14 @@ const assignAccount = async (role, applicationId, accountId) => {
     await API.put(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`, {
       accountId,
       applicationId,
-      contactRole: role
+      accountRole: role
     })
   } else if (!applicationAccount) {
-    debug(`Assigning ${role} contact ${accountId} to applicationId: ${applicationId}`)
-    await API.post(`${apiUrls.APPLICATION_ACCOUNTS}`, {
+    debug(`Assigning ${role} account ${accountId} to applicationId: ${applicationId}`)
+    await API.post(`${apiUrls.APPLICATION_ACCOUNT}`, {
       accountId,
       applicationId,
-      contactRole: role
+      accountRole: role
     })
   }
 }

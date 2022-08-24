@@ -20,7 +20,7 @@ export const getEmailAddressData = (contactType, contactOrganisation) => async r
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
   const account = await APIRequests[contactOrganisation].getByApplicationId(applicationId)
   return {
-    email: account?.email || contact?.email,
+    email: account?.contactDetails?.email || contact?.contactDetails?.email,
     contactName: contact?.fullName,
     accountName: account?.name
   }

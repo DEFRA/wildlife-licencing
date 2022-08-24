@@ -4,12 +4,12 @@ import { getEmailAddressData, setEmailAddressData, checkEmailAddressData }
   from '../common/email-address/email-address.js'
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
 
-const { EMAIL } = contactURIs.APPLICANT
+const { EMAIL, POSTCODE } = contactURIs.APPLICANT
 
 export const applicantEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
-  completion: EMAIL.uri,
+  completion: POSTCODE.uri,
   getData: getEmailAddressData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
   setData: setEmailAddressData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
   checkData: checkEmailAddressData(ApiRequestEntities.APPLICANT)
