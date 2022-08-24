@@ -47,18 +47,13 @@ const affectMap = [
   }
 ]
 
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-]
-
 const typeProcessor = selectedType => settMap.filter(type => type.key === selectedType)[0].value
 const methodProcessor = selectedMethods => affectMap.filter(method => selectedMethods.includes(method.key)).map(method => '\n' + method.value)
 export const dateProcessor = date => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()
-  const month = dateObj.getMonth()
   const year = dateObj.getFullYear()
-  return `${Number(day)} ${monthNames[month]} ${year}`
+  return `${Number(day)} ${dateObj.toLocaleString('default', { month: 'long' })} ${year}`
 }
 
 export const getData = async request => {
