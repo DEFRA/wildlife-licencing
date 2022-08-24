@@ -1,0 +1,37 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set errorMap = {
+        'postcode': {
+            'string.empty': { ref: '#postcode', text: 'Enter a postcode' },
+            'string.pattern.base': { ref: '#postcode', text: 'Enter a correct UK postcode' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: 'Postcode'
+      },
+      hint: {
+        text: 'e.g. SW1W 0NY'
+      },
+      id: "postcode",
+      name: "postcode",
+      spellcheck: false,
+      value: data.postcode if data.postcode else payload['postcode'],
+      classes: "govuk-input--width-10",
+      attributes: { maxlength: 10 },
+      errorMessage: { text: 'Enter the postcode' } if error['postcode']
+    }) }}
+    <p class="govuk-body">
+        <a href="{{ data.uri.addressForm }}" class="govuk-link">The address doesn’t have a postcode</a>
+    </p>
+{% endblock %}
