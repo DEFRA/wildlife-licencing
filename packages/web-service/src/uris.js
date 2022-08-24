@@ -40,7 +40,10 @@ export const contactURIs = {
     IS_ORGANISATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' },
     ORGANISATIONS: { uri: '/ecologist-organisations', page: 'ecologist-organisations' },
     EMAIL: { uri: '/ecologist-email', page: 'ecologist-email' },
-    CHECK_ANSWERS: { uri: '/ecologist-check-answers', page: 'ecologist-check-answers' }
+    CHECK_ANSWERS: { uri: '/ecologist-check-answers', page: 'ecologist-check-answers' },
+    POSTCODE: { uri: '/ecologist-postcode', page: 'ecologist-postcode' },
+    ADDRESS: { uri: '/ecologist-address', page: 'ecologist-address' },
+    ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
     USER: { uri: '/applicant-user', page: 'applicant-user' },
@@ -49,7 +52,10 @@ export const contactURIs = {
     IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
     ORGANISATIONS: { uri: '/applicant-organisations', page: 'applicant-organisations' },
     EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
-    CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' }
+    CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
+    POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
+    ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
+    ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
   }
 }
 

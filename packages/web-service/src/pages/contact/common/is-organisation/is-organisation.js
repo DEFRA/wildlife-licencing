@@ -1,4 +1,4 @@
-/** AKA account names */
+/** AKA account names == need to rename this for consistency */
 
 import { APIRequests } from '../../../../services/api-requests.js'
 

@@ -55,7 +55,8 @@ export const checkResponseOkElseThrow = async responsePromise => {
  * @param timeOutMS - The Timeout in milliseconds
  * @returns {Promise<*|*>}
  */
-export const httpFetch = async (url, method, payload, headerFunc, responseFunc = checkResponseOkElseThrow, timeOutMS = DEFAULT_TIMEOUT) => {
+export const httpFetch = async (url, method, payload, headerFunc, responseFunc = checkResponseOkElseThrow,
+  timeOutMS = DEFAULT_TIMEOUT, additionalOptions = {}) => {
   const headers = headerFunc && typeof headerFunc === 'function'
     ? await headerFunc()
     : { 'Content-Type': APPLICATION_JSON, Accept: APPLICATION_JSON }
@@ -66,7 +67,8 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     headers,
     method,
     signal: abortController.signal,
-    ...payload && { body: payload }
+    ...payload && { body: payload },
+    ...additionalOptions
   }
 
   debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)

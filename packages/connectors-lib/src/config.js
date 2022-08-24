@@ -52,5 +52,11 @@ export default {
   graph: {
     base: process.env.GRAPH_BASE,
     site: process.env.GRAPH_SITE
+  },
+  address: {
+    url: process.env.ADDRESS_LOOKUP_URL,
+    certificatePath: process.env.ADDRESS_LOOKUP_CERTIFICATE_PATH,
+    passphrase: process.env.ADDRESS_LOOKUP_PASSPHRASE,
+    timeout: process.env.ADDRESS_LOOKUP_TIMEOUT_MS
   }
 }

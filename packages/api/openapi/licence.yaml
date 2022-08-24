@@ -2574,34 +2574,54 @@ components:
     address:
       type: object
       properties:
-        houseNumber:
+        addressLine1:
           type: string
           minLength: 1
-          maxLength: 36
-        addrline1:
+          maxLength: 80
+        addressLine2:
           type: string
           minLength: 1
-          maxLength: 36
-        addrline2:
+          maxLength: 80
+        subBuildingName:
           type: string
           minLength: 1
-          maxLength: 36
-        addrline3:
+          maxLength: 80
+        buildingName:
           type: string
           minLength: 1
-          maxLength: 36
-        county:
+          maxLength: 80
+        buildingNumber:
           type: string
           minLength: 1
-          maxLength: 36
+          maxLength: 80
+        street:
+          type: string
+          minLength: 1
+          maxLength: 80
         town:
           type: string
           minLength: 1
-          maxLength: 36
+          maxLength: 80
+        county:
+          type: string
+          minLength: 1
+          maxLength: 80
+        country:
+          type: string
+          minLength: 1
+          maxLength: 50
         postcode:
           type: string
           minLength: 1
           maxLength: 10
+        uprn:
+          type: string
+          minLength: 1
+          maxLength: 12
+        xCoordinate:
+          type: number
+        yCoordinate:
+          type: number
 
     gridReference:
       type: string
