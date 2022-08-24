@@ -31,5 +31,92 @@ describe('The habitat activities page', () => {
       const { validator } = await import('../habitat-activities.js')
       expect(await validator(payload)).toBe(undefined)
     })
+    it('sets data correctly', async () => {
+      const mockSet = jest.fn()
+      const mockCreate = jest.fn()
+      const request = {
+        cache: () => ({
+          setData: mockSet,
+          getData: () => ({
+            habitatData: {
+              numberOfEntrances: 10,
+              numberOfActiveEntrances: 5
+            }
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-activities': [1000000, 10000001]
+            }
+          })
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            create: mockCreate
+          }
+        })
+      }))
+
+      jest.doMock('uuid', () => ({
+        v4: () => '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
+      }))
+      const { setData } = await import('../habitat-activities.js')
+      await setData(request)
+      expect(mockSet).toHaveBeenCalledWith({
+        habitatData: {
+          id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+          numberOfEntrances: 10,
+          numberOfActiveEntrances: 5,
+          speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+          activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+          methodIds: [1000000, 10000001],
+          active: true
+        }
+      })
+      expect(mockCreate).toHaveBeenCalledTimes(1)
+    })
+  })
+  it('sets data correctly', async () => {
+    const mockSet = jest.fn()
+    const mockCreate = jest.fn()
+    const request = {
+      cache: () => ({
+        setData: mockSet,
+        getData: () => ({
+          habitatData: {
+            id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+            numberOfEntrances: 10,
+            numberOfActiveEntrances: 5
+          }
+        }),
+        getPageData: () => ({
+          payload: {
+            'habitat-activities': [1000000, 10000001]
+          }
+        })
+      })
+    }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      APIRequests: ({
+        HABITAT: {
+          create: mockCreate
+        }
+      })
+    }))
+    const { setData } = await import('../habitat-activities.js')
+    await setData(request)
+    expect(mockSet).toHaveBeenCalledWith({
+      habitatData: {
+        id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
+        numberOfEntrances: 10,
+        numberOfActiveEntrances: 5,
+        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+        activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+        methodIds: [1000000, 10000001],
+        active: true
+      }
+    })
+    expect(mockCreate).toHaveBeenCalledTimes(1)
   })
 })

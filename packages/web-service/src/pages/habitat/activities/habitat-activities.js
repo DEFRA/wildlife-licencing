@@ -26,13 +26,13 @@ export const getData = async _request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const id = journeyData.habitatData.id ? journeyData.habitatData.id : uuidv4()
+  const habData = journeyData.habitatData
+  const id = habData.id || uuidv4()
   const methodIds = pageData.payload['habitat-activities'].map(method => parseInt(method))
-  const active = journeyData.habitatData.numberOfEntrances > 0 && journeyData.habitatData.numberOfActiveEntrances > 0
+  const active = habData.numberOfEntrances > 0 && habData.numberOfActiveEntrances > 0
   const speciesId = BADGER
   const activityId = INTERFERE_WITH_BADGER_SETT
   Object.assign(journeyData.habitatData, { id, methodIds, active, speciesId, activityId })
-  console.log(journeyData.habitatData)
   await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
   request.cache().setData(journeyData)
 }

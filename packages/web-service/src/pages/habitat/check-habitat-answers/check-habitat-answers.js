@@ -53,7 +53,7 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
 
 const typeProcessor = selectedType => settMap.filter(type => type.key === selectedType)[0].value
 const methodProcessor = selectedMethods => affectMap.filter(method => selectedMethods.includes(method.key)).map(method => '\n' + method.value)
-export const dateProcessor = (date) => {
+export const dateProcessor = date => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()
   const month = dateObj.getMonth()
@@ -77,9 +77,7 @@ export const getData = async request => {
   return pageData
 }
 
-export const validator = async payload => {
-  return payload
-}
+export const validator = async payload => payload
 
 export const completion = async _request => TASKLIST.uri
 

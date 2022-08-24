@@ -399,8 +399,7 @@ export const APIRequests = {
     },
     getHabitatsById: async applicationId => {
       try {
-        const habitats = await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
-        return habitats
+        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
       } catch (error) {
         console.error(`Error retrieving applications for ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
