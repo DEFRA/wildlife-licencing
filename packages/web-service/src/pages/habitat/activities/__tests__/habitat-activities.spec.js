@@ -11,7 +11,7 @@ describe('The habitat activities page', () => {
 
     it('the habitat-activities page delivers the correct data from the getData call', async () => {
       const { getData } = await import('../habitat-activities.js')
-      const expected = settDistruptionMethods
+      const expected = { settDistruptionMethods }
       expect(await getData()).toEqual(expected)
     })
 
