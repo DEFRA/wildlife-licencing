@@ -36,7 +36,6 @@ export default {
       },
       auth: {
         tokenHost: process.env.OAUTH_AUTHORITY_HOST_URL,
-        tenant: process.env.OAUTH_TENANT,
         tokenPath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/token`,
         authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
       }
@@ -51,7 +50,9 @@ export default {
   },
   graph: {
     base: process.env.GRAPH_BASE,
-    site: process.env.GRAPH_SITE
+    siteId: process.env.GRAPH_SITE_ID,
+    driveId: process.env.GRAPH_SITE_DRIVE_ID,
+    tenant: process.env.OAUTH_TENANT
   },
   address: {
     url: process.env.ADDRESS_LOOKUP_URL,

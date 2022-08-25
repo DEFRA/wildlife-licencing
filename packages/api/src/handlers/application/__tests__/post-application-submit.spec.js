@@ -28,7 +28,7 @@ const context = {
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-queue-defs', () => ({
   getQueue: jest.fn(() => ({ add: jest.fn(() => ({ id: 1 })) })),
-  queueDefinitions: { APPLICATION_QUEUE: {} }
+  queueDefinitions: { APPLICATION_QUEUE: {}, FILE_QUEUE: {} }
 }))
 
 let models
@@ -43,11 +43,14 @@ describe('The postApplicationSubmit handler', () => {
     cache = REDIS.cache
   })
 
-  it('returns a 204 on a successful submission', async () => {
+  it.only('returns a 204 on a successful submission', async () => {
     const mockUpdate = jest.fn()
     models.applications = {
       findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })),
       update: mockUpdate
+    }
+    models.applicationUploads = {
+      findAll: jest.fn(async () => [{ dataValues: { id: '123' } }])
     }
     cache.delete = jest.fn(() => null)
     await postApplicationSubmit(context, req, h)

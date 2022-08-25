@@ -30,6 +30,8 @@ export default async (context, req, h) => {
       console.log(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
     }
 
+    await models.applications.update({ userSubmission: true }, { where: { id: applicationId } })
+
     return h.response().code(204)
   } catch (err) {
     console.error('Error updating into APPLICATIONS table', err)

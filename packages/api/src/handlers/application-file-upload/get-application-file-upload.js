@@ -1,5 +1,5 @@
 import { models } from '@defra/wls-database-model'
-import { prepareResponse } from '../application/application-proc.js'
+import { prepareResponse } from './application-upload-proc.js'
 import { APPLICATION_JSON } from '../../constants.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 import { checkCache } from '../utils.js'

@@ -1488,7 +1488,7 @@ describe('The API requests service', () => {
         })
     })
 
-    it.only('record rethrows an error', async () => {
+    it('record rethrows an error', async () => {
       const mockGet = jest.fn(() => { throw new Error() })
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
