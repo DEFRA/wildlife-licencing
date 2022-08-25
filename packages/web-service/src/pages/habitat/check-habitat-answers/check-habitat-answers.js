@@ -4,10 +4,6 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { settTypes } from '../../../utils/sett-type.js'
 import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
 
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-]
-
 const typeProcessor = selectedType => settTypes.filter(type => type.value === selectedType)[0].text
 const methodProcessor = selectedMethods => settDistruptionMethods.filter(method => selectedMethods.includes(method.value)).map(method => '\n' + method.text)
 export const dateProcessor = date => {

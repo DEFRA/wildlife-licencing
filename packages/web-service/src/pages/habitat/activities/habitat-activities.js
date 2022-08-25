@@ -25,8 +25,11 @@ export const setData = async request => {
   const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
   const active = habData.numberOfEntrances > 0 && habData.numberOfActiveEntrances > 0
-
-  Object.assign(journeyData.habitatData, { methodIds, active, speciesId: BADGER, activityId: INTERFERE_WITH_BADGER_SETT })
+  const speciesId = BADGER
+  const activityId = INTERFERE_WITH_BADGER_SETT
+  const complete = true
+  Object.assign(journeyData.habitatData, { methodIds, active, speciesId, activityId })
+  Object.assign(journeyData, { complete })
   await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
   request.cache().setData(journeyData)
 }

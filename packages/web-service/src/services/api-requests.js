@@ -405,6 +405,25 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    getHabitatBySettId: async (applicationId, settId) => {
+      try {
+        console.log('before')
+        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+      } catch (error) {
+        console.error(`Error retrieving application for ${settId} on ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putHabitatById: async (applicationId, settId, payload) => {
+      try {
+        return await API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload)
+      } catch (error) {
+        console.error(`Error altering data for ${settId} on ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   LICENCES: {

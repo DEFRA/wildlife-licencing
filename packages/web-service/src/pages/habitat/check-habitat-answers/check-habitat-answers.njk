@@ -11,7 +11,6 @@
 {% for habitat in data %}
   <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
 
-
     {{ govukSummaryList({
     rows: [
     {
@@ -20,9 +19,8 @@
       actions: {
           items: [
             {
-              href: '#',
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-types?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -33,9 +31,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-reopen?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -46,9 +43,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-entrances?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -59,9 +55,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-active-entrances?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -72,9 +67,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-grid-ref?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -85,9 +79,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-work-start?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -98,9 +91,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-work-end?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }
@@ -111,9 +103,8 @@
       actions: {
           items: [
             {
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "name"
+              href: "/habitat-activities?id=" + habitat.id,
+              text: "Change"
             }
           ]
         }

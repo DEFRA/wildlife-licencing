@@ -3,9 +3,18 @@ import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import { settTypes } from '../../../utils/sett-type.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { changeHandler, putData } from '../../../utils/editTools.js'
+
 const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
-export const completion = async _request => habitatURIs.REOPEN.uri
+export const completion = async request => {
+  console.log('got to completion')
+  const journeyData = await request.cache().getData()
+  if (journeyData.complete) {
+    return habitatURIs.CHECK_YOUR_ANSWERS.uri
+  }
+  return habitatURIs.REOPEN.uri
+}
 
 const getData = () => {
   return { settTypes }
@@ -13,9 +22,18 @@ const getData = () => {
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
-  const settType = parseInt(pageData.payload['habitat-types'])
   const journeyData = await request.cache().getData()
-  journeyData.habitatData = Object.assign(journeyData.habitatData, { settType })
+  const settType = parseInt(pageData.payload['habitat-types'])
+  const settId = request.query.id
+  Object.assign(journeyData.habitatData, { settType })
+
+  if (journeyData.complete) {
+    const newSett = await changeHandler(journeyData, settId)
+    console.log('before Put')
+    const putStuff = await putData(newSett)
+    console.log(putStuff)
+    return
+  }
   request.cache().setData(journeyData)
 }
 
