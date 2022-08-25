@@ -20,24 +20,7 @@
       text: "Select one."
     },
     errorMessage: { text: "Select a sett type." } if error['habitat-types'],
-    items: [
-      {
-        value: data.MAIN_NO_ALTERNATIVE_SETT,
-        text: "Main"
-      },
-      {
-        value: data.ANNEXE,
-        text: "Annexe"
-      },
-      {
-        value: data.OUTLIER,
-        text: "Outlier"
-      },
-      {
-        value: data.SUBSIDIARY,
-        text: "Subsidiary"
-      }
-    ]
+    items: data.settTypes
   }) }}
 
 {% endblock %}
