@@ -113,7 +113,7 @@ describe('The file job processor', () => {
       }
     }))
     const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(() => fileJobProcess(job)).rejects.toThrow()
+    await expect(fileJobProcess(job)).rejects.toThrow()
   })
 
   it('rejects with an unrecoverable error from AWS', async () => {
@@ -147,7 +147,7 @@ describe('The file job processor', () => {
       }
     }))
     const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(() => fileJobProcess(job)).resolves
+    await expect(fileJobProcess(job)).resolves
   })
 
   it('rejects with recoverable error from AZURE', async () => {
@@ -188,6 +188,6 @@ describe('The file job processor', () => {
       }
     }))
     const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(() => fileJobProcess(job)).rejects.toThrow()
+    await expect(fileJobProcess(job)).rejects.toThrow()
   })
 })

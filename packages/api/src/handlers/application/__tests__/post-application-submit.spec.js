@@ -43,7 +43,7 @@ describe('The postApplicationSubmit handler', () => {
     cache = REDIS.cache
   })
 
-  it.only('returns a 204 on a successful submission', async () => {
+  it('returns a 204 on a successful submission', async () => {
     const mockUpdate = jest.fn()
     models.applications = {
       findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })),

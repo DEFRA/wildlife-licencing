@@ -230,12 +230,11 @@ export const applicationJobProcess = async job => {
 
     if (!payload) {
       console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)
-      return Promise.resolve()
-    }
-
+    } else {
     // Update the application and associated data in Power Apps
-    const targetKeys = await applicationUpdate(payload)
-    await postProcess(targetKeys)
+      const targetKeys = await applicationUpdate(payload)
+      await postProcess(targetKeys)
+    }
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)

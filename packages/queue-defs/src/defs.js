@@ -1,4 +1,4 @@
-const fastThenSlow = function (attemptsMade, err) {
+export const fastThenSlow = function (attemptsMade, err) {
   console.log(`Retry attempt ${attemptsMade} with error err: ${err}`)
   if (attemptsMade < 6) {
     // Every 20 seconds for the first 2 minutes

@@ -17,7 +17,7 @@ describe('the S3 file upload service', () => {
   })
 
   describe('s3FileUpload', () => {
-    it.only('sends the put command and unlinks the file', async () => {
+    it('sends the put command and unlinks the file', async () => {
       const mockSend = jest.fn()
       const mockPut = jest.fn()
       const mockCreate = jest.fn()
