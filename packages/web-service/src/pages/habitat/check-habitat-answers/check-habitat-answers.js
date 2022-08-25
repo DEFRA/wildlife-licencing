@@ -13,9 +13,8 @@ const methodProcessor = selectedMethods => settDistruptionMethods.filter(method 
 export const dateProcessor = date => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()
-  const month = dateObj.getMonth()
   const year = dateObj.getFullYear()
-  return `${Number(day)} ${monthNames[month]} ${year}`
+  return `${Number(day)} ${dateObj.toLocaleString('default', { month: 'long' })} ${year}`
 }
 
 export const getData = async request => {
