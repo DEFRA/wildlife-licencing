@@ -4,6 +4,7 @@ import { habitatURIs } from '../../../uris.js'
 import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../services/api-requests.js'
+const page = 'habitat-activities'
 
 const {
   SPECIES: { BADGER },
@@ -21,7 +22,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
 
   const habData = journeyData.habitatData
-  const activities = [].concat(pageData.payload['habitat-activities'])
+  const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
   const active = habData.numberOfEntrances > 0 && habData.numberOfActiveEntrances > 0
 
@@ -31,17 +32,15 @@ export const setData = async request => {
 }
 
 export const validator = async payload => {
-  if (!payload['habitat-activities']) {
-    const activities = 'habitat-activities'
-
+  if (!payload[page]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
-      path: [activities],
+      path: [page],
       type: 'no-checkbox-selected',
       context: {
-        label: activities,
+        label: page,
         value: 'Error',
-        key: activities
+        key: page
       }
     }], null)
   }
