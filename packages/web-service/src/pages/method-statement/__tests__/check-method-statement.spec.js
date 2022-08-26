@@ -1,4 +1,4 @@
-describe('the check-work-schedule page handler', () => {
+describe('the check-method-statement page handler', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
@@ -17,9 +17,9 @@ describe('the check-work-schedule page handler', () => {
       const h = {
         redirect: mockRedirect
       }
-      const { checkData } = await import('../check-work-schedule.js')
+      const { checkData } = await import('../check-method-statement.js')
       await checkData(request, h)
-      expect(mockRedirect).toHaveBeenCalledWith('/upload-work-schedule')
+      expect(mockRedirect).toHaveBeenCalledWith('/upload-method-statement')
     })
 
     it('checks there is a fileUpload object set in the cache and if so returns null', async () => {
@@ -28,7 +28,7 @@ describe('the check-work-schedule page handler', () => {
           getData: () => ({ fileUpload: {} })
         })
       }
-      const { checkData } = await import('../check-work-schedule.js')
+      const { checkData } = await import('../check-method-statement.js')
       const result = await checkData(request, { })
       expect(result).toBeNull()
     })
@@ -41,10 +41,10 @@ describe('the check-work-schedule page handler', () => {
           getData: () => ({ fileUpload: { filename: 'hello.txt' } })
         })
       }
-      const { getData } = await import('../check-work-schedule.js')
+      const { getData } = await import('../check-method-statement.js')
       const result = await getData(request)
       expect(result).toEqual({
-        change: '/upload-work-schedule',
+        change: '/upload-method-statement',
         filename: 'hello.txt'
       })
     })
@@ -64,10 +64,11 @@ describe('the check-work-schedule page handler', () => {
       jest.doMock('../../../services/s3-upload.js', () => ({
         s3FileUpload: mockS3FileUpload
       }))
-      const { completion } = await import('../check-work-schedule.js')
+      const { completion } = await import('../check-method-statement.js')
       const result = await completion(request)
       expect(result).toEqual('/tasklist')
-      expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path', 'method-statement')
+      expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
+        { filetype: 'METHOD-STATEMENT', multiple: false })
     })
 
     it('returns to the upload page if no upload found in the cache', async () => {
@@ -78,9 +79,9 @@ describe('the check-work-schedule page handler', () => {
           })
         })
       }
-      const { completion } = await import('../check-work-schedule.js')
+      const { completion } = await import('../check-method-statement.js')
       const result = await completion(request)
-      expect(result).toEqual('/upload-work-schedule')
+      expect(result).toEqual('/upload-method-statement')
     })
   })
 })

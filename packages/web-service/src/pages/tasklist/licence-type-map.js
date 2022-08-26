@@ -19,7 +19,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
-  WORK_SCHEDULE: 'work-schedule',
+  METHOD_STATEMENT: 'method-statement',
   SUBMIT: 'send-application'
 }
 
@@ -48,7 +48,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: false,
-    [SECTION_TASKS.WORK_SCHEDULE]: true,
+    [SECTION_TASKS.METHOD_STATEMENT]: true,
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -131,12 +131,12 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SETTS,
             uri: habitatURIs.START.uri,
-            status: () => STATUS_VALUES.NOT_STARTED,
-            enabled: true
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           },
           {
-            name: SECTION_TASKS.WORK_SCHEDULE,
-            uri: FILE_UPLOADS.WORK_SCHEDULE.FILE_UPLOAD.uri,
+            name: SECTION_TASKS.METHOD_STATEMENT,
+            uri: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri,
             status: eligibilityCheckStatus,
             enabled: eligibilityCheckEnabled
           }

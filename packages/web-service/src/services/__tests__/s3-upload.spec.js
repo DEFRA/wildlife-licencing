@@ -34,11 +34,18 @@ describe('the S3 file upload service', () => {
           CreateBucketCommand: mockCreate
         })
       }))
+      jest.doMock('../api-requests.js', () => ({
+        APIRequests: {
+          FILE_UPLOAD: {
+            record: jest.fn()
+          }
+        }
+      }))
       const { s3FileUpload } = await import('../s3-upload.js')
       await s3FileUpload('fedb14b6-53a8-ec11-9840-0022481aca85',
         'hello.txt',
         '/tmp/123',
-        'method'
+        { filetype: 'method', multiple: false }
       )
       expect(mockCreate).toHaveBeenCalledWith({ Bucket: 'fedb14b6-53a8-ec11-9840-0022481aca85.method' })
       expect(mockPut).toHaveBeenCalledWith({
@@ -71,7 +78,7 @@ describe('the S3 file upload service', () => {
         await s3FileUpload('fedb14b6-53a8-ec11-9840-0022481aca85',
           'hello.txt',
           '/tmp/123',
-          'method'
+          { filetype: 'method', multiple: false }
         )
       } catch (err) {
         expect(err.output.statusCode).toEqual(500)

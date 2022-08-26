@@ -108,6 +108,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       }
     }
   } finally {
+    debug('Request timeout clear ')
     clearTimeout(timeout)
   }
 }

@@ -3,40 +3,6 @@ import { MAX_FILE_UPLOAD_SIZE_MB } from '../../../../constants.js'
 
 describe('the generic file-upload page handler', () => {
   beforeEach(() => jest.resetModules())
-
-  it('checks that an applicationId is set in the cache and returns a redirect if not', async () => {
-    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-      return ({ init: () => Promise.resolve() })
-    }))
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({}))
-      })
-    }
-    const mockRedirect = jest.fn(() => 'redirect')
-    const h = {
-      redirect: mockRedirect
-    }
-    const { checkData } = await import('../file-upload.js')
-    const result = await checkData(request, h)
-    expect(result).toEqual('redirect')
-    expect(mockRedirect).toHaveBeenCalledWith('/applications')
-  })
-
-  it('checks that an applicationId is set in the cache and returns null if so', async () => {
-    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-      return ({ init: () => Promise.resolve() })
-    }))
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({ applicationId: '123' }))
-      })
-    }
-    const { checkData } = await import('../file-upload.js')
-    const result = await checkData(request, {})
-    expect(result).toBeNull()
-  })
-
   it('if the user doesnt attach a file - then it causes a joi error', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 

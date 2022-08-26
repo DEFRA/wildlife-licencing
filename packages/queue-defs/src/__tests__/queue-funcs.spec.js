@@ -33,4 +33,11 @@ describe('the queue functions', () => {
     expect(() => waitingHandler(job)).not.toThrow()
     expect(() => errorHandler('error')).not.toThrow()
   })
+
+  it('the back off function works sensibly ', async () => {
+    const { fastThenSlow } = await import('../defs.js')
+    expect(fastThenSlow(1, 'error')).toBe(20 * 1000) // 20 seconds
+    expect(fastThenSlow(12, 'error')).toBe(300 * 1000) // Five minutes
+    expect(fastThenSlow(30, 'error')).toBe(3600 * 1000) // One hour
+  })
 })

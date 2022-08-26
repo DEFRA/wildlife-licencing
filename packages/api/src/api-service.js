@@ -3,13 +3,17 @@ import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
 import { createQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import { createModels } from '@defra/wls-database-model'
 
-Promise.all([
-  SEQUELIZE.initialiseConnection()
-    .then(() => createModels()),
-  REDIS.initialiseConnection(),
-  createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
-]).then(() => createServer()
-  .then(s => init(s)))
+const initialize = async () => {
+  await SEQUELIZE.initialiseConnection()
+  await createModels()
+  await REDIS.initialiseConnection()
+  await createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.FILE_QUEUE, { type: 'client' })
+}
+
+initialize()
+  .then(() => createServer()
+    .then(s => init(s)))
   .catch(e => {
     console.error(e)
     process.exit(1)
