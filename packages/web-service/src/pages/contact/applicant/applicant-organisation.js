@@ -15,6 +15,6 @@ export const applicantOrganisation = isOrganisation({
   uri: IS_ORGANISATION.uri,
   checkData: checkData,
   getData: getContactAccountData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
-  setData: setContactAccountData(ApiRequestEntities.APPLICANT_ORGANISATION),
-  completion: contactAccountCompletion(ApiRequestEntities.APPLICANT, contactURIs.APPLICANT)
+  setData: setContactAccountData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
+  completion: contactAccountCompletion(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

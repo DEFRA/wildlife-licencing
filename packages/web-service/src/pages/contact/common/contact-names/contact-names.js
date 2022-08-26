@@ -5,7 +5,8 @@ export const getContactNamesData = contactType => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
   const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
-  return { contact, contacts }
+  // Cannot select from an associated contact
+  return { contact, contacts: contacts.filter(c => !c.userId) }
 }
 
 export const setContactNamesData = contactType => async request => {
@@ -13,6 +14,11 @@ export const setContactNamesData = contactType => async request => {
   if (contactId !== 'new') {
     const { applicationId } = await request.cache().getData()
     await APIRequests[contactType].assign(applicationId, contactId)
+    /* TODO
+     * if we select an immutable contact, which does not have an email address and address
+     * the on the direct journey that information will be collected against the organization.
+     * if however the user already selected no organization then create a contact
+     */
   } else {
     // At this point un-assign the contact from the application
     const { applicationId } = await request.cache().getData()

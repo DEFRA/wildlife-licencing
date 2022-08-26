@@ -69,6 +69,22 @@ const createContact = async (role, applicationId, payload) => {
   }
 }
 
+const destroyContact = async (role, applicationId) => {
+  try {
+    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    if (applicationContact) {
+      await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
+      debug(`Destroy ${role} ${applicationContact.id} for applicationId: ${applicationId}`)
+      await API.delete(`${apiUrls.CONTACT}/${applicationContact.contactId}`)
+      debug(`Destroy contact ${applicationContact.contactId}`)
+    }
+  } catch (error) {
+    console.error(`Error destroying ${role} for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
 const assignContact = async (role, applicationId, contactId) => {
   const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
   if (applicationContact && applicationContact.contactId !== contactId) {
@@ -121,7 +137,7 @@ const updateContact = async (role, applicationId, contact) => {
     const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
     return API.put(`${apiUrls.CONTACT}/${applicationContact.contactId}`, contact)
   } catch (error) {
-    console.error(`Error creating applicant for applicationId: ${applicationId}`, error)
+    console.error(`Error updating applicant for applicationId: ${applicationId}`, error)
     Boom.boomify(error, { statusCode: 500 })
     throw error
   }
@@ -388,6 +404,7 @@ export const APIRequests = {
   APPLICANT: {
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.APPLICANT, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
+    destroy: async applicationId => destroyContact(contactRoles.APPLICANT, applicationId),
     assign: async (applicationId, contactId) => assignContact(contactRoles.APPLICANT, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.APPLICANT, applicationId),
     update: async (applicationId, contact) => updateContact(contactRoles.APPLICANT, applicationId, contact),
@@ -396,6 +413,7 @@ export const APIRequests = {
   ECOLOGIST: {
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.ECOLOGIST, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
+    destroy: async applicationId => destroyContact(contactRoles.ECOLOGIST, applicationId),
     assign: async (applicationId, contactId) => assignContact(contactRoles.ECOLOGIST, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.ECOLOGIST, applicationId),
     update: async (applicationId, contact) => updateContact(contactRoles.ECOLOGIST, applicationId, contact),

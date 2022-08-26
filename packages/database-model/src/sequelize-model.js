@@ -42,7 +42,8 @@ async function defineAccountRoles (sequelize) {
 async function defineUsers (sequelize) {
   models.users = await sequelize.define('user', {
     id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(50), allowNull: false }
+    username: { type: DataTypes.STRING(50), allowNull: false },
+    password: { type: DataTypes.STRING(50) }
   }, {
     timestamps: true,
     indexes: [
@@ -54,6 +55,7 @@ async function defineUsers (sequelize) {
 async function defineContacts (sequelize) {
   models.contacts = await sequelize.define('contacts', {
     id: { type: DataTypes.UUID, primaryKey: true },
+    userId: { type: DataTypes.UUID },
     contact: { type: DataTypes.JSONB },
     sddsContactId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
@@ -61,7 +63,8 @@ async function defineContacts (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: true, fields: ['sdds_contact_id'], name: 'contact_sdds_id_uk' }
+      { unique: true, fields: ['sdds_contact_id'], name: 'contact_sdds_id_uk' },
+      { unique: false, fields: ['user_id'], name: 'contact_user_fk' }
     ]
   })
 }

@@ -1,5 +1,23 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
+import { APPLICATIONS } from '../../../../uris.js'
+
+export const postCodeCheckData = (contactType, accountType, uriBase) => async (request, h) => {
+  // If trying to set the address of an immutable account redirect to is organisations
+  // If trying to set the address of an immutable contact redirect to the names
+  const journeyData = await request.cache().getData()
+  if (!journeyData.applicationId) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  const account = await APIRequests[accountType].getByApplicationId(journeyData.applicationId)
+  if (account) {
+    return account.submitted ? h.redirect(uriBase.ORGANISATIONS.uri) : null
+  } else {
+    const contact = await APIRequests[contactType].getByApplicationId(journeyData.applicationId)
+    return contact.submitted ? h.redirect(uriBase.NAMES.uri) : null
+  }
+}
 
 export const getPostcodeData = (contactType, contactOrganisation, uriBase) => async request => {
   const journeyData = await request.cache().getData()

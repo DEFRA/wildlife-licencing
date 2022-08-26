@@ -2355,6 +2355,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
         fullName:
           type: string
           minLength: 1
@@ -2642,6 +2644,7 @@ components:
       example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
       minLength: 36
       maxLength: 36
+      nullable: true
 
     option:
       type: integer

@@ -12,5 +12,5 @@ export const applicantName = contactNamePage({
   checkData: checkData,
   getData: getContactData(ApiRequestEntities.APPLICANT),
   setData: setContactData(ApiRequestEntities.APPLICANT, contactURIs.APPLICANT),
-  completion: contactNameCompletion(ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
+  completion: contactNameCompletion(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

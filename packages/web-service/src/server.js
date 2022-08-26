@@ -13,7 +13,7 @@ import sessionManager, { isStaticResource } from './session-cache/session-manage
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT } from './uris.js'
+import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, contactURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -43,7 +43,21 @@ const additionalPageData = (request, h) => {
         landowner: eligibilityURIs.LANDOWNER.uri,
         landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
         consent: eligibilityURIs.CONSENT.uri,
-        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri
+        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
+        applicantUser: contactURIs.APPLICANT.USER.uri,
+        ecologistUser: contactURIs.ECOLOGIST.USER.uri,
+        applicantName: contactURIs.APPLICANT.NAME.uri,
+        ecologistName: contactURIs.ECOLOGIST.NAME.uri,
+        applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
+        ecologistOrganisations: contactURIs.ECOLOGIST.ORGANISATIONS.uri,
+        applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
+        ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
+        applicantAddress: contactURIs.APPLICANT.ADDRESS.uri,
+        ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
+        applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
+        ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
+        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
+        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri
       },
       credentials: request.auth.credentials
     })

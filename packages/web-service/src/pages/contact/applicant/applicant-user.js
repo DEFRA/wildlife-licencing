@@ -12,5 +12,5 @@ export const applicantUser = yesNoPage({
   checkData: checkData,
   getData: getUserData(ApiRequestEntities.APPLICANT),
   setData: setUserData(ApiRequestEntities.APPLICANT),
-  completion: userCompletion(ApiRequestEntities.APPLICANT, contactURIs.APPLICANT)
+  completion: userCompletion(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

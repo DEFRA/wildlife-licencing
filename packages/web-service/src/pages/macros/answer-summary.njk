@@ -14,7 +14,7 @@
                     actions: { items: [ { href: questionMap[item.key].href,
                                           text: "Change",
                                           classes: 'govuk-link govuk-link--no-visited-state',
-                                          visuallyHiddenText: questionMap[item.key].question } ]} })
+                                          visuallyHiddenText: questionMap[item.key].question } ] if questionMap[item.key].href else [] }  })
                 }}
             {% endfor %}
         </div>

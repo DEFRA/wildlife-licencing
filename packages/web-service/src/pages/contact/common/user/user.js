@@ -7,19 +7,75 @@ export const getUserData = _contactType => async request => {
   return APIRequests.USER.getById(userId)
 }
 
-export const setUserData = _contactType => async request => {
+const mostRecent = (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
+
+export const setUserData = contactType => async request => {
+  const { userId, applicationId } = await request.cache().getData()
+  if (request.payload['yes-no'] === 'yes') {
+    /*
+     * If the contacts assigned to the user are found, then take the most recent.
+     * The contact is immutable if submitted
+     * Find the contacts created by the user. (Really these maybe of any role, due to time pressure
+     * this is only those associated via the currently select role which should be fine for all but the rare case
+     * where an applicant is acting as an ecologist or vice versa
+     */
+    const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
+    // Find a contact associated to the user
+    const [userContact] = contacts.filter(c => c.userId === userId).sort(mostRecent)
+    if (userContact) {
+      // Assign the found contact to the application
+      await APIRequests[contactType].assign(applicationId, userContact.id)
+    } else {
+      const user = await APIRequests.USER.getById(userId)
+      await APIRequests[contactType].create(applicationId, { userId, contactDetails: { email: user.username } })
+    }
+  } else {
+    // Un-assign the contact - as not necessarily the sole application using it
+    await APIRequests[contactType].unAssign(applicationId)
+  }
 }
 
-export const userCompletion = (contactType, apiBase) => async request => {
-  const pageData = await request.cache().getPageData()
-  if (pageData.payload['yes-no'] === 'yes') {
-    return apiBase.USER.uri // This is pending build
-  }
-  const { userId } = await request.cache().getData()
-  const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
-  if (contacts.length) {
-    return apiBase.NAMES.uri
+async function accountsRoute (accountType, userId, uriBase) {
+  const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
+  if (accounts.length) {
+    return uriBase.ORGANISATIONS.uri
   } else {
-    return apiBase.NAME.uri
+    return uriBase.IS_ORGANISATION.uri
+  }
+}
+
+export const userCompletion = (contactType, accountType, uriBase) => async request => {
+  const pageData = await request.cache().getPageData()
+  const { userId } = await request.cache().getData()
+  // Find the contacts created by the user
+  const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
+  if (pageData.payload['yes-no'] === 'yes') {
+    // Find a contact associated to the user
+    const [userContact] = contacts.filter(c => c.userId === userId).sort(mostRecent)
+    if (userContact) {
+      if (userContact.submitted) {
+        // Contact is immutable, go to accounts
+        return await accountsRoute(accountType, userId, uriBase)
+      } else {
+        // Check that the contact has a name - if not go to the name page
+        // This can happen with the back-button
+        if (!userContact.fullName) {
+          return uriBase.NAME.uri
+        } else {
+          // Using the most recent contact proceed directly to the organization section
+          return await accountsRoute(accountType, userId, uriBase)
+        }
+      }
+    } else {
+      // Pending the creation of a user-contact
+      return uriBase.NAME.uri
+    }
+  } else {
+    // Filter out any owner by user
+    if (contacts.filter(c => c.userId !== userId).length) {
+      return uriBase.NAMES.uri
+    } else {
+      return uriBase.NAME.uri
+    }
   }
 }
