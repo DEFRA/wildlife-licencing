@@ -24,6 +24,15 @@ services:
       dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
+  # Wildlife licencing API service; application queue processor
+  ##############################################################################################################
+  fqp:
+    image: wildlife-licencing/fqp:${TAG:-latest}
+    build:
+      context: ../packages/file-queue-processor
+      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+
+  ##############################################################################################################
   # Wildlife licencing API service; application extract processor
   ##############################################################################################################
   aep:

@@ -8,6 +8,7 @@ The local docker swarm makes use of docker-compose to build a set of images whic
 - The API: ```packages/api/Dockerfile.dev```
 - The Application Extract Processor: ```packages/aep/Dockerfile.dev```
 - The Application Queue Processor: ```packages/aqp/Dockerfile.dev```
+- The File Queue Processor: ```packages/fqp/Dockerfile.dev```
 - The Reference Data Extract Processor: ```packages/rep/Dockerfile.dev```
 - The Web-service: ```packages/web-service/Dockerfile.dev```
 
@@ -16,7 +17,8 @@ The simplest way to build the images is to run docker-compose from the root of t
 
 This will create the set of development images in the local image repository;
 ```shell
-wildlife-licencing/aqp 
+wildlife-licencing/aqp
+wildlife-licencing/fqp  
 wildlife-licencing/api 
 wildlife-licencing/web 
 wildlife-licencing/rep 
@@ -47,6 +49,7 @@ docker build -t wildlife_licensing/builder -f Dockerfile.build .
 ```shell
 docker build -t wildlife-licencing/api:latest --file ./packages/api/Dockerfile.prod ./packages/api
 docker build -t wildlife-licencing/aqp:latest --file ./packages/application-queue-processor/Dockerfile.prod ./packages/application-queue-processor
+docker build -t wildlife-licencing/fqp:latest --file ./packages/file-queue-processor/Dockerfile.prod ./packages/file-queue-processor
 docker build -t wildlife-licencing/aep:latest --file ./packages/application-extract-processor/Dockerfile.prod ./packages/application-extract-processor
 docker build -t wildlife-licencing/rep:latest --file ./packages/refdata-extract-processor/Dockerfile.prod ./packages/refdata-extract-processor
 docker build -t wildlife-licencing/web:latest --file ./packages/web-service/Dockerfile.prod ./packages/web-service
