@@ -59,7 +59,7 @@ describe('The file job processor', () => {
     }))
     const { fileJobProcess } = await import('../file-job-process.js')
     await fileJobProcess(job)
-    expect(mockUpload).toHaveBeenCalledWith('file.txt', 500, 'byte-stream', '/APPLICATION_REFERENCE')
+    expect(mockUpload).toHaveBeenCalledWith('file.txt', 500, 'byte-stream', 'Application', '/APPLICATION_REFERENCE')
   })
 
   it('logs error and resolves with unrecoverable error - no record in database', async () => {

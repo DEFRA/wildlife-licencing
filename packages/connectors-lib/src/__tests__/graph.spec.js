@@ -9,9 +9,11 @@ jest.mock('../config.js', () => ({
     }
   },
   graph: {
-    tenant: 'tenant',
-    siteId: 'siteId',
-    driverId: 'driveId'
+    tenant: 'tenant'
+  },
+  sharepoint: {
+    root: 'sproot',
+    site: 'spsite'
   }
 }))
 
@@ -42,9 +44,13 @@ describe('Graph API', () => {
   it('upload a file calls the GRAPH API correctly', async () => {
     const mockTokenCredentialAuthenticationProvider = jest.fn()
     const mockClientSecretCredential = jest.fn()
-    const mockClient = { foo: 'bar' }
     const mockCreateUploadSession = jest.fn()
-    const mockInitWithMiddleware = jest.fn(() => mockClient)
+    const mockInitWithMiddleware = () => ({
+      api: jest.fn()
+        .mockReturnValueOnce({ get: () => ({ id: 123 }) })
+        .mockReturnValueOnce({ get: () => ({ value: [{ id: 456, name: 'Application' }] }) })
+    })
+
     const mockUpload = jest.fn()
     const mockStreamUploadConstructor = jest.fn()
     jest.doMock('@azure/identity', () => ({
@@ -68,9 +74,11 @@ describe('Graph API', () => {
       TokenCredentialAuthenticationProvider: mockTokenCredentialAuthenticationProvider
     }))
     const { GRAPH } = await import('../graph.js')
-    await GRAPH.client().uploadFile('filename', 100, {}, 'path')
-    expect(mockCreateUploadSession).toHaveBeenCalledWith({ foo: 'bar' },
-      'https://graph.microsoft.com/v1.0/sites/siteId/drives/undefined/root:path/filename:/createUploadSession',
+    const client = GRAPH.client()
+    await client.init()
+    await client.uploadFile('filename', 100, {}, 'Application', 'path')
+    expect(mockCreateUploadSession).toHaveBeenCalledWith(expect.any(Object),
+      'https://graph.microsoft.com/v1.0/sites/123/drives/456/root:path/filename:/createUploadSession',
       { item: { '@microsoft.graph.conflictBehavior': 'rename' } }
     )
     expect(mockUpload).toHaveBeenCalled()
@@ -105,7 +113,7 @@ describe('Graph API', () => {
       TokenCredentialAuthenticationProvider: mockTokenCredentialAuthenticationProvider
     }))
     const { GRAPH } = await import('../graph.js')
-    await expect(() => GRAPH.client().uploadFile('filename', 100, {}, 'path'))
+    await expect(() => GRAPH.client().uploadFile('filename', 100, {}, 'dname', 'path'))
       .rejects.toThrow()
   })
 })

@@ -50,9 +50,11 @@ export default {
   },
   graph: {
     base: process.env.GRAPH_BASE,
-    siteId: process.env.GRAPH_SITE_ID,
-    driveId: process.env.GRAPH_SITE_DRIVE_ID,
     tenant: process.env.OAUTH_TENANT
+  },
+  sharepoint: {
+    root: process.env.SHAREPOINT_ROOT,
+    site: process.env.SHAREPOINT_SITE
   },
   address: {
     url: process.env.ADDRESS_LOOKUP_URL,

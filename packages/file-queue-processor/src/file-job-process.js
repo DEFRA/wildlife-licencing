@@ -48,8 +48,8 @@ export const fileJobProcess = async job => {
     console.log(`Consume file - queue item ${JSON.stringify({ bucket, objectKey, filename })} for application: ${referenceNumber}`)
     const { stream, bytes } = await getReadStream(bucket, objectKey)
     console.log(`Read file bytes: ${bytes}`)
-    // The file location is the folder with the same name as the application reference number
-    await GRAPH.client().uploadFile(filename, bytes, stream, `/${referenceNumber}`)
+    // The file location is a folder within the 'Application' drive with the same name as the application reference number
+    await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', `/${referenceNumber}`)
     console.log(`Completed uploading ${filename} for ${referenceNumber}`)
   } catch (error) {
     if (error instanceof UnRecoverableUploadError) {
