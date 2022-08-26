@@ -8,7 +8,6 @@ import { changeHandler, putData } from '../../../utils/editTools.js'
 const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
 export const completion = async request => {
-  console.log('got to completion')
   const journeyData = await request.cache().getData()
   if (journeyData.complete) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
@@ -25,15 +24,14 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const settType = parseInt(pageData.payload['habitat-types'])
   const settId = request.query.id
-  Object.assign(journeyData.habitatData, { settType })
 
   if (journeyData.complete) {
     const newSett = await changeHandler(journeyData, settId)
-    console.log('before Put')
-    const putStuff = await putData(newSett)
-    console.log(putStuff)
-    return
+    Object.assign(journeyData.habitatData, { settType })
+    await putData(newSett)
   }
+  
+  Object.assign(journeyData.habitatData, { settType })
   request.cache().setData(journeyData)
 }
 

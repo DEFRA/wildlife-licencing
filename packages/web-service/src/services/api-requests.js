@@ -408,7 +408,6 @@ export const APIRequests = {
     },
     getHabitatBySettId: async (applicationId, settId) => {
       try {
-        console.log('before')
         return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
       } catch (error) {
         console.error(`Error retrieving application for ${settId} on ${applicationId}`, error)

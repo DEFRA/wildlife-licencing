@@ -10,6 +10,7 @@ export default async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
+    const id = uuidv4()
 
     // If the application does not exist return a not found and error
     if (!application) {
@@ -27,8 +28,9 @@ export default async (context, req, h) => {
         .code(409)
     }
 
+    req.payload.id = id 
     const { dataValues } = await models.habitatSites.create({
-      id: uuidv4(),
+      id,
       applicationId: applicationId,
       habitatSite: alwaysExclude(req.payload),
       updateStatus: 'L'

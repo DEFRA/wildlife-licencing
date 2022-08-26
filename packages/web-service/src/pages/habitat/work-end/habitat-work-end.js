@@ -44,7 +44,6 @@ export const setData = async request => {
 
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
-  console.log(pageData.error)
   if (pageData.error) {
     return habitatURIs.WORK_END.uri
   } else {
