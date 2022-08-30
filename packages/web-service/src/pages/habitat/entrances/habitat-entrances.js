@@ -9,7 +9,6 @@ export const completion = async request => {
   if (journeyData.complete) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
-  console.log('REDIRECTING')
   return habitatURIs.ACTIVE_ENTRANCES.uri
 }
 

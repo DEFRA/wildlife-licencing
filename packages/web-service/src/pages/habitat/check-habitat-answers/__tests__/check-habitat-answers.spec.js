@@ -69,16 +69,24 @@ describe('The check habitat answers page', () => {
         }
       }))
       const { getData } = await import('../check-habitat-answers.js')
-      expect(await getData(request)).toStrictEqual([{
-        settType: 100000000,
-        habitatType: 'Main',
-        methodIds: [100000011],
-        methodTypes: ['\nObstructing access to sett entrances by blocking or proofing'],
-        workStart: '25 July 2023',
-        workEnd: '28 July 2023',
-        willReopen: true,
-        reopen: 'Yes'
-      }])
+      expect(await getData(request)).toStrictEqual({
+        confirmDelete: '/confirm-delete',
+        pageData:
+        [
+          {
+            habitatType: 'Main',
+            methodIds: [100000011],
+            methodTypes: [
+              '\nObstructing access to sett entrances by blocking or proofing'
+            ],
+            reopen: 'Yes',
+            settType: 100000000,
+            willReopen: true,
+            workEnd: '28 July 2023',
+            workStart: '25 July 2023'
+          }
+        ]
+      })
     })
     it('gets data correctly if willReopen is false', async () => {
       const request = {
@@ -107,16 +115,21 @@ describe('The check habitat answers page', () => {
         }
       }))
       const { getData } = await import('../check-habitat-answers.js')
-      expect(await getData(request)).toStrictEqual([{
-        settType: 100000000,
-        habitatType: 'Main',
-        methodIds: [100000011],
-        methodTypes: ['\nObstructing access to sett entrances by blocking or proofing'],
-        workStart: '25 July 2023',
-        workEnd: '28 July 2023',
-        willReopen: false,
-        reopen: 'No'
-      }])
+      expect(await getData(request)).toStrictEqual({
+        confirmDelete: '/confirm-delete',
+        pageData: [
+          {
+            settType: 100000000,
+            habitatType: 'Main',
+            methodIds: [100000011],
+            methodTypes: ['\nObstructing access to sett entrances by blocking or proofing'],
+            workStart: '25 July 2023',
+            workEnd: '28 July 2023',
+            willReopen: false,
+            reopen: 'No'
+          }
+        ]
+      })
     })
     it('returns the payload from the validator', async () => {
       const payload = { data: 'badgers', 'additional-sett': 'no' }

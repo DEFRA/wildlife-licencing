@@ -35,7 +35,6 @@ export const setData = async request => {
     const complete = true
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
     Object.assign(journeyData, { complete })
-    console.log(journeyData)
     await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
   }
   request.cache().setData(journeyData)

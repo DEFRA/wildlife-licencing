@@ -5,7 +5,6 @@ import { changeHandler, putData } from '../../../utils/editTools.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  console.log(journeyData)
   if (journeyData.complete) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }

@@ -17,12 +17,17 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  console.log(journeyData.habitatData)
-  if (Object.keys(journeyData.habitatData).length !== 13) {
+
+  // Ensure if a user just deleted their only sett, we take them back to /tasklist
+  const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
+
+  // Ensure the object is populated with the correct (and enough) keys
+  if (Object.keys(journeyData.habitatData).length !== 13 || habitatSites.length === 0) {
     return h.redirect(TASKLIST.uri)
   }
   return undefined
 }
+
 export const getData = async request => {
   const journeyData = await request.cache().getData()
 
