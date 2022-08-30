@@ -134,4 +134,59 @@ describe('The check habitat answers page', () => {
       }
     })
   })
+  describe('CheckData', () => {
+    it('checks the journeyData object length and returns undefined if correct', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {
+              name: 'poolparty',
+              applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
+              settType: 100000002,
+              willReopen: true,
+              numberOfEntrances: 54,
+              numberOfActiveEntrances: 23,
+              active: true,
+              gridReference: 'NY574735',
+              workStart: '11-03-2222',
+              workEnd: '11-30-3001',
+              methodIds: [100000010, 100000011],
+              speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+              activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24'
+            }
+          })
+        })
+      }
+      const { checkData } = await import('../check-habitat-answers.js')
+      expect(await checkData(request)).toBe(undefined)
+    })
+  })
+  it('checks the journeyData object length and returns tasklist URL if incorrect', async () => {
+    const h = {
+      redirect: jest.fn()
+    }
+    const request = {
+      cache: () => ({
+        getData: () => ({
+          habitatData: {
+            name: 'poolparty',
+            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
+            settType: 100000002,
+            willReopen: true,
+            numberOfEntrances: 54,
+            numberOfActiveEntrances: 23,
+            active: true,
+            gridReference: 'NY574735',
+            workStart: '11-03-2222',
+            workEnd: '11-30-3001',
+            methodIds: [100000010, 100000011],
+            speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+          }
+        })
+      })
+    }
+    const { checkData } = await import('../check-habitat-answers.js')
+    await checkData(request, h)
+    expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+  })
 })

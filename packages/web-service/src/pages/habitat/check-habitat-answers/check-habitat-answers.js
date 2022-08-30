@@ -4,6 +4,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { settTypes } from '../../../utils/sett-type.js'
 import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
 import Joi from 'joi'
+const addSett = 'additional-sett'
 
 const typeProcessor = selectedType => settTypes.filter(type => type.value === selectedType)[0].text
 const methodProcessor = selectedMethods => settDistruptionMethods.filter(method => selectedMethods.includes(method.value)).map(method => '\n' + method.text)
@@ -14,6 +15,11 @@ export const dateProcessor = date => {
   return `${Number(day)} ${dateObj.toLocaleString('default', { month: 'long' })} ${year}`
 }
 
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  console.log(journeyData.habitatData)
+  if (Object.keys(journeyData.habitatData).length !== 13) h.redirect(TASKLIST.uri)
+}
 export const getData = async request => {
   const journeyData = await request.cache().getData()
 
@@ -33,15 +39,15 @@ export const getData = async request => {
 }
 
 export const validator = async payload => {
-  if (!payload['additional-sett']) {
+  if (!payload[addSett]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: Option for additional sett has not been chosen',
-      path: ['additional-sett'],
+      path: [addSett],
       type: 'no-choice-made',
       context: {
-        label: 'additional-sett',
+        label: addSett,
         value: 'Error',
-        key: 'additional-sett'
+        key: addSett
       }
     }], null)
   }
@@ -50,11 +56,11 @@ export const validator = async payload => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  if (pageData.payload['additional-sett'] === 'yes') {
+  if (pageData.payload[addSett] === 'yes') {
     delete journeyData.complete
     request.cache().setData(journeyData)
     return habitatURIs.NAME.uri
   }
   return TASKLIST.uri
 }
-export default pageRoute({ page: habitatURIs.CHECK_YOUR_ANSWERS.page, uri: habitatURIs.CHECK_YOUR_ANSWERS.uri, getData, validator, completion })
+export default pageRoute({ page: habitatURIs.CHECK_YOUR_ANSWERS.page, uri: habitatURIs.CHECK_YOUR_ANSWERS.uri, getData, validator, completion, checkData })
