@@ -18,7 +18,10 @@ export const dateProcessor = date => {
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
   console.log(journeyData.habitatData)
-  if (Object.keys(journeyData.habitatData).length !== 13) { return h.redirect(TASKLIST.uri) }
+  if (Object.keys(journeyData.habitatData).length !== 13) {
+    return h.redirect(TASKLIST.uri)
+  }
+  return undefined
 }
 export const getData = async request => {
   const journeyData = await request.cache().getData()
