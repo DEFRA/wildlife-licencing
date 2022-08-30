@@ -923,6 +923,164 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# Application File-Uploads
+################################################################################################
+  '/application/{applicationId}/file-uploads':
+    get:
+      description: Get a list of the file-uploads detail for an application
+      summary: Create or update the application file-upload details
+      operationId: getApplicationFileUploads
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: filetype
+          in: query
+          description: The filetype
+          required: false
+          schema:
+            $ref: '#/components/schemas/filetype'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUploads'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/file-upload':
+    post:
+      description: Create the application file-upload details
+      summary: Create the application file-upload details
+      operationId: postApplicationFileUpload
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationFileUpload'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/file-upload/{uploadId}':
+    put:
+      description: Update the application file-upload details
+      summary: Create or update the application file-upload details
+      operationId: putApplicationFileUpload
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: uploadId
+          in: path
+          description: ID of the upload
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationFileUpload'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application file-upload details
+      summary: Get the eligibility details for an application file-upload
+      operationId: getApplicationFileUpload
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: uploadId
+          in: path
+          description: ID of the upload
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Application Sites
 ################################################################################################
   '/application-sites':
@@ -2100,6 +2258,49 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    applicationFileUploads:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationFileUpload'
+
+    applicationFileUpload:
+      type: object
+      additionalProperties: false
+      required:
+        - filetype
+        - filename
+        - bucket
+        - objectKey
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        filetype:
+          $ref: '#/components/schemas/filetype'
+        filename:
+          type: string
+          maximum: 255
+        bucket:
+          type: string
+          minimum: 3
+          maximum: 63
+        objectKey:
+          $ref: '#/components/schemas/uuid'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    filetype:
+      type: string
+      enum:
+        - MAP
+        - METHOD-STATEMENT
+        - WORK-SCHEDULE
 
     applicationSites:
       type: array

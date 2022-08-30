@@ -15,7 +15,7 @@
     }
 %}
 
-{% set title = 'Upload a work schedule' %}
+{% set title = 'Upload a method statement' %}
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block topNavigation %}
@@ -28,12 +28,12 @@
 
 {{ errorSummary(error, errorMap, 'There is a problem') }}
 
-<h1 class="govuk-heading-xl">Upload a work schedule</h1>
+<h1 class="govuk-heading-xl">Upload a method statement</h1>
 
 <div class="govuk-grid-row">
     <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
 
-      <p class="govuk-body">The work schedule must include:</p>
+      <p class="govuk-body">The method statement must include:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>how and when each badger sett will be affected</li>
             <li>types of machinery or tools that will be used and their distance from each badger sett</li>
@@ -55,12 +55,11 @@
               }
             }) %}
 
-
             {{ govukFileUpload({
               id: "scan-file",
               name: "scan-file",
               label: {
-              text: "Upload a file"
+                text: "Upload a file"
               },
               errorMessage: { text: 'Upload a different file.' } if error['scan-file']
             }) }}

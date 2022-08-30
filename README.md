@@ -111,6 +111,10 @@ Problems have been faced running this in node, but git bash has been successful.
 
 Running `npm run start` from the web-service directory should now work.
 
+#### Installing teh address lookup certificate
+Get the container id for the web service using docker ps
+```sudo docker cp ./BOOMI-SDDS-SND.pfx <containerId>:/certs```
+
 #### Start the API locally
 
 ```shell

@@ -437,6 +437,49 @@ export const APIRequests = {
         throw error
       }
     }
+  },
+  FILE_UPLOAD: {
+    /**
+     * (1) If filetype.multiple false:
+     * For any given filetype if the file has been submitted then a new record is created,
+     * if the file has not been submitted then the existing record is updated with the new object key
+     * (2) If filetype.multiple is true: always create a new record for the upload
+     * @param applicationId
+     * @param filename
+     * @param filetype
+     * @param bucketName
+     * @param objectKey
+     * @returns {Promise<void>}
+     */
+    record: async (applicationId, filename, filetype, bucket, objectKey) => {
+      try {
+        debug(`Get uploads for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
+        if (filetype.multiple) {
+          debug(`Create new upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
+          await API.post(`${apiUrls.APPLICATION}/${applicationId}/file-upload`, {
+            filetype: filetype.filetype, filename, bucket, objectKey
+          })
+        } else {
+          const uploads = await API.get(`${apiUrls.APPLICATION}/${applicationId}/file-uploads`, `filetype=${filetype.filetype}`)
+          const unsubmitted = uploads.find(u => !u.submitted)
+          if (!unsubmitted) {
+            debug(`Create new upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
+            await API.post(`${apiUrls.APPLICATION}/${applicationId}/file-upload`, {
+              filetype: filetype.filetype, filename, bucket, objectKey
+            })
+          } else {
+            debug(`Update upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${unsubmitted.id}`, {
+              filetype: filetype.filetype, filename, bucket, objectKey
+            })
+          }
+        }
+      } catch (error) {
+        console.error(`Error setting uploads for applicationId: ${applicationId} and filetype ${filetype}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
   }
 }
 

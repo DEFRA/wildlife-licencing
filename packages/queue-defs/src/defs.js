@@ -1,5 +1,18 @@
+export const fastThenSlow = function (attemptsMade, err) {
+  console.log(`Retry attempt ${attemptsMade} with error err: ${err}`)
+  if (attemptsMade < 6) {
+    // Every 20 seconds for the first 2 minutes
+    return 20 * 1000
+  } else if (attemptsMade < 6 + 12) {
+    // Every five minutes for the next hour
+    return 5 * 60 * 1000
+  } else {
+    // Hourly thereafter
+    return 60 * 60 * 1000
+  }
+}
+
 export const queueDefinitions = {
-  // Will retry for 36 hours on failure
   APPLICATION_QUEUE: {
     name: 'application-queue',
     options: {
@@ -7,12 +20,35 @@ export const queueDefinitions = {
         removeOnComplete: true,
         removeOnFail: false,
         priority: 1,
-        attempts: 18,
-        retryProcessDelay: 10000,
+        attempts: 200,
         timeout: 30000,
         backoff: {
-          type: 'exponential',
-          delay: 1000
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
+  },
+  FILE_QUEUE: {
+    name: 'file-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
         }
       }
     }

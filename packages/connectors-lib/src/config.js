@@ -48,6 +48,14 @@ export default {
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
   },
+  graph: {
+    base: process.env.GRAPH_BASE,
+    tenant: process.env.OAUTH_TENANT
+  },
+  sharepoint: {
+    root: process.env.SHAREPOINT_ROOT,
+    site: process.env.SHAREPOINT_SITE
+  },
   address: {
     url: process.env.ADDRESS_LOOKUP_URL,
     certificatePath: process.env.ADDRESS_LOOKUP_CERTIFICATE_PATH,

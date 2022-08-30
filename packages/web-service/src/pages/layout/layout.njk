@@ -40,6 +40,10 @@
           <a class="govuk-header__link signout-link" href="{{ _uri.signOut }}">
             Sign out
           </a>
+        {% else %}
+          <a class="govuk-header__link signout-link" href="{{ _uri.login }}">
+            Sign in
+          </a>
         {% endif %}
 
       </div>

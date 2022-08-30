@@ -47,6 +47,13 @@ import {
 } from './handlers/licence/licence.js'
 
 import {
+  getApplicationFileUploads,
+  postApplicationFileUpload,
+  getApplicationFileUpload,
+  putApplicationFileUpload
+} from './handlers/application-file-upload/application-file-upload.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -172,6 +179,12 @@ const handlers = {
   postApplicationUser,
   getApplicationUserById,
   deleteApplicationUserById,
+
+  // Application file upload
+  getApplicationFileUploads,
+  postApplicationFileUpload,
+  getApplicationFileUpload,
+  putApplicationFileUpload,
 
   // Application site handlers
   getApplicationSites,
