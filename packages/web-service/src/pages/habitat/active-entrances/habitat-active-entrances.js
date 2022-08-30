@@ -22,7 +22,7 @@ export const setData = async request => {
 
   const habitatActiveEntrances = 'habitat-active-entrances'
   const numberOfActiveEntrances = pageData.payload[habitatActiveEntrances]
-  const active = journeyData.habitatData.numberOfEntrances > 0 && journeyData.habitatData.numberOfActiveEntrances > 0
+  const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatActiveEntrances] > 0
 
   const totalEntrances = journeyData.habitatData.numberOfEntrances
   if (numberOfActiveEntrances > totalEntrances) {

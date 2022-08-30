@@ -15,20 +15,29 @@ describe('The habitat work end page', () => {
       const request = {
         cache: () => {
           return {
-            getPageData: () => {
-              return {}
-            }
+            getData: () => ({}),
+            getPageData: () => ({})
           }
         }
       }
       const { completion } = await import('../habitat-work-end.js')
       expect(await completion(request)).toBe('/habitat-activities')
     })
-
+    it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ complete: true }),
+          getPageData: () => ({})
+        })
+      }
+      const { completion } = await import('../habitat-work-end.js')
+      expect(await completion(request)).toBe('/check-habitat-answers')
+    })
     it('the habitat-work-end page stays on the habitat-work-end page if there are errors', async () => {
       const request = {
         cache: () => {
           return {
+            getData: () => ({}),
             getPageData: () => {
               return { error: 'there were problems with user input' }
             }
@@ -265,6 +274,52 @@ describe('The habitat work end page', () => {
         habitatData:
           { workEnd: `7-10-${new Date().getFullYear()}` }
       })
+    })
+    it('sets the work end data correctly on return journey', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        query: {
+          id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
+        },
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({
+            complete: true,
+            habitatData: {}
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-work-end-day': 10,
+              'habitat-work-end-month': 7,
+              'habitat-work-end-year': new Date().getFullYear
+            }
+          })
+        })
+      }
+      jest.doMock('../../../../utils/editTools.js', () => ({
+        changeHandler: () => {},
+        putData: async () => {}
+      }))
+      const { setData } = await import('../habitat-work-end.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        complete: true,
+        redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
+        habitatData:
+          { workEnd: `7-10-${new Date().getFullYear}` }
+      })
+    })
+    it('validator returns payload if no error is thrown', async () => {
+      const { validator } = await import('../habitat-work-end.js')
+      const payload = {
+        'habitat-work-end-day': new Date().getDate() + 1,
+        'habitat-work-end-month': new Date().getMonth() < 11 ? new Date().getMonth() + 1 : 0,
+        'habitat-work-end-year': new Date().getFullYear()
+      }
+      jest.doMock('../../../../utils/date-validator.js', () => ({
+        validateDates: () => ({})
+      }))
+      expect(await validator(payload, 'habitat-work-end')).toBe(payload)
     })
   })
 })

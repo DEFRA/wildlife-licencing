@@ -28,7 +28,7 @@ export default async (context, req, h) => {
         .code(409)
     }
 
-    req.payload.id = id 
+    req.payload.id = id
     const { dataValues } = await models.habitatSites.create({
       id,
       applicationId: applicationId,

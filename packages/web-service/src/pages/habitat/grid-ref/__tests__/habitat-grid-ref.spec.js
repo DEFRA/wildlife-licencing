@@ -61,6 +61,10 @@ describe('The habitat grid ref page', () => {
           })
         })
       }
+      jest.doMock('../../../../utils/editTools.js', () => ({
+        changeHandler: () => {},
+        putData: async () => {}
+      }))
       const { setData } = await import('../habitat-grid-ref.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({

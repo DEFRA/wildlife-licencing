@@ -3,9 +3,27 @@ describe('The habitat work start page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat-work-start page', () => {
-    it('the habitat-work-start page forwards onto habitat-work-end', async () => {
+    it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({}),
+            getPageData: () => ({})
+          }
+        }
+      }
       const { completion } = await import('../habitat-work-start.js')
-      expect(await completion()).toBe('/habitat-work-end')
+      expect(await completion(request)).toBe('/habitat-work-end')
+    })
+    it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ complete: true }),
+          getPageData: () => ({})
+        })
+      }
+      const { completion } = await import('../habitat-work-start.js')
+      expect(await completion(request)).toBe('/check-habitat-answers')
     })
     it('throws an error if a date can not be parsed', async () => {
       try {
@@ -207,6 +225,40 @@ describe('The habitat work start page', () => {
       const { setData } = await import('../habitat-work-start.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
+        habitatData:
+          { workStart: `7-10-${new Date().getFullYear}` }
+      })
+    })
+    it('sets the work start data correctly on return journey', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        query: {
+          id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
+        },
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({
+            complete: true,
+            habitatData: {}
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-work-start-day': 10,
+              'habitat-work-start-month': 7,
+              'habitat-work-start-year': new Date().getFullYear
+            }
+          })
+        })
+      }
+      jest.doMock('../../../../utils/editTools.js', () => ({
+        changeHandler: () => {},
+        putData: async () => {}
+      }))
+      const { setData } = await import('../habitat-work-start.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        complete: true,
+        redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { workStart: `7-10-${new Date().getFullYear}` }
       })

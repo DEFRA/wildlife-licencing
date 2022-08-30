@@ -4,11 +4,28 @@ describe('The habitat activities page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat-activities page', () => {
-    it('the habitat-activities page forwards onto check-habitat-answers page', async () => {
+    it('the habitat-activities page forwards onto check-habitat-answers page on primary journey', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({}),
+            getPageData: () => ({})
+          }
+        }
+      }
       const { completion } = await import('../habitat-activities.js')
-      expect(await completion()).toBe('/check-habitat-answers')
+      expect(await completion(request)).toBe('/check-habitat-answers')
     })
-
+    it('the habitat-activities page forwards onto check-habitat-answers if no errors on return journey', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ complete: true }),
+          getPageData: () => ({})
+        })
+      }
+      const { completion } = await import('../habitat-activities.js')
+      expect(await completion(request)).toBe('/check-habitat-answers')
+    })
     it('the habitat-activities page delivers the correct data from the getData call', async () => {
       const { getData } = await import('../habitat-activities.js')
       const expected = { settDistruptionMethods }
@@ -32,7 +49,7 @@ describe('The habitat activities page', () => {
       expect(await validator(payload)).toBe(undefined)
     })
 
-    it('sets data correctly', async () => {
+    it('sets data correctly on primary journey', async () => {
       const mockSet = jest.fn()
       const mockCreate = jest.fn()
       const request = {
@@ -65,16 +82,48 @@ describe('The habitat activities page', () => {
       const { setData } = await import('../habitat-activities.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
+        complete: true,
         habitatData: {
           numberOfEntrances: 10,
           numberOfActiveEntrances: 5,
           speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
           activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
-          methodIds: [1000000, 10000001],
-          active: true
+          methodIds: [1000000, 10000001]
         }
       })
       expect(mockCreate).toHaveBeenCalledTimes(1)
+    })
+    it('sets the activities data correctly on return journey', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        query: {
+          id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
+        },
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({
+            complete: true,
+            habitatData: {}
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-activities': [1000000, 10000001]
+            }
+          })
+        })
+      }
+      jest.doMock('../../../../utils/editTools.js', () => ({
+        changeHandler: () => {},
+        putData: async () => {}
+      }))
+      const { setData } = await import('../habitat-activities.js')
+      await setData(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        complete: true,
+        redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
+        habitatData:
+          { methodIds: [1000000, 10000001] }
+      })
     })
   })
 })

@@ -15,7 +15,7 @@ export const completion = async request => {
   return habitatURIs.REOPEN.uri
 }
 
-const getData = () => {
+export const getData = () => {
   return { settTypes }
 }
 
