@@ -35,6 +35,7 @@ import habitatGridRef from '../pages/habitat/grid-ref/habitat-grid-ref.js'
 import habitatWorkStart from '../pages/habitat/work-start/habitat-work-start.js'
 import habitatWorkEnd from '../pages/habitat/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/activities/habitat-activities.js'
+import confirmDelete from '../pages/habitat/confirm-delete/confirm-delete.js'
 
 import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-habitat-answers.js'
 import { signOut } from '../pages/sign-out/sign-out.js'
@@ -78,6 +79,7 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
+  ...confirmDelete,
   signOut,
   ...miscRoutes
 ]

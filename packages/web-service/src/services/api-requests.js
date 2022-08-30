@@ -423,6 +423,15 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    deleteSett: async (applicationId, settId) => {
+      try {
+        return await API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+      } catch (error) {
+        console.error(`Error deleting sett id ${settId} on application ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   },
   LICENCES: {

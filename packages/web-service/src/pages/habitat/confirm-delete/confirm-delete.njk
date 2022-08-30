@@ -1,0 +1,40 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'confirm-delete': {
+          'any.required': { ref: '#confirm-delete', text: 'You have not selected an option' }
+        }
+    }
+%}
+
+{% block topNavigation %}
+  <p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+  </p>
+{% endblock %}
+
+{% set title = 'Do you want to remove this?' %}
+
+{% block pageContent %}
+
+  <h1 class="govuk-body govuk-!-margin-bottom-6 govuk-!-font-weight-bold">Sett: {{ data.name }} </h1>
+
+  {{ govukRadios({
+    id: "confirm-delete",
+    name: "confirm-delete",
+    errorMessage: { text: "Select an option." } if error['confirm-delete'],
+    items: [
+      {
+        value: true,
+        text: "Yes"
+      },
+      {
+        value: false,
+        text: "No"
+      }
+    ]
+  }) }}
+
+{% endblock %}

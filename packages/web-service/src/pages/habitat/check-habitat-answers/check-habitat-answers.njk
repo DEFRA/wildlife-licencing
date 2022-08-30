@@ -15,9 +15,16 @@
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
-{% for habitat in data %}
-  <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
-<a href="/delete-sett" class="govuk-link"><h4>Remove sett</h4></a>
+{% for habitat in data.pageData %}
+
+  <h1 class="govuk-heading-m">Sett {{habitat.name}}</h1>
+    
+  <div class="govuk-body">
+    <a class="govuk-link govuk-link--no-visited-state" href={{data.confirmDelete + "?id=" + habitat.id}}>
+      Remove sett
+    </a>
+  </div>
+
     {{ govukSummaryList({
     rows: [
     {

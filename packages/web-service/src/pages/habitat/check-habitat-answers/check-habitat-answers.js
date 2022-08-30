@@ -18,8 +18,8 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
 
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
-
-  const pageData = []
+  const data = {}
+  data.pageData = []
   for (const habitat of habitatSites) {
     const habitatType = typeProcessor(habitat.settType)
     const methodTypes = methodProcessor(habitat.methodIds)
@@ -27,9 +27,10 @@ export const getData = async request => {
     const workEnd = dateProcessor(habitat.workEnd)
     const reopen = habitat.willReopen ? 'Yes' : 'No'
     const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd })
-    pageData.push(habitatData)
+    data.pageData.push(habitatData)
   }
-  return pageData
+  data.confirmDelete = habitatURIs.CONFIRM_DELETE.uri
+  return data
 }
 
 export const validator = async payload => {
