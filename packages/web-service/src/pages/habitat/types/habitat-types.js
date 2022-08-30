@@ -22,15 +22,16 @@ const getData = () => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
+
   const settType = parseInt(pageData.payload['habitat-types'])
-  const settId = request.query.id
 
   if (journeyData.complete) {
-    const newSett = await changeHandler(journeyData, settId)
+    Object.assign(journeyData, { redirectId: request.query.id })
+    const newSett = await changeHandler(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { settType })
     await putData(newSett)
   }
-  
+
   Object.assign(journeyData.habitatData, { settType })
   request.cache().setData(journeyData)
 }

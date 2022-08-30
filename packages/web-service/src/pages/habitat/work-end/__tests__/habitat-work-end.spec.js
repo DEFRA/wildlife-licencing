@@ -263,7 +263,7 @@ describe('The habitat work end page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { workEnd: '7-10-2022' }
+          { workEnd: `7-10-${new Date().getFullYear()}` }
       })
     })
   })

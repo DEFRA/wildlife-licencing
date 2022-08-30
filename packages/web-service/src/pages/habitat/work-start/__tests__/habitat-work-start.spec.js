@@ -199,7 +199,7 @@ describe('The habitat work start page', () => {
             payload: {
               'habitat-work-start-day': 10,
               'habitat-work-start-month': 7,
-              'habitat-work-start-year': 2022
+              'habitat-work-start-year': new Date().getFullYear
             }
           })
         })
@@ -208,7 +208,7 @@ describe('The habitat work start page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { workStart: '7-10-2022' }
+          { workStart: `7-10-${new Date().getFullYear}` }
       })
     })
   })

@@ -4,6 +4,7 @@ import { habitatURIs } from '../../../uris.js'
 import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../services/api-requests.js'
+import { changeHandler, putData } from '../../../utils/editTools.js'
 const page = 'habitat-activities'
 
 const {
@@ -21,16 +22,22 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
 
-  const habData = journeyData.habitatData
   const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
-  const active = habData.numberOfEntrances > 0 && habData.numberOfActiveEntrances > 0
-  const speciesId = BADGER
-  const activityId = INTERFERE_WITH_BADGER_SETT
-  const complete = true
-  Object.assign(journeyData.habitatData, { methodIds, active, speciesId, activityId })
-  Object.assign(journeyData, { complete })
-  await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
+  if (journeyData.complete) {
+    Object.assign(journeyData, { redirectId: request.query.id })
+    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    Object.assign(journeyData.habitatData, { methodIds })
+    await putData(newSett)
+  } else {
+    const speciesId = BADGER
+    const activityId = INTERFERE_WITH_BADGER_SETT
+    const complete = true
+    Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
+    Object.assign(journeyData, { complete })
+    console.log(journeyData)
+    await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
+  }
   request.cache().setData(journeyData)
 }
 

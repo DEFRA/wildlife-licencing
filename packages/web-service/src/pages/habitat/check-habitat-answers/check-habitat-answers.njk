@@ -5,16 +5,23 @@
 
 {% set title = 'Check your answers' %} 
 
+{% set errorMap = {
+        'additional-sett': {
+          'no-choice-made': { ref: '#additional-sett', text: 'You have not made a choice' }
+        }
+    }
+%}
+
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
 {% for habitat in data %}
   <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
-
+<a href="/delete-sett" class="govuk-link"><h4>Remove sett</h4></a>
     {{ govukSummaryList({
     rows: [
     {
-      key: {text: "Sett Type"},
+      key: {text: "Sett type"},
       value: {text: habitat.habitatType},
       actions: {
           items: [
@@ -112,5 +119,29 @@
     ]
     })}}
     {% endfor %}
+
+    {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{{ govukRadios({
+  idPrefix: "additional-sett",
+  name: "additional-sett",
+  fieldset: {
+    legend: {
+      text: "Do you want to add another badger sett?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  items: [
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
+}) }}
 
 {% endblock %}

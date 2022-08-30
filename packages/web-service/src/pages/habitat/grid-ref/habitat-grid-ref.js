@@ -1,13 +1,29 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
+import { changeHandler, putData } from '../../../utils/editTools.js'
 
-export const completion = async _request => habitatURIs.WORK_START.uri
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  if (journeyData.complete) {
+    return habitatURIs.CHECK_YOUR_ANSWERS.uri
+  }
+  return habitatURIs.WORK_START.uri
+}
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
-  const gridReference = pageData.payload['habitat-grid-ref']
   const journeyData = await request.cache().getData()
+
+  const gridReference = pageData.payload['habitat-grid-ref']
+
+  if (journeyData.complete) {
+    Object.assign(journeyData, { redirectId: request.query.id })
+    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    Object.assign(journeyData.habitatData, { gridReference })
+    await putData(newSett)
+  }
+
   journeyData.habitatData = Object.assign(journeyData.habitatData, { gridReference })
   request.cache().setData(journeyData)
 }
