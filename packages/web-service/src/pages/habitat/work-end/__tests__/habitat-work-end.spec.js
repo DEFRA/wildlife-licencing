@@ -312,14 +312,14 @@ describe('The habitat work end page', () => {
     it('validator returns payload if no error is thrown', async () => {
       const { validator } = await import('../habitat-work-end.js')
       const payload = {
-        'habitat-work-end-day': new Date().getDate() + 1,
-        'habitat-work-end-month': new Date().getMonth() < 11 ? new Date().getMonth() + 1 : 0,
-        'habitat-work-end-year': new Date().getFullYear()
+        'habitat-work-end-day': '1',
+        'habitat-work-end-month': '9',
+        'habitat-work-end-year': new Date().getFullYear() + 1
       }
       jest.doMock('../../../../utils/date-validator.js', () => ({
         validateDates: () => ({})
       }))
-      expect(await validator(payload, 'habitat-work-end')).toBe(payload)
+      expect(await validator(payload)).toBe(payload)
     })
   })
 })

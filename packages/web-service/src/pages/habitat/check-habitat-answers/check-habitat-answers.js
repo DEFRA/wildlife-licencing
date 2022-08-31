@@ -32,8 +32,9 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
 
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
-  const data = {}
-  data.pageData = []
+  const data = {
+    pageData: []
+  }
   for (const habitat of habitatSites) {
     const habitatType = typeProcessor(habitat.settType)
     const methodTypes = methodProcessor(habitat.methodIds)

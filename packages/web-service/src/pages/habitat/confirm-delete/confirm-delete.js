@@ -16,8 +16,7 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
 
-  const habitat = habitatSites.filter(obj => obj.id === request.query.id)[0]
-  return habitat
+  return habitatSites.filter(obj => obj.id === request.query.id)[0]
 }
 
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
