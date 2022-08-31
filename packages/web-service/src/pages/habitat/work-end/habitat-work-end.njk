@@ -4,12 +4,11 @@
 
 {% set errorMap = {
         'habitat-work-end': {
-          'no-date-sent': { ref: '#habitat-work-end', text: 'You have not entered a end date' },
-          'invalidDate': { ref: '#habitat-work-end', text: 'You have not sent a valid date' },
-          'dateHasPassed': { ref: '#habitat-work-end', text: 'You have chosen a date in the past' },
-          'outsideLicence': { ref: '#habitat-work-end', text: 'You have chosen a date outside the licence period' },
-          'todaysDate': { ref: '#habitat-work-start', text: 'You may not select today as a date' },
-          'endDateBeforeStart': { ref: '#habitat-work-start', text: 'You have selected an end date that is before the start date' }
+          'no-date-sent': { ref: '#habitat-work-end', text: 'Enter an end date' },
+          'invalidDate': { ref: '#habitat-work-end', text: 'End date must be a real date' },
+          'dateHasPassed': { ref: '#habitat-work-end', text: 'End date must be in the future' },
+          'outsideLicence': { ref: '#habitat-work-end', text: 'The end date must be within the licence period' },
+          'endDateBeforeStart': { ref: '#habitat-work-start', text: 'The end date must be after the start date' }
         }
     }
 %}
