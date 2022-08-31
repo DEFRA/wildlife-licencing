@@ -99,29 +99,32 @@ describe('The habitat active entrances page', () => {
       })
     })
     it('returns an error if more active entrances than entrances', async () => {
+      const mockError = jest.fn()
       const request = {
+        payload: {},
         cache: () => ({
           getData: () => ({
-            complete: true,
             habitatData: {
               numberOfEntrances: 3
             }
           }),
           getPageData: () => ({
             payload: {
-              'habitat-active-entrances': 5
+              'habitat-active-entrances': 13
             }
           }),
-          setPageData: () => ({})
+          setPageData: mockError
         })
       }
-      try {
-        const { setData } = await import('../habitat-active-entrances.js')
-        expect(await setData(request))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
+      const { setData } = await import('../habitat-active-entrances.js')
+      await setData(request)
+      expect(mockError).toBeCalledTimes(1)
+      expect(mockError).toHaveBeenCalledWith({
+        error: {
+          'habitat-active-entrances': 'tooManyActiveHoles'
+        },
+        payload: {}
+      })
     })
   })
 })

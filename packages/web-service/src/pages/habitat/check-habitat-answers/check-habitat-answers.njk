@@ -1,4 +1,4 @@
-{% extends "standard-form-no-back.njk" %}
+{% extends "standard-form.njk" %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% from "error-summary.njk" import errorSummary %}
@@ -11,6 +11,15 @@
         }
     }
 %}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+      tag: {
+        text: "alpha"
+      },
+      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    }) }}
+ {% endblock %}
 
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 

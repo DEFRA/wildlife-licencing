@@ -2,7 +2,7 @@
 import Joi from 'joi'
 import { isDate } from './is-date.js'
 import { invalidDate } from './invalid-date.js'
-export const midnightString = `${new Date().getFullYear()}-0${new Date().getMonth() < 11 ? new Date().getMonth() + 1 : 0}-${new Date().getDate()}T00:00`
+export const midnightString = `${new Date().getFullYear()}-0${new Date().getMonth() < 11 ? new Date().getMonth() + 1 : 0}-${new Date().getDate() - 1}T23:59`
 
 const throwJoiError = (pageName, message, type) => {
   throw new Joi.ValidationError('ValidationError', [{
