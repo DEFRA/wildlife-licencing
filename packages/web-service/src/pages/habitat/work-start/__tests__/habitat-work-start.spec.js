@@ -177,7 +177,7 @@ describe('The habitat work start page', () => {
     })
     it('you cant pass a date outside of the license season', async () => {
       try {
-        const payload = { 'habitat-work-start-day': 31, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() }
+        const payload = { 'habitat-work-start-day': 1, 'habitat-work-start-month': 12, 'habitat-work-start-year': new Date().getFullYear() + 1 }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
