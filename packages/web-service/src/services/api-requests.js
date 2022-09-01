@@ -322,7 +322,46 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
-    }
+    },
+    tags: applicationId => ({
+      add: async tag => {
+        try {
+          const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
+          const applicationTags = application.applicationTags || []
+          if (!applicationTags.find(t => t === tag)) {
+            applicationTags.push(tag)
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          }
+        } catch (error) {
+          console.error(`Error adding tag ${tag} for applicationId: ${applicationId}`, error)
+          Boom.boomify(error, { statusCode: 500 })
+          throw error
+        }
+      },
+      has: async tag => {
+        try {
+          const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
+          const applicationTags = application.applicationTags || []
+          return applicationTags.find(t => t === tag)
+        } catch (error) {
+          console.error(`Error fetching tag ${tag} for applicationId: ${applicationId}`, error)
+          Boom.boomify(error, { statusCode: 500 })
+          throw error
+        }
+      },
+      remove: async tag => {
+        try {
+          const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
+          const applicationTags = application.applicationTags || []
+          Object.assign(application, { applicationTags: applicationTags.filter(t => t !== tag) })
+          await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+        } catch (error) {
+          console.error(`Error removing tag ${tag} for applicationId: ${applicationId}`, error)
+          Boom.boomify(error, { statusCode: 500 })
+          throw error
+        }
+      }
+    })
   },
   ELIGIBILITY: {
     getById: async applicationId => {

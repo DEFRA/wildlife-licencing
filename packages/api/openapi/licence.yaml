@@ -2208,8 +2208,6 @@ components:
           type: boolean
         permissionsGranted:
           type: boolean
-        checkCompleted:
-          type: boolean
 
     applicationAccounts:
       type: array
