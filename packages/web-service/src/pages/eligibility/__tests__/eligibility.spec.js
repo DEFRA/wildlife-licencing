@@ -35,12 +35,15 @@ describe('the eligibility pages', () => {
         ELIGIBILITY: {
           getById: jest.fn(() => ({ question: 'answer' })),
           putById: mockPut
+        },
+        APPLICATION: {
+          tags: () => ({ remove: jest.fn() })
         }
       }
     }))
     const { getData } = await import('../eligibility.js')
     const result = await getData('question')(request)
-    expect(mockPut).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { checkCompleted: false })
+    expect(mockPut).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { })
     expect(result).toBeNull()
   })
 
@@ -62,12 +65,15 @@ describe('the eligibility pages', () => {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false })),
             putById: mockPutById
+          },
+          APPLICATION: {
+            tags: () => ({ remove: jest.fn() })
           }
         }
       }))
       const { setData } = await import('../eligibility.js')
       await setData('hasLandOwnerPermission')(request)
-      expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { checkCompleted: false, hasLandOwnerPermission: true, isOwnerOfLand: false })
+      expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { hasLandOwnerPermission: true, isOwnerOfLand: false })
       expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
     })
 
@@ -88,12 +94,15 @@ describe('the eligibility pages', () => {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true })),
             putById: mockPutById
+          },
+          APPLICATION: {
+            tags: () => ({ remove: jest.fn() })
           }
         }
       }))
       const { setData } = await import('../eligibility.js')
       await setData('hasLandOwnerPermission')(request)
-      expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { checkCompleted: false, isOwnerOfLand: true })
+      expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { isOwnerOfLand: true })
       expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
     })
 
@@ -114,13 +123,15 @@ describe('the eligibility pages', () => {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: true })),
             putById: mockPutById
+          },
+          APPLICATION: {
+            tags: () => ({ remove: jest.fn() })
           }
         }
       }))
       const { setData } = await import('../eligibility.js')
       await setData('permissionsGranted')(request)
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', {
-        checkCompleted: false,
         permissionsRequired: true,
         permissionsGranted: true
       })
@@ -143,13 +154,15 @@ describe('the eligibility pages', () => {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: false })),
             putById: mockPutById
+          },
+          APPLICATION: {
+            tags: () => ({ remove: jest.fn() })
           }
         }
       }))
       const { setData } = await import('../eligibility.js')
       await setData('permissionsGranted')(request)
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', {
-        checkCompleted: false,
         permissionsRequired: false
       })
       expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
@@ -381,7 +394,7 @@ describe('the eligibility pages', () => {
 
   it('the checkYourAnswersSetData function sets the check completed flag', async () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
-    const mockPutById = jest.fn()
+    const mockAdd = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         ELIGIBILITY: {
@@ -390,22 +403,16 @@ describe('the eligibility pages', () => {
             isOwnerOfLand: false,
             hasLandOwnerPermission: true,
             permissionsRequired: true
-          })),
-          putById: mockPutById
+          }))
+        },
+        APPLICATION: {
+          tags: () => ({ add: mockAdd })
         }
       }
     }))
-
     const { checkYourAnswersSetData } = await import('../eligibility.js')
     await checkYourAnswersSetData(request)
-    expect(mockPutById).toHaveBeenCalledWith('6829ad54-bab7-4a78-8ca9-dcf722117a45',
-      {
-        checkCompleted: true,
-        hasLandOwnerPermission: true,
-        isOwnerOfLand: false,
-        permissionsGranted: true,
-        permissionsRequired: true
-      })
+    expect(mockAdd).toHaveBeenCalledWith('eligibility-check')
   })
 
   it('the checkYourAnswersCompletion function returns the eligible page if the answers are consistent', async () => {

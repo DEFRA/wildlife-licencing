@@ -2256,6 +2256,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        applicationTags:
+          type: array
+          items:
+            type: string
         applicationReferenceNumber:
           type: string
           minLength: 13
@@ -2301,8 +2305,6 @@ components:
         permissionsRequired:
           type: boolean
         permissionsGranted:
-          type: boolean
-        checkCompleted:
           type: boolean
 
     applicationAccounts:

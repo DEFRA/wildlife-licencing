@@ -10,7 +10,7 @@
             {% for item in checkData %}
                 {{ rows.push({
                     key: { text: questionMap[item.key].question },
-                    value: { text: questionMap[item.key].answer[item.value] },
+                    value: { text: questionMap[item.key].answer[item.value] if questionMap[item.key].answer else item.value },
                     actions: { items: [ { href: questionMap[item.key].href,
                                           text: "Change",
                                           classes: 'govuk-link govuk-link--no-visited-state',
