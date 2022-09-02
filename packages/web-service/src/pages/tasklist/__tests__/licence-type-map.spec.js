@@ -15,15 +15,12 @@ describe('The licence type map', () => {
         getData: () => ({ applicationId: '8a3e8c32-0138-402c-8913-87e78ed44ebd' })
       })
     }
-    const mockGetById = jest.fn(() => ({
-      eligibility: {
-        checkCompleted: true
-      }
-    }))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          getById: mockGetById
+          getById: jest.fn(() => ({
+            applicationTags: ['eligibility-check']
+          }))
         }
       }
     }))
