@@ -13,12 +13,20 @@ export const setContactNamesData = contactType => async request => {
   const { payload: { contact: contactId } } = await request.cache().getPageData()
   if (contactId !== 'new') {
     const { applicationId } = await request.cache().getData()
-    await APIRequests[contactType].assign(applicationId, contactId)
     /* TODO
      * if we select an immutable contact, which does not have an email address and address
      * the on the direct journey that information will be collected against the organization.
      * if however the user already selected no organization then create a contact
      */
+    const currentContact = await APIRequests[contactType].getById(contactId)
+    if (!currentContact.submitted) {
+      await APIRequests[contactType].assign(applicationId, contactId)
+    } else {
+      if (!currentContact.contactDetails || !currentContact.address) {
+
+        // await APIRequests[contactType].assign(applicationId, contactId)
+      }
+    }
   } else {
     // At this point un-assign the contact from the application
     const { applicationId } = await request.cache().getData()

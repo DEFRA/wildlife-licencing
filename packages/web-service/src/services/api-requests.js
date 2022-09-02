@@ -30,6 +30,17 @@ const apiUrls = {
   APPLICATION_ACCOUNT: '/application-account'
 }
 
+const getContactById = async (role, contactId) => {
+  try {
+    debug(`Get ${role} contact by id: ${contactId}`)
+    return API.get(`${apiUrls.CONTACT}/contactId`)
+  } catch (error) {
+    console.error(`Error getting ${role} by id: ${contactId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
 const getContactByApplicationId = async (role, applicationId) => {
   try {
     debug(`Get ${role} contact for an application id applicationId: ${applicationId}`)
@@ -402,6 +413,7 @@ export const APIRequests = {
     }
   },
   APPLICANT: {
+    getById: async contactId => getContactById(contactRoles.APPLICANT, contactId),
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.APPLICANT, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
     destroy: async applicationId => destroyContact(contactRoles.APPLICANT, applicationId),
@@ -411,6 +423,7 @@ export const APIRequests = {
     findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
   },
   ECOLOGIST: {
+    getById: async contactId => getContactById(contactRoles.ECOLOGIST, contactId),
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.ECOLOGIST, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
     destroy: async applicationId => destroyContact(contactRoles.ECOLOGIST, applicationId),
