@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, ecologistExperienceURIs } from '../../uris.js'
 import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -19,6 +19,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
+  ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   METHOD_STATEMENT: 'method-statement',
   SUBMIT: 'send-application'
 }
@@ -131,6 +132,12 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SETTS,
             uri: habitatURIs.START.uri,
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
+          },
+          {
+            name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
+            uri: ecologistExperienceURIs.PREVIOUS_LICENSE.uri,
             status: eligibilityCheckStatus,
             enabled: eligibilityCheckEnabled
           },

@@ -1,0 +1,64 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set errorMap = {
+        'license': {
+          'any.required': { ref: '#license', text: 'You have not selected an option' }
+        }
+    }
+%}
+
+{% set title = "Previous badger mitigiation licenses" %}
+
+{% block pageContent %}
+
+{% for license in data %}
+
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Badger mitigiation license"
+      },
+      value: {
+        text: license
+      },
+      actions: {
+        items: [
+          {
+            href: "#",
+            text: "Remove"
+          }
+        ]
+      }
+    }
+  ]
+}) }}
+
+{% endfor %}
+
+{{ govukRadios({
+  idPrefix: "license",
+  name: "license",
+  fieldset: {
+    legend: {
+      text: "Do you want to add another previous badger mitigation license?",
+      isPageHeading: false,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  items: [
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
+}) }}
+
+{% endblock %}

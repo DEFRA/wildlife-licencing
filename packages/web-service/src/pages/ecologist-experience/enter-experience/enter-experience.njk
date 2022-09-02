@@ -1,0 +1,23 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% set errorMap = {
+        'enter-experience': {
+          'string.empty': { ref: '#enter-experience', text: 'You have not entered the ecologist`s experience' }
+        }
+    }
+%}
+
+{% set title = "Enter the ecologist's experience of badger ecology and surveying" %}
+
+{% block pageContent %}
+
+{{ govukCharacterCount({
+  name: "enter-experience",
+  id: "enter-experience",
+  maxlength: 4000,
+  errorMessage: { text: "Enter the reference number of your previously held licence" } if error['enter-license-details']
+}) }}
+
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% from "error-summary.njk" import errorSummary %}
+
+{% set title = 'Check your answers' %} 
+
+{% set errorMap = {
+        'additional-sett': {
+          'no-choice-made': { ref: '#additional-sett', text: 'Select yes if you want to add another sett' }
+        }
+    }
+%}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+      tag: {
+        text: "alpha"
+      },
+      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    }) }}
+ {% endblock %}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ govukSummaryList({
+    rows: [
+    {
+      key: {text: "Previous mitigation license"},
+      value: {text: data.previousLicenseDisplay},
+      actions: {
+          items: [
+            {
+              href: "/previous-license",
+              text: "Change"
+            }
+          ]
+        }
+    } 
+    ]
+    })}}
+
+  {% if data.licenseDetails %}
+    {{ govukSummaryList({
+      rows: [
+    {
+      key: {text: "Previous license number"},
+      value: {text: data.licenseDetails},
+      actions: {
+          items: [
+            {
+              href: "/license",
+              text: "Change"
+            }
+          ]
+        }
+    }
+    ]
+    })}}
+  {% endif %}
+    {{ govukSummaryList({
+      rows: [
+    {
+      key: {text: "Previous experience of badger ecology and surveying"},
+      value: {text: data.experienceDetails},
+      actions: {
+          items: [
+            {
+              href: "/enter-experience",
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Previous experience of methods to be licensed"},
+      value: {text: data.methodExperience},
+      actions: {
+          items: [
+            {
+              href: "/enter-method",
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Class license held"},
+      value: {text: data.classMitigationDisplay},
+      actions: {
+          items: [
+            {
+              href: "/class-mitigation",
+              text: "Change"
+            }
+          ]
+        }
+    }
+     ]
+    })}}
+    {% if data.classMitigationDetails %}
+    {{ govukSummaryList({
+      rows: [
+    {
+      key: {text: "Class license number"},
+      value: {text: data.classMitigationDetails},
+      actions: {
+          items: [
+            {
+              href: "/enter-class-mitigation-details",
+              text: "Change"
+            }
+          ]
+        }
+    }
+    ]
+    })}}
+{% endif %}
+
+{% endblock %}
