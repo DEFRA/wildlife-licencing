@@ -3,7 +3,9 @@ import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../services/api-requests.js'
-import { changeHandler, putData } from '../../../utils/editTools.js'
+import { getHabitatById } from '../common/get-habitat-by-id.js'
+import { putHabitatById } from '../common/put-habitat-by-id.js'
+
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
 const page = 'habitat-activities'
@@ -27,9 +29,9 @@ export const setData = async request => {
   const methodIds = activities.map(method => parseInt(method))
   if (journeyData.complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
-    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { methodIds })
-    await putData(newSett)
+    await putHabitatById(newSett)
   } else {
     const speciesId = BADGER
     const activityId = INTERFERE_WITH_BADGER_SETT

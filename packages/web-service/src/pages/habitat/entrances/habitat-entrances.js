@@ -1,7 +1,8 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-import { changeHandler, putData } from '../../../utils/editTools.js'
+import { getHabitatById } from '../common/get-habitat-by-id.js'
+import { putHabitatById } from '../common/put-habitat-by-id.js'
 const page = 'habitat-entrances'
 
 export const completion = async request => {
@@ -20,9 +21,9 @@ export const setData = async request => {
 
   if (journeyData.complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
-    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { numberOfEntrances })
-    await putData(newSett)
+    await putHabitatById(newSett)
   }
   journeyData.habitatData = Object.assign(journeyData.habitatData, { numberOfEntrances })
   request.cache().setData(journeyData)

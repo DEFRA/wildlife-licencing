@@ -2,7 +2,8 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { changeHandler, putData } from '../../../utils/editTools.js'
+import { getHabitatById } from '../common/get-habitat-by-id.js'
+import { putHabitatById } from '../common/put-habitat-by-id.js'
 
 const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
@@ -26,9 +27,9 @@ export const setData = async request => {
 
   if (journeyData.complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
-    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { settType })
-    await putData(newSett)
+    await putHabitatById(newSett)
   }
 
   Object.assign(journeyData.habitatData, { settType })

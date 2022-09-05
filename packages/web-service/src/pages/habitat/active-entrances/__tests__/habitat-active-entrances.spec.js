@@ -85,10 +85,15 @@ describe('The habitat active entrances page', () => {
           })
         })
       }
-      jest.doMock('../../../../utils/editTools.js', () => ({
-        changeHandler: () => {},
-        putData: async () => {}
+
+      jest.doMock('../../common/get-habitat-by-id.js', () => ({
+        getHabitatById: () => {}
       }))
+
+      jest.doMock('../../common/put-habitat-by-id.js', () => ({
+        putHabitatById: () => {}
+      }))
+
       const { setData } = await import('../habitat-active-entrances.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({

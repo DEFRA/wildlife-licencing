@@ -3,7 +3,8 @@ import { errorShim } from '../../../handlers/page-handler.js'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
 import { validateDates } from '../../../utils/date-validator.js'
-import { changeHandler, putData } from '../../../utils/editTools.js'
+import { getHabitatById } from '../common/get-habitat-by-id.js'
+import { putHabitatById } from '../common/put-habitat-by-id.js'
 
 export const validator = async payload => {
   validateDates(payload, 'habitat-work-end')
@@ -44,9 +45,9 @@ export const setData = async request => {
   }
   if (journeyData.complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
-    const newSett = await changeHandler(journeyData, journeyData.redirectId)
+    const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workEnd })
-    await putData(newSett)
+    await putHabitatById(newSett)
   }
   journeyData.habitatData = Object.assign(journeyData.habitatData, { workEnd })
   request.cache().setData(journeyData)
