@@ -13,6 +13,7 @@ export default function () {
     CreateBucketCommand,
     GetObjectCommand,
     PutObjectCommand,
-    ListObjectsCommand
+    ListObjectsCommand,
+    bucket: Config.aws.s3.bucket
   }
 }

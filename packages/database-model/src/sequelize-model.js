@@ -250,7 +250,6 @@ async function defineApplicationUploads (sequelize) {
     },
     filetype: { type: DataTypes.STRING(30) },
     filename: { type: DataTypes.STRING(255) },
-    bucket: { type: DataTypes.STRING(63) },
     objectKey: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE }
   }, {
