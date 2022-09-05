@@ -2272,7 +2272,6 @@ components:
       required:
         - filetype
         - filename
-        - bucket
         - objectKey
       properties:
         id:
@@ -2284,10 +2283,6 @@ components:
         filename:
           type: string
           maximum: 255
-        bucket:
-          type: string
-          minimum: 3
-          maximum: 63
         objectKey:
           $ref: '#/components/schemas/uuid'
         submitted:
