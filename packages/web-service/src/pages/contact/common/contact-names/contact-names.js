@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
+import { migrateContact } from '../../common/common.js'
 
 export const getContactNamesData = contactType => async request => {
   const { userId, applicationId } = await request.cache().getData()
@@ -12,20 +13,17 @@ export const getContactNamesData = contactType => async request => {
 export const setContactNamesData = contactType => async request => {
   const { payload: { contact: contactId } } = await request.cache().getPageData()
   if (contactId !== 'new') {
-    const { applicationId } = await request.cache().getData()
+    const { applicationId, userId } = await request.cache().getData()
     /* TODO
      * if we select an immutable contact, which does not have an email address and address
      * the on the direct journey that information will be collected against the organization.
-     * if however the user already selected no organization then create a contact
+     * if however the user already selected 'no organization' then create a new contact
      */
     const currentContact = await APIRequests[contactType].getById(contactId)
-    if (!currentContact.submitted) {
-      await APIRequests[contactType].assign(applicationId, contactId)
+    if (currentContact.submitted) {
+      await migrateContact(currentContact, userId, contactType, applicationId)
     } else {
-      if (!currentContact.contactDetails || !currentContact.address) {
-
-        // await APIRequests[contactType].assign(applicationId, contactId)
-      }
+      await APIRequests[contactType].assign(applicationId, contactId)
     }
   } else {
     // At this point un-assign the contact from the application

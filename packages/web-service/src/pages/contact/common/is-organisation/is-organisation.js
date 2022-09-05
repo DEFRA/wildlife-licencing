@@ -1,4 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { migrateContact } from '../common.js'
 
 export const getContactAccountData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
@@ -27,23 +28,8 @@ export const setContactAccountData = (contactType, accountType) => async request
     const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
     if (currentContact.contactDetails || currentContact.address) {
       if (currentContact.submitted) {
-        // Immutable
-        if (currentContact.user) {
-          const user = await APIRequests.USER.getById(userId)
-          await APIRequests[contactType].unAssign(applicationId)
-          await APIRequests[contactType].create(applicationId, {
-            fullName: currentContact.fullName,
-            userId: user.id,
-            contactDetails: { email: user.username }
-          })
-        } else {
-          if (currentContact.address) {
-            await APIRequests[contactType].unAssign(applicationId)
-            await APIRequests[contactType].create(applicationId, {
-              fullName: currentContact.fullName
-            })
-          }
-        }
+        // Immutable TODO
+        await migrateContact(currentContact, userId, contactType, applicationId)
       } else {
         // Not immutable
         if (currentContact.address || currentContact.contactDetails) {
