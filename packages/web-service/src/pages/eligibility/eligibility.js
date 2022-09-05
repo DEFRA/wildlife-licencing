@@ -4,7 +4,7 @@
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
-
+import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
 
@@ -19,7 +19,6 @@ const IS_OWNER_OF_LAND = 'isOwnerOfLand'
 const HAS_LANDOWNER_PERMISSION = 'hasLandOwnerPermission'
 const PERMISSION_REQUIRED = 'permissionsRequired'
 const PERMISSION_GRANTED = 'permissionsGranted'
-export const CHECK_COMPLETED = 'checkCompleted'
 
 // A state machine to determine the next page required
 export const eligibilityStateMachine = async request => {
@@ -76,13 +75,13 @@ export const checkData = async (request, h) => {
 }
 
 export const getData = question => async request => {
-  const journeyData = await request.cache().getData()
-  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
+  const { applicationId } = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
   // const previous = eligibility[question] || {}
   // By going on to the page you are un-answering the question
   delete eligibility[question]
-  Object.assign(eligibility, { [CHECK_COMPLETED]: false })
-  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+  await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.ELIGIBILITY_CHECK)
+  await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
   return null
 }
 
@@ -104,11 +103,12 @@ const consolidateAnswers = async (request, eligibility) => {
 }
 
 export const setData = question => async request => {
-  const journeyData = await request.cache().getData()
-  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  Object.assign(eligibility, { [question]: isYes(request), [CHECK_COMPLETED]: false })
+  const { applicationId } = await request.cache().getData()
+  const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
+  Object.assign(eligibility, { [question]: isYes(request) })
   await consolidateAnswers(request, eligibility)
-  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+  await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
+  await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.ELIGIBILITY_CHECK)
 }
 
 /**************************************************************
@@ -204,10 +204,8 @@ export const checkYourAnswersGetData = async request => {
 }
 
 export const checkYourAnswersSetData = async request => {
-  const journeyData = await request.cache().getData()
-  const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  Object.assign(eligibility, { [CHECK_COMPLETED]: true })
-  await APIRequests.ELIGIBILITY.putById(journeyData.applicationId, eligibility)
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ELIGIBILITY_CHECK)
 }
 
 export const checkAnswersCompletion = async request => {

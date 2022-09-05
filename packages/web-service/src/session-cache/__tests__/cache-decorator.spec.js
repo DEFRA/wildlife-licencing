@@ -93,4 +93,21 @@ describe('The cache-decorator', () => {
     const cacheDecorator = cd.default('sid')
     await expect(async () => await cacheDecorator.call({ state: { sid: null } })).rejects.toThrowError()
   })
+
+  describe('the cache direct function', () => {
+    it('gets the data from the cache using the context', async () => {
+      const mockRestore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        REDIS: {
+          cache: {
+            restore: mockRestore
+          }
+        }
+      }))
+      const { cacheDirect } = await import('../cache-decorator.js')
+      const result = await cacheDirect({ context: { state: { sid: { id: 123 } } } }).getData()
+      expect(result).toEqual({ foo: 'bar' })
+      expect(mockRestore).toHaveBeenLastCalledWith('123_data')
+    })
+  })
 })

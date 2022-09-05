@@ -359,6 +359,112 @@ describe('The API requests service', () => {
       await expect(() => APIRequests.APPLICATION.submit('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
         .rejects.toThrowError()
     })
+
+    describe('the tag functions', () => {
+      it('the add tag function calls the the API correctly if tag present', async () => {
+        const mockPut = jest.fn()
+        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['here-before'] }))
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            put: mockPut,
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tag')
+        expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', {
+          applicationTags: expect.arrayContaining(['tag', 'here-before']), foo: 'bar'
+        })
+      })
+
+      it('the add tag function ignores duplicate tags', async () => {
+        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+        const mockPut = jest.fn()
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            put: mockPut,
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tag')
+        expect(mockPut).not.toHaveBeenCalledWith()
+      })
+
+      it('the add tag function rethrows an error', async () => {
+        const mockGet = jest.fn(() => { throw new Error() })
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tsg-2'))
+          .rejects.toThrowError()
+      })
+
+      it('the has tag function calls the the API correctly if tag present', async () => {
+        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tag')
+        expect(result).toBeTruthy()
+      })
+
+      it('the has tag function calls the the API correctly if tag not present', async () => {
+        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tag-2')
+        expect(result).not.toBeTruthy()
+      })
+
+      it('the has tag function rethrows an error', async () => {
+        const mockGet = jest.fn(() => { throw new Error() })
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tsg-2'))
+          .rejects.toThrowError()
+      })
+
+      it('the remove tag function calls the the API correctly if tag present', async () => {
+        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag', 'tag-2'] }))
+        const mockPut = jest.fn()
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet,
+            put: mockPut
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').remove('tag-2')
+        expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', { applicationTags: ['tag'], foo: 'bar' })
+      })
+
+      it('the remove tag function rethrows an error', async () => {
+        const mockGet = jest.fn(() => { throw new Error() })
+        jest.doMock('@defra/wls-connectors-lib', () => ({
+          API: {
+            get: mockGet
+          }
+        }))
+        const { APIRequests } = await import('../api-requests.js')
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').remove('tsg-2'))
+          .rejects.toThrowError()
+      })
+    })
   })
 
   describe('ELIGIBILITY requests', () => {
