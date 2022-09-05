@@ -1,10 +1,11 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../services/api-requests.js'
 import { changeHandler, putData } from '../../../utils/editTools.js'
+const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
+
 const page = 'habitat-activities'
 
 const {
@@ -15,7 +16,7 @@ const {
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
 export const getData = async _request => {
-  return { settDistruptionMethods }
+  return { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
 }
 
 export const setData = async request => {

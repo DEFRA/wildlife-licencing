@@ -1,4 +1,5 @@
-import { settDistruptionMethods } from '../../../../utils/sett-disturb-methods.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
 describe('The habitat activities page', () => {
   beforeEach(() => jest.resetModules())
@@ -28,8 +29,7 @@ describe('The habitat activities page', () => {
     })
     it('the habitat-activities page delivers the correct data from the getData call', async () => {
       const { getData } = await import('../habitat-activities.js')
-      const expected = { settDistruptionMethods }
-      expect(await getData()).toEqual(expected)
+      expect(await getData()).toEqual({ OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT })
     })
 
     it('if the user doesnt fill a checkbox - it raises an error', async () => {

@@ -1,7 +1,6 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs } from '../../../uris.js'
-import { settTypes } from '../../../utils/sett-type.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { changeHandler, putData } from '../../../utils/editTools.js'
 
@@ -16,7 +15,7 @@ export const completion = async request => {
 }
 
 export const getData = () => {
-  return { settTypes }
+  return { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER }
 }
 
 export const setData = async request => {

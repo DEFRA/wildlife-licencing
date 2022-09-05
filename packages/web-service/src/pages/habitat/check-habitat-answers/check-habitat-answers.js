@@ -2,12 +2,12 @@ import pageRoute from '../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { settTypes } from '../../../utils/sett-type.js'
-import { settDistruptionMethods } from '../../../utils/sett-disturb-methods.js'
+import { settDisruptionMethods } from '../../../utils/sett-disturb-methods.js'
 import Joi from 'joi'
 const addSett = 'additional-sett'
 
 const typeProcessor = selectedType => settTypes.filter(type => type.value === selectedType)[0].text
-const methodProcessor = selectedMethods => settDistruptionMethods.filter(method => selectedMethods.includes(method.value)).map(method => '\n' + method.text)
+const methodProcessor = selectedMethods => settDisruptionMethods.filter(method => selectedMethods.includes(method.value)).map(method => '\n' + method.text)
 export const dateProcessor = date => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()

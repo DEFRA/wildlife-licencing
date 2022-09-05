@@ -1,3 +1,5 @@
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } = PowerPlatformKeys
 
 describe('The habitat types page', () => {
   beforeEach(() => jest.resetModules())
@@ -77,8 +79,7 @@ describe('The habitat types page', () => {
     })
     it('getData returns the settTypes', async () => {
       const { getData } = await import('../habitat-types.js')
-      const { settTypes } = await import('../../../../utils/sett-type.js')
-      expect(getData()).toStrictEqual({ settTypes })
+      expect(getData()).toStrictEqual({ MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER })
     })
   })
 })
