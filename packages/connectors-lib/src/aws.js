@@ -10,10 +10,10 @@ export default function () {
         forcePathStyle: true
       })
     }),
+    bucket: Config.aws.s3.bucket,
     CreateBucketCommand,
     GetObjectCommand,
     PutObjectCommand,
-    ListObjectsCommand,
-    bucket: Config.aws.s3.bucket
+    ListObjectsCommand
   }
 }
