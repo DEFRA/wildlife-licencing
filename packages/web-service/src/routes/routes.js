@@ -45,6 +45,7 @@ import classMitigation from '../pages/ecologist-experience/class-mitigation/clas
 import enterClassMitigationDetails from '../pages/ecologist-experience/enter-class-mitigation-details/enter-class-mitigation-details.js'
 import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist-answers/check-ecologist-answers.js'
 import license from '../pages/ecologist-experience/license/license.js'
+import removeLicense from '../pages/ecologist-experience/remove-license/remove-license.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 
@@ -95,6 +96,7 @@ const routes = [
   ...enterClassMitigationDetails,
   ...checkEcologistAnswers,
   ...license,
+  ...removeLicense,
   signOut,
   ...miscRoutes
 ]

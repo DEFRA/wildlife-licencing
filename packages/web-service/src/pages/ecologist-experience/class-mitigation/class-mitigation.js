@@ -1,8 +1,9 @@
+import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
 const yesNo = 'yes-no'
 
-const completion = async request => {
+export const completion = async request => {
   const pageData = await request.cache().getPageData()
   if (pageData.payload[yesNo] === 'yes') {
     return ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
@@ -10,16 +11,20 @@ const completion = async request => {
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
-const setData = async request => {
+export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const classMitigation = pageData.payload[yesNo] === 'yes'
   Object.assign(journeyData.ecologistExperience, { classMitigation })
   if (classMitigation === false) {
-    Object.assign(journeyData.ecologistExperience, { complete: true })
     delete journeyData.ecologistExperience.classMitigationDetails
+    if (!journeyData.ecologistExperience.complete) {
+      Object.assign(journeyData.ecologistExperience, { complete: true })
+      APIRequests.ECOLOGIST_EXPERIENCE.create(journeyData.applicationId, journeyData.ecologistExperience)
+    } else {
+      APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(journeyData.applicationId, journeyData.ecologistExperience)
+    }
   }
-  console.log(journeyData.ecologistExperience)
   await request.cache().setData(journeyData)
 }
 

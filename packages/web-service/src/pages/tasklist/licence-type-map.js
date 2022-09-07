@@ -1,7 +1,5 @@
 import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, ecologistExperienceURIs } from '../../uris.js'
-import { CHECK_COMPLETED } from '../eligibility/eligibility.js'
 import { APIRequests } from '../../services/api-requests.js'
-
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 const {
   APPLICANT: { USER: APPLICANT_USER },

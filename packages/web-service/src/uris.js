@@ -26,7 +26,8 @@ export const ecologistExperienceURIs = {
   CHECK_YOUR_ANSWERS: { uri: '/check-ecologist-answers', page: 'check-ecologist-answers' },
   ENTER_METHODS: { uri: '/enter-methods', page: 'enter-methods' },
   CLASS_MITIGATION: { uri: '/class-mitigation', page: 'class-mitigation' },
-  ENTER_CLASS_MITIGATION: { uri: '/enter-class-mitigation-details', page: 'enter-class-mitigation-details' }
+  ENTER_CLASS_MITIGATION: { uri: '/enter-class-mitigation-details', page: 'enter-class-mitigation-details' },
+  REMOVE_LICENSE: { uri: '/remove-license', page: 'remove-license' }
 }
 
 export const habitatURIs = {

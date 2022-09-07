@@ -16,6 +16,7 @@
 {{ govukCharacterCount({
   name: "enter-experience",
   id: "enter-experience",
+  value: data,
   maxlength: 4000,
   errorMessage: { text: "Enter the reference number of your previously held licence" } if error['enter-license-details']
 }) }}

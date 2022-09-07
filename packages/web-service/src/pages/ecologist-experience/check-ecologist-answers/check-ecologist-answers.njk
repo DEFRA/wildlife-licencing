@@ -42,7 +42,7 @@
     ]
     })}}
 
-  {% if data.licenseDetails %}
+  {% if data.previousLicense %}
     {{ govukSummaryList({
       rows: [
     {
@@ -80,7 +80,7 @@
       actions: {
           items: [
             {
-              href: "/enter-method",
+              href: "/enter-methods",
               text: "Change"
             }
           ]

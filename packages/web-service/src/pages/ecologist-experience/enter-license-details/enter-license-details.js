@@ -2,16 +2,14 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 
-const completion = async () => ecologistExperienceURIs.LICENSE.uri
+export const completion = async () => ecologistExperienceURIs.LICENSE.uri
 
-const setData = async request => {
+export const setData = async request => {
   const pageData = await request.cache().getPageData()
-  console.log(pageData)
   const journeyData = await request.cache().getData()
   const currentLicenseDetails = journeyData.ecologistExperience.licenseDetails ? journeyData.ecologistExperience.licenseDetails : []
   const licenseDetails = currentLicenseDetails.concat(pageData.payload['enter-license-details'])
   Object.assign(journeyData.ecologistExperience, { licenseDetails })
-  console.log(journeyData)
   await request.cache().setData(journeyData)
 }
 

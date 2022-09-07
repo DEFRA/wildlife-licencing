@@ -2104,10 +2104,10 @@ paths:
 # Ecologist-Experience
 ################################################################################################
 
-  '/ecologist/{applicationId}/ecologist-experience'
+  '/ecologist/{applicationId}/ecologist-experience':
     get:
-      description: Get the ecologist's experience details
-      summary: Get the ecologist's experience details
+      description: Get the ecologists experience details
+      summary: Get the ecologists experience details
       operationId: getEcologistExperience
       parameters:
         - name: applicationId
@@ -2163,7 +2163,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-     put:
+    put:
       description: Create new ecologist experience or update existing experience
       summary: Create new ecologist experience or update existing experience
       operationId: putEcologistExperience
@@ -2180,13 +2180,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/site'
+                $ref: '#/components/schemas/ecologistExperience'
         201:
           description: The ecologist experience has been created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/site'
+                $ref: '#/components/schemas/ecologistExperience'
         400:
           description: Bad request. application ID must be a uuid
         404:

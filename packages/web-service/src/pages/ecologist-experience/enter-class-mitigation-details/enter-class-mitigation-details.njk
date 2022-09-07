@@ -12,10 +12,10 @@
 {% set title = "Enter the class license reference number" %}
 
 {% block pageContent %}
-
   {{ govukInput({
     id: "enter-class-mitigation-details",
     name: "enter-class-mitigation-details",
+    value: data,
     hint: {
       text: "This can be found on the license document."
     },

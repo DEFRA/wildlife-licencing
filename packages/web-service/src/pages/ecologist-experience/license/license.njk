@@ -10,9 +10,29 @@
     }
 %}
 
+{}
+
 {% set title = "Previous badger mitigiation licenses" %}
 
 {% block pageContent %}
+{% set legendText = "Do you want to add another previous badger mitigation license?" %}
+{% if not data %}
+
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Badger mitigiation license"
+      },
+      value: {
+        text: "No license added"
+      },
+      actions: {
+      }
+    }
+  ]
+}) }}
+{% endif %}
 
 {% for license in data %}
 
@@ -28,7 +48,7 @@
       actions: {
         items: [
           {
-            href: "#",
+            href: "/remove-license?license=" + license,
             text: "Remove"
           }
         ]
@@ -44,9 +64,9 @@
   name: "license",
   fieldset: {
     legend: {
-      text: "Do you want to add another previous badger mitigation license?",
+      text: "Do you want to add another previous badger mitigation license?" if data else "Do you want to add a previous badger mitigation license?",
       isPageHeading: false,
-      classes: "govuk-fieldset__legend--l"
+      classes: "govuk-fieldset__legend--m"
     }
   },
   items: [
