@@ -58,6 +58,7 @@ async function defineContacts (sequelize) {
     userId: { type: DataTypes.UUID },
     contact: { type: DataTypes.JSONB },
     sddsContactId: { type: DataTypes.UUID },
+    cloneOf: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
@@ -74,6 +75,7 @@ async function defineAccounts (sequelize) {
     id: { type: DataTypes.UUID, primaryKey: true },
     account: { type: DataTypes.JSONB },
     sddsAccountId: { type: DataTypes.UUID },
+    cloneOf: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {

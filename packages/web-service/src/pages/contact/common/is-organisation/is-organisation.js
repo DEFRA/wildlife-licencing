@@ -1,5 +1,21 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { migrateContact } from '../common.js'
+import { APPLICATIONS } from '../../../../uris.js'
+import { setAccountExisting } from '../account-names/account-names.js'
+
+export const checkContactAccountData = (contactType, urlBase) => async (request, h) => {
+  const journeyData = await request.cache().getData()
+  if (!journeyData.applicationId) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  const contact = await APIRequests[contactType].getByApplicationId(journeyData.applicationId)
+  if (!contact) {
+    return h.redirect(urlBase.NAME.uri)
+  }
+
+  return null
+}
 
 export const getContactAccountData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
@@ -18,73 +34,53 @@ export const setContactAccountData = (contactType, accountType) => async request
     await APIRequests[accountType].create(applicationId, {
       name: pageData.payload['organisation-name']
     })
-    /*
-     * Submitted contacts and accounts are immutable
-     * If the contact has previously had an address and email collected on it then it will be removed as long as it is not immutable.
-     * If the contact is immutable then a new contact is created and assigned, it will copy the name from the current contact.
-     * If the existing contact is linked to the user then the new contact is also linked to the user and the email address is retained
-     * If the existing contact is not linked to the user then the new contact will not retain the email address.
-     */
+
+    // If the current contact is immutable and has an address, the address now needs to be
+    // associated with the account. Migrate the contact to a new contact omitting the address details.
+    // If an account has already been assigned and is mutable, copy the address to the account
     const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
     if (currentContact.contactDetails || currentContact.address) {
-      if (currentContact.submitted) {
-        // Immutable TODO
-        await migrateContact(currentContact, userId, contactType, applicationId)
-      } else {
-        // Not immutable
-        if (currentContact.address || currentContact.contactDetails) {
-          delete currentContact.address
-          if (!currentContact.userId) {
-            delete currentContact.contactDetails
-          }
-          await APIRequests[contactType].update(applicationId, currentContact)
+      await setAccountExisting(userId, applicationId, currentContact, contactType)
+      const currentAccount = await APIRequests[accountType].getByApplicationId(applicationId)
+      if (currentAccount && !currentAccount.submitted) {
+        currentAccount.address = currentContact.address
+        if (!currentContact.userId) {
+          currentAccount.contactDetails = currentContact.contactDetails
         }
       }
     }
   } else {
-    // Un-assign any previous account
     const currentAccount = await APIRequests[accountType].getByApplicationId(applicationId)
-    await APIRequests[accountType].unAssign(applicationId)
-    /*
-     * If removing an existing associated account and
-     * the contact is immutable and does not have an address or email then
-     * create a new contact with or without the linked user.
-     * With the linked user copy the address from the contact and the email from the user.
-     * Without the linked user then copy both the address and email from the old contact.
-     * If the linked contact is not immutable then copy the address and email
-     * from the account onto the current contact
-     */
+    // Remove any existing account
     if (currentAccount) {
-      const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
-      if (currentContact.submitted) {
-        // Immutable
-        if (!currentContact.contactDetails || !currentContact.address) {
-          // Creates and associate a new contact
-          if (currentContact.user) {
-            // Linked to user
-            const user = await APIRequests.USER.getById(userId)
-            await APIRequests[contactType].unAssign(applicationId)
-            await APIRequests[contactType].create(applicationId, {
-              userId: user.id,
-              contactDetails: currentAccount.contactDetails,
-              address: currentAccount.address
-            })
-          } else {
-            // Not linked to user
-            await APIRequests[contactType].unAssign(applicationId)
-            await APIRequests[contactType].create(applicationId, {
-              contactDetails: currentAccount.contactDetails,
-              address: currentAccount.address
-            })
-          }
+      await APIRequests[accountType].unAssign(applicationId)
+    }
+
+    const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
+    // if the current contact is immutable and does not have an address or contact details then
+    // it is necessary to create and assign a new contact which can have those details added.
+    // If there was an account then migrate the address and contact details from the account
+    if (await APIRequests.CONTACT.isImmutable(applicationId, currentContact.id)) {
+      if (!currentContact.contactDetails || !currentContact.address) {
+        if (currentAccount) {
+          await migrateContact(userId, applicationId, contactType, {
+            contactDetails: currentAccount.contactDetails,
+            address: currentAccount.address
+          })
+        } else {
+          await migrateContact(userId, applicationId, currentContact, contactType)
         }
-      } else {
-        // Not immutable
+      }
+    } else {
+      // If the contact is not immutable then does not have an address or contact details
+      // then copy from the removed account if it existed
+      if (currentAccount && (!currentContact.contactDetails || !currentContact.address)) {
         currentContact.contactDetails = currentAccount.contactDetails
         currentContact.address = currentAccount.address
         await APIRequests[contactType].update(applicationId, currentContact)
       }
     }
+
     // Clear the name on the page here
     const pageData = await request.cache().getPageData()
     if (pageData) {
@@ -120,8 +116,7 @@ export const contactAccountCompletion = (contactType, accountType, urlBase) => a
     }
   } else {
     const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-    // Immutable
-    if (contact.submitted) {
+    if (await APIRequests.CONTACT.isImmutable(applicationId, contact.id)) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
       if (!contact.contactDetails) {

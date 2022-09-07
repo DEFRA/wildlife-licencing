@@ -15,7 +15,8 @@ export default async (context, req, h) => {
         id: contactId,
         contact: contactObj,
         updateStatus: 'L',
-        ...(req.payload.userId && { userId: req.payload.userId })
+        ...(req.payload.userId && { userId: req.payload.userId }),
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }
     })
 
@@ -29,7 +30,8 @@ export default async (context, req, h) => {
       const [, updatedContact] = await models.contacts.update({
         contact: contactObj,
         updateStatus: 'L',
-        ...(req.payload.userId && { userId: req.payload.userId })
+        ...(req.payload.userId && { userId: req.payload.userId }),
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }, {
         where: {
           id: contactId

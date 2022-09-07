@@ -2,9 +2,7 @@ import { ApiRequestEntities, APIRequests } from '../../../../services/api-reques
 
 export const CONTACT_COMPLETE = {
   [ApiRequestEntities.APPLICANT]: 'applicant-contact-complete',
-  [ApiRequestEntities.ECOLOGIST]: 'ecologist-contact-complete',
-  [ApiRequestEntities.APPLICANT_ORGANISATION]: 'applicant-account-complete',
-  [ApiRequestEntities.ECOLOGIST_ORGANISATION]: 'ecologist-account-complete'
+  [ApiRequestEntities.ECOLOGIST]: 'ecologist-contact-complete'
 }
 
 const prt = a => {
@@ -20,7 +18,10 @@ const addressLine = c => [
   c.address.buildingNumber,
   c.address.street,
   c.address.town,
-  c.address.postcode
+  c.address.postcode,
+  c.address.addressLine1,
+  c.address.addressLine2,
+  c.address.county
 ].filter(a => a).join(', ')
 
 export const getCheckAnswersData = (contactType, accountType) => async request => {
@@ -30,12 +31,8 @@ export const getCheckAnswersData = (contactType, accountType) => async request =
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
   // The check-answers macro requires an array of k, v pair objects
   await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE[contactType])
-  if (account) {
-    await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE[accountType])
-  }
   return {
     hasAccount: !!account,
-    immutableAccount: !!(account && account.submitted),
     checkYourAnswers: [
       { key: 'contactIsUser', value: prt(contact.userId) },
       { key: 'whoIsTheLicenceFor', value: contact.fullName },

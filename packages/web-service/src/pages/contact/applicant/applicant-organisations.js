@@ -9,6 +9,6 @@ export const applicantOrganisations = accountNamesPage({
   uri: ORGANISATIONS.uri,
   checkData: accountNamesCheckData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   getData: getAccountNamesData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
-  setData: setAccountNamesData(ApiRequestEntities.APPLICANT_ORGANISATION),
+  setData: setAccountNamesData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
   completion: accountNamesCompletion(ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

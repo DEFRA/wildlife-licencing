@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
+import { contactsFilter } from '../common.js'
 
 export const getUserData = _contactType => async request => {
   const journeyData = await request.cache().getData()
@@ -46,7 +47,7 @@ async function accountsRoute (accountType, userId, uriBase) {
 
 export const userCompletion = (contactType, accountType, uriBase) => async request => {
   const pageData = await request.cache().getPageData()
-  const { userId } = await request.cache().getData()
+  const { userId, applicationId } = await request.cache().getData()
   // Find the contacts created by the user
   const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
   if (pageData.payload['yes-no'] === 'yes') {
@@ -71,11 +72,12 @@ export const userCompletion = (contactType, accountType, uriBase) => async reque
       return uriBase.NAME.uri
     }
   } else {
-    // Filter out any owner by user
-    if (contacts.filter(c => c.userId !== userId).length) {
-      return uriBase.NAMES.uri
-    } else {
+    // Filter out any owner by user, and any clones
+    const filteredContacts = await contactsFilter(applicationId, contacts)
+    if (filteredContacts.length < 1) {
       return uriBase.NAME.uri
+    } else {
+      return uriBase.NAMES.uri
     }
   }
 }

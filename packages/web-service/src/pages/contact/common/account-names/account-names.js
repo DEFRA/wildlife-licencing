@@ -1,6 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
 import { APPLICATIONS } from '../../../../uris.js'
+import { accountsFilter, migrateContact } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -9,7 +10,8 @@ export const accountNamesCheckData = (contactType, accountType, urlBase) => asyn
   }
   // if no accounts available then redirect the is-organisation
   const accounts = await APIRequests[accountType].findByUser(journeyData.userId, DEFAULT_ROLE)
-  if (!accounts.length) {
+  const filteredAccounts = await accountsFilter(journeyData.applicationId, accounts)
+  if (!filteredAccounts.length) {
     return h.redirect(urlBase.IS_ORGANISATION.uri)
   }
   return null
@@ -20,13 +22,34 @@ export const getAccountNamesData = (contactType, accountType) => async request =
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
   const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
-  return { account, accounts, contact }
+  return { account, accounts: await accountsFilter(applicationId, accounts), contact }
 }
 
-export const setAccountNamesData = accountType => async request => {
+export const setAccountExisting = async (userId, applicationId, currentContact, contactType) => {
+  if (await APIRequests.CONTACT.isImmutable(applicationId, currentContact.id)) {
+    await migrateContact(userId, applicationId, currentContact, contactType)
+  } else {
+    // Not immutable
+    if (currentContact.address || currentContact.contactDetails) {
+      delete currentContact.address
+      if (!currentContact.userId) {
+        delete currentContact.contactDetails
+      }
+      await APIRequests[contactType].update(applicationId, currentContact)
+    }
+  }
+}
+
+export const setAccountNamesData = (contactType, accountType) => async request => {
   const { payload: { account } } = request
-  const { applicationId } = await request.cache().getData()
+  const { userId, applicationId } = await request.cache().getData()
   if (account !== 'new') {
+    // If the current contact is immutable and has an address, the address now needs to be
+    // associated with the account. Migrate the contact to a new contact omitting the address details.
+    const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
+    if (currentContact.contactDetails || currentContact.address) {
+      await setAccountExisting(userId, applicationId, currentContact, contactType)
+    }
     await APIRequests[accountType].assign(applicationId, account)
   }
 }

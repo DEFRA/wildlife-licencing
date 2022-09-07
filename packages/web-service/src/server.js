@@ -48,6 +48,8 @@ const additionalPageData = (request, h) => {
         ecologistUser: contactURIs.ECOLOGIST.USER.uri,
         applicantName: contactURIs.APPLICANT.NAME.uri,
         ecologistName: contactURIs.ECOLOGIST.NAME.uri,
+        applicantNames: contactURIs.APPLICANT.NAMES.uri,
+        ecologistNames: contactURIs.ECOLOGIST.NAMES.uri,
         applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
         ecologistOrganisations: contactURIs.ECOLOGIST.ORGANISATIONS.uri,
         applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,

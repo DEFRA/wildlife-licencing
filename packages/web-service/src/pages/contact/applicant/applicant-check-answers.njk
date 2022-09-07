@@ -2,11 +2,11 @@
 
 {% set questionMap = {
     contactIsUser: { question: 'Is the licence for you?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.applicantUser },
-    whoIsTheLicenceFor: { question: 'Who is the licence for?', href: _uri.applicantName },
+    whoIsTheLicenceFor: { question: 'Who is the licence for?', href: _uri.applicantNames },
     contactIsOrganisation: { question: 'Are you part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.applicantIsOrganisation if data.hasAccount else _uri.applicantOrganisations },
     applicantOrganisations: { question: 'Name of organisation', href: _uri.applicantOrganisations },
-    email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.applicantEmail if not data.immutableAccount },
-    address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.applicantEmail if not data.immutableAccount }
+    email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.applicantEmail },
+    address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.applicantPostcode }
 } %}
 
 {% set checkData = data.checkYourAnswers %}

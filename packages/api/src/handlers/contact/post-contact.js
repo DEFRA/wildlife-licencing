@@ -13,7 +13,8 @@ export default async (_context, req, h) => {
       id: uuidv4(),
       contact: contactObj,
       updateStatus: 'L',
-      ...(req.payload.userId && { userId: req.payload.userId })
+      ...(req.payload.userId && { userId: req.payload.userId }),
+      ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
     })
 
     const responseBody = prepareResponse(dataValues)

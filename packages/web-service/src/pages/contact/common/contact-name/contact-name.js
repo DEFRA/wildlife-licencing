@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
+import { accountsFilter } from '../common.js'
 
 export const getContactData = contact => async request => {
   const journeyData = await request.cache().getData()
@@ -46,7 +47,8 @@ export const contactNameCompletion = (_contactType, accountType, urlBase) => asy
   }
 
   const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
-  if (accounts.length) {
+  const filteredAccounts = await accountsFilter(applicationId, accounts)
+  if (filteredAccounts.length) {
     return urlBase.ORGANISATIONS.uri
   } else {
     return urlBase.IS_ORGANISATION.uri

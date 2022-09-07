@@ -10,7 +10,8 @@ export default async (_context, req, h) => {
     const { dataValues } = await models.accounts.create({
       id: uuidv4(),
       account: alwaysExclude(req.payload),
-      updateStatus: 'L'
+      updateStatus: 'L',
+      ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
     })
 
     const responseBody = prepareResponse(dataValues)

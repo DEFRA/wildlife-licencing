@@ -26,5 +26,6 @@ export const alwaysExclude = payload => {
   delete result.createdAt
   delete result.updatedAt
   delete result.userId
+  delete result.cloneOf
   return result
 }

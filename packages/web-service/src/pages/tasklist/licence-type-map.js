@@ -1,7 +1,9 @@
 import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs } from '../../uris.js'
-import { APIRequests } from '../../services/api-requests.js'
+import { APIRequests, ApiRequestEntities } from '../../services/api-requests.js'
+import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
+
 const {
   APPLICANT: { USER: APPLICANT_USER },
   ECOLOGIST: { USER: ECOLOGIST_USER }
@@ -42,7 +44,7 @@ export const getTaskStatus = async request => {
   const applicationTags = application.applicationTags || []
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
-    [SECTION_TASKS.LICENCE_HOLDER]: false,
+    [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE[ApiRequestEntities.APPLICANT]),
     [SECTION_TASKS.ECOLOGIST]: false,
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
@@ -98,8 +100,8 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
-            uri: APPLICANT_USER.uri,
-            status: eligibilityCheckStatus,
+            uri: status => status[SECTION_TASKS.LICENCE_HOLDER] ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
+            status: status => status[SECTION_TASKS.LICENCE_HOLDER] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
             enabled: eligibilityCheckEnabled
           },
           {

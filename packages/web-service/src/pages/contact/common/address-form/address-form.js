@@ -1,10 +1,11 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { setAddress } from '../address/address.js'
 
-export const getAddressFormData = (contactType, contactOrganisation) => async request => {
+export const getAddressFormData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  const account = await APIRequests[contactOrganisation].getByApplicationId(applicationId)
+  const account = await APIRequests[accountType].getByApplicationId(applicationId)
   return {
     contactName: contact?.fullName,
     accountName: account?.name,
@@ -12,21 +13,13 @@ export const getAddressFormData = (contactType, contactOrganisation) => async re
   }
 }
 
-export const setAddressFormData = (contactType, contactOrganisation) => async request => {
+export const setAddressFormData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const pageData = await request.cache().getPageData()
   const inputAddress = pageData.payload
   const apiAddress = mapInputAddress(inputAddress)
-  const account = await APIRequests[contactOrganisation].getByApplicationId(applicationId)
-  if (account) {
-    Object.assign(account, { address: apiAddress })
-    await APIRequests[contactOrganisation].update(applicationId, account)
-  } else {
-    const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-    Object.assign(contact, { address: apiAddress })
-    await APIRequests[contactType].update(applicationId, contact)
-  }
+  await setAddress(accountType, applicationId, apiAddress, contactType, journeyData)
 }
 
 const mapInputAddress = inputAddress => Object.assign({ },

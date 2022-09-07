@@ -577,6 +577,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: accountId
+          in: query
+          description: ID of the account
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
         - name: role
           in: query
           description: The role
@@ -754,6 +760,12 @@ paths:
         - name: applicationId
           in: query
           description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: contactId
+          in: query
+          description: ID of the contact
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
@@ -2133,6 +2145,8 @@ components:
           $ref: '#/components/schemas/address'
         submitted:
           $ref: '#/components/schemas/timestamp'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -2365,6 +2379,8 @@ components:
           $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
         submitted:
           $ref: '#/components/schemas/timestamp'
         createdAt:

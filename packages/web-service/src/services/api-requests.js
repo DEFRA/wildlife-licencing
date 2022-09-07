@@ -30,17 +30,6 @@ const apiUrls = {
   APPLICATION_ACCOUNT: '/application-account'
 }
 
-const getContactById = async (role, contactId) => {
-  try {
-    debug(`Get ${role} contact by id: ${contactId}`)
-    return API.get(`${apiUrls.CONTACT}/contactId`)
-  } catch (error) {
-    console.error(`Error getting ${role} by id: ${contactId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
-    throw error
-  }
-}
-
 const getContactByApplicationId = async (role, applicationId) => {
   try {
     debug(`Get ${role} contact for an application id applicationId: ${applicationId}`)
@@ -412,8 +401,57 @@ export const APIRequests = {
       }
     }
   },
+  CONTACT: {
+    getById: async contactId => {
+      try {
+        debug(`Get contact by id: ${contactId}`)
+        return API.get(`${apiUrls.CONTACT}/${contactId}`)
+      } catch (error) {
+        console.error(`Error getting contact by id: ${contactId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    isImmutable: async (applicationId, contactId) => {
+      const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
+      if (contact.submitted) {
+        return true
+      } else {
+        const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+        if (!applicationContacts.length) {
+          return false
+        } else {
+          return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+        }
+      }
+    }
+  },
+  ACCOUNT: {
+    getById: async accountId => {
+      try {
+        debug(`Get account by id: ${accountId}`)
+        return API.get(`${apiUrls.ACCOUNT}/${accountId}`)
+      } catch (error) {
+        console.error(`Error getting account by id: ${accountId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    isImmutable: async (applicationId, accountId) => {
+      const account = await API.get(`${apiUrls.ACCOUNT}/${accountId}`)
+      if (account.submitted) {
+        return true
+      } else {
+        const applicationAccounts = await API.get(apiUrls.APPLICATION_ACCOUNTS, `accountId=${accountId}`)
+        if (!applicationAccounts.length) {
+          return false
+        } else {
+          return !!applicationAccounts.find(ac => ac.applicationId !== applicationId)
+        }
+      }
+    }
+  },
   APPLICANT: {
-    getById: async contactId => getContactById(contactRoles.APPLICANT, contactId),
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.APPLICANT, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
     destroy: async applicationId => destroyContact(contactRoles.APPLICANT, applicationId),
@@ -423,7 +461,6 @@ export const APIRequests = {
     findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
   },
   ECOLOGIST: {
-    getById: async contactId => getContactById(contactRoles.ECOLOGIST, contactId),
     getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.ECOLOGIST, applicationId),
     create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
     destroy: async applicationId => destroyContact(contactRoles.ECOLOGIST, applicationId),
