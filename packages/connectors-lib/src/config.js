@@ -7,7 +7,8 @@ export default {
   aws: {
     region: process.env.AWS_REGION,
     s3: {
-      endpoint: process.env.AWS_S3_ENDPOINT
+      endpoint: process.env.AWS_S3_ENDPOINT,
+      bucket: process.env.AWS_S3_BUCKET
     }
   },
   pg: {

@@ -1,11 +1,11 @@
 import { models } from '@defra/wls-database-model'
 import { AWS, GRAPH } from '@defra/wls-connectors-lib'
-const { S3Client, GetObjectCommand } = AWS()
+const { S3Client, GetObjectCommand, bucket } = AWS()
 
 export class RecoverableUploadError extends Error {}
 export class UnRecoverableUploadError extends Error {}
 
-export const getReadStream = async (bucket, objectKey) => {
+export const getReadStream = async objectKey => {
   try {
     const response = await S3Client.send(new GetObjectCommand({
       Bucket: bucket,
@@ -27,9 +27,9 @@ export const getReadStream = async (bucket, objectKey) => {
 // Any error in the database including no data found is not recoverable
 const getDataFromDatabase = async id => {
   try {
-    const { bucket, objectKey, filename, applicationId } = await models.applicationUploads.findByPk(id)
+    const { objectKey, filename, applicationId } = await models.applicationUploads.findByPk(id)
     const { application } = await models.applications.findByPk(applicationId)
-    return { application, bucket, objectKey, filename }
+    return { application, objectKey, filename }
   } catch (err) {
     throw new UnRecoverableUploadError(err.message)
   }
@@ -43,10 +43,10 @@ const getDataFromDatabase = async id => {
 export const fileJobProcess = async job => {
   const { id, applicationId } = job.data
   try {
-    const { bucket, objectKey, filename, application } = await getDataFromDatabase(id)
+    const { objectKey, filename, application } = await getDataFromDatabase(id)
     const referenceNumber = application.applicationReferenceNumber
-    console.log(`Consume file - queue item ${JSON.stringify({ bucket, objectKey, filename })} for application: ${referenceNumber}`)
-    const { stream, bytes } = await getReadStream(bucket, objectKey)
+    console.log(`Consume file - queue item ${JSON.stringify({ objectKey, filename })} for application: ${referenceNumber}`)
+    const { stream, bytes } = await getReadStream(objectKey)
     console.log(`Read file bytes: ${bytes}`)
     // The file location is a folder within the 'Application' drive with the same name as the application reference number
     await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', `/${referenceNumber}`)
