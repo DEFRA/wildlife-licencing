@@ -69,7 +69,6 @@ export const completion = async request => {
 export const getData = async request => {
   const workEnd = (await request.cache().getData())?.habitatData?.workEnd || ''
   const [day, month, year] = workEnd.split('-')
-  console.log(day, month, year)
   return { day, month, year }
 }
 
