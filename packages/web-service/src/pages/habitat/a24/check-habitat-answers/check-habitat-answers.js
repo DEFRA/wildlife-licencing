@@ -118,4 +118,11 @@ export const completion = async request => {
   }
   return TASKLIST.uri
 }
-export default pageRoute({ page: habitatURIs.CHECK_YOUR_ANSWERS.page, uri: habitatURIs.CHECK_YOUR_ANSWERS.uri, getData, validator, completion, checkData })
+export default pageRoute({
+  page: habitatURIs.CHECK_YOUR_ANSWERS.page,
+  uri: habitatURIs.CHECK_YOUR_ANSWERS.uri,
+  getData,
+  validator,
+  completion,
+  checkData
+})

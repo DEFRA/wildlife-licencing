@@ -6,6 +6,7 @@ describe('The habitat name page', () => {
       const { completion } = await import('../habitat-name.js')
       expect(await completion()).toBe('/habitat-types')
     })
+
     it('sets the name correctly', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -28,6 +29,7 @@ describe('The habitat name page', () => {
           { name: 'Badgerland' }
       })
     })
+
     it('sets the name correctly if no journey data exists', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -49,6 +51,20 @@ describe('The habitat name page', () => {
         habitatData:
           { name: 'Badgerland' }
       })
+    })
+
+    it('getData returns the correct object', async () => {
+      const result = { habitatData: { name: 'The corner of my garden' } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-name.js')
+      expect(await getData(request)).toStrictEqual({ name: result.habitatData.name })
     })
   })
 })

@@ -17,8 +17,9 @@ const {
 
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
-export const getData = async _request => {
-  return { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
+export const getData = async request => {
+  const methodIds = (await request.cache().getData())?.habitatData?.methodIds || []
+  return { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT, methodIds }
 }
 
 export const setData = async request => {

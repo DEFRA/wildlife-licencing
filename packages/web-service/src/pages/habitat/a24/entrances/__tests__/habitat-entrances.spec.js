@@ -14,6 +14,7 @@ describe('The habitat entrances page', () => {
       const { completion } = await import('../habitat-entrances.js')
       expect(await completion(request)).toBe('/habitat-active-entrances')
     })
+
     it('the habitat-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       const request = {
         cache: () => ({
@@ -24,6 +25,7 @@ describe('The habitat entrances page', () => {
       const { completion } = await import('../habitat-entrances.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('sets the entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -46,6 +48,7 @@ describe('The habitat entrances page', () => {
           { numberOfEntrances: 99 }
       })
     })
+
     it('sets the active entrance data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -83,6 +86,20 @@ describe('The habitat entrances page', () => {
         habitatData:
           { numberOfEntrances: 5 }
       })
+    })
+
+    it('getData returns the correct object', async () => {
+      const result = { habitatData: { numberOfEntrances: 22 } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-entrances.js')
+      expect(await getData(request)).toStrictEqual({ numberOfEntrances: result.habitatData.numberOfEntrances })
     })
   })
 })

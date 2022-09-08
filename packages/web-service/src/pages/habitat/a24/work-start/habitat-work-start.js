@@ -37,4 +37,17 @@ export const setData = async request => {
   request.cache().setData(journeyData)
 }
 
-export default pageRoute({ page: habitatURIs.WORK_START.page, uri: habitatURIs.WORK_START.uri, setData, completion, validator })
+export const getData = async request => {
+  const workStart = (await request.cache().getData())?.habitatData?.workStart || ''
+  const [day, month, year] = workStart.split('-')
+  return { day, month, year }
+}
+
+export default pageRoute({
+  page: habitatURIs.WORK_START.page,
+  uri: habitatURIs.WORK_START.uri,
+  setData,
+  getData,
+  completion,
+  validator
+})

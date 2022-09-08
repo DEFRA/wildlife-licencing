@@ -19,10 +19,12 @@
     errorMessage: { text: "Select an option." } if error['habitat-reopen'],
     items: [
       {
+        checked: data.willReopen === true,
         value: true,
         text: "Yes"
       },
       {
+        checked: data.willReopen === false,
         value: false,
         text: "No"
       }

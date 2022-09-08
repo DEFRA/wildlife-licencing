@@ -66,4 +66,18 @@ export const completion = async request => {
   return habitatURIs.ACTIVITIES.uri
 }
 
-export default pageRoute({ page: habitatURIs.WORK_END.page, uri: habitatURIs.WORK_END.uri, validator, completion, setData })
+export const getData = async request => {
+  const workEnd = (await request.cache().getData())?.habitatData?.workEnd || ''
+  const [day, month, year] = workEnd.split('-')
+  console.log(day, month, year)
+  return { day, month, year }
+}
+
+export default pageRoute({
+  page: habitatURIs.WORK_END.page,
+  uri: habitatURIs.WORK_END.uri,
+  validator,
+  completion,
+  getData,
+  setData
+})

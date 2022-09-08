@@ -29,6 +29,11 @@ export const setData = async request => {
   request.cache().setData(journeyData)
 }
 
+export const getData = async request => {
+  const numberOfEntrances = (await request.cache().getData())?.habitatData?.numberOfEntrances
+  return { numberOfEntrances }
+}
+
 export default pageRoute({
   page: habitatURIs.ENTRANCES.page,
   uri: habitatURIs.ENTRANCES.uri,
@@ -36,5 +41,6 @@ export default pageRoute({
     [page]: Joi.number().integer().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
+  getData,
   setData
 })

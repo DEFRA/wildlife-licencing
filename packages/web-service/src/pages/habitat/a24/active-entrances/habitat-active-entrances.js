@@ -54,6 +54,11 @@ export const setData = async request => {
   request.cache().setData(journeyData)
 }
 
+export const getData = async request => {
+  const numberOfActiveEntrances = (await request.cache().getData())?.habitatData?.numberOfActiveEntrances
+  return { numberOfActiveEntrances }
+}
+
 export default pageRoute({
   page: habitatURIs.ACTIVE_ENTRANCES.page,
   uri: habitatURIs.ACTIVE_ENTRANCES.uri,
@@ -61,5 +66,6 @@ export default pageRoute({
     'habitat-active-entrances': Joi.number().integer().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
+  getData,
   setData
 })

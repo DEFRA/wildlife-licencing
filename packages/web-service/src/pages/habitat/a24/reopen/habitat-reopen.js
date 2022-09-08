@@ -20,6 +20,11 @@ export const setData = async request => {
   request.cache().setData(journeyData)
 }
 
+export const getData = async request => {
+  const willReopen = (await request.cache().getData())?.habitatData?.willReopen
+  return { willReopen }
+}
+
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   if (journeyData.complete) {
@@ -35,5 +40,6 @@ export default pageRoute({
     'habitat-reopen': Joi.boolean().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
+  getData,
   setData
 })

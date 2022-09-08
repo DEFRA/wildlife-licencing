@@ -131,5 +131,19 @@ describe('The habitat active entrances page', () => {
         payload: {}
       })
     })
+
+    it('getData returns the correct object', async () => {
+      const result = { habitatData: { numberOfActiveEntrances: 22 } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-active-entrances.js')
+      expect(await getData(request)).toStrictEqual({ numberOfActiveEntrances: result.habitatData.numberOfActiveEntrances })
+    })
   })
 })

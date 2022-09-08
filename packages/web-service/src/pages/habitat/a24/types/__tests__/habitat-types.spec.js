@@ -14,6 +14,7 @@ describe('The habitat types page', () => {
       const { completion } = await import('../habitat-types.js')
       expect(await completion(request)).toBe('/habitat-reopen')
     })
+
     it('the habitat-types page forwards onto check-habitat-answers on return journey', async () => {
       const request = {
         cache: () => ({
@@ -23,6 +24,7 @@ describe('The habitat types page', () => {
       const { completion } = await import('../habitat-types.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('sets the entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -45,6 +47,7 @@ describe('The habitat types page', () => {
           { settType: 100000011 }
       })
     })
+
     it('sets the type data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -82,9 +85,19 @@ describe('The habitat types page', () => {
           { settType: 100000011 }
       })
     })
+
     it('getData returns the settTypes', async () => {
+      const result = { habitatData: { settType: 100000003 } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
       const { getData } = await import('../habitat-types.js')
-      expect(getData()).toStrictEqual({ MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER })
+      expect(await getData(request)).toStrictEqual({ MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER, settType: result.habitatData.settType })
     })
   })
 })

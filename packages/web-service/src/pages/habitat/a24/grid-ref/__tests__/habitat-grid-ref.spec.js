@@ -11,6 +11,7 @@ describe('The habitat grid ref page', () => {
       const { completion } = await import('../habitat-grid-ref.js')
       expect(await completion(request)).toBe('/habitat-work-start')
     })
+
     it('the habitat-grid-ref page forwards onto check-habitat-answers on return journey', async () => {
       const request = {
         cache: () => ({
@@ -20,6 +21,7 @@ describe('The habitat grid ref page', () => {
       const { completion } = await import('../habitat-grid-ref.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('sets the grid ref data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -42,6 +44,7 @@ describe('The habitat grid ref page', () => {
           { gridReference: 'NY123456' }
       })
     })
+
     it('sets the grid ref data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -78,6 +81,20 @@ describe('The habitat grid ref page', () => {
         habitatData:
           { gridReference: 'NY123456' }
       })
+    })
+
+    it('getData returns the correct object', async () => {
+      const result = { habitatData: { gridReference: 'NY395557' } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-grid-ref.js')
+      expect(await getData(request)).toStrictEqual({ gridReference: result.habitatData.gridReference })
     })
   })
 })

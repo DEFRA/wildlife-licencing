@@ -15,6 +15,7 @@ describe('The habitat work end page', () => {
       const { completion } = await import('../habitat-work-end.js')
       expect(await completion(request)).toBe('/habitat-activities')
     })
+
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {
       const request = {
         cache: () => ({
@@ -25,6 +26,7 @@ describe('The habitat work end page', () => {
       const { completion } = await import('../habitat-work-end.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('the habitat-work-end page stays on the habitat-work-end page if there are errors', async () => {
       const request = {
         cache: () => {
@@ -318,5 +320,24 @@ describe('The habitat work end page', () => {
       }))
       expect(await validator(payload)).toBe(payload)
     })
+  })
+
+  it('getData returns the correct object', async () => {
+    const request = {
+      cache: () => {
+        return {
+          getData: () => {
+            return {
+              habitatData: {
+                workEnd: '10-10-3022'
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const { getData } = await import('../habitat-work-end.js')
+    expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
   })
 })

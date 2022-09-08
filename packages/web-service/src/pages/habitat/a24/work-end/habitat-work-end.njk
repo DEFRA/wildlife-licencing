@@ -22,6 +22,23 @@
     namePrefix: "habitat-work-end",
     name: "habitat-work-end",
     errorMessage: { text: "Enter an end date for the licenced work on this sett." } if error['habitat-work-end'],
+    items: [
+      {
+        classes: "govuk-input--width-2",
+        value: data.day,
+        name: "day"
+      },
+      {
+        classes: "govuk-input--width-2",
+        value: data.month,
+        name: "month"
+      },
+      {
+        classes: "govuk-input--width-4",
+        value: data.year,
+        name: "year"
+      }
+    ],
     hint: {
       text: "The work must be finished before the end of licence period (30 November)."
     }

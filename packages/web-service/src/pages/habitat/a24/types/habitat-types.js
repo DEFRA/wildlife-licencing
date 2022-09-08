@@ -15,8 +15,9 @@ export const completion = async request => {
   return habitatURIs.REOPEN.uri
 }
 
-export const getData = () => {
-  return { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER }
+export const getData = async request => {
+  const settType = (await request.cache().getData())?.habitatData?.settType
+  return { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER, settType }
 }
 
 export const setData = async request => {

@@ -29,6 +29,11 @@ export const setData = async request => {
   request.cache().setData(journeyData)
 }
 
+export const getData = async request => {
+  const gridReference = (await request.cache().getData())?.habitatData?.gridReference
+  return { gridReference }
+}
+
 export default pageRoute({
   page: habitatURIs.GRID_REF.page,
   uri: habitatURIs.GRID_REF.uri,
@@ -36,5 +41,6 @@ export default pageRoute({
     'habitat-grid-ref': Joi.string().trim().pattern(/[a-zA-Z]{2}\d{6}/).required()
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
+  getData,
   setData
 })

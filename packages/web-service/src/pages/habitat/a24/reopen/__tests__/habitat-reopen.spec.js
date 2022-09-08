@@ -11,6 +11,7 @@ describe('The habitat reopen page', () => {
       const { completion } = await import('../habitat-reopen.js')
       expect(await completion(request)).toBe('/habitat-entrances')
     })
+
     it('the habitat-reopen page forwards onto check-habitat-answers on return journey', async () => {
       const request = {
         cache: () => ({
@@ -20,6 +21,7 @@ describe('The habitat reopen page', () => {
       const { completion } = await import('../habitat-reopen.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('sets the reopen data correctly', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -42,6 +44,7 @@ describe('The habitat reopen page', () => {
           { willReopen: true }
       })
     })
+
     it('sets the reopen data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -78,6 +81,20 @@ describe('The habitat reopen page', () => {
         habitatData:
           { willReopen: true }
       })
+    })
+
+    it('getData returns the correct object', async () => {
+      const result = { habitatData: { willReopen: true } }
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return result
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-reopen.js')
+      expect(await getData(request)).toStrictEqual({ willReopen: result.habitatData.willReopen })
     })
   })
 })

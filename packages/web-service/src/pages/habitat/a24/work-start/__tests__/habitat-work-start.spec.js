@@ -15,6 +15,7 @@ describe('The habitat work start page', () => {
       const { completion } = await import('../habitat-work-start.js')
       expect(await completion(request)).toBe('/habitat-work-end')
     })
+
     it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
       const request = {
         cache: () => ({
@@ -25,6 +26,7 @@ describe('The habitat work start page', () => {
       const { completion } = await import('../habitat-work-start.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('throws an error if a date can not be parsed', async () => {
       try {
         const payload = { 'habitat-work-start-day': '12---', 'habitat-work-start-month': '5----', 'habitat-work-start-year': (new Date().getFullYear()) }
@@ -35,6 +37,7 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
       }
     })
+
     it('if the user doesnt input a day - it raises an error', async () => {
       try {
         const payload = { 'habitat-work-start-day': '', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
@@ -133,6 +136,7 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
+
     it('you cant pass a string as a day', async () => {
       try {
         const payload = { 'habitat-work-start-day': 'aa', 'habitat-work-start-month': '1', 'habitat-work-start-year': (new Date().getFullYear()) }
@@ -165,6 +169,7 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: the date is invalid')
       }
     })
+
     it('you cant pass a past date', async () => {
       try {
         const payload = { 'habitat-work-start-day': new Date().getDate() - 1, 'habitat-work-start-month': new Date().getMonth(), 'habitat-work-start-year': new Date().getFullYear() }
@@ -175,6 +180,7 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
+
     it('you cant pass a date outside of the license season', async () => {
       try {
         const payload = { 'habitat-work-start-day': 1, 'habitat-work-start-month': 12, 'habitat-work-start-year': new Date().getFullYear() + 1 }
@@ -185,6 +191,7 @@ describe('The habitat work start page', () => {
         expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
       }
     })
+
     it('you can pass a date in future license seasons', async () => {
       try {
         const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() + 10 }
@@ -220,6 +227,7 @@ describe('The habitat work start page', () => {
           { workStart: `7-10-${new Date().getFullYear}` }
       })
     })
+
     it('sets the work start data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
@@ -259,5 +267,24 @@ describe('The habitat work start page', () => {
           { workStart: `7-10-${new Date().getFullYear}` }
       })
     })
+  })
+
+  it('getData returns the correct object', async () => {
+    const request = {
+      cache: () => {
+        return {
+          getData: () => {
+            return {
+              habitatData: {
+                workStart: '10-10-3022'
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const { getData } = await import('../habitat-work-start.js')
+    expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
   })
 })

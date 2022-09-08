@@ -17,6 +17,7 @@ describe('The habitat activities page', () => {
       const { completion } = await import('../habitat-activities.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('the habitat-activities page forwards onto check-habitat-answers if no errors on return journey', async () => {
       const request = {
         cache: () => ({
@@ -28,8 +29,26 @@ describe('The habitat activities page', () => {
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
     it('the habitat-activities page delivers the correct data from the getData call', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return {
+              habitatData: {
+                methodIds: [100000010, 100000011]
+              }
+            }
+          }
+        })
+      }
       const { getData } = await import('../habitat-activities.js')
-      expect(await getData()).toEqual({ OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT })
+      expect(await getData(request)).toEqual({
+        OBSTRUCT_SETT_WITH_GATES,
+        OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+        DAMAGE_A_SETT,
+        DESTROY_A_SETT,
+        DISTURB_A_SETT,
+        methodIds: [100000010, 100000011]
+      })
     })
 
     it('if the user doesnt fill a checkbox - it raises an error', async () => {
@@ -93,6 +112,7 @@ describe('The habitat activities page', () => {
       })
       expect(mockCreate).toHaveBeenCalledTimes(1)
     })
+
     it('sets the activities data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       const request = {
