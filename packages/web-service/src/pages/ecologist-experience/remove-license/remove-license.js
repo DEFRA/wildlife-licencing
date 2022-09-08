@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 
-export const getData = async request => await request.query.license
+export const getData = async request => request.query.license
 
 export const completion = () => ecologistExperienceURIs.LICENSE.uri
 
@@ -24,10 +24,10 @@ export const setData = async request => {
 export default pageRoute({
   uri: ecologistExperienceURIs.REMOVE_LICENSE.uri,
   page: ecologistExperienceURIs.REMOVE_LICENSE.page,
-  getData,
-  setData,
-  completion,
   validator: Joi.object({
     'remove-license': Joi.string().required()
-  }).options({ abortEarly: false, allowUnknown: true })
+  }).options({ abortEarly: false, allowUnknown: true }),
+  getData,
+  setData,
+  completion
 })

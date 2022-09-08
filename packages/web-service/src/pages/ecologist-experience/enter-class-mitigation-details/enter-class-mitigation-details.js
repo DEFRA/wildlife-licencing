@@ -20,7 +20,7 @@ export const setData = async request => {
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  return await journeyData.ecologistExperience.classMitigationDetails
+  return journeyData.ecologistExperience.classMitigationDetails
 }
 
 export default pageRoute({

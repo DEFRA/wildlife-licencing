@@ -5,10 +5,6 @@
  */
 export const prepareResponse = a => {
   Object.assign((({
-    createdAt,
-    updatedAt,
-    updateStatus,
-    applicationId,
     ...experience
   }) => experience)(a), {
     createdAt: a.createdAt.toISOString(),

@@ -1,7 +1,6 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { prepareResponse } from './ecologist-experience-proc.js'
-// import { checkCache } from '../utils.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
