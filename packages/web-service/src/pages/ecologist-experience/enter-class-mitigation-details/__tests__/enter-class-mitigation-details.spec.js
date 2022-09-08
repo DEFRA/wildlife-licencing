@@ -117,4 +117,19 @@ describe('The check ecologist answers page', () => {
       })
     })
   })
+  describe('getData function', () => {
+    it('returns the mitigation details', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            ecologistExperience: {
+              classMitigationDetails: 'AZ1234'
+            }
+          })
+        })
+      }
+      const { getData } = await import('../enter-class-mitigation-details.js')
+      expect(await getData(request)).toBe('AZ1234')
+    })
+  })
 })

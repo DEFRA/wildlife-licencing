@@ -125,4 +125,19 @@ describe('The check ecologist answers page', () => {
       expect(mockPut).toHaveBeenCalledTimes(0)
     })
   })
+  describe('getData function', () => {
+    it('returns the experience details', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            ecologistExperience: {
+              experienceDetails: 'I have all the experience'
+            }
+          })
+        })
+      }
+      const { getData } = await import('../enter-experience.js')
+      expect(await getData(request)).toBe('I have all the experience')
+    })
+  })
 })

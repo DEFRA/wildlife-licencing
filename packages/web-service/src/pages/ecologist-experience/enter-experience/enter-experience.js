@@ -11,7 +11,7 @@ export const completion = async request => {
   return ecologistExperienceURIs.ENTER_METHODS.uri
 }
 
-const getData = async request => {
+export const getData = async request => {
   const journeyData = await request.cache().getData()
   return journeyData.ecologistExperience.experienceDetails
 }

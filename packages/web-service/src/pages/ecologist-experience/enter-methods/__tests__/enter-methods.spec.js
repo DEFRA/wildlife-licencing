@@ -124,4 +124,19 @@ describe('The check ecologist answers page', () => {
       expect(mockPut).toHaveBeenCalledTimes(0)
     })
   })
+  describe('getData function', () => {
+    it('returns the method details', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            ecologistExperience: {
+              methodExperience: 'I have all the methods'
+            }
+          })
+        })
+      }
+      const { getData } = await import('../enter-methods.js')
+      expect(await getData(request)).toBe('I have all the methods')
+    })
+  })
 })

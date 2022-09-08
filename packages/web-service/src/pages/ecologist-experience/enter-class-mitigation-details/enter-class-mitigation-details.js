@@ -18,7 +18,7 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-const getData = async request => {
+export const getData = async request => {
   const journeyData = await request.cache().getData()
   return await journeyData.ecologistExperience.classMitigationDetails
 }
