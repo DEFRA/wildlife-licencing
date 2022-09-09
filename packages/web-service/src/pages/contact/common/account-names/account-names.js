@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, migrateContact } from '../common.js'
+import { accountsFilter, alterContactDataAddAccount } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -25,21 +25,6 @@ export const getAccountNamesData = (contactType, accountType) => async request =
   return { account, accounts: await accountsFilter(applicationId, accounts), contact }
 }
 
-export const setAccountExisting = async (userId, applicationId, currentContact, contactType) => {
-  if (await APIRequests.CONTACT.isImmutable(applicationId, currentContact.id)) {
-    await migrateContact(userId, applicationId, currentContact, contactType)
-  } else {
-    // Not immutable
-    if (currentContact.address || currentContact.contactDetails) {
-      delete currentContact.address
-      if (!currentContact.userId) {
-        delete currentContact.contactDetails
-      }
-      await APIRequests[contactType].update(applicationId, currentContact)
-    }
-  }
-}
-
 export const setAccountNamesData = (contactType, accountType) => async request => {
   const { payload: { account } } = request
   const { userId, applicationId } = await request.cache().getData()
@@ -47,10 +32,14 @@ export const setAccountNamesData = (contactType, accountType) => async request =
     // If the current contact is immutable and has an address, the address now needs to be
     // associated with the account. Migrate the contact to a new contact omitting the address details.
     const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
-    if (currentContact.contactDetails || currentContact.address) {
-      await setAccountExisting(userId, applicationId, currentContact, contactType)
+    if ((!currentContact.userId && (currentContact.contactDetails || currentContact.address)) ||
+      (currentContact.userId && currentContact.address)) {
+      await alterContactDataAddAccount(userId, applicationId, currentContact, contactType)
     }
     await APIRequests[accountType].assign(applicationId, account)
+  } else {
+    // Un-assign and remove if mutable
+    await APIRequests[accountType].unLink(applicationId)
   }
 }
 

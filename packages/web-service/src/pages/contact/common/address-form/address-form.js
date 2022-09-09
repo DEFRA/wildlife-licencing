@@ -1,5 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { setAddress } from '../address/address.js'
+import { contactAccountOperations } from '../common.js'
 
 export const getAddressFormData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
@@ -19,7 +19,8 @@ export const setAddressFormData = (contactType, accountType) => async request =>
   const pageData = await request.cache().getPageData()
   const inputAddress = pageData.payload
   const apiAddress = mapInputAddress(inputAddress)
-  await setAddress(accountType, applicationId, apiAddress, contactType, journeyData)
+  const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+  await contactAccountOps.setAddress(apiAddress)
 }
 
 const mapInputAddress = inputAddress => Object.assign({ },

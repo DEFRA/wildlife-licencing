@@ -131,6 +131,48 @@ const unAssignContact = async (role, applicationId) => {
   }
 }
 
+/**
+ * Un-assign a contact from the application and delete it, if it is mutable
+ */
+const unLinkContact = async (role, applicationId) => {
+  try {
+    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    if (applicationContact) {
+      debug(`Unlink ${role} contact ${applicationContact.contactId} from applicationId: ${applicationId}`)
+      await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
+      const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${applicationContact.contactId}`)
+      if (!applicationContacts.length) {
+        await API.delete(`${apiUrls.CONTACT}/${applicationContact.contactId}`)
+      }
+    }
+  } catch (error) {
+    console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
+/**
+ * Un-assign a contact from the application and delete it, if it is mutable
+ */
+const unLinkAccount = async (role, applicationId) => {
+  try {
+    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${role}`)
+    if (applicationAccount) {
+      debug(`Unlink ${role} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
+      await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
+      const applicationAccounts = await API.get(apiUrls.APPLICATION_ACCOUNTS, `accountId=${applicationAccount.accountId}`)
+      if (!applicationAccounts.length) {
+        await API.delete(`${apiUrls.ACCOUNT}/${applicationAccount.accountId}`)
+      }
+    }
+  } catch (error) {
+    console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
+}
+
 const updateContact = async (role, applicationId, contact) => {
   try {
     debug(`Updating the ${role} for applicationId: ${applicationId}`)
@@ -412,6 +454,16 @@ export const APIRequests = {
         throw error
       }
     },
+    destroy: async contactId => {
+      try {
+        debug(`Delete contact by id: ${contactId}`)
+        return API.delete(`${apiUrls.CONTACT}/${contactId}`)
+      } catch (error) {
+        console.error(`Error deleting contact by id: ${contactId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     isImmutable: async (applicationId, contactId) => {
       const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
       if (contact.submitted) {
@@ -437,6 +489,16 @@ export const APIRequests = {
         throw error
       }
     },
+    destroy: async accountId => {
+      try {
+        debug(`Delete account by id: ${accountId}`)
+        return API.delete(`${apiUrls.ACCOUNT}/${accountId}`)
+      } catch (error) {
+        console.error(`Error deleting account by id: ${accountId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     isImmutable: async (applicationId, accountId) => {
       const account = await API.get(`${apiUrls.ACCOUNT}/${accountId}`)
       if (account.submitted) {
@@ -457,6 +519,7 @@ export const APIRequests = {
     destroy: async applicationId => destroyContact(contactRoles.APPLICANT, applicationId),
     assign: async (applicationId, contactId) => assignContact(contactRoles.APPLICANT, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.APPLICANT, applicationId),
+    unLink: async applicationId => unLinkContact(contactRoles.APPLICANT, applicationId),
     update: async (applicationId, contact) => updateContact(contactRoles.APPLICANT, applicationId, contact),
     findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
   },
@@ -466,6 +529,7 @@ export const APIRequests = {
     destroy: async applicationId => destroyContact(contactRoles.ECOLOGIST, applicationId),
     assign: async (applicationId, contactId) => assignContact(contactRoles.ECOLOGIST, applicationId, contactId),
     unAssign: async applicationId => unAssignContact(contactRoles.ECOLOGIST, applicationId),
+    unLink: async applicationId => unLinkContact(contactRoles.APPLICANT, applicationId),
     update: async (applicationId, contact) => updateContact(contactRoles.ECOLOGIST, applicationId, contact),
     findByUser: async userId => findContactByUser(contactRoles.ECOLOGIST, userId)
   },
@@ -473,6 +537,7 @@ export const APIRequests = {
     create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, applicationOrganisation),
     assign: async (applicationId, accountId) => assignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, accountId),
     unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
+    unLink: async applicationId => unLinkAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
     update: async (applicationId, account) => updateAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, account),
     getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANISATION'], applicationId),
     findByUser: async userId => findAccountByUser(accountRoles['APPLICANT-ORGANISATION'], userId)
@@ -481,6 +546,7 @@ export const APIRequests = {
     create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, applicationOrganisation),
     assign: async (applicationId, accountId) => assignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, accountId),
     unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
+    unLink: async applicationId => unLinkAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
     update: async (applicationId, account) => updateAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, account),
     getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
     findByUser: async userId => findAccountByUser(accountRoles['ECOLOGIST-ORGANISATION'], userId)

@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { migrateAccount, migrateContact } from '../common.js'
+import { accountOperations, contactAccountOperations, migrateAccount, migrateContact } from '../common.js'
 
 export const checkEmailAddressData = (contactType, accountType, urlBase) => async (request, h) => {
   // If trying to set the address of an immutable account redirect to is organisations
@@ -33,47 +33,28 @@ export const getEmailAddressData = (contactType, accountType) => async request =
 
 export const setEmailAddressData = (contactType, accountType) => async request => {
   const { userId, applicationId } = await request.cache().getData()
-  const pageData = await request.cache().getPageData()
-  const account = await APIRequests[accountType].getByApplicationId(applicationId)
-  if (account) {
-    // if trying to change the contact details of an immutable account then clone the account
-    const immutable = await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
-    if (immutable) {
-      await migrateAccount(applicationId, account, accountType, {
-        contactDetails: { email: pageData.payload['email-address'] },
-        address: account.address
-      })
-    } else {
-      const contactDetails = account.contactDetails || {}
-      Object.assign(contactDetails, { email: pageData.payload['email-address'] })
-      Object.assign(account, { contactDetails })
-      await APIRequests[accountType].update(applicationId, account)
-    }
-  } else {
-    const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-    const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-    if (immutable) {
-      await migrateContact(userId, applicationId, contact, contactType, {
-        contactDetails: { email: pageData.payload['email-address'] },
-        address: contact.address
-      })
-    } else {
-      const contactDetails = contact.contactDetails || {}
-      Object.assign(contactDetails, { email: pageData.payload['email-address'] })
-      Object.assign(contact, { contactDetails })
-      await APIRequests[contactType].update(applicationId, contact)
-    }
-  }
+  const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+  await contactAccountOps.setEmailAddress(request.payload['email-address'])
 }
 
-export const emailAddressCompletion = (contactType, accountType, baseUrl) => async request => {
+export const emailAddressCompletion = (contactType, accountType, urlBase) => async request => {
   // If an address is already present then go to the check page, otherwise go to the postcode page
   const { applicationId } = await request.cache().getData()
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
   if (account) {
-    return account.address ? baseUrl.CHECK_ANSWERS.uri : baseUrl.POSTCODE.uri
+    if (account.address) {
+      return urlBase.CHECK_ANSWERS.uri
+    } else {
+      await request.cache().clearPageData(urlBase.POSTCODE.page)
+      return urlBase.POSTCODE.uri
+    }
   } else {
     const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-    return contact.address ? baseUrl.CHECK_ANSWERS.uri : baseUrl.POSTCODE.uri
+    if (contact.address) {
+      return urlBase.CHECK_ANSWERS.uri
+    } else {
+      await request.cache().clearPageData(urlBase.POSTCODE.page)
+      return urlBase.POSTCODE.uri
+    }
   }
 }

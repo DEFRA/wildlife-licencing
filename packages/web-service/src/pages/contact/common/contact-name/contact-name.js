@@ -1,6 +1,19 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
-import { accountsFilter } from '../common.js'
+import { accountsFilter, checkData, contactOperations } from '../common.js'
+
+export const checkContactData = (contactType, urlBase) => async (request, h) => {
+  const ck = await checkData(request, h)
+  if (ck) {
+    return ck
+  }
+  const { applicationId } = await request.cache().getData()
+  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
+  if (!contact) {
+    return h.redirect(urlBase.USER.uri)
+  }
+  return null
+}
 
 export const getContactData = contact => async request => {
   const journeyData = await request.cache().getData()
@@ -8,23 +21,11 @@ export const getContactData = contact => async request => {
   return APIRequests[contact].getByApplicationId(applicationId)
 }
 
-export const setContactData = (contactType, apiBase) => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
+export const setContactData = (contactType) => async request => {
+  const { userId, applicationId } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  if (!contact || contact.submitted) {
-    // Creates and associate a new contact
-    await APIRequests[contactType].create(applicationId, {
-      fullName: pageData.payload.name
-    })
-  } else {
-    // Update the existing contact if already assigned
-    Object.assign(contact, { fullName: pageData.payload.name })
-    await APIRequests[contactType].update(applicationId, contact)
-  }
-  await request.cache().clearPageData(apiBase.ORGANISATIONS.page)
-  await request.cache().clearPageData(apiBase.IS_ORGANISATION.page)
+  const contactOps = await contactOperations(contactType, applicationId, userId)
+  await contactOps.setName(pageData.payload.name)
 }
 
 export const contactNameCompletion = (_contactType, accountType, urlBase) => async request => {
@@ -33,7 +34,7 @@ export const contactNameCompletion = (_contactType, accountType, urlBase) => asy
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
   if (account) {
     // Immutable
-    if (account.submitted) {
+    if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
       if (!account.contactDetails) {
