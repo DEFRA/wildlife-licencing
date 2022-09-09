@@ -113,7 +113,7 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
   if (pageData.payload[addSett] === 'yes') {
     delete journeyData.complete
-    request.cache().setData(journeyData)
+    await request.cache().setData(journeyData)
     return habitatURIs.NAME.uri
   }
   return TASKLIST.uri
