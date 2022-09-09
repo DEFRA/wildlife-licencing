@@ -24,6 +24,6 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => TASKLIST.uri
+export const completion = async () => TASKLIST.uri
 
 export default pageRoute({ page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page, uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri, getData, completion, checkData, setData })
