@@ -98,11 +98,10 @@ async function defineSites (sequelize) {
 
 async function defineEcologistExperience (sequelize) {
   models.ecologistExperience = await sequelize.define('ecologist-experience', {
-    id: { type: DataTypes.UUID },
+    id: { type: DataTypes.UUID, primaryKey: true },
     experience: { type: DataTypes.JSONB },
     applicationId: {
       type: DataTypes.UUID,
-      primaryKey: true,
       references: {
         model: models.applications,
         key: 'id'

@@ -1,4 +1,4 @@
-describe('The check ecologist answers page', () => {
+describe('The remove license page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
@@ -16,6 +16,13 @@ describe('The check ecologist answers page', () => {
       }
       const { getData } = await import('../remove-license.js')
       expect(await getData(request)).toBe('AZ1234')
+    })
+    it('returns the enter license details uri if user selects yes', async () => {
+      const request = {
+        query: {}
+      }
+      const { getData } = await import('../remove-license.js')
+      expect(await getData(request)).toBe('')
     })
   })
   describe('set data function', () => {
@@ -63,7 +70,8 @@ describe('The check ecologist answers page', () => {
           setData: mockSet
         })
       }
-      const { setData } = await import('../remove-license.js')
+      const { setData, getData } = await import('../remove-license.js')
+      await getData(request)
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
         ecologistExperience: {

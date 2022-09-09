@@ -1,4 +1,4 @@
-describe('The check ecologist answers page', () => {
+describe('The enter class mitigation details page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
@@ -15,11 +15,18 @@ describe('The check ecologist answers page', () => {
       const mockSet = jest.fn()
       const mockPut = jest.fn()
       const mockPost = jest.fn()
+      const mockAdd = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             create: mockPost,
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => false,
+              add: mockAdd
+            })
           }
         }
       }))
@@ -39,40 +46,38 @@ describe('The check ecologist answers page', () => {
           setData: mockSet
         })
       }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            create: mockPost,
-            putExperienceById: mockPut
-          }
-        }
-      }))
       const { setData } = await import('../enter-class-mitigation-details.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
         applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
         ecologistExperience: {
           classMitigation: false,
-          complete: true,
           classMitigationDetails: 'ZA1234'
         }
       })
       expect(mockPut).toHaveBeenCalledTimes(0)
       expect(mockPost).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', {
         classMitigation: false,
-        complete: true,
         classMitigationDetails: 'ZA1234'
       })
+      expect(mockAdd).toHaveBeenCalledTimes(1)
     })
     it('calls put on the return journey', async () => {
       const mockSet = jest.fn()
       const mockPut = jest.fn()
       const mockPost = jest.fn()
+      const mockAdd = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             create: mockPost,
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => true,
+              add: () => mockAdd
+            })
           }
         }
       }))
@@ -86,35 +91,25 @@ describe('The check ecologist answers page', () => {
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             ecologistExperience: {
-              complete: true,
               classMitigationDetails: 'ZA1234'
             }
           }),
           setData: mockSet
         })
       }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            create: mockPost,
-            putExperienceById: mockPut
-          }
-        }
-      }))
       const { setData } = await import('../enter-class-mitigation-details.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
         applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
         ecologistExperience: {
-          classMitigationDetails: 'ZA1234',
-          complete: true
+          classMitigationDetails: 'ZA1234'
         }
       })
       expect(mockPost).toHaveBeenCalledTimes(0)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', {
-        classMitigationDetails: 'ZA1234',
-        complete: true
+        classMitigationDetails: 'ZA1234'
       })
+      expect(mockAdd).toHaveBeenCalledTimes(0)
     })
   })
   describe('getData function', () => {

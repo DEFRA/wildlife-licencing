@@ -6,7 +6,7 @@ const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    const ecoExperience = await models.ecologistExperience.findByPk(context.request.params.applicationId)
+    const ecoExperience = await models.ecologistExperience.findOne({ where: { applicationId: context.request.params.applicationId } })
     if (!ecoExperience) {
       return h.response().code(404)
     }

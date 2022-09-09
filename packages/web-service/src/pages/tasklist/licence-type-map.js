@@ -39,11 +39,13 @@ export const getProgress = status => ({
 export const getTaskStatus = async request => {
   const journeyData = await request.cache().getData()
   const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
+  console.log(application)
   const applicationTags = application.applicationTags || []
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
     [SECTION_TASKS.LICENCE_HOLDER]: false,
     [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
@@ -137,7 +139,9 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
             uri: ecologistExperienceURIs.PREVIOUS_LICENSE.uri,
-            status: eligibilityCheckStatus,
+            status: status => status[SECTION_TASKS.ECOLOGIST_EXPERIENCE]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           },
           {

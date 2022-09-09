@@ -20,7 +20,7 @@ describe('The get ecologist experience endpoint', () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           ecologistExperience: {
-            findByPk: () => null
+            findOne: () => null
           }
         }
       }))
@@ -55,7 +55,7 @@ describe('The get ecologist experience endpoint', () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           ecologistExperience: {
-            findByPk: () => ({
+            findOne: () => ({
               dataValues: {
                 createdAt: new Date('11-05-22'),
                 updatedAt: new Date('11-06-22'),
@@ -97,7 +97,7 @@ describe('The get ecologist experience endpoint', () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           ecologistExperience: {
-            findByPk: () => { throw new Error('Couldnt reach database') }
+            findOne: () => { throw new Error('Couldnt reach database') }
           }
         }
       }))

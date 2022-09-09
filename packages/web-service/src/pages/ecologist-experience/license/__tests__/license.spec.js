@@ -1,11 +1,17 @@
 
-describe('The check ecologist answers page', () => {
+describe('The license page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
     it('returns the enter license details uri if user selects yes', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -24,7 +30,13 @@ describe('The check ecologist answers page', () => {
     })
     it('returns the enter experience uri on primary journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              has: () => false
+            })
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -43,7 +55,13 @@ describe('The check ecologist answers page', () => {
     })
     it('returns the check ecologist answers uri on return journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -100,6 +118,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
           }
         }
       }))
@@ -121,13 +144,6 @@ describe('The check ecologist answers page', () => {
           setData: mockSet
         })
       }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            putExperienceById: mockPut
-          }
-        }
-      }))
       const { setData } = await import('../license.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
@@ -150,6 +166,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => false
+            })
           }
         }
       }))
@@ -169,13 +190,6 @@ describe('The check ecologist answers page', () => {
           })
         })
       }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            putExperienceById: mockPut
-          }
-        }
-      }))
       const { setData } = await import('../license.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledTimes(0)
@@ -186,6 +200,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
           }
         }
       }))
@@ -204,13 +223,6 @@ describe('The check ecologist answers page', () => {
           })
         })
       }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            putExperienceById: mockPut
-          }
-        }
-      }))
       const { setData } = await import('../license.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledTimes(0)

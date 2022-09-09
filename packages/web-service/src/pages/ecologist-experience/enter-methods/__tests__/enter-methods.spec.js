@@ -1,10 +1,16 @@
-describe('The check ecologist answers page', () => {
+describe('The enter methods page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
     it('returns the class mitigation uri on primary journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              has: () => false
+            })
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -18,7 +24,13 @@ describe('The check ecologist answers page', () => {
     })
     it('returns the check ecologist answers uri on return journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -41,6 +53,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
           }
         }
       }))
@@ -64,6 +81,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
           }
         }
       }))
@@ -110,6 +132,11 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              has: () => false
+            })
           }
         }
       }))

@@ -1,19 +1,24 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
+let tempURL = ''
 
-export const getData = async request => request.query.license
+export const getData = async request => {
+  if (request.query.license) {
+    tempURL = request.query.license
+  }
+  return tempURL
+}
 
 export const completion = () => ecologistExperienceURIs.LICENSE.uri
 
 export const setData = async request => {
-  const removingLicense = await request.query.license
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const licenses = journeyData.ecologistExperience.licenseDetails
 
   if (pageData.payload['remove-license'] === 'yes') {
-    const index = licenses.indexOf(removingLicense)
+    const index = licenses.indexOf(tempURL)
     if (index > -1) {
       journeyData.ecologistExperience.licenseDetails.splice(index, 1)
     }

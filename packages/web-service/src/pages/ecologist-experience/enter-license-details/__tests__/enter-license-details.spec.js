@@ -1,4 +1,4 @@
-describe('The check ecologist answers page', () => {
+describe('The enter license details page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {

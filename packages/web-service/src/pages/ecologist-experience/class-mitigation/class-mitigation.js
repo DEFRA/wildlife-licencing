@@ -1,6 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 const yesNo = 'yes-no'
 
 export const completion = async request => {
@@ -18,11 +19,12 @@ export const setData = async request => {
   Object.assign(journeyData.ecologistExperience, { classMitigation })
   if (classMitigation === false) {
     delete journeyData.ecologistExperience.classMitigationDetails
-    if (!journeyData.ecologistExperience.complete) {
-      Object.assign(journeyData.ecologistExperience, { complete: true })
-      APIRequests.ECOLOGIST_EXPERIENCE.create(journeyData.applicationId, journeyData.ecologistExperience)
+    const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+    if (!flagged) {
+      await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+      await APIRequests.ECOLOGIST_EXPERIENCE.create(journeyData.applicationId, journeyData.ecologistExperience)
     } else {
-      APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(journeyData.applicationId, journeyData.ecologistExperience)
+      await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(journeyData.applicationId, journeyData.ecologistExperience)
     }
   }
   await request.cache().setData(journeyData)
