@@ -2,7 +2,7 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, alterContactDataAddAccount, contactsFilter } from '../common.js'
+import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
 
 export const checkContactNamesData = (contactType, urlBase) => async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -21,28 +21,11 @@ export const getContactNamesData = contactType => async request => {
 }
 
 export const setContactNamesData = (contactType, accountType) => async request => {
-  const { payload: { contact: contactId } } = await request.cache().getPageData()
+  const { payload: { contact: contactId } } = request
   const { applicationId, userId } = await request.cache().getData()
+  const contactOps = await contactOperations(contactType, applicationId, userId)
   if (contactId !== 'new') {
-    const currentContact = await APIRequests.CONTACT.getById(contactId)
-    // do nothing if not changing the contactId
-    if (currentContact.id !== contactId) {
-      // if we select an existing contact which does not have an email address and contact details
-      // that information is expected to be collected against the organization.
-      // if however the user has already selected 'no organization' AND the contact is immutable then create a new contact
-      // if the contact is mutable the address and contactDetails are simply removed
-      if (await APIRequests.APPLICATION.tags(applicationId).has(CONTACT_COMPLETE[contactType])) {
-        const account = await APIRequests[accountType].getByApplicationId(applicationId)
-        if (!account && (!currentContact.contactDetails || !currentContact.address)) {
-          await alterContactDataAddAccount(userId, applicationId, currentContact, contactType)
-        }
-      }
-      await APIRequests[contactType].unLink(applicationId)
-      await APIRequests[contactType].assign(applicationId, contactId)
-    }
-  } else {
-    // At this point un-assign the contact from the application
-    await APIRequests[contactType].unLink(applicationId)
+    await contactOps.assign(contactId)
   }
 }
 

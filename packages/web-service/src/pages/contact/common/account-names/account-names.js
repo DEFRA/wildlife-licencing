@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, alterContactDataAddAccount } from '../common.js'
+import { accountsFilter, accountOperations } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -26,20 +26,13 @@ export const getAccountNamesData = (contactType, accountType) => async request =
 }
 
 export const setAccountNamesData = (contactType, accountType) => async request => {
-  const { payload: { account } } = request
+  const { payload: { account: accountId } } = request
   const { userId, applicationId } = await request.cache().getData()
-  if (account !== 'new') {
-    // If the current contact is immutable and has an address, the address now needs to be
-    // associated with the account. Migrate the contact to a new contact omitting the address details.
-    const currentContact = await APIRequests[contactType].getByApplicationId(applicationId)
-    if ((!currentContact.userId && (currentContact.contactDetails || currentContact.address)) ||
-      (currentContact.userId && currentContact.address)) {
-      await alterContactDataAddAccount(userId, applicationId, currentContact, contactType)
-    }
-    await APIRequests[accountType].assign(applicationId, account)
+  const accountOps = await accountOperations(accountType, applicationId, userId)
+  if (accountId !== 'new') {
+    await accountOps.assign(accountId)
   } else {
-    // Un-assign and remove if mutable
-    await APIRequests[accountType].unLink(applicationId)
+    await accountOps.unAssign()
   }
 }
 

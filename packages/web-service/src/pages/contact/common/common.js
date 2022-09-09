@@ -19,7 +19,7 @@ export const checkData = async (request, h) => {
  * @param contacts
  */
 export const contactsFilter = async (applicationId, contacts, allowAssociated = false) => {
-  const candidates = await Promise.all(contacts.filter(c => !c.userId || allowAssociated).map(async c => ({
+  const candidates = await Promise.all(contacts.filter(c => c.fullName && (!c.userId || allowAssociated)).map(async c => ({
     ...c,
     isImmutable: await APIRequests.CONTACT.isImmutable(applicationId, c.id),
     groupId: c.cloneOf || c.id
@@ -128,13 +128,14 @@ export const contactOperations = async (contactType, applicationId, userId) => {
     assign: async contactId => {
       if (contact) {
         if (contactId !== contact.id) {
-          await APIRequests[contactType].assign(applicationId, contactId)
           await APIRequests[contactType].unLink(applicationId)
+          await APIRequests[contactType].assign(applicationId, contactId)
+          contact = await APIRequests[contactType].getByApplicationId(applicationId)
         }
       } else {
         await APIRequests[contactType].assign(applicationId, contactId)
+        contact = await APIRequests[contactType].getByApplicationId(applicationId)
       }
-      contact = await APIRequests[contactType].getByApplicationId(applicationId)
     },
     setName: async contactName => {
       // Assign the name
@@ -165,16 +166,17 @@ export const accountOperations = async (accountType, applicationId) => {
       if (accountId) {
         if (account) {
           if (accountId !== account.id) {
-            await APIRequests[accountType].assign(applicationId, accountId)
             await APIRequests[accountType].unLink(applicationId)
+            await APIRequests[accountType].assign(applicationId, accountId)
+            account = await APIRequests[accountType].getByApplicationId(applicationId)
           }
         } else {
           await APIRequests[accountType].assign(applicationId, accountId)
+          account = await APIRequests[accountType].getByApplicationId(applicationId)
         }
-        account = await APIRequests[accountType].getByApplicationId(applicationId)
       }
     },
-    unAssign: async accountId => {
+    unAssign: async () => {
       if (account) {
         await APIRequests[accountType].unLink(applicationId)
         account = null
@@ -233,7 +235,7 @@ export const updateContactFields = async (applicationId, contactType, currentCon
   contactDetails
 }) => {
   await APIRequests[contactType].update(applicationId, {
-    fullName: currentContact.FullName,
+    fullName: currentContact.fullName,
     address: address || currentContact.address,
     contactDetails: contactDetails || currentContact.contactDetails,
     ...(currentContact.userId && { userId: currentContact.userId }),
@@ -372,7 +374,7 @@ export const contactAccountOperations = async (contactType, accountType, applica
             contactDetails: { email: emailAddress }
           })
         } else {
-          await updateAccountFields(applicationId, contactType, contact, {
+          await updateAccountFields(applicationId, accountType, account, {
             contactDetails: { email: emailAddress }
           })
         }
@@ -397,7 +399,7 @@ export const contactAccountOperations = async (contactType, accountType, applica
             ...(contact.contactDetails && { contactDetails: contact.contactDetails })
           })
         } else {
-          await updateAccountFields(applicationId, contactType, contact, {
+          await updateAccountFields(applicationId, accountType, account, {
             address: address
           })
         }
