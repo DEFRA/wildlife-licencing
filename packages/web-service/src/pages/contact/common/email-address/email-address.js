@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { accountOperations, contactAccountOperations, migrateAccount, migrateContact } from '../common.js'
+import { contactAccountOperations } from '../common.js'
 
 export const checkEmailAddressData = (contactType, accountType, urlBase) => async (request, h) => {
   // If trying to set the address of an immutable account redirect to is organisations

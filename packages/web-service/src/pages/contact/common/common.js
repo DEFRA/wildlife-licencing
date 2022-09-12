@@ -1,6 +1,17 @@
 import { APPLICATIONS } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 
+/*
+ * This module abstracts the API operations out of the handlers helps simplify this section
+ * of the user journey, which is somewhat complex.
+ */
+
+/**
+ * In all cases an application must be selected to access any of the contact pages
+ * @param request
+ * @param h
+ * @returns {Promise<null|*>}
+ */
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.applicationId) {
@@ -12,8 +23,8 @@ export const checkData = async (request, h) => {
 
 /**
  * Used to produce lists of contact (names) to select from
- * (1) associated contacts are eliminated
- * (2) where there exists clones, if an immutable clone exists pick it otherwise pick the
+ * (1) associated contacts are eliminated if allowAssociated false
+ * (2) where there exists clones, if a mutable clone exists pick it otherwise pick the
  * origin record
  * @param applicationId
  * @param contacts
@@ -76,29 +87,12 @@ const duDuplicate = candidates => {
 }
 
 /**
- * Alters contact data in response to adding an account. Either migrates the contact or
- * copies the address and contact details from the account
- * @param userId
- * @param applicationId
- * @param currentContact
+ * Encapsulate the various operations made against contact
  * @param contactType
- * @returns {Promise<void>}
+ * @param applicationId
+ * @param userId
+ * @returns {Promise<{setName: ((function(*): Promise<void>)|*), unAssign: ((function(): Promise<void>)|*), create: ((function(*, *): Promise<void>)|*), assign: ((function(*): Promise<void>)|*)}>}
  */
-export const alterContactDataAddAccount = async (userId, applicationId, currentContact, contactType) => {
-  if (await APIRequests.CONTACT.isImmutable(applicationId, currentContact.id)) {
-    await migrateContact(userId, applicationId, currentContact, contactType)
-  } else {
-    // Not immutable
-    if (currentContact.address || currentContact.contactDetails) {
-      delete currentContact.address
-      if (!currentContact.userId) {
-        delete currentContact.contactDetails
-      }
-      await APIRequests[contactType].update(applicationId, currentContact)
-    }
-  }
-}
-
 export const contactOperations = async (contactType, applicationId, userId) => {
   let contact = await APIRequests[contactType].getByApplicationId(applicationId)
   return {
@@ -119,12 +113,6 @@ export const contactOperations = async (contactType, applicationId, userId) => {
         }
       }
     },
-    unAssign: async () => {
-      if (contact) {
-        await APIRequests[contactType].unLink(applicationId)
-        contact = null
-      }
-    },
     assign: async contactId => {
       if (contact) {
         if (contactId !== contact.id) {
@@ -135,6 +123,12 @@ export const contactOperations = async (contactType, applicationId, userId) => {
       } else {
         await APIRequests[contactType].assign(applicationId, contactId)
         contact = await APIRequests[contactType].getByApplicationId(applicationId)
+      }
+    },
+    unAssign: async () => {
+      if (contact) {
+        await APIRequests[contactType].unLink(applicationId)
+        contact = null
       }
     },
     setName: async contactName => {
@@ -152,6 +146,12 @@ export const contactOperations = async (contactType, applicationId, userId) => {
   }
 }
 
+/**
+ * Encapsulate the various operations made against account
+ * @param accountType
+ * @param applicationId
+ * @returns {Promise<{setName: ((function(*): Promise<void>)|*), unAssign: ((function(): Promise<void>)|*), create: ((function(*): Promise<void>)|*), assign: ((function(*): Promise<void>)|*)}>}
+ */
 export const accountOperations = async (accountType, applicationId) => {
   let account = await APIRequests[accountType].getByApplicationId(applicationId)
   return {
@@ -188,7 +188,7 @@ export const accountOperations = async (accountType, applicationId) => {
         await APIRequests[accountType].update(applicationId, {
           name: accountName,
           ...(account.contactDetails && { contactDetails: account.contactDetails }),
-          ...(account.address && { account: account.address }),
+          ...(account.address && { address: account.address }),
           ...(account.cloneOf && { cloneOf: account.cloneOf })
         })
       }
@@ -197,158 +197,13 @@ export const accountOperations = async (accountType, applicationId) => {
 }
 
 /**
- * Scenarios
-
- * Migrate details from an immutable contact to a new contact and assign
- * if the contact is associated with a user then assign the user email details
- * The name is always migrated
- *
- * @param userId
- * @param applicationId
- * @param currentContact
+ * Encapsulate the various operations made against either contact or account
  * @param contactType
- * @param contactPayload
- * @returns {Promise<applicationId>}
- */
-export const migrateContact = async (userId, applicationId, currentContact, contactType, contactPayload = {}) => {
-  if (currentContact.userId) {
-    const user = await APIRequests.USER.getById(userId)
-    await APIRequests[contactType].unAssign(applicationId)
-    return APIRequests[contactType].create(applicationId, {
-      ...contactPayload,
-      fullName: currentContact.fullName,
-      userId: user.id,
-      cloneOf: currentContact.id
-    })
-  } else {
-    await APIRequests[contactType].unAssign(applicationId)
-    return APIRequests[contactType].create(applicationId, Object.assign(contactPayload, {
-      ...contactPayload,
-      fullName: currentContact.fullName,
-      cloneOf: currentContact.id
-    }))
-  }
-}
-
-export const updateContactFields = async (applicationId, contactType, currentContact, {
-  address,
-  contactDetails
-}) => {
-  await APIRequests[contactType].update(applicationId, {
-    fullName: currentContact.fullName,
-    address: address || currentContact.address,
-    contactDetails: contactDetails || currentContact.contactDetails,
-    ...(currentContact.userId && { userId: currentContact.userId }),
-    ...(currentContact.cloneOf && { cloneOf: currentContact.cloneOf })
-  })
-}
-/**
- * When changing the email address or address of an immutable account then it is necessary to
- * clone the existing account. The name is copied from the origin account
- * @param applicationId
- * @param currentAccount
  * @param accountType
- * @param payload
- * @returns {Promise<void>}
+ * @param applicationId
+ * @param userId
+ * @returns {Promise<{setOrganisation: ((function(*): Promise<void>)|*), setAddress: ((function(*): Promise<void>)|*), setContactIsUser: ((function(*): Promise<void>)|*), setEmailAddress: ((function(*): Promise<void>)|*)}>}
  */
-export const migrateAccount = async (applicationId, currentAccount, accountType, payload) => {
-  await APIRequests[accountType].unAssign(applicationId)
-  await APIRequests[accountType].create(applicationId, {
-    cloneOf: currentAccount.id,
-    name: currentAccount.name,
-    ...payload
-  })
-}
-
-export const updateAccountFields = async (applicationId, accountType, currentAccount, {
-  address,
-  contactDetails
-}) => {
-  await APIRequests[accountType].update(applicationId, {
-    name: currentAccount.name,
-    address: address || currentAccount.address,
-    contactDetails: contactDetails || currentAccount.contactDetails,
-    ...(currentAccount.cloneOf && { cloneOf: currentAccount.cloneOf })
-  })
-}
-
-export const copyContactDetailsToAccount = async (applicationId, accountType, contact, account, accountImmutable) => {
-  if (accountImmutable) {
-    await APIRequests[accountType].unAssign(applicationId)
-    await APIRequests[accountType].create(applicationId, {
-      cloneOf: account.id,
-      name: account.name,
-      contactDetails: contact.contactDetails,
-      address: contact.contactDetails
-    })
-  } else {
-    await APIRequests[accountType].update(applicationId, {
-      name: account.name,
-      contactDetails: contact.contactDetails,
-      address: contact.contactDetails
-    })
-  }
-}
-
-export const copyAccountDetailsToContact = async (applicationId, userId, contactType, contact, account, contactImmutable) => {
-  if (account.address || account.contactDetails) {
-    const user = await APIRequests.USER.getById(userId)
-    // If the contact is associated with a user then preserve the user email address
-    if (contact.userId) {
-      if (contactImmutable) {
-        await APIRequests[contactType].unAssign(applicationId)
-        await APIRequests[contactType].create(applicationId, {
-          cloneOf: contact.id,
-          name: contact.name,
-          contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
-          address: account.address
-        })
-      } else {
-        await APIRequests[contactType].update(applicationId, {
-          name: contact.name,
-          contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
-          address: account.address
-        })
-      }
-    }
-  }
-}
-
-export const removeContactDetailsFromContact = async (applicationId, userId, contactType, contact, contactImmutable) => {
-  if (contact.address || contact.contactDetails) {
-    const user = await APIRequests.USER.getById(userId)
-    if (contact.userId) {
-      // If the contact is associated with a user then preserve the user email address
-      if (contactImmutable) {
-        await APIRequests[contactType].unAssign(applicationId)
-        await APIRequests[contactType].create(applicationId, {
-          userId: contact.userId,
-          cloneOf: contact.id,
-          fullName: contact.fullName,
-          contactDetails: { contactDetails: { email: user.username } }
-        })
-      } else {
-        await APIRequests[contactType].update(applicationId, {
-          fullName: contact.fullName
-        })
-      }
-    } else {
-      // Remove contact and address
-      if (contactImmutable) {
-        await APIRequests[contactType].unAssign(applicationId)
-        await APIRequests[contactType].create(applicationId, {
-          cloneOf: contact.id,
-          fullName: contact.fullName
-        })
-      } else {
-        await APIRequests[contactType].update(applicationId, {
-          fullName: contact.fullName
-        })
-      }
-    }
-  }
-}
-
 export const contactAccountOperations = async (contactType, accountType, applicationId, userId) => {
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
@@ -396,7 +251,7 @@ export const contactAccountOperations = async (contactType, accountType, applica
         if (accountImmutable) {
           await migrateAccount(applicationId, account, accountType, {
             address: address,
-            ...(contact.contactDetails && { contactDetails: contact.contactDetails })
+            ...(account.contactDetails && { contactDetails: account.contactDetails })
           })
         } else {
           await updateAccountFields(applicationId, accountType, account, {
@@ -457,6 +312,159 @@ export const contactAccountOperations = async (contactType, accountType, applica
             })
           }
         }
+      }
+    }
+  }
+}
+
+/**
+ * Scenarios
+
+ * Migrate details from an immutable contact to a new contact and assign
+ * if the contact is associated with a user then assign the user email details
+ * The name is always migrated
+ *
+ * @param userId
+ * @param applicationId
+ * @param currentContact
+ * @param contactType
+ * @param contactPayload
+ * @returns {Promise<applicationId>}
+ */
+const migrateContact = async (userId, applicationId, currentContact, contactType, contactPayload = {}) => {
+  if (currentContact.userId) {
+    const user = await APIRequests.USER.getById(userId)
+    await APIRequests[contactType].unAssign(applicationId)
+    return APIRequests[contactType].create(applicationId, {
+      ...contactPayload,
+      fullName: currentContact.fullName,
+      userId: user.id,
+      cloneOf: currentContact.id
+    })
+  } else {
+    await APIRequests[contactType].unAssign(applicationId)
+    return APIRequests[contactType].create(applicationId, Object.assign(contactPayload, {
+      ...contactPayload,
+      fullName: currentContact.fullName,
+      cloneOf: currentContact.id
+    }))
+  }
+}
+
+const updateContactFields = async (applicationId, contactType, currentContact, {
+  address,
+  contactDetails
+}) => {
+  await APIRequests[contactType].update(applicationId, {
+    fullName: currentContact.fullName,
+    address: address || currentContact.address,
+    contactDetails: contactDetails || currentContact.contactDetails,
+    ...(currentContact.userId && { userId: currentContact.userId }),
+    ...(currentContact.cloneOf && { cloneOf: currentContact.cloneOf })
+  })
+}
+/**
+ * When changing the email address or address of an immutable account then it is necessary to
+ * clone the existing account. The name is copied from the origin account
+ * @param applicationId
+ * @param currentAccount
+ * @param accountType
+ * @param payload
+ * @returns {Promise<void>}
+ */
+const migrateAccount = async (applicationId, currentAccount, accountType, payload) => {
+  await APIRequests[accountType].unAssign(applicationId)
+  await APIRequests[accountType].create(applicationId, {
+    cloneOf: currentAccount.id,
+    name: currentAccount.name,
+    ...payload
+  })
+}
+
+const updateAccountFields = async (applicationId, accountType, currentAccount, {
+  address,
+  contactDetails
+}) => {
+  await APIRequests[accountType].update(applicationId, {
+    name: currentAccount.name,
+    address: address || currentAccount.address,
+    contactDetails: contactDetails || currentAccount.contactDetails,
+    ...(currentAccount.cloneOf && { cloneOf: currentAccount.cloneOf })
+  })
+}
+
+const copyContactDetailsToAccount = async (applicationId, accountType, contact, account, accountImmutable) => {
+  if (accountImmutable) {
+    await APIRequests[accountType].unAssign(applicationId)
+    await APIRequests[accountType].create(applicationId, {
+      cloneOf: account.id,
+      name: account.name,
+      contactDetails: contact.contactDetails,
+      address: contact.contactDetails
+    })
+  } else {
+    await APIRequests[accountType].update(applicationId, {
+      name: account.name,
+      contactDetails: contact.contactDetails,
+      address: contact.contactDetails
+    })
+  }
+}
+
+const copyAccountDetailsToContact = async (applicationId, userId, contactType, contact, account, contactImmutable) => {
+  if (account.address || account.contactDetails) {
+    const user = await APIRequests.USER.getById(userId)
+    // If the contact is associated with a user then preserve the user email address
+    if (contact.userId) {
+      if (contactImmutable) {
+        await APIRequests[contactType].unAssign(applicationId)
+        await APIRequests[contactType].create(applicationId, {
+          cloneOf: contact.id,
+          name: contact.name,
+          contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
+          address: account.address
+        })
+      } else {
+        await APIRequests[contactType].update(applicationId, {
+          name: contact.name,
+          contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
+          address: account.address
+        })
+      }
+    }
+  }
+}
+
+const removeContactDetailsFromContact = async (applicationId, userId, contactType, contact, contactImmutable) => {
+  if (contact.address || contact.contactDetails) {
+    const user = await APIRequests.USER.getById(userId)
+    if (contact.userId) {
+      // If the contact is associated with a user then preserve the user email address
+      if (contactImmutable) {
+        await APIRequests[contactType].unAssign(applicationId)
+        await APIRequests[contactType].create(applicationId, {
+          userId: contact.userId,
+          cloneOf: contact.id,
+          fullName: contact.fullName,
+          contactDetails: { contactDetails: { email: user.username } }
+        })
+      } else {
+        await APIRequests[contactType].update(applicationId, {
+          fullName: contact.fullName
+        })
+      }
+    } else {
+      // Remove contact and address
+      if (contactImmutable) {
+        await APIRequests[contactType].unAssign(applicationId)
+        await APIRequests[contactType].create(applicationId, {
+          cloneOf: contact.id,
+          fullName: contact.fullName
+        })
+      } else {
+        await APIRequests[contactType].update(applicationId, {
+          fullName: contact.fullName
+        })
       }
     }
   }
