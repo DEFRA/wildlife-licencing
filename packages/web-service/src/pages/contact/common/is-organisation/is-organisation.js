@@ -34,11 +34,11 @@ export const setContactAccountData = (contactType, accountType) => async request
     await contactAccountOps.setOrganisation(false)
   }
   // Clear the name on the page here
-  // const pageData = await request.cache().getPageData()
-  // if (pageData) {
-  //  delete pageData.payload['organisation-name']
-  //  await request.cache().setPageData(pageData)
-  // }
+  const pageData = await request.cache().getPageData()
+  if (pageData) {
+    delete pageData.payload['organisation-name']
+    await request.cache().setPageData(pageData)
+  }
 }
 
 export const contactAccountCompletion = (contactType, accountType, urlBase) => async request => {

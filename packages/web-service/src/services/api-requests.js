@@ -553,11 +553,11 @@ export const APIRequests = {
   },
 
   /**
-   * Basic habitat creation - creates the habitat
-    * @param applicationId
-    * @param type
-    * @returns {Promise<*>}
-  */
+   * Habitat creation
+   * @param applicationId
+   * @param type
+   * @returns {Promise<*>}
+   */
   HABITAT: {
     create: async applicationId => {
       try {

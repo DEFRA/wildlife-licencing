@@ -26,6 +26,7 @@ export const setUserData = (contactType, accountType) => async request => {
       await contactOps.create(true)
     }
   } else {
+    // Create a contact here, it may be removed one is selected from contact names
     await contactOps.create(false)
   }
 }
