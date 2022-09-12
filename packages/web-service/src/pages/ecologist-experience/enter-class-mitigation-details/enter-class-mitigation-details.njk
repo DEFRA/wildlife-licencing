@@ -1,0 +1,27 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'enter-class-mitigation-details': {
+          'string.empty': { ref: '#enter-class-mitigation-details', text: 'You have not entered a licence number' }
+        }
+    }
+%}
+
+{% set title = "Enter the class license reference number" %}
+
+{% block pageContent %}
+  {{ govukInput({
+    id: "enter-class-mitigation-details",
+    name: "enter-class-mitigation-details",
+    value: data,
+    hint: {
+      text: "This can be found on the license document."
+    },
+    errorMessage: { text: "Enter the reference number of your previously held licence" } if error['enter-class-mitigation-details'],
+    classes: "govuk-input--width-10",
+    spellcheck: false
+  }) }}
+
+{% endblock %}

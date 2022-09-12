@@ -62,6 +62,12 @@ import {
 } from './handlers/site/site.js'
 
 import {
+  getEcologistExperience,
+  postEcologistExperience,
+  putEcologistExperience
+} from './handlers/ecologist-experience/ecologist-experience.js'
+
+import {
   getApplicationByApplicationId,
   getApplications,
   postApplication,
@@ -198,6 +204,11 @@ const handlers = {
   getHabitatSitesByApplicationId,
   putHabitatSite,
   deleteHabitatSite,
+
+  // ecologist experience handlers
+  getEcologistExperience,
+  postEcologistExperience,
+  putEcologistExperience,
 
   // Miscellaneous handlers
   getApplicationTypes,

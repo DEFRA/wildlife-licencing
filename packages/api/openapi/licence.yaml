@@ -2100,6 +2100,104 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+################################################################################################
+# Ecologist-Experience
+################################################################################################
+
+  '/ecologist/{applicationId}/ecologist-experience':
+    get:
+      description: Get the ecologists experience details
+      summary: Get the ecologists experience details
+      operationId: getEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      description: Post the ecologist's experience details
+      summary: Post the ecologist's experience details
+      operationId: postEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ecologistExperience'
+      responses:
+        201:
+          description: The ecologist experience has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    put:
+      description: Create new ecologist experience or update existing experience
+      summary: Create new ecologist experience or update existing experience
+      operationId: putEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: The ecologist experience has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        201:
+          description: The ecologist experience has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        400:
+          description: Bad request. application ID must be a uuid
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 components:
 ################################################################################################
 #
@@ -2437,6 +2535,35 @@ components:
               type: number
               minimum: 1
               maximum: 100
+    
+    ecologistExperience:
+      type: object
+      required:
+        - previousLicense
+        - experienceDetails
+        - methodExperience
+        - classMitigation
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        previousLicense:
+          type: boolean
+        licenseDetails:
+          type: array
+          items:
+            type: string
+        experienceDetails:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        methodExperience:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        classMitigation:
+          type: boolean
+        classMitigationDetails:
+          type: string
 
     licences:
       type: array
