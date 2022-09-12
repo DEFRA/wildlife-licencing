@@ -96,6 +96,27 @@ async function defineSites (sequelize) {
   })
 }
 
+async function defineEcologistExperience (sequelize) {
+  models.ecologistExperience = await sequelize.define('ecologist-experience', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    experience: { type: DataTypes.JSONB },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['application_id'], name: 'ecologist_experience' }
+    ]
+  })
+}
+
 async function defineHabitatSites (sequelize) {
   models.habitatSites = await sequelize.define('habitat-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -250,7 +271,6 @@ async function defineApplicationUploads (sequelize) {
     },
     filetype: { type: DataTypes.STRING(30) },
     filename: { type: DataTypes.STRING(255) },
-    bucket: { type: DataTypes.STRING(63) },
     objectKey: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE }
   }, {
@@ -446,10 +466,12 @@ const createModels = async () => {
   await defineContacts(sequelize)
   await defineAccounts(sequelize)
 
-  // Define te applications, licences and sites etc.
+  // Define the applications, licences and sites etc.
   await defineApplications(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
+
+  await defineEcologistExperience(sequelize)
 
   await defineApplicationUsers(sequelize)
 
@@ -508,7 +530,7 @@ const createModels = async () => {
   await models.applicationUploads.sync()
   await models.habitatSites.sync()
   await models.sites.sync()
-
+  await models.ecologistExperience.sync()
   await models.applicationUsers.sync()
 
   await models.applicationSites.sync()

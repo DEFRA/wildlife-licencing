@@ -27,7 +27,8 @@ const apiUrls = {
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
   APPLICATION_ACCOUNTS: '/application-accounts',
-  APPLICATION_ACCOUNT: '/application-account'
+  APPLICATION_ACCOUNT: '/application-account',
+  ECOLOGIST: '/ecologist'
 }
 
 const getContactByApplicationId = async (role, applicationId) => {
@@ -473,6 +474,41 @@ export const APIRequests = {
       }
     }
   },
+  ECOLOGIST_EXPERIENCE: {
+    create: async (applicationId, payload) => {
+      try {
+        const ecoExperience = await API.post(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
+        debug(`Created ecologist experience for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error adding ecologist experience to ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getExperienceById: async applicationId => {
+      try {
+        const ecoExperience = await API.get(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`)
+        debug(`Successfully retrieved experience data for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error retrieving experience for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putExperienceById: async (applicationId, payload) => {
+      try {
+        const ecoExperience = await API.put(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
+        debug(`Successfully altered experience data for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error making changes to experience for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
   LICENCES: {
     findByApplicationId: async applicationId => {
       try {
@@ -499,13 +535,13 @@ export const APIRequests = {
      * @param objectKey
      * @returns {Promise<void>}
      */
-    record: async (applicationId, filename, filetype, bucket, objectKey) => {
+    record: async (applicationId, filename, filetype, objectKey) => {
       try {
         debug(`Get uploads for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
         if (filetype.multiple) {
           debug(`Create new upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
           await API.post(`${apiUrls.APPLICATION}/${applicationId}/file-upload`, {
-            filetype: filetype.filetype, filename, bucket, objectKey
+            filetype: filetype.filetype, filename, objectKey
           })
         } else {
           const uploads = await API.get(`${apiUrls.APPLICATION}/${applicationId}/file-uploads`, `filetype=${filetype.filetype}`)
@@ -513,12 +549,12 @@ export const APIRequests = {
           if (!unsubmitted) {
             debug(`Create new upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
             await API.post(`${apiUrls.APPLICATION}/${applicationId}/file-upload`, {
-              filetype: filetype.filetype, filename, bucket, objectKey
+              filetype: filetype.filetype, filename, objectKey
             })
           } else {
             debug(`Update upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
             await API.put(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${unsubmitted.id}`, {
-              filetype: filetype.filetype, filename, bucket, objectKey
+              filetype: filetype.filetype, filename, objectKey
             })
           }
         }

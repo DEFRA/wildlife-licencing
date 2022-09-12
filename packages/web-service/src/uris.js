@@ -18,6 +18,18 @@ export const eligibilityURIs = {
   ELIGIBLE: { uri: '/eligible', page: 'eligible' }
 }
 
+export const ecologistExperienceURIs = {
+  PREVIOUS_LICENSE: { uri: '/previous-license', page: 'previous-license' },
+  ENTER_EXPERIENCE: { uri: '/enter-experience', page: 'enter-experience' },
+  ENTER_LICENSE_DETAILS: { uri: '/enter-license-details', page: 'enter-license-details' },
+  LICENSE: { uri: '/license', page: 'license' },
+  CHECK_YOUR_ANSWERS: { uri: '/check-ecologist-answers', page: 'check-ecologist-answers' },
+  ENTER_METHODS: { uri: '/enter-methods', page: 'enter-methods' },
+  CLASS_MITIGATION: { uri: '/class-mitigation', page: 'class-mitigation' },
+  ENTER_CLASS_MITIGATION: { uri: '/enter-class-mitigation-details', page: 'enter-class-mitigation-details' },
+  REMOVE_LICENSE: { uri: '/remove-license', page: 'remove-license' }
+}
+
 export const habitatURIs = {
   START: { uri: '/habitat-start', page: 'habitat-start' },
   NAME: { uri: '/habitat-name', page: 'habitat-name' },

@@ -67,13 +67,16 @@ Ensure you have node version 16.13.0 or greater installed; `node --version`
 
 #### Localstack
 The AWS S3 interface is simulated in the local docker stack using the localstack image
-In order to run s3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary
+In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary
 Alternatively you can install the AWS CLI.
 Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 Then run ```aws configure``` to generate a fake set of credentials. (Localstack does not support IAM)
 
-An example of listing the contents of an S3 bucket 
-```aws --endpoint-url=http://localhost:4566 s3 ls 22d1d642-7ee3-4598-9d02-cc36fe64a5c8.method-statement```
+The service stores files in an S3 bucket before moving them into sharepoint. It is necessary to set up a bucket in local stack as follows
+
+```aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region us-west-2```
+```aws --endpoint-url=http://localhost:4566 s3 ls```
+
 Here 4566 is the edge port for the localstack s4 interface
 
 #### To run any package locally
@@ -131,35 +134,32 @@ cp env.example .env
 node -r dotenv/config src/application-queue-processor.js
 ```
 
-Edit the .env files to add secrets
+Edit the .env files to add parameters and secrets
 
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
 If you receive the secrets, please remember to ignore them in git, by running  
-`git update-index --assume-unchanged docker/env/aqp-secrets.env`
-`git update-index --assume-unchanged docker/env/aep-secrets.env`
-`git update-index --assume-unchanged docker/env/aep.env`
-`git update-index --assume-unchanged docker/env/api.env`
-`git update-index --assume-unchanged docker/env/aqp.env`
-`git update-index --assume-unchanged docker/env/rep-secrets.env`
-`git update-index --assume-unchanged docker/env/rep.env`
-`git update-index --assume-unchanged docker/env/web-secrets.env`
+`git update-index --assume-unchanged docker/env/*.env`
+
+If changes are required to be made then set
+git update-index --no-assume-unchanged docker/env/<env-file>.env`
 
 Alternatively set the environment variables in the running shell or your IDE
 
 ## Packages
 
-| Package | Description | Runnable | Docker Image |
-| ----------- | ----------- | ----------- | ----------- |
-| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
-| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates. | Y | wildlife-licencing/aqp | 
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
-| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
-| [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/web-service |
-| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue | N | 
-| [database-model](packages/database-model) | Extracts the sequelize database model in order to share it between multiple processes | N | 
-| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Platform ODATA interface, including transformation | N | 
-| [queue-defs](packages/queue-defs) | Extracts the bull-queue queue definitions | N | 
+| Package                                                                 | Description                                                                                                         | Runnable | Docker Image |
+|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------| ----------- | ----------- |
+| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
+| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y | wildlife-licencing/aqp | 
+| [file-queue-processor](packages/file-queue-processor)                   | Consumes jobs from the file-queue uploads files to Share Point.                                                     | Y | wildlife-licencing/aqp | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y | wildlife-licencing/ep | 
+| [web-service](packages/eps/web-service)                                 | Public facing web server                                                                                            | Y | wildlife-licencing/web-service |
+| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N | 
+| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N | 
+| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N | 
+| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N | 
 
 ## Application Architecture 
 

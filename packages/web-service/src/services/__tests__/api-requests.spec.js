@@ -1494,12 +1494,10 @@ describe('The API requests service', () => {
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: true },
-        'bucket-name',
         'object-key'
       )
       expect(mockPost).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload',
         {
-          bucket: 'bucket-name',
           filename: 'hello.txt',
           filetype: 'greetings',
           objectKey: 'object-key'
@@ -1522,13 +1520,11 @@ describe('The API requests service', () => {
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: false },
-        'bucket-name',
         'object-key'
       )
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-uploads', 'filetype=greetings')
       expect(mockPost).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload',
         {
-          bucket: 'bucket-name',
           filename: 'hello.txt',
           filetype: 'greetings',
           objectKey: 'object-key'
@@ -1552,13 +1548,11 @@ describe('The API requests service', () => {
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: false },
-        'bucket-name',
         'object-key'
       )
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-uploads', 'filetype=greetings')
       expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8/file-upload/e6b8de2e-51dc-4196-aa69-5725b3aff732',
         {
-          bucket: 'bucket-name',
           filename: 'hello.txt',
           filetype: 'greetings',
           objectKey: 'object-key'
@@ -1576,7 +1570,6 @@ describe('The API requests service', () => {
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: false },
-        'bucket-name',
         'object-key'
       )).rejects.toThrowError()
     })

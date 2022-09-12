@@ -6,26 +6,15 @@ import db from 'debug'
 import { APIRequests } from './api-requests.js'
 const debug = db('web-service:s3')
 
-const { S3Client, CreateBucketCommand, PutObjectCommand } = AWS()
-
-export const createBucket = async bucketName => {
-  try {
-    await S3Client.send(new CreateBucketCommand({ Bucket: bucketName }))
-    debug(`Successfully created a bucket: ${bucketName}`)
-  } catch (err) {
-    debug(`Found bucket: ${bucketName}`)
-  }
-}
+const { S3Client, PutObjectCommand, bucket } = AWS()
 
 export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
-  const bucketName = `${applicationId}.${filetype.filetype.toLowerCase()}`
-  await createBucket(bucketName)
   const fileReadStream = fs.createReadStream(filepath)
 
   // The filename will be recorded by the API
   const objectKey = uuidv4()
   const params = {
-    Bucket: bucketName,
+    Bucket: bucket,
     ACL: 'authenticated-read',
     Key: objectKey,
     Body: fileReadStream
@@ -33,16 +22,16 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
 
   try {
     await S3Client.send(new PutObjectCommand(params))
-    debug(`Wrote file ${filename} to bucket: ${bucketName} with key: ${objectKey}`)
+    debug(`Wrote file ${filename} with key: ${objectKey}`)
 
     // Record the file upload on the API
-    await APIRequests.FILE_UPLOAD.record(applicationId, filename, filetype, bucketName, objectKey)
+    await APIRequests.FILE_UPLOAD.record(applicationId, filename, filetype, objectKey)
 
     // Remove the temporary file
     fs.unlinkSync(filepath)
     debug(`Removed temporary file ${filepath}`)
   } catch (err) {
-    console.error(`Cannot write data to s3 bucket: ${bucketName}`, err)
+    console.error(`Cannot write data with key: ${objectKey} to bucket: ${bucket}`, err)
     Boom.boomify(err, { statusCode: 500 })
     throw err
   }

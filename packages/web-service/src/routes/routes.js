@@ -38,6 +38,16 @@ import habitatActivities from '../pages/habitat/a24/activities/habitat-activitie
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
 import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
 
+import ecologistPreviousLicense from '../pages/ecologist-experience/previous-license/previous-license.js'
+import enterLicenseDetails from '../pages/ecologist-experience/enter-license-details/enter-license-details.js'
+import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
+import enterMethods from '../pages/ecologist-experience/enter-methods/enter-methods.js'
+import classMitigation from '../pages/ecologist-experience/class-mitigation/class-mitigation.js'
+import enterClassMitigationDetails from '../pages/ecologist-experience/enter-class-mitigation-details/enter-class-mitigation-details.js'
+import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist-answers/check-ecologist-answers.js'
+import license from '../pages/ecologist-experience/license/license.js'
+import removeLicense from '../pages/ecologist-experience/remove-license/remove-license.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
@@ -79,6 +89,15 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
+  ...ecologistPreviousLicense,
+  ...enterLicenseDetails,
+  ...enterExperience,
+  ...enterMethods,
+  ...classMitigation,
+  ...enterClassMitigationDetails,
+  ...checkEcologistAnswers,
+  ...license,
+  ...removeLicense,
   ...confirmDelete,
   signOut,
   ...miscRoutes
