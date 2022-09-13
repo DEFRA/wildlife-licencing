@@ -123,6 +123,9 @@ const assignAccount = async (role, applicationId, accountId) => {
   }
 }
 
+/**
+ * Un-assign a contact from the application
+ */
 const unAssignContact = async (role, applicationId) => {
   const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
   if (applicationContact) {
