@@ -15,7 +15,7 @@ export const completion = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const methodExperience = pageData.payload[ecologistExperienceURIs.ENTER_METHODS.page]
+  const methodExperience = pageData.payload[ecologistExperienceURIs.ENTER_METHODS.page].replace(/ {2}|\r\n|\n|\r/gm, ' ')
   Object.assign(journeyData.ecologistExperience, { methodExperience })
   const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (flagged) {
@@ -33,7 +33,7 @@ export default pageRoute({
   uri: ecologistExperienceURIs.ENTER_METHODS.uri,
   page: ecologistExperienceURIs.ENTER_METHODS.page,
   validator: Joi.object({
-    'enter-methods': Joi.string().required()
+    'enter-methods': Joi.string().replace(/ {2}|\r\n|\n|\r/gm, ' ').required().max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion,

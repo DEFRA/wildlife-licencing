@@ -14,7 +14,7 @@ export default async (context, req, h) => {
       updateStatus: 'L'
     })
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/experience/${dataValues.id}`, responseBody)
+    await cache.save(req.path, responseBody.ecologistExperience)
     return h.response(responseBody.ecologistExperience)
       .type(APPLICATION_JSON)
       .code(201)
