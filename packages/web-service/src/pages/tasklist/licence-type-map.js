@@ -1,13 +1,9 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs } from '../../uris.js'
-import { APIRequests, ApiRequestEntities } from '../../services/api-requests.js'
-// import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, TASKLIST } from '../../uris.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
-const {
-  APPLICANT: { USER: APPLICANT_USER },
-  ECOLOGIST: { USER: ECOLOGIST_USER }
-} = contactURIs
 // Placeholder - the badger mitigation licence
 export const A24 = 'A24 Badger'
 
@@ -44,7 +40,7 @@ export const getTaskStatus = async request => {
   const applicationTags = application.applicationTags || []
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
-    [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE[ApiRequestEntities.APPLICANT]),
+    [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
     [SECTION_TASKS.ECOLOGIST]: false,
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
@@ -106,7 +102,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: ECOLOGIST_USER.uri,
+            uri: TASKLIST.uri,
             status: eligibilityCheckStatus,
             enabled: eligibilityCheckEnabled
           }

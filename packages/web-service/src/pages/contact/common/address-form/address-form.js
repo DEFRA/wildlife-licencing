@@ -15,7 +15,7 @@ export const getAddressFormData = (contactType, accountType) => async request =>
 
 export const setAddressFormData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
+  const { userId, applicationId } = journeyData
   const pageData = await request.cache().getPageData()
   const inputAddress = pageData.payload
   const apiAddress = mapInputAddress(inputAddress)

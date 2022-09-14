@@ -3,7 +3,7 @@ import { DEFAULT_ROLE } from '../../../../constants.js'
 import { accountsFilter, accountOperations, checkHasContact } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
-  const ck = await checkHasContact(contactType, urlBase)
+  const ck = await checkHasContact(contactType, urlBase)(request, h)
   if (ck) {
     return ck
   }

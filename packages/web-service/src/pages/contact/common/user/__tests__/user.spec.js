@@ -185,6 +185,7 @@ describe('the user page', () => {
     })
 
     it('if yes, returns the organisations page with a immutable contact where organisations exist', async () => {
+      jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
@@ -195,6 +196,9 @@ describe('the user page', () => {
           },
           CONTACT: {
             isImmutable: () => true
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
@@ -214,6 +218,7 @@ describe('the user page', () => {
     })
 
     it('if yes, returns the organisation page with a immutable contact where no organisations exist', async () => {
+      jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
@@ -243,7 +248,7 @@ describe('the user page', () => {
     })
 
     it('if no, returns the name page where no candidate contacts exist', async () => {
-      jest.dontMock('../../common.js') // Wierd! -- fixes module mocking issue
+      jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {

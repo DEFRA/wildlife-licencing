@@ -97,7 +97,8 @@ describe('The putContact handler', () => {
     await putContact(context, req, h)
     expect(models.contacts.update).toHaveBeenCalledWith({
       updateStatus: 'L',
-      contact: (({ ...l }) => l)(req.payload)
+      contact: (({ ...l }) => l)(req.payload),
+      userId: null
     },
     { returning: true, where: { id: context.request.params.contactId } })
     expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.contactId, ...tsR })

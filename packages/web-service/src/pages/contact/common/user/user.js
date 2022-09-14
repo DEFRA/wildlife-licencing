@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
-import { contactsFilter, contactOperations, contactAccountOperations } from '../common.js'
+import { accountsRoute, contactAccountOperations, contactOperations, contactsRoute } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
 export const getUserData = _contactType => async request => {
@@ -33,15 +33,6 @@ export const setUserData = (contactType, accountType) => async request => {
   }
 }
 
-async function accountsRoute (accountType, userId, uriBase) {
-  const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
-  if (accounts.length) {
-    return uriBase.ORGANISATIONS.uri
-  } else {
-    return uriBase.IS_ORGANISATION.uri
-  }
-}
-
 export const userCompletion = (contactType, accountType, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
   const { userId, applicationId } = await request.cache().getData()
@@ -50,19 +41,13 @@ export const userCompletion = (contactType, accountType, urlBase) => async reque
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to accounts
-      return await accountsRoute(accountType, userId, urlBase)
+      return await accountsRoute(accountType, userId, applicationId, urlBase)
     } else {
       // Contact is new, gather name
       return urlBase.NAME.uri
     }
   } else {
     // Filter out any owner by user, and any clones
-    const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
-    const filteredContacts = await contactsFilter(applicationId, contacts)
-    if (filteredContacts.length < 1) {
-      return urlBase.NAME.uri
-    } else {
-      return urlBase.NAMES.uri
-    }
+    return await contactsRoute(contactType, userId, applicationId, urlBase)
   }
 }

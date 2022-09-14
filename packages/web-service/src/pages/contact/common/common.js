@@ -1,5 +1,6 @@
 import { APPLICATIONS } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { DEFAULT_ROLE } from '../../../constants.js'
 
 /*
  * This module abstracts the API operations out of the handlers helps simplify this section
@@ -39,6 +40,27 @@ export const checkHasContact = (contactType, urlBase) => async (request, h) => {
   }
 
   return null
+}
+
+export const checkAccountAndOrContactData = (contactType, accountType, urlBase) => async (request, h) => {
+  const ck = await checkHasContact(contactType, urlBase)(request, h)
+  if (ck) {
+    return ck
+  }
+  // If trying to set the address of an immutable account redirect to is organisations
+  // If trying to set the address of an immutable contact redirect to the names  const journeyData = await request.cache().getData()
+  const { applicationId, userId } = await request.cache().getData()
+  const account = await APIRequests[accountType].getByApplicationId(applicationId)
+  if (account) {
+    return await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
+      ? h.redirect(await accountsRoute(accountType, userId, applicationId, urlBase))
+      : null
+  } else {
+    const contact = await APIRequests[contactType].getByApplicationId(applicationId)
+    return await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
+      ? h.redirect(await contactsRoute(contactType, userId, applicationId, urlBase))
+      : null
+  }
 }
 
 /**
@@ -516,5 +538,25 @@ const removeContactDetailsFromContact = async (applicationId, userId, contactTyp
         })
       }
     }
+  }
+}
+
+export const contactsRoute = async (contactType, userId, applicationId, urlBase) => {
+  const contacts = await APIRequests[contactType].findByUser(userId, DEFAULT_ROLE)
+  const filteredContacts = await contactsFilter(applicationId, contacts)
+  if (filteredContacts.length < 1) {
+    return urlBase.NAME.uri
+  } else {
+    return urlBase.NAMES.uri
+  }
+}
+
+export const accountsRoute = async (accountType, userId, applicationId, uriBase) => {
+  const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
+  const filteredAccounts = await accountsFilter(applicationId, accounts)
+  if (filteredAccounts.length) {
+    return uriBase.ORGANISATIONS.uri
+  } else {
+    return uriBase.IS_ORGANISATION.uri
   }
 }
