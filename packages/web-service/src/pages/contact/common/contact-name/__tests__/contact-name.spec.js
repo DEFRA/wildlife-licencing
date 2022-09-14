@@ -3,66 +3,6 @@ import { contactURIs } from '../../../../../uris.js'
 describe('contact-name page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('checkContactData', () => {
-    it('returns null if a contact name is set', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
-            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkContactData } = await import('../contact-name.js')
-      const result = await checkContactData('APPLICANT', contactURIs.APPLICANT)(request, h)
-      expect(result).toBeNull()
-    })
-
-    it('returns to the user page if no contact name is set', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => null)
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
-            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkContactData } = await import('../contact-name.js')
-      await checkContactData('APPLICANT', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-user')
-    })
-
-    it('returns to the applications page if no applicationId is set', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkContactData } = await import('../contact-name.js')
-      await checkContactData('APPLICANT', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
-  })
-
   describe('getContactData', () => {
     it('returns the contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({

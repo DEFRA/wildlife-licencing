@@ -1,11 +1,11 @@
-import { APPLICATIONS } from '../../../../uris.js'
-import { contactAccountOperations } from '../common.js'
+import { APPLICATIONS, contactURIs } from '../../../../uris.js'
+import { checkHasContact } from '../common.js'
 
 describe('contact common', () => {
   beforeEach(() => jest.resetModules())
-  describe('checkData', () => {
+  describe('checkHasApplication', () => {
     it('returns redirect to the application page if applicationId is not set', async () => {
-      const { checkData } = await import('../common.js')
+      const { checkHasApplication } = await import('../common.js')
       const request = {
         cache: () => ({ getData: jest.fn(() => ({})) })
       }
@@ -13,19 +13,79 @@ describe('contact common', () => {
       const h = {
         redirect: mockRedirect
       }
-      const result = await checkData(request, h)
+      const result = await checkHasApplication(request, h)
       expect(result).toEqual('redirect')
       expect(mockRedirect).toHaveBeenCalledWith(APPLICATIONS.uri)
     })
 
     it('returns null if applicationId is set', async () => {
-      const { checkData } = await import('../common.js')
+      const { checkHasApplication } = await import('../common.js')
       const request = {
         cache: () => ({ getData: jest.fn(() => ({ applicationId: '64154be7-35d3-480b-ae97-38331605bf28' })) })
       }
       const h = {}
-      const result = await checkData(request, h)
+      const result = await checkHasApplication(request, h)
       expect(result).toBeNull()
+    })
+  })
+
+  describe('checkHasContact', () => {
+    it('returns null if a contact name is set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT: {
+            getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
+            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
+          }))
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkHasContact } = await import('../common.js')
+      const result = await checkHasContact('APPLICANT', contactURIs.APPLICANT)(request, h)
+      expect(result).toBeNull()
+    })
+
+    it('returns to the user page if no contact name is set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT: {
+            getByApplicationId: jest.fn(() => null)
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
+            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
+          }))
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkHasContact } = await import('../common.js')
+      await checkHasContact('APPLICANT', contactURIs.APPLICANT)(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applicant-user')
+    })
+
+    it('returns to the applications page if no applicationId is set', async () => {
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca'
+          }))
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkHasContact } = await import('../common.js')
+      await checkHasContact('APPLICANT', contactURIs.APPLICANT)(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applications')
     })
   })
 

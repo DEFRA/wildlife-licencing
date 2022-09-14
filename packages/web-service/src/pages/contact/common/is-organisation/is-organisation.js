@@ -1,19 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountOperations, checkData, contactAccountOperations } from '../common.js'
-
-export const checkContactAccountData = (contactType, urlBase) => async (request, h) => {
-  const ck = await checkData(request, h)
-  if (ck) {
-    return ck
-  }
-  const { applicationId } = await request.cache().getData()
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  if (!contact) {
-    return h.redirect(urlBase.NAME.uri)
-  }
-
-  return null
-}
+import { accountOperations, contactAccountOperations } from '../common.js'
+import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
 export const getContactAccountData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
@@ -26,18 +13,17 @@ export const getContactAccountData = (contactType, accountType) => async request
 export const setContactAccountData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, userId } = journeyData
-  const accountOps = await accountOperations(accountType, applicationId)
-  const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+
   if (request.payload['is-organisation'] === 'yes') {
+    const accountOps = await accountOperations(accountType, applicationId)
     await accountOps.create(request.payload['organisation-name'])
-  } else {
-    await contactAccountOps.setOrganisation(false)
-  }
-  // Clear the name on the page here
-  const pageData = await request.cache().getPageData()
-  if (pageData) {
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
+    const pageData = await request.cache().getPageData()
     delete pageData.payload['organisation-name']
     await request.cache().setPageData(pageData)
+  } else {
+    const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+    await contactAccountOps.setOrganisation(false)
   }
 }
 

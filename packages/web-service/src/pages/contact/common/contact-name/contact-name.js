@@ -1,19 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
-import { accountsFilter, checkData, contactOperations } from '../common.js'
-
-export const checkContactData = (contactType, urlBase) => async (request, h) => {
-  const ck = await checkData(request, h)
-  if (ck) {
-    return ck
-  }
-  const { applicationId } = await request.cache().getData()
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  if (!contact) {
-    return h.redirect(urlBase.USER.uri)
-  }
-  return null
-}
+import { accountsFilter, contactOperations } from '../common.js'
 
 export const getContactData = contact => async request => {
   const journeyData = await request.cache().getData()

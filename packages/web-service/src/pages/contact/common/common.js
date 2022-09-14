@@ -12,10 +12,30 @@ import { APIRequests } from '../../../services/api-requests.js'
  * @param h
  * @returns {Promise<null|*>}
  */
-export const checkData = async (request, h) => {
+export const checkHasApplication = async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.applicationId) {
     return h.redirect(APPLICATIONS.uri)
+  }
+
+  return null
+}
+
+/**
+ * In many cases a contact must be associated otherwise the journey must restart
+ * @param contactType
+ * @param urlBase
+ * @returns {(function(*, *): Promise<*|null>)|*}
+ */
+export const checkHasContact = (contactType, urlBase) => async (request, h) => {
+  const ck = await checkHasApplication(request, h)
+  if (ck) {
+    return ck
+  }
+  const { applicationId } = await request.cache().getData()
+  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
+  if (!contact) {
+    return h.redirect(urlBase.USER.uri)
   }
 
   return null
