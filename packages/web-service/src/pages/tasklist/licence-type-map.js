@@ -1,4 +1,4 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, TASKLIST } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, TASKLIST, ecologistExperienceURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
 
@@ -16,6 +16,7 @@ export const SECTION_TASKS = {
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
+  ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   METHOD_STATEMENT: 'method-statement',
   SUBMIT: 'send-application'
 }
@@ -42,6 +43,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
     [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
     [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
@@ -130,6 +132,14 @@ export const licenceTypeMap = {
             name: SECTION_TASKS.SETTS,
             uri: habitatURIs.START.uri,
             status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
+          },
+          {
+            name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
+            uri: ecologistExperienceURIs.PREVIOUS_LICENSE.uri,
+            status: status => status[SECTION_TASKS.ECOLOGIST_EXPERIENCE]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           },
           {

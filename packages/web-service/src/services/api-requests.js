@@ -27,7 +27,8 @@ const apiUrls = {
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
   APPLICATION_ACCOUNTS: '/application-accounts',
-  APPLICATION_ACCOUNT: '/application-account'
+  APPLICATION_ACCOUNT: '/application-account',
+  ECOLOGIST: '/ecologist'
 }
 
 const getContactByApplicationId = async (role, applicationId) => {
@@ -569,6 +570,41 @@ export const APIRequests = {
         return application
       } catch (error) {
         console.error(`Error creating habitat-site for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
+  },
+  ECOLOGIST_EXPERIENCE: {
+    create: async (applicationId, payload) => {
+      try {
+        const ecoExperience = await API.post(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
+        debug(`Created ecologist experience for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error adding ecologist experience to ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getExperienceById: async applicationId => {
+      try {
+        const ecoExperience = await API.get(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`)
+        debug(`Successfully retrieved experience data for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error retrieving experience for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putExperienceById: async (applicationId, payload) => {
+      try {
+        const ecoExperience = await API.put(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
+        debug(`Successfully altered experience data for ${applicationId}`)
+        return ecoExperience
+      } catch (error) {
+        console.error(`Error making changes to experience for ${applicationId}`)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
