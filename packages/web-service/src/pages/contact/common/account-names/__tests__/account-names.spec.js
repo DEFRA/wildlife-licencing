@@ -11,6 +11,9 @@ describe('the account-names functions', () => {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({ name: 'The Who' })),
             findByUser: jest.fn(() => [{ name: 'Led Zeppelin' }, { fullName: 'Yes' }, { fullName: 'The Who' }])
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
@@ -32,8 +35,15 @@ describe('the account-names functions', () => {
     })
   })
 
-  describe('setAccountNamesData', () => {
-    it('if existing account selected assign it to the organisation', async () => {
+  describe.only('setAccountNamesData', () => {
+    it('if existing account selected assign it to the application', async () => {
+      const mockAssign = jest.fn()
+      jest.doMock('../../common.js', () => ({
+        accountOperations: () => ({
+          assign: mockAssign
+        })
+      }))
+
       const request = {
         cache: () => ({
           getData: jest.fn(() => ({
@@ -44,19 +54,18 @@ describe('the account-names functions', () => {
           account: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
         }
       }
-      const mockAssign = jest.fn()
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT_ORGANISATION: {
-            assign: mockAssign
-          }
-        }
-      }))
       const { setAccountNamesData } = await import('../account-names.js')
-      await setAccountNamesData('APPLICANT_ORGANISATION')(request)
-      expect(mockAssign).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
+      await setAccountNamesData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockAssign).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c')
     })
+
     it('if \'none\' is selected un-assign any existing account from the organisation', async () => {
+      const mockUnAssign = jest.fn()
+      jest.doMock('../../common.js', () => ({
+        accountOperations: () => ({
+          unAssign: mockUnAssign
+        })
+      }))
       const request = {
         cache: () => ({
           getData: jest.fn(() => ({
@@ -67,17 +76,9 @@ describe('the account-names functions', () => {
           account: 'new'
         }
       }
-      const mockUnAssign = jest.fn()
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT_ORGANISATION: {
-            unAssign: mockUnAssign
-          }
-        }
-      }))
       const { setAccountNamesData } = await import('../account-names.js')
       await setAccountNamesData('APPLICANT_ORGANISATION')(request)
-      expect(mockUnAssign).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7')
+      expect(mockUnAssign).toHaveBeenCalledWith()
     })
   })
 
@@ -99,6 +100,7 @@ describe('the account-names functions', () => {
       const result = await accountNamesCompletion('APPLICANT_ORGANISATION', urlBase)(request)
       expect(result).toEqual('/applicant-is-organisation')
     })
+
     it('if an existing, submitted account is selected returns check-answers', async () => {
       const request = {
         cache: () => ({
@@ -123,6 +125,7 @@ describe('the account-names functions', () => {
       const result = await accountNamesCompletion('APPLICANT_ORGANISATION', urlBase)(request)
       expect(result).toEqual('/applicant-check-answers')
     })
+
     it('if an existing, un-submitted account is selected returns the email page', async () => {
       const request = {
         cache: () => ({

@@ -1,16 +1,17 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
-import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, accountOperations } from '../common.js'
+import { accountsFilter, accountOperations, checkHasContact } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
+  const ck = await checkHasContact(contactType, urlBase)
+  if (ck) {
+    return ck
   }
+
   // if no accounts available then redirect the is-organisation
-  const accounts = await APIRequests[accountType].findByUser(journeyData.userId, DEFAULT_ROLE)
-  const filteredAccounts = await accountsFilter(journeyData.applicationId, accounts)
+  const { userId, applicationId } = await request.cache().getData()
+  const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
+  const filteredAccounts = await accountsFilter(applicationId, accounts)
   if (!filteredAccounts.length) {
     return h.redirect(urlBase.IS_ORGANISATION.uri)
   }
