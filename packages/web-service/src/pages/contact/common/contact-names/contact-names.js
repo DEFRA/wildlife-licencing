@@ -4,7 +4,7 @@ import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
 import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
 
-export const checkContactNamesData = (contactType, urlBase) => async (request, h) => {
+export const checkContactNamesData = () => async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.applicationId) {
     return h.redirect(APPLICATIONS.uri)
@@ -20,7 +20,7 @@ export const getContactNamesData = contactType => async request => {
   return { contact, contacts: await contactsFilter(applicationId, contacts, contact && contact.userId) }
 }
 
-export const setContactNamesData = (contactType, accountType) => async request => {
+export const setContactNamesData = contactType => async request => {
   const { payload: { contact: contactId } } = request
   const { applicationId, userId } = await request.cache().getData()
   const contactOps = await contactOperations(contactType, applicationId, userId)

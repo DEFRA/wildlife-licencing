@@ -1,8 +1,8 @@
-import { ApiRequestEntities, APIRequests } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 
 export const CONTACT_COMPLETE = {
-  [ApiRequestEntities.APPLICANT]: 'applicant-contact-complete',
-  [ApiRequestEntities.ECOLOGIST]: 'ecologist-contact-complete'
+  APPLICANT: 'applicant-contact-complete',
+  ECOLOGIST: 'ecologist-contact-complete'
 }
 
 const prt = a => {

@@ -1,6 +1,6 @@
 import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs } from '../../uris.js'
 import { APIRequests, ApiRequestEntities } from '../../services/api-requests.js'
-import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
+// import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 

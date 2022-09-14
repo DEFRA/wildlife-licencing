@@ -8,9 +8,9 @@ import {
 } from '../common/contact-names/contact-names.js'
 import { ApiRequestEntities } from '../../../services/api-requests.js'
 
-export const checkApplicantNamesData = checkContactNamesData(ApiRequestEntities.APPLICANT, contactURIs.APPLICANT)
+export const checkApplicantNamesData = checkContactNamesData()
 export const getApplicantNamesData = getContactNamesData(ApiRequestEntities.APPLICANT)
-export const setApplicantNamesData = setContactNamesData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION)
+export const setApplicantNamesData = setContactNamesData(ApiRequestEntities.APPLICANT)
 export const applicantNamesCompletion = contactNamesCompletion(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 
 export const applicantNames = contactNamesPage({

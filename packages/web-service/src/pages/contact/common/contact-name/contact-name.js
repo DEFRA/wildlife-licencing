@@ -23,9 +23,8 @@ export const getContactData = contact => async request => {
 
 export const setContactData = (contactType) => async request => {
   const { userId, applicationId } = await request.cache().getData()
-  const pageData = await request.cache().getPageData()
   const contactOps = await contactOperations(contactType, applicationId, userId)
-  await contactOps.setName(pageData.payload.name)
+  await contactOps.setName(request.payload.name)
 }
 
 export const contactNameCompletion = (_contactType, accountType, urlBase) => async request => {
