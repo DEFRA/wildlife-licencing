@@ -141,6 +141,7 @@
 {{ govukRadios({
   idPrefix: "additional-sett",
   name: "additional-sett",
+  errorMessage: { text: 'Select an option' } if error['additional-sett'],
   fieldset: {
     legend: {
       text: "Do you want to add another badger sett?",
