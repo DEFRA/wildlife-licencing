@@ -23,6 +23,7 @@ export const prepareResponse = a => Object.assign((({
 })
 
 export const alwaysExclude = payload => {
+  delete payload.id
   delete payload.statusCode
   delete payload.submitted
   delete payload.userSubmission
