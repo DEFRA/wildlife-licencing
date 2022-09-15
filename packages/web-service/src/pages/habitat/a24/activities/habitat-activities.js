@@ -5,6 +5,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
@@ -25,10 +26,12 @@ export const getData = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
 
   const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
-  if (journeyData.complete) {
+
+  if (complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { methodIds })
@@ -36,10 +39,10 @@ export const setData = async request => {
   } else {
     const speciesId = BADGER
     const activityId = INTERFERE_WITH_BADGER_SETT
-    const complete = true
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
-    Object.assign(journeyData, { complete })
+
     await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
   }
   request.cache().setData(journeyData)
 }

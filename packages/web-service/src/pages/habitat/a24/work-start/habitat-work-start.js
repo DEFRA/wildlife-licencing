@@ -1,4 +1,6 @@
 import pageRoute from '../../../../routes/page-route.js'
+import { APIRequests } from '../../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { habitatURIs } from '../../../../uris.js'
 import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
@@ -6,7 +8,8 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  if (journeyData.complete) {
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  if (complete) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.WORK_END.uri
@@ -27,7 +30,8 @@ export const setData = async request => {
   const year = pageData.payload['habitat-work-start-year']
   const workStart = `${month}-${day}-${year}`
 
-  if (journeyData.complete) {
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  if (complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workStart })

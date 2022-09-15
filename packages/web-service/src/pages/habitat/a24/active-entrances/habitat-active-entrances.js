@@ -4,14 +4,19 @@ import { errorShim } from '../../../../handlers/page-handler.js'
 import { habitatURIs } from '../../../../uris.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
+import { APIRequests } from '../../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+
   if (pageData.error) {
     return habitatURIs.ACTIVE_ENTRANCES.uri
   }
-  if (journeyData.complete) {
+
+  if (complete) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.GRID_REF.uri
@@ -44,7 +49,9 @@ export const setData = async request => {
     return
   }
 
-  if (journeyData.complete) {
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+
+  if (complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { numberOfActiveEntrances, active })

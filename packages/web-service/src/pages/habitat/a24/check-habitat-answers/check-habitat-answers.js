@@ -3,6 +3,7 @@ import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 const {
   METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT },
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER }
@@ -67,7 +68,7 @@ export const checkData = async (request, h) => {
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
 
   // Ensure the object is populated with the correct (and enough) keys
-  if (Object.keys(journeyData.habitatData).length !== 13 || habitatSites.length === 0) {
+  if (Object.keys(journeyData.habitatData).length < 13 || habitatSites.length === 0) {
     return h.redirect(TASKLIST.uri)
   }
   return undefined
@@ -111,9 +112,9 @@ export const validator = async payload => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
+
   if (pageData.payload[addSett] === 'yes') {
-    delete journeyData.complete
-    await request.cache().setData(journeyData)
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).remove(SECTION_TASKS.SETTS)
     return habitatURIs.NAME.uri
   }
   return TASKLIST.uri

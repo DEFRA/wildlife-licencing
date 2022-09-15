@@ -1,7 +1,9 @@
 import Joi from 'joi'
 import { errorShim } from '../../../../handlers/page-handler.js'
 import pageRoute from '../../../../routes/page-route.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
@@ -43,7 +45,9 @@ export const setData = async request => {
 
     return
   }
-  if (journeyData.complete) {
+
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  if (complete) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workEnd })
@@ -60,8 +64,10 @@ export const completion = async request => {
   if (pageData.error) {
     return habitatURIs.WORK_END.uri
   }
-  if (journeyData.complete) {
-    return habitatURIs.CHECK_YOUR_ANSWERS.uri
+
+  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  if (complete) {
+    return habitatURIs.CHECK_YOUR_ANSWERS.uril
   }
   return habitatURIs.ACTIVITIES.uri
 }
