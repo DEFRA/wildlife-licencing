@@ -8,7 +8,7 @@ export const getContactData = contact => async request => {
   return APIRequests[contact].getByApplicationId(applicationId)
 }
 
-export const setContactData = (contactType) => async request => {
+export const setContactData = contactType => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contactOps = await contactOperations(contactType, applicationId, userId)
   await contactOps.setName(request.payload.name)

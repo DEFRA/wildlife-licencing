@@ -9,6 +9,7 @@ export const checkContactNamesData = () => async (request, h) => {
   if (!journeyData.applicationId) {
     return h.redirect(APPLICATIONS.uri)
   }
+  return null
 }
 
 export const getContactNamesData = contactType => async request => {
@@ -29,6 +30,37 @@ export const setContactNamesData = contactType => async request => {
   }
 }
 
+const contactNamesCompletionExisting = async (applicationId, contactType, accountType, contactId, urlBase, userId, request) => {
+  // Already completed without an account, then gather data against the contact.
+  // If already complete with an account go to the check page
+  // if no contact or address then set data will have produced a new immutable contact
+  if (await APIRequests.APPLICATION.tags(applicationId).has(CONTACT_COMPLETE[contactType])) {
+    const account = await APIRequests[accountType].getByApplicationId(applicationId)
+    if (!account) {
+      const contact = await APIRequests.CONTACT.getById(contactId)
+      if (!contact.contactDetails) {
+        return urlBase.EMAIL.uri
+      } else if (!contact.address) {
+        return urlBase.POSTCODE.uri
+      } else {
+        return urlBase.CHECK_ANSWERS.uri
+      }
+    } else {
+      return urlBase.CHECK_ANSWERS.uri
+    }
+  } else {
+    // The first time through, go to the organization data collection
+    const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
+    const filteredAccounts = await accountsFilter(applicationId, accounts)
+    if (filteredAccounts.length) {
+      return urlBase.ORGANISATIONS.uri
+    } else {
+      await request.cache().clearPageData(urlBase.IS_ORGANISATION.page)
+      return urlBase.IS_ORGANISATION.uri
+    }
+  }
+}
+
 export const contactNamesCompletion = (contactType, accountType, urlBase) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const { payload: { contact: contactId } } = await request.cache().getPageData()
@@ -36,33 +68,7 @@ export const contactNamesCompletion = (contactType, accountType, urlBase) => asy
     await request.cache().clearPageData(urlBase.NAME.page)
     return urlBase.NAME.uri
   } else {
-    // Already completed without an account, then gather data against the contact.
-    // If already complete with an account go to the check page
-    // if no contact or address then set data will have produced a new immutable contact
-    if (await APIRequests.APPLICATION.tags(applicationId).has(CONTACT_COMPLETE[contactType])) {
-      const account = await APIRequests[accountType].getByApplicationId(applicationId)
-      if (!account) {
-        const contact = await APIRequests.CONTACT.getById(contactId)
-        if (!contact.contactDetails) {
-          return urlBase.EMAIL.uri
-        } else if (!contact.address) {
-          return urlBase.POSTCODE.uri
-        } else {
-          return urlBase.CHECK_ANSWERS.uri
-        }
-      } else {
-        return urlBase.CHECK_ANSWERS.uri
-      }
-    } else {
-      // The first time through, go to the organization data collection
-      const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
-      const filteredAccounts = await accountsFilter(applicationId, accounts)
-      if (filteredAccounts.length) {
-        return urlBase.ORGANISATIONS.uri
-      } else {
-        await request.cache().clearPageData(urlBase.IS_ORGANISATION.page)
-        return urlBase.IS_ORGANISATION.uri
-      }
-    }
+    return await contactNamesCompletionExisting(applicationId, contactType, accountType,
+      contactId, urlBase, userId, request)
   }
 }

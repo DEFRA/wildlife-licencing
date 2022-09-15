@@ -41,13 +41,13 @@ export const userCompletion = (contactType, accountType, urlBase) => async reque
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to accounts
-      return await accountsRoute(accountType, userId, applicationId, urlBase)
+      return accountsRoute(accountType, userId, applicationId, urlBase)
     } else {
       // Contact is new, gather name
       return urlBase.NAME.uri
     }
   } else {
     // Filter out any owner by user, and any clones
-    return await contactsRoute(contactType, userId, applicationId, urlBase)
+    return contactsRoute(contactType, userId, applicationId, urlBase)
   }
 }
