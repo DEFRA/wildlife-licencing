@@ -67,6 +67,30 @@ describe('The postContact handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
+  it('returns a 201 on successful create with clone and user', async () => {
+    models.contacts = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } })) }
+    cache.save = jest.fn(() => null)
+    Object.assign(req.payload, {
+      cloneOf: 'clone-id',
+      userId: 'user-id'
+    })
+    await postContact(context, Object.assign(req, {
+      cloneOf: 'clone-id',
+      userId: 'user-id'
+    }), h)
+    expect(models.contacts.create).toHaveBeenCalledWith({
+      id: expect.any(String),
+      updateStatus: 'L',
+      cloneOf: 'clone-id',
+      userId: 'user-id',
+      contact: expect.any(Object)
+    })
+    expect(cache.save).toHaveBeenCalledWith('/contact/bar', { id: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
     models.contacts = { create: jest.fn(async () => { throw new Error() }) }

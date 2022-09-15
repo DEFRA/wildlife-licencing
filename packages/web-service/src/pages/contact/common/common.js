@@ -286,7 +286,7 @@ const setContactIsUserAssociated = async (contactImmutable, contactType, applica
  * @param accountType
  * @param applicationId
  * @param userId
- * @returns {Promise<{setName: ((function(*): Promise<void>)|*), unAssign: ((function(): Promise<void>)|*), create: ((function(*): Promise<void>)|*), assign: ((function(*): Promise<void>)|*)}>}
+ * @returns {Promise}
  **/
 export const contactAccountOperations = async (contactType, accountType, applicationId, userId) => {
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)

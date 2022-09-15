@@ -68,7 +68,7 @@ export const contactNamesCompletion = (contactType, accountType, urlBase) => asy
     await request.cache().clearPageData(urlBase.NAME.page)
     return urlBase.NAME.uri
   } else {
-    return await contactNamesCompletionExisting(applicationId, contactType, accountType,
+    return contactNamesCompletionExisting(applicationId, contactType, accountType,
       contactId, urlBase, userId, request)
   }
 }

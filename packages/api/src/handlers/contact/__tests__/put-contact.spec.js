@@ -10,6 +10,16 @@ const req = {
   }
 }
 
+const req2 = {
+  path,
+  payload: {
+    userId: 'user-id',
+    cloneOf: 'clone-id',
+    proposalDescription: 'a proposal',
+    detailsOfConvictions: 'convictions'
+  }
+}
+
 /*
  * Mock the hapi response toolkit in order to test the results of the request
  */
@@ -82,6 +92,37 @@ describe('The putContact handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
+  it('returns a 201 on successful create with clone and UserId', async () => {
+    models.contacts = {
+      findOrCreate: jest.fn(async () => ([{
+        dataValues:
+          {
+            id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+            ...ts
+          }
+      }, true]))
+    }
+    cache.save = jest.fn()
+    cache.delete = jest.fn()
+    await putContact(context, req2, h)
+    expect(models.contacts.findOrCreate).toHaveBeenCalledWith({
+      defaults: {
+        id: expect.any(String),
+        updateStatus: 'L',
+        contact: expect.any(Object),
+        userId: 'user-id',
+        cloneOf: 'clone-id'
+      },
+      where: {
+        id: context.request.params.contactId
+      }
+    })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.contactId, ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.contactId, ...tsR })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
   it('returns a 200 with an existing key', async () => {
     models.contacts = {
       findOrCreate: jest.fn(async () => ([{}, false])),
@@ -99,6 +140,32 @@ describe('The putContact handler', () => {
       updateStatus: 'L',
       contact: (({ ...l }) => l)(req.payload),
       userId: null
+    },
+    { returning: true, where: { id: context.request.params.contactId } })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.contactId, ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.contactId, ...tsR })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
+  it('returns a 200 with an existing key with clone and UserId', async () => {
+    models.contacts = {
+      findOrCreate: jest.fn(async () => ([{}, false])),
+      update: jest.fn(async () => ([1, [{
+        dataValues: {
+          id: context.request.params.contactId,
+          ...ts
+        }
+      }]]))
+    }
+    cache.save = jest.fn()
+    cache.delete = jest.fn()
+    await putContact(context, req2, h)
+    expect(models.contacts.update).toHaveBeenCalledWith({
+      updateStatus: 'L',
+      contact: expect.any(Object),
+      userId: 'user-id',
+      cloneOf: 'clone-id'
     },
     { returning: true, where: { id: context.request.params.contactId } })
     expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.contactId, ...tsR })

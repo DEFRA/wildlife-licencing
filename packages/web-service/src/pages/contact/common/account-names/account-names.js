@@ -23,7 +23,7 @@ export const getAccountNamesData = (contactType, accountType) => async request =
   const contact = await APIRequests[contactType].getByApplicationId(applicationId)
   const account = await APIRequests[accountType].getByApplicationId(applicationId)
   const accounts = await APIRequests[accountType].findByUser(userId, DEFAULT_ROLE)
-  return { account, accounts: await accountsFilter(applicationId, accounts), contact }
+  return { contact, account, accounts: await accountsFilter(applicationId, accounts) }
 }
 
 export const setAccountNamesData = (contactType, accountType) => async request => {

@@ -4,6 +4,22 @@ describe('the account-names functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('accountNamesCheckData', () => {
+    it('returns to applications if there is no application set', async () => {
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn(() => 'redirect')
+      }
+      const { accountNamesCheckData } = await import('../account-names.js')
+      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applications')
+    })
+
     it('returns to is-organisations if there is no available account', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
