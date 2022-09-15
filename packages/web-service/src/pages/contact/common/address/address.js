@@ -32,6 +32,8 @@ export const mapLookedUpAddress = lookupAddress => Object.assign({ }, {
   ...ifPresent(lookupAddress, 'buildingName', 'BuildingName'),
   ...ifPresent(lookupAddress, 'buildingNumber', 'BuildingNumber'),
   ...ifPresent(lookupAddress, 'street', 'Street'),
+  ...ifPresent(lookupAddress, 'locality', 'Locality'),
+  ...ifPresent(lookupAddress, 'dependentLocality', 'DependentLocality'),
   ...ifPresent(lookupAddress, 'town', 'Town'),
   ...ifPresent(lookupAddress, 'county', 'County'),
   ...ifPresent(lookupAddress, 'postcode', 'Postcode'),

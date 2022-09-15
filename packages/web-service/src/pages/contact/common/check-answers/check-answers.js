@@ -23,6 +23,8 @@ const addressLine1 = c => [
 
 const addressLine = c => [
   addressLine1(c),
+  c.address.locality,
+  c.address.dependentLocality,
   c.address.addressLine2,
   c.address.town,
   c.address.county,

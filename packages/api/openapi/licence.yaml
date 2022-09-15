@@ -2740,6 +2740,14 @@ components:
           type: string
           minLength: 1
           maxLength: 80
+        locality:
+          type: string
+          minLength: 1
+          maxLength: 80
+        dependentLocality:
+          type: string
+          minLength: 1
+          maxLength: 80
         town:
           type: string
           minLength: 1
