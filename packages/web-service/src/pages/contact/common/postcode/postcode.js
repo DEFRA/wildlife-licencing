@@ -1,6 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
 import { contactAccountOperations } from '../common.js'
+import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
 export const getPostcodeData = (contactType, contactOrganisation, uriBase) => async request => {
   const journeyData = await request.cache().getData()
@@ -29,6 +30,7 @@ export const setPostcodeData = (contactType, accountType) => async request => {
   // It is the clear however that some postcodes exist which are legitimate patterns, but cause
   // the lookup to throw a bad request, hence the try-catch here. Consider for instance LB1 2CD
   try {
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
     const { results } = await ADDRESS.lookup(postcode)
     if (results.length) {
       Object.assign(journeyData, { addressLookup: results })

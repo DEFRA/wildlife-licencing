@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
-import { accountsFilter, accountOperations, checkHasContact } from '../common.js'
+import { accountsFilter, accountOperations, checkHasContact, contactAccountOperations } from '../common.js'
 
 export const accountNamesCheckData = (contactType, accountType, urlBase) => async (request, h) => {
   const ck = await checkHasContact(contactType, urlBase)(request, h)
@@ -29,11 +29,12 @@ export const getAccountNamesData = (contactType, accountType) => async request =
 export const setAccountNamesData = (contactType, accountType) => async request => {
   const { payload: { account: accountId } } = request
   const { userId, applicationId } = await request.cache().getData()
-  const accountOps = await accountOperations(accountType, applicationId, userId)
+  const accountOps = await accountOperations(accountType, applicationId)
   if (accountId !== 'new') {
+    // Assign an existing organisation
     await accountOps.assign(accountId)
-  } else {
-    await accountOps.unAssign()
+    const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+    await contactAccountOps.setOrganisation(true)
   }
 }
 
@@ -46,7 +47,7 @@ export const accountNamesCompletion = (accountType, baseUri) => async request =>
     // If the selected account is submitted return to check answers page, otherwise the address flow.
     const { applicationId } = await request.cache().getData()
     const account = await APIRequests[accountType].getByApplicationId(applicationId)
-    if (account.submitted) {
+    if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
       return baseUri.CHECK_ANSWERS.uri
     } else if (!account.contactDetails) {
       return baseUri.EMAIL.uri

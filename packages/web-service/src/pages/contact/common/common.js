@@ -302,11 +302,14 @@ export const contactAccountOperations = async (contactType, accountType, applica
         }
       }
     },
-    setOrganisation: async isOrganisation => {
-      if (isOrganisation && !account) {
-        // Add account
-        const newAccount = await APIRequests[accountType].create(applicationId, {})
+    setOrganisation: async (isOrganisation, name) => {
+      if (isOrganisation && (!account || name)) {
+        // Add account if name set or there is no account assigned
+        const newAccount = await APIRequests[accountType].create(applicationId, { name })
         await copyContactDetailsToAccount(applicationId, accountType, contact, newAccount, false)
+        await removeContactDetailsFromContact(applicationId, userId, contactType, contact, contactImmutable)
+      } else if (isOrganisation && account) {
+        // If there is an account there should be no details on the contact
         await removeContactDetailsFromContact(applicationId, userId, contactType, contact, contactImmutable)
       } else if (!isOrganisation && account) {
         // Remove account

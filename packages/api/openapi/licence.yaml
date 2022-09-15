@@ -2553,35 +2553,6 @@ components:
               type: number
               minimum: 1
               maximum: 100
-    
-    ecologistExperience:
-      type: object
-      required:
-        - previousLicense
-        - experienceDetails
-        - methodExperience
-        - classMitigation
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        previousLicense:
-          type: boolean
-        licenseDetails:
-          type: array
-          items:
-            type: string
-        experienceDetails:
-          type: string
-          minLength: 1
-          maxLength: 4000
-        methodExperience:
-          type: string
-          minLength: 1
-          maxLength: 4000
-        classMitigation:
-          type: boolean
-        classMitigationDetails:
-          type: string
 
     ecologistExperience:
       type: object

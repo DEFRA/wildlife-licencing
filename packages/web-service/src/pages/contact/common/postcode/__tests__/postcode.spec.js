@@ -37,6 +37,15 @@ describe('the postcode functions', () => {
 
   describe('setPostcodeData', () => {
     it('sets the postcode and looks up the address', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              remove: jest.fn()
+            })
+          }
+        }
+      }))
       const mockSetAddress = jest.fn()
       jest.doMock('../../common.js', () => ({
         contactAccountOperations: () => ({
@@ -69,6 +78,15 @@ describe('the postcode functions', () => {
         contactAccountOperations: () => ({
           setAddress: mockSetAddress
         })
+      }))
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              remove: jest.fn()
+            })
+          }
+        }
       }))
       const mockSetData = jest.fn()
       const request = {

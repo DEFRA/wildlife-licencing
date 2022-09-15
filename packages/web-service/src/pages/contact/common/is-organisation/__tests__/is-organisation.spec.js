@@ -37,10 +37,10 @@ describe('the is-organisation page', () => {
 
   describe('setContactAccountData', () => {
     it('assigns an account if the user returns \'yes\'', async () => {
-      const mockCreate = jest.fn()
+      const mockSetOrganisation = jest.fn()
       jest.doMock('../../common.js', () => ({
-        accountOperations: () => ({
-          create: mockCreate
+        contactAccountOperations: () => ({
+          setOrganisation: mockSetOrganisation
         })
       }))
 
@@ -75,7 +75,7 @@ describe('the is-organisation page', () => {
       }
       const { setContactAccountData } = await import('../is-organisation.js')
       await setContactAccountData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
-      expect(mockCreate).toHaveBeenCalledWith('The Who')
+      expect(mockSetOrganisation).toHaveBeenCalledWith(true, 'The Who')
     })
 
     it('un-assigns an account if the user returns \'no\'', async () => {
@@ -246,41 +246,7 @@ describe('the is-organisation page', () => {
       expect(result).toEqual('/applicant-check-answers')
     })
 
-    it('if the user has selected \'no\', and the contact is immutable go to the check-answers page ', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-            })
-          },
-          CONTACT: {
-            isImmutable: () => true
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          })),
-          getPageData: jest.fn(() => ({
-            payload: {
-              'is-organisation': 'no'
-            }
-          })),
-          clearPageData: jest.fn()
-        })
-      }
-
-      const { contactAccountCompletion } = await import('../is-organisation.js')
-      const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
-    })
-
-    it('if the user has selected \'no\', the contact is not immutable and there are no contactDetails set go to the email page ', async () => {
+    it('if the user has selected \'no\', there are no contactDetails set go to the email page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
@@ -314,7 +280,7 @@ describe('the is-organisation page', () => {
       expect(result).toEqual('/applicant-email')
     })
 
-    it('if the user has selected \'no\', the contact is not immutable and there is no address set go to the postcode page ', async () => {
+    it('if the user has selected \'no\', there is no address set go to the postcode page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
@@ -349,7 +315,7 @@ describe('the is-organisation page', () => {
       expect(result).toEqual('/applicant-postcode')
     })
 
-    it('if the user has selected \'no\', the contact is not immutable and an address is set go to the check page ', async () => {
+    it('if the user has selected \'no\', an address is set go to the check page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {

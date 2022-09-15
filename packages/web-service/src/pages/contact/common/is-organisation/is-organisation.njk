@@ -27,7 +27,7 @@
       label: {
         text: "Name of organisation"
       },
-      value: payload['organisation-name'] if payload['organisation-name'] else data.account.name,
+      value: payload['organisation-name'] if payload['organisation-name'],
       attributes: { maxlength: 160 }
     }) }}
 {% endset -%}
@@ -43,7 +43,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['is-organisation'] === 'yes' or data.account.name,
+          checked: payload['is-organisation'] === 'yes',
           conditional: {
             html: organisationName
           }

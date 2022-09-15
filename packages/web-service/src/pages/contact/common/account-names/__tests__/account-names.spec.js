@@ -106,10 +106,14 @@ describe('the account-names functions', () => {
 
   describe('setAccountNamesData', () => {
     it('if existing account selected assign it to the application', async () => {
+      const mockSetOrganisation = jest.fn()
       const mockAssign = jest.fn()
       jest.doMock('../../common.js', () => ({
         accountOperations: () => ({
           assign: mockAssign
+        }),
+        contactAccountOperations: () => ({
+          setOrganisation: mockSetOrganisation
         })
       }))
 
@@ -125,29 +129,8 @@ describe('the account-names functions', () => {
       }
       const { setAccountNamesData } = await import('../account-names.js')
       await setAccountNamesData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetOrganisation).toHaveBeenCalledWith(true)
       expect(mockAssign).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c')
-    })
-
-    it('if \'none\' is selected un-assign any existing account from the organisation', async () => {
-      const mockUnAssign = jest.fn()
-      jest.doMock('../../common.js', () => ({
-        accountOperations: () => ({
-          unAssign: mockUnAssign
-        })
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        }),
-        payload: {
-          account: 'new'
-        }
-      }
-      const { setAccountNamesData } = await import('../account-names.js')
-      await setAccountNamesData('APPLICANT_ORGANISATION')(request)
-      expect(mockUnAssign).toHaveBeenCalledWith()
     })
   })
 
@@ -185,12 +168,15 @@ describe('the account-names functions', () => {
         APIRequests: {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({ submitted: '2022-08-17T11:00:30.297Z' }))
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
       const { accountNamesCompletion } = await import('../account-names.js')
       const result = await accountNamesCompletion('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/applicant-email')
     })
 
     it('if an existing, un-submitted account is selected returns the email page', async () => {
@@ -209,6 +195,9 @@ describe('the account-names functions', () => {
         APIRequests: {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({}))
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
