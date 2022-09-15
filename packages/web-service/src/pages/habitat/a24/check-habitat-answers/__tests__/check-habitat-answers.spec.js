@@ -4,10 +4,19 @@ describe('The check habitat answers page', () => {
 
   describe('check-habitat-answers page', () => {
     it('the check-habitat-answers page forwards onto the tasklist page if no additional setts required', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({
               payload: {
                 'additional-sett': 'no'

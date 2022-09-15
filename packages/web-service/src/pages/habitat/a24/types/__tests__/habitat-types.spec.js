@@ -6,9 +6,18 @@ describe('The habitat types page', () => {
 
   describe('habitat types page', () => {
     it('the habitat types page forwards onto habitat-reopen page on primary journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({ applicationId: '123abc' })
         })
       }
       const { completion } = await import('../habitat-types.js')

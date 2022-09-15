@@ -4,10 +4,19 @@ describe('The habitat work start page', () => {
 
   describe('habitat-work-start page', () => {
     it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({})
           }
         }

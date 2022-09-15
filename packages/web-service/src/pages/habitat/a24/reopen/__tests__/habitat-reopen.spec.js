@@ -3,9 +3,18 @@ describe('The habitat reopen page', () => {
 
   describe('habitat reopen page', () => {
     it('the habitat reopen page forwards onto habitat-entrances page on primary journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({ applicationId: '123abc' })
         })
       }
       const { completion } = await import('../habitat-reopen.js')

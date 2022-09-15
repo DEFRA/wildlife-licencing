@@ -3,9 +3,18 @@ describe('The habitat grid ref page', () => {
 
   describe('habitat-grid-ref page', () => {
     it('the habitat-grid-ref page forwards onto habitat-work-start on primary journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({ applicationId: '123abc' })
         })
       }
       const { completion } = await import('../habitat-grid-ref.js')

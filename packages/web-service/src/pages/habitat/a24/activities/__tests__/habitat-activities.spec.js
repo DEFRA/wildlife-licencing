@@ -6,16 +6,8 @@ describe('The habitat activities page', () => {
 
   describe('habitat-activities page', () => {
     it('the habitat-activities page forwards onto check-habitat-answers page on primary journey', async () => {
-      const request = {
-        cache: () => {
-          return {
-            getData: () => ({}),
-            getPageData: () => ({})
-          }
-        }
-      }
       const { completion } = await import('../habitat-activities.js')
-      expect(await completion(request)).toBe('/check-habitat-answers')
+      expect(await completion()).toBe('/check-habitat-answers')
     })
 
     it('the habitat-activities page forwards onto check-habitat-answers if no errors on return journey', async () => {

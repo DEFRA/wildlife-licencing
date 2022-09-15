@@ -3,9 +3,23 @@ describe('The confirm delte page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('confirm delete page', () => {
-    it('the confirm-delete page forwards onto check-habitat-answers', async () => {
+    it('the confirm-delete page forwards onto check-habitat-answers if you have at least 1 sett', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: () => ['one sett']
+          }
+        })
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({ habitatData: { applicationId: '123abc' } })
+          }
+        }
+      }
       const { completion } = await import('../confirm-delete.js')
-      expect(await completion()).toBe('/check-habitat-answers')
+      expect(await completion(request)).toBe('/check-habitat-answers')
     })
     it('setData calls the connectors lib correctly if user selects confirm delete', async () => {
       const mockDelete = jest.fn()

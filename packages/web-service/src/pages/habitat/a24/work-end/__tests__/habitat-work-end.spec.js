@@ -4,10 +4,19 @@ describe('The habitat work end page', () => {
 
   describe('habitat-work-end page', () => {
     it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({})
           }
         }

@@ -4,10 +4,19 @@ describe('The habitat active entrances page', () => {
 
   describe('habitat-active-entrances page', () => {
     it('the habitat-active-entrances page forwards onto habitat-grid-ref page if theres no errors', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({})
           }
         }
