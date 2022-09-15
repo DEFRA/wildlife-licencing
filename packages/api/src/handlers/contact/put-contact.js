@@ -7,12 +7,16 @@ const { cache } = REDIS
 export default async (context, req, h) => {
   try {
     const { contactId } = context.request.params
+    const contactObj = alwaysExclude(req.payload)
+
     const [contact, created] = await models.contacts.findOrCreate({
       where: { id: context.request.params.contactId },
       defaults: {
         id: contactId,
-        contact: alwaysExclude(req.payload),
-        updateStatus: 'L'
+        contact: contactObj,
+        updateStatus: 'L',
+        ...(req.payload.userId && { userId: req.payload.userId }),
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }
     })
 
@@ -24,8 +28,10 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedContact] = await models.contacts.update({
-        contact: alwaysExclude(req.payload),
-        updateStatus: 'L'
+        contact: contactObj,
+        updateStatus: 'L',
+        ...(req.payload.userId ? { userId: req.payload.userId } : { userId: null }),
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }, {
         where: {
           id: contactId

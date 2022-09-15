@@ -1,10 +1,9 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, ecologistExperienceURIs } from '../../uris.js'
+import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, TASKLIST, ecologistExperienceURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
+
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
-const {
-  APPLICANT: { USER: APPLICANT_USER },
-  ECOLOGIST: { USER: ECOLOGIST_USER }
-} = contactURIs
+
 // Placeholder - the badger mitigation licence
 export const A24 = 'A24 Badger'
 
@@ -39,11 +38,10 @@ export const getProgress = status => ({
 export const getTaskStatus = async request => {
   const journeyData = await request.cache().getData()
   const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
-  console.log(application)
   const applicationTags = application.applicationTags || []
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
-    [SECTION_TASKS.LICENCE_HOLDER]: false,
+    [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
     [SECTION_TASKS.ECOLOGIST]: false,
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
@@ -100,13 +98,13 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
-            uri: APPLICANT_USER.uri,
-            status: eligibilityCheckStatus,
+            uri: status => status[SECTION_TASKS.LICENCE_HOLDER] ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
+            status: status => status[SECTION_TASKS.LICENCE_HOLDER] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
             enabled: eligibilityCheckEnabled
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: ECOLOGIST_USER.uri,
+            uri: TASKLIST.uri,
             status: eligibilityCheckStatus,
             enabled: eligibilityCheckEnabled
           }

@@ -20,9 +20,12 @@ export const prepareResponse = a => Object.assign((({
 })
 
 export const alwaysExclude = payload => {
-  delete payload.id
-  delete payload.submitted
-  delete payload.createdAt
-  delete payload.updatedAt
-  return payload
+  const result = Object.assign({}, payload)
+  delete result.id
+  delete result.submitted
+  delete result.createdAt
+  delete result.updatedAt
+  delete result.userId
+  delete result.cloneOf
+  return result
 }

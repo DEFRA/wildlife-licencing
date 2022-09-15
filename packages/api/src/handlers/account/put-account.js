@@ -12,7 +12,8 @@ export default async (context, req, h) => {
       defaults: {
         id: accountId,
         account: alwaysExclude(req.payload),
-        updateStatus: 'L'
+        updateStatus: 'L',
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }
     })
 
@@ -25,7 +26,8 @@ export default async (context, req, h) => {
     } else {
       const [, updatedAccount] = await models.accounts.update({
         account: alwaysExclude(req.payload),
-        updateStatus: 'L'
+        updateStatus: 'L',
+        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }, {
         where: {
           id: accountId

@@ -577,6 +577,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: accountId
+          in: query
+          description: ID of the account
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
         - name: role
           in: query
           description: The role
@@ -754,6 +760,12 @@ paths:
         - name: applicationId
           in: query
           description: ID of the application
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: contactId
+          in: query
+          description: ID of the contact
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
@@ -2231,6 +2243,8 @@ components:
           $ref: '#/components/schemas/address'
         submitted:
           $ref: '#/components/schemas/timestamp'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -2453,6 +2467,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
         fullName:
           type: string
           minLength: 1
@@ -2461,6 +2477,8 @@ components:
           $ref: '#/components/schemas/contactDetails'
         address:
           $ref: '#/components/schemas/address'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
         submitted:
           $ref: '#/components/schemas/timestamp'
         createdAt:
@@ -2535,7 +2553,7 @@ components:
               type: number
               minimum: 1
               maximum: 100
-    
+
     ecologistExperience:
       type: object
       required:
@@ -2769,6 +2787,7 @@ components:
       example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
       minLength: 36
       maxLength: 36
+      nullable: true
 
     option:
       type: integer
