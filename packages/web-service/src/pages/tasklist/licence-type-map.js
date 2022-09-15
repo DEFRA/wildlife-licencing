@@ -39,7 +39,6 @@ export const getProgress = status => ({
 export const getTaskStatus = async request => {
   const journeyData = await request.cache().getData()
   const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
-  console.log(application)
   const applicationTags = application.applicationTags || []
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
