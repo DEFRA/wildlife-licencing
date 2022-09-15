@@ -5,9 +5,10 @@ import { prepareResponse } from './application-contact-proc.js'
 export default async (_context, req, h) => {
   try {
     const where = req.query
-    const applicationContacts = await models.applicationContacts.findAll(((where.applicationId || where.role) && {
+    const applicationContacts = await models.applicationContacts.findAll(((where.applicationId || where.role || where.contactId) && {
       where: {
         ...(where.applicationId && { applicationId: where.applicationId }),
+        ...(where.contactId && { contactId: where.contactId }),
         ...(where.role && { contactRole: where.role })
       }
     }))

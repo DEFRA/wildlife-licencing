@@ -1,4 +1,4 @@
-import { checkData } from '../common/common.js'
+import { checkAccountAndOrContactData } from '../common/common.js'
 import { addressFormPage } from '../common/address-form/address-form-page.js'
 import { ApiRequestEntities } from '../../../services/api-requests.js'
 import { contactURIs } from '../../../uris.js'
@@ -9,7 +9,7 @@ const { ADDRESS_FORM, CHECK_ANSWERS } = contactURIs.APPLICANT
 export const applicantAddressForm = addressFormPage({
   page: ADDRESS_FORM.page,
   uri: ADDRESS_FORM.uri,
-  checkData: checkData,
+  checkData: checkAccountAndOrContactData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   getData: getAddressFormData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION),
   setData: setAddressFormData(ApiRequestEntities.APPLICANT, ApiRequestEntities.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   completion: CHECK_ANSWERS.uri

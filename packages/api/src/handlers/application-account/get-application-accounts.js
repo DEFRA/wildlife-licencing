@@ -5,9 +5,10 @@ import { prepareResponse } from './application-account-proc.js'
 export default async (_context, req, h) => {
   try {
     const where = req.query
-    const applicationAccounts = await models.applicationAccounts.findAll(((where.applicationId || where.role) && {
+    const applicationAccounts = await models.applicationAccounts.findAll(((where.applicationId || where.role || where.accountId) && {
       where: {
         ...(where.applicationId && { applicationId: where.applicationId }),
+        ...(where.accountId && { accountId: where.accountId }),
         ...(where.role && { accountRole: where.role })
       }
     }))

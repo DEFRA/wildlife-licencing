@@ -1,47 +1,67 @@
-/** AKA account names == need to rename this for consistency */
-
 import { APIRequests } from '../../../../services/api-requests.js'
+import { contactAccountOperations } from '../common.js'
+import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
-export const getContactAccountData = (contact, contactOrganisation) => async request => {
+export const getContactAccountData = (contactType, accountType) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  return {
-    contact: await APIRequests[contact].getByApplicationId(applicationId),
-    account: await APIRequests[contactOrganisation].getByApplicationId(applicationId)
+  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
+  const account = await APIRequests[accountType].getByApplicationId(applicationId)
+  return { contact, account }
+}
+
+export const setContactAccountData = (contactType, accountType) => async request => {
+  const journeyData = await request.cache().getData()
+  const { applicationId, userId } = journeyData
+
+  if (request.payload['is-organisation'] === 'yes') {
+    // Assign a new organisation
+    const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+    await contactAccountOps.setOrganisation(true, request.payload['organisation-name'])
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
+    const pageData = await request.cache().getPageData()
+    delete pageData.payload['organisation-name']
+    await request.cache().setPageData(pageData)
+  } else {
+    // Remove assigned organisation
+    const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+    await contactAccountOps.setOrganisation(false)
   }
 }
 
-export const setContactAccountData = contactOrganisation => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  const pageData = await request.cache().getPageData()
-  if (pageData.payload['is-organisation'] === 'yes') {
-    // Create and assign account
-    await APIRequests[contactOrganisation].create(applicationId, {
-      name: pageData.payload['organisation-name']
-    })
-  } else {
-    // Un-assign any previous account
-    await APIRequests[contactOrganisation].unAssign(applicationId)
-  }
-}
-
-export const contactAccountCompletion = (contactType, urlBase) => async request => {
+export const contactAccountCompletion = (contactType, accountType, urlBase) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const pageData = await request.cache().getPageData()
 
   if (pageData.payload['is-organisation'] === 'yes') {
-    // Proceed to the address flow
-    return urlBase.EMAIL.uri
-  } else {
-    // No organisation so if the selected account has already been submitted then
-    // go directly to the check your answers page, otherwise proceed to the address pages
-    const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-    if (contact.submitted) {
+    // New organisation - collect details
+    const account = await APIRequests[accountType].getByApplicationId(applicationId)
+    // Immutable
+    if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
+      if (!account.contactDetails) {
+        await request.cache().clearPageData(urlBase.EMAIL.page)
+        return urlBase.EMAIL.uri
+      } else if (!account.address) {
+        await request.cache().clearPageData(urlBase.POSTCODE.page)
+        return urlBase.POSTCODE.uri
+      } else {
+        return urlBase.CHECK_ANSWERS.uri
+      }
+    }
+  } else {
+    // No organisation
+    const contact = await APIRequests[contactType].getByApplicationId(applicationId)
+    if (!contact.contactDetails) {
+      await request.cache().clearPageData(urlBase.EMAIL.page)
       return urlBase.EMAIL.uri
+    } else if (!contact.address) {
+      await request.cache().clearPageData(urlBase.POSTCODE.page)
+      return urlBase.POSTCODE.uri
+    } else {
+      return urlBase.CHECK_ANSWERS.uri
     }
   }
 }

@@ -311,15 +311,14 @@ export const applicationResponseTransformedDataObject = {
   application: {
     applicant: {
       address: {
-        addrline1: 'the grove',
-        addrline2: 'henleaze',
         county: 'bristol',
+        locality: 'henleaze',
         postcode: 'BS1',
+        street: 'the grove',
         town: 'briz'
       },
       contactDetails: {
-        email: 'me@email.com',
-        phone: '16542'
+        email: 'me@email.com'
       },
       fullName: 'Robert Plant'
     },
@@ -327,20 +326,27 @@ export const applicationResponseTransformedDataObject = {
     applicationReferenceNumber: '2022-500000-EPS-MIT',
     ecologist: {
       address: {
-        addrline1: 'Old Hill',
-        addrline2: 'Stapleton',
-        addrline3: 'Nr. Bristol',
         county: 'Somerset',
+        dependentLocality: 'Nr. Bristol',
+        locality: 'Stapleton',
         postcode: 'BS11',
+        street: 'Old Hill',
         town: 'Bristol'
       },
       contactDetails: {
-        email: 'ecologist1@email.com',
-        phone: 'string'
+        email: 'ecologist1@email.com'
       },
       fullName: 'Mr Brian Ecologist'
     },
     ecologistOrganization: {
+      address: {
+        county: 'c1',
+        dependentLocality: 'a3',
+        locality: 'a2',
+        postcode: '876',
+        street: 'a1',
+        town: 't1'
+      },
       name: 'Ecologist1_Org'
     },
     eligibility: {

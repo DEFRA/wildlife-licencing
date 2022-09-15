@@ -7,10 +7,14 @@ const { cache } = REDIS
 
 export default async (_context, req, h) => {
   try {
+    const contactObj = alwaysExclude(req.payload)
+
     const { dataValues } = await models.contacts.create({
       id: uuidv4(),
-      contact: alwaysExclude(req.payload),
-      updateStatus: 'L'
+      contact: contactObj,
+      updateStatus: 'L',
+      ...(req.payload.userId && { userId: req.payload.userId }),
+      ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
     })
 
     const responseBody = prepareResponse(dataValues)

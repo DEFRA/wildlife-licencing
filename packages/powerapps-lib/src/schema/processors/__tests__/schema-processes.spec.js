@@ -43,12 +43,9 @@ describe('the schema processes', () => {
       expect(columnPayload).toEqual({
         address1_city: 'briztol',
         address1_county: 'bristol',
-        address1_line1: 'the grove',
-        address1_line2: 'henleaze',
         address1_postalcode: 'BS1999',
         emailaddress1: 'me@email.com',
         lastname: 'Bob Slaigh',
-        telephone1: '16542',
         sdds_sourceremote: true
       })
     })
