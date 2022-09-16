@@ -1,5 +1,4 @@
 import Joi from 'joi'
-import { errorShim } from '../../../../handlers/page-handler.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -7,44 +6,42 @@ import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
+import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 
-export const validator = async payload => {
+export const validator = async (payload, context) => {
+  const journeyData = await cacheDirect(context).getData()
   validateDates(payload, 'habitat-work-end')
 
-  return payload
+  const habitatWorkEnd = 'habitat-work-end'
+  const day = payload['habitat-work-end-day']
+  const month = payload['habitat-work-end-month']
+  const year = payload['habitat-work-end-year']
+  const workEnd = `${month}-${day}-${year}`
+  const { habitatData } = journeyData
+  const { workStart } = habitatData
+
+  if (new Date(workEnd) < new Date(workStart)) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: the user has entered an end date before the start date',
+      path: [habitatWorkEnd],
+      type: 'endDateBeforeStart',
+      context: {
+        label: habitatWorkEnd,
+        value: 'Error',
+        key: habitatWorkEnd
+      }
+    }], null)
+  }
 }
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
 
-  const habitatWorkEnd = 'habitat-work-end'
   const day = pageData.payload['habitat-work-end-day']
   const month = pageData.payload['habitat-work-end-month']
   const year = pageData.payload['habitat-work-end-year']
   const workEnd = `${month}-${day}-${year}`
-
-  // Is the finish date before the start date?
-  // Ideally we should do this in the `validator`, but it doesn't have access
-  // to the journeyData as it's too early in the lifecycle
-
-  if (new Date(workEnd) < new Date(journeyData.habitatData.workStart)) {
-    await request.cache().setPageData({
-      payload: request.payload,
-      error: errorShim(new Joi.ValidationError('ValidationError', [{
-        message: 'Error: the user has entered an end date before the start date',
-        path: [habitatWorkEnd],
-        type: 'endDateBeforeStart',
-        context: {
-          label: habitatWorkEnd,
-          value: 'Error',
-          key: habitatWorkEnd
-        }
-      }]))
-    })
-
-    return
-  }
 
   const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
   if (complete) {
@@ -58,12 +55,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-
-  if (pageData.error) {
-    return habitatURIs.WORK_END.uri
-  }
 
   const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
   if (complete) {
