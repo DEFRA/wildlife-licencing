@@ -1,6 +1,10 @@
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
 
+const validator = Joi.object({
+  contact: Joi.string().required()
+}).options({ abortEarly: false, allowUnknown: true })
+
 export const contactNamesPage = ({ page, uri, checkData, getData, completion, setData }) => pageRoute({
   page,
   uri,
@@ -8,5 +12,5 @@ export const contactNamesPage = ({ page, uri, checkData, getData, completion, se
   getData,
   completion,
   setData,
-  validator: Joi.object({}).options({ abortEarly: false, allowUnknown: true })
+  validator
 })

@@ -10,10 +10,18 @@
     {{ items.push({ value: 'new', text: addText }) }}
 </div>
 
+{% set errorMap = {
+        'account': {
+            'any.required': { ref: '#account', text: "Select an organisation, or 'none of these'" }
+        }
+    }
+%}
+
 {% block pageContent %}
     {{ govukRadios({
       idPrefix: "account",
       name: "account",
-      items: items
+      items: items,
+      errorMessage: { text: 'Choose one' } if error['account']
     }) }}
 {% endblock %}

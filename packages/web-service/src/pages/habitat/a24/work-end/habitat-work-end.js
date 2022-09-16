@@ -67,7 +67,7 @@ export const completion = async request => {
 
   const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
   if (complete) {
-    return habitatURIs.CHECK_YOUR_ANSWERS.uril
+    return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.ACTIVITIES.uri
 }

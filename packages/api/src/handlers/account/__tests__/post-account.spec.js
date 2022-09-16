@@ -61,6 +61,27 @@ describe('The postAccount handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
+  it('returns a 201 on successful create with clone', async () => {
+    models.accounts = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts, account: {} } })) }
+    cache.save = jest.fn(() => null)
+    Object.assign(req.payload, {
+      cloneOf: 'clone-id'
+    })
+    await postAccount(context, req, h)
+    expect(models.accounts.create).toHaveBeenCalledWith({
+      id: expect.any(String),
+      updateStatus: 'L',
+      cloneOf: 'clone-id',
+      account: {
+        name: 'Blogs and Co.'
+      }
+    })
+    expect(cache.save).toHaveBeenCalledWith('/account/bar', { id: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
     models.accounts = { create: jest.fn(async () => { throw new Error() }) }

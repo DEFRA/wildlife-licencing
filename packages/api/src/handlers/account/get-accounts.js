@@ -28,6 +28,7 @@ export default async (_context, req, h) => {
     const responseBody = result.map(a => ({
       id: a.id,
       ...a.account,
+      cloneOf: a.clone_of,
       createdAt: a.created_at.toISOString(),
       updatedAt: a.updated_at.toISOString(),
       submitted: a.submitted?.toISOString()

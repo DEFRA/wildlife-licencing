@@ -1,60 +1,9 @@
-import { ApiRequestEntities } from '../../../../../services/api-requests.js'
+import { contactURIs } from '../../../../../uris.js'
 
-describe('the email-address functions', () => {
+describe('the email-address page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('checkData', () => {
-    it('if no application is selected return to the applications page', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({}))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkEmailAddressData } = await import('../email-address.js')
-      await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
-    it('if no contact is selected return to the tasklist page', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => null)
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkEmailAddressData } = await import('../email-address.js')
-      await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
-    })
-    it('if contact is selected return null', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }))
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkEmailAddressData } = await import('../email-address.js')
-      const result = await checkEmailAddressData(ApiRequestEntities.APPLICANT)(request, h)
-      expect(h.redirect).not.toHaveBeenCalledWith()
-      expect(result).toBeNull()
-    })
-  })
-
-  describe('getData', () => {
+  describe('getEmailAddressData', () => {
     it('if an account has been assigned return the contact name, the account name and the account email', async () => {
       const request = {
         cache: () => ({
@@ -104,60 +53,143 @@ describe('the email-address functions', () => {
     })
   })
 
-  describe('setData', () => {
-    it('if an account is assigned set the email address on the account', async () => {
+  describe('setEmailAddressData', () => {
+    it('assigns the email address', async () => {
+      const mockSetEmailAddress = jest.fn()
+      jest.doMock('../../common.js', () => ({
+        contactAccountOperations: () => ({
+          setEmailAddress: mockSetEmailAddress
+        })
+      }))
       const request = {
         cache: () => ({
-          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
-          getPageData: jest.fn(() => ({ payload: { 'email-address': 'Keith@therollingstones.com' } }))
-        })
+          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+        }),
+        payload: {
+          'email-address': 'Keith@therollingstones.com'
+        }
       }
-      const mockUpdate = jest.fn()
+      const { setEmailAddressData } = await import('../email-address.js')
+      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetEmailAddress).toHaveBeenCalledWith('Keith@therollingstones.com')
+    })
+  })
+
+  describe('emailAddressCompletion', () => {
+    it('if an account is assigned redirect to the postcode page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
-          },
           APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones' })),
-            update: mockUpdate
+            getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
           }
         }
       }))
-      const { setEmailAddressData } = await import('../email-address.js')
-      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
-      expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7',
-        {
-          contactDetails: { email: 'Keith@therollingstones.com' },
-          name: 'The Rolling Stones'
-        })
-    })
-    it('if no account is assigned set the email address on the contact', async () => {
       const request = {
         cache: () => ({
-          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
-          getPageData: jest.fn(() => ({ payload: { 'email-address': 'Keith@mail.com' } }))
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          })),
+          getPageData: jest.fn(() => ({
+            payload: {
+              'email-address': 'Keith@therollingstones.com'
+            }
+          })),
+          clearPageData: jest.fn()
         })
       }
-      const mockUpdate = jest.fn()
+      const { emailAddressCompletion } = await import('../email-address.js')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-postcode')
+    })
+
+    it('if an account is assigned and has an address, redirect to the check page', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT_ORGANISATION: {
+            getByApplicationId: jest.fn(() => ({
+              id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+              address: 'Address'
+            }))
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          })),
+          getPageData: jest.fn(() => ({
+            payload: {
+              'email-address': 'Keith@therollingstones.com'
+            }
+          })),
+          clearPageData: jest.fn()
+        })
+      }
+      const { emailAddressCompletion } = await import('../email-address.js')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-check-answers')
+    })
+
+    it('if no account is assigned redirect to the postcode page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' })),
-            update: mockUpdate
+            getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
           },
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => null)
           }
         }
       }))
-      const { setEmailAddressData } = await import('../email-address.js')
-      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
-      expect(mockUpdate).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7',
-        {
-          contactDetails: { email: 'Keith@mail.com' },
-          fullName: 'Keith Richards'
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          })),
+          getPageData: jest.fn(() => ({
+            payload: {
+              'email-address': 'Keith@therollingstones.com'
+            }
+          })),
+          clearPageData: jest.fn()
         })
+      }
+      const { emailAddressCompletion } = await import('../email-address.js')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-postcode')
+    })
+
+    it('if no account is assigned and the contact has an address, redirect to the check page', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT: {
+            getByApplicationId: jest.fn(() => ({
+              id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+              address: 'Address'
+            }))
+          },
+          APPLICANT_ORGANISATION: {
+            getByApplicationId: jest.fn(() => null)
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          })),
+          getPageData: jest.fn(() => ({
+            payload: {
+              'email-address': 'Keith@therollingstones.com'
+            }
+          })),
+          clearPageData: jest.fn()
+        })
+      }
+      const { emailAddressCompletion } = await import('../email-address.js')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-check-answers')
     })
   })
 })

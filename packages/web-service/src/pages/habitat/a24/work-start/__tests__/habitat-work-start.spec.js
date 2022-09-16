@@ -4,10 +4,19 @@ describe('The habitat work start page', () => {
 
   describe('habitat-work-start page', () => {
     it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({})
           }
         }
@@ -17,9 +26,18 @@ describe('The habitat work start page', () => {
     })
 
     it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true }),
+          getData: () => ({}),
           getPageData: () => ({})
         })
       }
@@ -205,6 +223,15 @@ describe('The habitat work start page', () => {
 
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
           setData: mockSetData,
@@ -230,6 +257,16 @@ describe('The habitat work start page', () => {
 
     it('sets the work start data correctly on return journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
+
       const request = {
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
@@ -237,7 +274,6 @@ describe('The habitat work start page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {}
           }),
           getPageData: () => ({
@@ -261,7 +297,6 @@ describe('The habitat work start page', () => {
       const { setData } = await import('../habitat-work-start.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { workStart: `7-10-${new Date().getFullYear}` }

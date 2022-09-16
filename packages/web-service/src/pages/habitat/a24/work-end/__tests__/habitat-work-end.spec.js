@@ -4,10 +4,19 @@ describe('The habitat work end page', () => {
 
   describe('habitat-work-end page', () => {
     it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        })
+      }))
       const request = {
         cache: () => {
           return {
-            getData: () => ({}),
+            getData: () => ({ applicationId: '123abc' }),
             getPageData: () => ({})
           }
         }
@@ -17,9 +26,18 @@ describe('The habitat work end page', () => {
     })
 
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true }),
+          getData: () => ({}),
           getPageData: () => ({})
         })
       }
@@ -247,6 +265,15 @@ describe('The habitat work end page', () => {
 
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
           setData: mockSetData,
@@ -278,7 +305,6 @@ describe('The habitat work end page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {}
           }),
           getPageData: () => ({
@@ -294,7 +320,15 @@ describe('The habitat work end page', () => {
       jest.doMock('../../common/get-habitat-by-id.js', () => ({
         getHabitatById: () => {}
       }))
-
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       jest.doMock('../../common/put-habitat-by-id.js', () => ({
         putHabitatById: () => {}
       }))
@@ -302,7 +336,6 @@ describe('The habitat work end page', () => {
       const { setData } = await import('../habitat-work-end.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { workEnd: `7-10-${new Date().getFullYear}` }

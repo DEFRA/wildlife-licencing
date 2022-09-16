@@ -1,5 +1,90 @@
+import { contactURIs } from '../../../../../uris.js'
+
 describe('the account-names functions', () => {
   beforeEach(() => jest.resetModules())
+
+  describe('accountNamesCheckData', () => {
+    it('returns to applications if there is no application set', async () => {
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn(() => 'redirect')
+      }
+      const { accountNamesCheckData } = await import('../account-names.js')
+      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applications')
+    })
+
+    it('returns to is-organisations if there is no available account', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT: {
+            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+          },
+          APPLICANT_ORGANISATION: {
+            findByUser: jest.fn(() => [])
+          },
+          ACCOUNT: {
+            isImmutable: () => false
+          }
+        }
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const { accountNamesCheckData } = await import('../account-names.js')
+      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applicant-organisation')
+    })
+
+    it('returns null if there are available accounts', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICANT: {
+            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+          },
+          APPLICANT_ORGANISATION: {
+            findByUser: jest.fn(() => [{
+              id: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+              name: 'The Who'
+            }])
+          },
+          ACCOUNT: {
+            isImmutable: () => false
+          }
+        }
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const { accountNamesCheckData } = await import('../account-names.js')
+      const result = await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      expect(result).toBeNull()
+    })
+  })
 
   describe('getAccountNamesData', () => {
     it('returns the contact, the account and the accounts for the user', async () => {
@@ -11,6 +96,9 @@ describe('the account-names functions', () => {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({ name: 'The Who' })),
             findByUser: jest.fn(() => [{ name: 'Led Zeppelin' }, { fullName: 'Yes' }, { fullName: 'The Who' }])
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
@@ -33,7 +121,18 @@ describe('the account-names functions', () => {
   })
 
   describe('setAccountNamesData', () => {
-    it('if existing account selected assign it to the organisation', async () => {
+    it('if existing account selected assign it to the application', async () => {
+      const mockSetOrganisation = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../common.js', () => ({
+        accountOperations: () => ({
+          assign: mockAssign
+        }),
+        contactAccountOperations: () => ({
+          setOrganisation: mockSetOrganisation
+        })
+      }))
+
       const request = {
         cache: () => ({
           getData: jest.fn(() => ({
@@ -44,40 +143,10 @@ describe('the account-names functions', () => {
           account: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
         }
       }
-      const mockAssign = jest.fn()
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT_ORGANISATION: {
-            assign: mockAssign
-          }
-        }
-      }))
       const { setAccountNamesData } = await import('../account-names.js')
-      await setAccountNamesData('APPLICANT_ORGANISATION')(request)
-      expect(mockAssign).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
-    })
-    it('if \'none\' is selected un-assign any existing account from the organisation', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        }),
-        payload: {
-          account: 'new'
-        }
-      }
-      const mockUnAssign = jest.fn()
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICANT_ORGANISATION: {
-            unAssign: mockUnAssign
-          }
-        }
-      }))
-      const { setAccountNamesData } = await import('../account-names.js')
-      await setAccountNamesData('APPLICANT_ORGANISATION')(request)
-      expect(mockUnAssign).toHaveBeenCalledWith('739f4e35-9e06-4585-b52a-c4144d94f7f7')
+      await setAccountNamesData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetOrganisation).toHaveBeenCalledWith(true)
+      expect(mockAssign).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c')
     })
   })
 
@@ -94,11 +163,11 @@ describe('the account-names functions', () => {
           clearPageData: jest.fn()
         })
       }
-      const urlBase = { IS_ORGANISATION: { uri: '/applicant-is-organisation', page: 'applicant-is-organisation' } }
       const { accountNamesCompletion } = await import('../account-names.js')
-      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', urlBase)(request)
-      expect(result).toEqual('/applicant-is-organisation')
+      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-organisation')
     })
+
     it('if an existing, submitted account is selected returns check-answers', async () => {
       const request = {
         cache: () => ({
@@ -115,14 +184,17 @@ describe('the account-names functions', () => {
         APIRequests: {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({ submitted: '2022-08-17T11:00:30.297Z' }))
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
-      const urlBase = { CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' } }
       const { accountNamesCompletion } = await import('../account-names.js')
-      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', urlBase)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/applicant-email')
     })
+
     it('if an existing, un-submitted account is selected returns the email page', async () => {
       const request = {
         cache: () => ({
@@ -139,12 +211,14 @@ describe('the account-names functions', () => {
         APIRequests: {
           APPLICANT_ORGANISATION: {
             getByApplicationId: jest.fn(() => ({}))
+          },
+          ACCOUNT: {
+            isImmutable: () => false
           }
         }
       }))
-      const urlBase = { EMAIL: { uri: '/applicant-email', page: 'applicant-email' } }
       const { accountNamesCompletion } = await import('../account-names.js')
-      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', urlBase)(request)
+      const result = await accountNamesCompletion('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-email')
     })
   })

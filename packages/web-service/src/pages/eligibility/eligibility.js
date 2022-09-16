@@ -197,6 +197,7 @@ export const checkYourAnswersGetData = async request => {
     return true
   }
 
+  // The check-answers macro requires an array of k, v pair objects
   return Object.keys(orderKeys)
     .sort((a, b) => orderKeys[a] - orderKeys[b])
     .filter(q => unneeded(q))
