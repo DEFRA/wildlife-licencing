@@ -22,9 +22,18 @@ describe('The habitat grid ref page', () => {
     })
 
     it('the habitat-grid-ref page forwards onto check-habitat-answers on return journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true })
+          getData: () => ({})
         })
       }
       const { completion } = await import('../habitat-grid-ref.js')
@@ -33,6 +42,16 @@ describe('The habitat grid ref page', () => {
 
     it('sets the grid ref data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        }
+      }))
+
       const request = {
         cache: () => ({
           setData: mockSetData,
@@ -56,6 +75,16 @@ describe('The habitat grid ref page', () => {
 
     it('sets the grid ref data correctly on return journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
+
       const request = {
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
@@ -63,7 +92,6 @@ describe('The habitat grid ref page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {}
           }),
           getPageData: () => ({
@@ -85,7 +113,6 @@ describe('The habitat grid ref page', () => {
       const { setData } = await import('../habitat-grid-ref.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { gridReference: 'NY123456' }

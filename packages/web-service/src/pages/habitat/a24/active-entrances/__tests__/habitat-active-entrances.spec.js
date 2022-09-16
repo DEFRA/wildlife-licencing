@@ -25,9 +25,18 @@ describe('The habitat active entrances page', () => {
       expect(await completion(request)).toBe('/habitat-grid-ref')
     })
     it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true }),
+          getData: () => ({}),
           getPageData: () => ({})
         })
       }
@@ -51,6 +60,16 @@ describe('The habitat active entrances page', () => {
 
     it('sets the active entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        }
+      }))
+
       const request = {
         cache: () => ({
           setData: mockSetData,
@@ -75,6 +94,16 @@ describe('The habitat active entrances page', () => {
     })
     it('sets the active entrance data correctly on return journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
+
       const request = {
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
@@ -82,7 +111,6 @@ describe('The habitat active entrances page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {
               numberOfEntrances: 10
             }
@@ -106,7 +134,6 @@ describe('The habitat active entrances page', () => {
       const { setData } = await import('../habitat-active-entrances.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { numberOfActiveEntrances: 5, active: true, numberOfEntrances: 10 }

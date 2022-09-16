@@ -13,7 +13,7 @@ describe('The habitat activities page', () => {
     it('the habitat-activities page forwards onto check-habitat-answers if no errors on return journey', async () => {
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true }),
+          getData: () => ({}),
           getPageData: () => ({})
         })
       }
@@ -79,10 +79,19 @@ describe('The habitat activities page', () => {
           })
         })
       }
+
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: ({
           HABITAT: {
             create: mockCreate
+          },
+          APPLICATION: {
+            tags: () => {
+              return {
+                has: () => false,
+                add: () => false
+              }
+            }
           }
         })
       }))
@@ -93,7 +102,6 @@ describe('The habitat activities page', () => {
       const { setData } = await import('../habitat-activities.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
-        complete: true,
         habitatData: {
           numberOfEntrances: 10,
           numberOfActiveEntrances: 5,
@@ -114,7 +122,6 @@ describe('The habitat activities page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {}
           }),
           getPageData: () => ({
@@ -133,10 +140,19 @@ describe('The habitat activities page', () => {
         putHabitatById: () => {}
       }))
 
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
+
       const { setData } = await import('../habitat-activities.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { methodIds: [1000000, 10000001] }

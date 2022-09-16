@@ -31,6 +31,15 @@ describe('The check habitat answers page', () => {
     })
 
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { remove: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => {
           return {

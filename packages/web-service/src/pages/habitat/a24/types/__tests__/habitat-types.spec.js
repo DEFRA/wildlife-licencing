@@ -25,9 +25,18 @@ describe('The habitat types page', () => {
     })
 
     it('the habitat-types page forwards onto check-habitat-answers on return journey', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
       const request = {
         cache: () => ({
-          getData: () => ({ complete: true })
+          getData: () => ({})
         })
       }
       const { completion } = await import('../habitat-types.js')
@@ -36,6 +45,16 @@ describe('The habitat types page', () => {
 
     it('sets the entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => false }
+            }
+          }
+        }
+      }))
+
       const request = {
         cache: () => ({
           setData: mockSetData,
@@ -59,6 +78,16 @@ describe('The habitat types page', () => {
 
     it('sets the type data correctly on return journey', async () => {
       const mockSetData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { has: () => true }
+            }
+          }
+        }
+      }))
+
       const request = {
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
@@ -66,7 +95,6 @@ describe('The habitat types page', () => {
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
-            complete: true,
             habitatData: {}
           }),
           getPageData: () => ({
@@ -88,7 +116,6 @@ describe('The habitat types page', () => {
       const { setData } = await import('../habitat-types.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
-        complete: true,
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
           { settType: 100000011 }
