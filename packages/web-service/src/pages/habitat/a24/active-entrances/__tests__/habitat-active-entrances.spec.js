@@ -43,20 +43,6 @@ describe('The habitat active entrances page', () => {
       const { completion } = await import('../habitat-active-entrances.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
-    it('the habitat-active-entrances page stays on the habitat-active-entrances page if there are errors', async () => {
-      const request = {
-        cache: () => {
-          return {
-            getPageData: () => {
-              return { error: 'there were problems with user input' }
-            },
-            getData: () => ({})
-          }
-        }
-      }
-      const { completion } = await import('../habitat-active-entrances.js')
-      expect(await completion(request)).toBe('/habitat-active-entrances')
-    })
 
     it('sets the active entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
@@ -140,32 +126,47 @@ describe('The habitat active entrances page', () => {
       })
     })
     it('returns an error if more active entrances than entrances', async () => {
-      const mockError = jest.fn()
-      const request = {
-        payload: {},
-        cache: () => ({
-          getData: () => ({
-            habitatData: {
-              numberOfEntrances: 3
+      try {
+        const payload = { 'habitat-active-entrances': 13 }
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { numberOfEntrances: 3 }
+                })
+              }
             }
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-active-entrances': 13
-            }
-          }),
-          setPageData: mockError
+          }
         })
+        const { validator } = await import('../habitat-active-entrances.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: the user has entered more active holes than total holes')
       }
-      const { setData } = await import('../habitat-active-entrances.js')
-      await setData(request)
-      expect(mockError).toBeCalledTimes(1)
-      expect(mockError).toHaveBeenCalledWith({
-        error: {
-          'habitat-active-entrances': 'tooManyActiveHoles'
-        },
-        payload: {}
-      })
+    })
+
+    it('should not returns an error if less active entrances than entrances', async () => {
+      try {
+        const payload = { 'habitat-active-entrances': 3 }
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { numberOfEntrances: 13 }
+                })
+              }
+            }
+          }
+        })
+        const { validator } = await import('../habitat-active-entrances.js')
+        expect(await validator(payload)).toBeUndefined()
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: the user has entered more active holes than total holes')
+      }
     })
 
     it('getData returns the correct object', async () => {
