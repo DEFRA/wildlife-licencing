@@ -47,7 +47,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
-    [SECTION_TASKS.SETTS]: false,
+    [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
     [SECTION_TASKS.METHOD_STATEMENT]: true,
     [SECTION_TASKS.SUBMIT]: false
   }
@@ -131,7 +131,9 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SETTS,
             uri: habitatURIs.START.uri,
-            status: eligibilityCheckStatus,
+            status: status => status[SECTION_TASKS.SETTS]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           },
           {
