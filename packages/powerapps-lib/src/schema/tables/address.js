@@ -11,8 +11,7 @@ export const address = [
   new Column('address1_county', 'address.county'),
   new Column('address1_postalcode', 'address.postcode', s => s.toUpperCase()),
   new Column('address1_country', 'address.country'),
-  // Add back in once Victor has changed to a numeric:
-  //  new Column('sdds_address1_xcoordinate', 'address.xCoordinate'),
-  //  new Column('sdds_address1_ycoordinate', 'address.yCoordinate'),
+  new Column('sdds_address1_xcoordinate', 'address.xCoordinate'),
+  new Column('sdds_address1_ycoordinate', 'address.yCoordinate'),
   new Column('sdds_address1_uprn', 'address.uprn')
 ]
