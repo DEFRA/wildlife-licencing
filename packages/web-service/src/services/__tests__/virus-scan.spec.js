@@ -14,6 +14,7 @@ describe('The virus scanning service', () => {
         init: () => Promise.reject(new Error())
       })))
       const { initializeClamScan } = await import('../virus-scan.js')
+      process.env.SCANNING_REQUIRED = true
       await expect(() => initializeClamScan()).rejects.toThrow()
     })
     it('rejects when uninitialized fails', async () => {
