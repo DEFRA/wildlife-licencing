@@ -34,6 +34,8 @@ export const initializeClamScan = async () => {
       return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
     }
   }
+
+  return undefined
 }
 
 export async function scanFile (filepath) {
