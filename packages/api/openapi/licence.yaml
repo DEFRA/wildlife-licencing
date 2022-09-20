@@ -435,6 +435,99 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# ecologist-experience
+################################################################################################
+  '/application/{applicationId}/ecologist-experience':
+    put:
+      description: Update the application ecologist-experience details
+      summary: Create or update the application ecologist-experience details
+      operationId: putApplicationEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ecologist-experience'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologist-experience'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application ecologist-experience details
+      summary: Get the ecologist-experience details for an application
+      operationId: getApplicationEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologist-experience'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application ecologist-experience details
+      summary: Delete the ecologist-experience details for an application
+      operationId: deleteApplicationEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Eligibility
 ################################################################################################
   '/application/{applicationId}/eligibility':
@@ -2112,103 +2205,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Ecologist-Experience
-################################################################################################
-
-  '/ecologist/{applicationId}/ecologist-experience':
-    get:
-      description: Get the ecologists experience details
-      summary: Get the ecologists experience details
-      operationId: getEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-    post:
-      description: Post the ecologist's experience details
-      summary: Post the ecologist's experience details
-      operationId: postEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ecologistExperience'
-      responses:
-        201:
-          description: The ecologist experience has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-    put:
-      description: Create new ecologist experience or update existing experience
-      summary: Create new ecologist experience or update existing experience
-      operationId: putEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: The ecologist experience has been updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        201:
-          description: The ecologist experience has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        400:
-          description: Bad request. application ID must be a uuid
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
 
 components:
 ################################################################################################
@@ -2298,6 +2294,8 @@ components:
           $ref: '#/components/schemas/uuid'
         eligibility:
           $ref: '#/components/schemas/eligibility'
+        ecologistExperience:
+          $ref: '#/components/schemas/ecologistExperience'
         statusCode:
           $ref: '#/components/schemas/option'
         submitted:
@@ -2556,14 +2554,7 @@ components:
 
     ecologistExperience:
       type: object
-      required:
-        - previousLicense
-        - experienceDetails
-        - methodExperience
-        - classMitigation
       properties:
-        id:
-          $ref: '#/components/schemas/uuid'
         previousLicense:
           type: boolean
         licenseDetails:
