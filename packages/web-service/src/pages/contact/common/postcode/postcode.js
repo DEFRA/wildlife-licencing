@@ -33,6 +33,7 @@ export const setPostcodeData = (contactType, accountType) => async request => {
   // the lookup to throw a bad request, hence the try-catch here. Consider for instance LB1 2CD
   try {
     await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
+    debug(`Address lookup for postcode: ${postcode}`)
     const { results } = await ADDRESS.lookup(postcode)
     if (results.length) {
       Object.assign(journeyData, { addressLookup: results })
