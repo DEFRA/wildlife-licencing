@@ -50,4 +50,25 @@ describe('The licence type map', () => {
     const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
     expect(licenceTypeMap[A24].sections[2].tasks[3]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'setts', uri: '/habitat-start' })
   })
+
+  it('will return completed if the SETT status is setts', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
+    expect(funcStatus({ setts: 'setts' })).toBe('completed')
+  })
+
+  it('will return eligibilityCheckStatus if the SETT status is not started', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
+    expect(funcStatus('cannotStart')).toBe('cannot-start')
+  })
+
+  it('will return eligibilityCheckStatus if the SETT status is not started', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
+    expect(funcStatus({ 'eligibility-check': 'eligibility-check' })).toBe('not-started')
+  })
 })
