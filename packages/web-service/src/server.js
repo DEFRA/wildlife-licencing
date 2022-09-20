@@ -14,7 +14,6 @@ import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
 import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, contactURIs } from './uris.js'
-import Config from '@defra/wls-connectors-lib/src/config.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -171,11 +170,6 @@ const init = async server => {
 
   process.on('SIGINT', () => shutdown(130))
   process.on('SIGTERM', () => shutdown(137))
-
-  // Log the address lookup certificate file directory
-  const addressCertDir = path.dirname(Config.address.certificatePath)
-  console.log(`Address lookup certificate location: ${addressCertDir}...`)
-  console.log(`${fs.readdirSync(addressCertDir).forEach(f => console.log(f))}`)
 
   /*
    * Start the server

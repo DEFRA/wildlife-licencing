@@ -3,6 +3,9 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
 import { contactAccountOperations } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
+import path from 'path'
+import Config from '@defra/wls-connectors-lib/src/config.js'
+import fs from 'fs'
 const debug = db('web-service:address-lookup')
 
 export const getPostcodeData = (contactType, contactOrganisation, uriBase) => async request => {
@@ -44,6 +47,11 @@ export const setPostcodeData = (contactType, accountType) => async request => {
   } catch (err) {
     // May not be real error so log on a debug
     debug(`Address lookup error: ${err}`)
+    // Log the address lookup certificate file directory
+    const addressCertDir = path.dirname(Config.address.certificatePath)
+    debug(`Address lookup certificate location: ${addressCertDir}...`)
+    debug(`${fs.readdirSync(addressCertDir).forEach(f => console.log(f))}`)
+
     // Remove previous
     delete journeyData.addressLookup
   } finally {
