@@ -63,9 +63,9 @@ import {
 
 import {
   getEcologistExperience,
-  postEcologistExperience,
-  putEcologistExperience
-} from './handlers/ecologist-experience/ecologist-experience.js'
+  putEcologistExperience,
+  deleteEcologistExperience
+} from './handlers/application/ecologist-experience/ecologist-experience.js'
 
 import {
   getApplicationByApplicationId,
@@ -207,8 +207,8 @@ const handlers = {
 
   // ecologist experience handlers
   getEcologistExperience,
-  postEcologistExperience,
   putEcologistExperience,
+  deleteEcologistExperience,
 
   // Miscellaneous handlers
   getApplicationTypes,

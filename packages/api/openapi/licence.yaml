@@ -441,7 +441,7 @@ paths:
     put:
       description: Update the application ecologist-experience details
       summary: Create or update the application ecologist-experience details
-      operationId: putApplicationEcologistExperience
+      operationId: putEcologistExperience
       parameters:
         - name: applicationId
           in: path
@@ -454,14 +454,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ecologist-experience'
+              $ref: '#/components/schemas/ecologistExperience'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ecologist-experience'
+                $ref: '#/components/schemas/ecologistExperience'
         400:
           description: Bad request
         404:
@@ -476,7 +476,7 @@ paths:
     get:
       description: Get the application ecologist-experience details
       summary: Get the ecologist-experience details for an application
-      operationId: getApplicationEcologistExperience
+      operationId: getEcologistExperience
       parameters:
         - name: applicationId
           in: path
@@ -490,7 +490,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ecologist-experience'
+                $ref: '#/components/schemas/ecologistExperience'
         400:
           description: Bad request
         404:
@@ -505,7 +505,7 @@ paths:
     delete:
       description: Delete the application ecologist-experience details
       summary: Delete the ecologist-experience details for an application
-      operationId: deleteApplicationEcologistExperience
+      operationId: deleteEcologistExperience
       parameters:
         - name: applicationId
           in: path
