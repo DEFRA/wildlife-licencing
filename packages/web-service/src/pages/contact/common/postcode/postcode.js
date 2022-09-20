@@ -1,7 +1,9 @@
+import db from 'debug'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
 import { contactAccountOperations } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
+const debug = db('web-service:address-lookup')
 
 export const getPostcodeData = (contactType, contactOrganisation, uriBase) => async request => {
   const journeyData = await request.cache().getData()
@@ -39,6 +41,8 @@ export const setPostcodeData = (contactType, accountType) => async request => {
       delete journeyData.addressLookup
     }
   } catch (err) {
+    // May not be real error so log on a debug
+    debug(`Address lookup error: ${err}`)
     // Remove previous
     delete journeyData.addressLookup
   } finally {
