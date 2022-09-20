@@ -42,4 +42,12 @@ describe('The licence type map', () => {
     const progress = getProgress({ first: true, second: false })
     expect(progress).toEqual({ completed: 1, from: 2 })
   })
+
+  it('the section tasks SETT will return completed if status is complete', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcEnabled = licenceTypeMap[A24].sections[2].tasks[3].enabled
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
+    expect(licenceTypeMap[A24].sections[2].tasks[3]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'setts', uri: '/habitat-start' })
+  })
 })
