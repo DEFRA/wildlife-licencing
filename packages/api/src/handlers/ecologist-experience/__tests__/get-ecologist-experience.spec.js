@@ -1,5 +1,7 @@
+
 describe('The get ecologist experience endpoint', () => {
   beforeEach(() => jest.resetModules())
+  beforeEach(() => jest.resetAllMocks())
 
   describe('get ecologist experience', () => {
     it('returns a 404 if no experience is found', async () => {
@@ -17,6 +19,10 @@ describe('The get ecologist experience endpoint', () => {
           code: mockCode
         })
       }
+
+      jest.doMock('../../utils.js', () => ({
+        checkCache: () => undefined
+      }))
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           ecologistExperience: {
@@ -28,10 +34,38 @@ describe('The get ecologist experience endpoint', () => {
       await getEcologistExperience(context, req, h)
       expect(mockCode).toHaveBeenCalledWith(404)
     })
+    it('pulls from the cache if data is found at request path', async () => {
+      const mockResponse = jest.fn(() => ({
+        type: () => ({
+          code: () => {}
+        })
+      }))
+      const context = {
+        request: {
+          params: {
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }
+        }
+      }
+      jest.doMock('../../utils.js', () => ({
+        checkCache: () => true
+      })
+      )
+      const req = {}
+      const h = {
+        response: mockResponse
+      }
+      const getEcologistExperience = (await import('../get-ecologist-experience.js')).default
+      await getEcologistExperience(context, req, h)
+      expect(mockResponse).toHaveBeenCalledWith(true)
+    })
     it('returns the correct object if experience is found', async () => {
       const mockCode = jest.fn()
       const mockType = jest.fn(() => ({ code: mockCode }))
       const mockResponse = jest.fn(() => ({ type: mockType }))
+      jest.doMock('../../utils.js', () => ({
+        checkCache: () => undefined
+      }))
       const context = {
         request: {
           params: {
@@ -84,6 +118,9 @@ describe('The get ecologist experience endpoint', () => {
           }
         }
       }
+      jest.doMock('../../utils.js', () => ({
+        checkCache: () => undefined
+      }))
       const req = {
         path: '/ecologist/26a3e94f-2280-4ea5-ad72-920d53c110fc/ecologist-experience'
       }

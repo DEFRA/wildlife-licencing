@@ -26,7 +26,7 @@ export default async (context, req, h) => {
     })
     if (created) {
       const responseBody = prepareResponse(ecologistExperience.dataValues)
-      await cache.save(req.path, responseBody)
+      await cache.save(req.path, responseBody.ecologistExperience)
       return h.response(responseBody.ecologistExperience)
         .type(APPLICATION_JSON)
         .code(201)
@@ -41,7 +41,7 @@ export default async (context, req, h) => {
         returning: true
       })
       const responseBody = prepareResponse(updatedEcologistExperience[0].dataValues)
-      await cache.save(req.path, responseBody)
+      await cache.save(req.path, responseBody.ecologistExperience)
       return h.response(responseBody.ecologistExperience)
         .type(APPLICATION_JSON)
         .code(200)

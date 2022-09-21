@@ -21,8 +21,9 @@ export const getData = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const experienceDetails = pageData.payload[ecologistExperienceURIs.ENTER_EXPERIENCE.page]
+  const experienceDetails = pageData.payload[ecologistExperienceURIs.ENTER_EXPERIENCE.page].replace(/ {2}|\r\n|\n|\r/gm, ' ')
   Object.assign(journeyData.ecologistExperience, { experienceDetails })
+  console.log(experienceDetails.length)
   const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (flagged) {
     await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(journeyData.applicationId, journeyData.ecologistExperience)
@@ -34,7 +35,7 @@ export default pageRoute({
   uri: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
   page: ecologistExperienceURIs.ENTER_EXPERIENCE.page,
   validator: Joi.object({
-    'enter-experience': Joi.string().required()
+    'enter-experience': Joi.string().replace((/|\r\n|\n|\r/gm), '').required().max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion,
