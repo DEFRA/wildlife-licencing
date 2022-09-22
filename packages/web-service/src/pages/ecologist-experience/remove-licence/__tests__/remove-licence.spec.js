@@ -7,105 +7,88 @@ describe('The remove licence page', () => {
       expect(completion()).toBe('/licence')
     })
   })
+
   describe('get data function', () => {
-    it('returns the enter licence details uri if user selects yes', async () => {
+    it('returns the licence number', async () => {
       const request = {
         query: {
-          licence: 'AZ1234'
-        }
+          licence: 'A1234'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          setData: jest.fn()
+        })
       }
       const { getData } = await import('../remove-licence.js')
-      expect(await getData(request)).toBe('AZ1234')
-    })
-    it('returns the enter licence details uri if user selects yes', async () => {
-      const request = {
-        query: {}
-      }
-      const { getData } = await import('../remove-licence.js')
-      expect(await getData(request)).toBe('')
+      expect(await getData(request)).toBe('A1234')
     })
   })
-  describe('set data function', () => {
-    it('does not delete a licence if the user selects no', async () => {
+
+  describe.only('set data function', () => {
+    it('does not delete a licence if the user selects \'no\'', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ licenceDetails: ['AZ1234'] })),
+            putExperienceById: mockPut
+          }
+        }
+      }))
       const mockSet = jest.fn()
       const request = {
+        payload: {
+          'remove-licence': 'no'
+        },
         query: {
           licence: 'AZ1234'
         },
         cache: () => ({
           getData: () => ({
-            ecologistExperience: {
-              licenceDetails: ['AZ1234', 'ZA4321', 'AB2468']
-            }
-          }),
-          getPageData: () => ({
-            payload: {
-              'remove-licence': 'no'
-            }
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            ecologistExperienceTemp: { licence: 'AZ1234' }
           }),
           setData: mockSet
         })
       }
       const { setData } = await import('../remove-licence.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledTimes(0)
+      expect(mockSet).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
+      expect(mockPut).toHaveBeenCalledTimes(0)
     })
-    it('deletes a licence if the user selects yes', async () => {
+
+    it('does deletes a licence if the user selects \'yes\'', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ licenceDetails: ['AZ1234'] })),
+            putExperienceById: mockPut
+          }
+        }
+      }))
       const mockSet = jest.fn()
       const request = {
+        payload: {
+          'remove-licence': 'yes'
+        },
         query: {
           licence: 'AZ1234'
         },
         cache: () => ({
           getData: () => ({
-            ecologistExperience: {
-              licenceDetails: ['AZ1234', 'ZA4321', 'AB2468']
-            }
-          }),
-          getPageData: () => ({
-            payload: {
-              'remove-licence': 'yes'
-            }
-          }),
-          setData: mockSet
-        })
-      }
-      const { setData, getData } = await import('../remove-licence.js')
-      await getData(request)
-      await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        ecologistExperience: {
-          licenceDetails: ['ZA4321', 'AB2468']
-        }
-      })
-    })
-    it('does not delete a licence if the selected licence is not in cache', async () => {
-      const mockSet = jest.fn()
-      const request = {
-        query: {
-          licence: 'AZ0000'
-        },
-        cache: () => ({
-          getData: () => ({
-            ecologistExperience: {
-              licenceDetails: ['AZ1234', 'ZA4321', 'AB2468']
-            }
-          }),
-          getPageData: () => ({
-            payload: {
-              'remove-licence': 'yes'
-            }
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            ecologistExperienceTemp: { licence: 'AZ1234' }
           }),
           setData: mockSet
         })
       }
       const { setData } = await import('../remove-licence.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        ecologistExperience: {
-          licenceDetails: ['AZ1234', 'ZA4321', 'AB2468']
-        }
-      })
+      expect(mockSet).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { licenceDetails: [] })
     })
   })
 })

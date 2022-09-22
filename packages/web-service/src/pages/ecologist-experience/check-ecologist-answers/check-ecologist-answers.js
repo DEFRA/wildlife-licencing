@@ -1,6 +1,7 @@
 import pageRoute from '../../../routes/page-route.js'
 import { APPLICATIONS, ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 const prt = a => {
   if (a === undefined) {
@@ -16,8 +17,8 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(journeyData.applicationId)
-  if (!ecologistExperience) {
+  const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  if (!flagged) {
     return h.redirect(ecologistExperienceURIs.PREVIOUS_LICENCE.uri)
   }
 

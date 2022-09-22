@@ -13,12 +13,18 @@ export const completion = async request => {
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  return { yesNo: ecologistExperience.classMitigation ? 'yes' : 'no' }
+}
+
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
   const classMitigation = request.payload[yesNo] === 'yes'
   Object.assign(ecologistExperience, { classMitigation })
-  if (classMitigation === false) {
+  if (!classMitigation) {
     delete ecologistExperience.classMitigationDetails
     await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   }
