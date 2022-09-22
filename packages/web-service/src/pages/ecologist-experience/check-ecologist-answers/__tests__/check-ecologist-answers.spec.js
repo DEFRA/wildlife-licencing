@@ -4,7 +4,7 @@ describe('The check ecologist answers page', () => {
   describe('check data function', () => {
     it('calls the get experience end point if no experience data in cache and data is set correctly', async () => {
       const mockGet = jest.fn(() => ({
-        previousLicense: true
+        previousLicence: true
       }))
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -28,14 +28,14 @@ describe('The check ecologist answers page', () => {
       expect(mockSet).toHaveBeenCalledWith({
         applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
         ecologistExperience: {
-          previousLicense: true,
+          previousLicence: true,
           complete: true
         }
       })
     })
     it('does not perform get if eco experience data already exists', async () => {
       const mockGet = jest.fn(() => ({
-        previousLicense: true
+        previousLicence: true
       }))
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -50,7 +50,7 @@ describe('The check ecologist answers page', () => {
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             ecologistExperience: {
-              previousLicense: true
+              previousLicence: true
             }
           }),
           setData: mockSet
@@ -69,7 +69,7 @@ describe('The check ecologist answers page', () => {
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             ecologistExperience: {
-              previousLicense: true,
+              previousLicence: true,
               classMitigation: false
             }
           })
@@ -77,10 +77,10 @@ describe('The check ecologist answers page', () => {
       }
       const { getData } = await import('../check-ecologist-answers.js')
       expect(await getData(request)).toStrictEqual({
-        previousLicense: true,
+        previousLicence: true,
         classMitigation: false,
         classMitigationDisplay: 'No',
-        previousLicenseDisplay: 'Yes'
+        previousLicenceDisplay: 'Yes'
       })
     })
     it('sets the display variables correctly if values alternate', async () => {
@@ -89,7 +89,7 @@ describe('The check ecologist answers page', () => {
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             ecologistExperience: {
-              previousLicense: false,
+              previousLicence: false,
               classMitigation: true
             }
           })
@@ -97,10 +97,10 @@ describe('The check ecologist answers page', () => {
       }
       const { getData } = await import('../check-ecologist-answers.js')
       expect(await getData(request)).toStrictEqual({
-        previousLicense: false,
+        previousLicence: false,
         classMitigation: true,
         classMitigationDisplay: 'Yes',
-        previousLicenseDisplay: 'No'
+        previousLicenceDisplay: 'No'
       })
     })
   })
@@ -112,7 +112,7 @@ describe('The check ecologist answers page', () => {
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             ecologistExperience: {
-              previousLicense: true,
+              previousLicence: true,
               classMitigation: false
             }
           }),

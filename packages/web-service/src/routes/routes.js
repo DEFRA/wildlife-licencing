@@ -37,15 +37,15 @@ import habitatWorkEnd from '../pages/habitat/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/activities/habitat-activities.js'
 import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-habitat-answers.js'
 
-import ecologistPreviousLicense from '../pages/ecologist-experience/previous-license/previous-license.js'
-import enterLicenseDetails from '../pages/ecologist-experience/enter-license-details/enter-license-details.js'
+import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
+import enterLicenceDetails from '../pages/ecologist-experience/enter-licence-details/enter-licence-details.js'
 import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
 import enterMethods from '../pages/ecologist-experience/enter-methods/enter-methods.js'
 import classMitigation from '../pages/ecologist-experience/class-mitigation/class-mitigation.js'
 import enterClassMitigationDetails from '../pages/ecologist-experience/enter-class-mitigation-details/enter-class-mitigation-details.js'
 import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist-answers/check-ecologist-answers.js'
-import license from '../pages/ecologist-experience/license/license.js'
-import removeLicense from '../pages/ecologist-experience/remove-license/remove-license.js'
+import licence from '../pages/ecologist-experience/licence/licence.js'
+import removeLicence from '../pages/ecologist-experience/remove-licence/remove-licence.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 
@@ -88,15 +88,15 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
-  ...ecologistPreviousLicense,
-  ...enterLicenseDetails,
+  ...ecologistPreviousLicence,
+  ...enterLicenceDetails,
   ...enterExperience,
   ...enterMethods,
   ...classMitigation,
   ...enterClassMitigationDetails,
   ...checkEcologistAnswers,
-  ...license,
-  ...removeLicense,
+  ...licence,
+  ...removeLicence,
   signOut,
   ...miscRoutes
 ]

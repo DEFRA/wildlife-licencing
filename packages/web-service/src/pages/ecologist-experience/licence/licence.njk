@@ -4,28 +4,28 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% set errorMap = {
-        'license': {
-          'any.required': { ref: '#license', text: 'You have not selected an option' }
+        'licence': {
+          'any.required': { ref: '#licence', text: 'You have not selected an option' }
         }
     }
 %}
 
 {}
 
-{% set title = "Previous badger mitigiation licenses" %}
+{% set title = "Previous badger mitigation licences" %}
 
 {% block pageContent %}
-{% set legendText = "Do you want to add another previous badger mitigation license?" %}
+{% set legendText = "Do you want to add another previous badger mitigation licence?" %}
 {% if not data %}
 
 {{ govukSummaryList({
   rows: [
     {
       key: {
-        text: "Badger mitigiation license"
+        text: "Badger mitigiation licence"
       },
       value: {
-        text: "No license added"
+        text: "No licence added"
       },
       actions: {
       }
@@ -34,21 +34,21 @@
 }) }}
 {% endif %}
 
-{% for license in data %}
+{% for licence in data %}
 
 {{ govukSummaryList({
   rows: [
     {
       key: {
-        text: "Badger mitigiation license"
+        text: "Badger mitigiation licence"
       },
       value: {
-        text: license
+        text: licence
       },
       actions: {
         items: [
           {
-            href: "/remove-license?license=" + license,
+            href: "/remove-licence?licence=" + licence,
             text: "Remove"
           }
         ]
@@ -60,11 +60,11 @@
 {% endfor %}
 
 {{ govukRadios({
-  idPrefix: "license",
-  name: "license",
+  idPrefix: "licence",
+  name: "licence",
   fieldset: {
     legend: {
-      text: "Do you want to add another previous badger mitigation license?" if data else "Do you want to add a previous badger mitigation license?",
+      text: "Do you want to add another previous badger mitigation licence?" if data else "Do you want to add a previous badger mitigation licence?",
       isPageHeading: false,
       classes: "govuk-fieldset__legend--m"
     }

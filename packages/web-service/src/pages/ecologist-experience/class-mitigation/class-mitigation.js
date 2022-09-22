@@ -2,6 +2,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { checkApplication } from '../../common/check-application.js'
 const yesNo = 'yes-no'
 
 export const completion = async request => {
@@ -13,21 +14,21 @@ export const completion = async request => {
 }
 
 export const setData = async request => {
-  const pageData = await request.cache().getPageData()
-  const journeyData = await request.cache().getData()
-  const classMitigation = pageData.payload[yesNo] === 'yes'
-  Object.assign(journeyData.ecologistExperience, { classMitigation })
+  const { applicationId } = await request.cache().getData()
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  const classMitigation = request.payload[yesNo] === 'yes'
+  Object.assign(ecologistExperience, { classMitigation })
   if (classMitigation === false) {
-    delete journeyData.ecologistExperience.classMitigationDetails
-    const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-    if (!flagged) {
-      await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-      await APIRequests.ECOLOGIST_EXPERIENCE.create(journeyData.applicationId, journeyData.ecologistExperience)
-    } else {
-      await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(journeyData.applicationId, journeyData.ecologistExperience)
-    }
+    delete ecologistExperience.classMitigationDetails
+    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   }
-  await request.cache().setData(journeyData)
+  await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }
 
-export default yesNoPage({ page: ecologistExperienceURIs.CLASS_MITIGATION.page, uri: ecologistExperienceURIs.CLASS_MITIGATION.uri, completion, setData })
+export default yesNoPage({
+  checkData: checkApplication,
+  page: ecologistExperienceURIs.CLASS_MITIGATION.page,
+  uri: ecologistExperienceURIs.CLASS_MITIGATION.uri,
+  completion,
+  setData
+})

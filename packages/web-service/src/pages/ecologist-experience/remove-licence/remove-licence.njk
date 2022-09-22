@@ -4,13 +4,13 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% set errorMap = {
-        'remove-license': {
-          'any.required': { ref: '#remove-license', text: 'You have not selected an option' }
+        'remove-licence': {
+          'any.required': { ref: '#remove-licence', text: 'You have not selected an option' }
         }
     }
 %}
 
-{% set title = "Are you sure you want to delete this license?" %}
+{% set title = "Are you sure you want to delete this licence?" %}
 
 {% block pageContent %}
 
@@ -18,7 +18,7 @@
   rows: [
     {
       key: {
-        text: "Badger mitigiation license"
+        text: "Badger mitigiation licence"
       },
       value: {
         text: data
@@ -28,8 +28,8 @@
 }) }}
 
 {{ govukRadios({
-  idPrefix: "remove-license",
-  name: "remove-license",
+  idPrefix: "remove-licence",
+  name: "remove-licence",
   fieldset: {
   },
   items: [

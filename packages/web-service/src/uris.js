@@ -19,15 +19,15 @@ export const eligibilityURIs = {
 }
 
 export const ecologistExperienceURIs = {
-  PREVIOUS_LICENSE: { uri: '/previous-license', page: 'previous-license' },
+  PREVIOUS_LICENCE: { uri: '/previous-licence', page: 'previous-licence' },
   ENTER_EXPERIENCE: { uri: '/enter-experience', page: 'enter-experience' },
-  ENTER_LICENSE_DETAILS: { uri: '/enter-license-details', page: 'enter-license-details' },
-  LICENSE: { uri: '/license', page: 'license' },
+  ENTER_LICENCE_DETAILS: { uri: '/enter-licence-details', page: 'enter-licence-details' },
+  LICENCE: { uri: '/licence', page: 'licence' },
   CHECK_YOUR_ANSWERS: { uri: '/check-ecologist-answers', page: 'check-ecologist-answers' },
   ENTER_METHODS: { uri: '/enter-methods', page: 'enter-methods' },
   CLASS_MITIGATION: { uri: '/class-mitigation', page: 'class-mitigation' },
   ENTER_CLASS_MITIGATION: { uri: '/enter-class-mitigation-details', page: 'enter-class-mitigation-details' },
-  REMOVE_LICENSE: { uri: '/remove-license', page: 'remove-license' }
+  REMOVE_LICENCE: { uri: '/remove-licence', page: 'remove-licence' }
 }
 
 export const habitatURIs = {

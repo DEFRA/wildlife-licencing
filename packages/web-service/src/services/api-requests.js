@@ -27,8 +27,7 @@ const apiUrls = {
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
   APPLICATION_ACCOUNTS: '/application-accounts',
-  APPLICATION_ACCOUNT: '/application-account',
-  ECOLOGIST: '/ecologist'
+  APPLICATION_ACCOUNT: '/application-account'
 }
 
 const getContactByApplicationId = async (role, applicationId) => {
@@ -389,9 +388,9 @@ export const APIRequests = {
       add: async tag => {
         try {
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
-          const applicationTags = application.applicationTags || []
-          if (!applicationTags.find(t => t === tag)) {
-            applicationTags.push(tag)
+          application.applicationTags = application.applicationTags || []
+          if (!application.applicationTags.find(t => t === tag)) {
+            application.applicationTags.push(tag)
             await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
           }
         } catch (error) {
@@ -403,8 +402,8 @@ export const APIRequests = {
       has: async tag => {
         try {
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
-          const applicationTags = application.applicationTags || []
-          return applicationTags.find(t => t === tag)
+          application.applicationTags = application.applicationTags || []
+          return !!application.applicationTags.find(t => t === tag)
         } catch (error) {
           console.error(`Error fetching tag ${tag} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
@@ -414,9 +413,10 @@ export const APIRequests = {
       remove: async tag => {
         try {
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
-          const applicationTags = application.applicationTags || []
-          Object.assign(application, { applicationTags: applicationTags.filter(t => t !== tag) })
-          await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          if (application.applicationTags && application.applicationTags.length) {
+            Object.assign(application, { applicationTags: application.applicationTags.filter(t => t !== tag) })
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          }
         } catch (error) {
           console.error(`Error removing tag ${tag} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
@@ -576,20 +576,9 @@ export const APIRequests = {
     }
   },
   ECOLOGIST_EXPERIENCE: {
-    create: async (applicationId, payload) => {
-      try {
-        const ecoExperience = await API.post(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
-        debug(`Created ecologist experience for ${applicationId}`)
-        return ecoExperience
-      } catch (error) {
-        console.error(`Error adding ecologist experience to ${applicationId}`, error)
-        Boom.boomify(error, { statusCode: 500 })
-        throw error
-      }
-    },
     getExperienceById: async applicationId => {
       try {
-        const ecoExperience = await API.get(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`)
+        const ecoExperience = await API.get(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`)
         debug(`Successfully retrieved experience data for ${applicationId}`)
         return ecoExperience
       } catch (error) {
@@ -600,7 +589,7 @@ export const APIRequests = {
     },
     putExperienceById: async (applicationId, payload) => {
       try {
-        const ecoExperience = await API.put(`${apiUrls.ECOLOGIST}/${applicationId}/ecologist-experience`, payload)
+        const ecoExperience = await API.put(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`, payload)
         debug(`Successfully altered experience data for ${applicationId}`)
         return ecoExperience
       } catch (error) {
