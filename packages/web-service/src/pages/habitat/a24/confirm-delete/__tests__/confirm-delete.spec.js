@@ -33,9 +33,7 @@ describe('The confirm delte page', () => {
         },
         cache: () => ({
           getData: () => ({
-            habitatData: {
-              applicationId: 'dbf77d92-a6a6-4ec3-9f4b-da6f6bf2c0af'
-            }
+            applicationId: 'dbf77d92-a6a6-4ec3-9f4b-da6f6bf2c0af'
           })
         })
       }
@@ -64,9 +62,7 @@ describe('The confirm delte page', () => {
         },
         cache: () => ({
           getData: () => ({
-            habitatData: {
-              applicationId: 'dbf77d92-a6a6-4ec3-9f4b-da6f6bf2c0af'
-            }
+            applicationId: 'dbf77d92-a6a6-4ec3-9f4b-da6f6bf2c0af'
           })
         })
       }

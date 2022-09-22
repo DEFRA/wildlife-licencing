@@ -69,7 +69,6 @@ describe('The postHabitatSite handler', () => {
       applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
       updateStatus: 'L',
       habitatSite: {
-        id: expect.any(String),
         name: 'name'
       }
     })

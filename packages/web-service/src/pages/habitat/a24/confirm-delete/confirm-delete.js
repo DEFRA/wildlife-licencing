@@ -8,10 +8,10 @@ let tempId = ''
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const totalSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
+  const totalSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
   if (request.payload['confirm-delete']) {
-    await APIRequests.HABITAT.deleteSett(journeyData.habitatData.applicationId, request.query.id || tempId)
+    await APIRequests.HABITAT.deleteSett(journeyData.applicationId, request.query.id || tempId)
 
     if (totalSites.length === 1) {
       // If you remove the only sett you have, your journey is no longer complete
@@ -24,7 +24,7 @@ export const setData = async request => {
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
+  const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
   if (request.query.id) {
     tempId = request.query.id
   }
@@ -33,7 +33,7 @@ export const getData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const totalSites = await APIRequests.HABITAT.getHabitatsById(journeyData.habitatData.applicationId)
+  const totalSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
   if (totalSites.length === 0) {
     return TASKLIST.uri
   } else {

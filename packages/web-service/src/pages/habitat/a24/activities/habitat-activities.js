@@ -41,7 +41,7 @@ export const setData = async request => {
     const activityId = INTERFERE_WITH_BADGER_SETT
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
 
-    await APIRequests.HABITAT.create(journeyData.habitatData.applicationId, journeyData.habitatData)
+    await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
     await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
   }
   request.cache().setData(journeyData)
