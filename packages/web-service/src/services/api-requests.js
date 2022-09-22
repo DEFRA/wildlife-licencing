@@ -566,9 +566,9 @@ export const APIRequests = {
   HABITAT: {
     create: async (applicationId, payload) => {
       try {
-        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, payload)
+        const habitatSite = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, payload)
         debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
-        return application
+        return habitatSite
       } catch (error) {
         console.error(`Error creating habitat-site for ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })

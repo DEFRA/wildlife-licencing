@@ -5,55 +5,18 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 const {
-  METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT },
-  SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER }
+  METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
 } = PowerPlatformKeys
 
 const addSett = 'additional-sett'
-const settDisruptionMethods = [
-  {
-    value: OBSTRUCT_SETT_WITH_GATES,
-    text: 'Obstructing sett entrances by means of one-way badger gates'
-  },
-  {
-    value: OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
-    text: 'Obstructing access to sett entrances by blocking or proofing'
-  },
-  {
-    value: DAMAGE_A_SETT,
-    text: 'Damaging a sett by hand and mechanical means'
-  },
-  {
-    value: DESTROY_A_SETT,
-    text: 'Destruction of the vacant sett by hand and mechanical means'
-  },
-  {
-    value: DISTURB_A_SETT,
-    text: 'Disturbance of badgers'
-  }
-]
+const activityTypes = {
+  OBSTRUCT_SETT_WITH_GATES,
+  OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+  DAMAGE_A_SETT,
+  DESTROY_A_SETT,
+  DISTURB_A_SETT
+}
 
-const settTypes = [
-  {
-    value: MAIN_NO_ALTERNATIVE_SETT,
-    text: 'Main'
-  },
-  {
-    value: ANNEXE,
-    text: 'Annexe'
-  },
-  {
-    value: SUBSIDIARY,
-    text: 'Subsidiary'
-  },
-  {
-    value: OUTLIER,
-    text: 'Outlier'
-  }
-]
-
-const typeProcessor = selectedType => settTypes.filter(type => type.value === selectedType)[0].text
-const methodProcessor = selectedMethods => settDisruptionMethods.filter(method => selectedMethods.includes(method.value)).map(method => '\n' + method.text)
 export const dateProcessor = date => {
   const dateObj = new Date(date)
   const day = dateObj.getDate()
@@ -82,12 +45,12 @@ export const getData = async request => {
     pageData: []
   }
   for (const habitat of habitatSites) {
-    const habitatType = typeProcessor(habitat.settType)
-    const methodTypes = methodProcessor(habitat.methodIds)
+    const habitatType = habitat.settType
+    const methodTypes = habitat.methodIds
     const workStart = dateProcessor(habitat.workStart)
     const workEnd = dateProcessor(habitat.workEnd)
     const reopen = habitat.willReopen ? 'Yes' : 'No'
-    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd })
+    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd, activityTypes })
     data.pageData.push(habitatData)
   }
   data.confirmDelete = habitatURIs.CONFIRM_DELETE.uri

@@ -1,6 +1,8 @@
 {% extends "standard-form.njk" %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
+{% import "habitat-text.njk" as habitatText %}
+
 {% from "error-summary.njk" import errorSummary %}
 
 {% set title = 'Check your answers' %} 
@@ -34,11 +36,24 @@
     </a>
   </div>
 
+  {% macro habitatMethodsMapper(habitatMethodTypes, habitat) %}
+   
+    {% for item in habitatMethodTypes %}
+         {% for key, value in habitat.activityTypes %}
+          {% if (item == value) %}
+          {% set activityText = key %}
+            <span>{{ habitatText.habitatMethodsText[activityText] + ',' }}</span> <br>
+          {% endif %}
+        {% endfor %}
+    {% endfor %}
+    
+  {% endmacro %}
+
     {{ govukSummaryList({
     rows: [
     {
       key: {text: "Sett type"},
-      value: {text: habitat.habitatType},
+      value: {text: habitatText.habitatActivitiesText[habitat.habitatType]},
       actions: {
           items: [
             {
@@ -122,7 +137,7 @@
     },
     {
       key: {text: "Affect on badgers"},
-      value: {text: habitat.methodTypes},
+      value: {text: habitatMethodsMapper(habitat.methodTypes, habitat)},
       actions: {
           items: [
             {
