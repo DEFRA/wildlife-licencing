@@ -597,6 +597,19 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    getPreviousLicences: async applicationId => {
+      return (await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)).map(l => l.licenceNumber)
+    },
+    addPreviousLicence: async (applicationId, licenceNumber) => {
+      await API.post(`${apiUrls.APPLICATION}/${applicationId}/previous-licence`, { licenceNumber })
+    },
+    removePreviousLicence: async (applicationId, licenceNumber) => {
+      const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)
+      const foundLicence = licences.find(l => l.licenceNumber === licenceNumber)
+      if (foundLicence) {
+        await API.delete(`${apiUrls.APPLICATION}/${applicationId}/previous-licence/${foundLicence.id}`)
+      }
     }
   },
   LICENCES: {

@@ -10,12 +10,11 @@ describe('The enter licence details page', () => {
 
   describe('setData function', () => {
     it('sets the licence details in the api', async () => {
-      const mockPut = jest.fn()
+      const mockAdd = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            putExperienceById: mockPut,
-            getExperienceById: jest.fn(() => ({ licenceDetails: ['AA1234'] }))
+            addPreviousLicence: mockAdd
           }
         }
       }))
@@ -31,7 +30,7 @@ describe('The enter licence details page', () => {
       }
       const { setData } = await import('../enter-licence-details.js')
       await setData(request)
-      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { licenceDetails: ['AA1234', 'AB1234'] })
+      expect(mockAdd).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AB1234')
     })
   })
 })

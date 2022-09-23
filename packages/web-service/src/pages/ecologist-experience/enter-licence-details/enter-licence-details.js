@@ -8,10 +8,7 @@ export const completion = async () => ecologistExperienceURIs.LICENCE.uri
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
-  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  ecologistExperience.licenceDetails = ecologistExperience.licenceDetails || []
-  ecologistExperience.licenceDetails.push(request.payload['enter-licence-details'])
-  await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
+  await APIRequests.ECOLOGIST_EXPERIENCE.addPreviousLicence(applicationId, request.payload['enter-licence-details'])
 }
 
 export default pageRoute({

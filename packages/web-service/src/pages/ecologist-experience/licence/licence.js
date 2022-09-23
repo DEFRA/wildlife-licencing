@@ -7,8 +7,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  return ecologistExperience.licenceDetails
+  return APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
 }
 
 export const completion = async request => {

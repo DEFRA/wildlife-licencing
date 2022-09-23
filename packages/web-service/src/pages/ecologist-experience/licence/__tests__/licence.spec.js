@@ -87,7 +87,7 @@ describe('The licence page', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            getExperienceById: jest.fn(() => ({ licenceDetails: ['A1234'] }))
+            getPreviousLicences: jest.fn(() => (['A1234']))
           }
         }
       }))

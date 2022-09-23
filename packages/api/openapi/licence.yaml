@@ -2727,10 +2727,6 @@ components:
       properties:
         previousLicense:
           type: boolean
-        licenseDetails:
-          type: array
-          items:
-            type: string
         experienceDetails:
           type: string
           minLength: 1

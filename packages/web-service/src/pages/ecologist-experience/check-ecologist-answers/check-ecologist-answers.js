@@ -28,9 +28,10 @@ export const checkData = async (request, h) => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
   const result = [{ key: 'previousLicence', value: prt(ecologistExperience.previousLicence) }]
   if (ecologistExperience.previousLicence) {
-    result.push({ key: 'licenceDetails', value: ecologistExperience.licenceDetails.join(', ') })
+    result.push({ key: 'licenceDetails', value: previousLicences.join(', ') })
   }
   const experienceDetails = `${ecologistExperience.experienceDetails.substring(0, 100)}${ecologistExperience.experienceDetails.length > 100 ? '...' : ''}`
   const methodExperience = `${ecologistExperience.methodExperience.substring(0, 100)}${ecologistExperience.methodExperience.length > 100 ? '...' : ''}`

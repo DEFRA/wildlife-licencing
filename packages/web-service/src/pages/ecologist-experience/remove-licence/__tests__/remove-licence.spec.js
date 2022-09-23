@@ -60,12 +60,11 @@ describe('The remove licence page', () => {
     })
 
     it('does deletes a licence if the user selects \'yes\'', async () => {
-      const mockPut = jest.fn()
+      const mockRemove = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            getExperienceById: jest.fn(() => ({ licenceDetails: ['AZ1234'] })),
-            putExperienceById: mockPut
+            removePreviousLicence: mockRemove
           }
         }
       }))
@@ -88,7 +87,7 @@ describe('The remove licence page', () => {
       const { setData } = await import('../remove-licence.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
-      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { licenceDetails: [] })
+      expect(mockRemove).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AZ1234')
     })
   })
 })
