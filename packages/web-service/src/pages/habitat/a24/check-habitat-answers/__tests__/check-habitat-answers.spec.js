@@ -95,11 +95,16 @@ describe('The check habitat answers page', () => {
         pageData:
           [
             {
-              habitatType: 'Main',
+              activityTypes: {
+                DAMAGE_A_SETT: 100000012,
+                DESTROY_A_SETT: 100000013,
+                DISTURB_A_SETT: 100000014,
+                OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: 100000011,
+                OBSTRUCT_SETT_WITH_GATES: 100000010
+              },
+              habitatType: 100000000,
               methodIds: [100000011],
-              methodTypes: [
-                '\nObstructing access to sett entrances by blocking or proofing'
-              ],
+              methodTypes: [100000011],
               reopen: 'Yes',
               settType: 100000000,
               willReopen: true,
@@ -142,9 +147,16 @@ describe('The check habitat answers page', () => {
         pageData: [
           {
             settType: 100000000,
-            habitatType: 'Main',
+            activityTypes: {
+              DAMAGE_A_SETT: 100000012,
+              DESTROY_A_SETT: 100000013,
+              DISTURB_A_SETT: 100000014,
+              OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: 100000011,
+              OBSTRUCT_SETT_WITH_GATES: 100000010
+            },
+            habitatType: 100000000,
             methodIds: [100000011],
-            methodTypes: ['\nObstructing access to sett entrances by blocking or proofing'],
+            methodTypes: [100000011],
             workStart: '25 July 2023',
             workEnd: '28 July 2023',
             willReopen: false,
@@ -157,7 +169,7 @@ describe('The check habitat answers page', () => {
     it('returns the payload from the validator', async () => {
       const payload = { data: 'badgers', 'additional-sett': 'no' }
       const { validator } = await import('../check-habitat-answers.js')
-      expect(await validator(payload)).toBe(undefined)
+      expect(await validator(payload)).toBeUndefined()
     })
 
     it('if the user doesnt input a choice - it raises an error', async () => {
