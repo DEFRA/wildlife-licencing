@@ -47,8 +47,8 @@ export default pageRoute({
   validator: Joi.object({
     [page]: Joi.number().integer().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

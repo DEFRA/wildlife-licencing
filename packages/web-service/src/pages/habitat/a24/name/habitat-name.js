@@ -27,8 +27,8 @@ export default pageRoute({
   validator: Joi.object({
     'habitat-name': Joi.string().trim().pattern(nameReg).required()
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

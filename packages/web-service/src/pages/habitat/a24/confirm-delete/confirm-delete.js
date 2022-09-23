@@ -48,8 +48,8 @@ export default pageRoute({
   validator: Joi.object({
     'confirm-delete': Joi.boolean().required()
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

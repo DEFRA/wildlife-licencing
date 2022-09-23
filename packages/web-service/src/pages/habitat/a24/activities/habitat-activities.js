@@ -66,9 +66,9 @@ export const validator = async payload => {
 export default pageRoute({
   page: habitatURIs.ACTIVITIES.page,
   uri: habitatURIs.ACTIVITIES.uri,
+  checkData: checkApplication,
   validator,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

@@ -46,8 +46,8 @@ export default pageRoute({
   validator: Joi.object({
     'habitat-grid-ref': Joi.string().trim().pattern(/[a-zA-Z]{2}\d{6}/).required()
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

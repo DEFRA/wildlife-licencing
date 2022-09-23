@@ -54,8 +54,8 @@ export default pageRoute({
       OUTLIER.toString()
     ).required()
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

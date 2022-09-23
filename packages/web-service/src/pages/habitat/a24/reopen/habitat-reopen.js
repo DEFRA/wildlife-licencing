@@ -45,8 +45,8 @@ export default pageRoute({
   validator: Joi.object({
     'habitat-reopen': Joi.boolean().required()
   }).options({ abortEarly: false, allowUnknown: true }),
+  checkData: checkApplication,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })

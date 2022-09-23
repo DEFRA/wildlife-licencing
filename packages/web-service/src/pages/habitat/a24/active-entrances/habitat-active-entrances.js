@@ -73,9 +73,9 @@ export const getData = async request => {
 export default pageRoute({
   page: habitatURIs.ACTIVE_ENTRANCES.page,
   uri: habitatURIs.ACTIVE_ENTRANCES.uri,
+  checkData: checkApplication,
   validator,
   completion,
   getData,
-  setData,
-  checkData: checkApplication
+  setData
 })
