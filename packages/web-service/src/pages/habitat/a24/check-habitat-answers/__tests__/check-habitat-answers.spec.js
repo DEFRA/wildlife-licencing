@@ -187,6 +187,7 @@ describe('The check habitat answers page', () => {
       const request = {
         cache: () => ({
           getData: () => ({
+            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
             habitatData: {
               name: 'poolparty',
               applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
@@ -216,6 +217,7 @@ describe('The check habitat answers page', () => {
       const request = {
         cache: () => ({
           getData: () => ({
+            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
             habitatData: {
               name: 'poolparty',
               applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
@@ -236,6 +238,16 @@ describe('The check habitat answers page', () => {
       const { checkData } = await import('../check-habitat-answers.js')
       await checkData(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('will return applications uri  if the user has not got an application id', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const { checkData } = await import('../check-habitat-answers.js')
+      expect(await checkData(request)).toBe('/applications')
     })
   })
 })

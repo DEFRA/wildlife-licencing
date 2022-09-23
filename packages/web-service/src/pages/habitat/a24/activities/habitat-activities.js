@@ -6,6 +6,7 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { checkApplication } from '../common/check-application.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
@@ -62,4 +63,12 @@ export const validator = async payload => {
   }
 }
 
-export default pageRoute({ page: habitatURIs.ACTIVITIES.page, uri: habitatURIs.ACTIVITIES.uri, validator, completion, getData, setData })
+export default pageRoute({
+  page: habitatURIs.ACTIVITIES.page,
+  uri: habitatURIs.ACTIVITIES.uri,
+  validator,
+  completion,
+  getData,
+  setData,
+  checkData: checkApplication
+})

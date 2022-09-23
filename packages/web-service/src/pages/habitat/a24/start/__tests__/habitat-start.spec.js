@@ -29,6 +29,16 @@ describe('The habitat start page', () => {
       expect(await checkData(request)).toBe(undefined)
     })
 
+    it('will return the application uri if the user has not got an application id', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const { checkData } = await import('../habitat-start.js')
+      expect(await checkData(request)).toBe('/applications')
+    })
+
     it('the checkData returns the user to the tasklist if the journey is complete', async () => {
       const mockRedirect = jest.fn()
       const request = {

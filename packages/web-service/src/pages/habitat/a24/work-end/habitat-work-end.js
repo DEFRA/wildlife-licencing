@@ -7,6 +7,7 @@ import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
+import { checkApplication } from '../common/check-application.js'
 
 export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
@@ -76,5 +77,6 @@ export default pageRoute({
   validator,
   completion,
   getData,
-  setData
+  setData,
+  checkData: checkApplication
 })

@@ -6,6 +6,7 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
+import { checkApplication } from '../common/check-application.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -75,5 +76,6 @@ export default pageRoute({
   validator,
   completion,
   getData,
-  setData
+  setData,
+  checkData: checkApplication
 })

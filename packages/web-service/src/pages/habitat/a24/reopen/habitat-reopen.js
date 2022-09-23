@@ -5,6 +5,7 @@ import { habitatURIs } from '../../../../uris.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
+import { checkApplication } from '../common/check-application.js'
 
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
@@ -46,5 +47,6 @@ export default pageRoute({
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
   getData,
-  setData
+  setData,
+  checkData: checkApplication
 })

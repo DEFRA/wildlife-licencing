@@ -4,6 +4,8 @@ import { habitatURIs, TASKLIST } from '../../../../uris.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { checkApplication } from '../common/check-application.js'
+
 const {
   METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
 } = PowerPlatformKeys
@@ -26,12 +28,17 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
+  const redirectUrl = await checkApplication(request)
+
+  if (redirectUrl) {
+    return redirectUrl
+  }
 
   // Ensure if a user just deleted their only sett, we take them back to /tasklist
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
   // Ensure the object is populated with the correct (and enough) keys
-  if (Object.keys(journeyData.habitatData).length < 13 || habitatSites.length === 0) {
+  if (Object.keys(journeyData?.habitatData || {}).length < 13 || habitatSites.length === 0) {
     return h.redirect(TASKLIST.uri)
   }
   return undefined
