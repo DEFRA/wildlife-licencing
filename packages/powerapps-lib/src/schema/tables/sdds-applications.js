@@ -18,6 +18,12 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
   new Column(null, 'eligibility.checkCompleted', null, () => true, OperationType.INBOUND),
 
+  // The ecologist experience section
+  new Column('sdds_badgermitigationclasslicence', 'ecologistExperience.classMitigation'),
+  new Column('sdds_heldbadgerlicence', 'ecologistExperience.previousLicence'),
+  new Column('sdds_ecologistexperienceofmethods', 'ecologistExperience.methodExperience'),
+  new Column('sdds_ecologistexperienceofbadgerecology', 'ecologistExperience.experienceDetails'),
+
   new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND)
 
 ], [
@@ -55,6 +61,10 @@ export const SddsApplication = new Table('sdds_applications', [
   new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  // Ecologist experience
+  new Relationship('sdds_ecologistexperience_sdds_application', 'sdds_ecologistexperiences',
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'ecologistExperienceLicenceDetails'),
 
   // Licensable actions
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',

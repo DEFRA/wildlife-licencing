@@ -47,6 +47,14 @@ import {
 } from './handlers/licence/licence.js'
 
 import {
+  getPreviousLicences,
+  postPreviousLicence,
+  getPreviousLicence,
+  putPreviousLicence,
+  deletePreviousLicence
+} from './handlers/previous-licence/previous-licence.js'
+
+import {
   getApplicationFileUploads,
   postApplicationFileUpload,
   getApplicationFileUpload,
@@ -179,8 +187,13 @@ const handlers = {
 
   // Licences
   getApplicationLicences,
+  postPreviousLicence,
+  getPreviousLicence,
+  putPreviousLicence,
+  deletePreviousLicence,
 
   // Application-user handlers
+  getPreviousLicences,
   getApplicationUsers,
   postApplicationUser,
   getApplicationUserById,

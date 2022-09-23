@@ -51,8 +51,9 @@ export const createTableSet = (table, include = [], path = table.basePath, relat
 }
 
 /**
- * For a given table and API src data generate the set of objects which will later be rendered to
- * the update text. * @param table
+ * For a given table and API src data, search for the nested structure and generate the set of objects
+ * which will later be rendered to the update text.
+ * @param table
  * @param srcObj
  * @param tableSet
  * @returns {Promise<null|*[]|{relationshipsPayload: null|{}, id: *, columnPayload: {}}>}
@@ -225,7 +226,7 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
 function getKeys (payload, tableColumnsPayloads, table) {
   const item = get(payload, table.basePath)
   if (item) {
-    return Array.isArray(item) ? item.find(i => i.keys.apiKey === tableColumnsPayloads.id).keys : item.keys
+    return Array.isArray(item) ? item.find(i => i.keys?.apiKey === tableColumnsPayloads.id).keys : item.keys
   }
   return null
 }
@@ -236,12 +237,12 @@ function assignColumns (payload, tableColumnsPayload, contentId, table, updateOb
   updateObjects.push({
     table: table.name,
     apiTable: table.apiTable,
-    apiKey: keys.apiKey,
+    apiKey: keys?.apiKey,
     relationshipName: table.relationshipName,
     contentId: contentId,
     assignments: Object.assign(tableColumnsPayload.columnPayload,
       substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-    powerAppsId: keys.sddsKey,
+    powerAppsId: keys?.sddsKey,
     method: keys?.sddsKey ? Methods.PATCH : Methods.POST
   })
   contentId++

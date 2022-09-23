@@ -315,6 +315,28 @@ async function defineLicences (sequelize) {
   })
 }
 
+async function definePreviousLicences (sequelize) {
+  models.previousLicences = await sequelize.define('previous-licences', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    licence: { type: DataTypes.JSONB },
+    sddsPreviousLicenceId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'previous_licence_application_fk' }
+    ]
+  })
+}
+
 const ReferenceDataType = {
   attributes: {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -463,6 +485,7 @@ const createModels = async () => {
   await defineApplicationUploads(sequelize)
 
   await defineLicences(sequelize)
+  await definePreviousLicences(sequelize)
 
   // Define other things
   await defineApplicationTypes(sequelize)
@@ -518,6 +541,7 @@ const createModels = async () => {
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()
   await models.licences.sync()
+  await models.previousLicences.sync()
 
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()

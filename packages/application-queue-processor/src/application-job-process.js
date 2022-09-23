@@ -20,7 +20,7 @@ export const postProcess = async targetKeys => {
   }
 
   try {
-    for (const tk of targetKeys) {
+    for (const tk of targetKeys.filter(k => k.apiTableName)) {
       await models[tk.apiTableName].update({
         submitted: SEQUELIZE.getSequelize().fn('NOW'),
         [MODEL_MAP[tk.apiTableName].sddsKey]: tk.keys.sddsKey,
@@ -153,8 +153,20 @@ const doHabitatSites = async (applicationId, payload) => {
   }
 }
 
+const doEcologistExperience = async (_applicationId, payload) => {
+  const licenceDetails = payload.application.data?.ecologistExperience?.licenceDetails
+  if (licenceDetails) {
+    Object.assign(payload.application, {
+      ecologistExperienceLicenceDetails: licenceDetails.map(d => ({ data: { licenceDetails: d } }))
+    })
+    delete payload.application.data.ecologistExperience.licenceDetails
+  }
+}
+
 /**
- * Merge the application, contacts, accounts and sites into a single API payload object
+ * The processor anticipates a structure where associated entities have their own nested structure under applications
+ *
+ * Merge the application, contacts, accounts, ecologist experience licence details and sites into a single API payload object
  * Read the keys object and add to each section
  *
  * The structure is nested a nested hierarchy with application as the top level and
@@ -206,6 +218,10 @@ export const buildApiObject = async applicationId => {
     // Add in the habitat sites (licensable actions)
     await doHabitatSites(applicationId, payload)
 
+    // Lifts the ecologist experience licence details section up into it own section (it is a separate table
+    // in the Power Platform)
+    await doEcologistExperience(applicationId, payload)
+
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload
   } catch (error) {
@@ -231,7 +247,7 @@ export const applicationJobProcess = async job => {
     if (!payload) {
       console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)
     } else {
-    // Update the application and associated data in Power Apps
+      // Update the application and associated data in Power Apps
       const targetKeys = await applicationUpdate(payload)
       await postProcess(targetKeys)
     }
