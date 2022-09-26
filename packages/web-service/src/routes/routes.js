@@ -98,6 +98,7 @@ const routes = [
   ...checkEcologistAnswers,
   ...licence,
   ...removeLicence,
+  ...confirmDelete,
 
   signOut,
   ...miscRoutes

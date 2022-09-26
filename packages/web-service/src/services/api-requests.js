@@ -578,7 +578,7 @@ export const APIRequests = {
       try {
         return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
       } catch (error) {
-        console.error(`Error retrieving applications for ${applicationId}`, error)
+        console.error(`Error retrieving habitat-site for ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -587,7 +587,7 @@ export const APIRequests = {
       try {
         return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
       } catch (error) {
-        console.error(`Error retrieving application for ${settId} on ${applicationId}`, error)
+        console.error(`Error retrieving habitat-site for ${settId} on ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -614,9 +614,7 @@ export const APIRequests = {
   ECOLOGIST_EXPERIENCE: {
     getExperienceById: async applicationId => {
       try {
-        const ecoExperience = await API.get(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`)
-        debug(`Successfully retrieved experience data for ${applicationId}`)
-        return ecoExperience
+        return API.get(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`)
       } catch (error) {
         console.error(`Error retrieving experience for ${applicationId}`)
         Boom.boomify(error, { statusCode: 500 })
@@ -625,25 +623,42 @@ export const APIRequests = {
     },
     putExperienceById: async (applicationId, payload) => {
       try {
-        const ecoExperience = await API.put(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`, payload)
-        debug(`Successfully altered experience data for ${applicationId}`)
-        return ecoExperience
+        return API.put(`${apiUrls.APPLICATION}/${applicationId}/ecologist-experience`, payload)
       } catch (error) {
-        console.error(`Error making changes to experience for ${applicationId}`)
+        console.error(`Error putting experience for ${applicationId}`)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
     },
-    getPreviousLicences: async applicationId =>
-      (await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)).map(l => l.licenceNumber),
+    getPreviousLicences: async applicationId => {
+      try {
+        return (await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)).map(l => l.licenceNumber)
+      } catch (error) {
+        console.error(`Error getting to previous-licences for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     addPreviousLicence: async (applicationId, licenceNumber) => {
-      await API.post(`${apiUrls.APPLICATION}/${applicationId}/previous-licence`, { licenceNumber })
+      try {
+        await API.post(`${apiUrls.APPLICATION}/${applicationId}/previous-licence`, { licenceNumber })
+      } catch (error) {
+        console.error(`Error adding previous-licences for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     },
     removePreviousLicence: async (applicationId, licenceNumber) => {
-      const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)
-      const foundLicence = licences.find(l => l.licenceNumber === licenceNumber)
-      if (foundLicence) {
-        await API.delete(`${apiUrls.APPLICATION}/${applicationId}/previous-licence/${foundLicence.id}`)
+      try {
+        const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)
+        const foundLicence = licences.find(l => l.licenceNumber === licenceNumber)
+        if (foundLicence) {
+          await API.delete(`${apiUrls.APPLICATION}/${applicationId}/previous-licence/${foundLicence.id}`)
+        }
+      } catch (error) {
+        console.error(`Error removing previous-licences for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
       }
     }
   },
