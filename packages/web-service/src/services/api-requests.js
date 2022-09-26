@@ -634,9 +634,8 @@ export const APIRequests = {
         throw error
       }
     },
-    getPreviousLicences: async applicationId => {
-      return (await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)).map(l => l.licenceNumber)
-    },
+    getPreviousLicences: async applicationId =>
+      (await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)).map(l => l.licenceNumber),
     addPreviousLicence: async (applicationId, licenceNumber) => {
       await API.post(`${apiUrls.APPLICATION}/${applicationId}/previous-licence`, { licenceNumber })
     },
