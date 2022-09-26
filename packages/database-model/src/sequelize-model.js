@@ -327,7 +327,6 @@ async function definePreviousLicences (sequelize) {
     },
     licence: { type: DataTypes.JSONB },
     sddsPreviousLicenceId: { type: DataTypes.UUID },
-    submitted: { type: DataTypes.DATE },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
     timestamps: true,

@@ -16,7 +16,8 @@ export const postProcess = async targetKeys => {
     sites: { sddsKey: 'sddsSiteId' },
     contacts: { sddsKey: 'sddsContactId' },
     accounts: { sddsKey: 'sddsAccountId' },
-    habitatSites: { sddsKey: 'sddsHabitatSiteId' }
+    habitatSites: { sddsKey: 'sddsHabitatSiteId' },
+    previousLicences: { sddsKey: 'sddsPreviousLicenceId' }
   }
 
   try {
@@ -153,13 +154,21 @@ const doHabitatSites = async (applicationId, payload) => {
   }
 }
 
-const doEcologistExperience = async (_applicationId, payload) => {
-  const licenceDetails = payload.application.data?.ecologistExperience?.licenceDetails
-  if (licenceDetails) {
-    Object.assign(payload.application, {
-      ecologistExperienceLicenceDetails: licenceDetails.map(d => ({ data: { licenceDetails: d } }))
-    })
-    delete payload.application.data.ecologistExperience.licenceDetails
+const doPreviousLicences = async (applicationId, payload) => {
+  const applicationPreviousLicences = await models.previousLicences.findAll({
+    where: { applicationId }
+  })
+
+  if (applicationPreviousLicences.length) {
+    const previousLicences = applicationPreviousLicences.map(pl => ({
+      data: pl.licence,
+      keys: {
+        apiKey: pl.id,
+        sddsKey: pl.sddsPreviousLicenceId
+      }
+    }))
+
+    Object.assign(payload.application, { previousLicences })
   }
 }
 
@@ -218,9 +227,8 @@ export const buildApiObject = async applicationId => {
     // Add in the habitat sites (licensable actions)
     await doHabitatSites(applicationId, payload)
 
-    // Lifts the ecologist experience licence details section up into it own section (it is a separate table
-    // in the Power Platform)
-    await doEcologistExperience(applicationId, payload)
+    // Add in the previous licences (ecologist-experience)
+    await doPreviousLicences(applicationId, payload)
 
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload

@@ -64,7 +64,7 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Ecologist experience
   new Relationship('sdds_ecologistexperience_sdds_application', 'sdds_ecologistexperiences',
-    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'ecologistExperienceLicenceDetails'),
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'previousLicences'),
 
   // Licensable actions
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
