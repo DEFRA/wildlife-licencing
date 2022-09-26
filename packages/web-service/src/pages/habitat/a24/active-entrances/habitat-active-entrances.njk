@@ -1,0 +1,33 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-active-entrances': {
+          'number.base': { ref: '#habitat-active-entrances', text: 'Enter the number of active entrance holes' },
+          'number.integer': { ref: '#habitat-active-entrances', text: 'Active entrance holes must be a whole number' },
+          'tooManyActiveHoles': { ref: '#habitat-active-entrances', text: 'Active entrance holes cannot be more than the total holes' },
+          'number.max' : { ref: '#habitat-active-entrances', text: 'Active entrance holes must be 100 or fewer'}
+        }
+    }
+%}
+
+{% set title = 'How many of the entrance holes are active?' %}
+
+{% block pageContent %}
+
+  {{ govukInput({
+    id: "habitat-active-entrances",
+    name: "habitat-active-entrances",
+    hint: {
+      text: "Enter 0 (zero) if the sett is inactive."
+    },
+    errorMessage: { text: "Enter the number of sett holes that are active." } if error['habitat-active-entrances'],
+    classes: "govuk-input--width-5",
+    inputmode: "numeric",
+    value: data.numberOfActiveEntrances,
+    pattern: "[0-9]*",
+    spellcheck: false
+  }) }}
+
+{% endblock %}

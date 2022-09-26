@@ -1,0 +1,34 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'habitat-reopen': {
+          'any.required': { ref: '#habitat-reopen', text: 'Enter if the sett will reopen' }
+        }
+    }
+%}
+
+{% set title = 'Will the badger sett be reopened once development is complete?' %}
+
+{% block pageContent %}
+
+  {{ govukRadios({
+    id: "habitat-reopen",
+    name: "habitat-reopen",
+    errorMessage: { text: "Select an option." } if error['habitat-reopen'],
+    items: [
+      {
+        checked: data.willReopen === true,
+        value: true,
+        text: "Yes"
+      },
+      {
+        checked: data.willReopen === false,
+        value: false,
+        text: "No"
+      }
+    ]
+  }) }}
+
+{% endblock %}

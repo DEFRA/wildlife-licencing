@@ -563,13 +563,49 @@ export const APIRequests = {
    * @returns {Promise<*>}
    */
   HABITAT: {
-    create: async applicationId => {
+    create: async (applicationId, payload) => {
       try {
-        const application = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, { applicationId })
+        const habitatSite = await API.post(`${apiUrls.APPLICATION}/${applicationId}/habitat-site`, payload)
         debug(`Created habitat-site for ${JSON.stringify(applicationId)}`)
-        return application
+        return habitatSite
       } catch (error) {
         console.error(`Error creating habitat-site for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getHabitatsById: async applicationId => {
+      try {
+        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
+      } catch (error) {
+        console.error(`Error retrieving applications for ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getHabitatBySettId: async (applicationId, settId) => {
+      try {
+        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+      } catch (error) {
+        console.error(`Error retrieving application for ${settId} on ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    putHabitatById: async (applicationId, settId, payload) => {
+      try {
+        return await API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload)
+      } catch (error) {
+        console.error(`Error altering data for ${settId} on ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    deleteSett: async (applicationId, settId) => {
+      try {
+        return await API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+      } catch (error) {
+        console.error(`Error deleting sett id ${settId} on application ${applicationId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }

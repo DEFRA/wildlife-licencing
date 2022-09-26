@@ -1997,35 +1997,6 @@ describe('The API requests service', () => {
         .rejects.toThrowError()
     })
   })
-
-  describe('HABITAT requests', () => {
-    it('create calls the API connector correctly', async () => {
-      const mockPost = jest.fn(() => ({ id: 'applicationId' }))
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          post: mockPost
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.HABITAT.create('9d62e5b8-9c77-ec11-8d21-000d3a87431b')
-      expect(mockPost).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site', {
-        applicationId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
-      })
-    })
-
-    it('create rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.HABITAT.create('fred.flintstone@email.co.uk'))
-        .rejects.toThrowError()
-    })
-  })
-
   describe('FILE_UPLOAD requests', () => {
     it('record always posts a new record for a filetype of multiple', async () => {
       const mockPost = jest.fn()
@@ -2103,7 +2074,6 @@ describe('The API requests service', () => {
           objectKey: 'object-key'
         })
     })
-
     it('record rethrows an error', async () => {
       const mockGet = jest.fn(() => { throw new Error() })
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -2120,7 +2090,120 @@ describe('The API requests service', () => {
       )).rejects.toThrowError()
     })
   })
+  describe('HABITAT requests', () => {
+    it('create calls the API connector correctly', async () => {
+      const mockPost = jest.fn(() => ({ id: 'applicationId' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.create('9d62e5b8-9c77-ec11-8d21-000d3a87431b', { speciesId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
+      expect(mockPost).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site', { speciesId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
+    })
 
+    it('create rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.create('fred.flintstone@email.co.uk'))
+        .rejects.toThrowError()
+    })
+    it('create calls the API connector correctly', async () => {
+      const payload = { name: 'Corner of field' }
+      const mockPost = jest.fn(() => ({ id: 'applicationId' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.create('9d62e5b8-9c77-ec11-8d21-000d3a87431b', payload)
+      expect(mockPost).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site', { name: 'Corner of field' })
+    })
+    it('getHabitatsById rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.getHabitatsById('9d62e5b8-9c77-ec11-8d21-000d3a87431b'))
+        .rejects.toThrowError()
+    })
+    it('retrieves habitats by ID', async () => {
+      const mockGet = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.getHabitatsById('9d62e5b8-9c77-ec11-8d21-000d3a87431b')
+      expect(mockGet).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-sites')
+    })
+    it('getHabitatBySettId rethrows an error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.getHabitatBySettId('9d62e5b8-9c77-ec11-8d21-000d3a87431b'))
+        .rejects.toThrowError()
+    })
+    it('retrieves habitats by ID', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.putHabitatById('9d62e5b8-9c77-ec11-8d21-000d3a87431b', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', {})
+      expect(mockPut).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site/f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', {})
+    })
+    it('putHabitatById rethrows an error', async () => {
+      const mockPut = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.putHabitatById('9d62e5b8-9c77-ec11-8d21-000d3a87431b'))
+        .rejects.toThrowError()
+    })
+    it('deletes a habitat by ID', async () => {
+      const mockDelete = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          delete: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.deleteSett('9d62e5b8-9c77-ec11-8d21-000d3a87431b', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
+      expect(mockDelete).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site/f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
+    })
+    it('deleteSett rethrows an error', async () => {
+      const mockDelete = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.HABITAT.deleteSett('9d62e5b8-9c77-ec11-8d21-000d3a87431b', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'))
+        .rejects.toThrowError()
+    })
+  })
   describe('LICENCE requests', () => {
     it('findByApplicationId calls the API connector correctly', async () => {
       const mockGet = jest.fn()

@@ -1,0 +1,179 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% import "habitat-text.njk" as habitatText %}
+
+{% from "error-summary.njk" import errorSummary %}
+
+{% set title = 'Check your answers' %} 
+
+{% set errorMap = {
+        'additional-sett': {
+          'no-choice-made': { ref: '#additional-sett', text: 'Select yes if you want to add another sett' }
+        }
+    }
+%}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+      tag: {
+        text: "alpha"
+      },
+      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    }) }}
+ {% endblock %}
+
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+{% for habitat in data.pageData %}
+
+  <h1 class="govuk-heading-m">Sett {{habitat.name}}</h1>
+    
+  <div class="govuk-body">
+    <a class="govuk-link govuk-link--no-visited-state" href={{data.confirmDelete + "?id=" + habitat.id}}>
+      Remove sett
+    </a>
+  </div>
+
+  {% macro habitatMethodsMapper(habitatMethodTypes, habitat) %}
+   
+    {% for item in habitatMethodTypes %}
+         {% for key, value in habitat.activityTypes %}
+          {% if (item == value) %}
+          {% set activityText = key %}
+            <span>{{ habitatText.habitatMethodsText[activityText] + ',' }}</span> <br>
+          {% endif %}
+        {% endfor %}
+    {% endfor %}
+    
+  {% endmacro %}
+
+    {{ govukSummaryList({
+    rows: [
+    {
+      key: {text: "Sett type"},
+      value: {text: habitatText.habitatActivitiesText[habitat.habitatType]},
+      actions: {
+          items: [
+            {
+              href: "/habitat-types?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Reopening sett"},
+      value: {text: habitat.reopen},
+      actions: {
+          items: [
+            {
+              href: "/habitat-reopen?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Number of entrance holes"},
+      value: {text: habitat.numberOfEntrances},
+      actions: {
+          items: [
+            {
+              href: "/habitat-entrances?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Number of active entrance holes"},
+      value: {text: habitat.numberOfActiveEntrances},
+      actions: {
+          items: [
+            {
+              href: "/habitat-active-entrances?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Sett grid reference"},
+      value: {text: habitat.gridReference},
+      actions: {
+          items: [
+            {
+              href: "/habitat-grid-ref?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Work start date"},
+      value: {text: habitat.workStart},
+      actions: {
+          items: [
+            {
+              href: "/habitat-work-start?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Work end date"},
+      value: {text: habitat.workEnd},
+      actions: {
+          items: [
+            {
+              href: "/habitat-work-end?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    },
+    {
+      key: {text: "Affect on badgers"},
+      value: {text: habitatMethodsMapper(habitat.methodTypes, habitat)},
+      actions: {
+          items: [
+            {
+              href: "/habitat-activities?id=" + habitat.id,
+              text: "Change"
+            }
+          ]
+        }
+    }
+    ]
+    })}}
+    {% endfor %}
+
+    {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{{ govukRadios({
+  idPrefix: "additional-sett",
+  name: "additional-sett",
+  errorMessage: { text: 'Select an option' } if error['additional-sett'],
+  fieldset: {
+    legend: {
+      text: "Do you want to add another badger sett?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  items: [
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
+}) }}
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% set errorMap = {
+        'habitat-work-start': {
+          'no-date-sent': { ref: '#habitat-work-start', text: 'Enter a start date' },
+          'invalidDate': { ref: '#habitat-work-start', text: 'Start date must be a real date' },
+          'dateHasPassed': { ref: '#habitat-work-start', text: 'Start date must be in the future' },
+          'outsideLicence': { ref: '#habitat-work-start', text: 'The start date must be within the licence period' }
+        }
+    }
+%}
+
+{% set title = "When will the work start?" %}
+
+{% block pageContent %}
+
+  {{ govukDateInput({
+    id: "habitat-work-start",
+    namePrefix: "habitat-work-start",
+    name: "habitat-work-start",
+    errorMessage: { text: "Enter a start date for the licenced work on this sett." } if error['habitat-work-start'],
+    items: [
+      {
+        classes: "govuk-input--width-2",
+        value: data.day,
+        name: "day"
+      },
+      {
+        classes: "govuk-input--width-2",
+        value: data.month,
+        name: "month"
+      },
+      {
+        classes: "govuk-input--width-4",
+        value: data.year,
+        name: "year"
+      }
+    ],
+    hint: {
+      text: "The work must start during the licence period (from 1 May to 30 November)"
+    }
+  }) }}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'habitat-entrances': {
+          'number.base': { ref: '#habitat-entrances', text: 'Enter the total number of holes' },
+          'number.integer': { ref: '#habitat-entrances', text: 'Entrance holes must be a whole number' },
+          'number.max': { ref: '#habitat-entrances', text: 'Entrance holes must be 100 or fewer' }
+        }
+    }
+%}
+
+{% set title = 'How many entrance holes does the badger sett have?' %}
+
+{% block pageContent %}
+
+  {{ govukInput({
+    id: "habitat-entrances",
+    name: "habitat-entrances",
+    classes: "govuk-input--width-5",
+    errorMessage: { text: "Enter the number of entrance holes for this sett." } if error['habitat-entrances'],
+    inputmode: "numeric",
+    value: data.numberOfEntrances,
+    pattern: "[0-9]*",
+    spellcheck: false
+  }) }}
+
+{% endblock %}
