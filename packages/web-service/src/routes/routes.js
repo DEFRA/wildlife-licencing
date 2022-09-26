@@ -25,17 +25,18 @@ import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
-import habitatStart from '../pages/habitat/start/habitat-start.js'
-import habitatTypes from '../pages/habitat/types/habitat-types.js'
-import habitatName from '../pages/habitat/name/habitat-name.js'
-import habitatReopen from '../pages/habitat/reopen/habitat-reopen.js'
-import habitatEntrances from '../pages/habitat/entrances/habitat-entrances.js'
-import habitatActiveEntrances from '../pages/habitat/active-entrances/habitat-active-entrances.js'
-import habitatGridRef from '../pages/habitat/grid-ref/habitat-grid-ref.js'
-import habitatWorkStart from '../pages/habitat/work-start/habitat-work-start.js'
-import habitatWorkEnd from '../pages/habitat/work-end/habitat-work-end.js'
-import habitatActivities from '../pages/habitat/activities/habitat-activities.js'
-import checkHabitatAnswers from '../pages/habitat/check-habitat-answers/check-habitat-answers.js'
+import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
+import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
+import habitatName from '../pages/habitat/a24/name/habitat-name.js'
+import habitatReopen from '../pages/habitat/a24/reopen/habitat-reopen.js'
+import habitatEntrances from '../pages/habitat/a24/entrances/habitat-entrances.js'
+import habitatActiveEntrances from '../pages/habitat/a24/active-entrances/habitat-active-entrances.js'
+import habitatGridRef from '../pages/habitat/a24/grid-ref/habitat-grid-ref.js'
+import habitatWorkStart from '../pages/habitat/a24/work-start/habitat-work-start.js'
+import habitatWorkEnd from '../pages/habitat/a24/work-end/habitat-work-end.js'
+import habitatActivities from '../pages/habitat/a24/activities/habitat-activities.js'
+import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
+import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
 
 import ecologistPreviousLicense from '../pages/ecologist-experience/previous-license/previous-license.js'
 import enterLicenseDetails from '../pages/ecologist-experience/enter-license-details/enter-license-details.js'
@@ -97,6 +98,7 @@ const routes = [
   ...checkEcologistAnswers,
   ...license,
   ...removeLicense,
+  ...confirmDelete,
   signOut,
   ...miscRoutes
 ]
