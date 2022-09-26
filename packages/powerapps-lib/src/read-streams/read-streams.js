@@ -6,6 +6,7 @@ import {
   Account,
   SddsSite,
   SddsLicensableActions,
+  SddsEcologistExperience,
   SddsLicenseActivities,
   SddsLicenseMethods,
   SddsSpecies,
@@ -69,10 +70,16 @@ const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationR
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
 /* Licensable actions */
-const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
-const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplication, SddsLicenseActivities, SddsSpecies])
+const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies])
+const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies])
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
+
+/* Previous Licences (part of ecologist experience) */
+const previousLicencesRequestPath = buildRequestPath(SddsEcologistExperience, [SddsApplicationRelations])
+const previousLicencesPathTableSet = createTableSet(SddsEcologistExperience, [SddsApplicationRelations])
+const previousLicencesObjectTransformer = buildObjectTransformer(SddsEcologistExperience, previousLicencesPathTableSet)
+export const previousLicencesReadStream = () => powerAppsReadStream(previousLicencesRequestPath, previousLicencesObjectTransformer)
 
 /* Application Types */
 const applicationTypesRequestPath = buildRequestPath(SddsApplicationType)

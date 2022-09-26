@@ -1,0 +1,47 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set errorMap = {
+        'remove-licence': {
+          'any.required': { ref: '#remove-licence', text: 'You have not selected an option' }
+        }
+    }
+%}
+
+{% set title = "Are you sure you want to delete this licence?" %}
+
+{% block pageContent %}
+
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Badger mitigiation licence"
+      },
+      value: {
+        text: data
+      }
+    }
+  ]
+}) }}
+
+{{ govukRadios({
+  idPrefix: "remove-licence",
+  name: "remove-licence",
+  fieldset: {
+  },
+  items: [
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
+}) }}
+
+{% endblock %}

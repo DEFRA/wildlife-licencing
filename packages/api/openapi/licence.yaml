@@ -435,6 +435,99 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# ecologist-experience
+################################################################################################
+  '/application/{applicationId}/ecologist-experience':
+    put:
+      description: Update the application ecologist-experience details
+      summary: Create or update the application ecologist-experience details
+      operationId: putEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ecologistExperience'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application ecologist-experience details
+      summary: Get the ecologist-experience details for an application
+      operationId: getEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application ecologist-experience details
+      summary: Delete the ecologist-experience details for an application
+      operationId: deleteEcologistExperience
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
 # Eligibility
 ################################################################################################
   '/application/{applicationId}/eligibility':
@@ -560,6 +653,176 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+################################################################################################
+# Previous licences
+################################################################################################
+  '/application/{applicationId}/previous-licences':
+    get:
+      description: Get the previous licences for an application
+      summary: Get the previous licences for an application
+      operationId: getPreviousLicences
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licences'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/previous-licence':
+    post:
+      description: Create a previous licence for an application
+      summary: Create a previous licence for an application
+      operationId: postPreviousLicence
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/previous-licence/{licenceId}':
+    get:
+      description: Get a previous licence for an application
+      summary: Get a previous licence for an application
+      operationId: getPreviousLicence
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: licenceId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+        400:
+          description: Bad request. Application-account ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Put a previous licence for an application
+      summary: Get the licences for a granted application
+      operationId: putPreviousLicence
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: licenceId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+        400:
+          description: Bad request. Application-account ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Get the licences for an application
+      summary: Get the licences for a granted application
+      operationId: deletePreviousLicence
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: licenceId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The licence has been deleted
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 
 ################################################################################################
@@ -2112,103 +2375,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Ecologist-Experience
-################################################################################################
-
-  '/ecologist/{applicationId}/ecologist-experience':
-    get:
-      description: Get the ecologists experience details
-      summary: Get the ecologists experience details
-      operationId: getEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-    post:
-      description: Post the ecologist's experience details
-      summary: Post the ecologist's experience details
-      operationId: postEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ecologistExperience'
-      responses:
-        201:
-          description: The ecologist experience has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
-    put:
-      description: Create new ecologist experience or update existing experience
-      summary: Create new ecologist experience or update existing experience
-      operationId: putEcologistExperience
-      parameters:
-        - name: applicationId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: The ecologist experience has been updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        201:
-          description: The ecologist experience has been created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ecologistExperience'
-        400:
-          description: Bad request. application ID must be a uuid
-        404:
-          description: Not found
-        500:
-          description: Unexpected error on server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
 
 components:
 ################################################################################################
@@ -2298,6 +2464,8 @@ components:
           $ref: '#/components/schemas/uuid'
         eligibility:
           $ref: '#/components/schemas/eligibility'
+        ecologistExperience:
+          $ref: '#/components/schemas/ecologistExperience'
         statusCode:
           $ref: '#/components/schemas/option'
         submitted:
@@ -2556,20 +2724,9 @@ components:
 
     ecologistExperience:
       type: object
-      required:
-        - previousLicense
-        - experienceDetails
-        - methodExperience
-        - classMitigation
       properties:
-        id:
-          $ref: '#/components/schemas/uuid'
         previousLicense:
           type: boolean
-        licenseDetails:
-          type: array
-          items:
-            type: string
         experienceDetails:
           type: string
           minLength: 1

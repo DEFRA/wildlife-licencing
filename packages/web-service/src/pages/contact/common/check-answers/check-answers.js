@@ -1,16 +1,9 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { yesNoFromBool } from '../../../common/common.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
   ECOLOGIST: 'ecologist-contact-complete'
-}
-
-const prt = a => {
-  if (a === undefined) {
-    return '-'
-  } else {
-    return a ? 'yes' : 'no'
-  }
 }
 
 const addressLine1 = c => [
@@ -41,9 +34,9 @@ export const getCheckAnswersData = (contactType, accountType) => async request =
   return {
     hasAccount: !!account,
     checkYourAnswers: [
-      { key: 'contactIsUser', value: prt(contact.userId) },
+      { key: 'contactIsUser', value: yesNoFromBool(contact.userId) },
       { key: 'whoIsTheLicenceFor', value: contact.fullName },
-      { key: 'contactIsOrganisation', value: prt(!!account) },
+      { key: 'contactIsOrganisation', value: yesNoFromBool(!!account) },
       (account && { key: 'applicantOrganisations', value: account.name }),
       { key: 'address', value: addressLine(account || contact) },
       { key: 'email', value: account?.contactDetails?.email || contact?.contactDetails?.email }

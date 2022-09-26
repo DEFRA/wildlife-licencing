@@ -13,7 +13,7 @@ import sessionManager, { isStaticResource } from './session-cache/session-manage
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, contactURIs } from './uris.js'
+import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, contactURIs, ecologistExperienceURIs } from './uris.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -59,7 +59,13 @@ const additionalPageData = (request, h) => {
         applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
         ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
         applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
-        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri
+        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
+        previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
+        licenceDetails: ecologistExperienceURIs.LICENCE.uri,
+        experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
+        methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
+        classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
+        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
       },
       credentials: request.auth.credentials
     })

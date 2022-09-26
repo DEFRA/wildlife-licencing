@@ -3,7 +3,7 @@ import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
   applicationAccountsReadStream, licensableActionsReadStream,
-  licenceReadStream
+  licenceReadStream, previousLicencesReadStream
 } from '@defra/wls-powerapps-lib'
 
 import { createModels } from '@defra/wls-database-model'
@@ -17,6 +17,7 @@ import { writeApplicationAccountObject } from './write-application-account-objec
 import { writeApplicationContactObject } from './write-application-contact-object.js'
 import { writeHabitatSiteObject } from './write-habitat-site-object.js'
 import { writeLicenceObject } from './write-licence-object.js'
+import { writePreviousLicenceObject } from './write-previous-licence-object.js'
 
 const extracts = async () => {
   await databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites')
@@ -28,6 +29,7 @@ const extracts = async () => {
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
   await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
   await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
+  await databaseWriter(previousLicencesReadStream(), writePreviousLicenceObject, new Date(), '-previous-licences')
 }
 
 const proc = async () => {

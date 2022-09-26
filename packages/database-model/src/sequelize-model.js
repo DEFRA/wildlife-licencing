@@ -101,27 +101,6 @@ async function defineSites (sequelize) {
   })
 }
 
-async function defineEcologistExperience (sequelize) {
-  models.ecologistExperience = await sequelize.define('ecologist-experience', {
-    id: { type: DataTypes.UUID, primaryKey: true },
-    experience: { type: DataTypes.JSONB },
-    applicationId: {
-      type: DataTypes.UUID,
-      references: {
-        model: models.applications,
-        key: 'id'
-      }
-    },
-    submitted: { type: DataTypes.DATE },
-    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
-  }, {
-    timestamps: true,
-    indexes: [
-      { unique: true, fields: ['application_id'], name: 'ecologist_experience' }
-    ]
-  })
-}
-
 async function defineHabitatSites (sequelize) {
   models.habitatSites = await sequelize.define('habitat-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -336,6 +315,27 @@ async function defineLicences (sequelize) {
   })
 }
 
+async function definePreviousLicences (sequelize) {
+  models.previousLicences = await sequelize.define('previous-licences', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    licence: { type: DataTypes.JSONB },
+    sddsPreviousLicenceId: { type: DataTypes.UUID },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'previous_licence_application_fk' }
+    ]
+  })
+}
+
 const ReferenceDataType = {
   attributes: {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -476,8 +476,6 @@ const createModels = async () => {
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
 
-  await defineEcologistExperience(sequelize)
-
   await defineApplicationUsers(sequelize)
 
   await defineApplicationSites(sequelize)
@@ -486,6 +484,7 @@ const createModels = async () => {
   await defineApplicationUploads(sequelize)
 
   await defineLicences(sequelize)
+  await definePreviousLicences(sequelize)
 
   // Define other things
   await defineApplicationTypes(sequelize)
@@ -535,13 +534,13 @@ const createModels = async () => {
   await models.applicationUploads.sync()
   await models.habitatSites.sync()
   await models.sites.sync()
-  await models.ecologistExperience.sync()
   await models.applicationUsers.sync()
 
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()
   await models.licences.sync()
+  await models.previousLicences.sync()
 
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()

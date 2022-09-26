@@ -16,11 +16,12 @@ export const postProcess = async targetKeys => {
     sites: { sddsKey: 'sddsSiteId' },
     contacts: { sddsKey: 'sddsContactId' },
     accounts: { sddsKey: 'sddsAccountId' },
-    habitatSites: { sddsKey: 'sddsHabitatSiteId' }
+    habitatSites: { sddsKey: 'sddsHabitatSiteId' },
+    previousLicences: { sddsKey: 'sddsPreviousLicenceId' }
   }
 
   try {
-    for (const tk of targetKeys) {
+    for (const tk of targetKeys.filter(k => k.apiTableName)) {
       await models[tk.apiTableName].update({
         submitted: SEQUELIZE.getSequelize().fn('NOW'),
         [MODEL_MAP[tk.apiTableName].sddsKey]: tk.keys.sddsKey,
@@ -153,8 +154,28 @@ const doHabitatSites = async (applicationId, payload) => {
   }
 }
 
+const doPreviousLicences = async (applicationId, payload) => {
+  const applicationPreviousLicences = await models.previousLicences.findAll({
+    where: { applicationId }
+  })
+
+  if (applicationPreviousLicences.length) {
+    const previousLicences = applicationPreviousLicences.map(pl => ({
+      data: pl.licence,
+      keys: {
+        apiKey: pl.id,
+        sddsKey: pl.sddsPreviousLicenceId
+      }
+    }))
+
+    Object.assign(payload.application, { previousLicences })
+  }
+}
+
 /**
- * Merge the application, contacts, accounts and sites into a single API payload object
+ * The processor anticipates a structure where associated entities have their own nested structure under applications
+ *
+ * Merge the application, contacts, accounts, ecologist experience licence details and sites into a single API payload object
  * Read the keys object and add to each section
  *
  * The structure is nested a nested hierarchy with application as the top level and
@@ -206,6 +227,9 @@ export const buildApiObject = async applicationId => {
     // Add in the habitat sites (licensable actions)
     await doHabitatSites(applicationId, payload)
 
+    // Add in the previous licences (ecologist-experience)
+    await doPreviousLicences(applicationId, payload)
+
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload
   } catch (error) {
@@ -231,7 +255,7 @@ export const applicationJobProcess = async job => {
     if (!payload) {
       console.error(`Cannot locate application: ${applicationId} for job: ${JSON.stringify(job.data)}`)
     } else {
-    // Update the application and associated data in Power Apps
+      // Update the application and associated data in Power Apps
       const targetKeys = await applicationUpdate(payload)
       await postProcess(targetKeys)
     }

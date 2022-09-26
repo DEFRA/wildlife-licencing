@@ -9,10 +9,11 @@ import { SddsLicenseActivities } from './sdds-license-activities.js'
 import { SddsLicenseMethods } from './sdds-licensemethods.js'
 import { SddsSpecies } from './sdds-species.js'
 import { SddsLicence } from './sdds-licence.js'
+import { SddsEcologistExperience } from './sdds-ecologist-experience.js'
 
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
   SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsLicence,
-  columnSourceRemote
+  columnSourceRemote, SddsEcologistExperience
 }

@@ -2,15 +2,24 @@ describe('The check ecologist answers page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('check data function', () => {
-    it('calls the get experience end point if no experience data in cache and data is set correctly', async () => {
-      const mockGet = jest.fn(() => ({
-        previousLicense: true
-      }))
-      const mockSet = jest.fn()
+    it('redirects to the applications if applicationId is not set', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkData } = await import('../check-ecologist-answers.js')
+      await checkData(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applications')
+    })
+    it('redirects to the previous licence if the tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            getExperienceById: mockGet
+          APPLICATION: {
+            tags: () => ({
+              has: () => false
+            })
           }
         }
       }))
@@ -18,114 +27,138 @@ describe('The check ecologist answers page', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          }),
-          setData: mockSet
+          })
         })
       }
+      const h = { redirect: jest.fn() }
       const { checkData } = await import('../check-ecologist-answers.js')
-      await checkData(request)
-      expect(mockGet).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc')
-      expect(mockSet).toHaveBeenCalledWith({
-        applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-        ecologistExperience: {
-          previousLicense: true,
-          complete: true
-        }
-      })
+      await checkData(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/previous-licence')
     })
-    it('does not perform get if eco experience data already exists', async () => {
-      const mockGet = jest.fn(() => ({
-        previousLicense: true
-      }))
-      const mockSet = jest.fn()
+
+    it('returns null if tag is et', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            getExperienceById: mockGet
+          APPLICATION: {
+            tags: () => ({
+              has: () => true
+            })
           }
         }
       }))
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {
-              previousLicense: true
-            }
-          }),
-          setData: mockSet
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
         })
       }
+      const h = { }
       const { checkData } = await import('../check-ecologist-answers.js')
-      await checkData(request)
-      expect(mockGet).toHaveBeenCalledTimes(0)
-      expect(mockSet).toHaveBeenCalledTimes(0)
+      const result = await checkData(request, h)
+      expect(result).toBeNull()
     })
   })
+
   describe('get data function', () => {
-    it('sets the display variables correctly and returns the ecologist experience data', async () => {
+    it('gets the experience data from the database', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getPreviousLicences: jest.fn(() => ['D333']),
+            getExperienceById: jest.fn(() => ({
+              licenceDetails: [
+                'D333'
+              ],
+              previousLicence: true,
+              methodExperience: 'methods',
+              experienceDetails: 'experience',
+              classMitigation: true,
+              classMitigationDetails: 'AX123'
+            }))
+          }
+        }
+      }))
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {
-              previousLicense: true,
-              classMitigation: false
-            }
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
           })
         })
       }
       const { getData } = await import('../check-ecologist-answers.js')
-      expect(await getData(request)).toStrictEqual({
-        previousLicense: true,
-        classMitigation: false,
-        classMitigationDisplay: 'No',
-        previousLicenseDisplay: 'Yes'
-      })
+      const result = await getData(request)
+      expect(result).toEqual([
+        {
+          key: 'previousLicence',
+          value: 'yes'
+        },
+        {
+          key: 'licenceDetails',
+          value: 'D333'
+        },
+        {
+          key: 'experienceDetails',
+          value: 'experience'
+        },
+        {
+          key: 'methodExperience',
+          value: 'methods'
+        },
+        {
+          key: 'classMitigation',
+          value: 'yes'
+        },
+        {
+          key: 'classMitigationDetails',
+          value: 'AX123'
+        }
+      ])
     })
-    it('sets the display variables correctly if values alternate', async () => {
+    it('gets the experience data from the database - no previous, no class', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getPreviousLicences: jest.fn(() => []),
+            getExperienceById: jest.fn(() => ({
+              previousLicence: false,
+              methodExperience: 'methods',
+              experienceDetails: 'experience',
+              classMitigation: false
+            }))
+          }
+        }
+      }))
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {
-              previousLicense: false,
-              classMitigation: true
-            }
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
           })
         })
       }
       const { getData } = await import('../check-ecologist-answers.js')
-      expect(await getData(request)).toStrictEqual({
-        previousLicense: false,
-        classMitigation: true,
-        classMitigationDisplay: 'Yes',
-        previousLicenseDisplay: 'No'
-      })
+      const result = await getData(request)
+      expect(result).toEqual([
+        {
+          key: 'previousLicence',
+          value: 'no'
+        },
+        {
+          key: 'experienceDetails',
+          value: 'experience'
+        },
+        {
+          key: 'methodExperience',
+          value: 'methods'
+        },
+        {
+          key: 'classMitigation',
+          value: 'no'
+        }
+      ])
     })
   })
-  describe('set data function', () => {
-    it('deletes the ecologist data before returning to tasklist and sets the remaining data in cache', async () => {
-      const mockSet = jest.fn()
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {
-              previousLicense: true,
-              classMitigation: false
-            }
-          }),
-          setData: mockSet
-        })
-      }
-      const { setData } = await import('../check-ecologist-answers.js')
-      await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-      })
-    })
-  })
+
   describe('completion function', () => {
     it('returns the tasklist uri', async () => {
       const { completion } = await import('../check-ecologist-answers.js')

@@ -47,6 +47,14 @@ import {
 } from './handlers/licence/licence.js'
 
 import {
+  getPreviousLicences,
+  postPreviousLicence,
+  getPreviousLicence,
+  putPreviousLicence,
+  deletePreviousLicence
+} from './handlers/previous-licence/previous-licence.js'
+
+import {
   getApplicationFileUploads,
   postApplicationFileUpload,
   getApplicationFileUpload,
@@ -63,9 +71,9 @@ import {
 
 import {
   getEcologistExperience,
-  postEcologistExperience,
-  putEcologistExperience
-} from './handlers/ecologist-experience/ecologist-experience.js'
+  putEcologistExperience,
+  deleteEcologistExperience
+} from './handlers/application/ecologist-experience/ecologist-experience.js'
 
 import {
   getApplicationByApplicationId,
@@ -179,8 +187,13 @@ const handlers = {
 
   // Licences
   getApplicationLicences,
+  postPreviousLicence,
+  getPreviousLicence,
+  putPreviousLicence,
+  deletePreviousLicence,
 
   // Application-user handlers
+  getPreviousLicences,
   getApplicationUsers,
   postApplicationUser,
   getApplicationUserById,
@@ -207,8 +220,8 @@ const handlers = {
 
   // ecologist experience handlers
   getEcologistExperience,
-  postEcologistExperience,
   putEcologistExperience,
+  deleteEcologistExperience,
 
   // Miscellaneous handlers
   getApplicationTypes,

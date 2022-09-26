@@ -36,137 +36,107 @@ describe('The class mitigation page', () => {
       expect(await completion(request)).toBe('/check-ecologist-answers')
     })
   })
-  describe('set data function', () => {
-    it('does not call the api if user answers yes', async () => {
-      const mockSet = jest.fn()
-      const mockPut = jest.fn()
-      const mockPost = jest.fn()
+
+  describe('the get data function', () => {
+    it('returns the value of classMitigation when false', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            create: mockPost,
-            putExperienceById: mockPut
+            getExperienceById: jest.fn(() => ({ classMitigation: false }))
           }
         }
       }))
       const request = {
         cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'yes'
-            }
-          }),
           getData: () => ({
-            ecologistExperience: {}
-          }),
-          setData: mockSet
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
         })
       }
-      const { setData } = await import('../class-mitigation.js')
-      await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        ecologistExperience: {
-          classMitigation: true
-        }
-      })
-      expect(mockPut).toHaveBeenCalledTimes(0)
-      expect(mockPost).toHaveBeenCalledTimes(0)
+      const { getData } = await import('../class-mitigation.js')
+      const result = await getData(request)
+      expect(result).toEqual({ yesNo: 'no' })
     })
-    it('calls a post if the user answers no on the primary journey', async () => {
-      const mockSet = jest.fn()
-      const mockPut = jest.fn()
-      const mockPost = jest.fn()
-      const mockAdd = jest.fn()
+    it('returns the value of classMitigation when true', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            create: mockPost,
+            getExperienceById: jest.fn(() => ({ classMitigation: true }))
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { getData } = await import('../class-mitigation.js')
+      const result = await getData(request)
+      expect(result).toEqual({ yesNo: 'yes' })
+    })
+  })
+
+  describe('set data function', () => {
+    it('write the data to the database if \'no\'', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ classMitigationDetails: 'details' })),
             putExperienceById: mockPut
           },
           APPLICATION: {
             tags: () => ({
-              add: mockAdd,
-              has: () => false
+              add: () => jest.fn()
             })
           }
         }
       }))
       const request = {
+        payload: {
+          'yes-no': 'no'
+        },
         cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'no'
-            }
-          }),
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {}
-          }),
-          setData: mockSet
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
         })
       }
       const { setData } = await import('../class-mitigation.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-        ecologistExperience: {
-          classMitigation: false
-        }
-      })
-      expect(mockPut).toHaveBeenCalledTimes(0)
-      expect(mockPost).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', {
-        classMitigation: false
-      })
-      expect(mockAdd).toHaveBeenCalledTimes(1)
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: false })
     })
-    it('calls put if the user answers no on the return journey and deletes mitigation details', async () => {
-      const mockSet = jest.fn()
+
+    it('write the data to the database if \'yes\'', async () => {
       const mockPut = jest.fn()
-      const mockPost = jest.fn()
-      const mockAdd = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({})),
+            putExperienceById: mockPut
+          },
           APPLICATION: {
             tags: () => ({
-              add: mockAdd,
               has: () => true
             })
-          },
-          ECOLOGIST_EXPERIENCE: {
-            create: mockPost,
-            putExperienceById: mockPut
           }
         }
       }))
       const request = {
+        payload: {
+          'yes-no': 'yes'
+        },
         cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'no'
-            }
-          }),
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            ecologistExperience: {
-              classMitigationDetails: 'ZA1234'
-            }
-          }),
-          setData: mockSet
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
         })
       }
       const { setData } = await import('../class-mitigation.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({
-        applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-        ecologistExperience: {
-          classMitigation: false
-        }
-      })
-      expect(mockPost).toHaveBeenCalledTimes(0)
-      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', {
-        classMitigation: false
-      })
-      expect(mockAdd).toHaveBeenCalledTimes(0)
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: true })
     })
   })
 })

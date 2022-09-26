@@ -138,7 +138,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
-            uri: ecologistExperienceURIs.PREVIOUS_LICENSE.uri,
+            uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
             status: status => status[SECTION_TASKS.ECOLOGIST_EXPERIENCE]
               ? STATUS_VALUES.COMPLETED
               : eligibilityCheckStatus(status),

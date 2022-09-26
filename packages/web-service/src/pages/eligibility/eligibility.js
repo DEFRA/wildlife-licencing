@@ -7,6 +7,7 @@ import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { yesNoFromBool } from '../common/common.js'
 
 // The pages in the flow
 const {
@@ -179,15 +180,8 @@ export const checkYourAnswersGetData = async request => {
   }
   const journeyData = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  // Turn into an array of key, value objects, sort and map booleans to strings to help in template
-  const prt = a => {
-    if (a === undefined) {
-      return '-'
-    } else {
-      return a ? 'yes' : 'no'
-    }
-  }
 
+  // Turn into an array of key, value objects, sort and map booleans to strings to help in template
   const unneeded = q => {
     if (q === HAS_LANDOWNER_PERMISSION && eligibility[IS_OWNER_OF_LAND]) {
       return false
@@ -201,7 +195,7 @@ export const checkYourAnswersGetData = async request => {
   return Object.keys(orderKeys)
     .sort((a, b) => orderKeys[a] - orderKeys[b])
     .filter(q => unneeded(q))
-    .map(q => ({ key: q, value: prt(eligibility[q]) }))
+    .map(q => ({ key: q, value: yesNoFromBool(eligibility[q]) }))
 }
 
 export const checkYourAnswersSetData = async request => {
