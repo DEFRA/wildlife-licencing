@@ -2,14 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { APPLICATIONS, ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
-
-const prt = a => {
-  if (a === undefined) {
-    return '-'
-  } else {
-    return a ? 'yes' : 'no'
-  }
-}
+import { yesNoFromBool } from '../../common/common.js'
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -29,7 +22,7 @@ export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
   const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
-  const result = [{ key: 'previousLicence', value: prt(ecologistExperience.previousLicence) }]
+  const result = [{ key: 'previousLicence', value: yesNoFromBool(ecologistExperience.previousLicence) }]
   if (ecologistExperience.previousLicence) {
     result.push({ key: 'licenceDetails', value: previousLicences.join(', ') })
   }
@@ -37,7 +30,7 @@ export const getData = async request => {
   const methodExperience = `${ecologistExperience.methodExperience.substring(0, 100)}${ecologistExperience.methodExperience.length > 100 ? '...' : ''}`
   result.push({ key: 'experienceDetails', value: experienceDetails })
   result.push({ key: 'methodExperience', value: methodExperience })
-  result.push({ key: 'classMitigation', value: prt(ecologistExperience.classMitigation) })
+  result.push({ key: 'classMitigation', value: yesNoFromBool(ecologistExperience.classMitigation) })
   if (ecologistExperience.classMitigation) {
     result.push({ key: 'classMitigationDetails', value: ecologistExperience.classMitigationDetails })
   }
@@ -50,7 +43,7 @@ export const completion = async () => TASKLIST.uri
 export default pageRoute({
   page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page,
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
-  checkData,
-  getData,
+  checkData: checkData,
+  getData: getData,
   completion: TASKLIST.uri
 })
