@@ -1,7 +1,7 @@
 import { APPLICATIONS } from '../../../../uris.js'
 
 export const checkApplication = async request => {
-  const journeyData = request.cache().getData()
+  const journeyData = await request.cache().getData()
 
   if (!journeyData.applicationId) {
     return APPLICATIONS.uri
