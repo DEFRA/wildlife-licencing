@@ -3,12 +3,12 @@ jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-connectors-lib')
 
 describe('The application job processor', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.resetModules()
   })
 
-  afterEach(async () => {
-    jest.restoreAllMocks()
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   it('returns resolve on registration', async () => {
@@ -16,7 +16,7 @@ describe('The application job processor', () => {
       getQueue: jest.fn(() => ({
         process: jest.fn(),
         isPaused: jest.fn(() => false),
-        pause: jest.fn(),
+        close: jest.fn(),
         resume: jest.fn()
       })),
       queueDefinitions: {
@@ -37,6 +37,7 @@ describe('The application job processor', () => {
         process: jest.fn(),
         isPaused: jest.fn(() => true),
         pause: jest.fn(),
+        close: jest.fn(),
         resume: mockResume
       })),
       queueDefinitions: {
@@ -51,15 +52,15 @@ describe('The application job processor', () => {
     expect(getQueue).toHaveBeenCalledWith(queueDefinitions.APPLICATION_QUEUE)
   })
 
-  it('pauses queue when terminated with SIGINT', async () => {
-    const mockPause = jest.fn()
+  it('closes queue when terminated with SIGINT', async () => {
+    const mockClose = jest.fn()
     jest.mock('@defra/wls-queue-defs', () => ({
       getQueue: jest.fn(() => ({
         process: jest.fn(() => {
           process.emit('SIGINT')
         }),
         isPaused: jest.fn(),
-        pause: mockPause,
+        close: mockClose,
         resume: jest.fn()
       })),
       queueDefinitions: {
@@ -73,23 +74,20 @@ describe('The application job processor', () => {
         console.log(code)
       })
 
-    await expect(async () => {
-      await worker()
-    }).not.toThrowError()
-
+    await worker()
     expect(processExitSpy).toHaveBeenCalledWith(1)
-    expect(mockPause).toHaveBeenCalled()
+    expect(mockClose).toHaveBeenCalled()
   })
 
-  it('pauses queue when terminated with SIGTERM', async () => {
-    const mockPause = jest.fn()
+  it('closes queue when terminated with SIGTERM', async () => {
+    const mockClose = jest.fn()
     jest.mock('@defra/wls-queue-defs', () => ({
       getQueue: jest.fn(() => ({
         process: jest.fn(() => {
           process.emit('SIGTERM')
         }),
         isPaused: jest.fn(),
-        pause: mockPause,
+        close: mockClose,
         resume: jest.fn()
       })),
       queueDefinitions: {
@@ -103,12 +101,8 @@ describe('The application job processor', () => {
         console.log(code)
       })
 
-    await expect(async () => {
-      await worker()
-    }).not.toThrowError()
-
+    await worker()
     expect(processExitSpy).toHaveBeenCalledWith(1)
-    expect(mockPause).toHaveBeenCalled()
-    jest.restoreAllMocks()
+    expect(mockClose).toHaveBeenCalled()
   })
 })
