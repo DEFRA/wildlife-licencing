@@ -7,18 +7,18 @@ export const worker = async () => {
   // Handle shutdown gracefully
   process.on('SIGTERM', async () => {
     console.info('SIGTERM signal received. Completing current job before shutting down...')
-    await applicationQueue.pause()
+    await applicationQueue.close()
     process.exit(1)
   })
 
   process.on('SIGINT', async () => {
     console.info('SIGINT signal received. Completing current job before shutting down...')
-    await applicationQueue.pause()
+    await applicationQueue.close()
     process.exit(1)
   })
 
   applicationQueue.process(applicationJobProcess)
-  if (applicationQueue.isPaused()) {
+  if (await applicationQueue.isPaused()) {
     console.log('Un-pausing application queue')
     await applicationQueue.resume()
   }
