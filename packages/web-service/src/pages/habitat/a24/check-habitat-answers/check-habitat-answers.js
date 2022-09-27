@@ -7,6 +7,7 @@ import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
 
 const {
+  SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
   METHOD_IDS: { OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, OBSTRUCT_SETT_WITH_GATES, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT }
 } = PowerPlatformKeys
 
@@ -17,6 +18,13 @@ const activityTypes = {
   DAMAGE_A_SETT,
   DESTROY_A_SETT,
   DISTURB_A_SETT
+}
+
+const settTypes = {
+  MAIN_NO_ALTERNATIVE_SETT,
+  ANNEXE,
+  SUBSIDIARY,
+  OUTLIER
 }
 
 export const dateProcessor = date => {
@@ -57,7 +65,7 @@ export const getData = async request => {
     const workStart = dateProcessor(habitat.workStart)
     const workEnd = dateProcessor(habitat.workEnd)
     const reopen = habitat.willReopen ? 'Yes' : 'No'
-    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd, activityTypes })
+    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd, activityTypes, settTypes })
     data.pageData.push(habitatData)
   }
   data.confirmDelete = habitatURIs.CONFIRM_DELETE.uri

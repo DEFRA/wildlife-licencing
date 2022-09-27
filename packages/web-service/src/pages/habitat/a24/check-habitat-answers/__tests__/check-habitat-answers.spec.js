@@ -107,6 +107,12 @@ describe('The check habitat answers page', () => {
               methodTypes: [100000011],
               reopen: 'Yes',
               settType: 100000000,
+              settTypes: {
+                ANNEXE: 100000002,
+                MAIN_NO_ALTERNATIVE_SETT: 100000000,
+                OUTLIER: 100000003,
+                SUBSIDIARY: 100000006
+              },
               willReopen: true,
               workEnd: '28 July 2023',
               workStart: '25 July 2023'
@@ -154,6 +160,12 @@ describe('The check habitat answers page', () => {
               OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: 100000011,
               OBSTRUCT_SETT_WITH_GATES: 100000010
             },
+            settTypes: {
+              ANNEXE: 100000002,
+              MAIN_NO_ALTERNATIVE_SETT: 100000000,
+              OUTLIER: 100000003,
+              SUBSIDIARY: 100000006
+            },
             habitatType: 100000000,
             methodIds: [100000011],
             methodTypes: [100000011],
@@ -172,7 +184,7 @@ describe('The check habitat answers page', () => {
       expect(await validator(payload)).toBeUndefined()
     })
 
-    it('if the user doesnt input a choice - it raises an error', async () => {
+    it('if the user does not input a choice - it raises an error', async () => {
       try {
         const payload = {}
         const { validator } = await import('../check-habitat-answers.js')
@@ -189,7 +201,7 @@ describe('The check habitat answers page', () => {
           getData: () => ({
             applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
             habitatData: {
-              name: 'poolparty',
+              name: 'pool party',
               applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
               settType: 100000002,
               willReopen: true,
@@ -219,7 +231,7 @@ describe('The check habitat answers page', () => {
           getData: () => ({
             applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
             habitatData: {
-              name: 'poolparty',
+              name: 'pool party',
               applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
               settType: 100000002,
               willReopen: true,
@@ -232,6 +244,22 @@ describe('The check habitat answers page', () => {
               methodIds: [100000010, 100000011],
               speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
             }
+          })
+        })
+      }
+      const { checkData } = await import('../check-habitat-answers.js')
+      await checkData(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('should checks the journeyData object length and returns tasklist URL if it is empty', async () => {
+      const h = {
+        redirect: jest.fn()
+      }
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f'
           })
         })
       }
