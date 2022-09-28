@@ -6,6 +6,8 @@ export const address = [
   new Column('sdds_address1_buildingnumber', 'address.buildingNumber'),
   new Column('address1_line1', 'address.street'),
   new Column('address1_line2', 'address.locality'),
+  new Column('address1_line1', 'address.addressLine1'),
+  new Column('address1_line2', 'address.addressLine2'),
   new Column('address1_line3', 'address.dependentLocality'),
   new Column('address1_city', 'address.town'),
   new Column('address1_county', 'address.county'),

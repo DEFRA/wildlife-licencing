@@ -28,6 +28,7 @@ export const setUserData = (contactType, accountType) => async request => {
     }
   } else {
     // Create a contact here, it may be removed one is selected from contact names
+    await contactOps.unAssign()
     await contactOps.create(false)
     await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
   }

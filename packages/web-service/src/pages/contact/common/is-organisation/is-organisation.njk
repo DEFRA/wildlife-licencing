@@ -14,7 +14,8 @@
         },
         'organisation-name': {
             'string.empty': { ref: '#organisation-name', text: noneNamed },
-            'string.pattern.base': { ref: '#organisation-name', text: badName }
+            'string.pattern.base': { ref: '#organisation-name', text: badName },
+            'any.invalid': { ref: '#name', text: 'The name \'' + payload['organisation-name'] + '\' has already been used, enter a unique name'  }
         }
     }
 %}

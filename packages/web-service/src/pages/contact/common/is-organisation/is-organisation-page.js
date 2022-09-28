@@ -1,24 +1,34 @@
 // The organisation allows language characters, numbers, hyphens spaces and the full-stop
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
+import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 
 const nameReg = /^[/\s\p{L}\d.-]{1,160}$/u
 
-const validator = Joi.object({
-  'is-organisation': Joi.any().valid('yes', 'no').required(),
-  'organisation-name': Joi.alternatives().conditional('is-organisation', {
-    is: 'yes',
-    then: Joi.string().trim().pattern(nameReg).required(),
-    otherwise: Joi.any().optional()
-  })
-}).options({ abortEarly: false, allowUnknown: true })
+export const getValidator = accountType => async (payload, context) => {
+  const cd = cacheDirect(context)
+  const { userId } = await cd.getData()
+  const accounts = await APIRequests[accountType].findByUser(userId)
+  const names = accounts.map(c => c.name).filter(c => c)
 
-export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }) => pageRoute({
+  const schema = Joi.object({
+    'is-organisation': Joi.any().valid('yes', 'no').required(),
+    'organisation-name': Joi.alternatives().conditional('is-organisation', {
+      is: 'yes',
+      then: Joi.string().trim().replace(/((\s+){2,})/gm, '$2').pattern(nameReg).invalid(...names).insensitive().required(),
+      otherwise: Joi.any().optional()
+    })
+  }).options({ abortEarly: false, allowUnknown: true })
+  Joi.assert(payload, schema, 'name', { abortEarly: false, allowUnknown: true })
+}
+
+export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }, accountType) => pageRoute({
   page,
   uri,
   checkData,
   getData,
-  validator,
   setData,
-  completion
+  completion,
+  validator: getValidator(accountType)
 })
