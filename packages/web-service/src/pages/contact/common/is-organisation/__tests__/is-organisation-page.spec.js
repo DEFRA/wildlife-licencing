@@ -9,8 +9,8 @@ describe('is-organisation page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT: {
-          findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }])
+        APPLICANT_ORGANISATION: {
+          findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }, {}])
         }
       }
     }))
