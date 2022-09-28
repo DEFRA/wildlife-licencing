@@ -49,11 +49,22 @@
     
   {% endmacro %}
 
+  {% macro habitatTypeMapper(habitatType, habitat) %}
+   
+    {% for key, value in habitat.settTypes %}
+      {% if (habitatType == value) %}
+        {% set settTypeText = key %}
+           <span>{{ habitatText.habitatActivitiesText[settTypeText]}}</span> <br>
+      {% endif %}
+    {% endfor %}
+  
+  {% endmacro %}
+
     {{ govukSummaryList({
     rows: [
     {
       key: {text: "Sett type"},
-      value: {text: habitatText.habitatActivitiesText[habitat.habitatType]},
+      value: {text: habitatTypeMapper(habitat.habitatType, habitat)},
       actions: {
           items: [
             {
