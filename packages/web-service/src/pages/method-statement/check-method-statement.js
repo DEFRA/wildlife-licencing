@@ -23,7 +23,7 @@ export const getData = async request => {
 export const completion = async request => {
   const { applicationId, fileUpload } = await request.cache().getData()
   if (applicationId && fileUpload) {
-    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.METHOD_STATEMENT)
+    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
     return TASKLIST.uri
   } else {
     return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri

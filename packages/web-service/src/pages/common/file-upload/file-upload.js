@@ -6,9 +6,9 @@ import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
 
 export const FILETYPES = {
-  METHOD_STATEMENT: {
+  SUPPORTING_INFORMATION: {
     filetype: 'METHOD-STATEMENT',
-    multiple: false
+    multiple: true
   }
 }
 

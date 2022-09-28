@@ -68,7 +68,7 @@ describe('the check-method-statement page handler', () => {
       const result = await completion(request)
       expect(result).toEqual('/tasklist')
       expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
-        { filetype: 'METHOD-STATEMENT', multiple: false })
+        { filetype: 'METHOD-STATEMENT', multiple: true })
     })
 
     it('returns to the upload page if no upload found in the cache', async () => {
