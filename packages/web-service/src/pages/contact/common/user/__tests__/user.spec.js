@@ -135,10 +135,11 @@ describe('the user page', () => {
       }))
 
       const mockCreate = jest.fn()
-
+      const mockUnAssign = jest.fn()
       jest.doMock('../../common.js', () => ({
         contactOperations: () => ({
-          create: mockCreate
+          create: mockCreate,
+          unAssign: mockUnAssign
         })
       }))
 
@@ -154,6 +155,7 @@ describe('the user page', () => {
       }
       await setUserData('APPLICANT', 'APPLICANT_ORGANIZATION')(request)
       expect(mockCreate).toHaveBeenCalledWith(false)
+      expect(mockUnAssign).toHaveBeenCalled()
     })
   })
 

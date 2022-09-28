@@ -7,7 +7,7 @@
 
         <div hidden>
             {% for field, type in error %}
-               {{ errList.push({ text: errorMap[field][type].text, href: errorMap[field][type].ref }) }}
+               {{ errList.push({ html: errorMap[field][type].text, href: errorMap[field][type].ref }) }}
             {% endfor %}
         </div>
 
