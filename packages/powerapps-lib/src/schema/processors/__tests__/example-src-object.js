@@ -315,7 +315,9 @@ export const applicationResponseTransformedDataObject = {
         locality: 'henleaze',
         postcode: 'BS1',
         street: 'the grove',
-        town: 'briz'
+        town: 'briz',
+        addressLine1: 'the grove',
+        addressLine2: 'henleaze'
       },
       contactDetails: {
         email: 'me@email.com'
@@ -329,6 +331,8 @@ export const applicationResponseTransformedDataObject = {
         county: 'Somerset',
         dependentLocality: 'Nr. Bristol',
         locality: 'Stapleton',
+        addressLine1: 'Old Hill',
+        addressLine2: 'Stapleton',
         postcode: 'BS11',
         street: 'Old Hill',
         town: 'Bristol'
@@ -344,6 +348,8 @@ export const applicationResponseTransformedDataObject = {
         dependentLocality: 'a3',
         locality: 'a2',
         postcode: '876',
+        addressLine1: 'a1',
+        addressLine2: 'a2',
         street: 'a1',
         town: 't1'
       },
