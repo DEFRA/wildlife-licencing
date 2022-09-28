@@ -16,9 +16,9 @@ const options = {
 let clamScan
 
 export const initializeClamScan = async () => {
-  // If you run an M1 based architecutre, the clamscan image doesn't currently work when developing locally
+  // If you run an M1 based architecture, the clamscan image doesn't currently work when developing locally
   // env var makes it more configurable to just turn it off when debugging
-  if (process.env.SCANNING_REQUIRED) {
+  if (!process.env.NO_SCANNING_REQUIRED) {
     try {
       const cs = new NodeClam()
       clamScan = await cs.init(options)
