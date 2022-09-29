@@ -4,6 +4,8 @@ import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILETYPES } from '../common/file-upload/file-upload.js'
 import Joi from 'joi'
 
+const anotherFileUpload = 'another-file-check'
+
 export const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
   // If not, bounce the user back to the file-upload page
@@ -17,15 +19,15 @@ export const checkData = async (request, h) => {
 }
 
 export const validator = async payload => {
-  if (!payload['another-file-check']) {
+  if (!payload[anotherFileUpload]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: Option for another file upload has not been chosen',
-      path: ['another-file-check'],
+      path: [anotherFileUpload],
       type: 'no-choice-made',
       context: {
-        label: 'another-file-check',
+        label: anotherFileUpload,
         value: 'Error',
-        key: 'another-file-check'
+        key: anotherFileUpload
       }
     }], null)
   }
@@ -42,7 +44,7 @@ export const completion = async request => {
 
   if (applicationId && fileUpload) {
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
-    if (pageData.payload['another-file-check'] === 'yes') {
+    if (pageData.payload[anotherFileUpload] === 'yes') {
       return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
     }
     return TASKLIST.uri
