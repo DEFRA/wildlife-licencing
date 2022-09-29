@@ -25,6 +25,8 @@ import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
+import siteName from '../pages/site/site-name/site-name.js'
+
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
 import habitatName from '../pages/habitat/a24/name/habitat-name.js'
@@ -78,6 +80,7 @@ const routes = [
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
+  ...siteName,
   ...habitatStart,
   ...habitatName,
   ...habitatActiveEntrances,

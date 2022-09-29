@@ -72,6 +72,10 @@ export const contactURIs = {
   }
 }
 
+export const siteURIs = {
+  NAME: { uri: '/site-name', page: 'site-name' }
+}
+
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
