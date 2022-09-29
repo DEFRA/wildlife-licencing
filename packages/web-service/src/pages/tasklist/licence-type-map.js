@@ -1,4 +1,13 @@
-import { eligibilityURIs, contactURIs, DECLARATION, FILE_UPLOADS, habitatURIs, TASKLIST, ecologistExperienceURIs } from '../../uris.js'
+import {
+  eligibilityURIs,
+  contactURIs,
+  DECLARATION,
+  FILE_UPLOADS,
+  habitatURIs,
+  TASKLIST,
+  ecologistExperienceURIs,
+  siteURIs
+} from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
 
@@ -125,8 +134,9 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SITES,
-            uri: '/',
-            status: () => STATUS_VALUES.CANNOT_START_YET
+            uri: siteURIs.NAME.uri,
+            status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
           },
           {
             name: SECTION_TASKS.SETTS,
