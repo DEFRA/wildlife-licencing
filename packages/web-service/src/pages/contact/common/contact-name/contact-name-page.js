@@ -2,7 +2,7 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
-const nameReg = /^[/\s\p{L}-]{1,160}$/u
+const nameReg = /^[/\s\p{L}'-.,]{1,160}$/u
 
 export const getValidator = contactType => async (payload, context) => {
   const cd = cacheDirect(context)

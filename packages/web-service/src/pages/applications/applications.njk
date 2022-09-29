@@ -82,19 +82,21 @@
      </div>
 {% endfor %}
 
-{{ govukTable({
-  captionClasses: "govuk-table__caption--m",
-  firstCellIsHeader: true,
-  head: [
-    {
-      text: "Application"
-    },
-    {
-      text: "Site",
-      colspan: 3
-    }
-  ],
-  rows: tableRows
-}) }}
+{% if tableRows.length %}
+    {{ govukTable({
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      head: [
+        {
+          text: "Application"
+        },
+        {
+          text: "Site",
+          colspan: 3
+        }
+      ],
+      rows: tableRows
+    }) }}
+{% endif %}
 
 {% endblock %}
