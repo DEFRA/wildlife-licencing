@@ -1,36 +1,70 @@
 {% extends 'layout.njk' %}
 {% from "button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "error-summary.njk" import errorSummary %}
 
-{% block pageTitle %}Check your answers{% endblock %}
+{% set errorMap = {
+        'another-file-check': {
+          'no-choice-made': { ref: '#another-file-check', text: 'Select yes if you want to upload another file' }
+        }
+    }
+%}
+
+{% set title = 'Supporting information{% endblock' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block content %}
 
-<h1 class="govuk-heading-xl">Check your answers</h1>
+{{ errorSummary(error, errorMap, 'There is a problem') }}
+
+<h1 class="govuk-heading-xl">Supporting information</h1>
 
 <div class="govuk-grid-row">
 	<div class="govuk-grid-column-two-thirds">
         <dl class="govuk-summary-list">
 
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Method statement</dt>
+                <dt class="govuk-summary-list__key">Uploaded file</dt>
                 <dd class="govuk-summary-list__value">
                     {{ data.filename }}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link govuk-link--no-visited-state" href="{{ data.change }}">
-                        Change<span class="govuk-visually-hidden"></span>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/check-method-statement"  name: "remove-file">
+                        Remove<span class="govuk-visually-hidden"></span>
                     </a>
                 </dd>
             </div>
 
         </dl>
         <form method="post">
-            <div class="govuk-form-group">
-                {{ govukButton({
-                    text: "Continue to upload",
-                    attributes: { id: 'continue' }
-                })}}
-            </div>
+          {{ govukRadios({
+            idPrefix: "another-file-check",
+            name: "another-file-check",
+            errorMessage: { text: 'Select an option' } if error['another-file-check'],
+            fieldset: {
+              legend: {
+                text: "Do you want to upload another file?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "yes",
+                text: "Yes"
+              },
+              {
+                value: "no",
+                text: "No"
+              }
+            ]
+          }) }}
+          <div class="govuk-form-group">
+            {{ govukButton({
+              text: "Continue",
+              attributes: { id: 'continue' }
+            })}}
+          </div>
         </form>
 	</div>
 </div>

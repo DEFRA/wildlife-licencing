@@ -2,6 +2,7 @@ import { FILE_UPLOADS, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILETYPES } from '../common/file-upload/file-upload.js'
+import Joi from 'joi'
 
 export const checkData = async (request, h) => {
   // You can't hit this page directly, unless you've already uploaded a file
@@ -15,15 +16,35 @@ export const checkData = async (request, h) => {
   return null
 }
 
+export const validator = async payload => {
+  if (!payload['another-file-check']) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: Option for another file upload has not been chosen',
+      path: ['another-file-check'],
+      type: 'no-choice-made',
+      context: {
+        label: 'another-file-check',
+        value: 'Error',
+        key: 'another-file-check'
+      }
+    }], null)
+  }
+}
+
 export const getData = async request => {
   const { fileUpload } = await request.cache().getData()
   return { filename: fileUpload.filename, change: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri }
 }
 
 export const completion = async request => {
+  const pageData = await request.cache().getPageData()
   const { applicationId, fileUpload } = await request.cache().getData()
+
   if (applicationId && fileUpload) {
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
+    if (pageData.payload['another-file-check'] === 'yes') {
+      return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
+    }
     return TASKLIST.uri
   } else {
     return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
@@ -34,6 +55,7 @@ export const checkMethodStatement = pageRoute({
   page: FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.page,
   uri: FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.uri,
   checkData,
+  validator,
   getData,
   completion
 })

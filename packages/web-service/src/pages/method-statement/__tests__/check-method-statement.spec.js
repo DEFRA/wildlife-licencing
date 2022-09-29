@@ -57,6 +57,11 @@ describe('the check-method-statement page handler', () => {
           getData: () => ({
             fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
             applicationId: 123
+          }),
+          getPageData: () => ({
+            payload: {
+              'another-file-check': 'no'
+            }
           })
         })
       }
@@ -76,12 +81,55 @@ describe('the check-method-statement page handler', () => {
         cache: () => ({
           getData: () => ({
             applicationId: 123
+          }),
+          getPageData: () => ({
+            payload: {
+              'another-file-check': 'no'
+            }
           })
         })
       }
       const { completion } = await import('../check-method-statement.js')
       const result = await completion(request)
       expect(result).toEqual('/upload-method-statement')
+    })
+
+    it('should returns to the upload page if the user selected yes to upload another file', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
+            applicationId: 123
+          }),
+          getPageData: () => ({
+            payload: {
+              'another-file-check': 'yes'
+            }
+          })
+        })
+      }
+      const { completion } = await import('../check-method-statement.js')
+      const result = await completion(request)
+      expect(result).toEqual('/upload-method-statement')
+    })
+
+    it('should display a validation error if the user does not input a choice for another file upload', async () => {
+      try {
+        const payload = {}
+        const { validator } = await import('../check-method-statement.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: Option for another file upload has not been chosen')
+      }
+    })
+
+    it('should not display an error if the user input a choice for another file upload', async () => {
+      const payload = {
+        'another-file-check': 'no'
+      }
+      const { validator } = await import('../check-method-statement.js')
+      expect(await validator(payload)).toBeUndefined()
     })
   })
 })
