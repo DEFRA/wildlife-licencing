@@ -28,11 +28,13 @@ describe('the user page', () => {
           USER: {
             getById: jest.fn(() => ({ username: 'Keith Moon' }))
           },
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => null),
-            findByUser: jest.fn(() => [{
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
-            }])
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null),
+              findByUser: jest.fn(() => [{
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
+              }])
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -73,13 +75,15 @@ describe('the user page', () => {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
           },
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => null),
-            findByUser: jest.fn(() => [{
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-              userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-              updatedAt: '2022-09-13T08:23:45'
-            }])
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null),
+              findByUser: jest.fn(() => [{
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+                userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
+                updatedAt: '2022-09-13T08:23:45'
+              }])
+            })
           }
         }
       }))
@@ -118,13 +122,15 @@ describe('the user page', () => {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
           },
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => null),
-            findByUser: jest.fn(() => [{
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-              userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-              updatedAt: '2022-09-13T08:23:45'
-            }])
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null),
+              findByUser: jest.fn(() => [{
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+                userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
+                updatedAt: '2022-09-13T08:23:45'
+              }])
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -163,10 +169,10 @@ describe('the user page', () => {
     it('if yes, returns the name page with a mutable contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
+            }),
             isImmutable: () => false
           }
         }
@@ -190,16 +196,16 @@ describe('the user page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
-          },
-          APPLICANT_ORGANISATION: {
-            findByUser: jest.fn(() => [{ id: 'f8387a83-1165-42e6-afab-add01e77bc4c' }])
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
+            }),
             isImmutable: () => true
           },
           ACCOUNT: {
+            role: () => ({
+              findByUser: jest.fn(() => [{ id: 'f8387a83-1165-42e6-afab-add01e77bc4c' }])
+            }),
             isImmutable: () => false
           }
         }
@@ -223,14 +229,16 @@ describe('the user page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
-          },
-          APPLICANT_ORGANISATION: {
-            findByUser: jest.fn(() => [])
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
+            }),
             isImmutable: () => true
+          },
+          ACCOUNT: {
+            role: () => ({
+              findByUser: jest.fn(() => [])
+            })
           }
         }
       }))
@@ -253,8 +261,10 @@ describe('the user page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            findByUser: jest.fn(() => [])
+          CONTACT: {
+            role: () => ({
+              findByUser: jest.fn(() => [])
+            })
           }
         }
       }))
@@ -277,10 +287,10 @@ describe('the user page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            findByUser: jest.fn(() => [{ id: '34b5c443-e5e0-4d81-9daa-671a21bd88ca', fullName: 'Keith' }])
-          },
           CONTACT: {
+            role: () => ({
+              findByUser: jest.fn(() => [{ id: '34b5c443-e5e0-4d81-9daa-671a21bd88ca', fullName: 'Keith' }])
+            }),
             isImmutable: () => false
           }
         }

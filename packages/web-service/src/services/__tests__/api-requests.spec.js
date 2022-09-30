@@ -725,6 +725,11 @@ describe('The API requests service', () => {
   })
 
   describe('CONTACT requests by role', () => {
+    it('throws with an unknown role', async () => {
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role('bad')).toThrow()
+    })
+
     it('getByApplicationId calls the API correctly', async () => {
       const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -1064,6 +1069,11 @@ describe('The API requests service', () => {
   })
 
   describe('ACCOUNT REQUESTS BY role', () => {
+    it('throws with an unknown role', async () => {
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role('bad')).toThrow()
+    })
+
     it('getByApplicationId calls the API correctly', async () => {
       const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
       jest.doMock('@defra/wls-connectors-lib', () => ({

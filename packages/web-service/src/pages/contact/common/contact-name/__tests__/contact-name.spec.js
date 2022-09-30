@@ -7,8 +7,10 @@ describe('contact-name page', () => {
     it('returns the contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
+            })
           }
         }
       }))
@@ -55,10 +57,10 @@ describe('contact-name page', () => {
     it('if an immutable account is associated return to the check your answers page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
+            }),
             isImmutable: () => true
           }
         }
@@ -82,10 +84,10 @@ describe('contact-name page', () => {
     it('if a mutable account is associated and no contact details are present, return to the email page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
+            }),
             isImmutable: () => false
           }
         }
@@ -109,13 +111,13 @@ describe('contact-name page', () => {
     it('if a mutable account is associated and no address is present, return to the postcode page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-              contactDetails: { email: 'rwood@email.com' }
-            }))
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+                contactDetails: { email: 'rwood@email.com' }
+              }))
+            }),
             isImmutable: () => false
           }
         }
@@ -139,14 +141,14 @@ describe('contact-name page', () => {
     it('if a mutable account is associated and an address is present, return to the check page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-              contactDetails: { email: 'rwood@email.com' },
-              address: 'Address'
-            }))
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+                contactDetails: { email: 'rwood@email.com' },
+                address: 'Address'
+              }))
+            }),
             isImmutable: () => false
           }
         }
@@ -171,13 +173,13 @@ describe('contact-name page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null),
-            findByUser: jest.fn(() => [{
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
-            }])
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null),
+              findByUser: jest.fn(() => [{
+                id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
+              }])
+            }),
             isImmutable: () => false
           }
         }
@@ -202,11 +204,11 @@ describe('contact-name page', () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null),
-            findByUser: jest.fn(() => [])
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null),
+              findByUser: jest.fn(() => [])
+            }),
             isImmutable: () => false
           }
         }

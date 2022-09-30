@@ -12,11 +12,15 @@ describe('the email-address page', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', contactDetails: { email: 'Keith@therollingstones.com' } }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', contactDetails: { email: 'Keith@therollingstones.com' } }))
+            })
           }
         }
       }))
@@ -36,11 +40,15 @@ describe('the email-address page', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           }
         }
       }))
@@ -79,8 +87,10 @@ describe('the email-address page', () => {
     it('if an account is assigned redirect to the postcode page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+            })
           }
         }
       }))
@@ -105,11 +115,13 @@ describe('the email-address page', () => {
     it('if an account is assigned and has an address, redirect to the check page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({
-              id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
-              address: 'Address'
-            }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+                address: 'Address'
+              }))
+            })
           }
         }
       }))
@@ -134,11 +146,15 @@ describe('the email-address page', () => {
     it('if no account is assigned redirect to the postcode page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           }
         }
       }))
@@ -163,14 +179,18 @@ describe('the email-address page', () => {
     it('if no account is assigned and the contact has an address, redirect to the check page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({
-              id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
-              address: 'Address'
-            }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+                address: 'Address'
+              }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           }
         }
       }))
