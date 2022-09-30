@@ -27,7 +27,11 @@ const apiUrls = {
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
   APPLICATION_ACCOUNTS: '/application-accounts',
-  APPLICATION_ACCOUNT: '/application-account'
+  APPLICATION_ACCOUNT: '/application-account',
+  SITE: '/site',
+  SITES: '/sites',
+  APPLICATION_SITE: '/application-site',
+  APPLICATION_SITES: '/application-sites'
 }
 
 const getContactByApplicationId = async (role, applicationId) => {
@@ -554,6 +558,59 @@ export const APIRequests = {
     update: async (applicationId, account) => updateAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, account),
     getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
     findByUser: async userId => findAccountByUser(accountRoles['ECOLOGIST-ORGANISATION'], userId)
+  },
+
+  /**
+   * Application sites
+   */
+  SITE: {
+    /**
+     * Create a site and associate it with an application
+     * @param applicationId
+     * @param site
+     * @returns {Promise<void>}
+     */
+    create: async (applicationId, payload) => {
+      try {
+        const site = await API.post(apiUrls.SITE, payload)
+        await API.post(apiUrls.APPLICATION_SITE, { applicationId, siteId: site.id })
+        return site
+      } catch (error) {
+        console.error(`Error creating site with applicationId ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    findByApplicationId: async applicationId => {
+      try {
+        const applicationSites = await API.get(`${apiUrls.APPLICATION_SITES}`, `applicationId=${applicationId}`)
+        return Promise.all(applicationSites.map(async as => API.get(`${apiUrls.SITE}/${as.siteId}`)))
+      } catch (error) {
+        console.error(`Error finding sites with applicationId ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    update: async (siteId, payload) => {
+      try {
+        await API.put(`${apiUrls.SITE}/${siteId}`, payload)
+      } catch (error) {
+        console.error(`Error updating site with siteId ${siteId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    destroy: async (applicationId, siteId) => {
+      try {
+        const [applicationSites] = await API.get(`${apiUrls.APPLICATION_SITES}`, `applicationId=${applicationId}&siteId=${siteId}`)
+        await API.delete(`${apiUrls.APPLICATION_SITE}/${applicationSites.id}`)
+        await API.delete(`${apiUrls.SITE}/${siteId}`)
+      } catch (error) {
+        console.error(`Error deleting site with siteId ${siteId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    }
   },
 
   /**

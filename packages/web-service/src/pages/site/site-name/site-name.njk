@@ -1,0 +1,15 @@
+{% extends "standard-form.njk" %}
+
+{% from "input/macro.njk" import govukInput %}
+
+{% block pageContent %}
+
+{{ govukInput({
+    id: "site-name",
+    name: "site-name",
+    classes: "govuk-input--width-5",
+    errorMessage: { text: "Enter the name of the site." } if error['site-name'],
+    spellcheck: false
+}) }}
+
+{% endblock %}

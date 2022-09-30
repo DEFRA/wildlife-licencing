@@ -2784,10 +2784,26 @@ components:
           $ref: '#/components/schemas/address'
         gridReference:
           $ref: '#/components/schemas/gridReference'
+        siteMapFiles:
+          $ref: '#/components/schemas/siteMapFiles'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    siteMapFiles:
+      type: object
+      additionalProperties: false
+      properties:
+        activity:
+          type: string
+          maxLength: 255
+        mitigationsDuringDevelopment:
+          type: string
+          maxLength: 255
+        mitigationsAfterDevelopment:
+          type: string
+          maxLength: 255
 
     user:
       type: object
