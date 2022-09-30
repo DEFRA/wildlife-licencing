@@ -1,4 +1,6 @@
 
+jest.spyOn(console, 'error').mockImplementation(code => {})
+
 describe('The API requests service', () => {
   beforeEach(() => jest.resetModules())
 
