@@ -3,6 +3,8 @@ import pageRoute from '../../routes/page-route.js'
 import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILETYPES } from '../common/file-upload/file-upload.js'
 import Joi from 'joi'
+import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { APIRequests } from '../../services/api-requests.js'
 
 const anotherFileUpload = 'another-file-check'
 
@@ -45,8 +47,10 @@ export const completion = async request => {
   if (applicationId && fileUpload) {
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
     if (pageData.payload[anotherFileUpload] === 'yes') {
+      await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.METHOD_STATEMENT)
       return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
     }
+    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.METHOD_STATEMENT)
     return TASKLIST.uri
   } else {
     return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri

@@ -57,7 +57,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
-    [SECTION_TASKS.METHOD_STATEMENT]: true,
+    [SECTION_TASKS.METHOD_STATEMENT]: applicationTags.includes(SECTION_TASKS.METHOD_STATEMENT),
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -156,8 +156,10 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.METHOD_STATEMENT,
-            uri: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri,
-            status: eligibilityCheckStatus,
+            uri: status => status[SECTION_TASKS.METHOD_STATEMENT] ? FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.uri : FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri,
+            status: status => status[SECTION_TASKS.METHOD_STATEMENT]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           }
         ]

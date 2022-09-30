@@ -65,6 +65,19 @@ describe('the check-method-statement page handler', () => {
           })
         })
       }
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                add: () => false
+              }
+            }
+          }
+        })
+      }))
+
       const mockS3FileUpload = jest.fn()
       jest.doMock('../../../services/s3-upload.js', () => ({
         s3FileUpload: mockS3FileUpload
@@ -89,6 +102,19 @@ describe('the check-method-statement page handler', () => {
           })
         })
       }
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                remove: () => false
+              }
+            }
+          }
+        })
+      }))
+
       const { completion } = await import('../check-method-statement.js')
       const result = await completion(request)
       expect(result).toEqual('/upload-method-statement')

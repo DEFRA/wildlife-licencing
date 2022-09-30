@@ -58,6 +58,57 @@ describe('The licence type map', () => {
     expect(funcStatus({ setts: 'setts' })).toBe('completed')
   })
 
+  it('should navigate the user to upload method statement page when the status is not started', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
+    expect(funcUri('not-started')).toEqual('/upload-method-statement')
+  })
+
+  it('should navigate the user to check your method statement page when the status is completed', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
+    expect(funcUri({ 'method-statement': 'method-statement' })).toEqual('/check-method-statement')
+  })
+
+  it('should return an object from the method statement section tasks', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcEnabled = licenceTypeMap[A24].sections[2].tasks[5].enabled
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
+    const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
+    expect(licenceTypeMap[A24].sections[2].tasks[5]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'method-statement', uri: funcUri })
+  })
+
+  it('should return completed if the user has completed the upload method statement journey', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
+    expect(funcStatus({ 'method-statement': 'method-statement' })).toBe('completed')
+  })
+
+  it('should return cannot-start if the user has not completed the upload method statement journey', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
+    expect(funcStatus('cannotStart')).toBe('cannot-start')
+  })
+
+  it('should return completed if the user has completed the ecologist experience journey', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[4].status
+    expect(funcStatus({ 'ecologist-experience': 'ecologist-experience' })).toBe('completed')
+  })
+
+  it('should return cannot-start if the user has not completed the ecologist experience journey', async () => {
+    const { licenceTypeMap } = await import('../licence-type-map.js')
+    const { A24 } = await import('../licence-type-map.js')
+    const funcStatus = licenceTypeMap[A24].sections[2].tasks[4].status
+    expect(funcStatus('cannotStart')).toBe('cannot-start')
+  })
+
   it('will return cannot-start if the user has not completed the eligibility check', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
