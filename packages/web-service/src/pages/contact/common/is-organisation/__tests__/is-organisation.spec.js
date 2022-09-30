@@ -7,11 +7,15 @@ describe('the is-organisation page', () => {
     it('returns the contact and account data for the role', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'The Who' }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'The Who' }))
+            })
           }
         }
       }))
@@ -107,12 +111,12 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'yes\' and the account is immutable go to the check-answers page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-            })
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+              })
+            }),
             isImmutable: () => true
           }
         }
@@ -141,12 +145,12 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'yes\', the account is not immutable and no contact details are set go to the email page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-            })
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+              })
+            }),
             isImmutable: () => false
           }
         }
@@ -176,13 +180,13 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'yes\', the account is not immutable and no address is set go to the postcode page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              contactDetails: { email: 'JohnEntwistle@thewho.com' }
-            })
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
+                contactDetails: { email: 'JohnEntwistle@thewho.com' }
+              })
+            }),
             isImmutable: () => false
           }
         }
@@ -212,14 +216,14 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'yes\', the account is not immutable and an address is set go to the check-answers page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              contactDetails: { email: 'JohnEntwistle@thewho.com' },
-              address: 'Address'
-            })
-          },
           ACCOUNT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
+                contactDetails: { email: 'JohnEntwistle@thewho.com' },
+                address: 'Address'
+              })
+            }),
             isImmutable: () => false
           }
         }
@@ -249,12 +253,12 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'no\', there are no contactDetails set go to the email page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-            })
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+              })
+            }),
             isImmutable: () => false
           }
         }
@@ -283,13 +287,13 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'no\', there is no address set go to the postcode page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              contactDetails: { email: 'john.coltrane@jazz.ltd' }
-            })
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
+                contactDetails: { email: 'john.coltrane@jazz.ltd' }
+              })
+            }),
             isImmutable: () => false
           }
         }
@@ -318,14 +322,14 @@ describe('the is-organisation page', () => {
     it('if the user has selected \'no\', an address is set go to the check page ', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: () => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              contactDetails: { email: 'john.coltrane@jazz.ltd' },
-              address: 'Address'
-            })
-          },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: () => ({
+                id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
+                contactDetails: { email: 'john.coltrane@jazz.ltd' },
+                address: 'Address'
+              })
+            }),
             isImmutable: () => false
           }
         }

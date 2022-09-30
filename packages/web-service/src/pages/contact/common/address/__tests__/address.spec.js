@@ -5,11 +5,15 @@ describe('the address functions', () => {
     it('gets the contact name, account name, postcode and the address-lookup result', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+            })
           },
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', address: { postcode: 'SW1W 0NY' } }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones', address: { postcode: 'SW1W 0NY' } }))
+            })
           }
         }
       }))

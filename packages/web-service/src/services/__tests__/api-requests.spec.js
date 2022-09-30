@@ -724,7 +724,12 @@ describe('The API requests service', () => {
     })
   })
 
-  describe('APPLICANT requests', () => {
+  describe('CONTACT requests by role', () => {
+    it('throws with an unknown role', async () => {
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role('bad')).toThrow()
+    })
+
     it('getByApplicationId calls the API correctly', async () => {
       const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -732,8 +737,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICANT.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/contacts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT')
       expect(result).toEqual(({ foo: 'bar' }))
     })
@@ -745,8 +750,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -766,8 +771,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPut).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
         contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
@@ -787,8 +792,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPost).toHaveBeenCalledWith('/application-contact', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
         contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
@@ -804,8 +809,8 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.create('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
         .rejects.toThrowError()
     })
 
@@ -821,8 +826,8 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).toHaveBeenCalledWith('/application-contact/e8387a83-1165-42e6-afab-add01e77bc4c', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
         contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
@@ -841,8 +846,8 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).not.toHaveBeenCalled()
     })
 
@@ -855,8 +860,8 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPost).not.toHaveBeenCalledWith()
     })
 
@@ -867,8 +872,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.assign('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -884,8 +889,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
 
@@ -898,8 +903,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).not.toHaveBeenCalledWith()
     })
 
@@ -910,8 +915,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -927,8 +932,8 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPut).toHaveBeenCalledWith('/contact/2342fce0-3067-4ca5-ae7a-23cae648e45c', { foo: 'bar' })
     })
 
@@ -939,8 +944,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' }))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' }))
         .rejects.toThrowError()
     })
 
@@ -951,8 +956,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
       expect(mockGet).toHaveBeenCalledWith('/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT')
     })
 
@@ -963,8 +968,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -982,8 +987,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockGet).toHaveBeenCalledWith('/application-contacts', 'applicationId=35acb529-70bb-4b8d-8688-ccdec837e5d4&role=APPLICANT')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
@@ -996,8 +1001,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4'))
         .rejects.toThrowError()
     })
 
@@ -1024,8 +1029,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
 
@@ -1044,8 +1049,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
     })
@@ -1057,13 +1062,18 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT.unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
   })
 
-  describe('APPLICANT-ORGANISATION requests', () => {
+  describe('ACCOUNT REQUESTS BY role', () => {
+    it('throws with an unknown role', async () => {
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role('bad')).toThrow()
+    })
+
     it('getByApplicationId calls the API correctly', async () => {
       const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -1071,8 +1081,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICANT_ORGANISATION.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const result = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/accounts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT-ORGANISATION')
       expect(result).toEqual(({ foo: 'bar' }))
     })
@@ -1084,8 +1094,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -1100,8 +1110,8 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockPost).toHaveBeenCalledWith('/application-account', {
         accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
         accountRole: 'APPLICANT-ORGANISATION',
@@ -1128,8 +1138,8 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockPut).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60', {
         accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
         accountRole: 'APPLICANT-ORGANISATION',
@@ -1144,8 +1154,8 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -1163,8 +1173,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
     })
 
@@ -1177,8 +1187,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).not.toHaveBeenCalledWith()
     })
 
@@ -1189,8 +1199,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
 
@@ -1202,8 +1212,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => ([{ id: '8a3e8c32-0138-402c-8913-87e78ed44ebd', accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }]))
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '412d7297-643d-485b-8745-cc25a0e6ec0a')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '412d7297-643d-485b-8745-cc25a0e6ec0a')
       expect(mockPut).toHaveBeenCalledWith('/application-account/8a3e8c32-0138-402c-8913-87e78ed44ebd', {
         accountId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -1219,8 +1229,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => ([{ id: '8a3e8c32-0138-402c-8913-87e78ed44ebd', accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }]))
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
       expect(mockPut).not.toHaveBeenCalled()
     })
 
@@ -1232,8 +1242,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => ([]))
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
       expect(mockPost).toHaveBeenCalledWith('/application-account', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', accountRole: 'APPLICANT-ORGANISATION' })
     })
 
@@ -1243,8 +1253,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => { throw new Error() })
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45'))
         .rejects.toThrowError()
     })
 
@@ -1256,8 +1266,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => ([{ accountId: 'f789913d-a095-4150-8aaf-7addd38d3092' }]))
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' })
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' })
       expect(mockPut).toHaveBeenCalledWith('/account/f789913d-a095-4150-8aaf-7addd38d3092', { name: 'Ltd.' })
     })
 
@@ -1269,8 +1279,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => { throw new Error() })
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' }))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' }))
         .rejects.toThrowError()
     })
 
@@ -1281,8 +1291,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       expect(mockGet).toHaveBeenCalledWith('/accounts', 'userId=f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb&role=APPLICANT-ORGANISATION')
     })
 
@@ -1292,8 +1302,8 @@ describe('The API requests service', () => {
           get: jest.fn(() => { throw new Error() })
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'))
         .rejects.toThrowError()
     })
 
@@ -1320,8 +1330,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
 
@@ -1340,8 +1350,8 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.APPLICANT_ORGANISATION.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/account/412d7297-643d-485b-8745-cc25a0e6ec0a')
     })
@@ -1353,351 +1363,8 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICANT_ORGANISATION.unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-  })
-
-  describe('ECOLOGIST requests', () => {
-    it('getByApplicationId calls the API correctly', async () => {
-      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.APPLICANT_ORGANISATION.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/accounts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT-ORGANISATION')
-      expect(result).toEqual(({ foo: 'bar' }))
-    })
-
-    it('getByApplicationId rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('create calls the API correctly where there is an existing applicant', async () => {
-      const mockPost = jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' }))
-      const mockGet = jest.fn(() => [{
-        id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-        contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactRole: 'ECOLOGIST'
-      }])
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut,
-          post: mockPost,
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
-      expect(mockPut).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada', {
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-        contactRole: 'ECOLOGIST'
-      })
-      expect(mockPost).toHaveBeenCalledWith('/contact', { foo: 'bar' })
-    })
-
-    it('create calls the API correctly where there is no existing applicant', async () => {
-      const mockPost = jest.fn()
-        .mockReturnValueOnce({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
-        .mockReturnValueOnce({})
-      const mockGet = jest.fn(() => [])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          post: mockPost,
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
-      expect(mockPost).toHaveBeenCalledWith('/application-contact', {
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-        contactRole: 'ECOLOGIST'
-      })
-      expect(mockPost).toHaveBeenCalledWith('/contact', { foo: 'bar' })
-    })
-
-    it('create rethrows an error', async () => {
-      const mockPut = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.create('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
-        .rejects.toThrowError()
-    })
-
-    it('findByUser calls the API correctly', async () => {
-      const mockGet = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
-      expect(mockGet).toHaveBeenCalledWith('/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=ECOLOGIST')
-    })
-
-    it('assign calls the API correctly where there is an existing relationship', async () => {
-      const mockGet = jest.fn(() => [{
-        id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-        contactId: '00ed369a-6765-45e3-bdad-546b774319f5'
-      }])
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          put: mockPut
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
-      expect(mockPut).toHaveBeenCalledWith('/application-contact/e8387a83-1165-42e6-afab-add01e77bc4c', {
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-        contactRole: 'ECOLOGIST'
-      })
-    })
-
-    it('assign calls the API correctly where the relationship is unchanged', async () => {
-      const mockGet = jest.fn(() => [{
-        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-      }])
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          put: mockPut
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
-      expect(mockPut).not.toHaveBeenCalled()
-    })
-
-    it('assign calls the API correctly where there is no existing relationship', async () => {
-      const mockGet = jest.fn(() => [])
-      const mockPost = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          post: mockPost
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
-      expect(mockPost).toHaveBeenCalledWith('/application-contact', {
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-        contactRole: 'ECOLOGIST'
-      })
-    })
-
-    it('assign rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.assign('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('unAssign calls the API correctly where there is a relationship', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn(() => [{
-        id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-      }])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          delete: mockDelete,
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-    })
-
-    it('unAssign does nothing there is no relationship', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn(() => [])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          delete: mockDelete,
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).not.toHaveBeenCalledWith()
-    })
-
-    it('unAssign rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('update calls the API correctly', async () => {
-      const mockPut = jest.fn()
-      const mockGet = jest.fn(() => [{
-        id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-        contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-      }])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          put: mockPut
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
-      expect(mockPut).toHaveBeenCalledWith('/contact/2342fce0-3067-4ca5-ae7a-23cae648e45c', { foo: 'bar' })
-    })
-
-    it('update rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.update('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' }))
-        .rejects.toThrowError()
-    })
-
-    it('findByUser rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('destroy calls the API correctly', async () => {
-      const mockGet = jest.fn().mockReturnValue([{
-        id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-        contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-        applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-      }
-      ])
-      const mockDelete = jest.fn(() => ({}))
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4')
-      expect(mockGet).toHaveBeenCalledWith('/application-contacts', 'applicationId=35acb529-70bb-4b8d-8688-ccdec837e5d4&role=ECOLOGIST')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-      expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
-    })
-
-    it('destroy rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.destroy('35acb529-70bb-4b8d-8688-ccdec837e5d4'))
-        .rejects.toThrowError()
-    })
-
-    it('unlink calls the API correctly - with immutable', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn()
-        .mockReturnValueOnce([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-        .mockReturnValue([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }, {
-          id: '8c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '45acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-    })
-
-    it('unlink calls the API correctly - with mutable', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn()
-        .mockReturnValueOnce([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-        .mockReturnValue([])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
-      expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-      expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
-    })
-
-    it('unlink rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST.unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
+      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
   })
@@ -1825,302 +1492,6 @@ describe('The API requests service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicence('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'ABBBC'))
-        .rejects.toThrowError()
-    })
-  })
-
-  describe('ECOLOGIST-ORGANISATION requests', () => {
-    it('getByApplicationId calls the API correctly', async () => {
-      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      const result = await APIRequests.ECOLOGIST_ORGANISATION.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/accounts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=ECOLOGIST-ORGANISATION')
-      expect(result).toEqual(({ foo: 'bar' }))
-    })
-
-    it('getByApplicationId rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('create calls the API correctly where there is no existing relationship', async () => {
-      const mockPost = jest.fn()
-        .mockReturnValueOnce({ id: '5eac8c64-7fa6-4418-bf24-ea2766ce802a' })
-
-      const mockGet = jest.fn(() => [])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          post: mockPost
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockPost).toHaveBeenCalledWith('/application-account', {
-        accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
-        accountRole: 'ECOLOGIST-ORGANISATION',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
-      })
-    })
-
-    it('create calls the API correctly where there is an existing relationship', async () => {
-      const mockPost = jest.fn()
-        .mockReturnValueOnce({ id: '5eac8c64-7fa6-4418-bf24-ea2766ce802a' })
-      const mockPut = jest.fn()
-
-      const mockGet = jest.fn(() => [{
-        id: 'f0de6fcb-098f-40b2-8cdb-0f717a701b60',
-        accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
-        accountRole: 'ECOLOGIST-ORGANISATION',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
-      }])
-
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          put: mockPut,
-          post: mockPost
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockPut).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60', {
-        accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
-        accountRole: 'ECOLOGIST-ORGANISATION',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
-      })
-    })
-
-    it('create rethrows an error', async () => {
-      const mockPost = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          post: mockPost
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.create('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('unAssign calls the API correctly where there is an existing relationship', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn(() => [{
-        id: 'f0de6fcb-098f-40b2-8cdb-0f717a701b60',
-        accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
-        accountRole: 'ECOLOGIST-ORGANISATION',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
-      }])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
-    })
-
-    it('unAssign does nothing where there is no existing relationship', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn(() => [])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockDelete).not.toHaveBeenCalledWith()
-    })
-
-    it('unAssignAccount rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
-    })
-
-    it('assign calls the API correctly, swapping contactId', async () => {
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut,
-          get: jest.fn(() => ([{ id: '8a3e8c32-0138-402c-8913-87e78ed44ebd', accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }]))
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '412d7297-643d-485b-8745-cc25a0e6ec0a')
-      expect(mockPut).toHaveBeenCalledWith('/application-account/8a3e8c32-0138-402c-8913-87e78ed44ebd', {
-        accountId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-        applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-        accountRole: 'ECOLOGIST-ORGANISATION'
-      })
-    })
-
-    it('assign calls the API correctly, ignoring assigned contactId', async () => {
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut,
-          get: jest.fn(() => ([{ id: '8a3e8c32-0138-402c-8913-87e78ed44ebd', accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }]))
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
-      expect(mockPut).not.toHaveBeenCalled()
-    })
-
-    it('assign calls the API correctly, creating a new assignment ', async () => {
-      const mockPost = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          post: mockPost,
-          get: jest.fn(() => ([]))
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45')
-      expect(mockPost).toHaveBeenCalledWith('/application-account', { accountId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', accountRole: 'ECOLOGIST-ORGANISATION' })
-    })
-
-    it('assign rethrows on error', async () => {
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: jest.fn(() => { throw new Error() })
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45'))
-        .rejects.toThrowError()
-    })
-
-    it('update calls the API correctly', async () => {
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut,
-          get: jest.fn(() => ([{ accountId: 'f789913d-a095-4150-8aaf-7addd38d3092' }]))
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' })
-      expect(mockPut).toHaveBeenCalledWith('/account/f789913d-a095-4150-8aaf-7addd38d3092', { name: 'Ltd.' })
-    })
-
-    it('update rethrows on error', async () => {
-      const mockPut = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          put: mockPut,
-          get: jest.fn(() => { throw new Error() })
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.update('9b0133b9-d140-42d8-ab61-10c095e55dd3', { name: 'Ltd.' }))
-        .rejects.toThrowError()
-    })
-
-    it('findByUser calls the API correctly', async () => {
-      const mockGet = jest.fn()
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
-      expect(mockGet).toHaveBeenCalledWith('/accounts', 'userId=f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb&role=ECOLOGIST-ORGANISATION')
-    })
-
-    it('findByUser rethrows on error', async () => {
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: jest.fn(() => { throw new Error() })
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'))
-        .rejects.toThrowError()
-    })
-
-    it('unlink calls the API correctly - with immutable', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn()
-        .mockReturnValueOnce([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-        .mockReturnValue([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }, {
-          id: '8c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '45acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
-      expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-    })
-
-    it('unlink calls the API correctly - with mutable', async () => {
-      const mockDelete = jest.fn()
-      const mockGet = jest.fn()
-        .mockReturnValueOnce([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          accountId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-        .mockReturnValue([])
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet,
-          delete: mockDelete
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.ECOLOGIST_ORGANISATION.unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
-      expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
-      expect(mockDelete).toHaveBeenCalledWith('/account/412d7297-643d-485b-8745-cc25a0e6ec0a')
-    })
-
-    it('unlink rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.ECOLOGIST_ORGANISATION.unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
   })

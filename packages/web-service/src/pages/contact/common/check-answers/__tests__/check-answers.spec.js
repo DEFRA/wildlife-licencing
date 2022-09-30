@@ -9,15 +9,19 @@ describe('the check-answers page', () => {
             add: jest.fn()
           })
         },
-        APPLICANT: {
-          getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+        CONTACT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards' }))
+          })
         },
-        APPLICANT_ORGANISATION: {
-          getByApplicationId: jest.fn(() => ({
-            name: 'The Rolling Stones',
-            address: { postcode: 'SW1W 0NY' },
-            contactDetails: { email: 'keith@therollingstones.com' }
-          }))
+        ACCOUNT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => ({
+              name: 'The Rolling Stones',
+              address: { postcode: 'SW1W 0NY' },
+              contactDetails: { email: 'keith@therollingstones.com' }
+            }))
+          })
         }
       }
     }))
@@ -71,16 +75,20 @@ describe('the check-answers page', () => {
             add: jest.fn()
           })
         },
-        APPLICANT: {
-          getByApplicationId: jest.fn(() => ({
-            fullName: 'Keith Richards',
-            address: { postcode: 'SW1W 0NY' },
-            contactDetails: { email: 'keith@therollingstones.com' },
-            userId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
-          }))
+        CONTACT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => ({
+              fullName: 'Keith Richards',
+              address: { postcode: 'SW1W 0NY' },
+              contactDetails: { email: 'keith@therollingstones.com' },
+              userId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
+            }))
+          })
         },
-        APPLICANT_ORGANISATION: {
-          getByApplicationId: jest.fn(() => null)
+        ACCOUNT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => null)
+          })
         }
       }
     }))

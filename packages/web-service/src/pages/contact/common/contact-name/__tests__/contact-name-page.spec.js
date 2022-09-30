@@ -9,8 +9,10 @@ describe('contact-name page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT: {
-          findByUser: jest.fn(() => [{ fullName: 'Keith Moon' }])
+        CONTACT: {
+          role: () => ({
+            findByUser: jest.fn(() => [{ fullName: 'Keith Moon' }])
+          })
         }
       }
     }))
@@ -30,8 +32,10 @@ describe('contact-name page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT: {
-          findByUser: jest.fn(() => [{ fullName: 'Brian Jones' }])
+        CONTACT: {
+          role: () => ({
+            findByUser: jest.fn(() => [{ fullName: 'Brian Jones' }])
+          })
         }
       }
     }))

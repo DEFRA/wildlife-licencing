@@ -6,10 +6,10 @@ import { APIRequests } from '../../../../services/api-requests.js'
 
 const nameReg = /^[/\s\p{L}\d.,'-]{1,160}$/u
 
-export const getValidator = accountType => async (payload, context) => {
+export const getValidator = accountRole => async (payload, context) => {
   const cd = cacheDirect(context)
   const { userId } = await cd.getData()
-  const accounts = await APIRequests[accountType].findByUser(userId)
+  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
   const names = accounts.map(c => c.name).filter(c => c)
 
   const schema = Joi.object({
@@ -23,12 +23,12 @@ export const getValidator = accountType => async (payload, context) => {
   Joi.assert(payload, schema, 'name', { abortEarly: false, allowUnknown: true })
 }
 
-export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }, accountType) => pageRoute({
+export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }, accountRole) => pageRoute({
   page,
   uri,
   checkData,
   getData,
   setData,
   completion,
-  validator: getValidator(accountType)
+  validator: getValidator(accountRole)
 })

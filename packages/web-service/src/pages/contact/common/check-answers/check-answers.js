@@ -24,13 +24,13 @@ const addressLine = c => [
   c.address.postcode
 ].filter(a => a).join('<br>')
 
-export const getCheckAnswersData = (contactType, accountType) => async request => {
+export const getCheckAnswersData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  const account = await APIRequests[accountType].getByApplicationId(applicationId)
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   // The check-answers macro requires an array of k, v pair objects
-  await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE[contactType])
+  await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE[contactRole])
   return {
     hasAccount: !!account,
     checkYourAnswers: [

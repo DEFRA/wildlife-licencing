@@ -3,14 +3,18 @@ import db from 'debug'
 import Boom from '@hapi/boom'
 const debug = db('web-service:api-requests')
 
-const contactRoles = {
+export const ContactRoles = {
   APPLICANT: 'APPLICANT',
-  ECOLOGIST: 'ECOLOGIST'
+  ECOLOGIST: 'ECOLOGIST',
+  PAYER: 'PAYER',
+  AUTHORISED_PERSON: 'AUTHORISED-PERSON',
+  ADDITIONAL_CONTACT: 'ADDITIONAL-CONTACT'
 }
 
-const accountRoles = {
-  'APPLICANT-ORGANISATION': 'APPLICANT-ORGANISATION',
-  'ECOLOGIST-ORGANISATION': 'ECOLOGIST-ORGANISATION'
+export const AccountRoles = {
+  APPLICANT_ORGANISATION: 'APPLICANT-ORGANISATION',
+  ECOLOGIST_ORGANISATION: 'ECOLOGIST-ORGANISATION',
+  PAYER_ORGANISATION: 'PAYER-ORGANISATION'
 }
 
 const apiUrls = {
@@ -33,6 +37,10 @@ const apiUrls = {
   APPLICATION_SITE: '/application-site',
   APPLICATION_SITES: '/application-sites'
 }
+
+Object.freeze(ContactRoles)
+Object.freeze(AccountRoles)
+Object.freeze(apiUrls)
 
 const getContactByApplicationId = async (role, applicationId) => {
   try {
@@ -484,6 +492,21 @@ export const APIRequests = {
           return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
         }
       }
+    },
+    role: contactRole => {
+      if (!Object.values(ContactRoles).find(k => k === contactRole)) {
+        throw new Error(`Unknown contact role: ${contactRole}`)
+      }
+      return {
+        getByApplicationId: async applicationId => getContactByApplicationId(contactRole, applicationId),
+        create: async (applicationId, applicant) => createContact(contactRole, applicationId, applicant),
+        destroy: async applicationId => destroyContact(contactRole, applicationId),
+        assign: async (applicationId, contactId) => assignContact(contactRole, applicationId, contactId),
+        unAssign: async applicationId => unAssignContact(contactRole, applicationId),
+        unLink: async applicationId => unLinkContact(contactRole, applicationId),
+        update: async (applicationId, contact) => updateContact(contactRole, applicationId, contact),
+        findByUser: async userId => findContactByUser(contactRole, userId)
+      }
     }
   },
   ACCOUNT: {
@@ -519,47 +542,22 @@ export const APIRequests = {
           return !!applicationAccounts.find(ac => ac.applicationId !== applicationId)
         }
       }
+    },
+    role: accountRole => {
+      if (!Object.values(AccountRoles).find(k => k === accountRole)) {
+        throw new Error(`Unknown account role: ${accountRole}`)
+      }
+      return {
+        create: async (applicationId, applicationOrganisation) => createAccount(accountRole, applicationId, applicationOrganisation),
+        assign: async (applicationId, accountId) => assignAccount(accountRole, applicationId, accountId),
+        unAssign: async applicationId => unAssignAccount(accountRole, applicationId),
+        unLink: async applicationId => unLinkAccount(accountRole, applicationId),
+        update: async (applicationId, account) => updateAccount(accountRole, applicationId, account),
+        getByApplicationId: async applicationId => getAccountByApplicationId(accountRole, applicationId),
+        findByUser: async userId => findAccountByUser(accountRole, userId)
+      }
     }
   },
-  APPLICANT: {
-    getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.APPLICANT, applicationId),
-    create: async (applicationId, applicant) => createContact(contactRoles.APPLICANT, applicationId, applicant),
-    destroy: async applicationId => destroyContact(contactRoles.APPLICANT, applicationId),
-    assign: async (applicationId, contactId) => assignContact(contactRoles.APPLICANT, applicationId, contactId),
-    unAssign: async applicationId => unAssignContact(contactRoles.APPLICANT, applicationId),
-    unLink: async applicationId => unLinkContact(contactRoles.APPLICANT, applicationId),
-    update: async (applicationId, contact) => updateContact(contactRoles.APPLICANT, applicationId, contact),
-    findByUser: async userId => findContactByUser(contactRoles.APPLICANT, userId)
-  },
-  ECOLOGIST: {
-    getByApplicationId: async applicationId => getContactByApplicationId(contactRoles.ECOLOGIST, applicationId),
-    create: async (applicationId, applicant) => createContact(contactRoles.ECOLOGIST, applicationId, applicant),
-    destroy: async applicationId => destroyContact(contactRoles.ECOLOGIST, applicationId),
-    assign: async (applicationId, contactId) => assignContact(contactRoles.ECOLOGIST, applicationId, contactId),
-    unAssign: async applicationId => unAssignContact(contactRoles.ECOLOGIST, applicationId),
-    unLink: async applicationId => unLinkContact(contactRoles.APPLICANT, applicationId),
-    update: async (applicationId, contact) => updateContact(contactRoles.ECOLOGIST, applicationId, contact),
-    findByUser: async userId => findContactByUser(contactRoles.ECOLOGIST, userId)
-  },
-  APPLICANT_ORGANISATION: {
-    create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, applicationOrganisation),
-    assign: async (applicationId, accountId) => assignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, accountId),
-    unAssign: async applicationId => unAssignAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
-    unLink: async applicationId => unLinkAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId),
-    update: async (applicationId, account) => updateAccount(accountRoles['APPLICANT-ORGANISATION'], applicationId, account),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['APPLICANT-ORGANISATION'], applicationId),
-    findByUser: async userId => findAccountByUser(accountRoles['APPLICANT-ORGANISATION'], userId)
-  },
-  ECOLOGIST_ORGANISATION: {
-    create: async (applicationId, applicationOrganisation) => createAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, applicationOrganisation),
-    assign: async (applicationId, accountId) => assignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, accountId),
-    unAssign: async applicationId => unAssignAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
-    unLink: async applicationId => unLinkAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
-    update: async (applicationId, account) => updateAccount(accountRoles['ECOLOGIST-ORGANISATION'], applicationId, account),
-    getByApplicationId: async applicationId => getAccountByApplicationId(accountRoles['ECOLOGIST-ORGANISATION'], applicationId),
-    findByUser: async userId => findAccountByUser(accountRoles['ECOLOGIST-ORGANISATION'], userId)
-  },
-
   /**
    * Application sites
    */
@@ -776,6 +774,3 @@ export const APIRequests = {
     }
   }
 }
-
-export const ApiRequestEntities = Object.freeze(Object.keys(APIRequests)
-  .reduce((p, c) => ({ ...p, [c]: c }), {}))
