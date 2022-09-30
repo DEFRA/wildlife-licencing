@@ -2421,6 +2421,7 @@ components:
       enum:
         - APPLICANT-ORGANISATION
         - ECOLOGIST-ORGANISATION
+        - PAYER-ORGANISATION
 
     applications:
       type: array
@@ -2667,7 +2668,9 @@ components:
       enum:
         - APPLICANT
         - ECOLOGIST
-        - NAMED-INDIVIDUAL
+        - PAYER
+        - AUTHORISED-PERSON
+        - ADDITIONAL-CONTACT
 
     habitatSite:
       type: object

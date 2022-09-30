@@ -560,9 +560,13 @@ const createModels = async () => {
   // Create the contact roles
   await models.contactRoles.upsert({ contactRole: 'APPLICANT' })
   await models.contactRoles.upsert({ contactRole: 'ECOLOGIST' })
-  await models.contactRoles.upsert({ contactRole: 'NAMED-INDIVIDUAL' })
+  await models.contactRoles.upsert({ contactRole: 'PAYER' })
+  await models.contactRoles.upsert({ contactRole: 'AUTHORISED-PERSON' })
+  await models.contactRoles.upsert({ contactRole: 'ADDITIONAL-CONTACT' })
+
   await models.accountRoles.upsert({ accountRole: 'APPLICANT-ORGANISATION' })
   await models.accountRoles.upsert({ accountRole: 'ECOLOGIST-ORGANISATION' })
+  await models.accountRoles.upsert({ accountRole: 'PAYER-ORGANISATION' })
 
   debug('Created database model')
 }

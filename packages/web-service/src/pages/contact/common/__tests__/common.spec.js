@@ -32,6 +32,9 @@ describe('contact common', () => {
     it('returns null if a contact name is set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          CONTACT: {
+            role: () => ({ getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' })) })
+          },
           APPLICANT: {
             getByApplicationId: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
           }

@@ -1,11 +1,11 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../common.js'
 
-export const getAddressData = (contactType, accountType, uriBase) => async request => {
+export const getAddressData = (contactRole, accountRole, uriBase) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  const account = await APIRequests[accountType].getByApplicationId(applicationId)
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   return {
     contactName: contact?.fullName,
     accountName: account?.name,
@@ -15,13 +15,13 @@ export const getAddressData = (contactType, accountType, uriBase) => async reque
   }
 }
 
-export const setAddressData = (contactType, accountType) => async request => {
+export const setAddressData = (contactRole, accountRole) => async request => {
   const { userId, applicationId, addressLookup } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   // Get the full address from the journey cache (Number IS large enough: 9007199254740991)
   const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === pageData.payload.uprn)
   const apiAddress = mapLookedUpAddress(lookupAddress)
-  const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setAddress(apiAddress)
 }
 
