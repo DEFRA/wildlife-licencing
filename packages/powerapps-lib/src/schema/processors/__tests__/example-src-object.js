@@ -41,7 +41,7 @@ export const srcObj = {
           name: 'The badger set 1',
           address: {
             houseNumber: 'The fields',
-            addrline1: 'Winscombe',
+            addressLine1: 'Winscombe',
             county: 'Somerset',
             postcode: 'bs21 2XX'
           },
@@ -57,8 +57,8 @@ export const srcObj = {
           name: 'The badger set 2',
           address: {
             houseNumber: 'The fields',
-            addrline1: 'Winscombe',
-            addrline2: null, // Explicit set of null
+            addressLine1: 'Winscombe',
+            addressLine2: null, // Explicit set of null
             county: 'Somerset',
             postcode: 'bs22 2XX'
           },
@@ -74,7 +74,7 @@ export const srcObj = {
           name: 'The badger set 3',
           address: {
             houseNumber: 'The fields',
-            addrline1: 'Winscombe',
+            addressLine1: 'Winscombe',
             county: 'Somerset',
             postcode: 'bs23 2XX'
           },
