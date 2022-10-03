@@ -26,7 +26,7 @@ describe('The remove licence page', () => {
     })
   })
 
-  describe.only('set data function', () => {
+  describe('set data function', () => {
     it('does not delete a licence if the user selects \'no\'', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({

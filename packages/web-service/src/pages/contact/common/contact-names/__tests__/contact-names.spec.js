@@ -31,11 +31,11 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT: {
-            findByUser: jest.fn(() => [{ fullName: 'Keith Moon' }, { fullName: 'Charlie Watts' }, { fullName: 'Keith Moon' }]),
-            getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
-          },
           CONTACT: {
+            role: () => ({
+              findByUser: jest.fn(() => [{ fullName: 'Keith Moon' }, { fullName: 'Charlie Watts' }, { fullName: 'Keith Moon' }]),
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+            }),
             isImmutable: () => false
           }
         }
@@ -136,8 +136,10 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -167,8 +169,10 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -201,8 +205,10 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => null)
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -236,10 +242,12 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            getByApplicationId: jest.fn(() => ({
-              id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
-            }))
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+              }))
+            })
           },
           APPLICATION: {
             tags: () => ({
@@ -267,16 +275,16 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            findByUser: jest.fn(() => [{ id: '1c3e7655-bb74-4420-9bf0-0bd710987f10', name: 'The Who' }])
+          ACCOUNT: {
+            role: () => ({
+              findByUser: jest.fn(() => [{ id: '1c3e7655-bb74-4420-9bf0-0bd710987f10', name: 'The Who' }])
+            }),
+            isImmutable: () => false
           },
           APPLICATION: {
             tags: () => ({
               has: () => false
             })
-          },
-          ACCOUNT: {
-            isImmutable: () => false
           }
         }
       }))
@@ -300,16 +308,16 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
-          APPLICANT_ORGANISATION: {
-            findByUser: jest.fn(() => [])
+          ACCOUNT: {
+            role: () => ({
+              findByUser: jest.fn(() => [])
+            }),
+            isImmutable: () => false
           },
           APPLICATION: {
             tags: () => ({
               has: () => false
             })
-          },
-          ACCOUNT: {
-            isImmutable: () => false
           }
         }
       }))

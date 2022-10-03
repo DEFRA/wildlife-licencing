@@ -9,8 +9,10 @@ describe('is-organisation page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT_ORGANISATION: {
-          findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }, {}])
+        ACCOUNT: {
+          role: () => ({
+            findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }, {}])
+          })
         }
       }
     }))
@@ -31,8 +33,10 @@ describe('is-organisation page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        APPLICANT_ORGANISATION: {
-          findByUser: jest.fn(() => [{ name: 'The Stones' }])
+        ACCOUNT: {
+          role: () => ({
+            findByUser: jest.fn(() => [{ name: 'The Stones' }])
+          })
         }
       }
     }))

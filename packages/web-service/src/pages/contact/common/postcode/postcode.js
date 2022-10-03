@@ -8,11 +8,11 @@ import Config from '@defra/wls-connectors-lib/src/config.js'
 import fs from 'fs'
 const debug = db('web-service:address-lookup')
 
-export const getPostcodeData = (contactType, contactOrganisation, uriBase) => async request => {
+export const getPostcodeData = (contactRole, accountRole, uriBase) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const contact = await APIRequests[contactType].getByApplicationId(applicationId)
-  const account = await APIRequests[contactOrganisation].getByApplicationId(applicationId)
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   return {
     contactName: contact?.fullName,
     accountName: account?.name,
@@ -21,13 +21,13 @@ export const getPostcodeData = (contactType, contactOrganisation, uriBase) => as
   }
 }
 
-export const setPostcodeData = (contactType, accountType) => async request => {
+export const setPostcodeData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode
   const { userId, applicationId } = journeyData
 
-  const contactAccountOps = await contactAccountOperations(contactType, accountType, applicationId, userId)
+  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setAddress({ postcode })
   // Write the address lookup results into the cache
   // There is a lot of discussion online about UK postcode formats and reg-ex validation patterns.
@@ -35,7 +35,7 @@ export const setPostcodeData = (contactType, accountType) => async request => {
   // It is the clear however that some postcodes exist which are legitimate patterns, but cause
   // the lookup to throw a bad request, hence the try-catch here. Consider for instance LB1 2CD
   try {
-    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactType])
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactRole])
     debug(`Address lookup for postcode: ${postcode}`)
     const { results } = await ADDRESS.lookup(postcode)
     if (results.length) {
