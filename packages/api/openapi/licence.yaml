@@ -2138,6 +2138,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/site'
       responses:
         200:
           description: The site object has been updated
