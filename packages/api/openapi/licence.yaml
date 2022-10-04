@@ -1356,7 +1356,7 @@ paths:
                 $ref: '#/components/schemas/error'
     delete:
       description: Delete an application-file-upload by id
-      summary:  Get an application-file-upload by id
+      summary:  Delete an application-file-upload by id
       operationId: deleteApplicationFileUploadByUploadId
       parameters:
         - name: applicationId
