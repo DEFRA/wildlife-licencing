@@ -63,4 +63,42 @@ describe('the upload-method-statement page handler', () => {
     await postRoute.handler(request, h)
     expect(mockRedirect).toHaveBeenCalledWith('/upload-method-statement')
   })
+
+  it('calls the s3 upload and returns to the check-method-statement', async () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({
+          fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
+          applicationId: 123
+        }),
+        getPageData: () => ({
+          payload: {
+            'another-file-check': 'no'
+          }
+        })
+      })
+    }
+
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: ({
+        APPLICATION: {
+          tags: () => {
+            return {
+              add: () => false
+            }
+          }
+        }
+      })
+    }))
+
+    const mockS3FileUpload = jest.fn()
+    jest.doMock('../../../services/s3-upload.js', () => ({
+      s3FileUpload: mockS3FileUpload
+    }))
+    const { completion } = await import('../upload-method-statement.js')
+    const result = await completion(request)
+    expect(result).toEqual('/check-method-statement')
+    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
+      { filetype: 'METHOD-STATEMENT', multiple: true })
+  })
 })

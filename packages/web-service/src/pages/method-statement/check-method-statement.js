@@ -1,10 +1,9 @@
 import { FILE_UPLOADS, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
-import { s3FileUpload } from '../../services/s3-upload.js'
-import { FILETYPES } from '../common/file-upload/file-upload.js'
 import Joi from 'joi'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { timestampFormatter } from '../common/common.js'
 
 const anotherFileUpload = 'another-file-check'
 
@@ -36,24 +35,26 @@ export const validator = async payload => {
 }
 
 export const getData = async request => {
-  const { fileUpload } = await request.cache().getData()
-  return { filename: fileUpload.filename, change: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri }
+  const { applicationId } = await request.cache().getData()
+  const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
+  const uploads = data.map(upload => ({
+    ...upload,
+    removeUploadUrl: '/remove/upload',
+    uploadedDate: timestampFormatter(upload.createdAt)
+  }))
+  return uploads
 }
 
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
-  const { applicationId, fileUpload } = await request.cache().getData()
+  const { applicationId } = await request.cache().getData()
 
-  if (applicationId && fileUpload) {
-    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
-    if (pageData.payload[anotherFileUpload] === 'yes') {
-      await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.METHOD_STATEMENT)
-      return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
-    }
+  if (pageData?.payload[anotherFileUpload] === 'yes') {
+    await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.METHOD_STATEMENT)
+    return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
+  } else {
     await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.METHOD_STATEMENT)
     return TASKLIST.uri
-  } else {
-    return FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
   }
 }
 

@@ -36,59 +36,41 @@ describe('the check-method-statement page handler', () => {
 
   describe('the getData function', () => {
     it(' returns the file data', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({ fileUpload: { filename: 'hello.txt' } })
-        })
-      }
-      const { getData } = await import('../check-method-statement.js')
-      const result = await getData(request)
-      expect(result).toEqual({
-        change: '/upload-method-statement',
-        filename: 'hello.txt'
-      })
-    })
-  })
-
-  describe('the completion function', () => {
-    it('calls the s3 upload and returns to the tasklist', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
-            applicationId: 123
-          }),
-          getPageData: () => ({
-            payload: {
-              'another-file-check': 'no'
-            }
-          })
-        })
-      }
+      const mockRemoveUploadedFile = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e', uploadId: '1234567' }))
+      const mockGetUploadedFiles = jest.fn(() => ([{ id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', createdAt: '2022-03-25T14:10:14.861Z', updatedAt: '2022-03-25T14:10:14.861Z', applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }]))
+      const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: ({
-          APPLICATION: {
-            tags: () => {
-              return {
-                add: () => false
-              }
-            }
+          FILE_UPLOAD: {
+            removeUploadedFile: mockRemoveUploadedFile,
+            getUploadedFiles: mockGetUploadedFiles
           }
         })
       }))
 
-      const mockS3FileUpload = jest.fn()
-      jest.doMock('../../../services/s3-upload.js', () => ({
-        s3FileUpload: mockS3FileUpload
-      }))
-      const { completion } = await import('../check-method-statement.js')
-      const result = await completion(request)
-      expect(result).toEqual('/tasklist')
-      expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
-        { filetype: 'METHOD-STATEMENT', multiple: true })
+      const request = {
+        cache: () => ({
+          getData: mockGetData
+        })
+      }
+      const { getData } = await import('../check-method-statement.js')
+      const result = await getData(request)
+      expect(mockGetData).toHaveBeenCalled()
+      expect(mockGetUploadedFiles).toHaveBeenCalledWith('afda812d-c4df-4182-9978-19e6641c4a6e')
+      expect(result).toEqual([{
+        applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
+        id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+        removeUploadUrl: '/remove/upload',
+        updatedAt: '2022-03-25T14:10:14.861Z',
+        createdAt: '2022-03-25T14:10:14.861Z',
+        uploadedDate: '25 March 2022'
+      }]
+      )
     })
+  })
 
+  describe('the completion function', () => {
     it('returns to the upload page if no upload found in the cache', async () => {
       const request = {
         cache: () => ({
@@ -108,7 +90,8 @@ describe('the check-method-statement page handler', () => {
           APPLICATION: {
             tags: () => {
               return {
-                remove: () => false
+                remove: () => false,
+                add: () => false
               }
             }
           }
@@ -117,7 +100,7 @@ describe('the check-method-statement page handler', () => {
 
       const { completion } = await import('../check-method-statement.js')
       const result = await completion(request)
-      expect(result).toEqual('/upload-method-statement')
+      expect(result).toEqual('/tasklist')
     })
 
     it('should returns to the upload page if the user selected yes to upload another file', async () => {

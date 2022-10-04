@@ -22,19 +22,21 @@
 <div class="govuk-grid-row">
 	<div class="govuk-grid-column-two-thirds">
         <dl class="govuk-summary-list">
+          {% for upload in data %}
 
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Uploaded file</dt>
                 <dd class="govuk-summary-list__value">
-                    {{ data.filename }}
+                    {{ upload.filename }} <br>
+                    <p>Uploaded {{ upload.uploadedDate }}</>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link govuk-link--no-visited-state" href="/check-method-statement"  name: "remove-file">
+                    <a class="govuk-link govuk-link--no-visited-state" href="{{upload.removeUploadUrl}}?uploadId={{upload.id}}"  name: "remove-file">
                         Remove<span class="govuk-visually-hidden"></span>
                     </a>
-                </dd>
+                </dd>             
             </div>
-
+          {% endfor %}
         </dl>
         <form method="post">
           {{ govukRadios({
