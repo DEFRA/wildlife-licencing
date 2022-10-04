@@ -37,12 +37,11 @@ export const validator = async payload => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
-  const uploads = data.map(upload => ({
+  return data.map(upload => ({
     ...upload,
     removeUploadUrl: '/remove/upload',
     uploadedDate: timestampFormatter(upload.createdAt)
   }))
-  return uploads
 }
 
 export const completion = async request => {
