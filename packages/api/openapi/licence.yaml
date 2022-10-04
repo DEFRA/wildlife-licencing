@@ -1359,6 +1359,12 @@ paths:
       summary:  Get an application-file-upload by id
       operationId: deleteApplicationFileUploadByUploadId
       parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
         - name: uploadId
           in: path
           description: ID of the application-file-upload
