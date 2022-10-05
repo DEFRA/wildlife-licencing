@@ -23,14 +23,14 @@ describe('the upload-method-statement page handler', () => {
     jest.doMock('../../../services/virus-scan.js', () => ({
       scanFile: jest.fn(() => false)
     }))
-    const { uploadMethodStatement } = await import('../upload-method-statement.js')
-    const [, postRoute] = uploadMethodStatement
+    const { uploadSupportingInformation } = await import('../upload-supporting-information.js')
+    const [, postRoute] = uploadSupportingInformation
     const mockRedirect = jest.fn()
     const h = {
       redirect: mockRedirect
     }
     await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/check-method-statement')
+    expect(mockRedirect).toHaveBeenCalledWith('/check-supporting-information')
   })
 
   it('with error returns the upload method-statement page', async () => {
@@ -54,14 +54,14 @@ describe('the upload-method-statement page handler', () => {
     jest.doMock('../../../services/virus-scan.js', () => ({
       scanFile: jest.fn(() => true)
     }))
-    const { uploadMethodStatement } = await import('../upload-method-statement.js')
-    const [, postRoute] = uploadMethodStatement
+    const { uploadSupportingInformation } = await import('../upload-supporting-information.js')
+    const [, postRoute] = uploadSupportingInformation
     const mockRedirect = jest.fn()
     const h = {
       redirect: mockRedirect
     }
     await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/upload-method-statement')
+    expect(mockRedirect).toHaveBeenCalledWith('/upload-supporting-information')
   })
 
   it('calls the s3 upload and returns to the check-method-statement', async () => {
@@ -95,9 +95,9 @@ describe('the upload-method-statement page handler', () => {
     jest.doMock('../../../services/s3-upload.js', () => ({
       s3FileUpload: mockS3FileUpload
     }))
-    const { completion } = await import('../upload-method-statement.js')
+    const { completion } = await import('../upload-supporting-information.js')
     const result = await completion(request)
-    expect(result).toEqual('/check-method-statement')
+    expect(result).toEqual('/check-supporting-information')
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
       { filetype: 'METHOD-STATEMENT', multiple: true })
   })

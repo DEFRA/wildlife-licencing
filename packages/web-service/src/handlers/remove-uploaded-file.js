@@ -13,7 +13,7 @@ export default async (request, h) => {
   const { applicationId } = journeyData
   const params = new URLSearchParams(request.query)
   const uploadId = params.get('uploadId')
-  let redirectUrl = FILE_UPLOADS.METHOD_STATEMENT.CHECK_YOUR_ANSWERS.uri
+  let redirectUrl = FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
 
   if (uploadId) {
     await APIRequests.FILE_UPLOAD.removeUploadedFile(applicationId, uploadId)
@@ -22,7 +22,7 @@ export default async (request, h) => {
   const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
 
   if (!uploadedFiles?.length) {
-    redirectUrl = FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri
+    redirectUrl = FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
     await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.METHOD_STATEMENT)
   }
 

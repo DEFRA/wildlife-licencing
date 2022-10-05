@@ -1,4 +1,4 @@
-describe('the check-method-statement page handler', () => {
+describe('the check-supporting-information page handler', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
@@ -17,9 +17,9 @@ describe('the check-method-statement page handler', () => {
       const h = {
         redirect: mockRedirect
       }
-      const { checkData } = await import('../check-method-statement.js')
+      const { checkData } = await import('../check-supporting-information.js')
       await checkData(request, h)
-      expect(mockRedirect).toHaveBeenCalledWith('/upload-method-statement')
+      expect(mockRedirect).toHaveBeenCalledWith('/upload-supporting-information')
     })
 
     it('checks there is a fileUpload object set in the cache and if so returns null', async () => {
@@ -28,7 +28,7 @@ describe('the check-method-statement page handler', () => {
           getData: () => ({ fileUpload: {} })
         })
       }
-      const { checkData } = await import('../check-method-statement.js')
+      const { checkData } = await import('../check-supporting-information.js')
       const result = await checkData(request, { })
       expect(result).toBeNull()
     })
@@ -54,7 +54,7 @@ describe('the check-method-statement page handler', () => {
           getData: mockGetData
         })
       }
-      const { getData } = await import('../check-method-statement.js')
+      const { getData } = await import('../check-supporting-information.js')
       const result = await getData(request)
       expect(mockGetData).toHaveBeenCalled()
       expect(mockGetUploadedFiles).toHaveBeenCalledWith('afda812d-c4df-4182-9978-19e6641c4a6e')
@@ -98,7 +98,7 @@ describe('the check-method-statement page handler', () => {
         })
       }))
 
-      const { completion } = await import('../check-method-statement.js')
+      const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
       expect(result).toEqual('/tasklist')
     })
@@ -117,15 +117,15 @@ describe('the check-method-statement page handler', () => {
           })
         })
       }
-      const { completion } = await import('../check-method-statement.js')
+      const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(result).toEqual('/upload-method-statement')
+      expect(result).toEqual('/upload-supporting-information')
     })
 
     it('should display a validation error if the user does not input a choice for another file upload', async () => {
       try {
         const payload = {}
-        const { validator } = await import('../check-method-statement.js')
+        const { validator } = await import('../check-supporting-information.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -137,7 +137,7 @@ describe('the check-method-statement page handler', () => {
       const payload = {
         'another-file-check': 'no'
       }
-      const { validator } = await import('../check-method-statement.js')
+      const { validator } = await import('../check-supporting-information.js')
       expect(await validator(payload)).toBeUndefined()
     })
   })

@@ -1,4 +1,4 @@
-import { APPLICATIONS, HEALTH } from '../uris.js'
+import { APPLICATIONS, HEALTH, REMOVE_FILE_UPLOAD } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
 import removeUpload from '../handlers/remove-uploaded-file.js'
 
@@ -35,7 +35,7 @@ export default [
   },
   {
     method: 'GET',
-    path: '/remove/upload',
+    path: REMOVE_FILE_UPLOAD.uri,
     handler: removeUpload
   }
 ]

@@ -58,37 +58,37 @@ describe('The licence type map', () => {
     expect(funcStatus({ setts: 'setts' })).toBe('completed')
   })
 
-  it('should navigate the user to upload method statement page when the status is not started', async () => {
+  it('should navigate the user to upload supporting information page when the status is not started', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
     const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
-    expect(funcUri('not-started')).toEqual('/upload-method-statement')
+    expect(funcUri('not-started')).toEqual('/upload-supporting-information')
   })
 
-  it('should navigate the user to check your method statement page when the status is completed', async () => {
+  it('should navigate the user to check your supporting information page when the status is completed', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
     const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
-    expect(funcUri({ 'method-statement': 'method-statement' })).toEqual('/check-method-statement')
+    expect(funcUri({ 'supporting-information': 'supporting-information' })).toEqual('/check-supporting-information')
   })
 
-  it('should return an object from the method statement section tasks', async () => {
+  it('should return an object from the supporting information section tasks', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
     const funcEnabled = licenceTypeMap[A24].sections[2].tasks[5].enabled
     const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
     const funcUri = licenceTypeMap[A24].sections[2].tasks[5].uri
-    expect(licenceTypeMap[A24].sections[2].tasks[5]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'method-statement', uri: funcUri })
+    expect(licenceTypeMap[A24].sections[2].tasks[5]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'supporting-information', uri: funcUri })
   })
 
-  it('should return completed if the user has completed the upload method statement journey', async () => {
+  it('should return completed if the user has completed the upload supporting information journey', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
     const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
-    expect(funcStatus({ 'method-statement': 'method-statement' })).toBe('completed')
+    expect(funcStatus({ 'supporting-information': 'supporting-information' })).toBe('completed')
   })
 
-  it('should return cannot-start if the user has not completed the upload method statement journey', async () => {
+  it('should return cannot-start if the user has not completed the upload supporting information journey', async () => {
     const { licenceTypeMap } = await import('../licence-type-map.js')
     const { A24 } = await import('../licence-type-map.js')
     const funcStatus = licenceTypeMap[A24].sections[2].tasks[5].status
