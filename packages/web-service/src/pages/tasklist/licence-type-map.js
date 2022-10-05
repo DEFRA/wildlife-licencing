@@ -156,7 +156,9 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SUPPORTING_INFORMATION,
-            uri: status => status[SECTION_TASKS.SUPPORTING_INFORMATION] ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
+            uri: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+              ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
+              : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
             status: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
               ? STATUS_VALUES.COMPLETED
               : eligibilityCheckStatus(status),

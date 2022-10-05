@@ -1,8 +1,8 @@
 
-describe('the upload-method-statement page handler', () => {
+describe('the upload-supporting-information page handler', () => {
   beforeEach(() => jest.resetModules())
 
-  it('without error returns the check your answers page', async () => {
+  it('should redirect the user to the check-supporting-information page after upload completion', async () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
@@ -16,8 +16,7 @@ describe('the upload-method-statement page handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({})),
         setData: jest.fn(),
-        clearPageData: jest.fn(),
-        getPageData: jest.fn(() => ({}))
+        clearPageData: jest.fn()
       })
     }
     jest.doMock('../../../services/virus-scan.js', () => ({
@@ -33,38 +32,7 @@ describe('the upload-method-statement page handler', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/check-supporting-information')
   })
 
-  it('with error returns the upload method-statement page', async () => {
-    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-      return ({ init: () => Promise.resolve() })
-    }))
-    const request = {
-      payload: {
-        'scan-file': {
-          filename: 'hello.txt',
-          path: '/tmp/123'
-        }
-      },
-      cache: () => ({
-        getData: jest.fn(() => ({})),
-        setData: jest.fn(),
-        setPageData: jest.fn(),
-        getPageData: jest.fn(() => ({ error: 'error ' }))
-      })
-    }
-    jest.doMock('../../../services/virus-scan.js', () => ({
-      scanFile: jest.fn(() => true)
-    }))
-    const { uploadSupportingInformation } = await import('../upload-supporting-information.js')
-    const [, postRoute] = uploadSupportingInformation
-    const mockRedirect = jest.fn()
-    const h = {
-      redirect: mockRedirect
-    }
-    await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/upload-supporting-information')
-  })
-
-  it('calls the s3 upload and returns to the check-method-statement', async () => {
+  it('should calls the s3 upload and redirects to the check-supporting-information page', async () => {
     const request = {
       cache: () => ({
         getData: () => ({

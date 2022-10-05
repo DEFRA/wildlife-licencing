@@ -52,7 +52,7 @@ export const completion = async request => {
     await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.SUPPORTING_INFORMATION)
     return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   } else {
-    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.METHOD_STATEMENT)
+    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.SUPPORTING_INFORMATION)
     return TASKLIST.uri
   }
 }
