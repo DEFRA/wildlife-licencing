@@ -69,6 +69,15 @@ export const contactURIs = {
     POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
     ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
     ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+  },
+  AUTHORISED_PEOPLE: {
+    ADD: { uri: '/add-authorised-person', page: 'add-authorised-person' },
+    NAME: { uri: '/authorised-person-name', page: 'authorised-person-name' },
+    EMAIL: { uri: '/authorised-person-email', page: 'authorised-person-email' },
+    POSTCODE: { uri: '/authorised-person-postcode', page: 'authorised-person-postcode' },
+    ADDRESS: { uri: '/authorised-person-address', page: 'authorised-person-address' },
+    ADDRESS_FORM: { uri: '/authorised-person-address-form', page: 'authorised-person-address-form' },
+    REMOVE: { uri: '/remove-authorised-person', page: 'remove-authorised-person' }
   }
 }
 

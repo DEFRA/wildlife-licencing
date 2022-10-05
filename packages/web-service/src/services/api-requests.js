@@ -17,6 +17,18 @@ export const AccountRoles = {
   PAYER_ORGANISATION: 'PAYER-ORGANISATION'
 }
 
+export const contactRoleIsSingular = contactRole => [
+  ContactRoles.APPLICANT,
+  ContactRoles.ECOLOGIST,
+  ContactRoles.PAYER
+].includes(contactRole)
+
+export const accountRoleIsSingular = accountRole => [
+  AccountRoles.APPLICANT_ORGANISATION,
+  AccountRoles.ECOLOGIST_ORGANISATION,
+  AccountRoles.PAYER_ORGANISATION
+].includes(accountRole)
+
 const apiUrls = {
   USERS: '/users',
   USER: '/user',
@@ -42,13 +54,13 @@ Object.freeze(ContactRoles)
 Object.freeze(AccountRoles)
 Object.freeze(apiUrls)
 
-const getContactByApplicationId = async (role, applicationId) => {
+const getContactsByApplicationId = async (role, applicationId) => {
   try {
-    debug(`Get ${role} contact for an application id applicationId: ${applicationId}`)
-    const [contact] = await API.get(apiUrls.CONTACTS, `applicationId=${applicationId}&role=${role}`)
-    return contact
+    debug(`Get ${role} contacts for an application id applicationId: ${applicationId}`)
+    const contacts = await API.get(apiUrls.CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    return contactRoleIsSingular(role) ? contacts[0] : contacts
   } catch (error) {
-    console.error(`Error getting ${role}/applicant for applicationId: ${applicationId}`, error)
+    console.error(`Error getting contacts of ${role} for applicationId: ${applicationId}`, error)
     Boom.boomify(error, { statusCode: 500 })
     throw error
   }
@@ -58,19 +70,27 @@ const createContact = async (role, applicationId, payload) => {
   try {
     const contact = await API.post(apiUrls.CONTACT, payload)
     // If we have a contact assigned to the application, update it
-    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
-    if (applicationContact) {
-      await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
-        contactId: contact.id,
-        applicationId: applicationId,
-        contactRole: role
-      })
-    } else {
+    if (!contactRoleIsSingular(role)) {
       await API.post(apiUrls.APPLICATION_CONTACT, {
         contactId: contact.id,
         applicationId: applicationId,
         contactRole: role
       })
+    } else {
+      const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+      if (applicationContact) {
+        await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
+          contactId: contact.id,
+          applicationId: applicationId,
+          contactRole: role
+        })
+      } else {
+        await API.post(apiUrls.APPLICATION_CONTACT, {
+          contactId: contact.id,
+          applicationId: applicationId,
+          contactRole: role
+        })
+      }
     }
     debug(`Created ${role} ${contact.id} for applicationId: ${applicationId}`)
     return contact
@@ -81,32 +101,8 @@ const createContact = async (role, applicationId, payload) => {
   }
 }
 
-const destroyContact = async (role, applicationId) => {
-  try {
-    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
-    if (applicationContact) {
-      await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
-      debug(`Destroy ${role} ${applicationContact.id} for applicationId: ${applicationId}`)
-      await API.delete(`${apiUrls.CONTACT}/${applicationContact.contactId}`)
-      debug(`Destroy contact ${applicationContact.contactId}`)
-    }
-  } catch (error) {
-    console.error(`Error destroying ${role} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
-    throw error
-  }
-}
-
 const assignContact = async (role, applicationId, contactId) => {
-  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
-  if (applicationContact && applicationContact.contactId !== contactId) {
-    debug(`Reassigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
-    await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`, {
-      contactId,
-      applicationId,
-      contactRole: role
-    })
-  } else if (!applicationContact) {
+  const doPost = async () => {
     debug(`Assigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
     await API.post(`${apiUrls.APPLICATION_CONTACT}`, {
       contactId,
@@ -114,18 +110,38 @@ const assignContact = async (role, applicationId, contactId) => {
       contactRole: role
     })
   }
+
+  // Look for the exact existing relationship
+  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&contactId=${contactId}&role=${role}`)
+  if (applicationContact) {
+    // The relationship already exists - do nothing
+    return null
+  }
+
+  if (contactRoleIsSingular(role)) {
+    // Look for a contact already assigned, to be replaced
+    const [applicationContact2] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    if (applicationContact2) {
+      debug(`Reassigning ${role} contact ${contactId} to applicationId: ${applicationId}`)
+      await API.put(`${apiUrls.APPLICATION_CONTACT}/${applicationContact2.id}`, {
+        contactId,
+        applicationId,
+        contactRole: role
+      })
+    } else {
+      // No relationship exists so create
+      await doPost()
+    }
+  } else {
+    // Plural role always creates the relationship
+    await doPost()
+  }
+
+  return null
 }
 
 const assignAccount = async (role, applicationId, accountId) => {
-  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${role}`)
-  if (applicationAccount && applicationAccount.accountId !== accountId) {
-    debug(`Reassigning ${role} contact ${accountId} to applicationId: ${applicationId}`)
-    await API.put(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`, {
-      accountId,
-      applicationId,
-      accountRole: role
-    })
-  } else if (!applicationAccount) {
+  const doPost = async () => {
     debug(`Assigning ${role} account ${accountId} to applicationId: ${applicationId}`)
     await API.post(`${apiUrls.APPLICATION_ACCOUNT}`, {
       accountId,
@@ -133,13 +149,41 @@ const assignAccount = async (role, applicationId, accountId) => {
       accountRole: role
     })
   }
+
+  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&accountId=${accountId}&role=${role}`)
+  if (applicationAccount) {
+    // The relationship exists - do nothing
+    return null
+  }
+
+  if (accountRoleIsSingular(role)) {
+    const [applicationAccount2] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${role}`)
+    if (applicationAccount2) {
+      if (applicationAccount2.accountId !== accountId) {
+        debug(`Reassigning ${role} contact ${accountId} to applicationId: ${applicationId}`)
+        await API.put(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount2.id}`, {
+          accountId,
+          applicationId,
+          accountRole: role
+        })
+      }
+    } else {
+      // No relationship for role - create
+      await doPost()
+    }
+  } else {
+    // Plural relationship -- always create once
+    await doPost()
+  }
+
+  return null
 }
 
 /**
  * Un-assign a contact from the application
  */
-const unAssignContact = async (role, applicationId) => {
-  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+const unAssignContact = async (role, applicationId, contactId) => {
+  const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&contactId=${contactId}&role=${role}`)
   if (applicationContact) {
     debug(`Un-assigning ${role} contact ${applicationContact.contactId} from applicationId: ${applicationId}`)
     await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
@@ -149,9 +193,9 @@ const unAssignContact = async (role, applicationId) => {
 /**
  * Un-assign a contact from the application and delete it, if it is mutable
  */
-const unLinkContact = async (role, applicationId) => {
+const unLinkContact = async (role, applicationId, contactId) => {
   try {
-    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
+    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&contactId=${contactId}&role=${role}`)
     if (applicationContact) {
       debug(`Unlink ${role} contact ${applicationContact.contactId} from applicationId: ${applicationId}`)
       await API.delete(`${apiUrls.APPLICATION_CONTACT}/${applicationContact.id}`)
@@ -162,39 +206,6 @@ const unLinkContact = async (role, applicationId) => {
     }
   } catch (error) {
     console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
-    throw error
-  }
-}
-
-/**
- * Un-assign a contact from the application and delete it, if it is mutable
- */
-const unLinkAccount = async (role, applicationId) => {
-  try {
-    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${role}`)
-    if (applicationAccount) {
-      debug(`Unlink ${role} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
-      await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
-      const applicationAccounts = await API.get(apiUrls.APPLICATION_ACCOUNTS, `accountId=${applicationAccount.accountId}`)
-      if (!applicationAccounts.length) {
-        await API.delete(`${apiUrls.ACCOUNT}/${applicationAccount.accountId}`)
-      }
-    }
-  } catch (error) {
-    console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
-    throw error
-  }
-}
-
-const updateContact = async (role, applicationId, contact) => {
-  try {
-    debug(`Updating the ${role} for applicationId: ${applicationId}`)
-    const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&role=${role}`)
-    return API.put(`${apiUrls.CONTACT}/${applicationContact.contactId}`, contact)
-  } catch (error) {
-    console.error(`Error updating applicant for applicationId: ${applicationId}`, error)
     Boom.boomify(error, { statusCode: 500 })
     throw error
   }
@@ -222,9 +233,15 @@ const findAccountByUser = async (accountRole, userId) => {
   }
 }
 
-const getAccountByApplicationId = async (accountRole, applicationId) => {
-  const [account] = await API.get(apiUrls.ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
-  return account
+const getAccountsByApplicationId = async (accountRole, applicationId) => {
+  try {
+    const accounts = await API.get(apiUrls.ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
+    return accountRoleIsSingular(accountRole) ? accounts[0] : accounts
+  } catch (error) {
+    console.error(`Error getting accounts by ${accountRole} for applicationId: ${applicationId}`, error)
+    Boom.boomify(error, { statusCode: 500 })
+    throw error
+  }
 }
 
 const createAccount = async (accountRole, applicationId, payload) => {
@@ -254,21 +271,30 @@ const createAccount = async (accountRole, applicationId, payload) => {
   }
 }
 
-const unAssignAccount = async (accountRole, applicationId) => {
-  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
+const unAssignAccount = async (accountRole, applicationId, accountId) => {
+  const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&accountId=${accountId}&role=${accountRole}`)
   if (applicationAccount) {
     debug(`Un-assigning ${accountRole} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
     await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
   }
 }
 
-const updateAccount = async (accountRole, applicationId, account) => {
+/**
+ * Un-assign a contact from the application and delete it, if it is mutable
+ */
+const unLinkAccount = async (accountRole, applicationId, accountId) => {
   try {
-    debug(`Updating the ${accountRole} for applicationId: ${applicationId}`)
-    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&role=${accountRole}`)
-    return API.put(`${apiUrls.ACCOUNT}/${applicationAccount.accountId}`, account)
+    const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&accountId=${accountId}&role=${accountRole}`)
+    if (applicationAccount) {
+      debug(`Unlink ${accountRole} account ${applicationAccount.accountId} from applicationId: ${applicationId}`)
+      await API.delete(`${apiUrls.APPLICATION_ACCOUNT}/${applicationAccount.id}`)
+      const applicationAccounts = await API.get(apiUrls.APPLICATION_ACCOUNTS, `accountId=${applicationAccount.accountId}`)
+      if (!applicationAccounts.length) {
+        await API.delete(`${apiUrls.ACCOUNT}/${applicationAccount.accountId}`)
+      }
+    }
   } catch (error) {
-    console.error(`Error updating ${accountRole} for applicationId: ${applicationId}`, error)
+    console.error(`Error unlinking ${accountRole} from applicationId: ${applicationId}`, error)
     Boom.boomify(error, { statusCode: 500 })
     throw error
   }
@@ -470,6 +496,16 @@ export const APIRequests = {
         throw error
       }
     },
+    update: async (contactId, payload) => {
+      try {
+        debug(`Updating the contact for contactId: ${contactId}`)
+        return API.put(`${apiUrls.CONTACT}/${contactId}`, payload)
+      } catch (error) {
+        console.error(`Error updating the contact for contactId: ${contactId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     destroy: async contactId => {
       try {
         debug(`Delete contact by id: ${contactId}`)
@@ -498,14 +534,12 @@ export const APIRequests = {
         throw new Error(`Unknown contact role: ${contactRole}`)
       }
       return {
-        getByApplicationId: async applicationId => getContactByApplicationId(contactRole, applicationId),
-        create: async (applicationId, applicant) => createContact(contactRole, applicationId, applicant),
-        destroy: async applicationId => destroyContact(contactRole, applicationId),
+        findByUser: async userId => findContactByUser(contactRole, userId),
+        getByApplicationId: async applicationId => getContactsByApplicationId(contactRole, applicationId),
+        create: async (applicationId, contact) => createContact(contactRole, applicationId, contact),
         assign: async (applicationId, contactId) => assignContact(contactRole, applicationId, contactId),
-        unAssign: async applicationId => unAssignContact(contactRole, applicationId),
-        unLink: async applicationId => unLinkContact(contactRole, applicationId),
-        update: async (applicationId, contact) => updateContact(contactRole, applicationId, contact),
-        findByUser: async userId => findContactByUser(contactRole, userId)
+        unAssign: async (applicationId, contactId) => unAssignContact(contactRole, applicationId, contactId),
+        unLink: async (applicationId, contactId) => unLinkContact(contactRole, applicationId, contactId)
       }
     }
   },
@@ -516,6 +550,16 @@ export const APIRequests = {
         return API.get(`${apiUrls.ACCOUNT}/${accountId}`)
       } catch (error) {
         console.error(`Error getting account by id: ${accountId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    update: async (accountId, payload) => {
+      try {
+        debug(`Updating the account for contactId: ${accountId}`)
+        return API.put(`${apiUrls.ACCOUNT}/${accountId}`, payload)
+      } catch (error) {
+        console.error(`Error updating the contact for contactId: ${accountId}`, error)
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
@@ -548,13 +592,12 @@ export const APIRequests = {
         throw new Error(`Unknown account role: ${accountRole}`)
       }
       return {
-        create: async (applicationId, applicationOrganisation) => createAccount(accountRole, applicationId, applicationOrganisation),
+        getByApplicationId: async applicationId => getAccountsByApplicationId(accountRole, applicationId),
+        findByUser: async userId => findAccountByUser(accountRole, userId),
+        create: async (applicationId, accountType) => createAccount(accountRole, applicationId, accountType),
         assign: async (applicationId, accountId) => assignAccount(accountRole, applicationId, accountId),
-        unAssign: async applicationId => unAssignAccount(accountRole, applicationId),
-        unLink: async applicationId => unLinkAccount(accountRole, applicationId),
-        update: async (applicationId, account) => updateAccount(accountRole, applicationId, account),
-        getByApplicationId: async applicationId => getAccountByApplicationId(accountRole, applicationId),
-        findByUser: async userId => findAccountByUser(accountRole, userId)
+        unAssign: async (applicationId, accountId) => unAssignAccount(accountRole, applicationId, accountId),
+        unLink: async (applicationId, accountId) => unLinkAccount(accountRole, applicationId, accountId)
       }
     }
   },

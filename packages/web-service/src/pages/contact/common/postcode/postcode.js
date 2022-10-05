@@ -27,7 +27,7 @@ export const setPostcodeData = (contactRole, accountRole) => async request => {
   const postcode = pageData.payload.postcode
   const { userId, applicationId } = journeyData
 
-  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setAddress({ postcode })
   // Write the address lookup results into the cache
   // There is a lot of discussion online about UK postcode formats and reg-ex validation patterns.

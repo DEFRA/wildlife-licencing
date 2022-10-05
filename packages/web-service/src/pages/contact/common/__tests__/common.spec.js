@@ -485,7 +485,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
+      const contactOps = contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.create(false, 'Brian Ferry')
       expect(mockCreate).toHaveBeenCalledWith('54b5c443-e5e0-4d81-9daa-671a21bd88ca', { fullName: 'Brian Ferry' })
@@ -504,7 +504,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
+      const contactOps = contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.create(false, 'Brian Ferry')
       expect(mockCreate).not.toHaveBeenCalled()
@@ -530,7 +530,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
+      const contactOps = contactOperations('APPLICANT', '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.create(true, 'Brian Ferry')
       expect(mockCreate).toHaveBeenCalledWith('54b5c443-e5e0-4d81-9daa-671a21bd88ca',
@@ -554,7 +554,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+      const contactOps = contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.assign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
@@ -577,7 +577,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+      const contactOps = contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.assign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       expect(mockUnlink).not.toHaveBeenCalled()
@@ -601,7 +601,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+      const contactOps = contactOperations('APPLICANT', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.assign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       expect(mockUnlink).not.toHaveBeenCalled()
@@ -622,7 +622,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT',
+      const contactOps = contactOperations('APPLICANT',
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.unAssign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
@@ -642,7 +642,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT',
+      const contactOps = contactOperations('APPLICANT',
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.unAssign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
@@ -670,7 +670,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT',
+      const contactOps = contactOperations('APPLICANT',
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.setName('Jon Bonham')
@@ -691,7 +691,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT',
+      const contactOps = contactOperations('APPLICANT',
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.setName('Jon Bonham')
@@ -718,7 +718,7 @@ describe('contact common', () => {
         }
       }))
       const { contactOperations } = await import('../common.js')
-      const contactOps = await contactOperations('APPLICANT',
+      const contactOps = contactOperations('APPLICANT',
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.setName('Jon Bonham')
@@ -746,7 +746,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.create('Organisation name')
       expect(mockCreate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', { name: 'Organisation name' })
     })
@@ -764,7 +764,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.create()
       expect(mockCreate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', {})
     })
@@ -782,7 +782,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.create()
       expect(mockCreate).not.toHaveBeenCalled()
     })
@@ -804,7 +804,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.assign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       expect(mockAssign).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
@@ -826,7 +826,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.assign('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       expect(mockUnlink).not.toHaveBeenCalled()
       expect(mockAssign).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
@@ -846,7 +846,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.unAssign()
       expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
     })
@@ -871,7 +871,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.setName('Led Zeppelin')
       expect(mockUpdate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', {
         address: 'Address',
@@ -901,7 +901,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.setName('Led Zeppelin')
       expect(mockUpdate).not.toHaveBeenCalled()
     })
@@ -919,7 +919,7 @@ describe('contact common', () => {
         }
       }))
       const { accountOperations } = await import('../common.js')
-      const acctOps = await accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
+      const acctOps = accountOperations('APPLICANT_ORGANISATION', '8d79bc16-02fe-4e3c-85ac-b8d792b59b94')
       await acctOps.setName('Led Zeppelin')
       expect(mockUpdate).not.toHaveBeenCalled()
     })
@@ -955,7 +955,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@email.com')
       expect(mockUpdate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -998,7 +998,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@email.com')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1040,7 +1040,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@email.com')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1085,7 +1085,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@pinkfloyd.com')
       expect(mockUpdate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1127,7 +1127,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@pinkfloyd.com')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1171,7 +1171,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setAddress('Address')
       expect(mockUpdate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1214,7 +1214,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setEmailAddress('Rick.wright@email.com')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1256,7 +1256,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setAddress('Address')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1299,7 +1299,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setAddress('Address')
       expect(mockUpdate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1341,7 +1341,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setAddress('Address')
       expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -1390,7 +1390,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
@@ -1441,7 +1441,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
@@ -1490,7 +1490,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
@@ -1538,7 +1538,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
@@ -1591,7 +1591,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockUpdateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1641,7 +1641,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockUpdateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1689,7 +1689,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockUpdateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1740,7 +1740,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1792,7 +1792,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1842,7 +1842,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(false)
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1887,7 +1887,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setContactIsUser(true)
       expect(mockUpdateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1931,7 +1931,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setContactIsUser(true)
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -1977,7 +1977,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setContactIsUser(false)
       expect(mockUpdateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
@@ -2021,7 +2021,7 @@ describe('contact common', () => {
         }
       }))
       const { contactAccountOperations } = await import('../common.js')
-      const ops = await contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setContactIsUser(false)
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
