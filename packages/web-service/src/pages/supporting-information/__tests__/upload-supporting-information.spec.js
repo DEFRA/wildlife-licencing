@@ -38,26 +38,9 @@ describe('the upload-supporting-information page handler', () => {
         getData: () => ({
           fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
           applicationId: 123
-        }),
-        getPageData: () => ({
-          payload: {
-            'another-file-check': 'no'
-          }
         })
       })
     }
-
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: ({
-        APPLICATION: {
-          tags: () => {
-            return {
-              add: () => false
-            }
-          }
-        }
-      })
-    }))
 
     const mockS3FileUpload = jest.fn()
     jest.doMock('../../../services/s3-upload.js', () => ({
