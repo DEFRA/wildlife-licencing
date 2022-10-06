@@ -1,3 +1,4 @@
+import { ContactRoles, AccountRoles } from '../../pages/contact/common/common.js'
 
 jest.spyOn(console, 'error').mockImplementation(code => {})
 
@@ -794,7 +795,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/contacts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT')
       expect(result).toEqual(({ foo: 'bar' }))
@@ -807,7 +808,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -828,7 +829,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPut).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -849,7 +850,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
       expect(mockPost).toHaveBeenCalledWith('/application-contact', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -866,7 +867,7 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', {}))
         .rejects.toThrowError()
     })
@@ -884,7 +885,7 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).toHaveBeenCalledWith('/application-contact/e8387a83-1165-42e6-afab-add01e77bc4c', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -906,7 +907,7 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).not.toHaveBeenCalled()
     })
@@ -920,7 +921,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPost).toHaveBeenCalledWith('/application-contact', { applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3', contactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', contactRole: 'APPLICANT' })
     })
@@ -934,7 +935,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPost).not.toHaveBeenCalledWith()
     })
@@ -946,7 +947,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).assign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -963,7 +964,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
@@ -977,7 +978,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).not.toHaveBeenCalledWith()
     })
@@ -989,7 +990,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1001,7 +1002,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
       expect(mockGet).toHaveBeenCalledWith('/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT')
     })
@@ -1013,7 +1014,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1041,7 +1042,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
@@ -1061,7 +1062,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
@@ -1074,7 +1075,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, ContactRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1093,7 +1094,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/accounts', 'applicationId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT-ORGANISATION')
       expect(result).toEqual(({ foo: 'bar' }))
@@ -1106,7 +1107,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1122,7 +1123,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockPost).toHaveBeenCalledWith('/application-account', {
         accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
@@ -1150,7 +1151,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockPut).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60', {
         accountId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
@@ -1166,7 +1167,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).create('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1185,7 +1186,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/f0de6fcb-098f-40b2-8cdb-0f717a701b60')
     })
@@ -1199,7 +1200,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockDelete).not.toHaveBeenCalledWith()
     })
@@ -1211,7 +1212,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unAssign('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
@@ -1229,7 +1230,7 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).toHaveBeenCalledWith('/application-account/e8387a83-1165-42e6-afab-add01e77bc4c', {
         applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
@@ -1251,7 +1252,7 @@ describe('The API requests service', () => {
           put: mockPut
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPut).not.toHaveBeenCalled()
     })
@@ -1265,7 +1266,7 @@ describe('The API requests service', () => {
           post: mockPost
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '2342fce0-3067-4ca5-ae7a-23cae648e45c')
       expect(mockPost).toHaveBeenCalledWith('/application-account', { accountId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', accountRole: 'APPLICANT-ORGANISATION', applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
     })
@@ -1276,7 +1277,7 @@ describe('The API requests service', () => {
           get: jest.fn(() => { throw new Error() })
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).assign('b306c67f-f5cd-4e69-9986-8390188051b3', '6829ad54-bab7-4a78-8ca9-dcf722117a45'))
         .rejects.toThrowError()
     })
@@ -1288,7 +1289,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       expect(mockGet).toHaveBeenCalledWith('/accounts', 'userId=f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb&role=APPLICANT-ORGANISATION')
     })
@@ -1299,7 +1300,7 @@ describe('The API requests service', () => {
           get: jest.fn(() => { throw new Error() })
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).findByUser('f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'))
         .rejects.toThrowError()
     })
@@ -1327,7 +1328,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
     })
@@ -1347,7 +1348,7 @@ describe('The API requests service', () => {
           delete: mockDelete
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-account/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/account/412d7297-643d-485b-8745-cc25a0e6ec0a')
@@ -1360,7 +1361,7 @@ describe('The API requests service', () => {
           get: mockGet
         }
       }))
-      const { APIRequests, AccountRoles } = await import('../api-requests.js')
+      const { APIRequests } = await import('../api-requests.js')
       await expect(() => APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).unLink('b306c67f-f5cd-4e69-9986-8390188051b3'))
         .rejects.toThrowError()
     })
