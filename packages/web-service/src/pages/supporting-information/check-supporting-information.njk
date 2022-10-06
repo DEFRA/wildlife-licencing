@@ -25,7 +25,7 @@
           {% for upload in data %}
 
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Uploaded file</dt>
+                <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
                 <dd class="govuk-summary-list__value">
                     {{ upload.filename }} <br>
                     <p>Uploaded {{ upload.uploadedDate }}</>
