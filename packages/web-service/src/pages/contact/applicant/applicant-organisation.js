@@ -4,8 +4,7 @@ import {
   contactAccountCompletion
 } from '../common/is-organisation/is-organisation.js'
 import { contactURIs } from '../../../uris.js'
-import { checkHasContact } from '../common/common.js'
-import { ContactRoles, AccountRoles } from '../../../services/api-requests.js'
+import { AccountRoles, checkHasContact, ContactRoles } from '../common/common.js'
 import { isOrganisation } from '../common/is-organisation/is-organisation-page.js'
 
 const { IS_ORGANISATION } = contactURIs.APPLICANT

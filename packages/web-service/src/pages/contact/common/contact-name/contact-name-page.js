@@ -1,7 +1,8 @@
-import { APIRequests, ContactRoles } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
+import { ContactRoles } from '../common.js'
 const nameReg = /^[/\s\p{L}'-.,]{1,160}$/u
 
 export const getValidator = contactRole => async (payload, context) => {

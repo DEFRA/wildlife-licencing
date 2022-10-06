@@ -1,12 +1,11 @@
 import { contactURIs } from '../../../uris.js'
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
-import { contactAccountOperationsForContactAccount } from '../common/common.js'
-import { ContactRoles } from '../../../services/api-requests.js'
+import { contactAccountOperationsForContactAccount, ContactRoles } from '../common/common.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 
 const { EMAIL } = contactURIs.AUTHORISED_PEOPLE
 
-const setData = async request => {
+export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
   const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,

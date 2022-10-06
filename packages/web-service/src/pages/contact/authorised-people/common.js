@@ -1,6 +1,6 @@
-import { checkHasApplication } from '../common/common.js'
+import { checkHasApplication, ContactRoles } from '../common/common.js'
 import { contactURIs } from '../../../uris.js'
-import { APIRequests, ContactRoles } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 const { NAME, EMAIL, POSTCODE, ADDRESS, ADDRESS_FORM, ADD } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkAuthorisedPeopleData = async (request, h) => {
@@ -58,21 +58,17 @@ export const getAuthorisedPeopleCompletion = async request => {
     return returnAndClear(EMAIL)
   }
 
-  if (contact.address) {
-    if (contact.address.postcode) {
-      if (contact.address.uprn) {
-        return returnAndClear(ADD)
-      } else {
-        return returnAndClear(ADDRESS)
-      }
-    } else {
-      if (contact.address.addressLine1) {
-        return returnAndClear(ADD)
-      } else {
-        return returnAndClear(ADDRESS_FORM)
-      }
-    }
-  } else {
+  if (contact?.address?.uprn || contact?.address?.addressLine1) {
+    return returnAndClear(ADD)
+  }
+
+  if (!contact?.address?.postcode) {
     return returnAndClear(POSTCODE)
   }
+
+  if (journeyData.addressLookup && !contact?.address?.uprn) {
+    return returnAndClear(ADDRESS)
+  }
+
+  return returnAndClear(ADDRESS_FORM)
 }

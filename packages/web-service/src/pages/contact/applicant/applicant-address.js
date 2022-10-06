@@ -1,6 +1,5 @@
-import { checkAccountAndOrContactData } from '../common/common.js'
+import { AccountRoles, checkAccountAndOrContactData, ContactRoles } from '../common/common.js'
 import { addressPage } from '../common/address/address-page.js'
-import { ContactRoles, AccountRoles } from '../../../services/api-requests.js'
 import { contactURIs } from '../../../uris.js'
 import { getAddressData, setAddressData } from '../common/address/address.js'
 

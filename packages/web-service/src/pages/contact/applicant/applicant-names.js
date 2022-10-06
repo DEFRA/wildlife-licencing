@@ -5,8 +5,7 @@ import {
   setContactNamesData,
   contactNamesCompletion
 } from '../common/contact-names/contact-names.js'
-import { ContactRoles, AccountRoles } from '../../../services/api-requests.js'
-import { checkHasContact } from '../common/common.js'
+import { AccountRoles, checkHasContact, ContactRoles } from '../common/common.js'
 
 export const applicantNames = contactNamesPage({
   page: contactURIs.APPLICANT.NAMES.page,

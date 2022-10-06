@@ -2,6 +2,32 @@ import { APPLICATIONS } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../constants.js'
 
+export const ContactRoles = {
+  APPLICANT: 'APPLICANT',
+  ECOLOGIST: 'ECOLOGIST',
+  PAYER: 'PAYER',
+  AUTHORISED_PERSON: 'AUTHORISED-PERSON',
+  ADDITIONAL_CONTACT: 'ADDITIONAL-CONTACT'
+}
+
+export const AccountRoles = {
+  APPLICANT_ORGANISATION: 'APPLICANT-ORGANISATION',
+  ECOLOGIST_ORGANISATION: 'ECOLOGIST-ORGANISATION',
+  PAYER_ORGANISATION: 'PAYER-ORGANISATION'
+}
+
+export const contactRoleIsSingular = contactRole => [
+  ContactRoles.APPLICANT,
+  ContactRoles.ECOLOGIST,
+  ContactRoles.PAYER
+].includes(contactRole)
+
+export const accountRoleIsSingular = accountRole => [
+  AccountRoles.APPLICANT_ORGANISATION,
+  AccountRoles.ECOLOGIST_ORGANISATION,
+  AccountRoles.PAYER_ORGANISATION
+].includes(accountRole)
+
 /*
  * This module abstracts the API operations out of the handlers helps simplify this section
  * of the user journey, which is somewhat complex.
@@ -185,7 +211,7 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
       const contact = await getContact()
       if (contact) {
         if (contactId !== contact.id) {
-          await APIRequests.CONTACT.role(contactRole).unLink(applicationId, contactId)
+          await APIRequests.CONTACT.role(contactRole).unLink(applicationId, contact.id)
           await APIRequests.CONTACT.role(contactRole).assign(applicationId, contactId)
         }
       } else {
@@ -263,13 +289,11 @@ const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
       if (accountId) {
         if (account) {
           if (accountId !== account.id) {
-            await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, accountId)
+            await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
             await APIRequests.ACCOUNT.role(accountRole).assign(applicationId, accountId)
-            return APIRequests.ACCOUNT.getById(accountId)
           }
         } else {
           await APIRequests.ACCOUNT.role(accountRole).assign(applicationId, accountId)
-          return APIRequests.ACCOUNT.getById(accountId)
         }
       }
     },
@@ -507,7 +531,6 @@ const migrateContact = async (userId, applicationId, currentContact, contactRole
     }))
   }
 }
-
 const updateContactFields = async (applicationId, contactRole, currentContact, {
   address,
   contactDetails
@@ -520,6 +543,7 @@ const updateContactFields = async (applicationId, contactRole, currentContact, {
     ...(currentContact.cloneOf && { cloneOf: currentContact.cloneOf })
   })
 }
+
 /**
  * When changing the email address or address of an immutable account then it is necessary to
  * clone the existing account. The name is copied from the origin account

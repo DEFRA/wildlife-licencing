@@ -1,12 +1,12 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
-import { checkHasApplication, contactOperationsForContact } from '../common/common.js'
+import { checkHasApplication, contactOperationsForContact, ContactRoles } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
-import { APIRequests, ContactRoles } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { addressLine, CONTACT_COMPLETE } from '../common/check-answers/check-answers.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
-const checkData = async (request, h) => {
+export const checkData = async (request, h) => {
   const res = await checkHasApplication(request, h)
   if (res) {
     return res
@@ -49,29 +49,33 @@ export const getData = async request => {
   }
 }
 
+export const setData = async request => {
+  const journeyData = await request.cache().getData()
+  const { userId, applicationId } = journeyData
+  if (request.payload['yes-no'] === 'yes') {
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE.AUTHORISED_PERSON)
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, userId, null)
+    const contact = await contactOps.create(false, request.payload.name)
+    Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+    await request.cache().clearPageData(NAME.page)
+  } else {
+    await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE.AUTHORISED_PERSON)
+    delete journeyData.authorisedPeople
+  }
+
+  await request.cache().setData(journeyData)
+}
+
+export const completion = async request => {
+  const { payload: { 'yes-no': yesNo } } = await request.cache().getPageData()
+  return yesNo === 'yes' ? NAME.uri : TASKLIST.uri
+}
+
 export const addAuthorisedPerson = yesNoPage({
   page: ADD.page,
   uri: ADD.uri,
   checkData: checkData,
   getData: getData,
-  setData: async request => {
-    const journeyData = await request.cache().getData()
-    const { userId, applicationId } = journeyData
-    if (request.payload['yes-no'] === 'yes') {
-      await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE.AUTHORISED_PERSON)
-      const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, userId, null)
-      const contact = await contactOps.create(false, request.payload.name)
-      Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
-      await request.cache().clearPageData(NAME.page)
-    } else {
-      await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE.AUTHORISED_PERSON)
-      delete journeyData.authorisedPeople
-    }
-
-    await request.cache().setData(journeyData)
-  },
-  completion: async request => {
-    const { payload: { 'yes-no': yesNo } } = await request.cache().getPageData()
-    return yesNo === 'yes' ? NAME.uri : TASKLIST.uri
-  }
+  setData: setData,
+  completion: completion
 })

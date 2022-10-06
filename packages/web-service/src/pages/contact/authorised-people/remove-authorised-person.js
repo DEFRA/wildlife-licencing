@@ -1,8 +1,7 @@
 import { yesNoPage } from '../../common/yes-no.js'
 import { contactURIs } from '../../../uris.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleData } from './common.js'
-import { ContactRoles } from '../../../services/api-requests.js'
-import { contactOperationsForContact } from '../common/common.js'
+import { contactOperationsForContact, ContactRoles } from '../common/common.js'
 
 const { ADD, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 

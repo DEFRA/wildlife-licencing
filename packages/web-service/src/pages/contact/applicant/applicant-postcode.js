@@ -1,8 +1,7 @@
 import { contactURIs } from '../../../uris.js'
 import { postcodePage } from '../common/postcode/postcode-page.js'
-import { ContactRoles, AccountRoles } from '../../../services/api-requests.js'
 import { getPostcodeData, postcodeCompletion, setPostcodeData } from '../common/postcode/postcode.js'
-import { checkHasContact } from '../common/common.js'
+import { AccountRoles, checkHasContact, ContactRoles } from '../common/common.js'
 
 const { POSTCODE } = contactURIs.APPLICANT
 
