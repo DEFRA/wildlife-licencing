@@ -6,34 +6,6 @@ describe('the check-supporting-information page handler', () => {
     }))
   })
 
-  describe('the checkData function', () => {
-    it('checks there is a fileUpload object set in the cache and if not redirects to the upload page', async () => {
-      const mockRedirect = jest.fn()
-      const request = {
-        cache: () => ({
-          getData: () => ({ })
-        })
-      }
-      const h = {
-        redirect: mockRedirect
-      }
-      const { checkData } = await import('../check-supporting-information.js')
-      await checkData(request, h)
-      expect(mockRedirect).toHaveBeenCalledWith('/upload-supporting-information')
-    })
-
-    it('checks there is a fileUpload object set in the cache and if so returns null', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({ fileUpload: {} })
-        })
-      }
-      const { checkData } = await import('../check-supporting-information.js')
-      const result = await checkData(request, { })
-      expect(result).toBeNull()
-    })
-  })
-
   describe('the getData function', () => {
     it(' returns the file data', async () => {
       const mockRemoveUploadedFile = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e', uploadId: '1234567' }))
