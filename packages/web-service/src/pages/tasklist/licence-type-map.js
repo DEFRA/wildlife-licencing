@@ -26,7 +26,7 @@ export const SECTION_TASKS = {
   SITES: 'sites',
   SETTS: 'setts',
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
-  METHOD_STATEMENT: 'method-statement',
+  SUPPORTING_INFORMATION: 'supporting-information',
   SUBMIT: 'send-application'
 }
 
@@ -57,7 +57,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
-    [SECTION_TASKS.METHOD_STATEMENT]: true,
+    [SECTION_TASKS.SUPPORTING_INFORMATION]: applicationTags.includes(SECTION_TASKS.SUPPORTING_INFORMATION),
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -155,9 +155,13 @@ export const licenceTypeMap = {
             enabled: eligibilityCheckEnabled
           },
           {
-            name: SECTION_TASKS.METHOD_STATEMENT,
-            uri: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri,
-            status: eligibilityCheckStatus,
+            name: SECTION_TASKS.SUPPORTING_INFORMATION,
+            uri: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+              ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
+              : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
+            status: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           }
         ]

@@ -28,22 +28,32 @@
 
 {{ errorSummary(error, errorMap, 'There is a problem') }}
 
-<h1 class="govuk-heading-xl">Upload a method statement</h1>
+<h1 class="govuk-heading-xl">Upload supporting information</h1>
 
 <div class="govuk-grid-row">
     <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
 
-      <p class="govuk-body">The method statement must include:</p>
+      <p class="govuk-body">Upload files that support your application.</p>
+      <p class="govuk-body">You can upload:</p>
+         <ul class="govuk-list govuk-list--bullet">
+            <li>a works schedule</li>
+            <li>a methods statement</li>
+            <li>maps, diagrams or drawings</li>
+            <li>any other supporting information</li>
+        </ul>
+      <p class="govuk-body">You should include information on:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>how and when each badger sett will be affected</li>
             <li>types of machinery or tools that will be used and their distance from each badger sett</li>
-            <li>justification for why each badger sett needs to be affected</li>
+            <li>justification for why each badger sett will be affected</li>
             <li>dates of any proposed mitigation work</li>
         </ul>
 
         <h2 class="govuk-heading-m">Upload a file</h2>
         <p class="govuk-body">The file must be smaller than 30MB. It can be:</p>
         <ul class="govuk-list govuk-list--bullet">
+            <li>an image (JPG, PNG, TIF or BMP)</li>
+            <li>map data (GeoJSON, KML or Shape)</li>
             <li>text (DOC, DOCX, PDF or ODT)</li>
             <li>a spreadsheet (XLS, XLSX or ODS)</li>
         </ul>
