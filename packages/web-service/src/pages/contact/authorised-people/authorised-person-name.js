@@ -8,8 +8,9 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
   const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
-    applicationId, userId, journeyData.authorisedPeople.contactId)
-  await contactOps.setName(request.payload.name)
+    applicationId, userId, null)
+  const contact = await contactOps.create(false, request.payload.name)
+  Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
   await request.cache().setData(journeyData)
 }
 

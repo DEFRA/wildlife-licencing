@@ -50,12 +50,6 @@ describe('the postcode functions', () => {
           }
         }
       }))
-      const mockSetAddress = jest.fn()
-      jest.doMock('../../common.js', () => ({
-        contactAccountOperations: () => ({
-          setAddress: mockSetAddress
-        })
-      }))
       const mockSetData = jest.fn()
       const request = {
         cache: () => ({
@@ -72,17 +66,10 @@ describe('the postcode functions', () => {
       }))
       const { setPostcodeData } = await import('../postcode.js')
       await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
-      expect(mockSetAddress).toHaveBeenCalledWith({ postcode: 'SW1W 0NY' })
       expect(mockSetData).toHaveBeenCalledWith(expect.objectContaining({ addressLookup: [{ foo: 'bar' }] }))
     })
 
     it('sets the postcode and looks up the address, deleting the address lookup cache data on a null result', async () => {
-      const mockSetAddress = jest.fn()
-      jest.doMock('../../common.js', () => ({
-        contactAccountOperations: () => ({
-          setAddress: mockSetAddress
-        })
-      }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
@@ -106,6 +93,37 @@ describe('the postcode functions', () => {
           lookup: mockLookup
         }
       }))
+      const { setPostcodeData } = await import('../postcode.js')
+      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
+    })
+
+    it('deleting the address lookup cache data on throwing an error', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              remove: jest.fn()
+            })
+          }
+        }
+      }))
+      const mockSetData = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
+          getPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
+          setData: mockSetData
+        })
+      }
+      const mockLookup = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        ADDRESS: {
+          lookup: mockLookup
+        }
+      }))
+      jest.doMock('path')
+      jest.doMock('fs', () => ({ readdirSync: () => [] }))
       const { setPostcodeData } = await import('../postcode.js')
       await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })

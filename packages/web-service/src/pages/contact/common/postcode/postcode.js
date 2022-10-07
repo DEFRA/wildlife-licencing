@@ -1,7 +1,6 @@
 import db from 'debug'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
-import { contactAccountOperations } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import path from 'path'
 import Config from '@defra/wls-connectors-lib/src/config.js'
@@ -25,10 +24,8 @@ export const setPostcodeData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode
-  const { userId, applicationId } = journeyData
+  const { applicationId } = journeyData
 
-  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
-  await contactAccountOps.setAddress({ postcode })
   // Write the address lookup results into the cache
   // There is a lot of discussion online about UK postcode formats and reg-ex validation patterns.
   // See this discussion https://stackoverflow.com/questions/164979/regex-for-matching-uk-postcodes

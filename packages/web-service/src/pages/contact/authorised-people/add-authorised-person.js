@@ -1,5 +1,5 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
-import { checkHasApplication, contactOperationsForContact, ContactRoles } from '../common/common.js'
+import { checkHasApplication, ContactRoles } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { APIRequests } from '../../../services/api-requests.js'
@@ -7,22 +7,38 @@ import { addressLine, CONTACT_COMPLETE } from '../common/check-answers/check-ans
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
-  const res = await checkHasApplication(request, h)
-  if (res) {
-    return res
+  const ck = await checkHasApplication(request, h)
+  if (ck) {
+    return ck
   }
 
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
     .getByApplicationId(journeyData.applicationId)
 
-  // Remove any that are incomplete because of back-button actions
+  const returnAndClear = async p => {
+    await request.cache().clearPageData(p.page)
+    return h.redirect(p.uri)
+  }
+
+  // Check any that are incomplete because of back-button actions
   for (const contact of contacts) {
-    if (!contact.fullName || !contact?.contactDetails?.email || !contact?.address) {
-      const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
-        applicationId, userId, contact.id)
-      await contactOps.unAssign()
+    if (!contact.fullName) {
+      Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+      await request.cache().setData(journeyData)
+      return returnAndClear(NAME)
+    }
+
+    if (!contact?.contactDetails?.email) {
+      Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+      await request.cache().setData(journeyData)
+      return returnAndClear(EMAIL)
+    }
+
+    if (!contact?.address) {
+      Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+      await request.cache().setData(journeyData)
+      return returnAndClear(POSTCODE)
     }
   }
 
@@ -51,18 +67,14 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
+  const { applicationId } = journeyData
   if (request.payload['yes-no'] === 'yes') {
-    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE.AUTHORISED_PERSON)
-    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, userId, null)
-    const contact = await contactOps.create(false, request.payload.name)
-    Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
     await request.cache().clearPageData(NAME.page)
+    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE.AUTHORISED_PERSON)
   } else {
     await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE.AUTHORISED_PERSON)
-    delete journeyData.authorisedPeople
   }
-
+  delete journeyData.authorisedPeople
   await request.cache().setData(journeyData)
 }
 

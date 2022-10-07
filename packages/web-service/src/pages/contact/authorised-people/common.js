@@ -1,7 +1,7 @@
 import { checkHasApplication, ContactRoles } from '../common/common.js'
-import { contactURIs } from '../../../uris.js'
+import { contactURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
-const { NAME, EMAIL, POSTCODE, ADDRESS, ADDRESS_FORM, ADD } = contactURIs.AUTHORISED_PEOPLE
+const { NAME, EMAIL, POSTCODE, ADD } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkAuthorisedPeopleData = async (request, h) => {
   const ck = await checkHasApplication(request, h)
@@ -10,16 +10,11 @@ export const checkAuthorisedPeopleData = async (request, h) => {
   }
 
   const journeyData = await request.cache().getData()
-  if (!journeyData?.authorisedPeople?.contactId) {
-    const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
-      .getByApplicationId(journeyData.applicationId)
+  const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
+    .getByApplicationId(journeyData.applicationId)
 
-    if (!contacts.length) {
-      return h.redirect(ADD.uri)
-    } else {
-      Object.assign(journeyData, { authorisedPeople: { contactId: contacts[0].id } })
-      await request.cache().setData(journeyData)
-    }
+  if (contacts.length && !journeyData?.authorisedPeople?.contactId) {
+    return h.redirect(TASKLIST.uri)
   }
 
   return null
@@ -62,13 +57,5 @@ export const getAuthorisedPeopleCompletion = async request => {
     return returnAndClear(ADD)
   }
 
-  if (!contact?.address?.postcode) {
-    return returnAndClear(POSTCODE)
-  }
-
-  if (journeyData.addressLookup && !contact?.address?.uprn) {
-    return returnAndClear(ADDRESS)
-  }
-
-  return returnAndClear(ADDRESS_FORM)
+  return returnAndClear(POSTCODE)
 }

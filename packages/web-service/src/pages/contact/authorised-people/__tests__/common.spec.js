@@ -1,12 +1,12 @@
 describe('authorised person common', () => {
   beforeEach(() => jest.resetModules())
   describe('the checkAuthorisedPeopleData function ', () => {
-    it('redirects to the ADD page if no contacts exist', async () => {
+    it('redirects to the tasklist page if contacts exist and journey contact not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => [])
+              getByApplicationId: jest.fn(() => [{ id: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }])
             })
           }
         }
@@ -25,18 +25,16 @@ describe('authorised person common', () => {
       }
       const { checkAuthorisedPeopleData } = await import('../common.js')
       await checkAuthorisedPeopleData(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/add-authorised-person')
+      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
     })
 
-    it('returns null and sets authorisedPeople.contactId if a contact exists', async () => {
+    it('returns null if journey contact if not set and no contacts exist', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => [{
-                id: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
-              }])
+              getByApplicationId: jest.fn(() => [])
             })
           }
         }
@@ -56,11 +54,35 @@ describe('authorised person common', () => {
       const { checkAuthorisedPeopleData } = await import('../common.js')
       await checkAuthorisedPeopleData(request, h)
       expect(h.redirect).not.toHaveBeenCalled()
-      expect(mockSetData).toHaveBeenCalledWith({
-        applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
-        authorisedPeople: { contactId: '1c3e7655-bb74-4420-9bf0-0bd710987f10' },
-        userId: '0d5509a8-48d8-4026-961f-a19918dfc28b'
-      })
+    })
+
+    it('returns null journey contact is set if and contacts exist', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => [{ id: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }])
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          setData: mockSetData,
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+            authorisedPeople: { contactId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const { checkAuthorisedPeopleData } = await import('../common.js')
+      await checkAuthorisedPeopleData(request, h)
+      expect(h.redirect).not.toHaveBeenCalled()
     })
 
     it('returns null if the authorisedPeople.contactId is set', async () => {
@@ -250,59 +272,6 @@ describe('authorised person common', () => {
       const { getAuthorisedPeopleCompletion } = await import('../common.js')
       const result = await getAuthorisedPeopleCompletion(request)
       expect(result).toEqual('/authorised-person-postcode')
-    })
-
-    it('returns the address page if a lookup result exists', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            getById: jest.fn(() => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              fullName: 'Peter Hammill',
-              contactDetails: { email: 'Peter.Hammill@vandergrafgenerator.co.uk' },
-              address: { postcode: 'BS44 2JK' }
-            }))
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          clearPageData: jest.fn(),
-          getData: jest.fn(() => ({
-            authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' },
-            addressLookup: [{ Address: {} }]
-          }))
-        })
-      }
-      const { getAuthorisedPeopleCompletion } = await import('../common.js')
-      const result = await getAuthorisedPeopleCompletion(request)
-      expect(result).toEqual('/authorised-person-address')
-    })
-
-    it('returns the address entry if no lookup result exists', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            getById: jest.fn(() => ({
-              id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
-              fullName: 'Peter Hammill',
-              contactDetails: { email: 'Peter.Hammill@vandergrafgenerator.co.uk' },
-              address: { postcode: 'BS44 2JK' }
-            }))
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          clearPageData: jest.fn(),
-          getData: jest.fn(() => ({
-            authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
-          }))
-        })
-      }
-      const { getAuthorisedPeopleCompletion } = await import('../common.js')
-      const result = await getAuthorisedPeopleCompletion(request)
-      expect(result).toEqual('/authorised-person-address-form')
     })
   })
 })

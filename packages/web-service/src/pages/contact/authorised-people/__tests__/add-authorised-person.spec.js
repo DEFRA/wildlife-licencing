@@ -1,21 +1,22 @@
 describe('add authorised person', () => {
   beforeEach(() => jest.resetModules())
   describe('the checkData function', () => {
-    it('un-assigns incomplete contacts and returns null - no name', async () => {
-      const mockUnlink = jest.fn()
+    it('redirects to the name page with no name', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => [{ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }]),
-              unLink: mockUnlink
-            }),
-            getById: jest.fn(() => ({ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }))
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb'
+              }])
+            })
           }
         }
       }))
       const request = {
         cache: () => ({
+          setData: jest.fn(),
+          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
             applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
@@ -25,27 +26,25 @@ describe('add authorised person', () => {
       const { checkData } = await import('../add-authorised-person.js')
       const h = { redirect: jest.fn() }
       await checkData(request, h)
-      expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', 'dad9d73e-d591-41df-9475-92c032bd3ceb')
-      expect(h.redirect).not.toHaveBeenCalled()
+      expect(h.redirect).toHaveBeenCalledWith('/authorised-person-name')
     })
-    it('un-assigns incomplete contacts and returns null - no email address', async () => {
-      const mockUnlink = jest.fn()
+    it('redirects to the email page with no email', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => [{ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }]),
-              unLink: mockUnlink
-            }),
-            getById: jest.fn(() => ({
-              id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
-              fullName: 'Peter Hammill'
-            }))
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
+                fullName: 'Peter Hammill'
+              }])
+            })
           }
         }
       }))
       const request = {
         cache: () => ({
+          setData: jest.fn(),
+          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
             applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
@@ -55,29 +54,27 @@ describe('add authorised person', () => {
       const { checkData } = await import('../add-authorised-person.js')
       const h = { redirect: jest.fn() }
       await checkData(request, h)
-      expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', 'dad9d73e-d591-41df-9475-92c032bd3ceb')
-      expect(h.redirect).not.toHaveBeenCalled()
+      expect(h.redirect).toHaveBeenCalledWith('/authorised-person-email')
     })
 
-    it('un-assigns incomplete contacts and returns null - no address', async () => {
-      const mockUnlink = jest.fn()
+    it('redirects to the postcode page with no address', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => [{ id: 'dad9d73e-d591-41df-9475-92c032bd3ceb' }]),
-              unLink: mockUnlink
-            }),
-            getById: jest.fn(() => ({
-              id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
-              fullName: 'Peter Hammill',
-              contactDetails: { email: 'Peter.Hammil@vandergrafgenerator' }
-            }))
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
+                fullName: 'Peter Hammill',
+                contactDetails: { email: 'Peter.Hammil@vandergrafgenerator' }
+              }])
+            })
           }
         }
       }))
       const request = {
         cache: () => ({
+          setData: jest.fn(),
+          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
             applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
@@ -87,8 +84,7 @@ describe('add authorised person', () => {
       const { checkData } = await import('../add-authorised-person.js')
       const h = { redirect: jest.fn() }
       await checkData(request, h)
-      expect(mockUnlink).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', 'dad9d73e-d591-41df-9475-92c032bd3ceb')
-      expect(h.redirect).not.toHaveBeenCalled()
+      expect(h.redirect).toHaveBeenCalledWith('/authorised-person-postcode')
     })
   })
 
@@ -138,18 +134,13 @@ describe('add authorised person', () => {
   })
 
   describe('the setData function ', () => {
-    it('when adding another contact calls the create', async () => {
-      const mockCreate = jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
+    it('when adding another removes the tag', async () => {
+      const mockRemove = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
-          CONTACT: {
-            role: () => ({
-              create: mockCreate
-            })
-          },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              remove: mockRemove
             })
           }
         }
@@ -170,7 +161,7 @@ describe('add authorised person', () => {
       }
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
-      expect(mockCreate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', {})
+      expect(mockRemove).toHaveBeenCalledWith('authorised-person-contact-complete')
     })
 
     it('when not adding another contact adds the tag', async () => {

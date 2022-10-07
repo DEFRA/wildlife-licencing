@@ -1,8 +1,13 @@
 describe('authorised person postcode', () => {
   beforeEach(() => jest.resetModules())
   describe('the setData function', () => {
+    const mockSetData = jest.fn()
     it('sets the postcode correctly', async () => {
-      const mockUpdate = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        ADDRESS: {
+          lookup: jest.fn(() => ({ results: [{ Address: { town: 'Bristol' } }] }))
+        }
+      }))
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -12,8 +17,12 @@ describe('authorised person postcode', () => {
               contactDetails: { email: 'Peter.Hammill@vandergrafgenerator.co.uk' },
               address: 'address'
             }),
-            isImmutable: () => false,
-            update: mockUpdate
+            isImmutable: () => false
+          },
+          APPLICATION: {
+            tags: () => ({
+              remove: jest.fn()
+            })
           }
         }
       }))
@@ -23,7 +32,7 @@ describe('authorised person postcode', () => {
         },
         cache: () => ({
           clearPageData: jest.fn(),
-          setData: jest.fn(),
+          setData: mockSetData,
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
             applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
@@ -33,7 +42,7 @@ describe('authorised person postcode', () => {
       }
       const { setData } = await import('../authorised-person-postcode.js')
       await setData(request)
-      expect(mockUpdate).toHaveBeenCalledWith('35acb529-70bb-4b8d-8688-ccdec837e5d4', { address: { postcode: 'BS9 1HK' }, contactDetails: { email: 'Peter.Hammill@vandergrafgenerator.co.uk' }, fullName: 'Peter Hammill' })
+      expect(mockSetData).toHaveBeenCalledWith(expect.objectContaining({ addressLookup: [{ Address: { town: 'Bristol' } }] }))
     })
   })
 })
