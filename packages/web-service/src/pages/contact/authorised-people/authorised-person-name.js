@@ -1,7 +1,8 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
-import { checkHasApplication, contactOperationsForContact, ContactRoles } from '../common/common.js'
+import { checkHasApplication, contactOperationsForContact } from '../common/common.js'
 import { getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
+import { ContactRoles } from '../common/contact-roles.js'
 const { NAME } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {

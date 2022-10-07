@@ -1,4 +1,5 @@
-import { ContactRoles, AccountRoles } from '../../pages/contact/common/common.js'
+
+import { AccountRoles, ContactRoles } from '../../pages/contact/common/contact-roles.js'
 
 jest.spyOn(console, 'error').mockImplementation(code => {})
 

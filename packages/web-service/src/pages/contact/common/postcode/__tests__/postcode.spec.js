@@ -65,7 +65,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      await setPostcodeData('APPLICANT')(request)
       expect(mockSetData).toHaveBeenCalledWith(expect.objectContaining({ addressLookup: [{ foo: 'bar' }] }))
     })
 
@@ -94,7 +94,7 @@ describe('the postcode functions', () => {
         }
       }))
       const { setPostcodeData } = await import('../postcode.js')
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      await setPostcodeData('APPLICANT')(request)
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
     })
 
@@ -125,7 +125,7 @@ describe('the postcode functions', () => {
       jest.doMock('path')
       jest.doMock('fs', () => ({ readdirSync: () => [] }))
       const { setPostcodeData } = await import('../postcode.js')
-      await setPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      await setPostcodeData('APPLICANT')(request)
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
     })
   })

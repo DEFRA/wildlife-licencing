@@ -20,7 +20,7 @@ export const getPostcodeData = (contactRole, accountRole, uriBase) => async requ
   }
 }
 
-export const setPostcodeData = (contactRole, accountRole) => async request => {
+export const setPostcodeData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode

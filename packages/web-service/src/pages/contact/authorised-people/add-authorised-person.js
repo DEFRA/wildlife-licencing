@@ -1,9 +1,10 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
-import { checkHasApplication, ContactRoles } from '../common/common.js'
+import { checkHasApplication } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { addressLine, CONTACT_COMPLETE } from '../common/check-answers/check-answers.js'
+import { ContactRoles } from '../common/contact-roles.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {

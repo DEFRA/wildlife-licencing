@@ -6,7 +6,7 @@ import {
   AccountRoles,
   contactRoleIsSingular,
   ContactRoles
-} from '../pages/contact/common/common.js'
+} from '../pages/contact/common/contact-roles.js'
 
 const debug = db('web-service:api-requests')
 
@@ -96,7 +96,7 @@ const assignContact = async (role, applicationId, contactId) => {
   const [applicationContact] = await API.get(apiUrls.APPLICATION_CONTACTS, `applicationId=${applicationId}&contactId=${contactId}&role=${role}`)
   if (applicationContact) {
     // The relationship already exists - do nothing
-    return null
+    return
   }
 
   if (contactRoleIsSingular(role)) {
@@ -117,8 +117,6 @@ const assignContact = async (role, applicationId, contactId) => {
     // Plural role always creates the relationship
     await doPost()
   }
-
-  return null
 }
 
 const assignAccount = async (role, applicationId, accountId) => {
@@ -134,7 +132,7 @@ const assignAccount = async (role, applicationId, accountId) => {
   const [applicationAccount] = await API.get(apiUrls.APPLICATION_ACCOUNTS, `applicationId=${applicationId}&accountId=${accountId}&role=${role}`)
   if (applicationAccount) {
     // The relationship exists - do nothing
-    return null
+    return
   }
 
   if (accountRoleIsSingular(role)) {
@@ -156,8 +154,6 @@ const assignAccount = async (role, applicationId, accountId) => {
     // Plural relationship -- always create once
     await doPost()
   }
-
-  return null
 }
 
 /**

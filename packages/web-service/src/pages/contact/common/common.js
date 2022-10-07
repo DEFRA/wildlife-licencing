@@ -2,32 +2,6 @@ import { APPLICATIONS } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../constants.js'
 
-export const ContactRoles = {
-  APPLICANT: 'APPLICANT',
-  ECOLOGIST: 'ECOLOGIST',
-  PAYER: 'PAYER',
-  AUTHORISED_PERSON: 'AUTHORISED-PERSON',
-  ADDITIONAL_CONTACT: 'ADDITIONAL-CONTACT'
-}
-
-export const AccountRoles = {
-  APPLICANT_ORGANISATION: 'APPLICANT-ORGANISATION',
-  ECOLOGIST_ORGANISATION: 'ECOLOGIST-ORGANISATION',
-  PAYER_ORGANISATION: 'PAYER-ORGANISATION'
-}
-
-export const contactRoleIsSingular = contactRole => [
-  ContactRoles.APPLICANT,
-  ContactRoles.ECOLOGIST,
-  ContactRoles.PAYER
-].includes(contactRole)
-
-export const accountRoleIsSingular = accountRole => [
-  AccountRoles.APPLICANT_ORGANISATION,
-  AccountRoles.ECOLOGIST_ORGANISATION,
-  AccountRoles.PAYER_ORGANISATION
-].includes(accountRole)
-
 /*
  * This module abstracts the API operations out of the handlers helps simplify this section
  * of the user journey, which is somewhat complex.
@@ -166,7 +140,7 @@ const duDuplicate = candidates => {
  * assign: ((function(*): Promise<void>)|*)}}
  */
 export const contactOperations = (contactRole, applicationId, userId) =>
-  contactOperationsFunctions(async () => await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId), userId, contactRole, applicationId)
+  contactOperationsFunctions(async () => APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId), userId, contactRole, applicationId)
 
 /**
  * Encapsulate the various operations made against contact
@@ -182,7 +156,7 @@ export const contactOperations = (contactRole, applicationId, userId) =>
  * }}
  */
 export const contactOperationsForContact = (contactRole, applicationId, userId, contactId) =>
-  contactOperationsFunctions(async () => contactId ? await APIRequests.CONTACT.getById(contactId) : null,
+  contactOperationsFunctions(async () => contactId ? APIRequests.CONTACT.getById(contactId) : null,
     userId,
     contactRole,
     applicationId)
@@ -206,6 +180,7 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
           })
         }
       }
+      return contact
     },
     assign: async contactId => {
       const contact = await getContact()
@@ -254,7 +229,7 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
  **/
 export const accountOperations = (accountRole, applicationId) =>
   accountOperationsFunctions(
-    async () => await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId), accountRole, applicationId)
+    async () => APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId), accountRole, applicationId)
 
 /**
  * Encapsulate the various operations made against account
@@ -270,7 +245,7 @@ export const accountOperations = (accountRole, applicationId) =>
  **/
 export const accountOperationsForAccount = (accountRole, applicationId, accountId) =>
   accountOperationsFunctions(
-    async () => accountId ? await APIRequests.ACCOUNT.getById(accountId) : null,
+    async () => accountId ? APIRequests.ACCOUNT.getById(accountId) : null,
     accountRole,
     applicationId)
 
@@ -333,9 +308,9 @@ const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
  **/
 export const contactAccountOperations = (contactRole, accountRole, applicationId, userId) =>
   contactAccountOperationsFunctions(
-    async () => await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId),
+    async () => APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId),
     applicationId,
-    async () => await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId),
+    async () => APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId),
     userId,
     contactRole,
     accountRole)
@@ -356,9 +331,9 @@ export const contactAccountOperations = (contactRole, accountRole, applicationId
  **/
 export const contactAccountOperationsForContactAccount = (contactRole, accountRole, applicationId, userId, contactId, accountId) =>
   contactAccountOperationsFunctions(
-    async () => contactId ? await APIRequests.CONTACT.getById(contactId) : null,
+    async () => contactId ? APIRequests.CONTACT.getById(contactId) : null,
     applicationId,
-    async () => accountId ? await APIRequests.ACCOUNT.getById(accountId) : null,
+    async () => accountId ? APIRequests.ACCOUNT.getById(accountId) : null,
     userId,
     contactRole,
     accountRole)
@@ -376,12 +351,11 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
             contactDetails: { email: emailAddress }
           })
         } else {
-          await updateContactFields(applicationId, contactRole, contact, {
+          await updateContactFields(contact, {
             contactDetails: { email: emailAddress }
           })
         }
       } else if (account) {
-        const account = await getAccount()
         const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
         if (accountImmutable) {
           await migrateAccount(applicationId, account, accountRole, {
@@ -389,7 +363,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
             contactDetails: { email: emailAddress }
           })
         } else {
-          await updateAccountFields(applicationId, accountRole, account, {
+          await updateAccountFields(account, {
             contactDetails: { email: emailAddress }
           })
         }
@@ -407,7 +381,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
             contactDetails: contact.contactDetails
           })
         } else {
-          await updateContactFields(applicationId, contactRole, contact, {
+          await updateContactFields(contact, {
             address: address
           })
         }
@@ -418,7 +392,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
             ...(account.contactDetails && { contactDetails: account.contactDetails })
           })
         } else {
-          await updateAccountFields(applicationId, accountRole, account, {
+          await updateAccountFields(account, {
             address: address
           })
         }
@@ -531,7 +505,8 @@ const migrateContact = async (userId, applicationId, currentContact, contactRole
     }))
   }
 }
-const updateContactFields = async (applicationId, contactRole, currentContact, {
+
+const updateContactFields = async (currentContact, {
   address,
   contactDetails
 }) => {
@@ -562,7 +537,7 @@ const migrateAccount = async (applicationId, currentAccount, accountRole, payloa
   })
 }
 
-const updateAccountFields = async (applicationId, accountRole, currentAccount, {
+const updateAccountFields = async (currentAccount, {
   address,
   contactDetails
 }) => {

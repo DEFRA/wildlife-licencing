@@ -1,6 +1,7 @@
-import { checkHasApplication, ContactRoles } from '../common/common.js'
+import { checkHasApplication } from '../common/common.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { ContactRoles } from '../common/contact-roles.js'
 const { NAME, EMAIL, POSTCODE, ADD } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkAuthorisedPeopleData = async (request, h) => {
