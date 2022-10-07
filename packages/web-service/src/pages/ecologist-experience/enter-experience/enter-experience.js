@@ -33,7 +33,11 @@ export default pageRoute({
   page: ecologistExperienceURIs.ENTER_EXPERIENCE.page,
   checkData: checkApplication,
   validator: Joi.object({
-    'enter-experience': Joi.string().replace(/((\s+){2,})/gm, '$2').required().max(4000)
+    // JS post message here sends line breaks with \r\n (CRLF) but the Gov.uk prototypes counts newlines as \n
+    // Which leads to a mismatch on the character count as
+    // '\r\n'.length == 2
+    // '\n'.length   == 1
+    'enter-experience': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion,
