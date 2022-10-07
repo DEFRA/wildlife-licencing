@@ -258,6 +258,7 @@ const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
           ...(accountName && { name: accountName })
         })
       }
+      return account
     },
     assign: async accountId => {
       const account = await getAccount()
@@ -356,7 +357,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
           })
         }
       } else if (account) {
-        const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
+        const accountImmutable = await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
         if (accountImmutable) {
           await migrateAccount(applicationId, account, accountRole, {
             address: account.address,
