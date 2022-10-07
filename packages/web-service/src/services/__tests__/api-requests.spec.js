@@ -1586,6 +1586,54 @@ describe('The API requests service', () => {
         'object-key'
       )).rejects.toThrowError()
     })
+
+    it('removeUploadedFile calls the API correctly', async () => {
+      const mockDelete = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          delete: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.FILE_UPLOAD.removeUploadedFile('6eec5687-d874-49db-b611-822cbb0068d8', 'a7b72637-8816-495a-8a6b-ebed2c182665')
+      expect(mockDelete).toHaveBeenCalledWith('/application/6eec5687-d874-49db-b611-822cbb0068d8/file-upload/a7b72637-8816-495a-8a6b-ebed2c182665')
+    })
+
+    it('removeUploadedFile rethrows on error', async () => {
+      const mockDelete = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          delete: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.FILE_UPLOAD.removeUploadedFile('6eec5687-d874-49db-b611-822cbb0068d8', 'a7b72637-8816-495a-8a6b-ebed2c182665'))
+        .rejects.toThrowError()
+    })
+
+    it('getUploadedFiles calls the API correctly', async () => {
+      const mockGet = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.FILE_UPLOAD.getUploadedFiles('6eec5687-d874-49db-b611-822cbb0068d8')
+      expect(mockGet).toHaveBeenCalledWith('/application/6eec5687-d874-49db-b611-822cbb0068d8/file-uploads')
+    })
+
+    it('getUploadedFiles rethrows on error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.FILE_UPLOAD.getUploadedFiles('6eec5687-d874-49db-b611-822cbb0068d8'))
+        .rejects.toThrowError()
+    })
   })
 
   describe('SITE requests', () => {

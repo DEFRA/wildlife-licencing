@@ -6,6 +6,7 @@ export const REGISTER = { uri: '/register', page: 'register' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
+export const REMOVE_FILE_UPLOAD = { uri: '/remove/upload', page: 'check-supporting-information' }
 
 export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },
@@ -93,8 +94,8 @@ export const ERRORS = {
 }
 
 export const FILE_UPLOADS = {
-  METHOD_STATEMENT: {
-    FILE_UPLOAD: { uri: '/upload-method-statement', page: 'upload-method-statement' },
-    CHECK_YOUR_ANSWERS: { uri: '/check-method-statement', page: 'check-method-statement' }
+  SUPPORTING_INFORMATION: {
+    FILE_UPLOAD: { uri: '/upload-supporting-information', page: 'upload-supporting-information' },
+    CHECK_YOUR_ANSWERS: { uri: '/check-supporting-information', page: 'check-supporting-information' }
   }
 }

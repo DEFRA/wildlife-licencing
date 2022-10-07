@@ -1,21 +1,20 @@
 {% extends 'information-page.njk' %}
 {% from "button/macro.njk" import govukButton %}
 
-{% set title = "Agree and send application" %}
+{% set title = "Agree to terms and send application" %}
 
 {% block pageContent %}
-    <p class="govuk-body">By sending the application you agree that you:</p>
+    <p class="govuk-body">By sending the application you agree that you have given complete and correct information.</p>
+    <p class="govuk-body">If you are making this application on behalf of another person, you confirm that you have their permission to do so. By sending the application, they agree that they will:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>have given complete and correct information</li>
       <li>will uphold any conditions applied to my licence if granted</li>
       <li>will abide by the terms and conditions of this service</li>
-      <li>have not been convicted of any wildlife offences</li>
     </ul>
     <p class="govuk-body">By sending the application you confirm that:</p>
     <ul class="govuk-list govuk-list--bullet">
-          <li>an ecologist has been involved in the design of any mitigation</li>
-          <li>the proposed methods, actions and mitigation are appropriate to cover the findings of the ecologist's site assessment</li>
-          <li>the licence holder and the ecologist agree to the licence application</li>
+          <li>an appropriate ecologist has been involved in the application and the design of any mitigations</li>
+          <li>the ecologist supports the application</li>
+          <li>the ecologist is content that the proposed methods, actions and mitigation are appropriate to address the findings of the ecologist's site assessment</li>
           <li>you will report any actions you took using this licence within 2 weeks of your licence expiring, even if you've taken no action</li>
      </ul>
     {{ govukButton({

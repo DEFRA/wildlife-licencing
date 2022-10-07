@@ -795,6 +795,24 @@ export const APIRequests = {
         Boom.boomify(error, { statusCode: 500 })
         throw error
       }
+    },
+    removeUploadedFile: async (applicationId, uploadId) => {
+      try {
+        return await API.delete(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${uploadId}`)
+      } catch (error) {
+        console.error(`Error deleting file upload id ${uploadId} on application ${applicationId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
+    getUploadedFiles: async applicationId => {
+      try {
+        return (await API.get(`/application/${applicationId}/file-uploads`))
+      } catch (error) {
+        console.error(`Error getting to file uploads for ${applicationId}`)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
     }
   }
 }
