@@ -29,11 +29,11 @@ export const getAccountNamesData = (contactRole, accountRole) => async request =
 export const setAccountNamesData = (contactRole, accountRole) => async request => {
   const { payload: { account: accountId } } = request
   const { userId, applicationId } = await request.cache().getData()
-  const accountOps = await accountOperations(accountRole, applicationId)
+  const accountOps = accountOperations(accountRole, applicationId)
   if (accountId !== 'new') {
     // Assign an existing organisation
     await accountOps.assign(accountId)
-    const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+    const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(true)
   }
 }

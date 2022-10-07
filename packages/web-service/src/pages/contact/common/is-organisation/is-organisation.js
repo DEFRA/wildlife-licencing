@@ -16,7 +16,7 @@ export const setContactAccountData = (contactRole, accountRole) => async request
 
   if (request.payload['is-organisation'] === 'yes') {
     // Assign a new organisation
-    const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+    const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(true, request.payload['organisation-name'])
     await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactRole])
     const pageData = await request.cache().getPageData()
@@ -24,7 +24,7 @@ export const setContactAccountData = (contactRole, accountRole) => async request
     await request.cache().setPageData(pageData)
   } else {
     // Remove assigned organisation
-    const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+    const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(false)
   }
 }

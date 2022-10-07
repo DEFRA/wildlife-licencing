@@ -15,7 +15,7 @@ export const getEmailAddressData = (contactRole, accountRole) => async request =
 
 export const setEmailAddressData = (contactRole, accountRole) => async request => {
   const { userId, applicationId } = await request.cache().getData()
-  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setEmailAddress(request.payload['email-address'])
 }
 

@@ -13,13 +13,13 @@ const mostRecent = (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
 
 export const setUserData = (contactRole, accountRole) => async request => {
   const { userId, applicationId } = await request.cache().getData()
-  const contactOps = await contactOperations(contactRole, applicationId, userId)
+  const contactOps = contactOperations(contactRole, applicationId, userId)
   if (request.payload['yes-no'] === 'yes') {
     const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId, DEFAULT_ROLE)
     const [userContact] = contacts.filter(c => c.userId === userId).sort(mostRecent)
     if (userContact) {
       await contactOps.assign(userContact.id)
-      const contactAcctOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+      const contactAcctOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
       await contactAcctOps.setContactIsUser(true)
     } else {
       await contactOps.unAssign()

@@ -21,6 +21,7 @@ export const SECTION_TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
+  AUTHORISED_PEOPLE: 'authorised-people',
   WORK_ACTIVITY: 'work-activity',
   PERMISSIONS: 'permissions',
   SITES: 'sites',
@@ -52,6 +53,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
     [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
     [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.AUTHORISED_PEOPLE]: applicationTags.includes(CONTACT_COMPLETE.AUTHORISED_PERSON),
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
@@ -115,6 +117,12 @@ export const licenceTypeMap = {
             name: SECTION_TASKS.ECOLOGIST,
             uri: TASKLIST.uri,
             status: eligibilityCheckStatus,
+            enabled: eligibilityCheckEnabled
+          },
+          {
+            name: SECTION_TASKS.AUTHORISED_PEOPLE,
+            uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
+            status: status => status[SECTION_TASKS.AUTHORISED_PEOPLE] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
             enabled: eligibilityCheckEnabled
           }
         ]

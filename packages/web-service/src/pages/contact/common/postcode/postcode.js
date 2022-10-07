@@ -1,7 +1,6 @@
 import db from 'debug'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
-import { contactAccountOperations } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import path from 'path'
 import Config from '@defra/wls-connectors-lib/src/config.js'
@@ -21,21 +20,8 @@ export const getPostcodeData = (contactRole, accountRole, uriBase) => async requ
   }
 }
 
-export const setPostcodeData = (contactRole, accountRole) => async request => {
-  const journeyData = await request.cache().getData()
-  const pageData = await request.cache().getPageData()
-  const postcode = pageData.payload.postcode
-  const { userId, applicationId } = journeyData
-
-  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
-  await contactAccountOps.setAddress({ postcode })
-  // Write the address lookup results into the cache
-  // There is a lot of discussion online about UK postcode formats and reg-ex validation patterns.
-  // See this discussion https://stackoverflow.com/questions/164979/regex-for-matching-uk-postcodes
-  // It is the clear however that some postcodes exist which are legitimate patterns, but cause
-  // the lookup to throw a bad request, hence the try-catch here. Consider for instance LB1 2CD
+export const addressLookupForPostcode = async (postcode, journeyData, request) => {
   try {
-    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactRole])
     debug(`Address lookup for postcode: ${postcode}`)
     const { results } = await ADDRESS.lookup(postcode)
     if (results.length) {
@@ -57,6 +43,15 @@ export const setPostcodeData = (contactRole, accountRole) => async request => {
   } finally {
     await request.cache().setData(journeyData)
   }
+}
+
+export const setPostcodeData = contactRole => async request => {
+  const journeyData = await request.cache().getData()
+  const pageData = await request.cache().getPageData()
+  const postcode = pageData.payload.postcode
+  const { applicationId } = journeyData
+  await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE[contactRole])
+  await addressLookupForPostcode(postcode, journeyData, request)
 }
 
 export const postcodeCompletion = uriBase => async request => {
