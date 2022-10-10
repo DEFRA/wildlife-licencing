@@ -1,0 +1,18 @@
+{% extends "standard-form.njk" %}
+
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'site-name': {
+          'string.empty': { ref: '#site-name', text: 'Enter the postcode' }
+        }
+    }
+%}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set title = "What is the site postcode?" %}
