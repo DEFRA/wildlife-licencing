@@ -26,11 +26,11 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
-        .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'sdds_applications'])
+        .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts', 'accounts', 'contacts', 'sdds_applications'])
 
       expect(tableSet.map(t => t.basePath))
         .toEqual(['application.sites', 'application.applicant', 'application.applicantOrganization',
-          'application.ecologist', 'application.ecologistOrganization', 'application'])
+          'application.ecologist', 'application.ecologistOrganization', 'application.authorisedPeople', 'application'])
     })
   })
 

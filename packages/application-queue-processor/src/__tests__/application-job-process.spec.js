@@ -78,7 +78,8 @@ describe('The application job processor', () => {
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'APPLICANT' }])
-              .mockReturnValue([])
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
           },
           applicationAccounts: { findAll: jest.fn(() => []) },
           contacts: {
@@ -127,7 +128,8 @@ describe('The application job processor', () => {
           applicationContacts: {
             findAll: jest.fn()
               .mockReturnValueOnce([])
-              .mockReturnValue([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'ECOLOGIST' }])
+              .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'ECOLOGIST' }])
+              .mockReturnValueOnce([])
           },
           applicationAccounts: { findAll: jest.fn(() => []) },
           contacts: {
@@ -155,6 +157,56 @@ describe('The application job processor', () => {
               sddsKey: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
             }
           }
+        }
+      }
+      ))
+    })
+
+    it.only('correctly creates a application payload with an authorised-person', async () => {
+      jest.doMock('@defra/wls-database-model', () => ({
+        models: {
+          applications: {
+            findByPk: jest.fn(() => ({
+              id: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+              application: { foo: 'bar' },
+              sddsApplicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+            }))
+          },
+          applicationSites: { findAll: jest.fn(() => []) },
+          habitatSites: { findAll: jest.fn(() => []) },
+          previousLicences: { findAll: jest.fn(() => []) },
+          applicationContacts: {
+            findAll: jest.fn()
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'AUTHORISED-PERSON' }])
+          },
+          applicationAccounts: { findAll: jest.fn(() => []) },
+          contacts: {
+            findAll: jest.fn(() => [{
+              id: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+              sddsContactId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+              contact: { name: 'contact 1' }
+            }])
+          }
+        }
+      }))
+      const { buildApiObject } = await import('../application-job-process.js')
+      const payload = await buildApiObject(job.data.applicationId)
+      expect(payload).toEqual(expect.objectContaining({
+        application: {
+          data: { foo: 'bar' },
+          keys: {
+            apiKey: 'b1847e67-07fa-4c51-af03-cb51f5126939',
+            sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
+          },
+          authorisedPeople: [{
+            data: { name: 'contact 1' },
+            keys: {
+              apiKey: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+              sddsKey: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+            }
+          }]
         }
       }
       ))

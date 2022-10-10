@@ -52,12 +52,35 @@ const doEcologist = async (applicationId, sddsContactId, counter) => {
 }
 
 const process = async (application, sddsApplicantContactId, counter, sddsEcologistContactId) => {
-  if (application) {
-    if (sddsApplicantContactId) {
-      await doApplicant(application.id, sddsApplicantContactId, counter)
-    }
-    if (sddsEcologistContactId) {
-      await doEcologist(application.id, sddsEcologistContactId, counter)
+  if (sddsApplicantContactId) {
+    await doApplicant(application.id, sddsApplicantContactId, counter)
+  }
+  if (sddsEcologistContactId) {
+    await doEcologist(application.id, sddsEcologistContactId, counter)
+  }
+}
+
+const doAuthorisedPerson = async (application, sddsContactId, counter) => {
+  const authorisedPerson = await models.contacts.findOne({
+    where: { sdds_contact_id: sddsContactId }
+  })
+
+  if (authorisedPerson) {
+    const applicationAuthorisedPerson = await models.applicationContacts.findOne({
+      where: {
+        applicationId: application.id,
+        contactId: authorisedPerson.id,
+        contactRole: 'AUTHORISED-PERSON'
+      }
+    })
+    if (!applicationAuthorisedPerson) {
+      await models.applicationContacts.create({
+        id: uuidv4(),
+        applicationId: application.id,
+        contactId: authorisedPerson.id,
+        contactRole: 'AUTHORISED-PERSON'
+      })
+      counter.insert++
     }
   }
 }
@@ -68,17 +91,25 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
   const sddsApplicationId = keys.find(k => k.apiBasePath === 'application')?.powerAppsKey
   const sddsApplicantContactId = keys.find(k => k.apiBasePath === 'application.applicant')?.powerAppsKey
   const sddsEcologistContactId = keys.find(k => k.apiBasePath === 'application.ecologist')?.powerAppsKey
+  const sddsAuthorisedPeopleIds = keys.filter(k => k.apiBasePath === 'application.authorisedPeople').map(a => a?.powerAppsKey)
 
   try {
-    if (sddsApplicantContactId || sddsEcologistContactId) {
-      // Find the application record using the Power Apps keys
-      const application = await models.applications.findOne({
-        where: { sdds_application_id: sddsApplicationId }
-      })
+    // Find the application record using the Power Apps keys
+    const application = await models.applications.findOne({
+      where: { sdds_application_id: sddsApplicationId }
+    })
 
-      // If the applications is not (yet) in the database do nothing
-      await process(application, sddsApplicantContactId, counter, sddsEcologistContactId)
+    if (application) {
+      if (sddsApplicantContactId || sddsEcologistContactId) {
+        // If the applications is not (yet) in the database do nothing
+        await process(application, sddsApplicantContactId, counter, sddsEcologistContactId)
+      }
+
+      if (sddsAuthorisedPeopleIds.length) {
+        await Promise.all(sddsAuthorisedPeopleIds.map(async ap => await doAuthorisedPerson(application, ap, counter)))
+      }
     }
+
     return counter
   } catch (error) {
     console.error('Error updating APPLICATION-CONTACTS', error)
