@@ -106,7 +106,7 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
       }
 
       if (sddsAuthorisedPeopleIds.length) {
-        await Promise.all(sddsAuthorisedPeopleIds.map(async ap => await doAuthorisedPerson(application, ap, counter)))
+        await Promise.all(sddsAuthorisedPeopleIds.map(async ap => doAuthorisedPerson(application, ap, counter)))
       }
     }
 

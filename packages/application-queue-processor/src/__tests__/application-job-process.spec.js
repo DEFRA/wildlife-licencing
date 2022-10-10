@@ -162,7 +162,7 @@ describe('The application job processor', () => {
       ))
     })
 
-    it.only('correctly creates a application payload with an authorised-person', async () => {
+    it('correctly creates a application payload with an authorised-person', async () => {
       jest.doMock('@defra/wls-database-model', () => ({
         models: {
           applications: {
