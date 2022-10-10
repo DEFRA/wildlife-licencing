@@ -649,12 +649,18 @@ describe('contact common', () => {
       expect(mockUnlink).not.toHaveBeenCalled()
     })
 
-    it('the setName function does nothing with an immutable contact', async () => {
-      const mockUpdate = jest.fn()
+    it('the setName function will migrate an immutable contact', async () => {
+      const mockCreate = jest.fn()
+      const mockUnAssign = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
           CONTACT: {
             role: () => ({
+              create: mockCreate,
+              unAssign: mockUnAssign,
               getByApplicationId: jest.fn().mockReturnValue(
                 {
                   id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -664,7 +670,6 @@ describe('contact common', () => {
                   userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
                 })
             }),
-            update: mockUpdate,
             isImmutable: () => true
           }
         }
@@ -674,7 +679,15 @@ describe('contact common', () => {
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.setName('Jon Bonham')
-      expect(mockUpdate).not.toHaveBeenCalled()
+      expect(mockUnAssign).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      expect(mockCreate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+        {
+          address: 'Address',
+          cloneOf: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+          contactDetails: { email: 'email@email.com' },
+          fullName: 'Jon Bonham',
+          userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+        })
     })
 
     it('the setName function does nothing if no contact is assigned', async () => {
