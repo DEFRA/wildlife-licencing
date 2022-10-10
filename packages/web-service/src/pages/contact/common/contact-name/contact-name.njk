@@ -16,7 +16,7 @@
       id: "name",
       name: "name",
       spellcheck: false,
-      value: payload['name'] if payload['name'] else data.fullName,
+      value: data.fullName if data.fullName else payload['name'],
       classes: "govuk-!-width-three-quarters",
       attributes: { maxlength: 160 },
       errorMessage: { text: 'Enter the full name' } if error['name']

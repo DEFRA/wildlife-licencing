@@ -3,10 +3,11 @@ import { yesNoFromBool } from '../../../common/common.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
-  ECOLOGIST: 'ecologist-contact-complete'
+  ECOLOGIST: 'ecologist-contact-complete',
+  AUTHORISED_PERSON: 'authorised-person-contact-complete'
 }
 
-const addressLine1 = c => [
+export const addressLine1 = c => [
   c.address.subBuildingName,
   c.address.buildingName,
   c.address.buildingNumber,
@@ -14,7 +15,7 @@ const addressLine1 = c => [
   c.address.addressLine1
 ].filter(a => a).join(', ')
 
-const addressLine = c => [
+export const addressLine = c => [
   addressLine1(c),
   c.address.locality,
   c.address.dependentLocality,

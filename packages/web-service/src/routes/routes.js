@@ -11,8 +11,8 @@ import {
 } from '../pages/eligibility/eligibility.js'
 
 import { tasklist } from '../pages/tasklist/tasklist.js'
-import { uploadMethodStatement } from '../pages/method-statement/upload-method-statement.js'
-import { checkMethodStatement } from '../pages/method-statement/check-method-statement.js'
+import { uploadSupportingInformation } from '../pages/supporting-information/upload-supporting-information.js'
+import { checkSupportingInformation } from '../pages/supporting-information/check-supporting-information.js'
 
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
@@ -24,6 +24,14 @@ import { applicantOrganisations } from '../pages/contact/applicant/applicant-org
 import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
+
+import { addAuthorisedPerson } from '../pages/contact/authorised-people/add-authorised-person.js'
+import { authorisedPersonName } from '../pages/contact/authorised-people/authorised-person-name.js'
+import { authorisedPersonEmail } from '../pages/contact/authorised-people/authorised-person-email.js'
+import { authorisedPersonPostcode } from '../pages/contact/authorised-people/authorised-person-postcode.js'
+import { authorisedPersonAddress } from '../pages/contact/authorised-people/authorised-person-address.js'
+import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
+import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
 import siteName from '../pages/site/site-name/site-name.js'
 
@@ -59,8 +67,8 @@ const routes = [
   ...register,
   ...declaration,
   ...submission,
-  ...uploadMethodStatement,
-  ...checkMethodStatement,
+  ...uploadSupportingInformation,
+  ...checkSupportingInformation,
   ...landOwner,
   ...landOwnerPermission,
   ...consent,
@@ -80,6 +88,13 @@ const routes = [
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
+  ...addAuthorisedPerson,
+  ...authorisedPersonName,
+  ...authorisedPersonEmail,
+  ...authorisedPersonPostcode,
+  ...authorisedPersonAddress,
+  ...authorisedPersonAddressForm,
+  ...removeAuthorisedPerson,
   ...siteName,
   ...habitatStart,
   ...habitatName,

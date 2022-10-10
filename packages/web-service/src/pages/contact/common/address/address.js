@@ -21,7 +21,7 @@ export const setAddressData = (contactRole, accountRole) => async request => {
   // Get the full address from the journey cache (Number IS large enough: 9007199254740991)
   const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === pageData.payload.uprn)
   const apiAddress = mapLookedUpAddress(lookupAddress)
-  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setAddress(apiAddress)
 }
 

@@ -58,7 +58,8 @@ import {
   getApplicationFileUploads,
   postApplicationFileUpload,
   getApplicationFileUpload,
-  putApplicationFileUpload
+  putApplicationFileUpload,
+  deleteApplicationFileUploadByUploadId
 } from './handlers/application-file-upload/application-file-upload.js'
 
 import {
@@ -204,6 +205,7 @@ const handlers = {
   postApplicationFileUpload,
   getApplicationFileUpload,
   putApplicationFileUpload,
+  deleteApplicationFileUploadByUploadId,
 
   // Application site handlers
   getApplicationSites,

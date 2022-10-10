@@ -19,11 +19,11 @@ export const setAddressFormData = (contactRole, accountRole) => async request =>
   const pageData = await request.cache().getPageData()
   const inputAddress = pageData.payload
   const apiAddress = mapInputAddress(inputAddress)
-  const contactAccountOps = await contactAccountOperations(contactRole, accountRole, applicationId, userId)
+  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
   await contactAccountOps.setAddress(apiAddress)
 }
 
-const mapInputAddress = inputAddress => Object.assign({ },
+export const mapInputAddress = inputAddress => Object.assign({ },
   {
     ...(!!inputAddress['address-line-1'] && { addressLine1: inputAddress['address-line-1'] }),
     ...(!!inputAddress['address-line-2'] && { addressLine2: inputAddress['address-line-2'] }),

@@ -6,6 +6,7 @@ export const REGISTER = { uri: '/register', page: 'register' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
+export const REMOVE_FILE_UPLOAD = { uri: '/remove/upload', page: 'check-supporting-information' }
 
 export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },
@@ -69,6 +70,15 @@ export const contactURIs = {
     POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
     ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
     ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+  },
+  AUTHORISED_PEOPLE: {
+    ADD: { uri: '/add-authorised-person', page: 'add-authorised-person' },
+    NAME: { uri: '/authorised-person-name', page: 'authorised-person-name' },
+    EMAIL: { uri: '/authorised-person-email', page: 'authorised-person-email' },
+    POSTCODE: { uri: '/authorised-person-postcode', page: 'authorised-person-postcode' },
+    ADDRESS: { uri: '/authorised-person-address', page: 'authorised-person-address' },
+    ADDRESS_FORM: { uri: '/authorised-person-address-form', page: 'authorised-person-address-form' },
+    REMOVE: { uri: '/remove-authorised-person', page: 'remove-authorised-person' }
   }
 }
 
@@ -84,8 +94,8 @@ export const ERRORS = {
 }
 
 export const FILE_UPLOADS = {
-  METHOD_STATEMENT: {
-    FILE_UPLOAD: { uri: '/upload-method-statement', page: 'upload-method-statement' },
-    CHECK_YOUR_ANSWERS: { uri: '/check-method-statement', page: 'check-method-statement' }
+  SUPPORTING_INFORMATION: {
+    FILE_UPLOAD: { uri: '/upload-supporting-information', page: 'upload-supporting-information' },
+    CHECK_YOUR_ANSWERS: { uri: '/check-supporting-information', page: 'check-supporting-information' }
   }
 }

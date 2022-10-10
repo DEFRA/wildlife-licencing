@@ -24,7 +24,7 @@ export const getContactNamesData = contactRole => async request => {
 export const setContactNamesData = contactRole => async request => {
   const { payload: { contact: contactId } } = request
   const { applicationId, userId } = await request.cache().getData()
-  const contactOps = await contactOperations(contactRole, applicationId, userId)
+  const contactOps = contactOperations(contactRole, applicationId, userId)
   if (contactId !== 'new') {
     await contactOps.assign(contactId)
   }

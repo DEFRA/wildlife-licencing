@@ -21,12 +21,13 @@ export const SECTION_TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
+  AUTHORISED_PEOPLE: 'authorised-people',
   WORK_ACTIVITY: 'work-activity',
   PERMISSIONS: 'permissions',
   SITES: 'sites',
   SETTS: 'setts',
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
-  METHOD_STATEMENT: 'method-statement',
+  SUPPORTING_INFORMATION: 'supporting-information',
   SUBMIT: 'send-application'
 }
 
@@ -52,12 +53,13 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
     [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
     [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.AUTHORISED_PEOPLE]: applicationTags.includes(CONTACT_COMPLETE.AUTHORISED_PERSON),
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
     [SECTION_TASKS.SITES]: false,
     [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
-    [SECTION_TASKS.METHOD_STATEMENT]: true,
+    [SECTION_TASKS.SUPPORTING_INFORMATION]: applicationTags.includes(SECTION_TASKS.SUPPORTING_INFORMATION),
     [SECTION_TASKS.SUBMIT]: false
   }
 }
@@ -116,6 +118,12 @@ export const licenceTypeMap = {
             uri: TASKLIST.uri,
             status: eligibilityCheckStatus,
             enabled: eligibilityCheckEnabled
+          },
+          {
+            name: SECTION_TASKS.AUTHORISED_PEOPLE,
+            uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
+            status: status => status[SECTION_TASKS.AUTHORISED_PEOPLE] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
+            enabled: eligibilityCheckEnabled
           }
         ]
       },
@@ -155,9 +163,13 @@ export const licenceTypeMap = {
             enabled: eligibilityCheckEnabled
           },
           {
-            name: SECTION_TASKS.METHOD_STATEMENT,
-            uri: FILE_UPLOADS.METHOD_STATEMENT.FILE_UPLOAD.uri,
-            status: eligibilityCheckStatus,
+            name: SECTION_TASKS.SUPPORTING_INFORMATION,
+            uri: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+              ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
+              : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
+            status: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           }
         ]
