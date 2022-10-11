@@ -94,8 +94,11 @@ export const completion = async request => {
   if (pageData.payload[addSett] === 'yes') {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).remove(SECTION_TASKS.SETTS)
     return habitatURIs.NAME.uri
+  } else if (pageData.payload[addSett] === 'no') {
+    // Mark the journey as complete if the user clicks "No" to adding any final setts
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
+    return TASKLIST.uri
   }
-  return TASKLIST.uri
 }
 export default pageRoute({
   page: habitatURIs.CHECK_YOUR_ANSWERS.page,

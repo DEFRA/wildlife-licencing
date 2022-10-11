@@ -1,9 +1,9 @@
 {% extends "standard-form.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "error-summary.njk" import errorSummary %}
 
 {% import "habitat-text.njk" as habitatText %}
-
-{% from "error-summary.njk" import errorSummary %}
 
 {% set title = 'Check your answers' %} 
 
@@ -161,8 +161,6 @@
     ]
     })}}
     {% endfor %}
-
-    {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {{ govukRadios({
   idPrefix: "additional-sett",
