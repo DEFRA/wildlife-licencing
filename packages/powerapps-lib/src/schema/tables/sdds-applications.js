@@ -62,6 +62,11 @@ export const SddsApplication = new Table('sdds_applications', [
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
+  // Authorised People
+  new Relationship('sdds_application_Contact_Authorisedpersons', 'contacts',
+    RelationshipType.MANY_TO_MANY, null, 'authorisedPeople', null, null,
+    OperationType.INBOUND_AND_OUTBOUND, true),
+
   // Ecologist experience
   new Relationship('sdds_ecologistexperience_sdds_application', 'sdds_ecologistexperiences',
     RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'previousLicences'),
