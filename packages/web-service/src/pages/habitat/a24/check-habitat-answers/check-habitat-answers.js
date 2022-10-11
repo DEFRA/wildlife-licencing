@@ -99,6 +99,8 @@ export const completion = async request => {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
     return TASKLIST.uri
   }
+
+  return undefined
 }
 export default pageRoute({
   page: habitatURIs.CHECK_YOUR_ANSWERS.page,
