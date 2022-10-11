@@ -8,12 +8,12 @@ import Nunjucks from 'nunjucks'
 import path from 'path'
 import __dirname from '../dirname.cjs'
 import routes from './routes/routes.js'
-import { SESSION_TTL_MS_DEFAULT, SESSION_COOKIE_NAME_DEFAULT } from './constants.js'
+import { SESSION_COOKIE_NAME_DEFAULT, SESSION_TTL_MS_DEFAULT } from './constants.js'
 import sessionManager, { isStaticResource } from './session-cache/session-manager.js'
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { REGISTER, eligibilityURIs, LOGIN, SIGN_OUT, contactURIs, ecologistExperienceURIs } from './uris.js'
+import { additionalPageData } from './additional-page-data.js'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -30,47 +30,6 @@ const createServer = async () => {
       }
     }
   })
-}
-
-const additionalPageData = (request, h) => {
-  const response = request.response
-  if (request.method === 'get' && response.variety === 'view') {
-    Object.assign(response.source.context, {
-      _uri: {
-        login: LOGIN.uri,
-        signOut: SIGN_OUT.uri,
-        register: REGISTER.uri,
-        landowner: eligibilityURIs.LANDOWNER.uri,
-        landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
-        consent: eligibilityURIs.CONSENT.uri,
-        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
-        applicantUser: contactURIs.APPLICANT.USER.uri,
-        ecologistUser: contactURIs.ECOLOGIST.USER.uri,
-        applicantName: contactURIs.APPLICANT.NAME.uri,
-        ecologistName: contactURIs.ECOLOGIST.NAME.uri,
-        applicantNames: contactURIs.APPLICANT.NAMES.uri,
-        ecologistNames: contactURIs.ECOLOGIST.NAMES.uri,
-        applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
-        ecologistOrganisations: contactURIs.ECOLOGIST.ORGANISATIONS.uri,
-        applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
-        ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
-        applicantAddress: contactURIs.APPLICANT.ADDRESS.uri,
-        ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
-        applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
-        ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
-        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
-        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
-        previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
-        licenceDetails: ecologistExperienceURIs.LICENCE.uri,
-        experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
-        methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
-        classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
-        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
-      },
-      credentials: request.auth.credentials
-    })
-  }
-  return h.continue
 }
 
 // Add default headers

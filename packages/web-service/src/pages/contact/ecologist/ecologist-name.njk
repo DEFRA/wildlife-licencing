@@ -1,0 +1,11 @@
+{% extends "contact-name.njk" %}
+{% set title = 'What is your name?' if data.userId else 'Who is the ecologist?' %}
+
+{% set errorMap = {
+        'name': {
+            'string.empty': { ref: '#name', text: 'Enter the name of the ecologist' },
+            'string.pattern.base': { ref: '#name', text: 'Enter the name of the ecologist using only letters, spaces, the apostrophe, hyphen, full-stop or comma.' },
+            'any.invalid': { ref: '#name', text: 'The name \'' +  payload.name + '\' has already been used, enter a unique name'  }
+        }
+    }
+%}

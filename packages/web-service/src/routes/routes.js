@@ -25,6 +25,17 @@ import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
+import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
+import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
+import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
+import { ecologistEmail } from '../pages/contact/ecologist/ecologist-email.js'
+import { ecologistCheckAnswers } from '../pages/contact/ecologist/ecologist-check-answers.js'
+import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
+import { ecologistOrganisations } from '../pages/contact/ecologist/ecologist-organisations.js'
+import { ecologistPostcode } from '../pages/contact/ecologist/ecologist-postcode.js'
+import { ecologistAddress } from '../pages/contact/ecologist/ecologist-address.js'
+import { ecologistAddressForm } from '../pages/contact/ecologist/ecologist-address-form.js'
+
 import { addAuthorisedPerson } from '../pages/contact/authorised-people/add-authorised-person.js'
 import { authorisedPersonName } from '../pages/contact/authorised-people/authorised-person-name.js'
 import { authorisedPersonEmail } from '../pages/contact/authorised-people/authorised-person-email.js'
@@ -88,6 +99,16 @@ const routes = [
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
+  ...ecologistUser,
+  ...ecologistName,
+  ...ecologistNames,
+  ...ecologistOrganisation,
+  ...ecologistOrganisations,
+  ...ecologistEmail,
+  ...ecologistPostcode,
+  ...ecologistAddress,
+  ...ecologistAddressForm,
+  ...ecologistCheckAnswers,
   ...addAuthorisedPerson,
   ...authorisedPersonName,
   ...authorisedPersonEmail,
