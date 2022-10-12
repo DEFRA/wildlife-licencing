@@ -17,7 +17,8 @@ export const REDIS = {
         host: Config.redis.host,
         port: Config.redis.port
       },
-      ...Config.redis.database ? { database: Config.redis.database } : {}
+      ...Config.redis.database ? { database: Config.redis.database } : {},
+      ...Config.redis.password ? { password: Config.redis.password } : {}
     }
 
     client = createClient(options)
