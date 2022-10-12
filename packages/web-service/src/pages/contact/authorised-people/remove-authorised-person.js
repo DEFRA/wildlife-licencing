@@ -1,7 +1,7 @@
 import { yesNoPage } from '../../common/yes-no.js'
 import { contactURIs } from '../../../uris.js'
-import { checkAuthorisedPeopleData, getAuthorisedPeopleData } from './common.js'
-import { contactOperationsForContact } from '../common/common.js'
+import { getAuthorisedPeopleData } from './common.js'
+import { checkHasApplication, contactOperationsForContact } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 
 const { ADD, REMOVE } = contactURIs.AUTHORISED_PEOPLE
@@ -21,7 +21,7 @@ export const setData = async request => {
 export const removeAuthorisedPerson = yesNoPage({
   page: REMOVE.page,
   uri: REMOVE.uri,
-  checkData: checkAuthorisedPeopleData,
+  checkData: checkHasApplication,
   getData: getAuthorisedPeopleData(c => ({
     contactName: c.fullName
   })),
