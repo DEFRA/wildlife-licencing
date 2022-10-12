@@ -57,6 +57,7 @@ describe('The class mitigation page', () => {
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'no' })
     })
+
     it('returns the value of classMitigation when true', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -75,6 +76,26 @@ describe('The class mitigation page', () => {
       const { getData } = await import('../class-mitigation.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
+    })
+
+    it('returns null if the user has no past data inputted', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({}))
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { getData } = await import('../class-mitigation.js')
+      const result = await getData(request)
+      expect(result).toEqual(null)
     })
   })
 

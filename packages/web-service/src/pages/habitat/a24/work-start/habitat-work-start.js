@@ -44,8 +44,8 @@ export const setData = async request => {
 
 export const getData = async request => {
   const workStart = (await request.cache().getData())?.habitatData?.workStart || ''
-  const [day, month, year] = workStart.split('-')
-  return { day, month, year }
+  const [month, day, year] = workStart.split('-')
+  return { month, day, year }
 }
 
 export default pageRoute({

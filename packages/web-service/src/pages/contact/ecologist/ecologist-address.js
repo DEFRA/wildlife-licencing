@@ -4,13 +4,13 @@ import { contactURIs } from '../../../uris.js'
 import { getAddressData, setAddressData } from '../common/address/address.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 
-const { ADDRESS, CHECK_ANSWERS } = contactURIs.APPLICANT
+const { ADDRESS, CHECK_ANSWERS } = contactURIs.ECOLOGIST
 
-export const applicantAddress = addressPage({
+export const ecologistAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
   checkData: checkHasContact(ContactRoles.APPLICANT, contactURIs.APPLICANT),
-  getData: getAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
-  setData: setAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
+  getData: getAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
+  setData: setAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
   completion: CHECK_ANSWERS.uri
 })

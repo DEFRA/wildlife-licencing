@@ -113,10 +113,12 @@ describe('application-summary page', () => {
               submitted: '2022-08-10T08:18:07.363Z'
             }))
           },
-          APPLICANT: {
-            getByApplicationId: jest.fn(() => ({
-              fullName: 'Joe Blogs'
-            }))
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                fullName: 'Joe Blogs'
+              }))
+            })
           },
           LICENCES: {
             findByApplicationId: jest.fn(() => [{
