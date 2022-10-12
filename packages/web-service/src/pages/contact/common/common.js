@@ -42,27 +42,6 @@ export const checkHasContact = (contactRole, urlBase) => async (request, h) => {
   return null
 }
 
-export const checkAccountAndOrContactData = (contactRole, accountRole, urlBase) => async (request, h) => {
-  const ck = await checkHasContact(contactRole, urlBase)(request, h)
-  if (ck) {
-    return ck
-  }
-  // If trying to set the address of an immutable account redirect to is organisations
-  // If trying to set the address of an immutable contact redirect to the names  const journeyData = await request.cache().getData()
-  const { applicationId, userId } = await request.cache().getData()
-  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  if (account) {
-    return await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
-      ? h.redirect(await accountsRoute(accountRole, userId, applicationId, urlBase))
-      : null
-  } else {
-    const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-    return await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      ? h.redirect(await contactsRoute(contactRole, userId, applicationId, urlBase))
-      : null
-  }
-}
-
 /**
  * Used to produce lists of contact (names) to select from
  * (1) associated contacts are eliminated if allowAssociated false

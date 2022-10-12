@@ -51,7 +51,7 @@ describe('the check-answers page', () => {
           value: 'yes'
         },
         {
-          key: 'applicantOrganisations',
+          key: 'contactOrganisations',
           value: 'The Rolling Stones'
         },
         {
