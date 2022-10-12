@@ -43,7 +43,7 @@ describe('the check-supporting-information page handler', () => {
   })
 
   describe('the completion function', () => {
-    it('returns to the upload page if no upload found in the cache', async () => {
+    it('should returns to the task list page if the user selected no to upload another file', async () => {
       const request = {
         cache: () => ({
           getData: () => ({
@@ -66,6 +66,11 @@ describe('the check-supporting-information page handler', () => {
                 add: () => false
               }
             }
+          },
+          FILE_UPLOAD: {
+            getUploadedFiles: () => {
+              return {}
+            }
           }
         })
       }))
@@ -75,7 +80,8 @@ describe('the check-supporting-information page handler', () => {
       expect(result).toEqual('/tasklist')
     })
 
-    it('should returns to the upload page if the user selected yes to upload another file', async () => {
+    it('should returns to the upload page if the user selected yes to upload another file and removes the tag', async () => {
+      const mockRemove = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({
@@ -89,9 +95,67 @@ describe('the check-supporting-information page handler', () => {
           })
         })
       }
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                remove: mockRemove,
+                add: () => false
+              }
+            }
+          }
+        })
+      }))
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
+      expect(mockRemove).toHaveBeenCalledWith('supporting-information')
       expect(result).toEqual('/upload-supporting-information')
+    })
+
+    it('should returns to the task list page and add completed tag', async () => {
+      const mockAdd = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 123
+          }),
+          getPageData: () => ({
+            payload: {
+              'another-file-check': 'no'
+            }
+          })
+        })
+      }
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                remove: () => false,
+                add: mockAdd
+              }
+            }
+          },
+          FILE_UPLOAD: {
+            getUploadedFiles: () => {
+              return [{
+                applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
+                id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+                updatedAt: '2022-03-25T14:10:14.861Z',
+                createdAt: '2022-03-25T14:10:14.861Z'
+              }]
+            }
+          }
+        })
+      }))
+
+      const { completion } = await import('../check-supporting-information.js')
+      const result = await completion(request)
+      expect(mockAdd).toHaveBeenCalledWith('supporting-information')
+      expect(result).toEqual('/tasklist')
     })
 
     it('should display a validation error if the user does not input a choice for another file upload', async () => {

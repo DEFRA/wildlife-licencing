@@ -3,12 +3,17 @@ import { FILE_UPLOADS } from '../../uris.js'
 import { FILETYPES, fileUploadPageRoute } from '../common/file-upload/file-upload.js'
 
 export const completion = async request => {
+  const journeyData = await request.cache().getPageData()
   const { applicationId, fileUpload } = await request.cache().getData()
-  if (applicationId && fileUpload) {
-    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
+
+  if (journeyData?.error) {
+    return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   }
 
-  return FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
+  if (applicationId && fileUpload) {
+    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
+    return FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
+  }
 }
 
 export const uploadSupportingInformation = fileUploadPageRoute({
