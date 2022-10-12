@@ -36,6 +36,9 @@ export const checkData = async (request, h) => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  if (Object.keys(ecologistExperience).length === 0) {
+    return null
+  }
   return { yesNo: ecologistExperience.previousLicence ? 'yes' : 'no' }
 }
 

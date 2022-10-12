@@ -136,6 +136,28 @@ const doSites = async (applicationId, payload) => {
   }
 }
 
+const doAuthorisedPeople = async (applicationId, payload) => {
+  const applicationContacts = await models.applicationContacts.findAll({
+    where: { applicationId, contactRole: 'AUTHORISED-PERSON' }
+  })
+
+  if (applicationContacts.length) {
+    const contactsFound = await models.contacts.findAll({
+      where: { id: applicationContacts.map(c => c.contactId) }
+    })
+
+    const authorisedPeople = contactsFound.map(c => ({
+      data: c.contact,
+      keys: {
+        apiKey: c.id,
+        sddsKey: c.sddsContactId
+      }
+    }))
+
+    Object.assign(payload.application, { authorisedPeople })
+  }
+}
+
 const doHabitatSites = async (applicationId, payload) => {
   const habitatSites = await models.habitatSites.findAll({
     where: { applicationId }
@@ -223,6 +245,9 @@ export const buildApiObject = async applicationId => {
 
     // Add in the application sites
     await doSites(applicationId, payload)
+
+    // Add in the authorised people
+    await doAuthorisedPeople(applicationId, payload)
 
     // Add in the habitat sites (licensable actions)
     await doHabitatSites(applicationId, payload)

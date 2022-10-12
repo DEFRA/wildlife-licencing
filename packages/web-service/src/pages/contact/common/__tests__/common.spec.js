@@ -88,208 +88,6 @@ describe('contact common', () => {
     })
   })
 
-  describe('checkAccountAndOrContactData', () => {
-    it('if an immutable account is associated, redirect to the organisations page, if candidates exist', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({ getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })) })
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '668ee1f0-073d-480c-a802-59db362897e6' })),
-              findByUser: jest.fn(() => [{ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', name: 'The Rolling Stones' }])
-            }),
-            isImmutable: () => true
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-organisations')
-    })
-
-    it('if an immutable account is associated, redirect to the organisation name page, if no candidates exist', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({ getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })) })
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '668ee1f0-073d-480c-a802-59db362897e6' })),
-              findByUser: jest.fn(() => [])
-            }),
-            isImmutable: () => true
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-organisation')
-    })
-
-    it('if no account is is associated and an immutable contact is associated, redirect to the names page if candidates exist', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
-              findByUser: jest.fn(() => [{ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', fullName: 'Mick Taylor' }])
-            }),
-            isImmutable: () => true
-
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn()
-            }),
-            isImmutable: () => true
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-names')
-    })
-
-    it('if no account is is associated and an immutable contact is associated, redirect to the namespage if no candidates exist', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
-              findByUser: jest.fn(() => [])
-            }),
-            isImmutable: () => true
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => null)
-            })
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-name')
-    })
-
-    it('if account is is associated and is mutable return null', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
-            })
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '668ee1f0-073d-480c-a802-59db362897e6' }))
-            }),
-            isImmutable: () => false
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      const result = await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(result).toBeNull()
-    })
-
-    it('if no account is is associated and the contact is mutable return null', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
-            }),
-            isImmutable: () => false
-          },
-          ACCOUNT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => null)
-            })
-          }
-        }
-      }))
-
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const { checkAccountAndOrContactData } = await import('../common.js')
-      const result = await checkAccountAndOrContactData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(result).toBeNull()
-    })
-  })
-
   describe('contactsFilter', () => {
     it('produces the list including a mutable clone where user associations are disallowed', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -649,12 +447,18 @@ describe('contact common', () => {
       expect(mockUnlink).not.toHaveBeenCalled()
     })
 
-    it('the setName function does nothing with an immutable contact', async () => {
-      const mockUpdate = jest.fn()
+    it('the setName function will migrate an immutable contact', async () => {
+      const mockCreate = jest.fn()
+      const mockUnAssign = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
           CONTACT: {
             role: () => ({
+              create: mockCreate,
+              unAssign: mockUnAssign,
               getByApplicationId: jest.fn().mockReturnValue(
                 {
                   id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
@@ -664,7 +468,6 @@ describe('contact common', () => {
                   userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
                 })
             }),
-            update: mockUpdate,
             isImmutable: () => true
           }
         }
@@ -674,7 +477,15 @@ describe('contact common', () => {
         '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
         'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb')
       await contactOps.setName('Jon Bonham')
-      expect(mockUpdate).not.toHaveBeenCalled()
+      expect(mockUnAssign).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94', '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      expect(mockCreate).toHaveBeenCalledWith('8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+        {
+          address: 'Address',
+          cloneOf: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+          contactDetails: { email: 'email@email.com' },
+          fullName: 'Jon Bonham',
+          userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+        })
     })
 
     it('the setName function does nothing if no contact is assigned', async () => {

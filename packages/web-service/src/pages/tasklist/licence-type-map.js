@@ -4,7 +4,6 @@ import {
   DECLARATION,
   FILE_UPLOADS,
   habitatURIs,
-  TASKLIST,
   ecologistExperienceURIs,
   siteURIs
 } from '../../uris.js'
@@ -52,7 +51,7 @@ export const getTaskStatus = async request => {
   return {
     [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
     [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
-    [SECTION_TASKS.ECOLOGIST]: false,
+    [SECTION_TASKS.ECOLOGIST]: applicationTags.includes(CONTACT_COMPLETE.ECOLOGIST),
     [SECTION_TASKS.AUTHORISED_PEOPLE]: applicationTags.includes(CONTACT_COMPLETE.AUTHORISED_PERSON),
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
@@ -115,8 +114,8 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: TASKLIST.uri,
-            status: eligibilityCheckStatus,
+            uri: status => status[SECTION_TASKS.ECOLOGIST] ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
+            status: status => status[SECTION_TASKS.ECOLOGIST] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
             enabled: eligibilityCheckEnabled
           },
           {

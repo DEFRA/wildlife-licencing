@@ -22,7 +22,8 @@ export default {
   redis: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    database: process.env.REDIS_DATABASE
+    database: process.env.REDIS_DATABASE,
+    password: process.env.REDIS_PASSWORD
   },
   queue: {
     host: process.env.REDIS_QUEUE_HOST,
