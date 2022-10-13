@@ -16,7 +16,7 @@ describe('getData function', () => {
       }
     }))
     const { restoreInputGetData } = await import('../restore-input-get-data.js')
-    expect(await restoreInputGetData(request)).toBe('experience')
+    expect(await restoreInputGetData(request, 'enter-experience')).toBe('experience')
   })
 
   it('returns the invalid input, if the user entered too much/too little', async () => {
