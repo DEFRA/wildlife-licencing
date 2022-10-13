@@ -50,6 +50,7 @@ export const cacheDirect = ({ context }) => {
   const getSessionCookieName = process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
   const dataKey = `${context.state[getSessionCookieName].id}_data`
   return {
-    getData: async () => JSON.parse(await REDIS.cache.restore(dataKey))
+    getData: async () => JSON.parse(await REDIS.cache.restore(dataKey)),
+    setData: async obj => REDIS.cache.save(dataKey, (obj))
   }
 }

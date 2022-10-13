@@ -47,7 +47,7 @@ describe('The enter experience page', () => {
   })
 
   describe('getData function', () => {
-    it('returns the experience details', async () => {
+    it('returns the experience details from the api, if there have been no error on the input', async () => {
       const request = {
         cache: () => ({
           getData: () => ({
@@ -64,6 +64,26 @@ describe('The enter experience page', () => {
       }))
       const { getData } = await import('../enter-experience.js')
       expect(await getData(request)).toBe('experience')
+    })
+
+    it('returns the invalid input, if the user entered too much/too little', async () => {
+      let journeyData = {
+        applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+        tempInput: 'This is just test text to ensure its retrieved'
+      }
+      const request = {
+        cache: () => ({
+          getData: () => journeyData,
+          setData: (newObj) => {
+            journeyData = newObj
+          }
+        })
+      }
+      const { getData } = await import('../enter-experience.js')
+      const result = await getData(request)
+      expect(result).toEqual('This is just test text to ensure its retrieved')
+      // The tempInput prop should now be wiped
+      expect(journeyData.tempInput).toEqual(undefined)
     })
   })
 
@@ -92,6 +112,51 @@ describe('The enter experience page', () => {
       const { setData } = await import('../enter-experience.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { experienceDetails: 'experience' })
+    })
+  })
+
+  describe('validator function', () => {
+    it('raises a joi error on an empty text input', async () => {
+      const payload = { 'enter-experience': '' }
+      const context = { context: { state: { sid: { id: 123 } } } }
+      jest.doMock('../../../../session-cache/cache-decorator.js', () => ({
+        cacheDirect: () => {
+          return {
+            getData: () => { },
+            setData: () => { }
+          }
+        }
+      }))
+      try {
+        const { validator } = await import('../enter-experience.js')
+        expect(await validator(payload, context))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: no text entered')
+      }
+    })
+
+    it('raises a joi error if the user enters more than 4,000 characters', async () => {
+      const fourThousandAndOneChars = 'dsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsdsdsddsdsdsdsdsd'
+      const payload = { 'enter-experience': fourThousandAndOneChars }
+      const setCacheMock = jest.fn()
+      const context = { context: { state: { sid: { id: 123 } } } }
+      jest.doMock('../../../../session-cache/cache-decorator.js', () => ({
+        cacheDirect: () => {
+          return {
+            getData: () => { return {} },
+            setData: setCacheMock
+          }
+        }
+      }))
+      try {
+        const { validator } = await import('../enter-experience.js')
+        expect(await validator(payload, context))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: max text input exceeded')
+        expect(setCacheMock).toHaveBeenCalledWith({ tempInput: fourThousandAndOneChars })
+      }
     })
   })
 })
