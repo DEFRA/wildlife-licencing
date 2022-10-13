@@ -1,11 +1,10 @@
-import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
-import { cacheDirect } from '../../../session-cache/cache-decorator.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
+import { maxInputValidator } from '../../common/max-input-validator.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -19,46 +18,9 @@ export const completion = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  const methodExperience = request.payload['enter-methods'].replace('\r\n', '\n')
+  const methodExperience = request.payload['enter-methods'].replaceAll('\r\n', '\n')
   Object.assign(ecologistExperience, { methodExperience })
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
-}
-
-export const validator = async (payload, context) => {
-  // JS post message here sends line breaks with \r\n (CRLF) but the Gov.uk prototypes counts newlines as \n
-  // Which leads to a mismatch on the character count as
-  // '\r\n'.length == 2
-  // '\n'.length   == 1
-  const input = payload['enter-methods'].replace('\r\n', '\n')
-  const journeyData = await cacheDirect(context).getData()
-
-  if (input === '') {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: no text entered',
-      path: ['enter-methods'],
-      type: 'string.empty',
-      context: {
-        label: 'enter-methods',
-        value: 'Error',
-        key: 'enter-methods'
-      }
-    }], null)
-  }
-
-  if (input.length > 4000) {
-    // Store the text in the input, so the user won't lose everything they typed, we'll delete it in getData()
-    await cacheDirect(context).setData(Object.assign(journeyData, { tempInput: input }))
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: max text input exceeded',
-      path: ['enter-methods'],
-      type: 'string.max',
-      context: {
-        label: 'enter-methods',
-        value: 'Error',
-        key: 'enter-methods'
-      }
-    }], null)
-  }
 }
 
 export default pageRoute({
@@ -66,7 +28,7 @@ export default pageRoute({
   page: ecologistExperienceURIs.ENTER_METHODS.page,
   checkData: checkApplication,
   getData: request => restoreInputGetData(request, 'enter-methods'),
-  validator,
+  validator: (request, context) => maxInputValidator(request, context, 'enter-methods'),
   setData,
   completion
 })
