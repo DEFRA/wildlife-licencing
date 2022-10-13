@@ -5,6 +5,7 @@ import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
 import { cacheDirect } from '../../../session-cache/cache-decorator.js'
+import { restoreInputGetData } from '../../common/restore-input-get-data.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -13,21 +14,6 @@ export const completion = async request => {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
   return ecologistExperienceURIs.CLASS_MITIGATION.uri
-}
-
-export const getData = async request => {
-  const journeyData = await request.cache().getData()
-
-  if (journeyData.tempInput) {
-    const inputText = journeyData.tempInput
-    delete journeyData.tempInput
-    await request.cache().setData(journeyData)
-    return inputText
-  }
-
-  // If there's no tempInput from the validator, retrieve the data from the API (might be an empty string)
-  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(journeyData.applicationId)
-  return ecologistExperience.methodExperience
 }
 
 export const setData = async request => {
@@ -79,8 +65,8 @@ export default pageRoute({
   uri: ecologistExperienceURIs.ENTER_METHODS.uri,
   page: ecologistExperienceURIs.ENTER_METHODS.page,
   checkData: checkApplication,
+  getData: request => restoreInputGetData(request, 'enter-methods'),
   validator,
   setData,
-  completion,
-  getData
+  completion
 })
