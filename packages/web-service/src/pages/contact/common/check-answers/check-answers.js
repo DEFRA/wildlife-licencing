@@ -38,7 +38,7 @@ export const getCheckAnswersData = (contactRole, accountRole) => async request =
       { key: 'contactIsUser', value: yesNoFromBool(contact.userId) },
       { key: 'whoIsTheLicenceFor', value: contact.fullName },
       { key: 'contactIsOrganisation', value: yesNoFromBool(!!account) },
-      (account && { key: 'applicantOrganisations', value: account.name }),
+      (account && { key: 'contactOrganisations', value: account.name }),
       { key: 'address', value: addressLine(account || contact) },
       { key: 'email', value: account?.contactDetails?.email || contact?.contactDetails?.email }
     ].filter(a => a) // Remove null values
