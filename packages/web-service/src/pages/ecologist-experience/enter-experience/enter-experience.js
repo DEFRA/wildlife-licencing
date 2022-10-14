@@ -6,6 +6,8 @@ import { checkApplication } from '../../common/check-application.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
 import { maxInputValidator } from '../../common/max-input-validator.js'
 
+const key = 'enter-experience'
+
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
@@ -18,7 +20,7 @@ export const completion = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  const experienceDetails = request.payload['enter-experience'].replaceAll('\r\n', '\n')
+  const experienceDetails = request.payload[key].replaceAll('\r\n', '\n')
   Object.assign(ecologistExperience, { experienceDetails })
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }
@@ -27,8 +29,8 @@ export default pageRoute({
   uri: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
   page: ecologistExperienceURIs.ENTER_EXPERIENCE.page,
   checkData: checkApplication,
-  getData: request => restoreInputGetData(request, 'enter-experience'),
-  validator: (request, context) => maxInputValidator(request, context, 'enter-experience'),
+  getData: request => restoreInputGetData(request, key),
+  validator: (request, context) => maxInputValidator(request, context, key),
   setData,
   completion
 })

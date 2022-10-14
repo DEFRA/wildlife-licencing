@@ -63,4 +63,20 @@ describe('max input validator function', () => {
       expect(setCacheMock).toHaveBeenCalledWith({ tempInput: fourThousandAndOneChars })
     }
   })
+
+  it('returns undefined if the character count is less than 4000 and more than 0', async () => {
+    const payload = { 'enter-experience': ':)' }
+    const context = { context: { state: { sid: { id: 123 } } } }
+    jest.doMock('../../../session-cache/cache-decorator.js', () => ({
+      cacheDirect: () => {
+        return {
+          getData: () => {},
+          setData: () => {}
+        }
+      }
+    }))
+
+    const { maxInputValidator } = await import('../max-input-validator.js')
+    expect(await maxInputValidator(payload, context, 'enter-experience')).toBe(undefined)
+  })
 })
