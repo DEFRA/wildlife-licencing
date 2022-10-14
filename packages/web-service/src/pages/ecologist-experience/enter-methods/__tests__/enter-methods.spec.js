@@ -72,4 +72,32 @@ describe('The enter methods page', () => {
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { methodExperience: 'experience' })
     })
   })
+
+  describe('the get data function', () => {
+    it('is included in the page route export', async () => {
+      const h = {
+        view: (view, pageData) => pageData
+      }
+      const request = {
+        payload: {
+          'enter-methods': 'experience'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          getPageData: () => {}
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ methodExperience: 'hello world' }))
+          }
+        }
+      }))
+      const pageRoute = await import('../enter-methods.js')
+      expect(await pageRoute.default[0].handler(request, h)).toEqual({ data: 'hello world' })
+    })
+  })
 })
