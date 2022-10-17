@@ -3,7 +3,7 @@ import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
 import { ContactRoles } from '../contact-roles.js'
-const nameReg = /^[/\s\p{L}\\.,-]{1,160}$/u
+const nameReg = /^[\s\p{L}.,-]{1,160}$/u
 
 // The rules for allowing duplicate contacts depend on the contact type
 const duplicateNames = async (contactRole, userId, applicationId) => {

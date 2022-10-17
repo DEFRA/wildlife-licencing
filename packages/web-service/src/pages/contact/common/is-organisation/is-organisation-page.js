@@ -4,7 +4,7 @@ import Joi from 'joi'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 
-const nameReg = /^[/\s\p{L}\d\\.,'-]{1,160}$/u
+const nameReg = /^[\s\p{L}\d.,'-]{1,160}$/u
 
 export const getValidator = accountRole => async (payload, context) => {
   const cd = cacheDirect(context)
