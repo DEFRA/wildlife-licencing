@@ -109,31 +109,5 @@ describe('The cache-decorator', () => {
       expect(result).toEqual({ foo: 'bar' })
       expect(mockRestore).toHaveBeenLastCalledWith('123_data')
     })
-
-    it('can set the data from the cache using the context', async () => {
-      let cachedResponse = {}
-      const mockSave = jest.fn(async (dataKey, obj) => {
-        cachedResponse = obj
-        return JSON.stringify(cachedResponse)
-      })
-      const mockRestore = jest.fn(async () => {
-        return JSON.stringify(cachedResponse)
-      })
-
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        REDIS: {
-          cache: {
-            save: mockSave,
-            restore: mockRestore
-          }
-        }
-      }))
-      const { cacheDirect } = await import('../cache-decorator.js')
-      await cacheDirect({ context: { state: { sid: { id: 123 } } } }).setData({ foo: 'now updated!' })
-      const journeyData = await cacheDirect({ context: { state: { sid: { id: 123 } } } }).getData()
-
-      expect(journeyData).toEqual({ foo: 'now updated!' })
-      expect(mockSave).toHaveBeenLastCalledWith('123_data', { foo: 'now updated!' })
-    })
   })
 })
