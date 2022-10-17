@@ -78,12 +78,8 @@ export const checkData = async (request, h) => {
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-  // const previous = eligibility[question] || {}
-  // By going on to the page you are un-answering the question
-  delete eligibility[question]
   await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.ELIGIBILITY_CHECK)
-  await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
-  return null
+  return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
 const consolidateAnswers = async (request, eligibility) => {
