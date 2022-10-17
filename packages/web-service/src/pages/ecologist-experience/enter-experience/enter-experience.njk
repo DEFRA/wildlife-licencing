@@ -17,7 +17,7 @@
 {{ govukCharacterCount({
   name: "enter-experience",
   id: "enter-experience",
-  value: data,
+  value: payload['enter-experience'] if payload['enter-experience'] else data,
   maxlength: 4000,
   errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['enter-experience']
 }) }}

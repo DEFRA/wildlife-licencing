@@ -1,10 +1,10 @@
+import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
-import { maxInputValidator } from '../../common/max-input-validator.js'
 
 const key = 'enter-experience'
 
@@ -30,7 +30,13 @@ export default pageRoute({
   page: ecologistExperienceURIs.ENTER_EXPERIENCE.page,
   checkData: checkApplication,
   getData: request => restoreInputGetData(request, key),
-  validator: (request, context) => maxInputValidator(request, context, key),
+  validator: Joi.object({
+    // JS post message here sends line breaks with \r\n (CRLF) but the Gov.uk prototypes counts newlines as \n
+    // Which leads to a mismatch on the character count as
+    // '\r\n'.length == 2
+    // '\n'.length   == 1
+    'enter-experience': Joi.string().required().replace('\r\n', '\n').max(4000)
+  }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion
 })
