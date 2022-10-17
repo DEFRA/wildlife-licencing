@@ -20,3 +20,14 @@ const PAGES = findPages(top)
  * @returns {Promise<Awaited<*>[]>}
  */
 export const clearPageData = async request => Promise.all(PAGES.map(async p => request.cache().clearPageData(p)))
+
+/**
+ * Clears the data from the "top-level" when a new application is chosen
+ * @param request
+ * @returns {Promise<Awaited<*>[]>}
+ */
+export const clearData = async request => {
+  const journeyData = await request.cache().getData()
+  delete journeyData.habitatData
+  await request.cache().setData(journeyData)
+}
