@@ -18,7 +18,7 @@
   name: "enter-methods",
   id: "enter-methods",
   maxlength: 4000,
-  value: data,
+  value: payload['enter-methods'] if payload['enter-methods'] else data,
   errorMessage: { text: "Enter details of the ecologist's experience of using the methods to be licensed" } if error['enter-methods']
 }) }}
 
