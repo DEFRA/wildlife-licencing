@@ -12,6 +12,7 @@ export const REDIS = {
     debug(`Redis host: ${Config.redis.host}`)
     debug(`Redis port: ${Config.redis.port}`)
     debug(`Redis expire time (second): ${CACHE_EXPIRE_SECONDS}`)
+    debug(`Redis password set: ${!!Config.redis.password}`)
     const options = {
       socket: {
         host: Config.redis.host,
