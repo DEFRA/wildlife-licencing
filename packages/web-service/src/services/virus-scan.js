@@ -1,5 +1,7 @@
 import NodeClam from 'clamscan'
 import * as fs from 'fs'
+import db from 'debug'
+const debug = db('web-service:clam')
 
 const options = {
   clamdscan: {
@@ -19,11 +21,12 @@ export const initializeClamScan = async () => {
   // If you run an M1 based architecture, the clamscan image doesn't currently work when developing locally
   // env var makes it more configurable to just turn it off when debugging
   if (!process.env.NO_SCANNING_REQUIRED) {
+    debug(`Scanning required. Options${JSON.stringify(options)}`)
     try {
       const cs = new NodeClam()
       clamScan = await cs.init(options)
       if (clamScan.initialized) {
-        console.log('clam virus scanner container is initialized')
+        debug('clam virus scanner container is initialized')
       } else {
         console.error('Clam virus scanner container is not initialized')
         return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
@@ -34,7 +37,7 @@ export const initializeClamScan = async () => {
       return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
     }
   } else {
-    console.log('virus scanner is disabled')
+    debug('virus scanner is disabled')
   }
 
   return undefined

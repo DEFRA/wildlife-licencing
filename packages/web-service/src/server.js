@@ -14,6 +14,8 @@ import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
 import { additionalPageData } from './additional-page-data.js'
+import db from 'debug'
+const debug = db('web-service:server')
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -22,8 +24,9 @@ const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_CO
  * @returns {Promise<*>}
  */
 const createServer = async () => {
-  console.log('Creating server...')
-  return new Hapi.Server({
+  // Warning -- may print sensitive info. Ensure disabled in production
+  debug(`Environment:${JSON.stringify(process.env, null, 4)}`)
+  const server = new Hapi.Server({
     port: process.env.SERVER_PORT || 4000,
     routes: {
       files: {
@@ -31,6 +34,9 @@ const createServer = async () => {
       }
     }
   })
+  debug(`Created server :${JSON.stringify(server.info, null, 4)}`)
+
+  return server
 }
 
 // Add default headers
@@ -101,6 +107,7 @@ const init = async server => {
   const sessionCookieName = getSessionCookieName()
 
   // Set up the session cookie
+  debug(`Session cookie name: ${sessionCookieName}`)
   server.state(sessionCookieName, sessionCookieOptions)
   server.ext('onPreAuth', sessionManager(sessionCookieName))
   server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
@@ -119,7 +126,10 @@ const init = async server => {
 
   // If the directory doesn't exist to hold our files we need to scan, create it
   if (!fs.existsSync(process.env.SCANDIR)) {
+    debug(`Created scan directory: ${process.env.SCANDIR}`)
     fs.mkdirSync(process.env.SCANDIR)
+  } else {
+    debug(`Scan directory exists: ${process.env.SCANDIR}`)
   }
 
   // Log any errors
