@@ -35,6 +35,6 @@ export const getData = async request => {
 export default pageRoute({
   page: APPLICATIONS.page,
   uri: APPLICATIONS.uri,
-  getData,
-  backlink: Backlink.NO_BACKLINK
+  backlink: Backlink.NO_BACKLINK,
+  getData
 })
