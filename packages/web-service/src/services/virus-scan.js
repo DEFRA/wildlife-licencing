@@ -33,6 +33,8 @@ export const initializeClamScan = async () => {
       console.error(err)
       return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
     }
+  } else {
+    console.log('virus scanner is disabled')
   }
 
   return undefined
