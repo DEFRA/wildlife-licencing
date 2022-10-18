@@ -1,6 +1,7 @@
 import { createClient } from 'redis'
 import Config from './config.js'
 import db from 'debug'
+import path from 'path'
 const debug = db('connectors-lib:redis')
 export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 3600
 
@@ -23,8 +24,20 @@ export const REDIS = {
     }
 
     client = createClient(options)
+
     await client.on('error', err => console.error('Redis Client Error', err))
+    await client.on('connect', () => debug('Redis connection is connecting'))
+    await client.on('ready', () => debug('Redis connection is ready'))
+    await client.on('end', () => debug('Redis connection has disconnected'))
+    await client.on('reconnecting', () => debug('Redis connection is reconnecting'))
+
     await client.connect()
+
+    // Initial write to the cache, log the service connecting
+    const dt = new Date()
+    const pn = path.basename(process.argv[1])
+    await client.set(Object(pn), Object(dt.toISOString()))
+
     return Promise.resolve()
   },
   cache: {
