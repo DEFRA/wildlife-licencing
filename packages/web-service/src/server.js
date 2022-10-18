@@ -24,8 +24,6 @@ const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_CO
  * @returns {Promise<*>}
  */
 const createServer = async () => {
-  // Warning -- may print sensitive info. Ensure disabled in production
-  debug(`Environment:${JSON.stringify(process.env, null, 4)}`)
   const server = new Hapi.Server({
     port: process.env.SERVER_PORT || 4000,
     routes: {
