@@ -37,6 +37,7 @@ export const REDIS = {
     const dt = new Date()
     const pn = path.basename(process.argv[1])
     await client.set(Object(pn), Object(dt.toISOString()))
+    debug(`Read from Redis: ${pn}: ${(await client.get(Object(pn)))}`)
 
     return Promise.resolve()
   },

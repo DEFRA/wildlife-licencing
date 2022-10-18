@@ -8,7 +8,8 @@ describe('The redis connector', () => {
       createClient: jest.fn(() => ({
         connect: jest.fn(),
         on: jest.fn(),
-        set: jest.fn()
+        set: jest.fn(),
+        get: jest.fn()
       }))
     }
 
@@ -38,7 +39,8 @@ describe('The redis connector', () => {
       createClient: jest.fn(() => ({
         connect: jest.fn(),
         on: jest.fn(),
-        set: jest.fn()
+        set: jest.fn(),
+        get: jest.fn()
       }))
     }
 
