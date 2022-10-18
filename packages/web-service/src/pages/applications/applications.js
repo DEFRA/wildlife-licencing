@@ -3,6 +3,7 @@ import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { TASKLIST, APPLICATIONS, APPLICATION_SUMMARY } from '../../uris.js'
+import { Backlink } from '../../handlers/backlink.js'
 
 // Values to keys and keys to values
 const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
@@ -31,4 +32,9 @@ export const getData = async request => {
   }
 }
 
-export default pageRoute({ page: APPLICATIONS.page, uri: APPLICATIONS.uri, getData })
+export default pageRoute({
+  page: APPLICATIONS.page,
+  uri: APPLICATIONS.uri,
+  getData,
+  backlink: Backlink.NO_BACKLINK
+})

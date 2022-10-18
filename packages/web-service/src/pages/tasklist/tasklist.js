@@ -4,6 +4,7 @@ import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
 import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
+import { Backlink } from '../../handlers/backlink.js'
 
 export const getApplication = async request => {
   // If there is no application then create a pre-application
@@ -69,4 +70,15 @@ export const checkData = async (request, h) => {
   return null
 }
 
-export const tasklist = pageRoute({ page: TASKLIST.page, uri: TASKLIST.uri, options: { auth: { mode: 'optional' } }, checkData, getData })
+export const tasklist = pageRoute({
+  page: TASKLIST.page,
+  uri: TASKLIST.uri,
+  backlink: new Backlink(async request => {
+    const { userId } = await request.cache().getData()
+    const applications = await APIRequests.APPLICATION.findByUser(userId)
+    return applications.length > 1 ? Backlink.JAVASCRIPT.value() : Backlink.NO_BACKLINK.value()
+  }),
+  options: { auth: { mode: 'optional' } },
+  checkData,
+  getData
+})

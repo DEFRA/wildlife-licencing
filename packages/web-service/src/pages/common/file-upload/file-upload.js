@@ -79,7 +79,6 @@ export const validator = async payload => {
  * @param h
  * @returns {Promise<null|*>}
  */
-
 export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion }) => [
   {
     method: 'GET',

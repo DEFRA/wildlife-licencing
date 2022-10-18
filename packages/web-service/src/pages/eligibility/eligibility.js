@@ -213,7 +213,7 @@ export const eligibilityCheck = checkAnswersPage(
     getData: checkYourAnswersGetData,
     setData: checkYourAnswersSetData,
     completion: checkAnswersCompletion,
-    checkData
+    checkData: checkData
   })
 
 /**************************************************************

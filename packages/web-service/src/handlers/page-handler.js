@@ -1,7 +1,9 @@
 import Joi from 'joi'
+import { Backlink } from './backlink.js'
 
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
-export default (view, checkData, getData, completion, setData) => ({
+
+export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
   get: async (request, h) => {
     // If checkData exists call it and if returning truthy, return
     if (checkData && typeof checkData === 'function') {
@@ -19,6 +21,9 @@ export default (view, checkData, getData, completion, setData) => ({
       const gotData = await getData(request)
       Object.assign(pageData, { data: gotData })
     }
+
+    // Add the backlink data
+    Object.assign(pageData, { backlink: await backlink.get(request) })
 
     return h.view(view, pageData)
   },
