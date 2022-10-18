@@ -61,12 +61,16 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <div id="backlink-div" hidden>
-        {{ govukBackLink({
-                    text: "Back",
-                    href: "javascript: window.history.go(-1)"
-                }) }}
-      </div>
+      {% if backlink.enabled %}
+          <div id="backlink-div" hidden>
+            {{ govukBackLink({
+              text: "Back",
+              href: backlink.value
+            }) }}
+          </div>
+      {% else %}
+        <div id="backlink-div" hidden>&nbsp;</div>
+      {% endif %}
     </div>
     <div class="govuk-grid-column-one-third">
       {% block topNavigation %}{% endblock %}

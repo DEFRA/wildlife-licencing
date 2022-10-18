@@ -5,6 +5,7 @@ import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { checkApplication } from '../common/check-application.js'
+import { Backlink } from '../../handlers/backlink.js'
 
 const anotherFileUpload = 'another-file-check'
 
@@ -56,6 +57,7 @@ export const checkSupportingInformation = pageRoute({
   page: FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.page,
   uri: FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri,
   checkData: checkApplication,
+  backlink: Backlink.NO_BACKLINK,
   validator,
   getData,
   completion

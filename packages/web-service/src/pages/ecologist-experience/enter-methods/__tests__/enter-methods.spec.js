@@ -97,7 +97,13 @@ describe('The enter methods page', () => {
         }
       }))
       const pageRoute = await import('../enter-methods.js')
-      expect(await pageRoute.default[0].handler(request, h)).toEqual({ data: 'hello world' })
+      expect(await pageRoute.default[0].handler(request, h)).toEqual({
+        backlink: {
+          enabled: true,
+          value: 'javascript: window.history.go(-1)'
+        },
+        data: 'hello world'
+      })
     })
   })
 })
