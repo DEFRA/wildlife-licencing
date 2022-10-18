@@ -98,7 +98,13 @@ describe('The enter experience page', () => {
         }
       }))
       const pageRoute = await import('../enter-experience.js')
-      expect(await pageRoute.default[0].handler(request, h)).toEqual({ data: 'hello people' })
+      expect(await pageRoute.default[0].handler(request, h)).toEqual({
+        data: 'hello people',
+        backlink: {
+          enabled: true,
+          value: 'javascript: window.history.go(-1)'
+        }
+      })
     })
   })
 })
