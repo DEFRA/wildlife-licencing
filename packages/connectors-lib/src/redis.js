@@ -15,19 +15,17 @@ export const REDIS = {
     debug(`Redis expire time (second): ${CACHE_EXPIRE_SECONDS}`)
     debug(`Redis password set: ${!!Config.redis.password}`)
     const options = {
-      socket: {
-        host: Config.redis.host,
-        port: Config.redis.port
-      },
-      ...Config.redis.database ? { database: Config.redis.database } : {},
-      ...Config.redis.password ? { password: Config.redis.password } : {}
+      url: Config.redis.password
+        ? `redis://default:${Config.redis.password}@${Config.redis.host}:${Config.redis.port}`
+        : `redis://${Config.redis.host}:${Config.redis.port}`,
+      ...Config.redis.database ? { database: Config.redis.database } : {}
     }
-
+    debug(`Redis options: ${JSON.stringify(options, null, 4)}`)
     client = createClient(options)
 
     await client.on('error', err => console.error('Redis Client Error', err))
-    await client.on('connect', () => debug('Redis connection is connecting'))
-    await client.on('ready', () => debug('Redis connection is ready'))
+    await client.on('connect', () => debug('Redis connection is connecting...'))
+    await client.on('ready', () => debug('Redis connection is connected'))
     await client.on('end', () => debug('Redis connection has disconnected'))
     await client.on('reconnecting', () => debug('Redis connection is reconnecting'))
 

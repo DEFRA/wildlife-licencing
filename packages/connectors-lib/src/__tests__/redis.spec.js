@@ -26,10 +26,7 @@ describe('The redis connector', () => {
     await REDIS.initialiseConnection()
     expect(mockRedis.createClient).toHaveBeenCalledWith(
       {
-        socket: {
-          host: 'hostname',
-          port: 999
-        }
+        url: 'redis://hostname:999'
       })
     expect(REDIS.getClient()).not.toBeNull()
   })
@@ -58,10 +55,7 @@ describe('The redis connector', () => {
     await REDIS.initialiseConnection()
     expect(mockRedis.createClient).toHaveBeenCalledWith(
       {
-        socket: {
-          host: 'hostname',
-          port: 999
-        },
+        url: 'redis://hostname:999',
         database: 'db'
       })
     expect(REDIS.getClient()).not.toBeNull()
