@@ -3,6 +3,7 @@ import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 
 export const completion = async _request => habitatURIs.NAME.uri
 
@@ -14,10 +15,10 @@ export const checkData = async (request, h) => {
     return redirectUrl
   }
 
-  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
-  if (complete && habitatSites.length !== 0) {
+  if (isComplete(tag) && habitatSites.length !== 0) {
     return h.redirect(habitatURIs.CHECK_YOUR_ANSWERS.uri)
   }
 

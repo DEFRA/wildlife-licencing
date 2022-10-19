@@ -4,6 +4,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -13,11 +14,11 @@ export const getData = async request => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (pageData.payload.licence === 'yes') {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
-  if (flagged) {
+  if (isComplete(tag)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri

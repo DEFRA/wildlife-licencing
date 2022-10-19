@@ -2,6 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { APPLICATIONS, ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
 
@@ -11,8 +12,8 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (!flagged) {
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  if (!isComplete(tag)) {
     return h.redirect(ecologistExperienceURIs.PREVIOUS_LICENCE.uri)
   }
 

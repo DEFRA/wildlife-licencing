@@ -2,7 +2,7 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkHasApplication } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { addressLine, CONTACT_COMPLETE } from '../common/check-answers/check-answers.js'
 import { ContactRoles } from '../common/contact-roles.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
@@ -71,9 +71,9 @@ export const setData = async request => {
   const { applicationId } = journeyData
   if (request.payload['yes-no'] === 'yes') {
     await request.cache().clearPageData(NAME.page)
-    await APIRequests.APPLICATION.tags(applicationId).remove(CONTACT_COMPLETE.AUTHORISED_PERSON)
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.notStarted })
   } else {
-    await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE.AUTHORISED_PERSON)
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.complete })
   }
   delete journeyData.authorisedPeople
   await request.cache().setData(journeyData)

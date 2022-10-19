@@ -31,11 +31,21 @@ const apiUrls = {
   APPLICATION_SITES: '/application-sites'
 }
 
+// If you want to read more about the states that should appear on a tasklist page
+// Gov.uk docs are here: https://design-system.service.gov.uk/patterns/task-list-pages/
 export const tagStatus = {
+  // if the user cannot start the task yet
+  // for example because another task must be completed first
+  cannotStart: 'cannotStart',
+
+  // if the user can start work on the task, but has not done so yet
   notStarted: 'notStarted',
+
+  // if the user has started but not completed the task
   inProgress: 'inProgress',
-  complete: 'complete',
-  confirmed: 'confirmed'
+
+  // if the user has completed the task
+  complete: 'complete'
 }
 
 Object.freeze(ContactRoles)

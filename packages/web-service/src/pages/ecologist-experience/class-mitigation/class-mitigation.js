@@ -1,4 +1,4 @@
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
@@ -29,7 +29,7 @@ export const setData = async request => {
   Object.assign(ecologistExperience, { classMitigation })
   if (!classMitigation) {
     delete ecologistExperience.classMitigationDetails
-    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.complete })
   }
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }

@@ -6,7 +6,7 @@ import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
-import { APIRequests } from '../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
 
 // The pages in the flow
@@ -78,7 +78,7 @@ export const checkData = async (request, h) => {
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-  await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.ELIGIBILITY_CHECK)
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.notStarted })
   return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
@@ -105,7 +105,7 @@ export const setData = question => async request => {
   Object.assign(eligibility, { [question]: isYes(request) })
   await consolidateAnswers(request, eligibility)
   await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
-  await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.ELIGIBILITY_CHECK)
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.notStarted })
 }
 
 /**************************************************************
@@ -196,7 +196,7 @@ export const checkYourAnswersGetData = async request => {
 
 export const checkYourAnswersSetData = async request => {
   const { applicationId } = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ELIGIBILITY_CHECK)
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.complete })
 }
 
 export const checkAnswersCompletion = async request => {

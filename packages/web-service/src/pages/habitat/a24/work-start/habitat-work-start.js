@@ -6,11 +6,12 @@ import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../common/check-application.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
-  if (complete) {
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  if (isComplete(tag)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.WORK_END.uri
@@ -31,8 +32,8 @@ export const setData = async request => {
   const year = pageData.payload['habitat-work-start-year']
   const workStart = `${month}-${day}-${year}`
 
-  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
-  if (complete) {
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  if (isComplete(tag)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workStart })

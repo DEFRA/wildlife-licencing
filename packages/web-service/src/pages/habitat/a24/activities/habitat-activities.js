@@ -2,11 +2,12 @@ import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { APIRequests } from '../../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
@@ -27,12 +28,12 @@ export const getData = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const complete = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.SETTS)
+  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
   const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
 
-  if (complete) {
+  if (isComplete(tag)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { methodIds })
@@ -43,7 +44,7 @@ export const setData = async request => {
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
 
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.complete })
   }
   request.cache().setData(journeyData)
 }
