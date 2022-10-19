@@ -31,9 +31,17 @@ const apiUrls = {
   APPLICATION_SITES: '/application-sites'
 }
 
+export const tagStatus = {
+  notStarted: 'notStarted',
+  inProgress: 'inProgress',
+  complete: 'complete',
+  confirmed: 'confirmed'
+}
+
 Object.freeze(ContactRoles)
 Object.freeze(AccountRoles)
 Object.freeze(apiUrls)
+Object.freeze(tagStatus)
 
 const getContactsByApplicationId = async (role, applicationId) => {
   try {
@@ -400,40 +408,52 @@ export const APIRequests = {
       }
     },
     tags: applicationId => ({
-      add: async tag => {
+      get: async key => {
         try {
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
           application.applicationTags = application.applicationTags || []
-          if (!application.applicationTags.find(t => t === tag)) {
-            application.applicationTags.push(tag)
-            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          const tag = application.applicationTags.find(t => t.tag === key)
+
+          if (tag === undefined) {
+            return tagStatus.notStarted
+          } else {
+            return tag.tagState
           }
         } catch (error) {
-          console.error(`Error adding tag ${tag} for applicationId: ${applicationId}`, error)
+          console.error(`Error fetching tag ${key} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
           throw error
         }
       },
-      has: async tag => {
+      set: async tagObj => {
         try {
+          const key = tagObj.tag
+          const tagState = tagObj.tagState
+
+          // If you are trying to set an impossible state
+          if (Object.values(tagStatus).indexOf(tagState) === -1) {
+            const error = new Error('Invalid tag status assignment')
+            console.error(`Error adding value key ${key} and value ${tagState} for applicationId: ${applicationId}`, error)
+            Boom.boomify(error, { statusCode: 500 })
+            throw error
+          }
+
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
           application.applicationTags = application.applicationTags || []
-          return !!application.applicationTags.find(t => t === tag)
-        } catch (error) {
-          console.error(`Error fetching tag ${tag} for applicationId: ${applicationId}`, error)
-          Boom.boomify(error, { statusCode: 500 })
-          throw error
-        }
-      },
-      remove: async tag => {
-        try {
-          const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
-          if (application.applicationTags && application.applicationTags.length) {
-            Object.assign(application, { applicationTags: application.applicationTags.filter(t => t !== tag) })
+          const tag = application.applicationTags.find(t => t.tag === key)
+
+          if (tag === undefined) {
+            // The first time the user is adding a tag
+            application.applicationTags.push(tagObj)
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          } else {
+            // A tag is being updated
+            const index = application.applicationTags.indexOf(tag)
+            application.applicationTags[index].tagState = tagState
             await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
           }
         } catch (error) {
-          console.error(`Error removing tag ${tag} for applicationId: ${applicationId}`, error)
+          console.error(`Error adding tag ${JSON.stringify(tagObj)} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
           throw error
         }
