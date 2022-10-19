@@ -15,10 +15,10 @@ export const checkData = async (request, h) => {
     return redirectUrl
   }
 
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
-  if (isComplete(tag) && habitatSites.length !== 0) {
+  if (isComplete(tagState) && habitatSites.length !== 0) {
     return h.redirect(habitatURIs.CHECK_YOUR_ANSWERS.uri)
   }
 

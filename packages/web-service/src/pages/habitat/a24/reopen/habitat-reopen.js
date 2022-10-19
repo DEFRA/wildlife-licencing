@@ -11,11 +11,11 @@ import { isComplete } from '../../../common/tag-is-complete.js'
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
   const willReopen = pageData.payload['habitat-reopen']
 
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { willReopen })
@@ -32,9 +32,9 @@ export const getData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.ENTRANCES.uri

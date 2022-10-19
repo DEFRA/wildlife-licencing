@@ -8,11 +8,11 @@ const yesNo = 'yes-no'
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (pageData.payload[yesNo] === 'yes') {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
@@ -25,8 +25,8 @@ export const checkData = async (request, h) => {
   }
 
   if (request.query?.change !== 'true') {
-    const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-    if (isComplete(tag)) {
+    const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+    if (isComplete(tagState)) {
       return h.redirect(ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri)
     }
   }

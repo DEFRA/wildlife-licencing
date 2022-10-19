@@ -18,7 +18,7 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -41,7 +41,7 @@ describe('The check ecologist answers page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }

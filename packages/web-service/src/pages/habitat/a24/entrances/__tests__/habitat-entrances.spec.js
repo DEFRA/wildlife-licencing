@@ -4,10 +4,13 @@ describe('The habitat entrances page', () => {
   describe('habitat-entrances page', () => {
     it('the habitat-entrances page forwards onto habitat-active-entrances page on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         })
@@ -25,10 +28,13 @@ describe('The habitat entrances page', () => {
 
     it('the habitat-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -46,10 +52,13 @@ describe('The habitat entrances page', () => {
     it('sets the entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         }
@@ -79,10 +88,13 @@ describe('The habitat entrances page', () => {
     it('sets the active entrance data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

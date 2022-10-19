@@ -59,6 +59,9 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false })),
@@ -88,6 +91,9 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true })),
@@ -117,6 +123,9 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: true })),
@@ -394,6 +403,9 @@ describe('the eligibility pages', () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
     const mockAdd = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        complete: 'complete'
+      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({

@@ -5,10 +5,13 @@ describe('The habitat work end page', () => {
   describe('habitat-work-end page', () => {
     it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         })
@@ -30,7 +33,7 @@ describe('The habitat work end page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -247,7 +250,7 @@ describe('The habitat work end page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -302,7 +305,7 @@ describe('The habitat work end page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

@@ -13,9 +13,9 @@ const { SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER } } =
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.REOPEN.uri
@@ -32,8 +32,8 @@ export const setData = async request => {
 
   const settType = parseInt(pageData.payload['habitat-types'])
 
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
-  if (isComplete(tag)) {
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  if (isComplete(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { settType })

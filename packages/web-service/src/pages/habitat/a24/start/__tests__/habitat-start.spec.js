@@ -17,7 +17,7 @@ describe('The habitat start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           },
           HABITAT: {
@@ -53,7 +53,7 @@ describe('The habitat start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           },
           HABITAT: {

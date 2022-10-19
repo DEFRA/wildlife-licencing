@@ -50,7 +50,7 @@ export const setPostcodeData = contactRole => async request => {
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode
   const { applicationId } = journeyData
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.notStarted })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.inProgress })
   await addressLookupForPostcode(postcode, journeyData, request)
 }
 

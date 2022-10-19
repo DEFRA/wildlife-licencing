@@ -45,8 +45,8 @@ export const setData = async request => {
   const year = pageData.payload['habitat-work-end-year']
   const workEnd = `${month}-${day}-${year}`
 
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
-  if (isComplete(tag)) {
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  if (isComplete(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workEnd })
@@ -59,8 +59,8 @@ export const setData = async request => {
 export const completion = async request => {
   const journeyData = await request.cache().getData()
 
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
-  if (isComplete(tag)) {
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  if (isComplete(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.ACTIVITIES.uri

@@ -12,9 +12,9 @@ const page = 'habitat-entrances'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.ACTIVE_ENTRANCES.uri
@@ -23,11 +23,11 @@ export const completion = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tag = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
   const numberOfEntrances = pageData.payload[page]
 
-  if (isComplete(tag)) {
+  if (isComplete(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { numberOfEntrances })

@@ -78,7 +78,7 @@ export const checkData = async (request, h) => {
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.notStarted })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.inProgress })
   return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
@@ -105,7 +105,7 @@ export const setData = question => async request => {
   Object.assign(eligibility, { [question]: isYes(request) })
   await consolidateAnswers(request, eligibility)
   await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.notStarted })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.inProgress })
 }
 
 /**************************************************************

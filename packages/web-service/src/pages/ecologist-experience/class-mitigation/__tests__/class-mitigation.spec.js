@@ -140,7 +140,7 @@ describe('The class mitigation page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }

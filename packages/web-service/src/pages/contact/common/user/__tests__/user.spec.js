@@ -118,6 +118,9 @@ describe('the user page', () => {
 
     it('if no, invokes the common operations correctly', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))

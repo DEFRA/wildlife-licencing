@@ -10,7 +10,7 @@ describe('The habitat types page', () => {
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         })
@@ -29,7 +29,7 @@ describe('The habitat types page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -49,7 +49,7 @@ describe('The habitat types page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -82,7 +82,7 @@ describe('The habitat types page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

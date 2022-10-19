@@ -8,7 +8,7 @@ describe('The habitat work start page', () => {
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         })
@@ -30,7 +30,7 @@ describe('The habitat work start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -227,7 +227,7 @@ describe('The habitat work start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         }
@@ -261,7 +261,7 @@ describe('The habitat work start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

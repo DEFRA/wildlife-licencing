@@ -285,7 +285,7 @@ describe('The task-list handler', () => {
             applicationReferenceNumber: 'ref'
           })),
           tags: () => ({
-            has: () => true
+            get: () => 'complete'
           })
         }
       }

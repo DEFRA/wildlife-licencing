@@ -415,7 +415,7 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tag')
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tag')
         expect(result).toBeTruthy()
       })
 
@@ -427,7 +427,7 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tag-2')
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tag-2')
         expect(result).not.toBeTruthy()
       })
 
@@ -439,7 +439,7 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').has('tsg-2'))
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tsg-2'))
           .rejects.toThrowError()
       })
 

@@ -8,7 +8,7 @@ describe('The habitat active entrances page', () => {
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return 'inProgress'
             }
           }
         })
@@ -29,7 +29,7 @@ describe('The habitat active entrances page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -50,7 +50,7 @@ describe('The habitat active entrances page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         }
@@ -84,7 +84,7 @@ describe('The habitat active entrances page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

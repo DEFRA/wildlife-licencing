@@ -143,7 +143,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -176,7 +176,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -212,7 +212,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -251,7 +251,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -283,7 +283,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -316,7 +316,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }

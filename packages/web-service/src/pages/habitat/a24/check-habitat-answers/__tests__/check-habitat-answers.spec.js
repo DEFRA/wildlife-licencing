@@ -3,12 +3,12 @@ describe('The check habitat answers page', () => {
 
   describe('check-habitat-answers page', () => {
     it('the check-habitat-answers page forwards onto the tasklist page if no additional setts required', async () => {
-      const addTagsMock = jest.fn()
+      const setTagsMock = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false, add: addTagsMock }
+              return { get: () => 'inProgress', set: setTagsMock }
             }
           }
         })
@@ -28,7 +28,7 @@ describe('The check habitat answers page', () => {
       }
       const { completion } = await import('../check-habitat-answers.js')
       expect(await completion(request)).toBe('/tasklist')
-      expect(addTagsMock).toHaveBeenCalledTimes(1)
+      expect(setTagsMock).toHaveBeenCalledTimes(1)
     })
 
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
@@ -36,7 +36,7 @@ describe('The check habitat answers page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { remove: () => true }
+              return { set: () => true }
             }
           }
         }

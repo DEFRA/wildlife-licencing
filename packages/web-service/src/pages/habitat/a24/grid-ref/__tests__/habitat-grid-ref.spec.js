@@ -4,10 +4,13 @@ describe('The habitat grid ref page', () => {
   describe('habitat-grid-ref page', () => {
     it('the habitat-grid-ref page forwards onto habitat-work-start on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         })
@@ -23,10 +26,13 @@ describe('The habitat grid ref page', () => {
 
     it('the habitat-grid-ref page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -43,10 +49,13 @@ describe('The habitat grid ref page', () => {
     it('sets the grid ref data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'inProgress' }
             }
           }
         }
@@ -76,10 +85,13 @@ describe('The habitat grid ref page', () => {
     it('sets the grid ref data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

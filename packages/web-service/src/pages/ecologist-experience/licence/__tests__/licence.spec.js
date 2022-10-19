@@ -8,7 +8,7 @@ describe('The licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -31,10 +31,13 @@ describe('The licence page', () => {
 
     it('returns the enter experience uri on primary journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -57,10 +60,13 @@ describe('The licence page', () => {
 
     it('returns the check ecologist answers uri on return journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }

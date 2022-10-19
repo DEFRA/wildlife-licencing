@@ -24,13 +24,13 @@ export const setUserData = (contactRole, accountRole) => async request => {
     } else {
       await contactOps.unAssign()
       await contactOps.create(true)
-      await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.notStarted })
+      await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.inProgress })
     }
   } else {
     // Create a contact here, it may be removed one is selected from contact names
     await contactOps.unAssign()
     await contactOps.create(false)
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.notStarted })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.inProgress })
   }
 }
 

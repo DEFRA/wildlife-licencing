@@ -7,7 +7,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -33,7 +33,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -61,7 +61,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -91,7 +91,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -116,7 +116,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }

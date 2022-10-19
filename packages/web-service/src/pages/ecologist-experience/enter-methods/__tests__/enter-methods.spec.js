@@ -4,10 +4,13 @@ describe('The enter methods page', () => {
   describe('completion function', () => {
     it('returns the class mitigation uri on primary journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'inProgress'
             })
           }
         }
@@ -25,10 +28,13 @@ describe('The enter methods page', () => {
 
     it('returns the check ecologist answers uri on return journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }

@@ -88,8 +88,7 @@ describe('The habitat activities page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                has: () => false,
-                add: () => false
+                get: () => 'inProgress'
               }
             }
           }
@@ -141,10 +140,15 @@ describe('The habitat activities page', () => {
       }))
 
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return {
+                get: () => 'complete'
+              }
             }
           }
         }
