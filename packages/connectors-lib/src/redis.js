@@ -9,25 +9,33 @@ let client
 export const REDIS = {
   getClient: () => client,
   initialiseConnection: async () => {
-    debug(`Redis host: ${Config.redis.host}`)
-    debug(`Redis port: ${Config.redis.port}`)
-    debug(`Redis expire time (second): ${CACHE_EXPIRE_SECONDS}`)
-    debug(`Redis password set: ${!!Config.redis.password}`)
     const options = {
-      url: Config.redis.password
-        ? `redis://default:${Config.redis.password}@${Config.redis.host}:${Config.redis.port}`
-        : `redis://${Config.redis.host}:${Config.redis.port}`,
-      ...Config.redis.database ? { database: Config.redis.database } : {}
+      socket: {
+        host: Config.redis.host,
+        port: Config.redis.port,
+        ...(Config.redis.password && { tls: true })
+      },
+      ...(Config.redis.database && { database: Config.redis.database }),
+      ...(Config.redis.password && { password: Config.redis.password })
     }
-    debug(`Redis options: ${JSON.stringify(options, null, 4)}`)
+
+    // Print options -- hide password
+    debug(`Redis options: ${JSON.stringify(
+      Object.assign({},
+        options, { ...(Config.redis.password && { password: '***' }) }),
+      null, 4)}`)
+
+    // Create client
     client = createClient(options)
 
+    // Log events
     await client.on('error', err => console.error('Redis Client Error', err))
     await client.on('connect', () => debug('Redis connection is connecting...'))
     await client.on('ready', () => debug('Redis connection is connected'))
     await client.on('end', () => debug('Redis connection has disconnected'))
     await client.on('reconnecting', () => debug('Redis connection is reconnecting'))
 
+    // Connect
     await client.connect()
     return Promise.resolve()
   },

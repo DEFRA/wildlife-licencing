@@ -24,10 +24,12 @@ describe('The redis connector', () => {
     // const { createClient } = await import('redis')
     const { REDIS } = await import('../redis.js')
     await REDIS.initialiseConnection()
-    expect(mockRedis.createClient).toHaveBeenCalledWith(
-      {
-        url: 'redis://hostname:999'
-      })
+    expect(mockRedis.createClient).toHaveBeenCalledWith({
+      socket: {
+        host: 'hostname',
+        port: 999
+      }
+    })
     expect(REDIS.getClient()).not.toBeNull()
   })
 
@@ -46,18 +48,23 @@ describe('The redis connector', () => {
       redis: {
         host: 'hostname',
         port: 999,
-        database: 'db'
+        database: 'db',
+        password: 'pw'
       }
     }))
 
     // const { createClient } = await import('redis')
     const { REDIS } = await import('../redis.js')
     await REDIS.initialiseConnection()
-    expect(mockRedis.createClient).toHaveBeenCalledWith(
-      {
-        url: 'redis://hostname:999',
-        database: 'db'
-      })
+    expect(mockRedis.createClient).toHaveBeenCalledWith({
+      database: 'db',
+      password: 'pw',
+      socket: {
+        host: 'hostname',
+        port: 999,
+        tls: true
+      }
+    })
     expect(REDIS.getClient()).not.toBeNull()
   })
 })
