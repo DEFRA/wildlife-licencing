@@ -7,6 +7,9 @@ describe('The habitat types page', () => {
   describe('habitat types page', () => {
     it('the habitat types page forwards onto habitat-reopen page on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
@@ -26,6 +29,9 @@ describe('The habitat types page', () => {
 
     it('the habitat-types page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -46,6 +52,9 @@ describe('The habitat types page', () => {
     it('sets the entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -79,6 +88,9 @@ describe('The habitat types page', () => {
     it('sets the type data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {

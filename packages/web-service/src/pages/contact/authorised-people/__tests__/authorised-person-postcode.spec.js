@@ -9,7 +9,13 @@ describe('authorised person postcode', () => {
         }
       }))
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
+          tagStatus: {
+            inProgress: 'inProgress'
+          },
           CONTACT: {
             getById: () => ({
               id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',
@@ -21,7 +27,7 @@ describe('authorised person postcode', () => {
           },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }

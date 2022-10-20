@@ -81,6 +81,9 @@ describe('The habitat activities page', () => {
       }
 
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           HABITAT: {
             create: mockCreate
@@ -88,7 +91,8 @@ describe('The habitat activities page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                get: () => 'inProgress'
+                get: () => 'inProgress',
+                set: () => jest.fn()
               }
             }
           }

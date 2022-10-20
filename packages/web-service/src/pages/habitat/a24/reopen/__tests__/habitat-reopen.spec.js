@@ -4,6 +4,9 @@ describe('The habitat reopen page', () => {
   describe('habitat reopen page', () => {
     it('the habitat reopen page forwards onto habitat-entrances page on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
@@ -23,6 +26,9 @@ describe('The habitat reopen page', () => {
 
     it('the habitat-reopen page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -43,6 +49,9 @@ describe('The habitat reopen page', () => {
     it('sets the reopen data correctly', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -76,6 +85,9 @@ describe('The habitat reopen page', () => {
     it('sets the reopen data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {

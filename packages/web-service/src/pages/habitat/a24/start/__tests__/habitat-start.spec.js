@@ -14,7 +14,13 @@ describe('The habitat start page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
+          tagStatus: {
+            complete: 'complete'
+          },
           APPLICATION: {
             tags: () => {
               return { get: () => 'inProgress' }
@@ -50,7 +56,13 @@ describe('The habitat start page', () => {
         redirect: mockRedirect
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
+          tagStatus: {
+            complete: 'complete'
+          },
           APPLICATION: {
             tags: () => {
               return { get: () => 'complete' }

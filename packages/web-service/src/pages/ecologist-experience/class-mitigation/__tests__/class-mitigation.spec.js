@@ -103,6 +103,9 @@ describe('The class mitigation page', () => {
     it('write the data to the database if \'no\'', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ classMitigationDetails: 'details' })),

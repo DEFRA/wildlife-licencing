@@ -58,6 +58,9 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
@@ -97,6 +100,9 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
@@ -130,6 +136,9 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {

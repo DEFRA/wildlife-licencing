@@ -67,6 +67,9 @@ describe('The confirm delte page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           HABITAT: {
             deleteSett: mockDelete,

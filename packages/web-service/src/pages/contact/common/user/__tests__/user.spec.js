@@ -24,6 +24,9 @@ describe('the user page', () => {
   describe('setUserData', () => {
     it('if yes, invokes the common operations correctly if no user contact is found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ username: 'Keith Moon' }))
@@ -38,7 +41,7 @@ describe('the user page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }
@@ -137,7 +140,7 @@ describe('the user page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }

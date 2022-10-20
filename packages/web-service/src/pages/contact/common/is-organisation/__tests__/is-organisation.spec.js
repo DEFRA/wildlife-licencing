@@ -52,7 +52,7 @@ describe('the is-organisation page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }

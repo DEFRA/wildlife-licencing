@@ -137,6 +137,9 @@ describe('add authorised person', () => {
     it('when adding another removes the tag', async () => {
       const mockRemove = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -167,6 +170,9 @@ describe('add authorised person', () => {
     it('when not adding another contact adds the tag', async () => {
       const mockAdd = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({

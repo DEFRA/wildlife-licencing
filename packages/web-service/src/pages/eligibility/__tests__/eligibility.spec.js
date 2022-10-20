@@ -31,12 +31,15 @@ describe('the eligibility pages', () => {
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        inProgress: 'inProgress'
+      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({ question: 'answer' }))
         },
         APPLICATION: {
-          tags: () => ({ remove: jest.fn() })
+          tags: () => ({ set: jest.fn() })
         }
       }
     }))
@@ -68,7 +71,7 @@ describe('the eligibility pages', () => {
             putById: mockPutById
           },
           APPLICATION: {
-            tags: () => ({ remove: jest.fn() })
+            tags: () => ({ set: jest.fn() })
           }
         }
       }))
@@ -100,7 +103,7 @@ describe('the eligibility pages', () => {
             putById: mockPutById
           },
           APPLICATION: {
-            tags: () => ({ remove: jest.fn() })
+            tags: () => ({ set: jest.fn() })
           }
         }
       }))
@@ -132,7 +135,7 @@ describe('the eligibility pages', () => {
             putById: mockPutById
           },
           APPLICATION: {
-            tags: () => ({ remove: jest.fn() })
+            tags: () => ({ set: jest.fn() })
           }
         }
       }))
@@ -157,13 +160,16 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: false })),
             putById: mockPutById
           },
           APPLICATION: {
-            tags: () => ({ remove: jest.fn() })
+            tags: () => ({ set: jest.fn() })
           }
         }
       }))
@@ -401,7 +407,7 @@ describe('the eligibility pages', () => {
 
   it('the checkYourAnswersSetData function sets the check completed flag', async () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
-    const mockAdd = jest.fn()
+    const mockSet = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
         complete: 'complete'
@@ -416,13 +422,13 @@ describe('the eligibility pages', () => {
           }))
         },
         APPLICATION: {
-          tags: () => ({ add: mockAdd })
+          tags: () => ({ set: mockSet })
         }
       }
     }))
     const { checkYourAnswersSetData } = await import('../eligibility.js')
     await checkYourAnswersSetData(request)
-    expect(mockAdd).toHaveBeenCalledWith('eligibility-check')
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'eligibility-check', tagState: 'complete' })
   })
 
   it('the checkYourAnswersCompletion function returns the eligible page if the answers are consistent', async () => {

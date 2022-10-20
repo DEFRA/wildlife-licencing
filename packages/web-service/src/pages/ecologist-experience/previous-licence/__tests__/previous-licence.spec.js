@@ -30,6 +30,9 @@ describe('The previous licence page', () => {
     })
     it('returns the check ecologist details uri on the return journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -58,6 +61,9 @@ describe('The previous licence page', () => {
     })
     it('returns the enter experience uri on the primary journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -88,6 +94,9 @@ describe('The previous licence page', () => {
     it('redirects to check ecologist answers if completion-tag is set', async () => {
       const mockRedirect = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -113,6 +122,9 @@ describe('The previous licence page', () => {
 
     it('returns undefined if tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({

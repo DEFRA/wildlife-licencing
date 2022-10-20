@@ -5,6 +5,9 @@ describe('The check habitat answers page', () => {
     it('the check-habitat-answers page forwards onto the tasklist page if no additional setts required', async () => {
       const setTagsMock = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {

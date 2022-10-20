@@ -30,6 +30,9 @@ describe('The habitat work end page', () => {
 
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -247,10 +250,13 @@ describe('The habitat work end page', () => {
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'complete' }
+              return { get: () => 'inProgress' }
             }
           }
         }
@@ -302,6 +308,9 @@ describe('The habitat work end page', () => {
         getHabitatById: () => {}
       }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          complete: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
