@@ -42,7 +42,7 @@ describe('The check habitat answers page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { set: () => true }
+              return { set: () => jest.fn() }
             }
           }
         }

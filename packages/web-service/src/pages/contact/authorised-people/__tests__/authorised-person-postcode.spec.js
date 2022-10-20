@@ -13,9 +13,6 @@ describe('authorised person postcode', () => {
           inProgress: 'inProgress'
         },
         APIRequests: {
-          tagStatus: {
-            inProgress: 'inProgress'
-          },
           CONTACT: {
             getById: () => ({
               id: '35acb529-70bb-4b8d-8688-ccdec837e5d4',

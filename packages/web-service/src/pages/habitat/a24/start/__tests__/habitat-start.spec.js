@@ -18,9 +18,6 @@ describe('The habitat start page', () => {
           complete: 'complete'
         },
         APIRequests: {
-          tagStatus: {
-            complete: 'complete'
-          },
           APPLICATION: {
             tags: () => {
               return { get: () => 'inProgress' }
@@ -60,9 +57,6 @@ describe('The habitat start page', () => {
           complete: 'complete'
         },
         APIRequests: {
-          tagStatus: {
-            complete: 'complete'
-          },
           APPLICATION: {
             tags: () => {
               return { get: () => 'complete' }
