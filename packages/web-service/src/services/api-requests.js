@@ -31,6 +31,7 @@ const apiUrls = {
   APPLICATION_SITES: '/application-sites'
 }
 
+// These states are common goverment pattern states, and are mirrored in /applications-text.njk
 // If you want to read more about the states that should appear on a tasklist page
 // Gov.uk docs are here: https://design-system.service.gov.uk/patterns/task-list-pages/
 export const tagStatus = {
