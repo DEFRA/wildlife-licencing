@@ -58,7 +58,7 @@ describe('The habitat types page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'complete' }
+              return { get: () => 'inProgress' }
             }
           }
         }

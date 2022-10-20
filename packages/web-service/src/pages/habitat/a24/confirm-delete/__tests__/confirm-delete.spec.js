@@ -52,7 +52,7 @@ describe('The confirm delte page', () => {
 
     it('setData resets the tags to be incomplete if the user deletes their final sett', async () => {
       const mockDelete = jest.fn()
-      const mockTagDelete = jest.fn()
+      const mockSet = jest.fn()
       const request = {
         payload: {
           'confirm-delete': true
@@ -77,7 +77,7 @@ describe('The confirm delte page', () => {
           },
           APPLICATION: {
             tags: () => {
-              return { remove: mockTagDelete }
+              return { set: mockSet }
             }
           }
         }
@@ -85,7 +85,7 @@ describe('The confirm delte page', () => {
       const { setData } = await import('../confirm-delete.js')
       await setData(request)
       expect(mockDelete).toHaveBeenCalledWith('dbf77d92-a6a6-4ec3-9f4b-da6f6bf2c0af', 'ff530373-a8f0-4c7e-a7cf-f97d533a8c7c')
-      expect(mockTagDelete).toHaveBeenCalledWith('setts')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'setts', tagState: 'inProgress' })
     })
 
     it('setData does not call API if user selects not to confirm delete', async () => {

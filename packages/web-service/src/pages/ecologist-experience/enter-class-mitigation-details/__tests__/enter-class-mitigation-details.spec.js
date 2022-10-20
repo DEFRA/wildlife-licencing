@@ -44,7 +44,7 @@ describe('The enter class mitigation details page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              add: () => jest.fn()
+              set: () => jest.fn()
             })
           }
         }

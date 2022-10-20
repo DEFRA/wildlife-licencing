@@ -135,7 +135,7 @@ describe('add authorised person', () => {
 
   describe('the setData function ', () => {
     it('when adding another removes the tag', async () => {
-      const mockRemove = jest.fn()
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           inProgress: 'inProgress'
@@ -143,7 +143,7 @@ describe('add authorised person', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              remove: mockRemove
+              set: mockSet
             })
           }
         }
@@ -164,11 +164,11 @@ describe('add authorised person', () => {
       }
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
-      expect(mockRemove).toHaveBeenCalledWith('authorised-person-contact-complete')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-person-contact-complete', tagState: 'inProgress' })
     })
 
     it('when not adding another contact adds the tag', async () => {
-      const mockAdd = jest.fn()
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           complete: 'complete'
@@ -176,7 +176,7 @@ describe('add authorised person', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              add: mockAdd
+              set: mockSet
             })
           }
         }
@@ -197,7 +197,7 @@ describe('add authorised person', () => {
       }
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
-      expect(mockAdd).toHaveBeenCalledWith('authorised-person-contact-complete')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-person-contact-complete', tagState: 'complete' })
     })
   })
 

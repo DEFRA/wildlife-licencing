@@ -36,6 +36,9 @@ describe('The check habitat answers page', () => {
 
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {

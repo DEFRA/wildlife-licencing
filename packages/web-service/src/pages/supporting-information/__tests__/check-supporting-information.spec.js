@@ -65,8 +65,7 @@ describe('the check-supporting-information page handler', () => {
           APPLICATION: {
             tags: () => {
               return {
-                remove: () => false,
-                add: () => false
+                set: () => jest.fn()
               }
             }
           },
@@ -84,7 +83,7 @@ describe('the check-supporting-information page handler', () => {
     })
 
     it('should returns to the upload page if the user selected yes to upload another file and removes the tag', async () => {
-      const mockRemove = jest.fn()
+      const mockSet = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({
@@ -107,8 +106,7 @@ describe('the check-supporting-information page handler', () => {
           APPLICATION: {
             tags: () => {
               return {
-                remove: mockRemove,
-                add: () => false
+                set: mockSet
               }
             }
           }
@@ -116,12 +114,12 @@ describe('the check-supporting-information page handler', () => {
       }))
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(mockRemove).toHaveBeenCalledWith('supporting-information')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'inProgress' })
       expect(result).toEqual('/upload-supporting-information')
     })
 
     it('should returns to the task list page and add completed tag', async () => {
-      const mockAdd = jest.fn()
+      const mockSet = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({
@@ -143,8 +141,7 @@ describe('the check-supporting-information page handler', () => {
           APPLICATION: {
             tags: () => {
               return {
-                remove: () => false,
-                add: mockAdd
+                set: mockSet
               }
             }
           },
@@ -163,7 +160,7 @@ describe('the check-supporting-information page handler', () => {
 
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(mockAdd).toHaveBeenCalledWith('supporting-information')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete' })
       expect(result).toEqual('/tasklist')
     })
 

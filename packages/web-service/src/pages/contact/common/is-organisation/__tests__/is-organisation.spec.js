@@ -49,6 +49,9 @@ describe('the is-organisation page', () => {
       }))
 
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          inProgress: 'inProgress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({

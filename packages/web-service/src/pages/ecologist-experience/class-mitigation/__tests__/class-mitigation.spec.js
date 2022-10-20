@@ -113,7 +113,7 @@ describe('The class mitigation page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              add: () => jest.fn()
+              set: () => jest.fn()
             })
           }
         }
