@@ -457,8 +457,14 @@ export const APIRequests = {
             application.applicationTags.push(tagObj)
             await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
           } else {
-            // A tag is being updated
+            // The tag to update
             const index = application.applicationTags.indexOf(tag)
+
+            // Nothing to update
+            if (application.applicationTags[index].tagState === tagState) {
+              return
+            }
+
             application.applicationTags[index].tagState = tagState
             await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
           }

@@ -1,5 +1,6 @@
 
 import { AccountRoles, ContactRoles } from '../../pages/contact/common/contact-roles.js'
+import { tagStatus } from '../api-requests.js'
 
 jest.spyOn(console, 'error').mockImplementation(code => {})
 
@@ -365,9 +366,16 @@ describe('The API requests service', () => {
     })
 
     describe('the tag functions', () => {
-      it('the add tag function calls the the API correctly if tag present', async () => {
+      it('the set tag function calls the the API correctly if the tag is present', async () => {
         const mockPut = jest.fn()
-        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['here-before'] }))
+        const mockGet = jest.fn(() => (
+          {
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+            applicationTags: [
+              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+            ]
+          }
+        ))
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
             put: mockPut,
@@ -375,14 +383,17 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tag')
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.complete })
         expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', {
-          applicationTags: expect.arrayContaining(['tag', 'here-before']), foo: 'bar'
+          applicationTags: expect.arrayContaining([{ tag: 'setts', tagState: tagStatus.complete }]), applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         })
       })
 
-      it('the add tag function ignores duplicate tags', async () => {
-        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+      it('the set tag function ignores duplicate tag updates', async () => {
+        const mockGet = jest.fn(() => ({
+          applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+          applicationTags: [{ tag: 'ecologist-experience', tagState: tagStatus.complete }]
+        }))
         const mockPut = jest.fn()
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
@@ -391,47 +402,62 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tag')
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.complete })
         expect(mockPut).not.toHaveBeenCalledWith()
       })
 
-      it('the add tag function rethrows an error', async () => {
-        const mockGet = jest.fn(() => { throw new Error() })
+      it('the set tag function rethrows an error', async () => {
+        const mockSet = jest.fn(() => { throw new Error() })
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
-            get: mockGet
+            set: mockSet
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').add('tsg-2'))
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.complete }))
           .rejects.toThrowError()
       })
 
-      it('the has tag function calls the the API correctly if tag present', async () => {
-        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+      it('the get tag function calls the the API correctly if the tags present', async () => {
+        const mockGet = jest.fn(() => (
+          {
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+            applicationTags: [
+              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+            ]
+          }
+        ))
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
             get: mockGet
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tag')
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('ecologist-experience')
         expect(result).toBeTruthy()
+        expect(result).toEqual('complete')
       })
 
-      it('the has tag function calls the the API correctly if tag not present', async () => {
-        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag'] }))
+      it('the get tag function calls the the API correctly if the tags not present', async () => {
+        const mockGet = jest.fn(() => (
+          {
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+            applicationTags: [
+              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+            ]
+          }
+        ))
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
             get: mockGet
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tag-2')
-        expect(result).not.toBeTruthy()
+        const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('missingSTRING')
+        expect(result).toEqual('notStarted')
       })
 
-      it('the has tag function rethrows an error', async () => {
+      it('the get tag function rethrows an error', async () => {
         const mockGet = jest.fn(() => { throw new Error() })
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
@@ -443,8 +469,16 @@ describe('The API requests service', () => {
           .rejects.toThrowError()
       })
 
-      it('the remove tag function calls the the API correctly if tag present', async () => {
-        const mockGet = jest.fn(() => ({ foo: 'bar', applicationTags: ['tag', 'tag-2'] }))
+      it('the set tag function calls the the API correctly if tag present', async () => {
+        const mockGet = jest.fn(() => (
+          {
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
+            applicationTags: [
+              { tag: 'ecologist-experience', tagState: tagStatus.complete },
+              { tag: 'setts', tagState: tagStatus.inProgress }
+            ]
+          }
+        ))
         const mockPut = jest.fn()
         jest.doMock('@defra/wls-connectors-lib', () => ({
           API: {
@@ -453,20 +487,15 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').remove('tag-2')
-        expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', { applicationTags: ['tag'], foo: 'bar' })
-      })
-
-      it('the remove tag function rethrows an error', async () => {
-        const mockGet = jest.fn(() => { throw new Error() })
-        jest.doMock('@defra/wls-connectors-lib', () => ({
-          API: {
-            get: mockGet
-          }
-        }))
-        const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').remove('tsg-2'))
-          .rejects.toThrowError()
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.complete })
+        expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3',
+          {
+            applicationTags: [
+              { tag: 'ecologist-experience', tagState: tagStatus.complete },
+              { tag: 'setts', tagState: tagStatus.complete }
+            ],
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+          })
       })
     })
   })
