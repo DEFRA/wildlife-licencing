@@ -6,7 +6,8 @@ describe('The check habitat answers page', () => {
       const setTagsMock = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: ({
           APPLICATION: {
@@ -37,7 +38,8 @@ describe('The check habitat answers page', () => {
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          IN_PROGRESS: 'in-progress'
+          IN_PROGRESS: 'in-progress',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {

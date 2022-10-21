@@ -91,6 +91,9 @@ describe('The licence page', () => {
   describe('the get data function', () => {
     it('returns licence details if they exists', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => (['A1234']))

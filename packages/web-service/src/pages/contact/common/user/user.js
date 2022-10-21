@@ -2,10 +2,17 @@ import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
 import { accountsRoute, contactAccountOperations, contactOperations, contactsRoute } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
+import { ContactRoles } from '../contact-roles.js'
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 
-export const getUserData = _contactRole => async request => {
+export const getUserData = contactRole => async request => {
   const journeyData = await request.cache().getData()
-  const { userId } = journeyData
+  const { userId, applicationId } = journeyData
+
+  if (contactRole === ContactRoles.APPLICANT) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.IN_PROGRESS })
+  }
+
   return APIRequests.USER.getById(userId)
 }
 

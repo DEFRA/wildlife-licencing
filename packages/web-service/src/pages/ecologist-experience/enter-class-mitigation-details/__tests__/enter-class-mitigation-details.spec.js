@@ -14,6 +14,9 @@ describe('The enter class mitigation details page', () => {
   describe('getData function', () => {
     it('returns the class-mitigation details', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ classMitigationDetails: 'CL-MIT' }))

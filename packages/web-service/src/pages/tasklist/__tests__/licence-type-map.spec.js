@@ -16,21 +16,26 @@ describe('The licence type map', () => {
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
       APIRequests: {
         APPLICATION: {
           getById: jest.fn(() => ({
-            applicationTags: ['eligibility-check']
+            applicationTags: [{ tag: 'eligibility-check', tagState: 'in-progress' }]
           }))
         }
       }
     }))
     const { getTaskStatus } = await import('../licence-type-map.js')
     const taskStatus = await getTaskStatus(request)
-    expect(taskStatus).toEqual(expect.objectContaining({ 'eligibility-check': true }))
+    expect(taskStatus).toEqual(expect.objectContaining({ 'eligibility-check': { tag: 'eligibility-check', tagState: 'in-progress' } }))
   })
 
   it('the decorateMap function works as expected', async () => {
-    const decoratedMap = await decorateMap(licenceTypeMap[A24], { 'eligibility-check': true })
+    const decoratedMap = await decorateMap(licenceTypeMap[A24], {
+      'eligibility-check': { tagState: 'not-started' }
+    })
     const startCheck = decoratedMap.find(m => m.name === 'check-before-you-start')
     const eligibilityCheck = startCheck.tasks.find(t => t.name === SECTION_TASKS.ELIGIBILITY_CHECK)
     expect(eligibilityCheck).toEqual({
@@ -40,7 +45,7 @@ describe('The licence type map', () => {
 
   it('the getProgress function works as expected', async () => {
     const progress = getProgress({ first: true, second: false })
-    expect(progress).toEqual({ completed: 1, from: 2 })
+    expect(progress).toEqual({ complete: 1, from: 2 })
   })
 
   describe('the applicant section', () => {
@@ -48,8 +53,8 @@ describe('The licence type map', () => {
     const funcUri = licenceTypeMap[A24].sections[1].tasks[0].uri
 
     it('status function will return completed if the applicant has completed the section task', async () => {
-      const result = funcStatus({ 'licence-holder': 'completed' })
-      expect(result).toBe('completed')
+      const result = funcStatus({ 'licence-holder': { tagState: 'complete' } })
+      expect(result).toBe('complete')
     })
 
     it('status function will return not-started if the applicant has not completed the section task', async () => {
@@ -64,7 +69,7 @@ describe('The licence type map', () => {
     })
 
     it('uri function will return the check-page if the applicant has not started the section task', async () => {
-      const result = funcUri({ 'licence-holder': 'completed' })
+      const result = funcUri({ 'licence-holder': 'complete' })
       expect(result).toBe('/applicant-check-answers')
     })
   })
@@ -74,7 +79,7 @@ describe('The licence type map', () => {
     const funcUri = licenceTypeMap[A24].sections[1].tasks[1].uri
 
     it('status function will return completed if the ecologist has completed the section task', async () => {
-      const result = funcStatus({ ecologist: 'completed' })
+      const result = funcStatus({ ecologist: { tagState: 'complete' } })
       expect(result).toBe('completed')
     })
 
@@ -90,7 +95,7 @@ describe('The licence type map', () => {
     })
 
     it('uri function will return the check-page if the ecologist has not started the section task', async () => {
-      const result = funcUri({ ecologist: 'completed' })
+      const result = funcUri({ ecologist: 'complete' })
       expect(result).toBe('/ecologist-check-answers')
     })
   })
@@ -99,7 +104,7 @@ describe('The licence type map', () => {
     const funcStatus = licenceTypeMap[A24].sections[1].tasks[2].status
 
     it('status function will return completed if the authorised-people has completed the section task', async () => {
-      const result = funcStatus({ 'authorised-people': 'completed' })
+      const result = funcStatus({ 'authorised-people': { tagState: 'complete' } })
       expect(result).toBe('completed')
     })
 

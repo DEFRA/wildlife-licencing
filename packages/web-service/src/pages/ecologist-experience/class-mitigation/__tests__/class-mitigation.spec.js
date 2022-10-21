@@ -5,6 +5,9 @@ describe('The class mitigation page', () => {
   describe('completion function', () => {
     it('returns the enter class mitigation uri if the user answers yes', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {}
       }))
       const request = {
@@ -21,6 +24,9 @@ describe('The class mitigation page', () => {
     })
     it('returns the check ecologist answers uri if the user answers no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {}
       }))
       const request = {

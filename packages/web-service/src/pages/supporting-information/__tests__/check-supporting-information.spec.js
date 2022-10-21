@@ -13,6 +13,9 @@ describe('the check-supporting-information page handler', () => {
       const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: ({
           FILE_UPLOAD: {
             removeUploadedFile: mockRemoveUploadedFile,

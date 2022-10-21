@@ -5,7 +5,8 @@ describe('The enter methods page', () => {
     it('returns the class mitigation uri on primary journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {

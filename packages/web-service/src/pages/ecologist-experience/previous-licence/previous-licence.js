@@ -1,4 +1,4 @@
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { APPLICATIONS, ecologistExperienceURIs } from '../../../uris.js'
 import { isComplete } from '../../common/tag-is-complete.js'
 import { yesNoPage } from '../../common/yes-no.js'
@@ -36,6 +36,7 @@ export const checkData = async (request, h) => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
   if (Object.keys(ecologistExperience).length === 0) {
     return null

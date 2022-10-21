@@ -20,7 +20,7 @@ describe('The habitat start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'in-progress' }
+              return { get: () => 'in-progress', set: jest.fn() }
             }
           },
           HABITAT: {
@@ -59,7 +59,7 @@ describe('The habitat start page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'complete' }
+              return { get: () => 'complete', set: jest.fn() }
             }
           },
           HABITAT: {

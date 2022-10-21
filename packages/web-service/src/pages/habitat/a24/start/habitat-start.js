@@ -1,4 +1,4 @@
-import { APIRequests } from '../../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
@@ -15,6 +15,7 @@ export const checkData = async (request, h) => {
     return redirectUrl
   }
 
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.IN_PROGRESS })
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
