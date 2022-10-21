@@ -3,6 +3,7 @@ import { APPLICATIONS, ecologistExperienceURIs, TASKLIST } from '../../../uris.j
 import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { yesNoFromBool } from '../../common/common.js'
+import { Backlink } from '../../../handlers/backlink.js'
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -45,5 +46,6 @@ export default pageRoute({
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
   checkData: checkData,
   getData: getData,
-  completion: TASKLIST.uri
+  completion: TASKLIST.uri,
+  backlink: Backlink.NO_BACKLINK
 })

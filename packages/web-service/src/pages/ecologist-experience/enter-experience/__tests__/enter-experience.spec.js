@@ -46,27 +46,6 @@ describe('The enter experience page', () => {
     })
   })
 
-  describe('getData function', () => {
-    it('returns the experience details', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          })
-        })
-      }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          ECOLOGIST_EXPERIENCE: {
-            getExperienceById: jest.fn(() => ({ experienceDetails: 'experience' }))
-          }
-        }
-      }))
-      const { getData } = await import('../enter-experience.js')
-      expect(await getData(request)).toBe('experience')
-    })
-  })
-
   describe('the set data function', () => {
     it('stores the experience details', async () => {
       const mockPut = jest.fn()
@@ -92,6 +71,40 @@ describe('The enter experience page', () => {
       const { setData } = await import('../enter-experience.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { experienceDetails: 'experience' })
+    })
+  })
+
+  describe('the get data function', () => {
+    it('is included in the page route export', async () => {
+      const h = {
+        view: (view, pageData) => pageData
+      }
+      const request = {
+        payload: {
+          'enter-experience': 'experience'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          getPageData: () => {}
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ experienceDetails: 'hello people' }))
+          }
+        }
+      }))
+      const pageRoute = await import('../enter-experience.js')
+      expect(await pageRoute.default[0].handler(request, h)).toEqual({
+        data: 'hello people',
+        backlink: {
+          enabled: true,
+          value: 'javascript: window.history.go(-1)'
+        }
+      })
     })
   })
 })

@@ -4,6 +4,7 @@ export const QUEUE = {
   connection: {
     host: Config.redis.host,
     port: Config.redis.port,
-    database: Config.redis.database
+    ...(Config.redis.password && { password: Config.redis.password, tls: true }),
+    ...(Config.redis.database && { database: Config.redis.database })
   }
 }

@@ -20,11 +20,11 @@ import handler from '../handlers/page-handler.js'
  * {path, handler: ((function(*=, *): Promise<*>)|*), method: string, options: (*&{validate:
  * {payload, failAction: ((function(*, *, *=): Promise<*|undefined>)|*)}})}]}
  */
-export default ({ page, uri, checkData, getData, validator, completion, setData, options = {} }) => [
+export default ({ page, uri, checkData, getData, validator, completion, setData, backlink, options = {} }) => [
   {
     method: 'GET',
     path: uri,
-    handler: handler(page, checkData, getData).get,
+    handler: handler(page, checkData, getData, null, null, backlink).get,
     options
   },
   {

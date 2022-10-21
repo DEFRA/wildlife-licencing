@@ -22,7 +22,7 @@ describe('the eligibility pages', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/tasklist')
   })
 
-  it('the getData function returns the eligibility data from the API (and clears the answer)', async () => {
+  it('the getData function returns the eligibility data from the API', async () => {
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -30,12 +30,10 @@ describe('the eligibility pages', () => {
         }))
       })
     }
-    const mockPut = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         ELIGIBILITY: {
-          getById: jest.fn(() => ({ question: 'answer' })),
-          putById: mockPut
+          getById: jest.fn(() => ({ question: 'answer' }))
         },
         APPLICATION: {
           tags: () => ({ remove: jest.fn() })
@@ -44,8 +42,7 @@ describe('the eligibility pages', () => {
     }))
     const { getData } = await import('../eligibility.js')
     const result = await getData('question')(request)
-    expect(mockPut).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { })
-    expect(result).toBeNull()
+    expect(result).toEqual({ yesNo: 'yes' })
   })
 
   describe('the setData function', () => {

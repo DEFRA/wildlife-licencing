@@ -9,7 +9,13 @@ describe('the page handler function', () => {
     const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
     const view = { view: 'view' }
     const result = await pageHandler(view, null, getData).get(request, h)
-    expect(mockView).toHaveBeenLastCalledWith({ view: 'view' }, { data: { foo: 'bar' } })
+    expect(mockView).toHaveBeenLastCalledWith({ view: 'view' }, {
+      data: { foo: 'bar' },
+      backlink: {
+        enabled: true,
+        value: 'javascript: window.history.go(-1)'
+      }
+    })
     expect(result).toEqual('view')
   })
 

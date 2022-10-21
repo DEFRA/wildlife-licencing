@@ -283,7 +283,10 @@ describe('The task-list handler', () => {
           getById: jest.fn(() => ({
             id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
             applicationReferenceNumber: 'ref'
-          }))
+          })),
+          tags: () => ({
+            has: () => true
+          })
         }
       }
     }))
@@ -302,6 +305,9 @@ describe('The task-list handler', () => {
       decorateMap: jest.fn(() => 'decorated-map'),
       getProgress: jest.fn(() => 'progress'),
       licenceTypeMap: [],
+      SECTION_TASKS: {
+        ELIGIBILITY_CHECK: 'ec'
+      },
       A24: 'a24'
     }))
 

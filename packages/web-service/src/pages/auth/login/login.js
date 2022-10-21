@@ -4,6 +4,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { LOGIN, APPLICATIONS, TASKLIST } from '../../../uris.js'
 import { authJoiObject } from '../auth.js'
 import db from 'debug'
+import { Backlink } from '../../../handlers/backlink.js'
 const debug = db('web-service:login')
 
 // If we have request a which needs authorization then redirect to that page
@@ -68,4 +69,13 @@ export const checkData = async (request, h) => {
   }
 }
 
-export default pageRoute({ page: LOGIN.page, uri: LOGIN.uri, options: { auth: false }, checkData, validator, completion, setData })
+export default pageRoute({
+  page: LOGIN.page,
+  uri: LOGIN.uri,
+  options: { auth: false },
+  backlink: Backlink.NO_BACKLINK,
+  checkData,
+  validator,
+  completion,
+  setData
+})

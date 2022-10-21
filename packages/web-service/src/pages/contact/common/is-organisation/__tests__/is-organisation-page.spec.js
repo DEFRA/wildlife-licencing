@@ -48,4 +48,29 @@ describe('is-organisation page', () => {
     const validator = getValidator('APPLICANT_ORGANISATION')
     await expect(() => validator(payload, {})).resolves
   })
+
+  it('the validator works as expected with non-duplicate single account', async () => {
+    jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+      cacheDirect: () => ({
+        getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+      })
+    }))
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ACCOUNT: {
+          role: () => ({
+            findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }]),
+            findByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones' }))
+          })
+        }
+      }
+    }))
+    const payload = {
+      'is-organisation': 'yes',
+      'organisation-name': 'The Rolling Stones'
+    }
+    const { getValidator } = await import('../is-organisation-page')
+    const validator = getValidator('APPLICANT_ORGANISATION')
+    await expect(() => validator(payload, {})).resolves
+  })
 })

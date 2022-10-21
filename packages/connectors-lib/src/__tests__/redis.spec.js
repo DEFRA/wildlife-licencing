@@ -5,7 +5,12 @@ describe('The redis connector', () => {
 
   it('connects', async () => {
     const mockRedis = {
-      createClient: jest.fn(() => ({ connect: jest.fn(), on: jest.fn() }))
+      createClient: jest.fn(() => ({
+        connect: jest.fn(),
+        on: jest.fn(),
+        set: jest.fn(),
+        get: jest.fn()
+      }))
     }
 
     jest.mock('redis', () => mockRedis)
@@ -19,19 +24,23 @@ describe('The redis connector', () => {
     // const { createClient } = await import('redis')
     const { REDIS } = await import('../redis.js')
     await REDIS.initialiseConnection()
-    expect(mockRedis.createClient).toHaveBeenCalledWith(
-      {
-        socket: {
-          host: 'hostname',
-          port: 999
-        }
-      })
+    expect(mockRedis.createClient).toHaveBeenCalledWith({
+      socket: {
+        host: 'hostname',
+        port: 999
+      }
+    })
     expect(REDIS.getClient()).not.toBeNull()
   })
 
   it('connects - with db', async () => {
     const mockRedis = {
-      createClient: jest.fn(() => ({ connect: jest.fn(), on: jest.fn() }))
+      createClient: jest.fn(() => ({
+        connect: jest.fn(),
+        on: jest.fn(),
+        set: jest.fn(),
+        get: jest.fn()
+      }))
     }
 
     jest.mock('redis', () => mockRedis)
@@ -39,21 +48,23 @@ describe('The redis connector', () => {
       redis: {
         host: 'hostname',
         port: 999,
-        database: 'db'
+        database: 'db',
+        password: 'pw'
       }
     }))
 
     // const { createClient } = await import('redis')
     const { REDIS } = await import('../redis.js')
     await REDIS.initialiseConnection()
-    expect(mockRedis.createClient).toHaveBeenCalledWith(
-      {
-        socket: {
-          host: 'hostname',
-          port: 999
-        },
-        database: 'db'
-      })
+    expect(mockRedis.createClient).toHaveBeenCalledWith({
+      database: 'db',
+      password: 'pw',
+      socket: {
+        host: 'hostname',
+        port: 999,
+        tls: true
+      }
+    })
     expect(REDIS.getClient()).not.toBeNull()
   })
 })

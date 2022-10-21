@@ -3,7 +3,8 @@ import { APPLICATIONS, TASKLIST, FILE_UPLOADS } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus } from './licence-type-map.js'
+import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
+import { Backlink } from '../../handlers/backlink.js'
 
 export const getApplication = async request => {
   // If there is no application then create a pre-application
@@ -38,9 +39,10 @@ export const getData = async request => {
 
   // If you navigate to the TASKLIST page, we need to ensure we've cleared all the error states on the file-upload page
   await request.cache().clearPageData(FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.page)
+  const eligibilityCheckComplete = await APIRequests.APPLICATION.tags(application.id).has(SECTION_TASKS.ELIGIBILITY_CHECK)
 
   return {
-    reference: application?.applicationReferenceNumber,
+    ...(eligibilityCheckComplete && { reference: application.applicationReferenceNumber }),
     licenceType: A24,
     licenceTypeMap: decoratedMap,
     progress
@@ -68,4 +70,19 @@ export const checkData = async (request, h) => {
   return null
 }
 
-export const tasklist = pageRoute({ page: TASKLIST.page, uri: TASKLIST.uri, options: { auth: { mode: 'optional' } }, checkData, getData })
+export const tasklist = pageRoute({
+  page: TASKLIST.page,
+  uri: TASKLIST.uri,
+  backlink: new Backlink(async request => {
+    if (request.auth.isAuthenticated) {
+      const { userId } = await request.cache().getData()
+      const applications = await APIRequests.APPLICATION.findByUser(userId)
+      return applications.length > 1 ? Backlink.JAVASCRIPT.value() : Backlink.NO_BACKLINK.value()
+    } else {
+      return Backlink.NO_BACKLINK.value()
+    }
+  }),
+  options: { auth: { mode: 'optional' } },
+  checkData,
+  getData
+})
