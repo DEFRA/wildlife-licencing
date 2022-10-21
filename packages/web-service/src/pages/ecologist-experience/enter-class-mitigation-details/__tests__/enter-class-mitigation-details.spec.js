@@ -35,7 +35,7 @@ describe('The enter class mitigation details page', () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {

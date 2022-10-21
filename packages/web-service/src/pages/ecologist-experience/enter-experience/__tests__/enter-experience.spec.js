@@ -6,12 +6,12 @@ describe('The enter experience page', () => {
     it('returns the enter methods uri on primary journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'inProgress'
+              get: () => 'in-progress'
             })
           }
         }
@@ -30,7 +30,7 @@ describe('The enter experience page', () => {
     it('returns the check ecologist answers uri on return journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {

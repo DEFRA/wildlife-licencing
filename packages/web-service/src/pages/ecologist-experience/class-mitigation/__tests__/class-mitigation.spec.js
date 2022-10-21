@@ -104,7 +104,7 @@ describe('The class mitigation page', () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {

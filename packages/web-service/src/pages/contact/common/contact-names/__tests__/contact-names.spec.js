@@ -136,7 +136,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -172,7 +172,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -211,7 +211,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -251,7 +251,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -287,7 +287,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -298,7 +298,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              get: () => 'inProgress'
+              get: () => 'in-progress'
             })
           }
         }
@@ -323,7 +323,7 @@ describe('contact-names', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           ACCOUNT: {
@@ -334,7 +334,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              get: () => 'inProgress'
+              get: () => 'in-progress'
             })
           }
         }

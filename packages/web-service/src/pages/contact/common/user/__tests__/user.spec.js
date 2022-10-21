@@ -25,7 +25,7 @@ describe('the user page', () => {
     it('if yes, invokes the common operations correctly if no user contact is found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           USER: {
@@ -122,7 +122,7 @@ describe('the user page', () => {
     it('if no, invokes the common operations correctly', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           USER: {

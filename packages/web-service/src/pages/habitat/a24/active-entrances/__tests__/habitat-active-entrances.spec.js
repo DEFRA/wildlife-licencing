@@ -6,13 +6,13 @@ describe('The habitat active entrances page', () => {
     it('the habitat-active-entrances page forwards onto habitat-grid-ref page if theres no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
               return {
-                get: () => 'inProgress'
+                get: () => 'in-progress'
               }
             }
           }
@@ -32,7 +32,7 @@ describe('The habitat active entrances page', () => {
     it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
@@ -56,12 +56,12 @@ describe('The habitat active entrances page', () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'inProgress' }
+              return { get: () => 'in-progress' }
             }
           }
         }
@@ -93,7 +93,7 @@ describe('The habitat active entrances page', () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {

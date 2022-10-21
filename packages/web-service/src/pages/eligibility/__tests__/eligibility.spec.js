@@ -32,7 +32,7 @@ describe('the eligibility pages', () => {
     }
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
-        inProgress: 'inProgress'
+        IN_PROGRESS: 'in-progress'
       },
       APIRequests: {
         ELIGIBILITY: {
@@ -63,7 +63,7 @@ describe('the eligibility pages', () => {
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           ELIGIBILITY: {
@@ -95,7 +95,7 @@ describe('the eligibility pages', () => {
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           ELIGIBILITY: {
@@ -127,7 +127,7 @@ describe('the eligibility pages', () => {
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           ELIGIBILITY: {
@@ -161,7 +161,7 @@ describe('the eligibility pages', () => {
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           ELIGIBILITY: {
@@ -410,7 +410,7 @@ describe('the eligibility pages', () => {
     const mockSet = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
-        complete: 'complete'
+        COMPLETE: 'complete'
       },
       APIRequests: {
         ELIGIBILITY: {

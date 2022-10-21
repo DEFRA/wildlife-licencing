@@ -2476,7 +2476,7 @@ components:
         applicationTags:
           type: array
           items:
-            type: string
+            type: object
         applicationReferenceNumber:
           type: string
           minLength: 13

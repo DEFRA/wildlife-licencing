@@ -19,7 +19,7 @@ export const setData = async request => {
   const classMitigationDetails = request.payload['enter-class-mitigation-details']
   Object.assign(ecologistExperience, { classMitigationDetails })
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.complete })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE })
 }
 
 export default pageRoute({

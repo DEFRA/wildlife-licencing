@@ -4,7 +4,7 @@ describe('the check-answers page', () => {
   it('getCheckAnswersData fetch data with account', async () => {
     jest.doMock('../../../../../services/api-requests.js', () => ({
       tagStatus: {
-        complete: 'complete'
+        COMPLETE: 'complete'
       },
       APIRequests: {
         APPLICATION: {
@@ -73,7 +73,7 @@ describe('the check-answers page', () => {
   it('getCheckAnswersData fetch data without account', async () => {
     jest.doMock('../../../../../services/api-requests.js', () => ({
       tagStatus: {
-        complete: 'complete'
+        COMPLETE: 'complete'
       },
       APIRequests: {
         APPLICATION: {

@@ -279,7 +279,7 @@ describe('The task-list handler', () => {
   it('the getData function returns the correct data to the template', async () => {
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
-        complete: 'complete'
+        COMPLETE: 'complete'
       },
       APIRequests: {
         APPLICATION: {

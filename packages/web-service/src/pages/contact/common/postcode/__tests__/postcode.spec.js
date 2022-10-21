@@ -43,7 +43,7 @@ describe('the postcode functions', () => {
     it('sets the postcode and looks up the address', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           APPLICATION: {
@@ -75,7 +75,7 @@ describe('the postcode functions', () => {
     it('sets the postcode and looks up the address, deleting the address lookup cache data on a null result', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           APPLICATION: {
@@ -107,7 +107,7 @@ describe('the postcode functions', () => {
     it('deleting the address lookup cache data on throwing an error', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           APPLICATION: {

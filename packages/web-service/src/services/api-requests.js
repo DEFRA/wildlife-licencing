@@ -37,16 +37,16 @@ const apiUrls = {
 export const tagStatus = {
   // if the user cannot start the task yet
   // for example because another task must be completed first
-  cannotStart: 'cannotStart',
+  CANNOT_START: 'cannot-start',
 
   // if the user can start work on the task, but has not done so yet
-  notStarted: 'notStarted',
+  NOT_STARTED: 'not-started',
 
   // if the user has started but not completed the task
-  inProgress: 'inProgress',
+  IN_PROGRESS: 'in-progress',
 
   // if the user has completed the task
-  complete: 'complete'
+  COMPLETE: 'complete'
 }
 
 Object.freeze(ContactRoles)
@@ -426,7 +426,7 @@ export const APIRequests = {
           const tag = application.applicationTags.find(t => t.tag === key)
 
           if (tag === undefined) {
-            return tagStatus.notStarted
+            return tagStatus.NOT_STARTED
           } else {
             return tag.tagState
           }

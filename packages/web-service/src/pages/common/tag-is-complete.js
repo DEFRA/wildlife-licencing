@@ -1,5 +1,5 @@
 import { tagStatus } from '../../services/api-requests.js'
 
 export const isComplete = tagState => {
-  return tagState === tagStatus.complete
+  return tagState === tagStatus.COMPLETE
 }

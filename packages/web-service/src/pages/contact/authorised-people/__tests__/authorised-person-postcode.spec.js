@@ -10,7 +10,7 @@ describe('authorised person postcode', () => {
       }))
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          inProgress: 'inProgress'
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           CONTACT: {

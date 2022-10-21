@@ -18,7 +18,7 @@ export const setContactAccountData = (contactRole, accountRole) => async request
     // Assign a new organisation
     const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(true, request.payload['organisation-name'])
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.inProgress })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.IN_PROGRESS })
     const pageData = await request.cache().getPageData()
     delete pageData.payload['organisation-name']
     await request.cache().setPageData(pageData)

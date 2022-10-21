@@ -13,7 +13,7 @@ export const setData = async request => {
   const postcode = request.payload.postcode
   await request.cache().clearPageData(ADDRESS.page)
   await request.cache().clearPageData(ADDRESS_FORM.page)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.inProgress })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.IN_PROGRESS })
   await addressLookupForPostcode(postcode, journeyData, request)
 }
 

@@ -15,12 +15,12 @@ describe('The habitat start page', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'inProgress' }
+              return { get: () => 'in-progress' }
             }
           },
           HABITAT: {
@@ -54,7 +54,7 @@ describe('The habitat start page', () => {
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {

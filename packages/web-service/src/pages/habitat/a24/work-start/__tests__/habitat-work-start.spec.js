@@ -6,12 +6,12 @@ describe('The habitat work start page', () => {
     it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { get: () => 'inProgress' }
+              return { get: () => 'in-progress' }
             }
           }
         })
@@ -31,7 +31,7 @@ describe('The habitat work start page', () => {
     it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
@@ -231,12 +231,12 @@ describe('The habitat work start page', () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { get: () => 'inProgress' }
+              return { get: () => 'in-progress' }
             }
           }
         }
@@ -268,7 +268,7 @@ describe('The habitat work start page', () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {

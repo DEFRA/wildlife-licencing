@@ -372,7 +372,7 @@ describe('The API requests service', () => {
           {
             applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
             applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }
             ]
           }
         ))
@@ -383,16 +383,16 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.complete })
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.COMPLETE })
         expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', {
-          applicationTags: expect.arrayContaining([{ tag: 'setts', tagState: tagStatus.complete }]), applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
+          applicationTags: expect.arrayContaining([{ tag: 'setts', tagState: tagStatus.COMPLETE }]), applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         })
       })
 
       it('the set tag function ignores duplicate tag updates', async () => {
         const mockGet = jest.fn(() => ({
           applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-          applicationTags: [{ tag: 'ecologist-experience', tagState: tagStatus.complete }]
+          applicationTags: [{ tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }]
         }))
         const mockPut = jest.fn()
         jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -402,7 +402,7 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.complete })
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.COMPLETE })
         expect(mockPut).not.toHaveBeenCalledWith()
       })
 
@@ -414,7 +414,7 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.complete }))
+        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }))
           .rejects.toThrowError()
       })
 
@@ -423,7 +423,7 @@ describe('The API requests service', () => {
           {
             applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
             applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }
             ]
           }
         ))
@@ -443,7 +443,7 @@ describe('The API requests service', () => {
           {
             applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
             applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.complete }
+              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }
             ]
           }
         ))
@@ -454,7 +454,7 @@ describe('The API requests service', () => {
         }))
         const { APIRequests } = await import('../api-requests.js')
         const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('missingSTRING')
-        expect(result).toEqual('notStarted')
+        expect(result).toEqual('not-started')
       })
 
       it('the get tag function rethrows an error', async () => {
@@ -474,8 +474,8 @@ describe('The API requests service', () => {
           {
             applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
             applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.complete },
-              { tag: 'setts', tagState: tagStatus.inProgress }
+              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE },
+              { tag: 'setts', tagState: tagStatus.IN_PROGRESS }
             ]
           }
         ))
@@ -487,12 +487,12 @@ describe('The API requests service', () => {
           }
         }))
         const { APIRequests } = await import('../api-requests.js')
-        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.complete })
+        await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'setts', tagState: tagStatus.COMPLETE })
         expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3',
           {
             applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.complete },
-              { tag: 'setts', tagState: tagStatus.complete }
+              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE },
+              { tag: 'setts', tagState: tagStatus.COMPLETE }
             ],
             applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
           })

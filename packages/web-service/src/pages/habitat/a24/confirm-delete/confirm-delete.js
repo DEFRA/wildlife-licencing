@@ -16,7 +16,7 @@ export const setData = async request => {
 
     if (totalSites.length === 1) {
       // If you remove the only sett you have, your journey is no longer complete
-      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.inProgress })
+      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.IN_PROGRESS })
     }
   }
 

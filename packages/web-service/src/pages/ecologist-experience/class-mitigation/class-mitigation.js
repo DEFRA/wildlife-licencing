@@ -29,7 +29,7 @@ export const setData = async request => {
   Object.assign(ecologistExperience, { classMitigation })
   if (!classMitigation) {
     delete ecologistExperience.classMitigationDetails
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.complete })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE })
   }
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }

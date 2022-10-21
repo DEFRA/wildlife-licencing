@@ -16,12 +16,12 @@ describe('The check ecologist answers page', () => {
     it('redirects to the previous licence if the tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'inProgress'
+              get: () => 'in-progress'
             })
           }
         }
@@ -42,7 +42,7 @@ describe('The check ecologist answers page', () => {
     it('returns null if tag is et', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          complete: 'complete'
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {

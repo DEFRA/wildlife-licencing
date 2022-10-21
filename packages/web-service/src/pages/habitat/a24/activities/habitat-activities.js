@@ -44,7 +44,7 @@ export const setData = async request => {
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
 
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.complete })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE })
   }
   request.cache().setData(journeyData)
 }
