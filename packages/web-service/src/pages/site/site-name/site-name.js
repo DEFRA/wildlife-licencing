@@ -16,8 +16,8 @@ export const setData = async request => {
   const siteName = request.payload['site-name']
   // Create a new site with the name from the request
   if (siteName) {
-    await APIRequests.SITE.create(journeyData.applicationId, { name: siteName })
-    journeyData.siteData = Object.assign(journeyData.siteData, { siteName })
+    const site = await APIRequests.SITE.create(journeyData.applicationId, { name: siteName })
+    journeyData.siteData = Object.assign(journeyData.siteData || {}, { id: site.id, name: siteName })
     request.cache().setData(journeyData)
   }
 }
@@ -30,7 +30,7 @@ export const completion = async request => {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
 
-  return siteURIs.POSTCODE.uri
+  return siteURIs.SITE_GOT_POSTCODE.uri
 }
 
 export default pageRoute({
@@ -40,7 +40,7 @@ export default pageRoute({
   validator: Joi.object({
     'site-name': Joi.string().required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  completion,
   getData,
-  setData
+  setData,
+  completion
 })

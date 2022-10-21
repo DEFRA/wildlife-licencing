@@ -45,6 +45,10 @@ import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
 import siteName from '../pages/site/site-name/site-name.js'
+import siteGotPostcode from '../pages/site/site-got-postcode/site-got-postcode.js'
+import siteSelectAddress from '../pages/site/select-address/select-address.js'
+import siteAddressNoLookup from '../pages/site/site-address-no-lookup/site-address-no-lookup.js'
+import { siteMapUpload } from '../pages/site/upload-map/upload-map.js'
 
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
@@ -117,6 +121,10 @@ const routes = [
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
   ...siteName,
+  ...siteGotPostcode,
+  ...siteSelectAddress,
+  ...siteAddressNoLookup,
+  ...siteMapUpload,
   ...habitatStart,
   ...habitatName,
   ...habitatActiveEntrances,

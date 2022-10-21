@@ -84,8 +84,10 @@ export const contactURIs = {
 
 export const siteURIs = {
   NAME: { uri: '/site-name', page: 'site-name' },
-  POSTCODE: { uri: '/site-got-postcode', page: 'site-got-postcode' },
+  SITE_GOT_POSTCODE: { uri: '/site-got-postcode', page: 'site-got-postcode' },
   SELECT_ADDRESS: { uri: '/select-address', page: 'select-address' },
+  ADDRESS_NO_LOOKUP: { uri: '/site-address-no-lookup', page: 'site-address-no-lookup' },
+  UPLOAD_MAP: { uri: '/upload-map', page: 'upload-map' },
   CHECK_SITE_ANSWERS: { uri: '/check-site-answers', page: 'check-site-answers' }
 }
 

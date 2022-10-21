@@ -1,18 +1,78 @@
-{% extends "standard-form.njk" %}
-
-{% from "input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% extends 'layout.njk' %}
+{% from "button/macro.njk" import govukButton %}
+{% from "error-summary.njk" import errorSummary %}
 
 {% set errorMap = {
-        'site-name': {
-          'string.empty': { ref: '#site-name', text: 'Enter the postcode' }
-        }
+    'site-postcode-check': {
+      'no-choice-made': { ref: '#site-postcode-check', text: 'You have not selected an option' }
+    },
+    'site-postcode': {
+      'string.empty': { ref: '#site-postcode', text: 'You have not entered a postcode' },
+      'string.pattern.base': { ref: '#site-postcode', text: 'You have not entered a correct postcode' }
     }
+  }
 %}
 
-{% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
-{% endblock %}
+{% set postcodeHtml %}
+{{ govukInput({
+  id: "site-postcode",
+  name: "site-postcode",
+  errorMessage: { text: 'Enter a postcode' } if error['site-postcode'],
+  value: payload['site-postcode'] if payload['site-postcode'] else data.sitePostcode,
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Postcode"
+  }
+}) }}
+{% endset -%}
 
-{% set title = "What is the site postcode?" %}
+{% set title = 'Does the site have a postcode?' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block content %}
+
+{{ errorSummary(error, errorMap, 'There is a problem') }}
+
+<div class="govuk-grid-row">
+	<div class="govuk-grid-column-two-thirds">
+        <form method="post">
+          {{ govukRadios({
+            idPrefix: "site-postcode-check",
+            name: "site-postcode-check",
+            errorMessage: { text: 'Select an option' } if error['site-postcode-check'],
+            fieldset: {
+              legend: {
+                text: "Does the site have a postcode?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--xl"
+              }
+            },
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['site-postcode-check'] === 'yes',
+                conditional: {
+                  html: postcodeHtml
+                }
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['site-postcode-check'] === 'no'
+              }
+            ]
+          }) }}
+          <div class="govuk-form-group">
+            {{ govukButton({
+              text: "Continue",
+              attributes: { id: 'continue' }
+            })}}
+          </div>
+        </form>
+	</div>
+</div>
+
+{% endblock %}

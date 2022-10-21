@@ -42,7 +42,7 @@ describe('site-name page handler', () => {
     }
     await setData(request)
 
-    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', siteData: { siteName: 'name' } })
+    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', siteData: { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'name' } })
   })
 
   it('should redirect user to site postcode page, when the site tag is in progress', async () => {
