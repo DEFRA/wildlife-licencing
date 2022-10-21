@@ -14,9 +14,9 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    debug(`Received submission for applicationId: ${applicationId}`)
-
     await clearCaches(applicationId)
+
+    debug(`Received submission for applicationId: ${applicationId}`)
     const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
     const applicationJob = await applicationQueue.add({ applicationId })
     debug(`Queued application ${applicationId} - job: ${applicationJob.id}`)
