@@ -1,6 +1,8 @@
 import { models } from '@defra/wls-database-model'
 import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import { clearCaches } from './application-cache.js'
+import db from 'debug'
+const debug = db('api:submission')
 
 export default async (context, req, h) => {
   try {
@@ -12,10 +14,12 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
+    debug(`Received submission for applicationId: ${applicationId}`)
+
     await clearCaches(applicationId)
     const applicationQueue = getQueue(queueDefinitions.APPLICATION_QUEUE)
     const applicationJob = await applicationQueue.add({ applicationId })
-    console.log(`Queued application ${applicationId} - job: ${applicationJob.id}`)
+    debug(`Queued application ${applicationId} - job: ${applicationJob.id}`)
 
     const fileQueue = getQueue(queueDefinitions.FILE_QUEUE)
 
@@ -27,7 +31,7 @@ export default async (context, req, h) => {
 
     for await (const upload of applicationUploads) {
       const fileJob = await fileQueue.add({ id: upload.dataValues.id, applicationId })
-      console.log(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
+      debug(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
     }
 
     await models.applications.update({ userSubmission: true }, { where: { id: applicationId } })
