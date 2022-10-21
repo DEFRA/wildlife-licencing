@@ -4,6 +4,9 @@ describe('The previous licence page', () => {
   describe('completion function', () => {
     it('returns the enter licence details uri if user selects yes', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -31,7 +34,8 @@ describe('The previous licence page', () => {
     it('returns the check ecologist details uri on the return journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {
@@ -62,7 +66,8 @@ describe('The previous licence page', () => {
     it('returns the enter experience uri on the primary journey if user selects no', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {
@@ -95,7 +100,8 @@ describe('The previous licence page', () => {
       const mockRedirect = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {
@@ -123,7 +129,8 @@ describe('The previous licence page', () => {
     it('returns undefined if tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {

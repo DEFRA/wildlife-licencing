@@ -44,6 +44,9 @@ describe('The task-list handler', () => {
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             findByUser: jest.fn(() => [{ id: '123' }])
@@ -65,6 +68,9 @@ describe('The task-list handler', () => {
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             findByUser: jest.fn(() => [])
@@ -85,6 +91,9 @@ describe('The task-list handler', () => {
       }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             getById: mockGetById
@@ -115,6 +124,9 @@ describe('The task-list handler', () => {
       }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             create: mockCreate
@@ -150,6 +162,9 @@ describe('The task-list handler', () => {
       const mockFindRoles = jest.fn(() => ['USER'])
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             getById: mockGetById,
@@ -188,6 +203,9 @@ describe('The task-list handler', () => {
 
       const mockFindRoles = jest.fn(() => ['USER'])
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             getById: mockGetById,
@@ -240,6 +258,9 @@ describe('The task-list handler', () => {
       }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             getById: mockGetById,

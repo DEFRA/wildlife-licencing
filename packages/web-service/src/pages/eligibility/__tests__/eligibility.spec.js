@@ -186,6 +186,9 @@ describe('the eligibility pages', () => {
     it('Returns the landowner page if no eligibility data set', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ }))
@@ -200,6 +203,9 @@ describe('the eligibility pages', () => {
     it('Returns the landowner permissions page not the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false }))
@@ -214,6 +220,9 @@ describe('the eligibility pages', () => {
     it('Returns the project permissions (consent) page not the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true }))
@@ -228,6 +237,9 @@ describe('the eligibility pages', () => {
     it('Returns the not-eligible page if no permissions from the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false, hasLandOwnerPermission: false }))

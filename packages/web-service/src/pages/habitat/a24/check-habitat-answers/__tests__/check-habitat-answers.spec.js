@@ -151,6 +151,9 @@ describe('The check habitat answers page', () => {
       ])
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
+          tagStatus: {
+            NOT_STARTED: 'not-started'
+          },
           HABITAT: {
             getHabitatsById: mockHabitats
           }
@@ -188,6 +191,11 @@ describe('The check habitat answers page', () => {
     })
 
     it('returns the payload from the validator', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const payload = { data: 'badgers', 'additional-sett': 'no' }
       const { validator } = await import('../check-habitat-answers.js')
       expect(await validator(payload)).toBeUndefined()
@@ -195,6 +203,11 @@ describe('The check habitat answers page', () => {
 
     it('if the user does not input a choice - it raises an error', async () => {
       try {
+        jest.doMock('../../../services/api-requests.js', () => ({
+          tagStatus: {
+            NOT_STARTED: 'not-started'
+          }
+        }))
         const payload = {}
         const { validator } = await import('../check-habitat-answers.js')
         expect(await validator(payload))
@@ -227,6 +240,11 @@ describe('The check habitat answers page', () => {
           })
         })
       }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       expect(await checkData(request)).toBe(undefined)
     })
@@ -256,6 +274,11 @@ describe('The check habitat answers page', () => {
           })
         })
       }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       await checkData(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
@@ -283,6 +306,11 @@ describe('The check habitat answers page', () => {
           getData: () => ({})
         })
       }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       expect(await checkData(request)).toBe('/applications')
     })

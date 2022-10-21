@@ -16,7 +16,8 @@ describe('The check ecologist answers page', () => {
     it('redirects to the previous licence if the tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {
@@ -42,7 +43,8 @@ describe('The check ecologist answers page', () => {
     it('returns null if tag is et', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          COMPLETE: 'complete'
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
         },
         APIRequests: {
           APPLICATION: {
@@ -69,6 +71,9 @@ describe('The check ecologist answers page', () => {
   describe('get data function', () => {
     it('gets the experience data from the database', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => ['D333']),
@@ -123,6 +128,9 @@ describe('The check ecologist answers page', () => {
     })
     it('gets the experience data from the database - no previous, no class', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => []),
@@ -167,6 +175,11 @@ describe('The check ecologist answers page', () => {
 
   describe('completion function', () => {
     it('returns the tasklist uri', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const { completion } = await import('../check-ecologist-answers.js')
       expect(await completion()).toBe('/tasklist')
     })

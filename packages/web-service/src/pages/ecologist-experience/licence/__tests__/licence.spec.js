@@ -5,6 +5,9 @@ describe('The licence page', () => {
   describe('completion function', () => {
     it('returns the enter licence details uri if user selects yes', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({

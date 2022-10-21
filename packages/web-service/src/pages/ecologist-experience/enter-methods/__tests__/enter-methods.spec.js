@@ -56,6 +56,9 @@ describe('The enter methods page', () => {
     it('writes the method experience to the api', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({})),
@@ -98,6 +101,9 @@ describe('The enter methods page', () => {
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          tagStatus: {
+            NOT_STARTED: 'not-started'
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ methodExperience: 'hello world' }))
           }

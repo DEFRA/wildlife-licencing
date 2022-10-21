@@ -46,6 +46,9 @@ describe('The class mitigation page', () => {
   describe('the get data function', () => {
     it('returns the value of classMitigation when false', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ classMitigation: false }))
@@ -66,6 +69,9 @@ describe('The class mitigation page', () => {
 
     it('returns the value of classMitigation when true', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ classMitigation: true }))
@@ -86,6 +92,9 @@ describe('The class mitigation page', () => {
 
     it('returns null if the user has no past data inputted', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({}))
@@ -142,6 +151,9 @@ describe('The class mitigation page', () => {
     it('write the data to the database if \'yes\'', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({})),
