@@ -38,7 +38,7 @@ describe('the generic file-upload page handler', () => {
   it('a file that\'s is not too big, causes no error', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.txt', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.doc', path: '/tmp/123' } }
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
@@ -126,5 +126,21 @@ describe('the generic file-upload page handler', () => {
     const { setData } = await import('../file-upload.js')
     await setData(request)
     expect(mockClearPageData).toHaveBeenCalled()
+  })
+
+  it('should throw a joi error, when the file extension is not from the accepted type', async () => {
+    jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
+
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.txt', path: '/tmp/123' } }
+    try {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
+      const { validator } = await import('../file-upload.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF')
+    }
   })
 })

@@ -41,6 +41,12 @@ export const setData = async request => {
   }
 }
 
+export const getFileExtension = (file) => {
+  const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
+  const supportedFileTypes = ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
+  return supportedFileTypes.indexOf(fileExtension) >= 0
+}
+
 export const validator = async payload => {
   // The user hasn't attached a file in their request
   if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
@@ -65,6 +71,22 @@ export const validator = async payload => {
       message: 'Error: the file was too large',
       path: ['scan-file'],
       type: 'file-too-big',
+      context: {
+        label: 'scan-file',
+        value: 'Error',
+        key: 'scan-file'
+      }
+    }], null)
+  }
+
+  const isFileExtensionSupported = getFileExtension(payload['scan-file'])
+
+  if (!isFileExtensionSupported) {
+    fs.unlinkSync(payload['scan-file'].path)
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF',
+      path: ['scan-file'],
+      type: 'wrong-file-type',
       context: {
         label: 'scan-file',
         value: 'Error',
