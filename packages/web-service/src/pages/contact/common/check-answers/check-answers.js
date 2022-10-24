@@ -5,7 +5,7 @@ export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
   ECOLOGIST: 'ecologist-contact-complete',
   AUTHORISED_PERSON: 'authorised-person-contact-complete',
-  INVOICE_PAYER: 'invoice-payer-complete'
+  PAYER: 'invoice-payer-complete'
 }
 
 export const addressLine1 = c => [

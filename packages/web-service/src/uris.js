@@ -82,7 +82,16 @@ export const contactURIs = {
   },
   INVOICE_PAYER: {
     RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
-    USER: { uri: '/invoice-user', page: 'invoice-user' }
+    USER: { uri: '/invoice-user', page: 'invoice-user' },
+    NAMES: { uri: '/invoice-names', page: 'invoice-names' },
+    NAME: { uri: '/invoice-name', page: 'invoice-name' },
+    IS_ORGANISATION: { uri: '/invoice-organisation', page: 'invoice-organisation' },
+    ORGANISATIONS: { uri: '/invoice-organisations', page: 'invoice-organisations' },
+    EMAIL: { uri: '/invoice-email', page: 'invoice-email' },
+    CHECK_ANSWERS: { uri: '/invoice-check-answers', page: 'invoice-check-answers' },
+    POSTCODE: { uri: '/invoice-postcode', page: 'invoice-postcode' },
+    ADDRESS: { uri: '/invoice-address', page: 'invoice-address' },
+    ADDRESS_FORM: { uri: '/invoice-address-form', page: 'invoice-address-form' }
   }
 }
 

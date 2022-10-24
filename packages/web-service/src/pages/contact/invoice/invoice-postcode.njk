@@ -1,0 +1,7 @@
+{% extends "postcode.njk" %}
+
+{% if data.accountName %}
+    {% set title = 'What is ' + data.accountName + '\'s postcode?' %}
+{% else %}
+    {% set title = 'What is ' + data.contactName + '\'s postcode?' %}
+{% endif %}
