@@ -92,6 +92,9 @@ describe('The check habitat answers page', () => {
         }
       ])
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           HABITAT: {
             getHabitatsById: mockHabitats
@@ -150,6 +153,9 @@ describe('The check habitat answers page', () => {
         }
       ])
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           tagStatus: {
             NOT_STARTED: 'not-started'
@@ -191,7 +197,7 @@ describe('The check habitat answers page', () => {
     })
 
     it('returns the payload from the validator', async () => {
-      jest.doMock('../../../services/api-requests.js', () => ({
+      jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
         }
@@ -203,7 +209,7 @@ describe('The check habitat answers page', () => {
 
     it('if the user does not input a choice - it raises an error', async () => {
       try {
-        jest.doMock('../../../services/api-requests.js', () => ({
+        jest.doMock('../../../../../services/api-requests.js', () => ({
           tagStatus: {
             NOT_STARTED: 'not-started'
           }
@@ -240,9 +246,14 @@ describe('The check habitat answers page', () => {
           })
         })
       }
-      jest.doMock('../../../services/api-requests.js', () => ({
+      jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: () => ['setts']
+          }
         }
       }))
       const { checkData } = await import('../check-habitat-answers.js')
@@ -274,9 +285,14 @@ describe('The check habitat answers page', () => {
           })
         })
       }
-      jest.doMock('../../../services/api-requests.js', () => ({
+      jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: jest.fn()
+          }
         }
       }))
       const { checkData } = await import('../check-habitat-answers.js')
@@ -285,6 +301,16 @@ describe('The check habitat answers page', () => {
     })
 
     it('should checks the journeyData object length and returns tasklist URL if it is empty', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: jest.fn()
+          }
+        }
+      }))
       const h = {
         redirect: jest.fn()
       }
@@ -306,7 +332,7 @@ describe('The check habitat answers page', () => {
           getData: () => ({})
         })
       }
-      jest.doMock('../../../services/api-requests.js', () => ({
+      jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
         }

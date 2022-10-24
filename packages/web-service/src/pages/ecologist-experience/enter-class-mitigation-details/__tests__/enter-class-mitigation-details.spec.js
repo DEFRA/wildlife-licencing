@@ -4,6 +4,9 @@ describe('The enter class mitigation details page', () => {
   describe('completion function', () => {
     it('returns the check ecologist answers uri', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {}
       }))
       const { completion } = await import('../enter-class-mitigation-details.js')

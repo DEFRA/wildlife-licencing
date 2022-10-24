@@ -172,6 +172,9 @@ describe('The previous licence page', () => {
     it('sets previous licence to true calling the api', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
@@ -197,6 +200,9 @@ describe('The previous licence page', () => {
     it('sets previous licence to false, removes the licence details, calling the api', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
@@ -223,7 +229,17 @@ describe('The previous licence page', () => {
   describe('the get data function', () => {
     it('returns the value of previous licence as no if false', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ previousLicence: false }))
           }
@@ -243,7 +259,17 @@ describe('The previous licence page', () => {
 
     it('returns the value of previous licence as yes if true', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ previousLicence: true }))
           }
@@ -263,7 +289,17 @@ describe('The previous licence page', () => {
 
     it('returns null if the user has no past data inputted', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({}))
           }

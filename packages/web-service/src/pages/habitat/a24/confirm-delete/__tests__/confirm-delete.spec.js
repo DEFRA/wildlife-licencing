@@ -5,6 +5,9 @@ describe('The confirm delte page', () => {
   describe('confirm delete page', () => {
     it('the confirm-delete page forwards onto check-habitat-answers if you have at least 1 sett', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: ({
           HABITAT: {
             getHabitatsById: () => ['one sett']
@@ -38,6 +41,9 @@ describe('The confirm delte page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           HABITAT: {
             deleteSett: mockDelete,
@@ -106,6 +112,9 @@ describe('The confirm delte page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           HABITAT: {
             deleteSett: mockDelete,
@@ -132,6 +141,9 @@ describe('The confirm delte page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           HABITAT: {
             getHabitatsById: () => ([

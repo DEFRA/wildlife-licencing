@@ -100,10 +100,10 @@ describe('The enter methods page', () => {
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
-          tagStatus: {
-            NOT_STARTED: 'not-started'
-          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ methodExperience: 'hello world' }))
           }

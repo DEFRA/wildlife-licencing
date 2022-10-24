@@ -14,6 +14,13 @@ describe('the user page', () => {
         NOT_STARTED: 'not-started'
       },
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
         USER: {
           getById: jest.fn(() => ({ username: 'Keith Moon' }))
         }
@@ -77,6 +84,10 @@ describe('the user page', () => {
 
     it('if yes, invokes the common operations correctly if user contacts are found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
@@ -177,6 +188,10 @@ describe('the user page', () => {
   describe('userCompletion', () => {
     it('if yes, returns the name page with a mutable contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -204,6 +219,10 @@ describe('the user page', () => {
     it('if yes, returns the organisations page with a immutable contact where organisations exist', async () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
