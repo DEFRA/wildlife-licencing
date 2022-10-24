@@ -19,7 +19,7 @@ const endProcess = err => {
  */
 const hide = (obj, path) => has(obj, path) && get(obj, path).length >= 5
   ? set(obj, path, (s =>
-      s.substr(0, 2) + '*'.repeat(2) + s.substr(s.length - 2, 2))(get(obj, path)))
+      s.substring(0, 2) + '*'.repeat(2) + s.substring(s.length - 2, s.length))(get(obj, path)))
   : obj
 
 export { endProcess, hide }

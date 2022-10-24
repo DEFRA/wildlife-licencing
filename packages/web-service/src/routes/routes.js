@@ -44,6 +44,18 @@ import { authorisedPersonAddress } from '../pages/contact/authorised-people/auth
 import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
+import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
+import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
+import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
+import { invoiceUser } from '../pages/contact/invoice/invoice-user.js'
+import { invoiceEmail } from '../pages/contact/invoice/invoice-email.js'
+import { invoiceCheckAnswers } from '../pages/contact/invoice/invoice-check-answers.js'
+import { invoiceOrganisation } from '../pages/contact/invoice/invoice-organisation.js'
+import { invoiceOrganisations } from '../pages/contact/invoice/invoice-organisations.js'
+import { invoicePostcode } from '../pages/contact/invoice/invoice-postcode.js'
+import { invoiceAddress } from '../pages/contact/invoice/invoice-address.js'
+import { invoiceAddressForm } from '../pages/contact/invoice/invoice-address-form.js'
+
 import siteName from '../pages/site/site-name/site-name.js'
 
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
@@ -116,6 +128,17 @@ const routes = [
   ...authorisedPersonAddress,
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
+  ...invoiceResponsible,
+  ...invoiceUser,
+  ...invoiceName,
+  ...invoiceNames,
+  ...invoiceOrganisation,
+  ...invoiceOrganisations,
+  ...invoiceEmail,
+  ...invoicePostcode,
+  ...invoiceAddress,
+  ...invoiceAddressForm,
+  ...invoiceCheckAnswers,
   ...siteName,
   ...habitatStart,
   ...habitatName,
