@@ -79,6 +79,10 @@ export const contactURIs = {
     ADDRESS: { uri: '/authorised-person-address', page: 'authorised-person-address' },
     ADDRESS_FORM: { uri: '/authorised-person-address-form', page: 'authorised-person-address-form' },
     REMOVE: { uri: '/remove-authorised-person', page: 'remove-authorised-person' }
+  },
+  INVOICE_PAYER: {
+    RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
+    USER: { uri: '/invoice-user', page: 'invoice-user' }
   }
 }
 

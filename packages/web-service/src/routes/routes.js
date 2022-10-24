@@ -44,6 +44,8 @@ import { authorisedPersonAddress } from '../pages/contact/authorised-people/auth
 import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
+import { invoiceResponsible } from '../pages/contact/invoice-payer/invoice-responsible.js'
+
 import siteName from '../pages/site/site-name/site-name.js'
 
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
@@ -116,6 +118,7 @@ const routes = [
   ...authorisedPersonAddress,
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
+  ...invoiceResponsible,
   ...siteName,
   ...habitatStart,
   ...habitatName,
