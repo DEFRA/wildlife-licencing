@@ -41,7 +41,7 @@ export const setData = async request => {
   }
 }
 
-export const getFileExtension = (file) => {
+export const getFileExtension = file => {
   const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
   const supportedFileTypes = ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
   return supportedFileTypes.indexOf(fileExtension) >= 0
