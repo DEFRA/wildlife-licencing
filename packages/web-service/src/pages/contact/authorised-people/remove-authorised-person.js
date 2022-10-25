@@ -13,7 +13,6 @@ export const setData = async request => {
     const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId,
       userId, journeyData.authorisedPeople.contactId)
     await contactOps.unAssign()
-    delete journeyData.authorisedPeople
     await request.cache().setData(journeyData)
   }
 }
