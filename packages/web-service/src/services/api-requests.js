@@ -45,6 +45,13 @@ export const tagStatus = {
   // if the user has started but not completed the task
   IN_PROGRESS: 'in-progress',
 
+  // if the user has gone through the flow once
+  // but not clicked "no" on the yes, no radio buttons
+  // to confirm they don't want to enter any more information
+  // we now can still take them back to the check-your-answers page
+  // and so that the tasklist "tag" still shows "In Progress" - https://design-system.service.gov.uk/patterns/task-list-pages/task-list-statuses.png
+  COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed',
+
   // if the user has completed the task
   COMPLETE: 'complete'
 }

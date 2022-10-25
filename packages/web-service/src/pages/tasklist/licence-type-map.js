@@ -9,6 +9,7 @@ import {
 } from '../../uris.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { isComplete } from '../common/tag-is-complete.js'
+import { isCompleteOrConfirmed } from '../common/tag-is-complete-or-confirmed.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
@@ -92,7 +93,7 @@ export const licenceTypeMap = {
         tasks: [ // The set of tasks in this section
           {
             name: SECTION_TASKS.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
-            uri: status => isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK]) ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri,
             status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState,
             enabled: status => !eligibilityCompleted(status)
           }

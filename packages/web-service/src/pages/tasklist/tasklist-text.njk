@@ -31,17 +31,19 @@
 
 {%
   set statusText = {
-    'complete': 'COMPLETED',
-    'in-progress': 'IN PROGRESS',
+    'cannot-start': 'CANNOT START YET',
     'not-started': 'NOT STARTED',
-    'cannot-start': 'CANNOT START YET'
+    'in-progress': 'IN PROGRESS',
+    'complete-not-confirmed': 'IN PROGRESS',
+    'complete': 'COMPLETED'
   }
 %}
 
 {%
   set statusColours = {
-    'in-progress': 'blue',
+    'cannot-start': 'grey',
     'not-started': 'grey',
-    'cannot-start': 'grey'
+    'in-progress': 'blue',
+    'complete-not-confirmed': 'blue'
   }
 %}

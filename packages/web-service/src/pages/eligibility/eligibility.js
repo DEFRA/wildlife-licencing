@@ -78,7 +78,10 @@ export const checkData = async (request, h) => {
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.IN_PROGRESS })
+
+  if (request.url.pathname === LANDOWNER.uri) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.IN_PROGRESS })
+  }
   return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
@@ -185,6 +188,10 @@ export const checkYourAnswersGetData = async request => {
       return false
     }
     return true
+  }
+
+  if (request.url.pathname === ELIGIBILITY_CHECK.uri) {
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
 
   // The check-answers macro requires an array of k, v pair objects

@@ -10,7 +10,7 @@ describe('the eligibility pages', () => {
   it('the checkData function redirects to the tasklist if the applicationId is not set', async () => {
     const request = {
       cache: () => ({
-        getData: jest.fn(() => ({ }))
+        getData: jest.fn(() => ({}))
       })
     }
     const mockRedirect = jest.fn()
@@ -24,6 +24,9 @@ describe('the eligibility pages', () => {
 
   it('the getData function returns the eligibility data from the API', async () => {
     const request = {
+      url: {
+        pathname: ''
+      },
       cache: () => ({
         getData: jest.fn(() => ({
           applicationId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
@@ -191,7 +194,7 @@ describe('the eligibility pages', () => {
         },
         APIRequests: {
           ELIGIBILITY: {
-            getById: jest.fn(() => ({ }))
+            getById: jest.fn(() => ({}))
           }
         }
       }))
@@ -337,7 +340,16 @@ describe('the eligibility pages', () => {
     })
 
     it('the checkYourAnswersGetData function sets  \'yes\' for isOwnerOfLand and removes hasLandOwnerPermission', async () => {
-      const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+      const request = {
+        url: {
+          pathname: ''
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45'
+          }))
+        })
+      }
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -365,7 +377,16 @@ describe('the eligibility pages', () => {
     })
 
     it('the checkYourAnswersGetData function sets \'-\'  for isOwnerOfLand and removes hasLandOwnerPermission', async () => {
-      const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+      const request = {
+        url: {
+          pathname: ''
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45'
+          }))
+        })
+      }
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -392,7 +413,16 @@ describe('the eligibility pages', () => {
     })
 
     it('the checkYourAnswersGetData function removes unneeded hasLandOwnerPermission', async () => {
-      const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+      const request = {
+        url: {
+          pathname: ''
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45'
+          }))
+        })
+      }
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -420,7 +450,16 @@ describe('the eligibility pages', () => {
   })
 
   it('the checkYourAnswersGetData function removes unneeded permissionsGranted', async () => {
-    const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
+    const request = {
+      url: {
+        pathname: ''
+      },
+      cache: () => ({
+        getData: jest.fn(() => ({
+          applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45'
+        }))
+      })
+    }
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
         NOT_STARTED: 'not-started'
