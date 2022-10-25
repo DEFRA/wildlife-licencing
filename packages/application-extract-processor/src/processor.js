@@ -1,4 +1,5 @@
 import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import db from 'debug'
 import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
@@ -37,6 +38,10 @@ const proc = async () => {
   await createModels()
   await extracts()
 }
+
+// Warning -- may print sensitive info. Ensure disabled in production
+const debug = db('application-extract-processor:env')
+debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
 
 proc()
   .then(() => {

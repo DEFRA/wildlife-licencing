@@ -2,9 +2,14 @@
 {% extends "information-page.njk" %}
 {% set title = "You’re eligible to apply for a licence" %}
 {% block pageContent %}
-    <h2 class="govuk-heading-m">Save application</h2>
 
-    <p class="govuk-body">To be able to save your application and return to it later, you need to sign into an existing account or create a new one.</p>
+    {% if credentials %}
+         <p class="govuk-body">You can save your application and return to it later.</p>
+    {% else %}
+        <h2 class="govuk-heading-m">Save application</h2>
+        <p class="govuk-body">To be able to save your application and return to it later, you need to sign into an existing account or create a new one.</p>
+    {% endif %}
+
     {{ govukButton({
         attributes: { id: 'continue' },
         preventDoubleClick: true,

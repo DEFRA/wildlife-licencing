@@ -1,0 +1,12 @@
+{% extends "check-answers.njk" %}
+
+{% set questionMap = {
+    contactIsUser: { question: 'Are you responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
+    whoIsTheLicenceFor: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceNames },
+    contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation if data.hasAccount else _uri.invoiceOrganisations },
+    contactOrganisations: { question: 'Name of organisation', href: _uri.invoiceOrganisations },
+    email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.invoiceEmail },
+    address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.invoicePostcode }
+} %}
+
+{% set checkData = data.checkYourAnswers %}
