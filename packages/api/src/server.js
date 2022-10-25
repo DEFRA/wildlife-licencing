@@ -241,6 +241,7 @@ const handlers = {
  */
 const init = async server => {
   const { OpenAPIBackend } = await import('openapi-backend')
+  const debug = db('api:request')
 
   /*
    * Create the OpenAPI backend
@@ -260,17 +261,9 @@ const init = async server => {
   /*
    * For debugging only
    */
-  server.ext('onPreHandler', (request, h) => {
-    const debug = db('api:request')
-    const info = {
-      method: request.method,
-      path: request.path,
-      query: request.query,
-      headers: request.headers,
-      payload: request.payload
-    }
-    debug(info)
-    return h.continue
+  server.events.on('response', request => {
+    // you can use request.log or server.log it's depends
+    debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode}`)
   })
 
   /*

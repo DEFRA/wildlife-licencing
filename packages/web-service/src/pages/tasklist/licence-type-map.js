@@ -22,6 +22,7 @@ export const SECTION_TASKS = {
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
   AUTHORISED_PEOPLE: 'authorised-people',
+  INVOICE_PAYER: 'invoice-payer',
   WORK_ACTIVITY: 'work-activity',
   PERMISSIONS: 'permissions',
   SITES: 'sites',
