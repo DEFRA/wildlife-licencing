@@ -47,6 +47,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.LICENCE_HOLDER]: (applicationTags.find(t => t.tag === SECTION_TASKS.LICENCE_HOLDER) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.ECOLOGIST]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.AUTHORISED_PEOPLE]: (applicationTags.find(t => t.tag === SECTION_TASKS.AUTHORISED_PEOPLE) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.INVOICE_PAYER]: (applicationTags.find(t => t.tag === SECTION_TASKS.INVOICE_PAYER) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST_EXPERIENCE) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.WORK_ACTIVITY]: { tagState: tagStatus.NOT_STARTED },
     [SECTION_TASKS.PERMISSIONS]: { tagState: tagStatus.NOT_STARTED },
@@ -119,6 +120,12 @@ export const licenceTypeMap = {
             name: SECTION_TASKS.AUTHORISED_PEOPLE,
             uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
             status: status => getState(status, SECTION_TASKS.AUTHORISED_PEOPLE),
+            enabled: status => eligibilityCompleted(status)
+          },
+          {
+            name: SECTION_TASKS.INVOICE_PAYER,
+            uri: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+            status: status => getState(status, SECTION_TASKS.INVOICE_PAYER),
             enabled: status => eligibilityCompleted(status)
           }
         ]
