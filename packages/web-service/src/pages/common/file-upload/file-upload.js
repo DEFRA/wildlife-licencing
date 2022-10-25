@@ -78,9 +78,9 @@ export const validator = async payload => {
     }], null)
   }
 
-  const virusPresent = await scanFile(payload['scan-file'].path)
+  const isFileInfected = await scanFile(payload['scan-file'].path)
 
-  if (virusPresent) {
+  if (isFileInfected) {
     fs.unlinkSync(payload['scan-file'].path)
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the file contains a virus',

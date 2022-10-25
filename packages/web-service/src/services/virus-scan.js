@@ -46,9 +46,6 @@ export const initializeClamScan = async () => {
 export async function scanFile (filepath) {
   try {
     const { isInfected } = await clamScan.isInfected(filepath)
-    if (isInfected) {
-      fs.unlinkSync(filepath)
-    }
     return isInfected
   } catch (err) {
     console.error(err.message)
