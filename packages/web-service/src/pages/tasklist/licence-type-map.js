@@ -82,6 +82,24 @@ const getState = (status, sectionTaskKey) => {
   return status[sectionTaskKey].tagState
 }
 
+// This essentially does the same job as the `getState` function
+// But it also checks other features are complete too
+// E.g. 'Add invoice details' depends upon 3 other flows being complete
+const getStateDependsUpon = (status, sectionTaskKey, dependUpon) => {
+  if (!eligibilityCompleted(status)) {
+    return tagStatus.CANNOT_START
+  }
+
+  for (let i = 0; i < dependUpon.length; i++) {
+    const key = dependUpon[i]
+    if (!isComplete(status[key].tagState)) {
+      return tagStatus.CANNOT_START
+    }
+  }
+
+  return status[sectionTaskKey].tagState
+}
+
 const eligibilityCompleted = status => {
   return isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState)
 }
@@ -106,7 +124,7 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
-            uri: status => isComplete(status[SECTION_TASKS.LICENCE_HOLDER].tagState) ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.LICENCE_HOLDER].tagState) ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
             status: status => getState(status, SECTION_TASKS.LICENCE_HOLDER),
             enabled: status => eligibilityCompleted(status)
           },
@@ -125,8 +143,24 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.INVOICE_PAYER,
             uri: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-            status: status => getState(status, SECTION_TASKS.INVOICE_PAYER),
-            enabled: status => eligibilityCompleted(status)
+            status: status => getStateDependsUpon(
+              status,
+              SECTION_TASKS.INVOICE_PAYER,
+              [
+                SECTION_TASKS.LICENCE_HOLDER,
+                SECTION_TASKS.ECOLOGIST,
+                SECTION_TASKS.AUTHORISED_PEOPLE
+              ]
+            ),
+            enabled: status => getStateDependsUpon(
+              status,
+              SECTION_TASKS.INVOICE_PAYER,
+              [
+                SECTION_TASKS.LICENCE_HOLDER,
+                SECTION_TASKS.ECOLOGIST,
+                SECTION_TASKS.AUTHORISED_PEOPLE
+              ]
+            ) === tagStatus.NOT_STARTED
           }
         ]
       },

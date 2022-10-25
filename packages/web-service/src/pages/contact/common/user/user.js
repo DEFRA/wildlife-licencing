@@ -10,6 +10,7 @@ export const getUserData = contactRole => async request => {
   const { userId, applicationId } = journeyData
 
   if (contactRole === ContactRoles.APPLICANT) {
+    // /applicant-user flow has begun
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.IN_PROGRESS })
   }
 
