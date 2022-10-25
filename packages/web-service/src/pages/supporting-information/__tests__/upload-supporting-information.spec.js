@@ -23,35 +23,4 @@ describe('the upload-supporting-information page handler', () => {
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
       { filetype: 'METHOD-STATEMENT', multiple: true })
   })
-
-  it('should redirect the user to  the upload-supporting-information page when the uploaded file is infected', async () => {
-    jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
-      return ({ init: () => Promise.resolve() })
-    }))
-    const request = {
-      payload: {
-        'scan-file': {
-          filename: 'testFile.txt',
-          path: '/temporary/storage'
-        }
-      },
-      cache: () => ({
-        getData: jest.fn(() => ({})),
-        setData: jest.fn(),
-        setPageData: jest.fn(),
-        getPageData: jest.fn(() => ({ error: 'FILE_INFECTED_ERROR ' }))
-      })
-    }
-    jest.doMock('../../../services/virus-scan.js', () => ({
-      scanFile: jest.fn(() => true)
-    }))
-    const { uploadSupportingInformation } = await import('../upload-supporting-information.js')
-    const [, postRoute] = uploadSupportingInformation
-    const mockRedirect = jest.fn()
-    const h = {
-      redirect: mockRedirect
-    }
-    await postRoute.handler(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/upload-supporting-information')
-  })
 })

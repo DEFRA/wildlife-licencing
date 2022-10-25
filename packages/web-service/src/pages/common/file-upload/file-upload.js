@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import fs from 'fs'
-import handler, { errorShim } from '../../../handlers/page-handler.js'
+import handler from '../../../handlers/page-handler.js'
 import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
@@ -21,24 +21,13 @@ export const setData = async request => {
     }
   }))
 
-  const virusPresent = await scanFile(path)
-  if (virusPresent) {
-    await request.cache().setPageData({
-      payload: request.payload,
-      error: errorShim(new Joi.ValidationError('ValidationError', [{
-        message: 'Error: the file contains a virus',
-        path: ['scan-file'],
-        type: 'infected',
-        context: {
-          label: 'scan-file',
-          value: 'Error',
-          key: 'scan-file'
-        }
-      }]))
-    })
-  } else {
-    await request.cache().clearPageData()
-  }
+  await request.cache().clearPageData()
+}
+
+export const getFileExtension = file => {
+  const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
+  const supportedFileTypes = ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
+  return supportedFileTypes.indexOf(fileExtension) >= 0
 }
 
 export const validator = async payload => {
@@ -65,6 +54,38 @@ export const validator = async payload => {
       message: 'Error: the file was too large',
       path: ['scan-file'],
       type: 'file-too-big',
+      context: {
+        label: 'scan-file',
+        value: 'Error',
+        key: 'scan-file'
+      }
+    }], null)
+  }
+
+  const isFileExtensionSupported = getFileExtension(payload['scan-file'])
+
+  if (!isFileExtensionSupported) {
+    fs.unlinkSync(payload['scan-file'].path)
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF',
+      path: ['scan-file'],
+      type: 'wrong-file-type',
+      context: {
+        label: 'scan-file',
+        value: 'Error',
+        key: 'scan-file'
+      }
+    }], null)
+  }
+
+  const virusPresent = await scanFile(payload['scan-file'].path)
+
+  if (virusPresent) {
+    fs.unlinkSync(payload['scan-file'].path)
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: the file contains a virus',
+      path: ['scan-file'],
+      type: 'infected',
       context: {
         label: 'scan-file',
         value: 'Error',
