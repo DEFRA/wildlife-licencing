@@ -1,6 +1,10 @@
 import { createClient } from 'redis'
 import Config from './config.js'
 import db from 'debug'
+import { hide } from './utils.js'
+import * as _cloneDeep from 'lodash.clonedeep'
+const { default: cloneDeep } = _cloneDeep
+
 const debug = db('connectors-lib:redis')
 export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 3600
 
@@ -19,11 +23,13 @@ export const REDIS = {
       ...(Config.redis.password && { password: Config.redis.password })
     }
 
+    const msg = cloneDeep(Config.redis)
+    if (Config.redis.password) {
+      hide(msg, 'password')
+    }
+
     // Print options -- hide password
-    debug(`Redis options: ${JSON.stringify(
-      Object.assign({},
-        options, { ...(Config.redis.password && { password: '***' }) }),
-      null, 4)}`)
+    debug(`Redis connections: ${JSON.stringify(msg, null, 4)}`)
 
     // Create client
     client = createClient(options)
