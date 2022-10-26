@@ -76,6 +76,25 @@ const doEcologist = async (applicationId, payload) => {
   }
 }
 
+const doPayer = async (applicationId, payload) => {
+  const [applicationPayerContact] = await models.applicationContacts.findAll({
+    where: { applicationId, contactRole: 'PAYER' }
+  })
+
+  if (applicationPayerContact) {
+    const applicantContact = await models.contacts.findByPk(applicationPayerContact.contactId)
+    Object.assign(payload.application, {
+      payer: {
+        data: applicantContact.contact,
+        keys: {
+          apiKey: applicantContact.id,
+          sddsKey: applicantContact.sddsContactId
+        }
+      }
+    })
+  }
+}
+
 const doApplicantOrganisation = async (applicationId, payload) => {
   const [applicationApplicantAccount] = await models.applicationAccounts.findAll({
     where: { applicationId, accountRole: 'APPLICANT-ORGANISATION' }
@@ -104,6 +123,25 @@ const doEcologistOrganisation = async (applicationId, payload) => {
     const applicantAccount = await models.accounts.findByPk(applicationEcologistAccount.accountId)
     Object.assign(payload.application, {
       ecologistOrganization: {
+        data: applicantAccount.account,
+        keys: {
+          apiKey: applicantAccount.id,
+          sddsKey: applicantAccount.sddsAccountId
+        }
+      }
+    })
+  }
+}
+
+const doPayerOrganisation = async (applicationId, payload) => {
+  const [applicationPayerAccount] = await models.applicationAccounts.findAll({
+    where: { applicationId, accountRole: 'PAYER-ORGANISATION' }
+  })
+
+  if (applicationPayerAccount) {
+    const applicantAccount = await models.accounts.findByPk(applicationPayerAccount.accountId)
+    Object.assign(payload.application, {
+      payerOrganization: {
         data: applicantAccount.account,
         keys: {
           apiKey: applicantAccount.id,
@@ -237,11 +275,17 @@ export const buildApiObject = async applicationId => {
     // Add the ecologist details
     await doEcologist(applicationId, payload)
 
+    // Add the payer details
+    await doPayer(applicationId, payload)
+
     // Add the applicant organization details
     await doApplicantOrganisation(applicationId, payload)
 
     // Add the ecologist organization details
     await doEcologistOrganisation(applicationId, payload)
+
+    // Add the payer organization details
+    await doPayerOrganisation(applicationId, payload)
 
     // Add in the application sites
     await doSites(applicationId, payload)

@@ -30,7 +30,7 @@ const extracts = async () => {
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
   await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
   await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
-  await databaseWriter(previousLicencesReadStream(), writePreviousLicenceObject, new Date(), '-previous-licences')
+  await databaseWriter(previousLicencesReadStream(), writePreviousLicenceObject, new Date(), 'previous-licences')
 }
 
 const proc = async () => {

@@ -62,6 +62,16 @@ export const SddsApplication = new Table('sdds_applications', [
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
+  // Payer
+  new Relationship('sdds_application_billingcustomerid_contac', 'contacts',
+    RelationshipType.MANY_TO_ONE, 'sdds_billingcustomerid', 'payer',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  // Payer organization
+  new Relationship('sdds_application_billingorganisationid_ac', 'accounts',
+    RelationshipType.MANY_TO_ONE, 'sdds_billingorganisationid', 'payerOrganization',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
   // Authorised People
   new Relationship('sdds_application_Contact_Authorisedpersons', 'contacts',
     RelationshipType.MANY_TO_MANY, null, 'authorisedPeople', null, null,
