@@ -27,6 +27,14 @@ const keys = [
   {
     apiTable: 'contacts',
     apiKey: null,
+    apiBasePath: 'application.payer',
+    powerAppsTable: 'contacts',
+    contentId: null,
+    powerAppsKey: '2fd69d6f-db01-ed11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'contacts',
+    apiKey: null,
     apiBasePath: 'application.authorisedPeople',
     powerAppsTable: 'contacts',
     contentId: null,
@@ -66,7 +74,7 @@ describe('The application-contact extract processor: write-application-contact-o
     })
   })
 
-  it('creates an application ecologist (and authorised person', async () => {
+  it('creates an application ecologist (and authorised person)', async () => {
     const mockCreate = jest.fn()
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -77,6 +85,7 @@ describe('The application-contact extract processor: write-application-contact-o
           findOne: jest.fn()
             .mockReturnValueOnce(null)
             .mockReturnValueOnce({ id: '96013271-b969-4ef4-871e-41471eaaabda' })
+            .mockReturnValueOnce(null)
             .mockReturnValueOnce({ id: '33013271-b969-4ef4-871e-41471eaaabda' })
         },
         applicationContacts: {
@@ -99,6 +108,41 @@ describe('The application-contact extract processor: write-application-contact-o
       applicationId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
       contactId: '33013271-b969-4ef4-871e-41471eaaabda',
       contactRole: 'AUTHORISED-PERSON'
+    })
+  })
+
+  it('creates an payer', async () => {
+    const mockCreate = jest.fn()
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findOne: jest.fn(() => ({ id: '5eac8c64-7fa6-4418-bf24-ea2766ce802a' }))
+        },
+        contacts: {
+          findOne: jest.fn()
+            .mockReturnValueOnce({ id: '96013271-b969-4ef4-871e-41471eaaabda' })
+            .mockReturnValueOnce({ id: '33013271-b969-4ef4-871e-41471eaaabda' })
+        },
+        applicationContacts: {
+          findOne: jest.fn(() => null),
+          create: mockCreate
+        }
+      }
+    }))
+    const { writeApplicationContactObject } = await import('../write-application-contact-object.js')
+    const result = await writeApplicationContactObject({ data: { }, keys: [keys[0], keys[1], keys[3]] })
+    expect(result).toEqual({ error: 0, insert: 2, pending: 0, update: 0 })
+    expect(mockCreate).toHaveBeenCalledWith({
+      id: expect.any(String),
+      applicationId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
+      contactId: '96013271-b969-4ef4-871e-41471eaaabda',
+      contactRole: 'APPLICANT'
+    })
+    expect(mockCreate).toHaveBeenCalledWith({
+      id: expect.any(String),
+      applicationId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
+      contactId: '33013271-b969-4ef4-871e-41471eaaabda',
+      contactRole: 'PAYER'
     })
   })
 
