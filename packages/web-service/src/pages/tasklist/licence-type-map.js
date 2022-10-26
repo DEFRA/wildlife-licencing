@@ -100,9 +100,7 @@ const getStateDependsUpon = (status, sectionTaskKey, dependUpon) => {
   return status[sectionTaskKey].tagState
 }
 
-const eligibilityCompleted = status => {
-  return isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState)
-}
+const eligibilityCompleted = status => isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState)
 
 // A map of the sections and tasks by licence type
 export const licenceTypeMap = {
@@ -142,7 +140,9 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.INVOICE_PAYER,
-            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState) ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
+              ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri
+              : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
             status: status => getStateDependsUpon(
               status,
               SECTION_TASKS.INVOICE_PAYER,
@@ -163,11 +163,7 @@ export const licenceTypeMap = {
                 ]
               )
 
-              if (currState === tagStatus.CANNOT_START) {
-                return false
-              }
-
-              return true
+              return currState !== tagStatus.CANNOT_START
             }
           }
         ]

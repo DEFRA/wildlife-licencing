@@ -3,7 +3,7 @@ import { DEFAULT_ROLE } from '../../../../constants.js'
 import { accountsRoute, contactAccountOperations, contactOperations, contactsRoute } from '../common.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
-export const getUserData = contactRole => async request => {
+export const getUserData = _contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
   return APIRequests.USER.getById(userId)

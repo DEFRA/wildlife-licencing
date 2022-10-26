@@ -15,10 +15,10 @@ export const getData = async request => {
 }
 
 export const ecologistUser = yesNoPage({
+  getData,
   page: USER.page,
   uri: USER.uri,
-  checkData: checkHasApplication,
-  getData,
   setData: setUserData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
-  completion: userCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
+  completion: userCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
+  checkData: checkHasApplication
 })
