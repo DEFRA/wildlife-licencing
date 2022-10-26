@@ -130,7 +130,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: status => isComplete(status[SECTION_TASKS.ECOLOGIST].tagState) ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ECOLOGIST].tagState) ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
             status: status => getState(status, SECTION_TASKS.ECOLOGIST),
             enabled: status => eligibilityCompleted(status)
           },

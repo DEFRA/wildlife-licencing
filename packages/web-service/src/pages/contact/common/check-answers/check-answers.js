@@ -1,4 +1,4 @@
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
 
 export const CONTACT_COMPLETE = {
@@ -32,7 +32,6 @@ export const getCheckAnswersData = (contactRole, accountRole) => async request =
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   // The check-answers macro requires an array of k, v pair objects
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.COMPLETE })
   return {
     hasAccount: !!account,
     checkYourAnswers: [
