@@ -13,7 +13,7 @@ export const completion = async request => {
   return TASKLIST.uri
 }
 
-const getData = async request => {
+export const getData = async request => {
   const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return getCheckAnswersData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION)(request)
