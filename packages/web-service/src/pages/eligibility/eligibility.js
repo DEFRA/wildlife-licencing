@@ -78,10 +78,6 @@ export const checkData = async (request, h) => {
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-
-  if (request.url.pathname === LANDOWNER.uri) {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.IN_PROGRESS })
-  }
   return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
@@ -238,7 +234,11 @@ export const eligibleCheckData = async (request, h) => {
   return null
 }
 
-export const eligibleCompletion = async request => request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
+export const eligibleCompletion = async request => {
+  const journeyData = request.cache().getData()
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE })
+  return request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
+}
 
 export const eligible = pageRoute({
   page: ELIGIBLE.page,

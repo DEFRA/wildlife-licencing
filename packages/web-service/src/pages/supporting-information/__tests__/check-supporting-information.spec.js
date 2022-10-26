@@ -103,7 +103,8 @@ describe('the check-supporting-information page handler', () => {
 
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          IN_PROGRESS: 'in-progress'
+          IN_PROGRESS: 'in-progress',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
         },
         APIRequests: ({
           APPLICATION: {
@@ -117,7 +118,7 @@ describe('the check-supporting-information page handler', () => {
       }))
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'in-progress' })
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete-not-confirmed' })
       expect(result).toEqual('/upload-supporting-information')
     })
 

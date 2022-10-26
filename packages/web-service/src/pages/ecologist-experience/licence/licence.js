@@ -4,7 +4,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
-import { isComplete } from '../../common/tag-is-complete.js'
+import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -18,7 +18,7 @@ export const completion = async request => {
   if (pageData.payload.licence === 'yes') {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
-  if (isComplete(tagState)) {
+  if (isCompleteOrConfirmed(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri

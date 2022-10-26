@@ -36,6 +36,7 @@ describe('The licence type map', () => {
     const decoratedMap = await decorateMap(licenceTypeMap[A24], {
       'eligibility-check': { tagState: 'not-started' },
       setts: { tagState: 'not-started' },
+      'ecologist-experience': { tagState: 'not-started' },
       'licence-holder': { tagState: 'not-started' },
       ecologist: { tagState: 'not-started' },
       'invoice-payer': { tagState: 'not-started' },

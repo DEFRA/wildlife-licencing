@@ -39,7 +39,7 @@ export const completion = async request => {
   const { applicationId } = await request.cache().getData()
 
   if (pageData?.payload[anotherFileUpload] === 'yes') {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.IN_PROGRESS })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   } else {
     const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)

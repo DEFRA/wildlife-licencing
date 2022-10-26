@@ -195,13 +195,15 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
-            uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ECOLOGIST_EXPERIENCE].tagState)
+              ? ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+              : ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
             status: status => getState(status, SECTION_TASKS.ECOLOGIST_EXPERIENCE),
             enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.SUPPORTING_INFORMATION,
-            uri: status => isComplete(status[SECTION_TASKS.SUPPORTING_INFORMATION].tagState)
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SUPPORTING_INFORMATION].tagState)
               ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
               : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
             status: status => getState(status, SECTION_TASKS.SUPPORTING_INFORMATION),

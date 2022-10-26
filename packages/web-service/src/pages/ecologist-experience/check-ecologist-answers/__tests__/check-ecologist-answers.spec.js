@@ -75,6 +75,13 @@ describe('The check ecologist answers page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => ['D333']),
             getExperienceById: jest.fn(() => ({
@@ -129,9 +136,17 @@ describe('The check ecologist answers page', () => {
     it('gets the experience data from the database - no previous, no class', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => []),
             getExperienceById: jest.fn(() => ({
