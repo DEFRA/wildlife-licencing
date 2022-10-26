@@ -28,15 +28,12 @@ describe('The virus scanning service', () => {
   describe('Scan file request', () => {
     it('returns a true and unlinks when scanned infected file', async () => {
       const mockScan = { isInfected: true }
-      const mockUnlinkSync = jest.fn()
-      jest.doMock('fs', () => ({ unlinkSync: mockUnlinkSync }))
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
         init: () => Promise.resolve({ isInfected: () => mockScan, initialized: true })
       })))
       const { scanFile, initializeClamScan } = await import('../virus-scan.js')
       await initializeClamScan()
       expect(await scanFile('text.txt')).toBe(true)
-      await expect(mockUnlinkSync).toHaveBeenCalledWith('text.txt')
     })
 
     it('returns a false when scanned clean file', async () => {
