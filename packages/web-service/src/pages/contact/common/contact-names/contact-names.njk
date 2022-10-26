@@ -4,7 +4,7 @@
 <div hidden>
     {% set items = [] %}
     {% for contact in data.contacts %}
-        {{ items.push({ value: contact.id, text: contact.fullName, checked: contact.id === data.contact.id }) }}
+        {{ items.push({ value: contact.id, text: contact.fullName, checked: contact.id === data.contact.id, label: { classes: 'display-wrapped' } }) }}
     {% endfor %}
     {{ items.push({ divider: "or" }) }}
     {{ items.push({ value: 'new', text: addText }) }}
