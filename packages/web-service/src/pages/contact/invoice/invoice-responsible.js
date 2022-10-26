@@ -1,9 +1,10 @@
 import pageRoute from '../../../routes/page-route.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import Joi from 'joi'
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { checkHasApplication } from '../common/common.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 const { RESPONSIBLE, USER } = contactURIs.INVOICE_PAYER
 
@@ -27,6 +28,8 @@ export const getData = async request => {
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
   const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
+
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.IN_PROGRESS })
 
   const currentPayer = (() => {
     if (!payer) {
@@ -91,6 +94,9 @@ export const completion = async request => {
   if (pageData.payload.responsible === 'other') {
     return USER.uri
   }
+
+  const journeyData = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE })
   return TASKLIST.uri
 }
 

@@ -37,6 +37,7 @@ describe('The licence type map', () => {
       'eligibility-check': { tagState: 'not-started' },
       'licence-holder': { tagState: 'not-started' },
       ecologist: { tagState: 'not-started' },
+      'invoice-payer': { tagState: 'not-started' },
       'supporting-information': { tagState: 'not-started' }
     })
     const startCheck = decoratedMap.find(m => m.name === 'check-before-you-start')

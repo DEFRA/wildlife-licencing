@@ -3,8 +3,9 @@ import { checkHasApplication } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
-import { addressLine, CONTACT_COMPLETE } from '../common/check-answers/check-answers.js'
+import { addressLine } from '../common/check-answers/check-answers.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
@@ -49,6 +50,7 @@ export const checkData = async (request, h) => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON).getByApplicationId(applicationId)
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
   return {
     contacts: contacts.map(c => ({
       uri: {
@@ -71,9 +73,9 @@ export const setData = async request => {
   const { applicationId } = journeyData
   if (request.payload['yes-no'] === 'yes') {
     await request.cache().clearPageData(NAME.page)
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.IN_PROGRESS })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
   } else {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE.AUTHORISED_PERSON, tagState: tagStatus.COMPLETE })
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.COMPLETE })
   }
   delete journeyData.authorisedPeople
   await request.cache().setData(journeyData)

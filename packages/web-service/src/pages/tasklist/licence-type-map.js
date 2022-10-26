@@ -142,7 +142,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.INVOICE_PAYER,
-            uri: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState) ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
             status: status => getStateDependsUpon(
               status,
               SECTION_TASKS.INVOICE_PAYER,
@@ -152,15 +152,23 @@ export const licenceTypeMap = {
                 SECTION_TASKS.AUTHORISED_PEOPLE
               ]
             ),
-            enabled: status => getStateDependsUpon(
-              status,
-              SECTION_TASKS.INVOICE_PAYER,
-              [
-                SECTION_TASKS.LICENCE_HOLDER,
-                SECTION_TASKS.ECOLOGIST,
-                SECTION_TASKS.AUTHORISED_PEOPLE
-              ]
-            ) === tagStatus.NOT_STARTED
+            enabled: status => {
+              const currState = getStateDependsUpon(
+                status,
+                SECTION_TASKS.INVOICE_PAYER,
+                [
+                  SECTION_TASKS.LICENCE_HOLDER,
+                  SECTION_TASKS.ECOLOGIST,
+                  SECTION_TASKS.AUTHORISED_PEOPLE
+                ]
+              )
+
+              if (currState === tagStatus.CANNOT_START) {
+                return false
+              }
+
+              return true
+            }
           }
         ]
       },

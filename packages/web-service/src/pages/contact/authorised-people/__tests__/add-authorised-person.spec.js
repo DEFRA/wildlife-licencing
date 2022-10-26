@@ -3,6 +3,9 @@ describe('add authorised person', () => {
   describe('the checkData function', () => {
     it('redirects to the name page with no name', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -30,6 +33,9 @@ describe('add authorised person', () => {
     })
     it('redirects to the email page with no email', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -59,6 +65,9 @@ describe('add authorised person', () => {
 
     it('redirects to the postcode page with no address', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -91,7 +100,17 @@ describe('add authorised person', () => {
   describe('the getData function ', () => {
     it('returns the check-answers data correctly', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           CONTACT: {
             role: () => ({
               getByApplicationId: jest.fn(() => [{
@@ -164,7 +183,7 @@ describe('add authorised person', () => {
       }
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-person-contact-complete', tagState: 'in-progress' })
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-people', tagState: 'in-progress' })
     })
 
     it('when not adding another contact adds the tag', async () => {
@@ -197,7 +216,7 @@ describe('add authorised person', () => {
       }
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
-      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-person-contact-complete', tagState: 'complete' })
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-people', tagState: 'complete' })
     })
   })
 
