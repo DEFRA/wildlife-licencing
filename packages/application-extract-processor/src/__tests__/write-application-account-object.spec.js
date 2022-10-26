@@ -22,6 +22,14 @@ const keys = [
     powerAppsTable: 'accounts',
     contentId: null,
     powerAppsKey: '9fd69d6f-db01-ed11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'accounts',
+    apiKey: null,
+    apiBasePath: 'application.payerOrganization',
+    powerAppsTable: 'accounts',
+    contentId: null,
+    powerAppsKey: '6fd69d6f-db01-ed11-82e5-002248c5c45b'
   }
 ]
 
@@ -38,7 +46,8 @@ describe('The application-account extract processor: write-application-account-o
         accounts: {
           findOne: jest.fn()
             .mockReturnValueOnce({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })
-            .mockReturnValue(null)
+            .mockReturnValueOnce(null)
+            .mockReturnValueOnce(null)
         },
         applicationAccounts: {
           findOne: jest.fn(() => null),
@@ -47,7 +56,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
     expect(mockCreate).toHaveBeenCalledWith({
       id: expect.any(String),
@@ -67,6 +76,37 @@ describe('The application-account extract processor: write-application-account-o
         accounts: {
           findOne: jest.fn()
             .mockReturnValueOnce(null)
+            .mockReturnValueOnce({ id: '96013271-b969-4ef4-871e-41471eaaabda' })
+            .mockReturnValueOnce(null)
+        },
+        applicationAccounts: {
+          findOne: jest.fn(() => null),
+          create: mockCreate
+        }
+      }
+    }))
+    const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
+    const result = await writeApplicationAccountObject({ data: {}, keys })
+    expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
+    expect(mockCreate).toHaveBeenCalledWith({
+      id: expect.any(String),
+      applicationId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
+      accountId: '96013271-b969-4ef4-871e-41471eaaabda',
+      accountRole: 'ECOLOGIST-ORGANISATION'
+    })
+  })
+
+  it('creates an application payer-organisation', async () => {
+    const mockCreate = jest.fn()
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findOne: jest.fn(() => ({ id: '5eac8c64-7fa6-4418-bf24-ea2766ce802a' }))
+        },
+        accounts: {
+          findOne: jest.fn()
+            .mockReturnValueOnce(null)
+            .mockReturnValueOnce(null)
             .mockReturnValue({ id: '96013271-b969-4ef4-871e-41471eaaabda' })
         },
         applicationAccounts: {
@@ -76,13 +116,13 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
     expect(mockCreate).toHaveBeenCalledWith({
       id: expect.any(String),
       applicationId: '5eac8c64-7fa6-4418-bf24-ea2766ce802a',
       accountId: '96013271-b969-4ef4-871e-41471eaaabda',
-      accountRole: 'ECOLOGIST-ORGANISATION'
+      accountRole: 'PAYER-ORGANISATION'
     })
   })
 
@@ -105,7 +145,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
     expect(mockCreate).not.toHaveBeenCalledWith()
   })
@@ -129,7 +169,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
     expect(mockCreate).not.toHaveBeenCalled()
   })
@@ -149,7 +189,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
     expect(mockCreate).not.toHaveBeenCalledWith()
   })
@@ -164,7 +204,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
     expect(mockCreate).not.toHaveBeenCalledWith()
   })
@@ -178,7 +218,7 @@ describe('The application-account extract processor: write-application-account-o
       }
     }))
     const { writeApplicationAccountObject } = await import('../write-application-account-object.js')
-    const result = await writeApplicationAccountObject({ data: { }, keys })
+    const result = await writeApplicationAccountObject({ data: {}, keys })
     expect(result).toEqual({ error: 1, insert: 0, pending: 0, update: 0 })
   })
 })
