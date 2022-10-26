@@ -35,6 +35,7 @@ describe('The licence type map', () => {
   it('the decorateMap function works as expected', async () => {
     const decoratedMap = await decorateMap(licenceTypeMap[A24], {
       'eligibility-check': { tagState: 'not-started' },
+      setts: { tagState: 'not-started' },
       'licence-holder': { tagState: 'not-started' },
       ecologist: { tagState: 'not-started' },
       'invoice-payer': { tagState: 'not-started' },
@@ -154,7 +155,8 @@ describe('The licence type map', () => {
       const { A24 } = await import('../licence-type-map.js')
       const funcEnabled = licenceTypeMap[A24].sections[2].tasks[3].enabled
       const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
-      expect(licenceTypeMap[A24].sections[2].tasks[3]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'setts', uri: '/habitat-start' })
+      const funcUri = licenceTypeMap[A24].sections[2].tasks[3].uri
+      expect(licenceTypeMap[A24].sections[2].tasks[3]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'setts', uri: funcUri })
     })
 
     it('will return complete if the user has completed the sett journey', async () => {

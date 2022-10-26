@@ -189,7 +189,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SETTS,
-            uri: habitatURIs.START.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SETTS].tagState) ? habitatURIs.START.uri : habitatURIs.CHECK_YOUR_ANSWERS.uri,
             status: status => getState(status, SECTION_TASKS.SETTS),
             enabled: status => eligibilityCompleted(status)
           },

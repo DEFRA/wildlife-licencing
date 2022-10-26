@@ -7,7 +7,7 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
-import { isComplete } from '../../../common/tag-is-complete.js'
+import { isCompleteOrConfirmed } from '../../../common/tag-is-complete-or-confirmed.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
@@ -33,7 +33,7 @@ export const setData = async request => {
   const activities = [].concat(pageData.payload[page])
   const methodIds = activities.map(method => parseInt(method))
 
-  if (isComplete(tagState)) {
+  if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { methodIds })
@@ -44,7 +44,7 @@ export const setData = async request => {
     Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
 
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
   request.cache().setData(journeyData)
 }

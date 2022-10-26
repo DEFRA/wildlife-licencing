@@ -8,7 +8,7 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { checkApplication } from '../common/check-application.js'
-import { isComplete } from '../../../common/tag-is-complete.js'
+import { isCompleteOrConfirmed } from '../../../common/tag-is-complete-or-confirmed.js'
 
 export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
@@ -46,7 +46,7 @@ export const setData = async request => {
   const workEnd = `${month}-${day}-${year}`
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
-  if (isComplete(tagState)) {
+  if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
     Object.assign(journeyData.habitatData, { workEnd })
@@ -60,7 +60,7 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
-  if (isComplete(tagState)) {
+  if (isCompleteOrConfirmed(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
   return habitatURIs.ACTIVITIES.uri
