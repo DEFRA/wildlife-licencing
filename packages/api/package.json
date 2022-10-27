@@ -35,6 +35,7 @@
     "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/vision": "^6.1.0",
+    "argon2": "^0.30.1",
     "dotenv": "^10.0.0",
     "openapi-backend": "^5.0.0",
     "sequelize": "^6.12.5",
