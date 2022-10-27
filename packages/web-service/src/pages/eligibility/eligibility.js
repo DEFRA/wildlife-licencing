@@ -235,7 +235,7 @@ export const eligibleCheckData = async (request, h) => {
 }
 
 export const eligibleCompletion = async request => {
-  const journeyData = request.cache().getData()
+  const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE })
   return request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
 }

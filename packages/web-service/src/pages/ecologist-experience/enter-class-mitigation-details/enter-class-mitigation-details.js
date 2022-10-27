@@ -6,7 +6,7 @@ import { checkApplication } from '../../common/check-application.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const completion = async request => {
-  const journeyData = request.cache().getData()
+  const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }

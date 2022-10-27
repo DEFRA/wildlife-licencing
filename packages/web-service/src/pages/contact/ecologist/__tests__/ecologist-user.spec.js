@@ -25,7 +25,10 @@ describe('applicant check answers page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: tagSet
+                set: tagSet,
+                get: () => {
+                  return 'not-started'
+                }
               }
             }
           }

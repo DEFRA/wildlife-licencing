@@ -107,7 +107,8 @@ describe('add authorised person', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: jest.fn()
               }
             }
           },

@@ -50,7 +50,10 @@ export const checkData = async (request, h) => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON).getByApplicationId(applicationId)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
+  const state = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.AUTHORISED_PEOPLE)
+  if (state === tagStatus.NOT_STARTED) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
+  }
   return {
     contacts: contacts.map(c => ({
       uri: {
