@@ -16,12 +16,7 @@ export default async (context, req, h) => {
       return h.response().code(200)
     }
 
-    const user = await models.users.findByPk(userId)
-    if (!user) {
-      return h.response().code(404)
-    }
-
-    const [, updatedUser] = await models.users.update({
+    const [found, updatedUser] = await models.users.update({
       password: await toHash(req.payload.password)
     }, {
       where: {
@@ -29,6 +24,10 @@ export default async (context, req, h) => {
       },
       returning: true
     })
+
+    if (found !== 1) {
+      return h.response().code(404)
+    }
 
     const response = prepareResponse(updatedUser[0].dataValues)
     return h.response(response)

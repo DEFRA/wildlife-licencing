@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { verify } from './password.js'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { userId, password } = context.request.params
 
@@ -10,11 +10,7 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    if (await verify(password, user.password)) {
-      return h.response().code(200)
-    } else {
-      return h.response().code(401)
-    }
+    return await verify(password, user?.password) ? h.response().code(200) : h.response().code(401)
   } catch (err) {
     console.error('Error inserting into USERS table', err)
     throw new Error(err.message)

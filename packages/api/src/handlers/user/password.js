@@ -12,9 +12,10 @@ export const toHash = async plaintext => {
 
 export const verify = async (plaintext, hash) => {
   try {
-    return argon2.verify(hash, plaintext)
+    const result = await argon2.verify(hash, plaintext)
+    return result
   } catch (err) {
     console.error(err)
-    return true
+    return false
   }
 }
