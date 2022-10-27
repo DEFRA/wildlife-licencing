@@ -55,7 +55,7 @@ export const FILE_UPLOAD = {
   },
   getUploadedFiles: async applicationId => {
     return apiRequestsWrapper(
-      async () => await API.get(`/application/${applicationId}/file-uploads`),
+      async () => API.get(`/application/${applicationId}/file-uploads`),
       `Error getting to file uploads for ${applicationId}`,
       500
     )

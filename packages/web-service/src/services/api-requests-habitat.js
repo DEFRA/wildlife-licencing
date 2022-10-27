@@ -25,18 +25,14 @@ export const HABITAT = {
   },
   getHabitatBySettId: async (applicationId, settId) => {
     return apiRequestsWrapper(
-      async () => {
-        return API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
-      },
+      async () => API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`),
       `Error retrieving habitat-site for ${settId} on ${applicationId}`,
       500
     )
   },
   putHabitatById: async (applicationId, settId, payload) => {
     return apiRequestsWrapper(
-      async () => {
-        return API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload)
-      },
+      async () => API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload),
       `Error altering data for ${settId} on ${applicationId}`,
       500
     )
