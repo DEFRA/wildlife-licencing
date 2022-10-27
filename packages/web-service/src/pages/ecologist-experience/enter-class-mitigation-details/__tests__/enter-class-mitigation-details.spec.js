@@ -4,16 +4,39 @@ describe('The enter class mitigation details page', () => {
   describe('completion function', () => {
     it('returns the check ecologist answers uri', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {}
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
+        }
       }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
       const { completion } = await import('../enter-class-mitigation-details.js')
-      expect(await completion()).toBe('/check-ecologist-answers')
+      expect(await completion(request)).toBe('/check-ecologist-answers')
     })
   })
 
   describe('getData function', () => {
     it('returns the class-mitigation details', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ classMitigationDetails: 'CL-MIT' }))
@@ -34,6 +57,9 @@ describe('The enter class mitigation details page', () => {
     it('writes class-mitigation details to the api', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ })),
@@ -41,7 +67,7 @@ describe('The enter class mitigation details page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              add: () => jest.fn()
+              set: () => jest.fn()
             })
           }
         }

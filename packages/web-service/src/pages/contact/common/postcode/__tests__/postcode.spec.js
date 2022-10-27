@@ -42,10 +42,13 @@ describe('the postcode functions', () => {
   describe('setPostcodeData', () => {
     it('sets the postcode and looks up the address', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }
@@ -71,10 +74,13 @@ describe('the postcode functions', () => {
 
     it('sets the postcode and looks up the address, deleting the address lookup cache data on a null result', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }
@@ -100,10 +106,13 @@ describe('the postcode functions', () => {
 
     it('deleting the address lookup cache data on throwing an error', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }

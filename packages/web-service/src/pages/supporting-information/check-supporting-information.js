@@ -2,7 +2,7 @@ import { FILE_UPLOADS, REMOVE_FILE_UPLOAD, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import Joi from 'joi'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
-import { APIRequests } from '../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
@@ -39,14 +39,14 @@ export const completion = async request => {
   const { applicationId } = await request.cache().getData()
 
   if (pageData?.payload[anotherFileUpload] === 'yes') {
-    await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.SUPPORTING_INFORMATION)
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   } else {
     const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
     if (uploadedFiles?.length) {
-      await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.SUPPORTING_INFORMATION)
+      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE })
     } else {
-      await APIRequests.APPLICATION.tags(applicationId).remove(SECTION_TASKS.SUPPORTING_INFORMATION)
+      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.IN_PROGRESS })
     }
 
     return TASKLIST.uri

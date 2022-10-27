@@ -7,8 +7,9 @@ import {
   ecologistExperienceURIs,
   siteURIs
 } from '../../uris.js'
-import { APIRequests } from '../../services/api-requests.js'
-import { CONTACT_COMPLETE } from '../contact/common/check-answers/check-answers.js'
+import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { isComplete } from '../common/tag-is-complete.js'
+import { isCompleteOrConfirmed } from '../common/tag-is-complete-or-confirmed.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
@@ -31,17 +32,9 @@ export const SECTION_TASKS = {
   SUBMIT: 'send-application'
 }
 
-// The expected status values for tasks
-export const STATUS_VALUES = {
-  COMPLETED: 'completed',
-  IN_PROGRESS: 'in-progress',
-  NOT_STARTED: 'not-started',
-  CANNOT_START_YET: 'cannot-start'
-}
-
 // Return a progress object containing the number of completed tasks of total tasks )
 export const getProgress = status => ({
-  completed: Object.values(status).filter(s => s).length,
+  complete: Object.values(status).filter(s => s).length,
   from: Object.keys(status).length
 })
 
@@ -50,18 +43,18 @@ export const getTaskStatus = async request => {
   const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
   const applicationTags = application.applicationTags || []
   return {
-    [SECTION_TASKS.ELIGIBILITY_CHECK]: applicationTags.includes(SECTION_TASKS.ELIGIBILITY_CHECK),
-    [SECTION_TASKS.LICENCE_HOLDER]: applicationTags.includes(CONTACT_COMPLETE.APPLICANT),
-    [SECTION_TASKS.ECOLOGIST]: applicationTags.includes(CONTACT_COMPLETE.ECOLOGIST),
-    [SECTION_TASKS.AUTHORISED_PEOPLE]: applicationTags.includes(CONTACT_COMPLETE.AUTHORISED_PERSON),
-    [SECTION_TASKS.INVOICE_PAYER]: applicationTags.includes(CONTACT_COMPLETE.PAYER),
-    [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
-    [SECTION_TASKS.WORK_ACTIVITY]: false,
-    [SECTION_TASKS.PERMISSIONS]: false,
-    [SECTION_TASKS.SITES]: false,
-    [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
-    [SECTION_TASKS.SUPPORTING_INFORMATION]: applicationTags.includes(SECTION_TASKS.SUPPORTING_INFORMATION),
-    [SECTION_TASKS.SUBMIT]: false
+    [SECTION_TASKS.ELIGIBILITY_CHECK]: (applicationTags.find(t => t.tag === SECTION_TASKS.ELIGIBILITY_CHECK) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.LICENCE_HOLDER]: (applicationTags.find(t => t.tag === SECTION_TASKS.LICENCE_HOLDER) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.ECOLOGIST]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.AUTHORISED_PEOPLE]: (applicationTags.find(t => t.tag === SECTION_TASKS.AUTHORISED_PEOPLE) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.INVOICE_PAYER]: (applicationTags.find(t => t.tag === SECTION_TASKS.INVOICE_PAYER) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST_EXPERIENCE) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.WORK_ACTIVITY]: { tagState: tagStatus.NOT_STARTED },
+    [SECTION_TASKS.PERMISSIONS]: { tagState: tagStatus.NOT_STARTED },
+    [SECTION_TASKS.SITES]: { tagState: tagStatus.NOT_STARTED },
+    [SECTION_TASKS.SETTS]: (applicationTags.find(t => t.tag === SECTION_TASKS.SETTS) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.SUPPORTING_INFORMATION]: (applicationTags.find(t => t.tag === SECTION_TASKS.SUPPORTING_INFORMATION) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.SUBMIT]: { tagState: tagStatus.NOT_STARTED }
   }
 }
 
@@ -82,11 +75,32 @@ export const decorateMap = (currentLicenceTypeMap, taskStatus) => currentLicence
   }))
 }))
 
-const eligibilityCheckStatus = status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
-  ? STATUS_VALUES.NOT_STARTED
-  : STATUS_VALUES.CANNOT_START_YET
+const getState = (status, sectionTaskKey) => {
+  if (!eligibilityCompleted(status)) {
+    return tagStatus.CANNOT_START
+  }
+  return status[sectionTaskKey].tagState
+}
 
-const eligibilityCheckEnabled = status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
+// This essentially does the same job as the `getState` function
+// But it also checks other features are complete too
+// E.g. 'Add invoice details' depends upon 3 other flows being complete
+const getStateDependsUpon = (status, sectionTaskKey, dependUpon) => {
+  if (!eligibilityCompleted(status)) {
+    return tagStatus.CANNOT_START
+  }
+
+  for (let i = 0; i < dependUpon.length; i++) {
+    const key = dependUpon[i]
+    if (!isComplete(status[key].tagState)) {
+      return tagStatus.CANNOT_START
+    }
+  }
+
+  return status[sectionTaskKey].tagState
+}
+
+const eligibilityCompleted = status => isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState)
 
 // A map of the sections and tasks by licence type
 export const licenceTypeMap = {
@@ -97,11 +111,9 @@ export const licenceTypeMap = {
         tasks: [ // The set of tasks in this section
           {
             name: SECTION_TASKS.ELIGIBILITY_CHECK, // The name of the task within a section, referred to in the template
-            uri: status => status[SECTION_TASKS.ELIGIBILITY_CHECK] ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri, // Either a fixed uri or a function of the status to resolve the uri
-            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK]
-              ? STATUS_VALUES.COMPLETED
-              : STATUS_VALUES.NOT_STARTED, // returns a function of request to get the current status
-            enabled: status => !status[SECTION_TASKS.ELIGIBILITY_CHECK]
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri,
+            status: status => status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState,
+            enabled: status => !eligibilityCompleted(status)
           }
         ]
       },
@@ -110,27 +122,49 @@ export const licenceTypeMap = {
         tasks: [
           {
             name: SECTION_TASKS.LICENCE_HOLDER,
-            uri: status => status[SECTION_TASKS.LICENCE_HOLDER] ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
-            status: status => status[SECTION_TASKS.LICENCE_HOLDER] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
-            enabled: eligibilityCheckEnabled
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.LICENCE_HOLDER].tagState) ? contactURIs.APPLICANT.CHECK_ANSWERS.uri : contactURIs.APPLICANT.USER.uri,
+            status: status => getState(status, SECTION_TASKS.LICENCE_HOLDER),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.ECOLOGIST,
-            uri: status => status[SECTION_TASKS.ECOLOGIST] ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
-            status: status => status[SECTION_TASKS.ECOLOGIST] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
-            enabled: eligibilityCheckEnabled
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ECOLOGIST].tagState) ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
+            status: status => getState(status, SECTION_TASKS.ECOLOGIST),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.AUTHORISED_PEOPLE,
             uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
-            status: status => status[SECTION_TASKS.AUTHORISED_PEOPLE] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
-            enabled: eligibilityCheckEnabled
+            status: status => getState(status, SECTION_TASKS.AUTHORISED_PEOPLE),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.INVOICE_PAYER,
-            uri: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-            status: status => status[SECTION_TASKS.INVOICE_PAYER] ? STATUS_VALUES.COMPLETED : STATUS_VALUES.NOT_STARTED,
-            enabled: eligibilityCheckEnabled
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
+              ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri
+              : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+            status: status => getStateDependsUpon(
+              status,
+              SECTION_TASKS.INVOICE_PAYER,
+              [
+                SECTION_TASKS.LICENCE_HOLDER,
+                SECTION_TASKS.ECOLOGIST,
+                SECTION_TASKS.AUTHORISED_PEOPLE
+              ]
+            ),
+            enabled: status => {
+              const currState = getStateDependsUpon(
+                status,
+                SECTION_TASKS.INVOICE_PAYER,
+                [
+                  SECTION_TASKS.LICENCE_HOLDER,
+                  SECTION_TASKS.ECOLOGIST,
+                  SECTION_TASKS.AUTHORISED_PEOPLE
+                ]
+              )
+
+              return currState !== tagStatus.CANNOT_START
+            }
           }
         ]
       },
@@ -140,44 +174,40 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.WORK_ACTIVITY,
             uri: '/',
-            status: () => STATUS_VALUES.CANNOT_START_YET
+            status: () => tagStatus.CANNOT_START
           },
           {
             name: SECTION_TASKS.PERMISSIONS,
             uri: '/',
-            status: () => STATUS_VALUES.CANNOT_START_YET
+            status: () => tagStatus.CANNOT_START
           },
           {
             name: SECTION_TASKS.SITES,
             uri: siteURIs.NAME.uri,
-            status: eligibilityCheckStatus,
-            enabled: eligibilityCheckEnabled
+            status: status => getState(status, SECTION_TASKS.SITES),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.SETTS,
-            uri: habitatURIs.START.uri,
-            status: status => status[SECTION_TASKS.SETTS]
-              ? STATUS_VALUES.COMPLETED
-              : eligibilityCheckStatus(status),
-            enabled: eligibilityCheckEnabled
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SETTS].tagState) ? habitatURIs.START.uri : habitatURIs.CHECK_YOUR_ANSWERS.uri,
+            status: status => getState(status, SECTION_TASKS.SETTS),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.ECOLOGIST_EXPERIENCE,
-            uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
-            status: status => status[SECTION_TASKS.ECOLOGIST_EXPERIENCE]
-              ? STATUS_VALUES.COMPLETED
-              : eligibilityCheckStatus(status),
-            enabled: eligibilityCheckEnabled
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ECOLOGIST_EXPERIENCE].tagState)
+              ? ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+              : ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
+            status: status => getState(status, SECTION_TASKS.ECOLOGIST_EXPERIENCE),
+            enabled: status => eligibilityCompleted(status)
           },
           {
             name: SECTION_TASKS.SUPPORTING_INFORMATION,
-            uri: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SUPPORTING_INFORMATION].tagState)
               ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
               : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
-            status: status => status[SECTION_TASKS.SUPPORTING_INFORMATION]
-              ? STATUS_VALUES.COMPLETED
-              : eligibilityCheckStatus(status),
-            enabled: eligibilityCheckEnabled
+            status: status => getState(status, SECTION_TASKS.SUPPORTING_INFORMATION),
+            enabled: status => eligibilityCompleted(status)
           }
         ]
       },
@@ -187,8 +217,8 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SUBMIT,
             uri: DECLARATION.uri,
-            status: eligibilityCheckStatus,
-            enabled: eligibilityCheckEnabled
+            status: tagStatus.NOT_STARTED,
+            enabled: status => eligibilityCompleted(status)
           }
         ]
       }

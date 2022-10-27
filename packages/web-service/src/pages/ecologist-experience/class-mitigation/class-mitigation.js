@@ -1,7 +1,7 @@
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
 const yesNo = 'yes-no'
 
@@ -10,6 +10,8 @@ export const completion = async request => {
   if (pageData.payload[yesNo] === 'yes') {
     return ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
   }
+  const journeyData = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
@@ -29,7 +31,6 @@ export const setData = async request => {
   Object.assign(ecologistExperience, { classMitigation })
   if (!classMitigation) {
     delete ecologistExperience.classMitigationDetails
-    await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   }
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }

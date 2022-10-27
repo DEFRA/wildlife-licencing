@@ -135,6 +135,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -143,7 +146,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -168,6 +171,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -176,7 +182,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -204,6 +210,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -212,7 +221,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           },
           CONTACT: {
@@ -241,6 +250,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -251,7 +263,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -274,6 +286,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -283,7 +298,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'in-progress'
             })
           }
         }
@@ -307,6 +322,9 @@ describe('contact-names', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           ACCOUNT: {
             role: () => ({
@@ -316,7 +334,7 @@ describe('contact-names', () => {
           },
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'in-progress'
             })
           }
         }

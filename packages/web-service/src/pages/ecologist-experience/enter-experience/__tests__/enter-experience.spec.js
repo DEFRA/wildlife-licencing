@@ -5,10 +5,13 @@ describe('The enter experience page', () => {
   describe('completion function', () => {
     it('returns the enter methods uri on primary journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'in-progress'
             })
           }
         }
@@ -26,10 +29,14 @@ describe('The enter experience page', () => {
 
     it('returns the check ecologist answers uri on return journey', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -50,6 +57,9 @@ describe('The enter experience page', () => {
     it('stores the experience details', async () => {
       const mockPut = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({})),
@@ -91,6 +101,9 @@ describe('The enter experience page', () => {
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ experienceDetails: 'hello people' }))

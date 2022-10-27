@@ -31,9 +31,35 @@ const apiUrls = {
   APPLICATION_SITES: '/application-sites'
 }
 
+// These states are common goverment pattern states, and are mirrored in /applications-text.njk
+// If you want to read more about the states that should appear on a tasklist page
+// Gov.uk docs are here: https://design-system.service.gov.uk/patterns/task-list-pages/
+export const tagStatus = {
+  // if the user cannot start the task yet
+  // for example because another task must be completed first
+  CANNOT_START: 'cannot-start',
+
+  // if the user can start work on the task, but has not done so yet
+  NOT_STARTED: 'not-started',
+
+  // if the user has started but not completed the task
+  IN_PROGRESS: 'in-progress',
+
+  // if the user has gone through the flow once
+  // but not clicked "no" on the yes, no radio buttons
+  // to confirm they don't want to enter any more information
+  // we now can still take them back to the check-your-answers page
+  // and so that the tasklist "tag" still shows "In Progress" - https://design-system.service.gov.uk/patterns/task-list-pages/task-list-statuses.png
+  COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed',
+
+  // if the user has completed the task
+  COMPLETE: 'complete'
+}
+
 Object.freeze(ContactRoles)
 Object.freeze(AccountRoles)
 Object.freeze(apiUrls)
+Object.freeze(tagStatus)
 
 const getContactsByApplicationId = async (role, applicationId) => {
   try {
@@ -400,40 +426,58 @@ export const APIRequests = {
       }
     },
     tags: applicationId => ({
-      add: async tag => {
+      get: async key => {
         try {
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
           application.applicationTags = application.applicationTags || []
-          if (!application.applicationTags.find(t => t === tag)) {
-            application.applicationTags.push(tag)
-            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          const tag = application.applicationTags.find(t => t.tag === key)
+
+          if (tag === undefined) {
+            return tagStatus.NOT_STARTED
+          } else {
+            return tag.tagState
           }
         } catch (error) {
-          console.error(`Error adding tag ${tag} for applicationId: ${applicationId}`, error)
+          console.error(`Error fetching tag ${key} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
           throw error
         }
       },
-      has: async tag => {
+      set: async tagObj => {
         try {
+          const key = tagObj.tag
+          const tagState = tagObj.tagState
+
+          // If you are trying to set an impossible state
+          if (Object.values(tagStatus).indexOf(tagState) === -1) {
+            const error = new Error('Invalid tag status assignment')
+            console.error(`Error adding value key ${key} and value ${tagState} for applicationId: ${applicationId}`, error)
+            Boom.boomify(error, { statusCode: 500 })
+            throw error
+          }
+
           const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
           application.applicationTags = application.applicationTags || []
-          return !!application.applicationTags.find(t => t === tag)
-        } catch (error) {
-          console.error(`Error fetching tag ${tag} for applicationId: ${applicationId}`, error)
-          Boom.boomify(error, { statusCode: 500 })
-          throw error
-        }
-      },
-      remove: async tag => {
-        try {
-          const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
-          if (application.applicationTags && application.applicationTags.length) {
-            Object.assign(application, { applicationTags: application.applicationTags.filter(t => t !== tag) })
+          const tag = application.applicationTags.find(t => t.tag === key)
+
+          if (tag === undefined) {
+            // The first time the user is adding a tag
+            application.applicationTags.push(tagObj)
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
+          } else {
+            // The tag to update
+            const index = application.applicationTags.indexOf(tag)
+
+            // Nothing to update
+            if (application.applicationTags[index].tagState === tagState) {
+              return
+            }
+
+            application.applicationTags[index].tagState = tagState
             await API.put(`${apiUrls.APPLICATION}/${applicationId}`, application)
           }
         } catch (error) {
-          console.error(`Error removing tag ${tag} for applicationId: ${applicationId}`, error)
+          console.error(`Error adding tag ${JSON.stringify(tagObj)} for applicationId: ${applicationId}`, error)
           Boom.boomify(error, { statusCode: 500 })
           throw error
         }

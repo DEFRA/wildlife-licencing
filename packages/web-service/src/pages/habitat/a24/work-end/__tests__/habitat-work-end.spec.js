@@ -5,10 +5,13 @@ describe('The habitat work end page', () => {
   describe('habitat-work-end page', () => {
     it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress' }
             }
           }
         })
@@ -27,10 +30,13 @@ describe('The habitat work end page', () => {
 
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -244,10 +250,13 @@ describe('The habitat work end page', () => {
     it('constructs the date correctly', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress' }
             }
           }
         }
@@ -299,10 +308,13 @@ describe('The habitat work end page', () => {
         getHabitatById: () => {}
       }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

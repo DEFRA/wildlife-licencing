@@ -5,6 +5,7 @@ import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
 import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
 import { Backlink } from '../../handlers/backlink.js'
+import { isComplete } from '../common/tag-is-complete.js'
 
 export const getApplication = async request => {
   // If there is no application then create a pre-application
@@ -39,10 +40,10 @@ export const getData = async request => {
 
   // If you navigate to the TASKLIST page, we need to ensure we've cleared all the error states on the file-upload page
   await request.cache().clearPageData(FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.page)
-  const eligibilityCheckComplete = await APIRequests.APPLICATION.tags(application.id).has(SECTION_TASKS.ELIGIBILITY_CHECK)
+  const eligibilityCheckComplete = await APIRequests.APPLICATION.tags(application.id).get(SECTION_TASKS.ELIGIBILITY_CHECK)
 
   return {
-    ...(eligibilityCheckComplete && { reference: application.applicationReferenceNumber }),
+    ...(isComplete(eligibilityCheckComplete) && { reference: application.applicationReferenceNumber }),
     licenceType: A24,
     licenceTypeMap: decoratedMap,
     progress

@@ -24,6 +24,7 @@
   "scripts": {
     "postinstall": "npm run lerna:bootstrap",
     "test": "jest",
+    "test-clear": "jest --clearCache", 
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
     "format": "standard",

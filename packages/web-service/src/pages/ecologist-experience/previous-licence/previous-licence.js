@@ -1,5 +1,6 @@
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { APPLICATIONS, ecologistExperienceURIs } from '../../../uris.js'
+import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 const yesNo = 'yes-no'
@@ -7,13 +8,14 @@ const yesNo = 'yes-no'
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (pageData.payload[yesNo] === 'yes') {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
-  if (flagged) {
+  if (isCompleteOrConfirmed(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
 }
 
@@ -24,8 +26,8 @@ export const checkData = async (request, h) => {
   }
 
   if (request.query?.change !== 'true') {
-    const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-    if (flagged) {
+    const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+    if (isCompleteOrConfirmed(tagState)) {
       return h.redirect(ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri)
     }
   }
