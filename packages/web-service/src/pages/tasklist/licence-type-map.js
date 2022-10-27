@@ -148,8 +148,7 @@ export const licenceTypeMap = {
               SECTION_TASKS.INVOICE_PAYER,
               [
                 SECTION_TASKS.LICENCE_HOLDER,
-                SECTION_TASKS.ECOLOGIST,
-                SECTION_TASKS.AUTHORISED_PEOPLE
+                SECTION_TASKS.ECOLOGIST
               ]
             ),
             enabled: status => {
