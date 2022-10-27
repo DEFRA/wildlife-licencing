@@ -18,9 +18,7 @@ export const HABITAT = {
   },
   getHabitatsById: async applicationId => {
     return apiRequestsWrapper(
-      async () => {
-        return API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
-      },
+      async () => API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`),
       `Error retrieving habitat-site for ${applicationId}`,
       500
     )
@@ -45,9 +43,7 @@ export const HABITAT = {
   },
   deleteSett: async (applicationId, settId) => {
     return apiRequestsWrapper(
-      async () => {
-        return API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
-      },
+      async () => API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`),
       `Error deleting sett id ${settId} on application ${applicationId}`,
       500
     )

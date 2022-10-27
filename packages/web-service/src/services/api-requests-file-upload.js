@@ -48,9 +48,7 @@ export const FILE_UPLOAD = {
   },
   removeUploadedFile: async (applicationId, uploadId) => {
     return apiRequestsWrapper(
-      async () => {
-        return API.delete(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${uploadId}`)
-      },
+      async () => API.delete(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${uploadId}`),
       `Error deleting file upload id ${uploadId} on application ${applicationId}`,
       500
     )
