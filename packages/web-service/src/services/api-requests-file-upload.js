@@ -49,7 +49,7 @@ export const FILE_UPLOAD = {
   removeUploadedFile: async (applicationId, uploadId) => {
     return apiRequestsWrapper(
       async () => {
-        return await API.delete(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${uploadId}`)
+        return API.delete(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${uploadId}`)
       },
       `Error deleting file upload id ${uploadId} on application ${applicationId}`,
       500
@@ -57,9 +57,7 @@ export const FILE_UPLOAD = {
   },
   getUploadedFiles: async applicationId => {
     return apiRequestsWrapper(
-      async () => {
-        return (await API.get(`/application/${applicationId}/file-uploads`))
-      },
+      async () => await API.get(`/application/${applicationId}/file-uploads`),
       `Error getting to file uploads for ${applicationId}`,
       500
     )

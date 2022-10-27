@@ -19,7 +19,7 @@ export const HABITAT = {
   getHabitatsById: async applicationId => {
     return apiRequestsWrapper(
       async () => {
-        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
+        return API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-sites`)
       },
       `Error retrieving habitat-site for ${applicationId}`,
       500
@@ -28,7 +28,7 @@ export const HABITAT = {
   getHabitatBySettId: async (applicationId, settId) => {
     return apiRequestsWrapper(
       async () => {
-        return await API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+        return API.get(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
       },
       `Error retrieving habitat-site for ${settId} on ${applicationId}`,
       500
@@ -37,7 +37,7 @@ export const HABITAT = {
   putHabitatById: async (applicationId, settId, payload) => {
     return apiRequestsWrapper(
       async () => {
-        return await API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload)
+        return API.put(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`, payload)
       },
       `Error altering data for ${settId} on ${applicationId}`,
       500
@@ -46,7 +46,7 @@ export const HABITAT = {
   deleteSett: async (applicationId, settId) => {
     return apiRequestsWrapper(
       async () => {
-        return await API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
+        return API.delete(`${apiUrls.APPLICATION}/${applicationId}/habitat-site/${settId}`)
       },
       `Error deleting sett id ${settId} on application ${applicationId}`,
       500
