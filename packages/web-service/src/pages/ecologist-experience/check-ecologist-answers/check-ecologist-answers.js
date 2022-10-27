@@ -52,6 +52,6 @@ export default pageRoute({
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
   checkData: checkData,
   getData: getData,
-  completion,
-  backlink: Backlink.NO_BACKLINK
+  backlink: Backlink.NO_BACKLINK,
+  completion
 })
