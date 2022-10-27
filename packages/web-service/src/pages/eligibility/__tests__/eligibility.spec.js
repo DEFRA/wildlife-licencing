@@ -647,19 +647,55 @@ describe('the eligibility pages', () => {
     it('returns the tasklist if authenticated', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
         }
       }))
       const { eligibleCompletion } = await import('../eligibility.js')
       const result = await eligibleCompletion({
-        auth: { isAuthenticated: true }
+        auth: { isAuthenticated: true },
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
       })
       expect(result).toEqual(TASKLIST.uri)
     })
     it('returns the login page if not authenticated', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({ set: jest.fn() })
+          }
+        }
+      }))
       const { eligibleCompletion } = await import('../eligibility.js')
       const result = await eligibleCompletion({
-        auth: { isAuthenticated: false }
+        auth: { isAuthenticated: false },
+        cache: () => {
+          return {
+            getData: () => {
+              return {
+                applicationId: 'abe123'
+              }
+            }
+          }
+        }
       })
       expect(result).toEqual(LOGIN.uri)
     })

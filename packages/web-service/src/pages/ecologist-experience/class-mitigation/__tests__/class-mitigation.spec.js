@@ -27,7 +27,15 @@ describe('The class mitigation page', () => {
         tagStatus: {
           NOT_STARTED: 'not-started'
         },
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
+        }
       }))
       const request = {
         cache: () => ({
@@ -35,7 +43,10 @@ describe('The class mitigation page', () => {
             payload: {
               'yes-no': 'no'
             }
-          })
+          }),
+          getData: () => {
+            return { applicationId: 'abe123' }
+          }
         })
       }
       const { completion } = await import('../class-mitigation.js')

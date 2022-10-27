@@ -72,7 +72,8 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'in-progress'
+              get: () => 'in-progress',
+              set: jest.fn()
             })
           }
         }

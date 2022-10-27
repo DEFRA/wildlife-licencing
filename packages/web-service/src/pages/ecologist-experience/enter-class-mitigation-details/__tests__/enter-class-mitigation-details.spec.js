@@ -7,10 +7,27 @@ describe('The enter class mitigation details page', () => {
         tagStatus: {
           NOT_STARTED: 'not-started'
         },
-        APIRequests: {}
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
+        }
       }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
       const { completion } = await import('../enter-class-mitigation-details.js')
-      expect(await completion()).toBe('/check-ecologist-answers')
+      expect(await completion(request)).toBe('/check-ecologist-answers')
     })
   })
 

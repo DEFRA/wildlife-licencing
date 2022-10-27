@@ -193,10 +193,28 @@ describe('The check ecologist answers page', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
         }
       }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
       const { completion } = await import('../check-ecologist-answers.js')
-      expect(await completion()).toBe('/tasklist')
+      expect(await completion(request)).toBe('/tasklist')
     })
   })
 })
