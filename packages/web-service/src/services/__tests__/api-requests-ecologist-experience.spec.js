@@ -117,6 +117,20 @@ describe('The API requests ecologist experience service', () => {
       expect(mockDelete).toHaveBeenCalledWith('/application/35acb529-70bb-4b8d-8688-ccdec837e5d4/previous-licence/35acb529-70bb-4b8d-8688-ccdec837e5d4')
     })
 
+    it('removePreviousLicence doesnt call the API if no licence found', async () => {
+      const mockGet = jest.fn(() => [{ id: '35acb529-70bb-4b8d-8688-ccdec837e5d4', licenceNumber: 'ABBBC' }])
+      const mockDelete = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet,
+          delete: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicence('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'not-the-same')
+      expect(mockDelete).toHaveBeenCalledTimes(0)
+    })
+
     it('removePreviousLicence rethrows on error', async () => {
       const mockGet = jest.fn(() => { throw new Error() })
       jest.doMock('@defra/wls-connectors-lib', () => ({
