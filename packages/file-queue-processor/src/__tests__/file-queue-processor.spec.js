@@ -1,3 +1,5 @@
+jest.spyOn(console, 'error').mockImplementation(() => null)
+
 describe('The wrapper: file-queue-processor', () => {
   afterAll(done => {
     jest.clearAllMocks()
@@ -7,31 +9,28 @@ describe('The wrapper: file-queue-processor', () => {
   it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
-        jest.mock('../worker.js')
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib', () => ({
           AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
           SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
-          REDIS: { initialiseConnection: jest.fn() },
           GRAPH: { client: jest.fn(() => ({ init: jest.fn() })) }
         }))
 
         jest.mock('@defra/wls-queue-defs')
 
-        const { worker } = require('../worker.js')
         const { SEQUELIZE } = require('@defra/wls-connectors-lib')
         const { createModels } = require('@defra/wls-database-model')
-        const { createQueue } = require('@defra/wls-queue-defs')
+        const { createQueue, queueWorker } = require('@defra/wls-queue-defs')
 
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
 
-        worker.mockImplementation(() => Promise.resolve())
+        queueWorker.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
 
         require('../file-queue-processor')
         setImmediate(() => {
-          expect(worker).toHaveBeenCalled()
+          expect(queueWorker).toHaveBeenCalled()
           done()
         })
       } catch (e) {
@@ -43,7 +42,6 @@ describe('The wrapper: file-queue-processor', () => {
   it('has initialisation failure', done => {
     jest.isolateModules(() => {
       try {
-        jest.mock('../worker.js')
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib')
         jest.mock('@defra/wls-queue-defs')
@@ -55,21 +53,20 @@ describe('The wrapper: file-queue-processor', () => {
         }))
 
         const { createModels } = require('@defra/wls-database-model')
-        const { worker } = require('../worker.js')
-        const { createQueue } = require('@defra/wls-queue-defs')
+        const { createQueue, queueWorker } = require('@defra/wls-queue-defs')
         const { SEQUELIZE } = require('@defra/wls-connectors-lib')
 
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
         SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
-        worker.mockImplementation(() => Promise.reject(new Error()))
+        queueWorker.mockImplementation(() => Promise.reject(new Error()))
 
         const processExitSpy = jest
           .spyOn(process, 'exit')
           .mockImplementation(code => {})
         require('../file-queue-processor')
         setImmediate(() => {
-          expect(worker).toHaveBeenCalled()
+          expect(queueWorker).toHaveBeenCalled()
           expect(processExitSpy).toHaveBeenCalledWith(1)
           done()
         })

@@ -1,13 +1,12 @@
-import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
-import { createQueue, queueDefinitions } from '@defra/wls-queue-defs'
+import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { createQueue, queueDefinitions, queueWorker } from '@defra/wls-queue-defs'
 import { createModels } from '@defra/wls-database-model'
-import { worker } from './worker.js'
+import { applicationJobProcess } from './application-job-process.js'
 
 Promise.all([
-  REDIS.initialiseConnection(),
   SEQUELIZE.initialiseConnection().then(() => createModels()),
   createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'subscriber' })
-]).then(() => worker())
+]).then(() => queueWorker(queueDefinitions.APPLICATION_QUEUE, applicationJobProcess))
   .catch(e => {
     console.error(e)
     process.exit(1)
