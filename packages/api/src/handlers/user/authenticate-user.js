@@ -1,18 +1,24 @@
 import { models } from '@defra/wls-database-model'
 import { verify } from './password.js'
+import { APPLICATION_JSON } from '../../constants.js'
 
 export default async (context, _req, h) => {
   try {
-    const { userId, password } = context.request.params
+    const { username, password } = context.request.params
 
-    const user = await models.users.findByPk(userId)
+    const [user] = await models.users.findAll({
+      where: { username: username.toLowerCase() }
+    })
+
     if (!user) {
-      return h.response().code(404)
+      return h.response({ result: false }).code(200)
     }
 
-    return await verify(password, user?.password) ? h.response().code(200) : h.response().code(401)
+    return h.response({ result: await verify(password, user.password) })
+      .type(APPLICATION_JSON)
+      .code(200)
   } catch (err) {
-    console.error('Error inserting into USERS table', err)
+    console.error('Error selecting from USERS table', err)
     throw new Error(err.message)
   }
 }

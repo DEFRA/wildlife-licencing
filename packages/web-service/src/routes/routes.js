@@ -1,7 +1,6 @@
 import applications from '../pages/applications/applications.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import login from '../pages/auth/login/login.js'
-import register from '../pages/auth/register/register.js'
 import miscRoutes from './misc-routes.js'
 import declaration from '../pages/declaration/declaration.js'
 import submission from '../pages/submission/submission.js'
@@ -87,7 +86,6 @@ const routes = [
   ...applications,
   ...applicationSummary,
   ...login,
-  ...register,
   ...declaration,
   ...submission,
   ...uploadSupportingInformation,

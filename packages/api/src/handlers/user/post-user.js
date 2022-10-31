@@ -7,12 +7,12 @@ import { toHash } from './password.js'
 const { cache } = REDIS
 
 /*
- * Create the new user object and return 201
+ * Create the new user object and return 201.
  */
 export default async (context, req, h) => {
   try {
-    // Trim and remove multiple spaces
-    const username = req.payload.username.trim().replace(/\s{2,}/g, ' ')
+    // Trim and remove any spaces, and ensure lower-case storage
+    const username = req.payload.username.toLowerCase()
 
     // Ensure the username is not taken
     const users = await models.users.findAll({

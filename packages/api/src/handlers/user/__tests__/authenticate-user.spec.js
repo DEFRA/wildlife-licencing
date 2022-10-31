@@ -4,121 +4,59 @@ jest.spyOn(console, 'error').mockImplementation(code => {})
 describe('the authenticate user functions', () => {
   beforeEach(() => jest.resetModules())
 
-  it('returns 200 if the user authenticates', async () => {
+  it('returns true if the user authenticates', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         users: {
-          findByPk: () => ({
-            password: encoded
-          })
+          findAll: () => [{ password: encoded }]
         }
       }
     }))
 
-    const mockCode = jest.fn()
     const context = {
       request: {
         params: {
-          userId: 'uid',
+          username: 'a@email.com',
           password: 'Aa1!HHHH'
         }
       }
     }
-    const h = {
-      response: () => ({
-        code: mockCode
-      })
-    }
+
+    const mockCode = jest.fn()
+    const mockType = jest.fn().mockReturnValue({ code: mockCode })
+    const mockResponse = jest.fn().mockReturnValue({ type: mockType })
+    const h = { response: mockResponse }
     const authenticateUser = (await import('../authenticate-user.js')).default
     await authenticateUser(context, null, h)
     expect(mockCode).toHaveBeenCalledWith(200)
+    expect(mockResponse).toHaveBeenCalledWith({ result: true })
   })
 
-  it('returns 401 if the user does not authenticate', async () => {
+  it('returns false if the user does not authenticate', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         users: {
-          findByPk: () => ({
-            password: encoded
-          })
+          findAll: () => [{ password: encoded }]
         }
       }
     }))
 
-    const mockCode = jest.fn()
     const context = {
       request: {
         params: {
-          userId: 'uid',
+          username: 'a@email.com',
           password: 'Aa1!HHHHd'
         }
       }
     }
-    const h = {
-      response: () => ({
-        code: mockCode
-      })
-    }
-    const authenticateUser = (await import('../authenticate-user.js')).default
-    await authenticateUser(context, null, h)
-    expect(mockCode).toHaveBeenCalledWith(401)
-  })
-
-  it('returns 401 if the user cannot authenticate', async () => {
-    jest.doMock('@defra/wls-database-model', () => ({
-      models: {
-        users: {
-          findByPk: () => ({
-          })
-        }
-      }
-    }))
-
     const mockCode = jest.fn()
-    const context = {
-      request: {
-        params: {
-          userId: 'uid',
-          password: 'Aa1!HHHHd'
-        }
-      }
-    }
-    const h = {
-      response: () => ({
-        code: mockCode
-      })
-    }
+    const mockType = jest.fn().mockReturnValue({ code: mockCode })
+    const mockResponse = jest.fn().mockReturnValue({ type: mockType })
+    const h = { response: mockResponse }
     const authenticateUser = (await import('../authenticate-user.js')).default
     await authenticateUser(context, null, h)
-    expect(mockCode).toHaveBeenCalledWith(401)
-  })
-
-  it('returns 404 if the user not found', async () => {
-    jest.doMock('@defra/wls-database-model', () => ({
-      models: {
-        users: {
-          findByPk: () => null
-        }
-      }
-    }))
-
-    const mockCode = jest.fn()
-    const context = {
-      request: {
-        params: {
-          userId: 'uid',
-          password: 'Aa1!HHHHd'
-        }
-      }
-    }
-    const h = {
-      response: () => ({
-        code: mockCode
-      })
-    }
-    const authenticateUser = (await import('../authenticate-user.js')).default
-    await authenticateUser(context, null, h)
-    expect(mockCode).toHaveBeenCalledWith(404)
+    expect(mockCode).toHaveBeenCalledWith(200)
+    expect(mockResponse).toHaveBeenCalledWith({ result: false })
   })
 
   it('throws with a database error', async () => {
