@@ -11,11 +11,11 @@ const activeHandler = job => console.log(`Job ${job.id} - ${JSON.stringify(job.d
 const completedHandler = job => console.log(`Job ${job.id} - ${JSON.stringify(job.data)} has completed`)
 const stalledHandler = job => console.error(`Job ${job.id} - ${JSON.stringify(job.data)} has stalled`)
 
-// Care -- can reveal connection pw. Turn off in production
 const debug = db('queue-defs:create')
 
 export const createQueue = async (definition, ops) => {
-  debug(`Queue connection for ${definition.name} + ${JSON.stringify(QUEUE.connection, null, 4)}`)
+  const msg = Object.assign({}, QUEUE.connection, QUEUE.connection.password && { password: '***' })
+  debug(`Queue connection for ${definition.name} + ${JSON.stringify(msg, null, 4)}`)
   const options = Object.assign(definition.options, { redis: QUEUE.connection }, ops)
   console.log(`Creating queue: ${definition.name} with options: ${JSON.stringify(options)}`)
   const queue = new Queue(definition.name, options)
