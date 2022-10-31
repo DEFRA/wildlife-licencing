@@ -7,13 +7,13 @@ export const toHash = async plaintext => {
     })
   } catch (err) {
     console.error(err)
+    return false
   }
 }
 
 export const verify = async (plaintext, hash) => {
   try {
-    const result = await argon2.verify(hash, plaintext)
-    return result
+    return argon2.verify(hash, plaintext)
   } catch (err) {
     console.error(err)
     return false

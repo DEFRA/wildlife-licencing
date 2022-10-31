@@ -11,7 +11,9 @@ export default async (context, _req, h) => {
     })
 
     if (!user) {
-      return h.response({ result: false }).code(200)
+      return h.response({ result: false })
+        .type(APPLICATION_JSON)
+        .code(200)
     }
 
     return h.response({ result: await verify(password, user.password) })

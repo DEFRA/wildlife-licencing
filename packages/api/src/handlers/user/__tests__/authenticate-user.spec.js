@@ -59,6 +59,33 @@ describe('the authenticate user functions', () => {
     expect(mockResponse).toHaveBeenCalledWith({ result: false })
   })
 
+  it('returns false if the user does not exist', async () => {
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        users: {
+          findAll: () => []
+        }
+      }
+    }))
+
+    const context = {
+      request: {
+        params: {
+          username: 'a@email.com',
+          password: 'Aa1!HHHHd'
+        }
+      }
+    }
+    const mockCode = jest.fn()
+    const mockType = jest.fn().mockReturnValue({ code: mockCode })
+    const mockResponse = jest.fn().mockReturnValue({ type: mockType })
+    const h = { response: mockResponse }
+    const authenticateUser = (await import('../authenticate-user.js')).default
+    await authenticateUser(context, null, h)
+    expect(mockCode).toHaveBeenCalledWith(200)
+    expect(mockResponse).toHaveBeenCalledWith({ result: false })
+  })
+
   it('throws with a database error', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
