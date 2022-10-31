@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-queue-defs",
-  "version": "6.5.1-alpha.0",
+  "version": "6.5.2-alpha.0",
   "description": "Queue definitions",
   "main": "src/queue-defs.js",
   "type": "module",
