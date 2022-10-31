@@ -11,7 +11,6 @@ const duplicateNames = async (contactRole, userId, applicationId) => {
     const contacts = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     return contacts.map(c => c.fullName).filter(c => c)
   } else {
-    // const currentContact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId)
     return contacts.map(c => c.fullName).filter(c => c)
   }
