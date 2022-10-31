@@ -17,7 +17,7 @@ export const createQueue = async (definition, ops) => {
   const msg = Object.assign({}, QUEUE.connection, QUEUE.connection.password && { password: '***' })
   debug(`Queue connection for ${definition.name} + ${JSON.stringify(msg, null, 4)}`)
   const options = Object.assign(definition.options, { redis: QUEUE.connection }, ops)
-  console.log(`Creating queue: ${definition.name} with options: ${JSON.stringify(options)}`)
+  console.log(`Creating queue: ${definition.name} with options: ${JSON.stringify(Object.assign({}, options, { redis: undefined }))}`)
   const queue = new Queue(definition.name, options)
 
   queue.clients.forEach((c, i) => debug(`Client ${i}: host: ${c.options.host} port: ${c.options.port} tls: ${c.options.tls}`))
