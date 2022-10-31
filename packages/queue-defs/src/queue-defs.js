@@ -1,3 +1,4 @@
-import { getQueue, createQueue } from './queue-funcs.js'
+import { queueWorker } from './queue-worker.js'
+import { createQueue, getQueue } from './queue-funcs.js'
 import { queueDefinitions } from './defs.js'
-export { getQueue, createQueue, queueDefinitions }
+export { createQueue, queueDefinitions, queueWorker, getQueue }
