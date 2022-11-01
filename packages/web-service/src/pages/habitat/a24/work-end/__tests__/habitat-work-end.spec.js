@@ -210,7 +210,6 @@ describe('The habitat work end page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
 
