@@ -58,6 +58,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
       }
     })
 
@@ -193,13 +194,14 @@ describe('The habitat work start page', () => {
       }
     })
 
-    it('you cant pass a past date', async () => {
+    it('you cant pass a date in the past', async () => {
       try {
-        const payload = { 'habitat-work-start-day': new Date().getDate() - 1, 'habitat-work-start-month': new Date().getMonth(), 'habitat-work-start-year': new Date().getFullYear() }
+        const payload = { 'habitat-work-start-day': 11, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() - 1 }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
 
