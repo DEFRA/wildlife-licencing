@@ -5,6 +5,16 @@ import db from 'debug'
 const debug = db('web-service:api-requests')
 
 export const USER = {
+  authenticate: async (username, password) => {
+    return apiRequestsWrapper(
+      async () => {
+        const { result } = await API.get(`/user/${username}/${password}/authenticate`)
+        return result
+      },
+      `Error authenticating user with username ${username}`,
+      500
+    )
+  },
   getById: async userId => {
     return apiRequestsWrapper(
       async () => {
