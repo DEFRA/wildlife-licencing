@@ -58,7 +58,6 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
       }
     })
 
@@ -201,7 +200,6 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
 

@@ -4,32 +4,47 @@
 {% set title = 'Sign in' %}
 
 {% set errorMap = {
-        'user-id': {
-            'string.empty': { ref: '#user-id', text: 'Enter your email address' },
-            'string.email': { ref: '#user-id', text: 'You did not enter a valid email address' },
-            'unauthorized': { ref: '#user-id', text: 'Your email address has not been found' }
+        'username': {
+            'string.empty': { ref: '#username', text: 'Enter your email address' },
+            'string.email': { ref: '#username', text: 'You did not enter a valid email address' }
+        },
+        'password': {
+            'string.empty': { ref: '#password', text: 'Enter your password' },
+            'unauthorized': { ref: '#password', text: 'Your email address and password has not been found' },
+            'string.min': { ref: '#password', text: 'Your password is at least 8 characters' }
         }
     }
 %}
 
 {% block pageContent %}
+{{error|dump}}
     {{ govukInput({
       label: {
         text: 'Email address'
       },
-      hint: {
-        text: "The email address that you used to register with the service, for instance nigel.molesworth@email.co.uk"
-      },
-      id: "user-id",
-      name: "user-id",
+      id: "username",
+      name: "username",
       type: "email",
       autocomplete: "email",
       spellcheck: false,
-      value: payload['user-id'],
+      value: payload['username'],
       classes: "govuk-input--width-20",
       attributes: { maxlength: 50 },
-      errorMessage: { text: 'Enter your email address' } if error['user-id']
+      errorMessage: { text: 'Enter your email address' } if error['username']
     }) }}
 
-    <a href="{{_uri.register}}" class="govuk-link govuk-body-m">Register</a>
+    {{ govukInput({
+      label: {
+        text: 'Password'
+      },
+      id: "password",
+      name: "password",
+      type: "password",
+      autocomplete: "current-password",
+      spellcheck: false,
+      value: payload['password'],
+      classes: "govuk-input--width-20",
+      attributes: { maxlength: 16 },
+      errorMessage: { text: 'Enter your password' } if error['password']
+    }) }}
 {% endblock %}

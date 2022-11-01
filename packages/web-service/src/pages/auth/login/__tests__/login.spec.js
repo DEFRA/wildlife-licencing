@@ -9,7 +9,7 @@ describe('login page', () => {
       const { setData } = await import('../login.js')
       await setData({
         cache: () => ({ setAuthData: mockSetAuthData, setData: jest.fn(), getData: jest.fn() }),
-        payload: { 'user-id': 'a.b@email.com' }
+        payload: { username: 'a.b@email.com' }
       })
       expect(mockSetAuthData).toHaveBeenCalledWith({ username: 'flintstone' })
     })
@@ -18,26 +18,26 @@ describe('login page', () => {
   describe('the validator', () => {
     it('throws an exception on an empty username', async () => {
       const { validator } = await import('../login.js')
-      await expect(() => validator({ 'user-id': '' })).rejects.toThrowError()
+      await expect(() => validator({ username: '', password: '11Aaaaaa!' })).rejects.toThrowError()
     })
 
     it('throws an exception on an invalid email address', async () => {
       const { validator } = await import('../login.js')
-      await expect(() => validator({ 'user-id': 'a.b@notvalid' })).rejects.toThrowError()
+      await expect(() => validator({ username: 'a.b@notvalid', password: '11Aaaaaa!' })).rejects.toThrowError()
     })
 
-    it('throws an exception on an not-found email address', async () => {
-      const mockFindUser = jest.fn(() => null)
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
+    it('throws an exception on a not-found email address/password', async () => {
+      const mockAuthenticate = jest.fn().mockReturnValue(false)
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { authenticate: mockAuthenticate } } }))
       const { validator } = await import('../login.js')
-      await expect(validator({ 'user-id': 'a.b@email.com' })).rejects.toThrowError()
+      await expect(validator({ username: 'a.b@email.com', password: '11Aaaaaa!' })).rejects.toThrowError()
     })
 
     it('completes successfully on an found email address', async () => {
-      const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
+      const mockAuthenticate = jest.fn().mockReturnValue(true)
+      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { authenticate: mockAuthenticate } } }))
       const { validator } = await import('../login.js')
-      await expect(validator({ 'user-id': 'a.b@email.com' })).resolves
+      await expect(validator({ username: 'a.b@email.com', password: '11Aaaaaa!' })).resolves
     })
   })
 
