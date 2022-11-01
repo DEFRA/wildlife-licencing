@@ -27,7 +27,7 @@ export const validator = async payload => {
 
   Joi.assert(payload, Joi.object({
     username: Joi.string().email().required().lowercase(),
-    password: Joi.string().required()
+    password: Joi.string().required().min(8)
   }).options({ abortEarly: false, allowUnknown: true }))
 
   if (!await APIRequests.USER.authenticate(username, password)) {
