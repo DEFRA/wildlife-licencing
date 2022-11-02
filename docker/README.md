@@ -67,7 +67,7 @@ The change-log files (packages/database-model/liquibase/changelog/*.xml) are cop
 The liquibase container is intended to be run from the Jenkins pipelines 
 
 For development purposes it can then be run on the command line as follows
-```docker run wildlife-licencing/liquibase update --url="jdbc:postgresql://host.docker.internal:5432/wls" --changeLogFile="./db.changelog-root.xml" --username=wlsuser --password=wildl1fe```
+```docker run wildlife-licencing/liquibase update --url="jdbc:postgresql://host.docker.internal:5432/wls" --changeLogFile="./db.changelog-root.xml" --username=wlsuser --password=:pw```
 
 To invoke liquibase within the running container log on to the running container and issue the update command:
 ```shell
