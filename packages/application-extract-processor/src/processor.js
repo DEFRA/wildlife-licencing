@@ -19,6 +19,7 @@ import { writeApplicationContactObject } from './write-application-contact-objec
 import { writeHabitatSiteObject } from './write-habitat-site-object.js'
 import { writeLicenceObject } from './write-licence-object.js'
 import { writePreviousLicenceObject } from './write-previous-licence-object.js'
+import fs from 'fs'
 
 const extracts = async () => {
   await databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites')
@@ -42,6 +43,9 @@ const proc = async () => {
 // Warning -- may print sensitive info. Ensure disabled in production
 const debug = db('application-extract-processor:env')
 debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
+
+const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
+console.log(`Starting ${json.name}:${json.version}`)
 
 proc()
   .then(() => {
