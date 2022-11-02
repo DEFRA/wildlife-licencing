@@ -57,15 +57,21 @@ docker build -t wildlife-licencing/web:latest --file ./packages/web-service/Dock
 
 The production images can be used in the local swarm by running the deployment as above.
 
-3. Liquibase
+### Liquibase
 
-The liquibase container can be used to create database migrations
+The liquibase container can be used to create database migrations, which is necessary in the live environment where tables cannot be dropped.  
 
-The change files are copied into the container
-docker build -t wildlife-licencing/liquibase:latest --file ./docker/liquibase/Dockerfile.prod .
+The change-log files (packages/database-model/liquibase/changelog/*.xml) are copied into the container when it is built
+```docker build -t wildlife-licencing/liquibase:latest --file ./docker/liquibase/Dockerfile.prod .```
 
-It can then be run on the command line locally as follows
+The liquibase container is intended to be run from the Jenkins pipelines 
+
+For development purposes it can then be run on the command line as follows
 ```docker run wildlife-licencing/liquibase update --url="jdbc:postgresql://host.docker.internal:5432/wls" --changeLogFile="./db.changelog-root.xml" --username=wlsuser --password=wildl1fe```
 
-To run within the container in order to problem-solve log on to the running container and issue:
-```liquibase update --changelog-file ./changelog/db.changelog-root.xml --url="jdbc:postgresql://host.docker.internal:5432/wls" --username=wlsuser --password=wildl1fe```
+To invoke liquibase within the running container log on to the running container and issue the update command:
+```shell
+docker run wildlife-licencing/liquibase tail -f /dev/null
+docker exec -t $(docker ps | grep wildlife-licencing/liquibase | awk  '{print $1}') /bin/bash
+liquibase update --changelog-file ./changelog/db.changelog-root.xml --url="jdbc:postgresql://host.docker.internal:5432/wls" --username=wlsuser --password=:pw
+```
