@@ -203,13 +203,14 @@ describe('The habitat work end page', () => {
       }
     })
 
-    it('you cant pass a past date', async () => {
+    it('you cant pass a date in the past', async () => {
       try {
-        const payload = { 'habitat-work-end-day': new Date().getDate() - 1, 'habitat-work-end-month': new Date().getMonth(), 'habitat-work-end-year': new Date().getFullYear() }
+        const payload = { 'habitat-work-end-day': 11, 'habitat-work-end-month': 11, 'habitat-work-end-year': new Date().getFullYear() - 1 }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
       }
     })
 
