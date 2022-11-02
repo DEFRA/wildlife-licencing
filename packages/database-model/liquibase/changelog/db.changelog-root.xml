@@ -20,9 +20,9 @@
         </insert>
     </changeSet>
 
-    <changeSet  id="1"  author="sdds">
+    <changeSet  id="2"  author="sdds">
         <insert  tableName="version_log">
-            <column  name="version"  value="7.0.4-alpha.0"/>
+            <column  name="version"  value="7.0.5-alpha.0"/>
             <column  name="created_at" valueComputed="now()"/>
         </insert>
     </changeSet>
