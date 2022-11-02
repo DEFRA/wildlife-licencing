@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-database-model",
-  "version": "7.0.0-alpha.0",
+  "version": "7.0.2-alpha.0",
   "description": "Common sequelize database model for the wildlife service",
   "main": "src/sequelize-model.js",
   "type": "module",
