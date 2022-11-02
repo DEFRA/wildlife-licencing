@@ -1,4 +1,6 @@
 ####################################################################################################################################
-# Hello Image -- Proof of concept
+# Liquibase Image -- Proof of concept
 ####################################################################################################################################
-FROM hello-world:latest
+FROM liquibase/liquibase
+WORKDIR /liquibase/changelog
+COPY packages/database-model/liquibase/changelog/* .
