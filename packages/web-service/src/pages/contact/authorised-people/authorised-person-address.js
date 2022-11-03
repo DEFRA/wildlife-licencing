@@ -20,7 +20,7 @@ export const setData = async request => {
 }
 
 // Ensure there is an address
-const checkData = async (request, h) => {
+export const checkData = async (request, h) => {
   const ck = await checkAuthorisedPeopleData(request, h)
   if (ck) {
     return ck
@@ -29,6 +29,7 @@ const checkData = async (request, h) => {
   if (!journeyData.addressLookup) {
     return h.redirect(POSTCODE.uri)
   }
+  return null
 }
 
 export const authorisedPersonAddress = addressPage({
