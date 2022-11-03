@@ -19,10 +19,22 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
+// Ensure there is an address
+const checkData = async (request, h) => {
+  const ck = await checkAuthorisedPeopleData(request, h)
+  if (ck) {
+    return ck
+  }
+  const journeyData = await request.cache().getData()
+  if (!journeyData.addressLookup) {
+    return h.redirect(POSTCODE.uri)
+  }
+}
+
 export const authorisedPersonAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: checkAuthorisedPeopleData,
+  checkData: checkData,
   getData: getAuthorisedPeopleData(async (c, r) => {
     const journeyData = await r.cache().getData()
     return {

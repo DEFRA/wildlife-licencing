@@ -1,5 +1,5 @@
 import { checkHasApplication } from '../common/common.js'
-import { contactURIs, TASKLIST } from '../../../uris.js'
+import { contactURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
 const { NAME, EMAIL, POSTCODE, ADD } = contactURIs.AUTHORISED_PEOPLE
@@ -9,13 +9,27 @@ export const checkAuthorisedPeopleData = async (request, h) => {
   if (ck) {
     return ck
   }
-
   const journeyData = await request.cache().getData()
-  const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
-    .getByApplicationId(journeyData.applicationId)
+  const params = new URLSearchParams(request.query)
+  const id = params.get('id')
+  if (id) {
+    const contact = await APIRequests.CONTACT.getById(id)
+    if (!contact) {
+      return h.redirect(ADD.uri)
+    }
+  } else if (journeyData?.authorisedPeople?.contactId) {
+    const contact = await APIRequests.CONTACT.getById(journeyData.authorisedPeople.contactId)
+    if (!contact) {
+      return h.redirect(ADD.uri)
+    }
+  } else {
+    // Journey contact is not set
+    const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
+      .getByApplicationId(journeyData.applicationId)
 
-  if (contacts.length && !journeyData?.authorisedPeople?.contactId) {
-    return h.redirect(TASKLIST.uri)
+    if (contacts.length) {
+      return h.redirect(ADD.uri)
+    }
   }
 
   return null
