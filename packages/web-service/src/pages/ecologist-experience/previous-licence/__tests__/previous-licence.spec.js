@@ -207,7 +207,8 @@ describe('The previous licence page', () => {
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
-            getExperienceById: jest.fn(() => ({ licenceDetails: [] }))
+            removePreviousLicences: jest.fn(),
+            getExperienceById: jest.fn(() => ({ previousLicence: true }))
           }
         }
       }))

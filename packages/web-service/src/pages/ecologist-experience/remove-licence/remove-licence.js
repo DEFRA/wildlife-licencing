@@ -20,6 +20,13 @@ export const setData = async request => {
   const { licence } = ecologistExperienceTemp
   if (request.payload['remove-licence'] === 'yes') {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicence(applicationId, licence)
+    const licences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
+    // If no more licences set previous licence to false
+    if (!licences.length) {
+      const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+      ecologistExperience.previousLicence = false
+      await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
+    }
   }
   delete journeyData.ecologistExperienceTemp
   await request.cache().setData(journeyData)
