@@ -1,12 +1,41 @@
-{% extends "check-answers.njk" %}
+{% extends "information-page.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Check your answers' %}
+{% from "answer-summary.njk" import answerSummary %}
 
-{% set questionMap = {
-    contactIsUser: { question: 'Are you responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
-    whoIsTheLicenceFor: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceNames },
-    contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation if data.hasAccount else _uri.invoiceOrganisations },
-    contactOrganisations: { question: 'Name of organisation', href: _uri.invoiceOrganisations },
-    email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.invoiceEmail },
-    address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.invoicePostcode }
-} %}
+{% block pageContent %}
+    {% if data.responsibility.responsible === 'applicant' %}
+        {% set questionMap = {
+                whoIsResponsible: { question: 'Who responsible for paying the invoice?', value: data.responsibility.name + ', the applicant', href: _uri.invoiceResponsible },
+                contactOrganisations: { question: 'Name of organisation' },
+                email: { question: 'Organisation email' if data.responsibility.account else 'Contact email' },
+                address: { question: 'Organisation address' if data.responsibility.account else 'Contact address' }
+            } %}
+    {% elseif data.responsibility.responsible === 'ecologist' %}
+        {% set questionMap = {
+                whoIsResponsible: { question: 'Who responsible for paying the invoice?', value: data.responsibility.name + ', the ecologist', href: _uri.invoiceResponsible },
+                contactOrganisations: { question: 'Name of organisation' },
+                email: { question: 'Organisation email' if data.responsibility.account else 'Contact email' },
+                address: { question: 'Organisation address' if data.responsibility.account else 'Contact address' }
+         } %}
+    {% else %}
+        {% set questionMap = {
+            contactIsUser: { question: 'Is the signed-in user responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
+            whoIsResponsible: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceNames },
+            contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation if data.hasAccount else _uri.invoiceOrganisations },
+            contactOrganisations: { question: 'Name of organisation', href: _uri.invoiceOrganisations },
+            email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.invoiceEmail },
+            address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.invoicePostcode }
+        } %}
+    {% endif %}
 
-{% set checkData = data.checkYourAnswers %}
+    {{ answerSummary(questionMap, data.checkYourAnswers) }}
+    {{ govukButton({
+        attributes: { id: 'continue' },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Confirm',
+        classes: "govuk-!-margin-top-5"
+    }) }}
+{% endblock %}
