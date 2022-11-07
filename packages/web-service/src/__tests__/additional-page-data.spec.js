@@ -43,6 +43,7 @@ describe('additional page data', () => {
         ecologistPostcode: '/ecologist-postcode',
         ecologistUser: '/ecologist-user',
         experienceDetails: '/enter-experience',
+        invoiceResponsible: '/invoice-responsible',
         invoiceAddress: '/invoice-address',
         invoiceEmail: '/invoice-email',
         invoiceIsOrganisation: '/invoice-organisation',
