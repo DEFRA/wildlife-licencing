@@ -1,4 +1,5 @@
 import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT, siteURIs } from './uris.js'
+import crypto from 'crypto'
 
 export const additionalPageData = (request, h) => {
   const response = request.response
@@ -51,6 +52,19 @@ export const additionalPageData = (request, h) => {
       },
       credentials: request.auth.credentials
     })
+
+    // Generate the nonce
+    const nonce = crypto.randomBytes(16).toString('base64')
+
+    // Add the nonce to the template data
+    Object.assign(response.source.context, { cspNonce: nonce })
+    // Add additional headers
+    const defaultSrc = '\'self\''
+    const scriptSrc = `'self' unsafe-inline 'nonce-${nonce}'`
+    const fontSrc = '\'self\' fonts.gstatic.com'
+    const imageSrc = '\'self\''
+    request.response.header('Content-Security-Policy', `default-src ${defaultSrc}; font-src ${fontSrc}; script-src ${scriptSrc}; img-src ${imageSrc}`)
   }
+
   return h.continue
 }

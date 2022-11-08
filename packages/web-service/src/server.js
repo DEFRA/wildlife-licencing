@@ -1,8 +1,6 @@
 import fs from 'fs'
 import 'dotenv/config'
 import Hapi from '@hapi/hapi'
-import HapiInert from '@hapi/inert'
-import HapiVision from '@hapi/vision'
 import find from 'find'
 import Nunjucks from 'nunjucks'
 import path from 'path'
@@ -15,6 +13,7 @@ import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
 import { additionalPageData } from './additional-page-data.js'
 import db from 'debug'
+import { plugins } from './plugins.js'
 const debug = db('web-service:server')
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
@@ -42,9 +41,8 @@ export const addDefaultHeaders = (request, h) => {
   if (!request.response.isBoom) {
     if (!isStaticResource(request)) {
       request.response.header('X-Frame-Options', 'DENY')
-      request.response.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+      request.response.header('Cache-Control', 'no-store')
       request.response.header('X-XSS-Protection', '1; mode=block')
-      request.response.header('Expires', '0')
     }
     request.response.header('X-Content-Type-Options', 'nosniff')
     request.response.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
@@ -73,8 +71,8 @@ const sessionCookieOptions = {
 const init = async server => {
   const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, path.join(__dirname, './src/pages')).map(f => path.dirname(f)))]
 
-  await server.register(HapiVision)
-  await server.register(HapiInert)
+  await server.register(plugins)
+
   await server.views({
     engines: {
       njk: {

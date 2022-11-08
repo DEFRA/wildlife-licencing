@@ -1,6 +1,9 @@
+import { any } from 'joi'
+
 describe('additional page data', () => {
   beforeEach(() => jest.resetModules())
   it('return response-toolkit continue', async () => {
+    const mockHeaders = jest.fn()
     const request = {
       method: 'get',
       auth: {
@@ -10,7 +13,8 @@ describe('additional page data', () => {
         variety: 'view',
         source: {
           context: {}
-        }
+        },
+        header: mockHeaders
       }
     }
 
@@ -20,6 +24,7 @@ describe('additional page data', () => {
     const { additionalPageData } = await import('../additional-page-data.js')
     const result = await additionalPageData(request, h)
     expect(result).toEqual('continue')
+    expect(mockHeaders).toHaveBeenCalledWith('Content-Security-Policy', expect.stringContaining('script-src \'self\''))
     expect(request.response.source.context).toEqual({
       _uri: {
         applicantAddress: '/applicant-address',
@@ -66,7 +71,8 @@ describe('additional page data', () => {
         siteName: '/site-name',
         signOut: '/sign-out'
       },
-      credentials: 'credentials'
+      credentials: 'credentials',
+      cspNonce: expect.any(String)
     })
   })
 })
