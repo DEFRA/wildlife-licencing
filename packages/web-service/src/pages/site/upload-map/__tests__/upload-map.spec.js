@@ -8,6 +8,9 @@ describe('the map of your activity at the development site page handler', () => 
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate
@@ -49,6 +52,9 @@ describe('the map of your activity at the development site page handler', () => 
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate
@@ -88,6 +94,9 @@ describe('the map of your activity at the development site page handler', () => 
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate

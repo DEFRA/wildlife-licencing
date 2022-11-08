@@ -3,15 +3,16 @@ import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './user-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
+import { toHash } from './password.js'
 const { cache } = REDIS
 
 /*
- * Create the new user object and return 201
+ * Create the new user object and return 201.
  */
 export default async (context, req, h) => {
   try {
-    // Trim and remove multiple spaces
-    const username = req.payload.username.trim().replace(/\s{2,}/g, ' ')
+    // Trim and remove any spaces, and ensure lower-case storage
+    const username = req.payload.username.toLowerCase()
 
     // Ensure the username is not taken
     const users = await models.users.findAll({
@@ -26,7 +27,8 @@ export default async (context, req, h) => {
 
     const user = await models.users.create({
       id: uuidv4(),
-      username
+      username,
+      ...(req.payload.password && { password: await toHash(req.payload.password) })
     })
 
     const response = prepareResponse(user.dataValues)

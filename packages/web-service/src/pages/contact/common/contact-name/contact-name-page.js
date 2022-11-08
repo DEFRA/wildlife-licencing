@@ -3,7 +3,7 @@ import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
 import { ContactRoles } from '../contact-roles.js'
-const nameReg = /^[\s\p{L}.,-]{1,160}$/u
+const nameReg = /^[\s\p{L}'.,-]{1,160}$/u
 
 // The rules for allowing duplicate contacts depend on the contact type
 const duplicateNames = async (contactRole, userId, applicationId) => {
@@ -11,9 +11,8 @@ const duplicateNames = async (contactRole, userId, applicationId) => {
     const contacts = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     return contacts.map(c => c.fullName).filter(c => c)
   } else {
-    const currentContact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId)
-    return contacts.map(c => c.fullName).filter(c => c && currentContact?.fullName !== c)
+    return contacts.map(c => c.fullName).filter(c => c)
   }
 }
 

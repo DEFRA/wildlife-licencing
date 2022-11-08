@@ -32,7 +32,6 @@ export const getCheckAnswersData = (contactRole, accountRole) => async request =
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   // The check-answers macro requires an array of k, v pair objects
-  await APIRequests.APPLICATION.tags(applicationId).add(CONTACT_COMPLETE[contactRole])
   return {
     hasAccount: !!account,
     checkYourAnswers: [

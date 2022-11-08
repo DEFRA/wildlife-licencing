@@ -3,10 +3,13 @@ describe('the check-answers page', () => {
 
   it('getCheckAnswersData fetch data with account', async () => {
     jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => ({
-            add: jest.fn()
+            set: jest.fn()
           })
         },
         CONTACT: {
@@ -69,10 +72,13 @@ describe('the check-answers page', () => {
 
   it('getCheckAnswersData fetch data without account', async () => {
     jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => ({
-            add: jest.fn()
+            set: jest.fn()
           })
         },
         CONTACT: {

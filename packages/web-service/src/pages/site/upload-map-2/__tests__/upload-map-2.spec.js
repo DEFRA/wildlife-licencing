@@ -8,6 +8,9 @@ describe('the map of the site showing the mitigations during development page ha
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate
@@ -50,6 +53,9 @@ describe('the map of the site showing the mitigations during development page ha
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate
@@ -89,6 +95,9 @@ describe('the map of the site showing the mitigations during development page ha
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate

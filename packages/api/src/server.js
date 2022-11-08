@@ -7,7 +7,9 @@ import {
   getUserByUserId,
   getUsers,
   deleteUser,
-  postUser
+  postUser,
+  putUser,
+  authenticateUser
 } from './handlers/user/user.js'
 
 import {
@@ -137,7 +139,9 @@ const handlers = {
   getUserByUserId,
   getUsers,
   postUser,
+  putUser,
   deleteUser,
+  authenticateUser,
 
   // Contact handlers
   getContacts,

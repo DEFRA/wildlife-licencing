@@ -20,6 +20,9 @@ describe('The site national grid reference page', () => {
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           update: mockUpdate
@@ -62,6 +65,9 @@ describe('The site national grid reference page', () => {
 
   it('should redirect user to site address and grid reference mismatch, when the site tag is in progress', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -88,6 +94,10 @@ describe('The site national grid reference page', () => {
 
   it('should redirect user to check your answers page, when the tag is complete', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED',
+        COMPLETED: 'COMPLETED'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => {

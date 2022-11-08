@@ -3,8 +3,29 @@ describe('The habitat start page', () => {
 
   describe('habitat start page', () => {
     it('the habitat start page forwards onto habitat-name page', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => jest.fn()
+          }
+        }
+      }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          IN_PROGRESS: 'in-progress'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { set: jest.fn() }
+            }
+          }
+        }
+      }))
+      jest.doMock()
       const { completion } = await import('../habitat-start.js')
-      expect(await completion()).toBe('/habitat-name')
+      expect(await completion(request)).toBe('/habitat-name')
     })
 
     it('the checkData returns undefined if the journey isnt complete', async () => {
@@ -14,10 +35,13 @@ describe('The habitat start page', () => {
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress', set: jest.fn() }
             }
           },
           HABITAT: {
@@ -50,10 +74,13 @@ describe('The habitat start page', () => {
         redirect: mockRedirect
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete', set: jest.fn() }
             }
           },
           HABITAT: {

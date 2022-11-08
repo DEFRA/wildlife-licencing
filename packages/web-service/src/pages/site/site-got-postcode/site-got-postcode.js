@@ -13,7 +13,8 @@ export const getData = async request => {
 // To do: when the user selects the site does not have a post code should be directed to the upload file
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const sitePostcode = request.payload['site-postcode']
+  const pageData = await request.cache().getPageData()
+  const sitePostcode = pageData.payload['site-postcode']
 
   // address lookup for the postcode from the request
   await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)

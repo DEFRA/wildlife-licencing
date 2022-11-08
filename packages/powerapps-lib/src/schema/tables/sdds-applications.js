@@ -13,10 +13,10 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // The Eligibility section
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
-  new Column('sdds_receivedonwerpermission', 'eligibility.hasLandOwnerPermission'),
+  new Column('sdds_ownerpermissionreceived', 'eligibility.hasLandOwnerPermission',
+    s => s ? 100000000 : 100000001, t => t === 100000000),
   new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
   new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
-  new Column(null, 'eligibility.checkCompleted', null, () => true, OperationType.INBOUND),
 
   // The ecologist experience section
   new Column('sdds_badgermitigationclasslicence', 'ecologistExperience.classMitigation'),
@@ -60,6 +60,16 @@ export const SddsApplication = new Table('sdds_applications', [
   // Ecologist organization
   new Relationship('sdds_application_ecologistorganisationid_', 'accounts',
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  // Payer
+  new Relationship('sdds_application_billingcustomerid_contac', 'contacts',
+    RelationshipType.MANY_TO_ONE, 'sdds_billingcustomerid', 'payer',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  // Payer organization
+  new Relationship('sdds_application_billingorganisationid_ac', 'accounts',
+    RelationshipType.MANY_TO_ONE, 'sdds_billingorganisationid', 'payerOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
   // Authorised People

@@ -3,6 +3,7 @@ import { DEFAULT_ROLE } from '../../../../constants.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
 import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
+import { isComplete } from '../../../common/tag-is-complete.js'
 
 export const checkContactNamesData = () => async (request, h) => {
   const journeyData = await request.cache().getData()
@@ -34,7 +35,8 @@ const contactNamesCompletionExisting = async (applicationId, contactRole, accoun
   // Already completed without an account, then gather data against the contact.
   // If already complete with an account go to the check page
   // if no contact or address then set data will have produced a new immutable contact
-  if (await APIRequests.APPLICATION.tags(applicationId).has(CONTACT_COMPLETE[contactRole])) {
+  const contactTag = await APIRequests.APPLICATION.tags(applicationId).get(CONTACT_COMPLETE[contactRole])
+  if (isComplete(contactTag)) {
     const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
     if (!account) {
       const contact = await APIRequests.CONTACT.getById(contactId)

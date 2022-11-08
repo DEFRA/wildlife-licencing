@@ -21,6 +21,9 @@ describe('the invoice-responsible page', () => {
 
     it('returns to the tasklist page if there is no applicant set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -47,6 +50,9 @@ describe('the invoice-responsible page', () => {
 
     it('returns to the tasklist page if there is no ecologist set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: jest.fn()
@@ -73,6 +79,9 @@ describe('the invoice-responsible page', () => {
 
     it('returns null if there is an applicant and an ecologist set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: jest.fn()
@@ -101,7 +110,17 @@ describe('the invoice-responsible page', () => {
   describe('getData', () => {
     it('returns correctly with no payer set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           CONTACT: {
             role: jest.fn()
               .mockReturnValueOnce({ getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Joe Bloggs' }) })
@@ -130,7 +149,17 @@ describe('the invoice-responsible page', () => {
 
     it('returns correctly with payer set to applicant', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           CONTACT: {
             role: jest.fn()
               .mockReturnValueOnce({ getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Joe Bloggs' }) })
@@ -159,7 +188,17 @@ describe('the invoice-responsible page', () => {
 
     it('returns correctly with payer set to ecologist', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           CONTACT: {
             role: jest.fn()
               .mockReturnValueOnce({ getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Joe Bloggs' }) })
@@ -188,7 +227,17 @@ describe('the invoice-responsible page', () => {
 
     it('returns correctly with payer set to other', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           CONTACT: {
             role: jest.fn()
               .mockReturnValueOnce({ getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Joe Bloggs' }) })
@@ -234,6 +283,9 @@ describe('the invoice-responsible page', () => {
         })
 
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: mockContactRole
@@ -283,6 +335,9 @@ describe('the invoice-responsible page', () => {
         })
 
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: mockContactRole
@@ -332,6 +387,9 @@ describe('the invoice-responsible page', () => {
         })
 
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: mockContactRole
@@ -364,12 +422,27 @@ describe('the invoice-responsible page', () => {
   })
 
   describe('completion', () => {
-    it('go to the user page if other is chosen', async () => {
+    it('go to the user page if other is chosen and neither the applicant or the ecologist is the user', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValueOnce({}).mockReturnValueOnce({})
+            })
+          }
+        }
+      }))
       const request = {
         cache: () => ({
           getPageData: () => ({
             payload: { responsible: 'other' }
-          })
+          }),
+          getData: jest.fn(() => ({
+            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
+          }))
         })
       }
 
@@ -378,9 +451,88 @@ describe('the invoice-responsible page', () => {
       expect(result).toEqual('/invoice-user')
     })
 
-    it('go to the tasklist page if other is not chosen', async () => {
+    it('go to the names page if other is chosen and the applicant is the user', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn()
+                .mockReturnValueOnce({ userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })
+                .mockReturnValueOnce({})
+            })
+          }
+        }
+      }))
       const request = {
         cache: () => ({
+          getPageData: () => ({
+            payload: { responsible: 'other' }
+          }),
+          getData: jest.fn(() => ({
+            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
+          }))
+        })
+      }
+
+      const { completion } = await import('../invoice-responsible.js')
+      const result = await completion(request)
+      expect(result).toEqual('/invoice-names')
+    })
+
+    it('go to the names page if other is chosen and the ecologist is the user', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          CONTACT: {
+            role: jest.fn().mockReturnValueOnce({
+              getByApplicationId: () => ({})
+            }).mockReturnValueOnce({
+              getByApplicationId: () => ({ userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getPageData: () => ({
+            payload: { responsible: 'other' }
+          }),
+          getData: jest.fn(() => ({
+            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
+          }))
+        })
+      }
+
+      const { completion } = await import('../invoice-responsible.js')
+      const result = await completion(request)
+      expect(result).toEqual('/invoice-names')
+    })
+
+    it('go to the tasklist page if other is not chosen', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return { applicationId: 'ab28sks' }
+          },
           getPageData: () => ({
             payload: { responsible: 'applicant' }
           })
@@ -389,7 +541,7 @@ describe('the invoice-responsible page', () => {
 
       const { completion } = await import('../invoice-responsible.js')
       const result = await completion(request)
-      expect(result).toEqual('/tasklist')
+      expect(result).toEqual('/invoice-check-answers')
     })
   })
 })

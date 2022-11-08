@@ -59,12 +59,49 @@ describe('The remove licence page', () => {
       expect(mockPut).toHaveBeenCalledTimes(0)
     })
 
-    it('does deletes a licence if the user selects \'yes\'', async () => {
+    it('does deletes a licence if the user selects \'yes\' - for the last licence', async () => {
+      const mockRemove = jest.fn()
+      const mockPut = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            removePreviousLicence: mockRemove,
+            getPreviousLicences: () => [],
+            getExperienceById: () => ({}),
+            putExperienceById: mockPut
+          }
+        }
+      }))
+      const mockSet = jest.fn()
+      const request = {
+        payload: {
+          'remove-licence': 'yes'
+        },
+        query: {
+          licence: 'AZ1234'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            ecologistExperienceTemp: { licence: 'AZ1234' }
+          }),
+          setData: mockSet
+        })
+      }
+      const { setData } = await import('../remove-licence.js')
+      await setData(request)
+      expect(mockSet).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
+      expect(mockRemove).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AZ1234')
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { previousLicence: false })
+    })
+
+    it('does deletes a licence if the user selects \'yes\' - licences remaining', async () => {
       const mockRemove = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            removePreviousLicence: mockRemove
+            removePreviousLicence: mockRemove,
+            getPreviousLicences: () => [{ id: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }]
           }
         }
       }))

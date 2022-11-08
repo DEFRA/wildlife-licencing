@@ -10,6 +10,6 @@ export const emailAddressPage = ({ page, uri, checkData, getData, completion, se
     completion,
     setData,
     validator: Joi.object({
-      'email-address': Joi.string().email().required()
+      'email-address': Joi.string().email().required().lowercase()
     }).options({ abortEarly: false, allowUnknown: true })
   })

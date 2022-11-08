@@ -14,17 +14,15 @@ describe('site-got-postcode page handler', () => {
     expect(await getData(request)).toStrictEqual({ sitePostcode: 'B15 7GF' })
   })
 
-  it.skip('setData', async () => {
+  it('setData', async () => {
     const mockSetData = jest.fn()
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
+        getPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
         clearPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
         setData: mockSetData
-      }),
-      payload: {
-        'site-postcode': 'SW1W 0NY'
-      }
+      })
     }
     const { setData } = await import('../site-got-postcode.js')
     const mockLookup = jest.fn(() => ({ results: [{ Address: { town: 'Bristol' } }] }))

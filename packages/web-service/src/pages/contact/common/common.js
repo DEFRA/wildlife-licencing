@@ -43,6 +43,25 @@ export const checkHasContact = (contactRole, urlBase) => async (request, h) => {
 }
 
 /**
+ * In the address choose there must be a lookup result
+ * @param contactRole
+ * @param urlBase
+ * @returns {(function(*, *): Promise<*|null>)|*}
+ */
+export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
+  const ck = await checkHasContact(contactRole, urlBase)(request, h)
+  if (ck) {
+    return ck
+  }
+  const journeyData = await request.cache().getData()
+  if (!journeyData.addressLookup) {
+    return h.redirect(urlBase.POSTCODE.uri)
+  }
+
+  return null
+}
+
+/**
  * Used to produce lists of contact (names) to select from
  * (1) associated contacts are eliminated if allowAssociated false
  * (2) where there exists clones, if a mutable clone exists pick it otherwise pick the

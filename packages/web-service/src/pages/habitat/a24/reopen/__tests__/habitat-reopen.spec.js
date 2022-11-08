@@ -4,10 +4,13 @@ describe('The habitat reopen page', () => {
   describe('habitat reopen page', () => {
     it('the habitat reopen page forwards onto habitat-entrances page on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress' }
             }
           }
         })
@@ -23,10 +26,13 @@ describe('The habitat reopen page', () => {
 
     it('the habitat-reopen page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -43,10 +49,13 @@ describe('The habitat reopen page', () => {
     it('sets the reopen data correctly', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress' }
             }
           }
         }
@@ -76,10 +85,13 @@ describe('The habitat reopen page', () => {
     it('sets the reopen data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

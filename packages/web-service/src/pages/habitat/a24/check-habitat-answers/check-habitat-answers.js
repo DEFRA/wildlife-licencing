@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
-import { APIRequests } from '../../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
@@ -92,11 +92,11 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
 
   if (pageData.payload[addSett] === 'yes') {
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).remove(SECTION_TASKS.SETTS)
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return habitatURIs.NAME.uri
   } else if (pageData.payload[addSett] === 'no') {
     // Mark the journey as complete if the user clicks "No" to adding any final setts
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).add(SECTION_TASKS.SETTS)
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE })
     return TASKLIST.uri
   }
 

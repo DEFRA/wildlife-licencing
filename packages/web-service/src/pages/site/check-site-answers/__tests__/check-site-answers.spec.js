@@ -27,6 +27,9 @@ describe('The check site answers page', () => {
     }
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           getSiteById: () => {
@@ -84,6 +87,9 @@ describe('The check site answers page', () => {
 
   it('completion', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => {

@@ -2314,6 +2314,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+    put:
+      description: Update a user
+      summary: Update a user
+      operationId: putUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the applicant
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        400:
+          description: Bad request. User ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An user with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
     delete:
       description: Delete user
       summary:  Delete the user on the provided ID
@@ -2334,6 +2373,41 @@ paths:
           description: Not found
         409:
           description: Conflict
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user/{username}/{password}/authenticate':
+    get:
+      description: Test a user password
+      summary: Retrieve a user
+      operationId: authenticateUser
+      parameters:
+        - name: username
+          in: path
+          description: ID of the applicant
+          required: true
+          schema:
+            $ref: '#/components/schemas/email'
+        - name: password
+          in: path
+          description: password
+          required: true
+          schema:
+            $ref: '#/components/schemas/password'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
         500:
           description: Unexpected error on server
           content:
@@ -2476,7 +2550,7 @@ components:
         applicationTags:
           type: array
           items:
-            type: string
+            type: object
         applicationReferenceNumber:
           type: string
           minLength: 13
@@ -2847,13 +2921,13 @@ components:
     user:
       type: object
       additionalProperties: false
-      required:
-        - username
       properties:
         id:
           $ref: '#/components/schemas/uuid'
         username:
           $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -3016,8 +3090,21 @@ components:
 
     email:
       type: string
-      pattern: (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
       example: email@email.com
+
+    # At least 8 characters long
+    # Not more than 16 characters long
+    # At least one uppercase character
+    # At least one lowercase character
+    # At least one number
+    # At least one special character
+    # Example Aa1!HHHH
+    password:
+      type: string
+      pattern: (?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])
+      minLength: 8
+      maxLength: 16
+      example:  Aa1!HHHH
 
     phone:
       type: string

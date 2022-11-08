@@ -20,6 +20,7 @@ import {
   writeApplicationTypeActivities, writeApplicationTypeSpecies,
   writeApplicationApplicationPurpose, writeOptionSets
 } from './write-object.js'
+import fs from 'fs'
 
 const extracts = async () => {
   await databaseWriter(applicationTypesReadStream(), writeApplicationTypes, 'Application Types')
@@ -33,6 +34,9 @@ const extracts = async () => {
   await databaseWriter(applicationTypeApplicationPurposesReadStream(), writeApplicationApplicationPurpose, 'Application type Application Purposes')
   await databaseWriter(globalOptionSetReadStream(), writeOptionSets, 'Option sets')
 }
+
+const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
+console.log(`Starting ${json.name}:${json.version}`)
 
 SEQUELIZE.initialiseConnection()
   .then(() => createModels()

@@ -5,10 +5,15 @@ describe('The habitat active entrances page', () => {
   describe('habitat-active-entrances page', () => {
     it('the habitat-active-entrances page forwards onto habitat-grid-ref page if theres no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return {
+                get: () => 'in-progress'
+              }
             }
           }
         })
@@ -26,10 +31,13 @@ describe('The habitat active entrances page', () => {
     })
     it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }
@@ -47,10 +55,13 @@ describe('The habitat active entrances page', () => {
     it('sets the active entrance data correctly on primary journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => false }
+              return { get: () => 'in-progress' }
             }
           }
         }
@@ -81,10 +92,13 @@ describe('The habitat active entrances page', () => {
     it('sets the active entrance data correctly on return journey', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return { get: () => 'complete' }
             }
           }
         }

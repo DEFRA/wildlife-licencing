@@ -81,6 +81,9 @@ describe('The habitat activities page', () => {
       }
 
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: ({
           HABITAT: {
             create: mockCreate
@@ -88,8 +91,8 @@ describe('The habitat activities page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                has: () => false,
-                add: () => false
+                get: () => 'in-progress',
+                set: () => jest.fn()
               }
             }
           }
@@ -141,10 +144,15 @@ describe('The habitat activities page', () => {
       }))
 
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { has: () => true }
+              return {
+                get: () => 'complete'
+              }
             }
           }
         }

@@ -5,13 +5,14 @@ import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
+import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 
 const key = 'enter-experience'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const flagged = await APIRequests.APPLICATION.tags(journeyData.applicationId).has(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (flagged) {
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  if (isCompleteOrConfirmed(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
   return ecologistExperienceURIs.ENTER_METHODS.uri

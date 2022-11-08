@@ -3,12 +3,16 @@ describe('The check habitat answers page', () => {
 
   describe('check-habitat-answers page', () => {
     it('the check-habitat-answers page forwards onto the tasklist page if no additional setts required', async () => {
-      const addTagsMock = jest.fn()
+      const setTagsMock = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
-              return { has: () => false, add: addTagsMock }
+              return { get: () => 'in-progress', set: setTagsMock }
             }
           }
         })
@@ -28,15 +32,19 @@ describe('The check habitat answers page', () => {
       }
       const { completion } = await import('../check-habitat-answers.js')
       expect(await completion(request)).toBe('/tasklist')
-      expect(addTagsMock).toHaveBeenCalledTimes(1)
+      expect(setTagsMock).toHaveBeenCalledTimes(1)
     })
 
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return { remove: () => true }
+              return { set: () => jest.fn() }
             }
           }
         }
@@ -84,6 +92,9 @@ describe('The check habitat answers page', () => {
         }
       ])
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           HABITAT: {
             getHabitatsById: mockHabitats
@@ -142,7 +153,13 @@ describe('The check habitat answers page', () => {
         }
       ])
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          tagStatus: {
+            NOT_STARTED: 'not-started'
+          },
           HABITAT: {
             getHabitatsById: mockHabitats
           }
@@ -180,6 +197,11 @@ describe('The check habitat answers page', () => {
     })
 
     it('returns the payload from the validator', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const payload = { data: 'badgers', 'additional-sett': 'no' }
       const { validator } = await import('../check-habitat-answers.js')
       expect(await validator(payload)).toBeUndefined()
@@ -187,6 +209,11 @@ describe('The check habitat answers page', () => {
 
     it('if the user does not input a choice - it raises an error', async () => {
       try {
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          tagStatus: {
+            NOT_STARTED: 'not-started'
+          }
+        }))
         const payload = {}
         const { validator } = await import('../check-habitat-answers.js')
         expect(await validator(payload))
@@ -219,6 +246,16 @@ describe('The check habitat answers page', () => {
           })
         })
       }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: () => ['setts']
+          }
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       expect(await checkData(request)).toBe(undefined)
     })
@@ -248,12 +285,32 @@ describe('The check habitat answers page', () => {
           })
         })
       }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: jest.fn()
+          }
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       await checkData(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
     })
 
     it('should checks the journeyData object length and returns tasklist URL if it is empty', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: jest.fn()
+          }
+        }
+      }))
       const h = {
         redirect: jest.fn()
       }
@@ -275,6 +332,11 @@ describe('The check habitat answers page', () => {
           getData: () => ({})
         })
       }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       expect(await checkData(request)).toBe('/applications')
     })

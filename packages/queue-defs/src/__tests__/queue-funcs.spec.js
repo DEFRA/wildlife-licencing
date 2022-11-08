@@ -5,8 +5,13 @@ import Queue from 'bull'
 const mockOn = jest.fn()
 
 jest.mock('bull', () => jest.fn(() => {
-  return { on: mockOn }
+  return {
+    on: mockOn,
+    clients: []
+  }
 }))
+
+jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the queue functions', () => {
   it('can create and get a queue', async () => {

@@ -15,10 +15,14 @@ describe('The check ecologist answers page', () => {
     })
     it('redirects to the previous licence if the tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => false
+              get: () => 'in-progress'
             })
           }
         }
@@ -38,10 +42,14 @@ describe('The check ecologist answers page', () => {
 
     it('returns null if tag is et', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              has: () => true
+              get: () => 'complete'
             })
           }
         }
@@ -63,7 +71,17 @@ describe('The check ecologist answers page', () => {
   describe('get data function', () => {
     it('gets the experience data from the database', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => ['D333']),
             getExperienceById: jest.fn(() => ({
@@ -117,7 +135,18 @@ describe('The check ecologist answers page', () => {
     })
     it('gets the experience data from the database - no previous, no class', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getPreviousLicences: jest.fn(() => []),
             getExperienceById: jest.fn(() => ({
@@ -161,8 +190,31 @@ describe('The check ecologist answers page', () => {
 
   describe('completion function', () => {
     it('returns the tasklist uri', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
       const { completion } = await import('../check-ecologist-answers.js')
-      expect(await completion()).toBe('/tasklist')
+      expect(await completion(request)).toBe('/tasklist')
     })
   })
 })

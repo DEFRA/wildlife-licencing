@@ -18,6 +18,9 @@ describe('site-name page handler', () => {
     const mockSetData = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
@@ -47,6 +50,9 @@ describe('site-name page handler', () => {
 
   it('should redirect user to site postcode page, when the site tag is in progress', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -74,6 +80,9 @@ describe('site-name page handler', () => {
     const mockSetData = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         SITE: {
           create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
@@ -101,6 +110,9 @@ describe('site-name page handler', () => {
 
   it('should redirect user to check your answers page, when the tag is complete', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'NOT_STARTED'
+      },
       APIRequests: {
         APPLICATION: {
           tags: () => {

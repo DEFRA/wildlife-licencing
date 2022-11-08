@@ -10,7 +10,17 @@ describe('the user page', () => {
       })
     }
     jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
         USER: {
           getById: jest.fn(() => ({ username: 'Keith Moon' }))
         }
@@ -24,6 +34,9 @@ describe('the user page', () => {
   describe('setUserData', () => {
     it('if yes, invokes the common operations correctly if no user contact is found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ username: 'Keith Moon' }))
@@ -38,7 +51,7 @@ describe('the user page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }
@@ -71,6 +84,10 @@ describe('the user page', () => {
 
     it('if yes, invokes the common operations correctly if user contacts are found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
@@ -118,6 +135,9 @@ describe('the user page', () => {
 
     it('if no, invokes the common operations correctly', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
@@ -134,7 +154,7 @@ describe('the user page', () => {
           },
           APPLICATION: {
             tags: () => ({
-              remove: jest.fn()
+              set: jest.fn()
             })
           }
         }
@@ -168,6 +188,10 @@ describe('the user page', () => {
   describe('userCompletion', () => {
     it('if yes, returns the name page with a mutable contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -195,6 +219,10 @@ describe('the user page', () => {
     it('if yes, returns the organisations page with a immutable contact where organisations exist', async () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -228,6 +256,9 @@ describe('the user page', () => {
     it('if yes, returns the organisation page with a immutable contact where no organisations exist', async () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -260,6 +291,9 @@ describe('the user page', () => {
     it('if no, returns the name page where no candidate contacts exist', async () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -286,6 +320,9 @@ describe('the user page', () => {
     it('if no, returns the names page where candidate contacts exist', async () => {
       jest.dontMock('../../common.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             role: () => ({

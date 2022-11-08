@@ -13,6 +13,9 @@ describe('the check-supporting-information page handler', () => {
       const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: ({
           FILE_UPLOAD: {
             removeUploadedFile: mockRemoveUploadedFile,
@@ -58,12 +61,14 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
               return {
-                remove: () => false,
-                add: () => false
+                set: () => jest.fn()
               }
             }
           },
@@ -81,7 +86,7 @@ describe('the check-supporting-information page handler', () => {
     })
 
     it('should returns to the upload page if the user selected yes to upload another file and removes the tag', async () => {
-      const mockRemove = jest.fn()
+      const mockSet = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({
@@ -97,12 +102,15 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
               return {
-                remove: mockRemove,
-                add: () => false
+                set: mockSet
               }
             }
           }
@@ -110,12 +118,12 @@ describe('the check-supporting-information page handler', () => {
       }))
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(mockRemove).toHaveBeenCalledWith('supporting-information')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete-not-confirmed' })
       expect(result).toEqual('/upload-supporting-information')
     })
 
     it('should returns to the task list page and add completed tag', async () => {
-      const mockAdd = jest.fn()
+      const mockSet = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({
@@ -130,12 +138,14 @@ describe('the check-supporting-information page handler', () => {
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
         APIRequests: ({
           APPLICATION: {
             tags: () => {
               return {
-                remove: () => false,
-                add: mockAdd
+                set: mockSet
               }
             }
           },
@@ -154,7 +164,7 @@ describe('the check-supporting-information page handler', () => {
 
       const { completion } = await import('../check-supporting-information.js')
       const result = await completion(request)
-      expect(mockAdd).toHaveBeenCalledWith('supporting-information')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete' })
       expect(result).toEqual('/tasklist')
     })
 

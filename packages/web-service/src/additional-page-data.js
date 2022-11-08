@@ -12,6 +12,7 @@ export const additionalPageData = (request, h) => {
         landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
         consent: eligibilityURIs.CONSENT.uri,
         consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
+        invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
         applicantUser: contactURIs.APPLICANT.USER.uri,
         ecologistUser: contactURIs.ECOLOGIST.USER.uri,
         invoiceUser: contactURIs.INVOICE_PAYER.USER.uri,

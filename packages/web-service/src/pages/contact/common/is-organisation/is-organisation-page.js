@@ -8,10 +8,9 @@ const nameReg = /^[\s\p{L}\d.,'-]{1,160}$/u
 
 export const getValidator = accountRole => async (payload, context) => {
   const cd = cacheDirect(context)
-  const { userId, applicationId } = await cd.getData()
+  const { userId } = await cd.getData()
   const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
-  const currentAccount = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  const names = accounts.map(c => c.name).filter(a => a && currentAccount?.name !== a)
+  const names = accounts.map(c => c.name).filter(a => a)
 
   const schema = Joi.object({
     'is-organisation': Joi.any().valid('yes', 'no').required(),
