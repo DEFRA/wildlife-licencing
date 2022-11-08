@@ -61,6 +61,11 @@ import siteGotPostcode from '../pages/site/site-got-postcode/site-got-postcode.j
 import siteSelectAddress from '../pages/site/select-address/select-address.js'
 import siteAddressNoLookup from '../pages/site/site-address-no-lookup/site-address-no-lookup.js'
 import { siteMapUpload } from '../pages/site/upload-map/upload-map.js'
+import { siteMapUploadTwo } from '../pages/site/upload-map-2/upload-map-2.js'
+import { siteMapUploadThree } from '../pages/site/upload-map-3/upload-map-3.js'
+import siteGridRef from '../pages/site/site-grid-ref/site-grid-ref.js'
+import siteMisMatchCheck from '../pages/site/site-check/site-check.js'
+import checkSiteAnswers from '../pages/site/check-site-answers/check-site-answers.js'
 
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
@@ -148,6 +153,11 @@ const routes = [
   ...siteSelectAddress,
   ...siteAddressNoLookup,
   ...siteMapUpload,
+  ...siteMapUploadTwo,
+  ...siteMapUploadThree,
+  ...siteGridRef,
+  ...siteMisMatchCheck,
+  ...checkSiteAnswers,
   ...habitatStart,
   ...habitatName,
   ...habitatActiveEntrances,

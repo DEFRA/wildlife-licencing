@@ -21,6 +21,25 @@ describe('the upload-supporting-information page handler', () => {
     const result = await completion(request)
     expect(result).toEqual('/check-supporting-information')
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
-      { filetype: 'METHOD-STATEMENT', multiple: true })
+      {
+        filetype: 'METHOD-STATEMENT',
+        multiple: true,
+        supportedFileTypes: [
+          'JPG',
+          'PNG',
+          'TIF',
+          'BMP',
+          'GEOJSON',
+          'KML',
+          'SHAPE',
+          'DOC',
+          'DOCX',
+          'PDF',
+          'ODT',
+          'XLS',
+          'XLSX',
+          'ODS'
+        ]
+      })
   })
 })

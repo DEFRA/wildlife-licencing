@@ -58,6 +58,11 @@ describe('additional page data', () => {
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
         register: '/register',
+        siteGridReference: '/site-grid-ref',
+        siteMap: '/upload-map',
+        siteMapThree: '/upload-map-3',
+        siteMapTwo: '/upload-map-2',
+        siteName: '/site-name',
         signOut: '/sign-out'
       },
       credentials: 'credentials'

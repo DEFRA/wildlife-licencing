@@ -1,0 +1,34 @@
+import { APIRequests } from '../../../services/api-requests.js'
+import { s3FileUpload } from '../../../services/s3-upload.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { siteURIs } from '../../../uris.js'
+import { FILETYPES, fileUploadPageRoute } from '../../common/file-upload/file-upload.js'
+
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  const { siteData, applicationId, fileUpload } = journeyData
+  const { name, address, siteMapFiles } = siteData
+  const complete = await APIRequests.APPLICATION.tags(applicationId).has(SECTION_TASKS.SITES)
+  const { activity } = siteMapFiles
+
+  if (applicationId && fileUpload) {
+    const payload = { name, address, siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } }
+    await APIRequests.SITE.update(siteData.id, payload)
+    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
+    journeyData.siteData = Object.assign(journeyData.siteData || {}, { siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } })
+    await request.cache().setData(journeyData)
+  }
+
+  if (complete) {
+    return siteURIs.CHECK_SITE_ANSWERS.uri
+  }
+
+  return siteURIs.UPLOAD_MAP_3.uri
+}
+
+export const siteMapUploadTwo = fileUploadPageRoute({
+  view: siteURIs.UPLOAD_MAP_2.page,
+  fileUploadUri: siteURIs.UPLOAD_MAP_2.uri,
+  fileUploadCompletion: completion,
+  fileType: FILETYPES.SITE_MAP_FILES.filetype
+})

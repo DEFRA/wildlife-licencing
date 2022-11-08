@@ -101,6 +101,10 @@ export const siteURIs = {
   SELECT_ADDRESS: { uri: '/select-address', page: 'select-address' },
   ADDRESS_NO_LOOKUP: { uri: '/site-address-no-lookup', page: 'site-address-no-lookup' },
   UPLOAD_MAP: { uri: '/upload-map', page: 'upload-map' },
+  UPLOAD_MAP_2: { uri: '/upload-map-2', page: 'upload-map-2' },
+  UPLOAD_MAP_3: { uri: '/upload-map-3', page: 'upload-map-3' },
+  SITE_GRID_REF: { uri: '/site-grid-ref', page: 'site-grid-ref' },
+  SITE_CHECK: { uri: '/site-check', page: 'site-check' },
   CHECK_SITE_ANSWERS: { uri: '/check-site-answers', page: 'check-site-answers' }
 }
 

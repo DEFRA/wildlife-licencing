@@ -19,7 +19,6 @@ describe('site-got-postcode page handler', () => {
         }
       }
     }))
-    const { setData } = await import('../site-address-no-lookup.js')
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({
@@ -35,9 +34,11 @@ describe('site-got-postcode page handler', () => {
             'address-county': 'MerseySide',
             'address-postcode': 'SW1W 0NY'
           }
-        }))
+        })),
+        setData: jest.fn()
       })
     }
+    const { setData } = await import('../site-address-no-lookup.js')
 
     await setData(request)
 

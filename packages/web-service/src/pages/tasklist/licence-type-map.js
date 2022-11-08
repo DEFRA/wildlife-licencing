@@ -58,7 +58,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: applicationTags.includes(SECTION_TASKS.ECOLOGIST_EXPERIENCE),
     [SECTION_TASKS.WORK_ACTIVITY]: false,
     [SECTION_TASKS.PERMISSIONS]: false,
-    [SECTION_TASKS.SITES]: false,
+    [SECTION_TASKS.SITES]: applicationTags.includes(SECTION_TASKS.SITES),
     [SECTION_TASKS.SETTS]: applicationTags.includes(SECTION_TASKS.SETTS),
     [SECTION_TASKS.SUPPORTING_INFORMATION]: applicationTags.includes(SECTION_TASKS.SUPPORTING_INFORMATION),
     [SECTION_TASKS.SUBMIT]: false
@@ -149,8 +149,12 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SITES,
-            uri: siteURIs.NAME.uri,
-            status: eligibilityCheckStatus,
+            uri: status => status[SECTION_TASKS.SITES]
+              ? siteURIs.CHECK_SITE_ANSWERS.uri
+              : siteURIs.NAME.uri,
+            status: status => status[SECTION_TASKS.SITES]
+              ? STATUS_VALUES.COMPLETED
+              : eligibilityCheckStatus(status),
             enabled: eligibilityCheckEnabled
           },
           {

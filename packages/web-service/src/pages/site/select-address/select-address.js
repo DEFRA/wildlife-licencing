@@ -16,12 +16,15 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { siteData, addressLookup } = journeyData
+  const { name } = siteData
 
   const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === request.payload.uprn)
 
   const apiAddress = mapLookedUpAddress(lookupAddress)
-  await APIRequests.SITE.update(siteData.id, { name: siteData.name, address: apiAddress })
+  delete journeyData.siteData.postcode
+  await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
   delete journeyData.addressLookup
+  journeyData.siteData = Object.assign(journeyData.siteData || {}, { address: apiAddress })
   await request.cache().setData(journeyData)
 }
 

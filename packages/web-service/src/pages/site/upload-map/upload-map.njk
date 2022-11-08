@@ -1,0 +1,84 @@
+{% extends "layout.njk" %}
+
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "button/macro.njk" import govukButton %}
+{% from "error-summary.njk" import errorSummary %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'scan-file': {
+          'no-file-chosen' : { ref: '#scan-file', text: 'You must choose a file to upload.' },
+          'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
+          'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' },
+          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON or PDF.' }
+        }
+    }
+%}
+
+{% set title = 'Map of your activity at the development site' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% block content %}
+
+{{ errorSummary(error, errorMap, 'There is a problem') }}
+
+<h1 class="govuk-heading-xl">Map of your activity at the development site</h1>
+
+<div class="govuk-grid-row">
+    <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
+
+      <p class="govuk-body">You must send a survey map showing the site before any of the planned activity.</p>
+      <p class="govuk-body">Your survey map should include:</p>
+         <ul class="govuk-list govuk-list--bullet">
+            <li>habitat locations</li>
+            <li>type of habitat</li>
+            <li>entrances</li>
+            <li>survey positions</li>
+        </ul>
+      <p class="govuk-body">You can upload:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>GeoJSON files</li>
+            <li>KML files</li>
+            <li>Shape files</li>
+            <li>PDF, jpg or PNG files (if these are used, your application may take longer to process)</li>
+        </ul>
+        <p class="govuk-body">The file must be smaller than 30MB.</p>
+
+        <form enctype="multipart/form-data" method="post">
+            {% call govukFieldset({
+              legend: {
+                classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-0"
+              }
+            }) %}
+
+            {{ govukFileUpload({
+              id: "scan-file",
+              name: "scan-file",
+              label: {
+                text: "Upload a file",
+                classes: "govuk-label govuk-label--s"
+              },
+              errorMessage: { text: 'Upload a different file.' } if error['scan-file']
+            }) }}
+
+            <div> <!-- Div user here to "push" the button onto a newline, otherwise it displays next to the file upload button, which is incorrect -->
+              {{ govukButton({
+                  attributes: { id: 'continue' },
+                  preventDoubleClick: true,
+                  text: 'Continue',
+                  classes: "govuk-!-margin-top-5"
+                }) }}
+            </div>
+
+            {% endcall %}
+        </form>
+    </div>
+</div>
+{% endblock %}

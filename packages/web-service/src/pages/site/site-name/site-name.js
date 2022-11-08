@@ -18,7 +18,7 @@ export const setData = async request => {
   if (siteName) {
     const site = await APIRequests.SITE.create(journeyData.applicationId, { name: siteName })
     journeyData.siteData = Object.assign(journeyData.siteData || {}, { id: site.id, name: siteName })
-    request.cache().setData(journeyData)
+    await request.cache().setData(journeyData)
   }
 }
 

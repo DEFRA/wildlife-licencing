@@ -19,7 +19,7 @@ export const setData = async request => {
   await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   await addressLookupForPostcode(sitePostcode, journeyData, request)
   journeyData.siteData = Object.assign(journeyData.siteData || {}, { postcode: sitePostcode })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const completion = async request => {

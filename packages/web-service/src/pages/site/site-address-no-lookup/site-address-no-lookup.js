@@ -12,11 +12,15 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { siteData } = journeyData
+  const { name } = siteData
 
   const pageData = await request.cache().getPageData()
   const inputAddress = pageData.payload
   const apiAddress = mapInputAddress(inputAddress)
-  await APIRequests.SITE.update(siteData.id, { name: siteData.name, address: apiAddress })
+  delete journeyData.siteData.postcode
+  await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
+  journeyData.siteData = Object.assign(journeyData.siteData || {}, { address: apiAddress })
+  await request.cache().setData(journeyData)
 }
 
 export const completion = async () => siteURIs.UPLOAD_MAP.uri

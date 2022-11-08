@@ -599,6 +599,16 @@ export const APIRequests = {
         throw error
       }
     },
+    getSiteById: async siteId => {
+      try {
+        debug(`Get site by id: ${siteId}`)
+        return API.get(`${apiUrls.SITE}/${siteId}`)
+      } catch (error) {
+        console.error(`Error getting site by id: ${siteId}`, error)
+        Boom.boomify(error, { statusCode: 500 })
+        throw error
+      }
+    },
     findByApplicationId: async applicationId => {
       try {
         const applicationSites = await API.get(`${apiUrls.APPLICATION_SITES}`, `applicationId=${applicationId}`)

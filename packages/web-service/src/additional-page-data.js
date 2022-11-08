@@ -1,4 +1,4 @@
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT } from './uris.js'
+import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT, siteURIs } from './uris.js'
 
 export const additionalPageData = (request, h) => {
   const response = request.response
@@ -41,7 +41,12 @@ export const additionalPageData = (request, h) => {
         experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
         methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
         classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
-        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri,
+        siteName: siteURIs.NAME.uri,
+        siteGridReference: siteURIs.SITE_GRID_REF.uri,
+        siteMap: siteURIs.UPLOAD_MAP.uri,
+        siteMapTwo: siteURIs.UPLOAD_MAP_2.uri,
+        siteMapThree: siteURIs.UPLOAD_MAP_3.uri
       },
       credentials: request.auth.credentials
     })

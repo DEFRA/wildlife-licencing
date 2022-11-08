@@ -1,0 +1,29 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'site-grid-ref': {
+          'string.empty': { ref: '#site-grid-ref', text: 'You have not entered a grid reference' },
+          'string.pattern.base': { ref: '#site-grid-ref', text: 'A grid reference must be 2 letters, followed by 6 numbers' }
+        }
+    }
+%}
+
+{% set title = "What is the site’s National Grid Reference?" %}
+
+{% block pageContent %}
+
+  {{ govukInput({
+    id: "site-grid-ref",
+    name: "site-grid-ref",
+    hint: {
+      text: "For example, NY395557."
+    },
+    errorMessage: { text: "Enter a national grid reference for the site" } if error['site-grid-ref'],
+    classes: "govuk-input--width-10",
+    value: data.gridReference,
+    spellcheck: false
+  }) }}
+
+{% endblock %}
