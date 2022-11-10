@@ -8,6 +8,7 @@ import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
+import { moveTagInProgress } from '../common/move-tag-status-in-progress.js'
 
 // The pages in the flow
 const {
@@ -25,10 +26,11 @@ const PERMISSION_GRANTED = 'permissionsGranted'
 export const eligibilityStateMachine = async request => {
   const journeyData = await request.cache().getData() || {}
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  const grantedCompletionSection = eligibilityPart => {
+  const grantedCompletionSection = async eligibilityPart => {
     if (eligibilityPart[PERMISSION_GRANTED] === undefined) {
       return CONSENT_GRANTED.uri
     } else if (!eligibilityPart[PERMISSION_GRANTED]) {
+      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
       return NOT_ELIGIBLE_PROJECT.uri
     } else {
       return ELIGIBILITY_CHECK.uri
@@ -114,7 +116,11 @@ export const landOwner = yesNoPage({
   page: LANDOWNER.page,
   uri: LANDOWNER.uri,
   options: { auth: { mode: 'optional' } },
-  getData: getData(IS_OWNER_OF_LAND),
+  getData: async request => {
+    const { applicationId } = await request.cache().getData()
+    moveTagInProgress(applicationId, SECTION_TASKS.ELIGIBILITY_CHECK)
+    return getData(IS_OWNER_OF_LAND)
+  },
   completion: eligibilityStateMachine,
   setData: setData(IS_OWNER_OF_LAND),
   checkData
@@ -186,10 +192,6 @@ export const checkYourAnswersGetData = async request => {
     return true
   }
 
-  if (request.url.pathname === ELIGIBILITY_CHECK.uri) {
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  }
-
   // The check-answers macro requires an array of k, v pair objects
   return Object.keys(orderKeys)
     .sort((a, b) => orderKeys[a] - orderKeys[b])
@@ -213,7 +215,11 @@ export const eligibilityCheck = checkAnswersPage(
     page: ELIGIBILITY_CHECK.page,
     uri: ELIGIBILITY_CHECK.uri,
     options: { auth: { mode: 'optional' } },
-    getData: checkYourAnswersGetData,
+    getData: async request => {
+      const { applicationId } = await request.cache().getData()
+      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+      return checkYourAnswersGetData(request)
+    },
     setData: checkYourAnswersSetData,
     completion: checkAnswersCompletion,
     checkData: checkData

@@ -1,6 +1,5 @@
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../common.js'
-import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 
 export const getContactAccountData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
@@ -18,7 +17,6 @@ export const setContactAccountData = (contactRole, accountRole) => async request
     // Assign a new organisation
     const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(true, request.payload['organisation-name'])
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.IN_PROGRESS })
     const pageData = await request.cache().getPageData()
     delete pageData.payload['organisation-name']
     await request.cache().setPageData(pageData)

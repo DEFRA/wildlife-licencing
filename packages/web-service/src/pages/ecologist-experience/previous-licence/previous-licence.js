@@ -1,5 +1,6 @@
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { APPLICATIONS, ecologistExperienceURIs } from '../../../uris.js'
+import { moveTagInProgress } from '../../common/move-tag-status-in-progress.js'
 import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
@@ -15,7 +16,7 @@ export const completion = async request => {
   if (isCompleteOrConfirmed(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
   }
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
+
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
 }
 
@@ -37,6 +38,8 @@ export const checkData = async (request, h) => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  moveTagInProgress(applicationId, SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
   if (Object.keys(ecologistExperience).length === 0) {
     return null

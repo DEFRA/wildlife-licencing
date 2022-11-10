@@ -1,10 +1,11 @@
 import pageRoute from '../../../routes/page-route.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import Joi from 'joi'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { checkHasApplication, contactOperations } from '../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { moveTagInProgress } from '../../common/move-tag-status-in-progress.js'
 
 const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES } = contactURIs.INVOICE_PAYER
 
@@ -29,7 +30,7 @@ export const getData = async request => {
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
   const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
 
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.IN_PROGRESS })
+  moveTagInProgress(applicationId, SECTION_TASKS.INVOICE_PAYER)
 
   const currentPayer = (() => {
     if (!payer) {
@@ -121,7 +122,7 @@ export const invoiceResponsible = pageRoute({
   page: RESPONSIBLE.page,
   uri: RESPONSIBLE.uri,
   checkData: checkData,
-  getData: getData,
+  getData,
   validator: Joi.object({
     responsible: Joi.any().valid('applicant', 'ecologist', 'other').required()
   }).options({ abortEarly: false, allowUnknown: true }),

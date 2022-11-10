@@ -1,7 +1,9 @@
 import pageRoute from '../../../routes/page-route.js'
 import { siteURIs, TASKLIST } from '../../../uris.js'
 import { checkApplication } from '../../habitat/a24/common/check-application.js'
+import { moveTagInProgress } from '../../common/move-tag-status-in-progress.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -26,6 +28,9 @@ export default pageRoute({
   uri: siteURIs.NAME.uri,
   checkData: checkApplication,
   completion: () => TASKLIST.uri,
-  getData: () => {},
+  getData: async request => {
+    const { applicationId } = await request.cache().getData()
+    moveTagInProgress(applicationId, SECTION_TASKS.SITES)
+  },
   setData: setData
 })
