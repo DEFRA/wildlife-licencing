@@ -50,9 +50,4 @@ describe('site-got-postcode page handler', () => {
     expect(mockSetData).toHaveBeenCalled()
     expect(mockUpdate).toHaveBeenCalledWith('6829ad54', { address: { postcode: 'SW1W 0NY', street: 'VICARAGE ROAD', uprn: '123' }, name: 'site-name' })
   })
-
-  it('should redirect user to upload-map page, when the user selects an address and continue', async () => {
-    const { completion } = await import('../select-address.js')
-    expect(await completion()).toBe('/upload-map')
-  })
 })

@@ -16,7 +16,7 @@ export const completion = async request => {
     const payload = { name, address, siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } }
     await APIRequests.SITE.update(siteData.id, payload)
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
-    journeyData.siteData = Object.assign(journeyData.siteData || {}, { siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } })
+    journeyData.siteData = Object.assign(journeyData.siteData, { siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } })
     await request.cache().setData(journeyData)
   }
 

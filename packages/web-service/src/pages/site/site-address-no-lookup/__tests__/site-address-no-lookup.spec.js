@@ -53,9 +53,4 @@ describe('site-got-postcode page handler', () => {
       name: 'site-name'
     })
   })
-
-  it('should redirect user to upload-map page, when the user enters the address manually and continue', async () => {
-    const { completion } = await import('../site-address-no-lookup.js')
-    expect(await completion()).toBe('/upload-map')
-  })
 })

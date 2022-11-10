@@ -24,9 +24,8 @@
 }) }}
 {% endset -%}
 {% set title = 'Does the site have a postcode?' %}
-{% block pageTitle %}
-  {{ 'Error: ' + title if error else title }}
-{% endblock %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
 {% block pageContent %}
   {{ govukRadios({
             idPrefix: "site-postcode-check",

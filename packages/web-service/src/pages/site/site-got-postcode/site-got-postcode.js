@@ -5,8 +5,7 @@ import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
 
 export const getData = async request => {
-  // await request.cache().clearPageData(siteURIs.SITE_GOT_POSTCODE.page)
-  const { siteData } = (await request.cache().getData())
+  const { siteData } = await request.cache().getData()
   const { sitePostcode } = siteData
   return { sitePostcode }
 }
@@ -20,7 +19,7 @@ export const setData = async request => {
   // address lookup for the postcode from the request
   await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   await addressLookupForPostcode(sitePostcode, journeyData, request)
-  journeyData.siteData = Object.assign(journeyData.siteData || {}, { postcode: sitePostcode })
+  journeyData.siteData = Object.assign(journeyData.siteData, { postcode: sitePostcode })
   await request.cache().setData(journeyData)
 }
 
@@ -42,7 +41,7 @@ export default pageRoute({
     'site-postcode-check': Joi.any()
       .valid('yes', 'no')
       .required(),
-    'site-postcode': Joi.string().trim().min(1).max(12).required().pattern(ukPostcodeRegex)
+    'site-postcode': Joi.string().trim().required().pattern(ukPostcodeRegex)
       .replace(ukPostcodeRegex, '$1 $2').uppercase()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,

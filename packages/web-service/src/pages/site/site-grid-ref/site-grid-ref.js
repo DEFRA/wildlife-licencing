@@ -25,7 +25,7 @@ export const setData = async request => {
   const gridReference = pageData.payload['site-grid-ref']
   const payload = { name, address, gridReference, siteMapFiles: { activity, mitigationsDuringDevelopment, mitigationsAfterDevelopment } }
   await APIRequests.SITE.update(siteData.id, payload)
-  journeyData.siteData = Object.assign(journeyData.siteData || {}, { gridReference })
+  journeyData.siteData = Object.assign(journeyData.siteData, { gridReference })
   await request.cache().setData(journeyData)
 }
 

@@ -26,8 +26,6 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async () => siteURIs.UPLOAD_MAP.uri
-
 export default pageRoute({
   page: siteURIs.SELECT_ADDRESS.page,
   uri: siteURIs.SELECT_ADDRESS.uri,
@@ -36,5 +34,5 @@ export default pageRoute({
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,
-  completion
+  completion: siteURIs.UPLOAD_MAP.uri
 })

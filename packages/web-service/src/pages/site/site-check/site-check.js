@@ -2,6 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
+import { addressLine } from '../../service/address.js'
 import { getGridReferenceProximity } from './grid-reference-proximity.js'
 
 export const completion = async request => {
@@ -17,32 +18,15 @@ export const completion = async request => {
   return redirectUrl
 }
 
-const siteAddressLine1 = c => [
-  c?.subBuildingName,
-  c?.buildingName,
-  c?.buildingNumber,
-  c?.street,
-  c?.addressLine1
-].filter(a => a).join(', ')
-
-const siteAddressLine = c => [
-  siteAddressLine1(c),
-  c?.locality,
-  c?.dependentLocality,
-  c?.addressLine2,
-  c?.town,
-  c?.county,
-  c?.postcode
-].filter(a => a).join(', ')
-
 export const getData = async request => {
   const siteId = (await request.cache().getData())?.siteData?.id
-  const { address, gridReference } = await APIRequests.SITE.getSiteById(siteId)
+  const site = await APIRequests.SITE.getSiteById(siteId)
+  const { address, gridReference } = site
   const { xCoordinate, yCoordinate } = address
   const proximity = getGridReferenceProximity(gridReference, xCoordinate, yCoordinate)
 
   const data = {}
-  const siteAddress = siteAddressLine(address)
+  const siteAddress = addressLine(site)
   //  proximity test of 10 Km since it is large enough to cover most postcodes
   const proximityFlag = proximity > 10
   Object.assign(data, { siteAddress, proximityFlag, gridReference })
