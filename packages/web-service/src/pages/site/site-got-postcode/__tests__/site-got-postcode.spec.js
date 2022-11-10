@@ -18,7 +18,7 @@ describe('site-got-postcode page handler', () => {
     const mockSetData = jest.fn()
     const request = {
       cache: () => ({
-        getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
+        getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: {} })),
         getPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
         setData: mockSetData,
         clearPageData: jest.fn()

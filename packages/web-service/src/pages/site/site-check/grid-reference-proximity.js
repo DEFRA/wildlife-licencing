@@ -16,7 +16,5 @@ export const getGridReferenceProximity = (gridReference, xCor, yCor) => {
   const eastingDistance = (xCor / 1000) - gridReferenceEastingMatch
   const northingDistance = (yCor / 1000) - gridReferenceNorthingMatch
 
-  const proximityDistance = Math.sqrt((eastingDistance * eastingDistance) + (northingDistance * northingDistance))
-
-  return proximityDistance
+  return Math.sqrt((eastingDistance * eastingDistance) + (northingDistance * northingDistance))
 }

@@ -22,7 +22,7 @@ export const setData = async request => {
 
   const apiAddress = mapLookedUpAddress(lookupAddress)
   await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
-  journeyData.siteData = Object.assign(journeyData.siteData || {}, { address: apiAddress })
+  journeyData.siteData = Object.assign(journeyData.siteData, { address: apiAddress })
   await request.cache().setData(journeyData)
 }
 

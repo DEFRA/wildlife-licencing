@@ -19,7 +19,7 @@ export const setData = async request => {
   const apiAddress = mapInputAddress(inputAddress)
   delete journeyData.siteData.postcode
   await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
-  journeyData.siteData = Object.assign(journeyData.siteData || {}, { address: apiAddress })
+  journeyData.siteData = Object.assign(journeyData.siteData, { address: apiAddress })
   await request.cache().setData(journeyData)
 }
 
