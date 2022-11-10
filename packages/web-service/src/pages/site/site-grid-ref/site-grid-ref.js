@@ -2,13 +2,14 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
+import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
-  const complete = await APIRequests.APPLICATION.tags(applicationId).has(SECTION_TASKS.SITES)
+  const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
 
-  if (complete) {
+  if (isCompleteOrConfirmed(appTagStatus)) {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
   return siteURIs.SITE_CHECK.uri

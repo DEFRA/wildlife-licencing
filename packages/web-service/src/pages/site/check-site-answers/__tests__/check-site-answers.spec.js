@@ -93,7 +93,7 @@ describe('The check site answers page', () => {
       APIRequests: {
         APPLICATION: {
           tags: () => {
-            return { add: () => true }
+            return { set: jest.fn(() => 'complete') }
           }
         }
       }

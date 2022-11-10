@@ -66,12 +66,12 @@ describe('The site national grid reference page', () => {
   it('should redirect user to site address and grid reference mismatch, when the site tag is in progress', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        IN_PROGRESS: 'in-progress'
       },
       APIRequests: {
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => false }
           }
         }
       }
@@ -96,12 +96,12 @@ describe('The site national grid reference page', () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         NOT_STARTED: 'NOT_STARTED',
-        COMPLETED: 'COMPLETED'
+        COMPLETE: 'complete'
       },
       APIRequests: {
         APPLICATION: {
           tags: () => {
-            return { has: () => true }
+            return { get: jest.fn(() => 'complete') }
           }
         }
       }

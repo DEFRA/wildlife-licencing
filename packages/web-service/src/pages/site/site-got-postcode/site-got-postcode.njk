@@ -1,54 +1,37 @@
+{% extends 'standard-form.njk' %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% extends 'layout.njk' %}
-{% from "button/macro.njk" import govukButton %}
-{% from "error-summary.njk" import errorSummary %}
 
 {% set errorMap = {
     'site-postcode-check': {
-      'no-choice-made': { ref: '#site-postcode-check', text: 'You have not selected an option' }
+      'string.empty': { ref: '#site-postcode-check', text: 'You have not selected an option' }
     },
     'site-postcode': {
       'string.empty': { ref: '#site-postcode', text: 'You have not entered a postcode' },
       'string.pattern.base': { ref: '#site-postcode', text: 'You have not entered a correct postcode' }
     }
-  }
-%}
-
+  } %}
 {% set postcodeHtml %}
 {{ govukInput({
   id: "site-postcode",
   name: "site-postcode",
   errorMessage: { text: 'Enter a postcode' } if error['site-postcode'],
-  value: payload['site-postcode'] if payload['site-postcode'] else data.sitePostcode,
+  value: data.sitePostcode if data.sitePostcode else payload['site-postcode'],
   classes: "govuk-!-width-one-third",
   label: {
     text: "Postcode"
   }
 }) }}
 {% endset -%}
-
 {% set title = 'Does the site have a postcode?' %}
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
-
-{% block content %}
-
-{{ errorSummary(error, errorMap, 'There is a problem') }}
-
-<div class="govuk-grid-row">
-	<div class="govuk-grid-column-two-thirds">
-        <form method="post">
-          {{ govukRadios({
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
             idPrefix: "site-postcode-check",
             name: "site-postcode-check",
             errorMessage: { text: 'Select an option' } if error['site-postcode-check'],
-            fieldset: {
-              legend: {
-                text: "Does the site have a postcode?",
-                isPageHeading: true,
-                classes: "govuk-fieldset__legend--xl"
-              }
-            },
             items: [
               {
                 value: "yes",
@@ -65,14 +48,4 @@
               }
             ]
           }) }}
-          <div class="govuk-form-group">
-            {{ govukButton({
-              text: "Continue",
-              attributes: { id: 'continue' }
-            })}}
-          </div>
-        </form>
-	</div>
-</div>
-
 {% endblock %}

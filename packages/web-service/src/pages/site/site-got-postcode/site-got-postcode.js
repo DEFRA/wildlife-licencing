@@ -5,6 +5,7 @@ import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
 
 export const getData = async request => {
+  // await request.cache().clearPageData(siteURIs.SITE_GOT_POSTCODE.page)
   const { siteData } = (await request.cache().getData())
   const { sitePostcode } = siteData
   return { sitePostcode }

@@ -20,21 +20,21 @@ describe('site-got-postcode page handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })),
         getPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
-        clearPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
-        setData: mockSetData
+        setData: mockSetData,
+        clearPageData: jest.fn()
       })
     }
-    const { setData } = await import('../site-got-postcode.js')
     const mockLookup = jest.fn(() => ({ results: [{ Address: { town: 'Bristol' } }] }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
       ADDRESS: {
         lookup: mockLookup
       }
     }))
-
+    jest.doMock('path')
+    jest.doMock('fs', () => ({ readdirSync: () => [] }))
+    const { setData } = await import('../site-got-postcode.js')
     await setData(request)
-
-    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
+    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: { postcode: undefined }, addressLookup: [{ Address: { town: 'Bristol' } }] })
   })
 
   it('should redirect user to upload-map page, when the site does not has a postcode', async () => {

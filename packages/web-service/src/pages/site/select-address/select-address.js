@@ -5,7 +5,7 @@ import { siteURIs } from '../../../uris.js'
 import { mapLookedUpAddress } from '../../contact/common/address/address.js'
 
 export const getData = async request => {
-  const journeyData = (await request.cache().getData())
+  const journeyData = await request.cache().getData()
   return {
     postcode: journeyData?.siteData?.postcode,
     uri: { addressForm: siteURIs.ADDRESS_NO_LOOKUP.uri, postcode: siteURIs.SITE_GOT_POSTCODE.uri },
@@ -21,9 +21,7 @@ export const setData = async request => {
   const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === request.payload.uprn)
 
   const apiAddress = mapLookedUpAddress(lookupAddress)
-  delete journeyData.siteData.postcode
   await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
-  delete journeyData.addressLookup
   journeyData.siteData = Object.assign(journeyData.siteData || {}, { address: apiAddress })
   await request.cache().setData(journeyData)
 }

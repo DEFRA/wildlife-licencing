@@ -16,17 +16,20 @@ describe('site-name page handler', () => {
 
   it('setData', async () => {
     const mockSetData = jest.fn()
+    const mockSet = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        IN_PROGRESS: 'IN_PROGRESS'
       },
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { set: mockSet }
+          }
+        },
         SITE: {
           create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
-        },
-        tags: () => {
-          return { has: () => false }
         }
       }
     }))
@@ -45,18 +48,19 @@ describe('site-name page handler', () => {
     }
     await setData(request)
 
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'sites', tagState: 'IN_PROGRESS' })
     expect(mockSetData).toHaveBeenCalledWith({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', siteData: { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'name' } })
   })
 
   it('should redirect user to site postcode page, when the site tag is in progress', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        IN_PROGRESS: 'IN_PROGRESS'
       },
       APIRequests: {
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => true }
           }
         }
       }
@@ -76,47 +80,16 @@ describe('site-name page handler', () => {
     expect(await completion(request)).toBe('/site-got-postcode')
   })
 
-  it('should not call setData when there is no a site name provided on the payload', async () => {
-    const mockSetData = jest.fn()
-
-    jest.doMock('../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
-      },
-      APIRequests: {
-        SITE: {
-          create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
-        },
-        tags: () => {
-          return { has: () => false }
-        }
-      }
-    }))
-    const { setData } = await import('../site-name.js')
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-          siteData: {}
-        }),
-        setData: mockSetData
-      })
-    }
-    await setData(request)
-
-    expect(mockSetData).not.toHaveBeenCalled()
-  })
-
   it('should redirect user to check your answers page, when the tag is complete', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        NOT_STARTED: 'not-started',
+        COMPLETE: 'complete'
       },
       APIRequests: {
         APPLICATION: {
           tags: () => {
-            return { has: () => true }
+            return { get: jest.fn(() => 'complete') }
           }
         }
       }

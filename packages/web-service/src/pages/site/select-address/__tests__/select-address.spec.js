@@ -47,7 +47,7 @@ describe('site-got-postcode page handler', () => {
 
     await setData(request)
 
-    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35', siteData: { id: '6829ad54', name: 'site-name', address: { postcode: 'SW1W 0NY', street: 'VICARAGE ROAD', uprn: '123' } } })
+    expect(mockSetData).toHaveBeenCalled()
     expect(mockUpdate).toHaveBeenCalledWith('6829ad54', { address: { postcode: 'SW1W 0NY', street: 'VICARAGE ROAD', uprn: '123' }, name: 'site-name' })
   })
 

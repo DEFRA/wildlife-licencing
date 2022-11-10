@@ -3,12 +3,13 @@ import { s3FileUpload } from '../../../services/s3-upload.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { siteURIs } from '../../../uris.js'
 import { FILETYPES, fileUploadPageRoute } from '../../common/file-upload/file-upload.js'
+import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const { siteData, applicationId, fileUpload } = journeyData
   const { name, address, siteMapFiles } = siteData
-  const complete = await APIRequests.APPLICATION.tags(applicationId).has(SECTION_TASKS.SITES)
+  const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
   const { activity } = siteMapFiles
 
   if (applicationId && fileUpload) {
@@ -19,7 +20,7 @@ export const completion = async request => {
     await request.cache().setData(journeyData)
   }
 
-  if (complete) {
+  if (isCompleteOrConfirmed(appTagStatus)) {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
 

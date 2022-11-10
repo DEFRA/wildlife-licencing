@@ -1,5 +1,5 @@
 import pageRoute from '../../../routes/page-route.js'
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { APPLICATIONS, siteURIs, TASKLIST } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
@@ -28,7 +28,7 @@ export const checkData = async (request, h) => {
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
   // Mark the site journey tag as complete
-  await APIRequests.APPLICATION.tags(applicationId).add(SECTION_TASKS.SETTS)
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE })
 
   return TASKLIST.uri
 }

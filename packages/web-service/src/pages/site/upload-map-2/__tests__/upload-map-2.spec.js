@@ -17,7 +17,7 @@ describe('the map of the site showing the mitigations during development page ha
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => false }
           }
         }
       }
@@ -62,7 +62,7 @@ describe('the map of the site showing the mitigations during development page ha
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => false }
           }
         }
       }
@@ -96,7 +96,8 @@ describe('the map of the site showing the mitigations during development page ha
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        NOT_STARTED: 'NOT_STARTED',
+        COMPLETE: 'complete'
       },
       APIRequests: {
         SITE: {
@@ -104,7 +105,7 @@ describe('the map of the site showing the mitigations during development page ha
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => true }
+            return { get: jest.fn(() => 'complete') }
           }
         }
       }

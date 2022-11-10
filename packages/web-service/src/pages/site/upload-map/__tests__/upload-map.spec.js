@@ -17,7 +17,7 @@ describe('the map of your activity at the development site page handler', () => 
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => false }
           }
         }
       }
@@ -61,7 +61,7 @@ describe('the map of your activity at the development site page handler', () => 
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => false }
+            return { get: () => false }
           }
         }
       }
@@ -95,7 +95,8 @@ describe('the map of your activity at the development site page handler', () => 
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED'
+        NOT_STARTED: 'NOT_STARTED',
+        COMPLETE: 'complete'
       },
       APIRequests: {
         SITE: {
@@ -103,7 +104,7 @@ describe('the map of your activity at the development site page handler', () => 
         },
         APPLICATION: {
           tags: () => {
-            return { has: () => true }
+            return { get: jest.fn(() => 'complete') }
           }
         }
       }
