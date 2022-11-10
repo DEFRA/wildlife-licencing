@@ -34,7 +34,7 @@ export default pageRoute({
     'address-postcode': Joi.string().allow('').trim().min(1).max(12).pattern(ukPostcodeRegex)
       .replace(ukPostcodeRegex, '$1 $2').uppercase()
   }).options({ abortEarly: false, allowUnknown: true }),
+  completion: siteURIs.UPLOAD_MAP.uri,
   getData,
-  setData,
-  completion: siteURIs.UPLOAD_MAP.uri
+  setData
 })

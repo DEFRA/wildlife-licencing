@@ -32,7 +32,7 @@ export default pageRoute({
   validator: Joi.object({
     uprn: Joi.number()
   }).options({ abortEarly: false, allowUnknown: true }),
+  completion: siteURIs.UPLOAD_MAP.uri,
   getData,
-  setData,
-  completion: siteURIs.UPLOAD_MAP.uri
+  setData
 })
