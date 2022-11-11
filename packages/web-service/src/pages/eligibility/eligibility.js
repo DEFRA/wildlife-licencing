@@ -47,7 +47,7 @@ export const eligibilityStateMachine = async request => {
     }
   }
 
-  const permissionsCompletionSection = eligibilityPart => {
+  const permissionsCompletionSection = async eligibilityPart => {
     if (eligibilityPart[HAS_LANDOWNER_PERMISSION] === undefined) {
       return LANDOWNER_PERMISSION.uri
     } else if (!eligibilityPart[HAS_LANDOWNER_PERMISSION]) {
