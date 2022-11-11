@@ -75,6 +75,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   if (request.payload['yes-no'] === 'yes') {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
     await request.cache().clearPageData(NAME.page)
   } else {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.COMPLETE })
