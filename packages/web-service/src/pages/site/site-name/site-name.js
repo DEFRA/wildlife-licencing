@@ -23,14 +23,16 @@ export const setData = async request => {
   console.log(JSON.stringify(sites2, null, 4))
 }
 
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  moveTagInProgress(applicationId, SECTION_TASKS.SITES)
+}
+
 export default pageRoute({
   page: siteURIs.NAME.page,
   uri: siteURIs.NAME.uri,
   checkData: checkApplication,
   completion: () => TASKLIST.uri,
-  getData: async request => {
-    const { applicationId } = await request.cache().getData()
-    moveTagInProgress(applicationId, SECTION_TASKS.SITES)
-  },
-  setData: setData
+  setData: setData,
+  getData
 })
