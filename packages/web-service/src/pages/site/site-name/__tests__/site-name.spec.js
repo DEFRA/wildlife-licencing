@@ -26,4 +26,29 @@ describe('site-name page handler', () => {
     await setData(request)
     // await expect(() => setData(request)).resolves
   })
+
+  it('getData returns null', async () => {
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              get: () => jest.fn(),
+              set: () => jest.fn()
+            }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => ({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' })
+      })
+    }
+    const { getData } = await import('../site-name.js')
+    expect(await getData(request)).toBe(undefined)
+  })
 })
