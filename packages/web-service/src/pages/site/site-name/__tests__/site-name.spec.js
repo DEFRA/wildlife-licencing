@@ -2,6 +2,9 @@ describe('site-name page handler', () => {
   beforeEach(() => jest.resetModules())
   it('setData', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
       APIRequests: {
         SITE: {
           create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })),

@@ -312,6 +312,13 @@ describe('the eligibility pages', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: () => {}
+              }
+            }
+          },
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: true, permissionsGranted: false }))
           }
@@ -355,6 +362,13 @@ describe('the eligibility pages', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: () => {}
+              }
+            }
+          },
           ELIGIBILITY: {
             getById: jest.fn(() => ({
               permissionsGranted: true,
@@ -560,6 +574,13 @@ describe('the eligibility pages', () => {
         NOT_STARTED: 'not-started'
       },
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: () => {}
+            }
+          }
+        },
         ELIGIBILITY: {
           getById: jest.fn(() => ({
             permissionsGranted: false,

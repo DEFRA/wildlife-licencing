@@ -4,6 +4,9 @@ describe('authorised person name', () => {
     it('set the contact name correctly', async () => {
       const mockCreate = jest.fn(() => ({ id: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }))
       jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
         APIRequests: {
           CONTACT: {
             getById: () => ({ id: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }),

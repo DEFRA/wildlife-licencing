@@ -2,32 +2,6 @@ describe('The habitat start page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat start page', () => {
-    it('the habitat start page forwards onto habitat-name page', async () => {
-      const request = {
-        cache: () => {
-          return {
-            getData: () => jest.fn()
-          }
-        }
-      }
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          IN_PROGRESS: 'in-progress'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { set: jest.fn() }
-            }
-          }
-        }
-      }))
-      jest.doMock()
-      const { completion } = await import('../habitat-start.js')
-      expect(await completion(request)).toBe('/habitat-name')
-    })
-
     it('the checkData returns undefined if the journey isnt complete', async () => {
       const request = {
         cache: () => ({
