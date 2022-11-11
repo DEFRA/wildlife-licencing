@@ -34,7 +34,7 @@ describe('contact-name page', () => {
       APIRequests: {
         CONTACT: {
           role: () => ({
-            findByUser: jest.fn(() => [{ fullName: 'Brian Jones' }])
+            findByUser: jest.fn(() => [{ fullName: 'Brian O\'connor-Jones' }])
           })
         }
       }

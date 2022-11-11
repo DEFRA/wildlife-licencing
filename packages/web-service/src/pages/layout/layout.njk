@@ -8,11 +8,8 @@
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+  <meta http-equiv="x-ua-compatible" content="IE=Edge"/>
   <link href="/public/stylesheets/main.css" rel="stylesheet" type="text/css"/>
-  <meta http-equiv="Cache-Control" content="no-store"/>
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="-1">
 {% endblock %}
 
 {% block header %}
@@ -88,10 +85,10 @@
 
 {% block bodyEnd %}
   <script src="/public/javascript/all-min.js"></script>
-  <script nonce={{nonce}}>
+  <script nonce={{cspNonce}}>
     window.GOVUKFrontend.initAll()
   </script>
-  <script nonce={{nonce}}>
+  <script nonce={{cspNonce}}>
     (function () {
       const backLinkDiv = document.getElementById('backlink-div')
       backLinkDiv.removeAttribute('hidden')

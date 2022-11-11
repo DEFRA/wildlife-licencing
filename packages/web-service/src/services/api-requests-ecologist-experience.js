@@ -42,5 +42,11 @@ export const ECOLOGIST_EXPERIENCE = {
       `Error removing previous-licences for ${applicationId}`,
       500
     )
+  },
+  removePreviousLicences: async applicationId => {
+    return apiRequestsWrapper(async () => {
+      const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/previous-licences`)
+      await Promise.all(licences.map(async l => await API.delete(`${apiUrls.APPLICATION}/${applicationId}/previous-licence/${l.id}`)))
+    }, `Error removing previous-licences for ${applicationId}`, 500)
   }
 }

@@ -10,10 +10,23 @@ const { NAME } = contactURIs.AUTHORISED_PEOPLE
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
-  const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
-    applicationId, userId, null)
-  const contact = await contactOps.create(false, request.payload.name)
-  Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+
+  const params = new URLSearchParams(request.query)
+  const id = params.get('id')
+  if (id) {
+    // Change
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
+      applicationId, userId, id)
+    await contactOps.setName(request.payload.name)
+    Object.assign(journeyData, { authorisedPeople: { contactId: id } })
+  } else {
+    // Create
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
+      applicationId, userId, null)
+    const contact = await contactOps.create(false, request.payload.name)
+    Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
+  }
+
   await request.cache().setData(journeyData)
 }
 
