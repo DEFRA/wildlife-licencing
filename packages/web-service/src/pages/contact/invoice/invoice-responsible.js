@@ -122,10 +122,10 @@ export const invoiceResponsible = pageRoute({
   page: RESPONSIBLE.page,
   uri: RESPONSIBLE.uri,
   checkData: checkData,
-  getData,
   validator: Joi.object({
     responsible: Joi.any().valid('applicant', 'ecologist', 'other').required()
   }).options({ abortEarly: false, allowUnknown: true }),
   setData: setData,
-  completion: completion
+  completion: completion,
+  getData
 })

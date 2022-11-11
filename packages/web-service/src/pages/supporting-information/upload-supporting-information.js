@@ -22,6 +22,6 @@ export const getData = async request => {
 export const uploadSupportingInformation = fileUploadPageRoute({
   view: FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.page,
   fileUploadUri: FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
-  getData,
-  fileUploadCompletion: completion
+  fileUploadCompletion: completion,
+  getData
 })

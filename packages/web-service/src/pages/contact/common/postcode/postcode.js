@@ -44,7 +44,7 @@ export const addressLookupForPostcode = async (postcode, journeyData, request) =
   }
 }
 
-export const setPostcodeData = contactRole => async request => {
+export const setPostcodeData = _contactRole => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode
