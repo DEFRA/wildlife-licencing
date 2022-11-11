@@ -37,7 +37,7 @@ export const eligibilityStateMachine = async request => {
     }
   }
 
-  const consentCompletionSection = eligibilityPart => {
+  const consentCompletionSection = async eligibilityPart => {
     if (eligibilityPart[PERMISSION_REQUIRED] === undefined) {
       return CONSENT.uri
     } else if (!eligibilityPart[PERMISSION_REQUIRED]) {
@@ -100,6 +100,12 @@ const consolidateAnswers = async (request, eligibility) => {
   }
 }
 
+export const landOwnerGetData = async request => {
+  const { applicationId } = await request.cache().getData()
+  moveTagInProgress(applicationId, SECTION_TASKS.ELIGIBILITY_CHECK)
+  return getData(IS_OWNER_OF_LAND)
+}
+
 export const setData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
@@ -116,11 +122,7 @@ export const landOwner = yesNoPage({
   page: LANDOWNER.page,
   uri: LANDOWNER.uri,
   options: { auth: { mode: 'optional' } },
-  getData: async request => {
-    const { applicationId } = await request.cache().getData()
-    moveTagInProgress(applicationId, SECTION_TASKS.ELIGIBILITY_CHECK)
-    return getData(IS_OWNER_OF_LAND)
-  },
+  getData: landOwnerGetData,
   completion: eligibilityStateMachine,
   setData: setData(IS_OWNER_OF_LAND),
   checkData

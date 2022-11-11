@@ -66,5 +66,35 @@ describe('The habitat start page', () => {
       await checkData(request, h)
       expect(mockRedirect).toHaveBeenCalledWith('/check-habitat-answers')
     })
+
+    it('getData sets the tag', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => 'not-started',
+                set: mockSet
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { getData } = await import('../habitat-start.js')
+      expect(await getData(request)).toBe(null)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'setts', tagState: 'in-progress' })
+    })
   })
 })
