@@ -14,7 +14,7 @@ export const eligibilityURIs = {
   CONSENT: { uri: '/consent', page: 'consent' },
   CONSENT_GRANTED: { uri: '/consent-granted', page: 'consent-granted' },
   NOT_ELIGIBLE_LANDOWNER: { uri: '/dropout-landowner', page: 'dropout-landowner' },
-  NOT_ELIGIBLE_PROJECT: { uri: '/dropout-project', page: 'dropout-project' },
+  NOT_ELIGIBLE_PROJECT: { uri: '/dropout-consent-granted', page: 'dropout-consent-granted' },
   ELIGIBILITY_CHECK: { uri: '/eligibility-check', page: 'eligibility-check' },
   ELIGIBLE: { uri: '/eligible', page: 'eligible' }
 }
