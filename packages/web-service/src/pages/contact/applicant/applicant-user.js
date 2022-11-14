@@ -17,7 +17,7 @@ export const applicantUser = yesNoPage({
   getData,
   page: USER.page,
   uri: USER.uri,
-  setData: setUserData(ContactRoles.APPLICANT),
-  completion: userCompletion(ContactRoles.APPLICANT, [ContactRoles.ADDITIONAL_APPLICANT], AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
+  setData: setUserData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION),
+  completion: userCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   checkData: checkHasApplication
 })

@@ -43,20 +43,6 @@ import { authorisedPersonAddress } from '../pages/contact/authorised-people/auth
 import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
-import { addAdditionalApplicant } from '../pages/contact/additional-contacts/add-additional-applicant.js'
-import { additionalApplicantUser } from '../pages/contact/additional-contacts/additional-applicant-user.js'
-import { additionalApplicantName } from '../pages/contact/additional-contacts/additional-applicant-name.js'
-import { additionalApplicantNames } from '../pages/contact/additional-contacts/additional-applicant-names.js'
-import { additionalApplicantEmail } from '../pages/contact/additional-contacts/additional-applicant-email.js'
-
-import { addAdditionalEcologist } from '../pages/contact/additional-contacts/add-additional-ecologist.js'
-import { additionalEcologistUser } from '../pages/contact/additional-contacts/additional-ecologist-user.js'
-import { additionalEcologistName } from '../pages/contact/additional-contacts/additional-ecologist-name.js'
-import { additionalEcologistNames } from '../pages/contact/additional-contacts/additional-ecologist-names.js'
-import { additionalEcologistEmail } from '../pages/contact/additional-contacts/additional-ecologist-email.js'
-
-import { additionalContactCheckAnswers } from '../pages/contact/additional-contacts/additional-contact-check-answers.js'
-
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
 import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
@@ -70,6 +56,7 @@ import { invoiceAddress } from '../pages/contact/invoice/invoice-address.js'
 import { invoiceAddressForm } from '../pages/contact/invoice/invoice-address-form.js'
 
 import siteName from '../pages/site/site-name/site-name.js'
+
 import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
 import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
 import habitatName from '../pages/habitat/a24/name/habitat-name.js'
@@ -81,8 +68,8 @@ import habitatWorkStart from '../pages/habitat/a24/work-start/habitat-work-start
 import habitatWorkEnd from '../pages/habitat/a24/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/a24/activities/habitat-activities.js'
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
-
 import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
+
 import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
 import enterLicenceDetails from '../pages/ecologist-experience/enter-licence-details/enter-licence-details.js'
 import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
@@ -91,8 +78,8 @@ import classMitigation from '../pages/ecologist-experience/class-mitigation/clas
 import enterClassMitigationDetails from '../pages/ecologist-experience/enter-class-mitigation-details/enter-class-mitigation-details.js'
 import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist-answers/check-ecologist-answers.js'
 import licence from '../pages/ecologist-experience/licence/licence.js'
-
 import removeLicence from '../pages/ecologist-experience/remove-licence/remove-licence.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
@@ -139,17 +126,6 @@ const routes = [
   ...authorisedPersonAddress,
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
-  ...addAdditionalApplicant,
-  ...additionalApplicantUser,
-  ...additionalApplicantNames,
-  ...additionalApplicantName,
-  ...additionalApplicantEmail,
-  ...addAdditionalEcologist,
-  ...additionalEcologistUser,
-  ...additionalEcologistNames,
-  ...additionalEcologistName,
-  ...additionalEcologistEmail,
-  ...additionalContactCheckAnswers,
   ...invoiceResponsible,
   ...invoiceUser,
   ...invoiceName,

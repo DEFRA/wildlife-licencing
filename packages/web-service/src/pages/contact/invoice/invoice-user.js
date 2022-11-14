@@ -11,6 +11,6 @@ export const invoiceUser = yesNoPage({
   uri: USER.uri,
   checkData: checkHasApplication,
   getData: getUserData(ContactRoles.PAYER),
-  setData: setUserData(ContactRoles.PAYER),
-  completion: userCompletion(ContactRoles.PAYER, [], AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
+  setData: setUserData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION),
+  completion: userCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
 })

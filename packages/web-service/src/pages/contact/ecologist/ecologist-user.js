@@ -21,7 +21,7 @@ export const ecologistUser = yesNoPage({
   getData,
   page: USER.page,
   uri: USER.uri,
-  setData: setUserData(ContactRoles.ECOLOGIST),
-  completion: userCompletion(ContactRoles.ECOLOGIST, [ContactRoles.ADDITIONAL_ECOLOGIST], AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
+  setData: setUserData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
+  completion: userCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
   checkData: checkHasApplication
 })

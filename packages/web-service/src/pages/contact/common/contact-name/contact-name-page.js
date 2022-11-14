@@ -2,34 +2,24 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
-import { contactRoleIsSingular } from '../contact-roles.js'
+import { ContactRoles } from '../contact-roles.js'
 const nameReg = /^[\s\p{L}'.,-]{1,160}$/u
 
-/**
- * Find the duplicate names to validate against
- * For a singular role the duplicate check is across the user
- * otherwise it is across the application
- * @param contactRoles
- * @param userId
- * @param applicationId
- * @returns {Promise<*[]|*>}
- */
-const duplicateNames = async (contactRoles, userId, applicationId) => {
-  let contacts = []
-  for await (const cr of contactRoles) {
-    if (contactRoleIsSingular(cr)) {
-      contacts = contacts.concat(await APIRequests.CONTACT.role(cr).findByUser(userId))
-    } else {
-      contacts = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
-    }
+// The rules for allowing duplicate contacts depend on the contact type
+const duplicateNames = async (contactRole, userId, applicationId) => {
+  if (contactRole === ContactRoles.AUTHORISED_PERSON) {
+    const contacts = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+    return contacts.map(c => c.fullName).filter(c => c)
+  } else {
+    const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId)
+    return contacts.map(c => c.fullName).filter(c => c)
   }
-  return contacts.map(c => c.fullName).filter(c => c)
 }
 
-export const getValidator = contactRoles => async (payload, context) => {
+export const getValidator = contactRole => async (payload, context) => {
   const cd = cacheDirect(context)
   const { userId, applicationId } = await cd.getData()
-  const names = await duplicateNames(contactRoles, userId, applicationId)
+  const names = await duplicateNames(contactRole, userId, applicationId)
   Joi.assert({ name: payload.name }, Joi.object({
     // Remove double spacing
     name: Joi.string().trim().replace(/((\s+){2,})/gm, '$2')
@@ -37,7 +27,7 @@ export const getValidator = contactRoles => async (payload, context) => {
   }), 'name', { abortEarly: false, allowUnknown: true })
 }
 
-export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, contactRoles) =>
+export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, contactRole) =>
   pageRoute({
     page,
     uri,
@@ -45,5 +35,5 @@ export const contactNamePage = ({ page, uri, checkData, getData, completion, set
     getData,
     completion,
     setData,
-    validator: getValidator(contactRoles)
+    validator: getValidator(contactRole)
   })
