@@ -8,7 +8,7 @@ export default async (context, req, h) => {
   try {
     const { siteId } = context.request.params
     const [site, created] = await models.sites.findOrCreate({
-      where: { id: context.request.params.siteId },
+      where: { id: siteId },
       defaults: {
         id: siteId,
         site: alwaysExclude(req.payload),

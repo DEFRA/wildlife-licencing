@@ -1,0 +1,73 @@
+{% extends "standard-form.njk" %}
+
+{% from "radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'address-and-grid-reference-mismatch': {
+          'any.required': { ref: '#address-and-grid-reference-mismatch', text: 'You have not selected an option' }
+        }
+    }
+%}
+
+{% set title = "Site address and National Grid Reference do not match" %}
+
+{% macro getSiteAddress(siteAddress) %}
+
+  {% if (siteAddress) %}
+        Address <br> <span>{{ siteAddress }}</span> <br>
+  {% endif %}
+    
+{% endmacro %}
+
+{% macro getGridReference(gridReference) %}
+
+  {% if (gridReference) %}
+      National Grid Reference <br> <span>{{ gridReference }}</span> <br>
+  {% else %}
+      National Grid Reference <br>
+  {% endif %}
+    
+{% endmacro %}
+
+{% block pageContent %}
+
+  <p class="govuk-body">The site address and national grid reference must be at the same location.</p>
+  {% if (data.proximityFlag) %}
+     <p class="govuk-body">There is a possible error of the grid reference which is located far away from the site.</p>
+  {% endif %}
+
+
+  {{ govukRadios({
+      name: "address-and-grid-reference-mismatch",
+      errorMessage: { text: 'Select an option' } if error['address-and-grid-reference-mismatch'],
+      fieldset: {
+        legend: {
+          text: "Which one do you want to change?",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [
+        {
+          value: "address",
+          html: getSiteAddress(data.siteAddress)
+        },
+        {
+          value: "gridReference",
+          text: getGridReference(data.gridReference)
+        },
+        {
+          divider: "or"
+        },
+        {
+          value: "correct",
+          text: "These are correct",
+          hint: {
+            text: "Your application may take longer to process if you don't give accurate site locations."
+          }
+        }
+      ]
+    })
+  }}
+
+{% endblock %}

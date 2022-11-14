@@ -1,0 +1,50 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+    'site-postcode-check': {
+      'string.empty': { ref: '#site-postcode-check', text: 'You have not selected an option' }
+    },
+    'site-postcode': {
+      'string.empty': { ref: '#site-postcode', text: 'You have not entered a postcode' },
+      'string.pattern.base': { ref: '#site-postcode', text: 'You have not entered a correct postcode' }
+    }
+  } %}
+{% set postcodeHtml %}
+{{ govukInput({
+  id: "site-postcode",
+  name: "site-postcode",
+  errorMessage: { text: 'Enter a postcode' } if error['site-postcode'],
+  value: data.sitePostcode if data.sitePostcode else payload['site-postcode'],
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Postcode"
+  }
+}) }}
+{% endset -%}
+{% set title = 'Does the site have a postcode?' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+  {{ govukRadios({
+            idPrefix: "site-postcode-check",
+            name: "site-postcode-check",
+            errorMessage: { text: 'Select an option' } if error['site-postcode-check'],
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['site-postcode-check'] === 'yes',
+                conditional: {
+                  html: postcodeHtml
+                }
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['site-postcode-check'] === 'no'
+              }
+            ]
+          }) }}
+{% endblock %}

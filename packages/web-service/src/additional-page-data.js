@@ -1,5 +1,5 @@
+import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT, siteURIs } from './uris.js'
 import crypto from 'crypto'
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT } from './uris.js'
 
 export const additionalPageData = (request, h) => {
   const response = request.response
@@ -43,7 +43,12 @@ export const additionalPageData = (request, h) => {
         experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
         methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
         classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
-        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri,
+        siteName: siteURIs.NAME.uri,
+        siteGridReference: siteURIs.SITE_GRID_REF.uri,
+        siteMap: siteURIs.UPLOAD_MAP.uri,
+        siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
+        siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri
       },
       credentials: request.auth.credentials
     })

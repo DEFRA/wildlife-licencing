@@ -1,0 +1,47 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+{% from "select/macro.njk" import govukSelect %}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set errorMap = {
+        'uprn': {
+            'number.base': { ref: '#siteAddress', text: 'You have not selected an address' }
+        }
+    }
+%}
+
+{% set title = 'What is the site address?' %}
+
+{% set items = [] %}
+{{ items.push({ value: 'top', text: data.addressLookup.length + ' addresses found' }) }}
+{% for a in data.addressLookup %}
+    {{ items.push({ value: a.Address.UPRN, text: a.Address.AddressLine }) }}
+{% endfor %}
+
+{% block pageContent %}
+    <p class="govuk-body govuk-!-margin-bottom-6">
+      <span class="govuk-!-font-weight-bold">Postcode</span>
+      <br>
+      {{ data.postcode }}
+      <br>
+      <a href="{{ data.uri.postcode }}" class="govuk-link">Change</a>
+    </p>
+    {{ govukSelect({
+      id: "siteAddress",
+      name: "uprn",
+      label: {
+        text: "Select an address",
+        classes: "govuk-label govuk-!-font-weight-bold"
+      },
+      errorMessage: { text: 'Select an address' } if error['uprn'],
+      items: items
+    }) }}
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        <a href="{{ data.uri.addressForm }}" class="govuk-link">I can’t find the address in the list</a>
+    </p>
+{% endblock %}

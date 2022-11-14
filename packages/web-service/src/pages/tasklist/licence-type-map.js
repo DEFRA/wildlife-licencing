@@ -181,7 +181,7 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SITES,
-            uri: siteURIs.NAME.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SITES].tagState) ? siteURIs.CHECK_SITE_ANSWERS.uri : siteURIs.NAME.uri,
             status: status => getState(status, SECTION_TASKS.SITES),
             enabled: status => eligibilityCompleted(status)
           },
