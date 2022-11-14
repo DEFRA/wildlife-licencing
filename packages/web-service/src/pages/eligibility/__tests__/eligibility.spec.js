@@ -312,6 +312,13 @@ describe('the eligibility pages', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: () => {}
+              }
+            }
+          },
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: true, permissionsGranted: false }))
           }
@@ -355,6 +362,13 @@ describe('the eligibility pages', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: () => {}
+              }
+            }
+          },
           ELIGIBILITY: {
             getById: jest.fn(() => ({
               permissionsGranted: true,
@@ -560,6 +574,13 @@ describe('the eligibility pages', () => {
         NOT_STARTED: 'not-started'
       },
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: () => {}
+            }
+          }
+        },
         ELIGIBILITY: {
           getById: jest.fn(() => ({
             permissionsGranted: false,
@@ -698,6 +719,39 @@ describe('the eligibility pages', () => {
         }
       })
       expect(result).toEqual(LOGIN.uri)
+    })
+
+    it('getData sets the tag', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress'
+        },
+        APIRequests: {
+          ELIGIBILITY: {
+            getById: jest.fn(() => ({ question: 'answer' }))
+          },
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => 'not-started',
+                set: mockSet
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { landOwnerGetData } = await import('../eligibility.js')
+      await landOwnerGetData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'eligibility-check', tagState: 'in-progress' })
     })
   })
 })

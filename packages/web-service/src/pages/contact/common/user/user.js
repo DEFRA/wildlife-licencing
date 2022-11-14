@@ -1,6 +1,5 @@
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
-import { accountsRoute, contactAccountOperations, contactOperations, contactsRoute } from '../common.js'
-import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
+import { APIRequests } from '../../../../services/api-requests.js'
+import { accountsRoute, contactOperations, contactsRoute } from '../common.js'
 
 export const getUserData = _contactRole => async request => {
   const journeyData = await request.cache().getData()
@@ -22,13 +21,11 @@ export const setUserData = contactRole => async request => {
     } else {
       await contactOps.unAssign()
       await contactOps.create(true)
-      await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.IN_PROGRESS })
     }
   } else {
     // Create a contact here, it may be removed one is selected from contact names
     await contactOps.unAssign()
     await contactOps.create(false)
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.IN_PROGRESS })
   }
 }
 

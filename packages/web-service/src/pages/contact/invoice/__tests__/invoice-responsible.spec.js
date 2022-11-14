@@ -109,6 +109,7 @@ describe('the invoice-responsible page', () => {
 
   describe('getData', () => {
     it('returns correctly with no payer set', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -117,7 +118,8 @@ describe('the invoice-responsible page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -148,15 +150,18 @@ describe('the invoice-responsible page', () => {
     })
 
     it('returns correctly with payer set to applicant', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -187,6 +192,7 @@ describe('the invoice-responsible page', () => {
     })
 
     it('returns correctly with payer set to ecologist', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -195,7 +201,8 @@ describe('the invoice-responsible page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -226,6 +233,7 @@ describe('the invoice-responsible page', () => {
     })
 
     it('returns correctly with payer set to other', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -234,7 +242,8 @@ describe('the invoice-responsible page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -514,6 +523,7 @@ describe('the invoice-responsible page', () => {
     })
 
     it('go to the tasklist page if other is not chosen', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -522,7 +532,8 @@ describe('the invoice-responsible page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           }

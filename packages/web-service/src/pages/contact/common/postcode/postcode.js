@@ -1,7 +1,6 @@
 import db from 'debug'
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
-import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import path from 'path'
 import Config from '@defra/wls-connectors-lib/src/config.js'
 import fs from 'fs'
@@ -45,12 +44,10 @@ export const addressLookupForPostcode = async (postcode, journeyData, request) =
   }
 }
 
-export const setPostcodeData = contactRole => async request => {
+export const setPostcodeData = _contactRole => async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   const postcode = pageData.payload.postcode
-  const { applicationId } = journeyData
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: CONTACT_COMPLETE[contactRole], tagState: tagStatus.IN_PROGRESS })
   await addressLookupForPostcode(postcode, journeyData, request)
 }
 

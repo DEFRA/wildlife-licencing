@@ -230,6 +230,7 @@ describe('The previous licence page', () => {
 
   describe('the get data function', () => {
     it('returns the value of previous licence as no if false', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -238,7 +239,8 @@ describe('The previous licence page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -260,15 +262,18 @@ describe('The previous licence page', () => {
     })
 
     it('returns the value of previous licence as yes if true', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },
@@ -290,6 +295,7 @@ describe('The previous licence page', () => {
     })
 
     it('returns null if the user has no past data inputted', async () => {
+      const mockGet = jest.fn(() => 'not-started')
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -298,7 +304,8 @@ describe('The previous licence page', () => {
           APPLICATION: {
             tags: () => {
               return {
-                set: jest.fn()
+                set: jest.fn(),
+                get: mockGet
               }
             }
           },

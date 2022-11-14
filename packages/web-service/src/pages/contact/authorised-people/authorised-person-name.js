@@ -3,6 +3,8 @@ import { contactNamePage } from '../common/contact-name/contact-name-page.js'
 import { checkHasApplication, contactOperationsForContact } from '../common/common.js'
 import { getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 const { NAME } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
@@ -28,11 +30,16 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
+  return getAuthorisedPeopleData(c => c)
+}
+
 export const authorisedPersonName = contactNamePage({
   page: NAME.page,
   uri: NAME.uri,
   checkData: checkHasApplication,
-  getData: getAuthorisedPeopleData(c => c),
   setData: setData,
   completion: getAuthorisedPeopleCompletion
 }, [ContactRoles.AUTHORISED_PERSON])

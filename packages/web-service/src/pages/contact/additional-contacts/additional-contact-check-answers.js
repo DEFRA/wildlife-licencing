@@ -1,13 +1,15 @@
-import { APIRequests } from '../../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { checkHasApplication } from '../common/common.js'
 import { yesNoFromBool } from '../../common/common.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 const { CHECK_ANSWERS } = contactURIs.ADDITIONAL_APPLICANT
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   const additionalApplicant = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_APPLICANT).getByApplicationId(applicationId)
   const additionalEcologist = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_ECOLOGIST).getByApplicationId(applicationId)
 
@@ -35,10 +37,16 @@ export const getData = async request => {
   }
 }
 
+export const setData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE })
+}
+
 export const additionalContactCheckAnswers = checkAnswersPage({
   checkData: checkHasApplication,
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
   getData,
+  setData: setData,
   completion: TASKLIST.uri
 })

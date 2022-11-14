@@ -8,6 +8,7 @@ import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
+import { moveTagInProgress } from '../common/tag-functions.js'
 
 // The pages in the flow
 const {
@@ -25,17 +26,18 @@ const PERMISSION_GRANTED = 'permissionsGranted'
 export const eligibilityStateMachine = async request => {
   const journeyData = await request.cache().getData() || {}
   const eligibility = await APIRequests.ELIGIBILITY.getById(journeyData.applicationId)
-  const grantedCompletionSection = eligibilityPart => {
+  const grantedCompletionSection = async eligibilityPart => {
     if (eligibilityPart[PERMISSION_GRANTED] === undefined) {
       return CONSENT_GRANTED.uri
     } else if (!eligibilityPart[PERMISSION_GRANTED]) {
+      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
       return NOT_ELIGIBLE_PROJECT.uri
     } else {
       return ELIGIBILITY_CHECK.uri
     }
   }
 
-  const consentCompletionSection = eligibilityPart => {
+  const consentCompletionSection = async eligibilityPart => {
     if (eligibilityPart[PERMISSION_REQUIRED] === undefined) {
       return CONSENT.uri
     } else if (!eligibilityPart[PERMISSION_REQUIRED]) {
@@ -45,7 +47,7 @@ export const eligibilityStateMachine = async request => {
     }
   }
 
-  const permissionsCompletionSection = eligibilityPart => {
+  const permissionsCompletionSection = async eligibilityPart => {
     if (eligibilityPart[HAS_LANDOWNER_PERMISSION] === undefined) {
       return LANDOWNER_PERMISSION.uri
     } else if (!eligibilityPart[HAS_LANDOWNER_PERMISSION]) {
@@ -98,6 +100,12 @@ const consolidateAnswers = async (request, eligibility) => {
   }
 }
 
+export const landOwnerGetData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await moveTagInProgress(applicationId, SECTION_TASKS.ELIGIBILITY_CHECK)
+  return getData(IS_OWNER_OF_LAND)
+}
+
 export const setData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
@@ -114,7 +122,7 @@ export const landOwner = yesNoPage({
   page: LANDOWNER.page,
   uri: LANDOWNER.uri,
   options: { auth: { mode: 'optional' } },
-  getData: getData(IS_OWNER_OF_LAND),
+  getData: landOwnerGetData,
   completion: eligibilityStateMachine,
   setData: setData(IS_OWNER_OF_LAND),
   checkData
@@ -180,14 +188,8 @@ export const checkYourAnswersGetData = async request => {
   const unneeded = q => {
     if (q === HAS_LANDOWNER_PERMISSION && eligibility[IS_OWNER_OF_LAND]) {
       return false
-    } if (q === PERMISSION_GRANTED && !eligibility[PERMISSION_REQUIRED]) {
-      return false
     }
-    return true
-  }
-
-  if (request.url.pathname === ELIGIBILITY_CHECK.uri) {
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+    return !(q === PERMISSION_GRANTED && !eligibility[PERMISSION_REQUIRED])
   }
 
   // The check-answers macro requires an array of k, v pair objects
@@ -213,7 +215,11 @@ export const eligibilityCheck = checkAnswersPage(
     page: ELIGIBILITY_CHECK.page,
     uri: ELIGIBILITY_CHECK.uri,
     options: { auth: { mode: 'optional' } },
-    getData: checkYourAnswersGetData,
+    getData: async request => {
+      const { applicationId } = await request.cache().getData()
+      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+      return checkYourAnswersGetData(request)
+    },
     setData: checkYourAnswersSetData,
     completion: checkAnswersCompletion,
     checkData: checkData

@@ -1,5 +1,4 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { DEFAULT_ROLE } from '../../../../constants.js'
 import { accountsFilter, contactOperations } from '../common.js'
 
 export const getContactData = contactRole => async request => {

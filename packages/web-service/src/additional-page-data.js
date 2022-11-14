@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, REGISTER, SIGN_OUT } from './uris.js'
+import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, SIGN_OUT } from './uris.js'
 
 export const additionalPageData = (request, h) => {
   const response = request.response

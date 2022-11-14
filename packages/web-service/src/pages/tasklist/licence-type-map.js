@@ -8,8 +8,7 @@ import {
   siteURIs
 } from '../../uris.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
-import { isComplete } from '../common/tag-is-complete.js'
-import { isCompleteOrConfirmed } from '../common/tag-is-complete-or-confirmed.js'
+import { isComplete, isCompleteOrConfirmed } from '../common/tag-functions.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
@@ -53,7 +52,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST_EXPERIENCE) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.WORK_ACTIVITY]: { tagState: tagStatus.NOT_STARTED },
     [SECTION_TASKS.PERMISSIONS]: { tagState: tagStatus.NOT_STARTED },
-    [SECTION_TASKS.SITES]: { tagState: tagStatus.NOT_STARTED },
+    [SECTION_TASKS.SITES]: (applicationTags.find(t => t.tag === SECTION_TASKS.SITES) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SETTS]: (applicationTags.find(t => t.tag === SECTION_TASKS.SETTS) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUPPORTING_INFORMATION]: (applicationTags.find(t => t.tag === SECTION_TASKS.SUPPORTING_INFORMATION) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUBMIT]: { tagState: tagStatus.NOT_STARTED }
@@ -138,7 +137,9 @@ export const licenceTypeMap = {
 
           {
             name: SECTION_TASKS.ADDITIONAL_CONTACTS,
-            uri: contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
+              ? contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
+              : contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
             status: status => getStateDependsUpon(
               status,
               SECTION_TASKS.ADDITIONAL_CONTACTS,

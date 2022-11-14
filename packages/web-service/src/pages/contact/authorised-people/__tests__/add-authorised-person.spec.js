@@ -158,7 +158,8 @@ describe('add authorised person', () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          IN_PROGRESS: 'in-progress'
+          IN_PROGRESS: 'in-progress',
+          COMPLETE: 'complete'
         },
         APIRequests: {
           APPLICATION: {
@@ -185,6 +186,40 @@ describe('add authorised person', () => {
       const { setData } = await import('../add-authorised-person.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-people', tagState: 'in-progress' })
+    })
+
+    it('if you add no authorised people, journey marked as complete', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet
+            })
+          }
+        }
+      }))
+
+      const request = {
+        payload: {
+          'yes-no': 'no'
+        },
+        cache: () => ({
+          clearPageData: jest.fn(),
+          setData: jest.fn(),
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { setData } = await import('../add-authorised-person.js')
+      await setData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-people', tagState: 'complete' })
     })
 
     it('when not adding another contact adds the tag', async () => {
