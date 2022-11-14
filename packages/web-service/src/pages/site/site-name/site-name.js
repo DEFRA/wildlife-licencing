@@ -4,11 +4,12 @@ import { checkApplication } from '../../habitat/a24/common/check-application.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import Joi from 'joi'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { moveTagInProgress } from '../../common/move-tag-status-in-progress.js'
 import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 
 export const getData = async request => {
-  const siteName = await request.cache().getData()
-  const { name } = siteName
+  const { name, applicationId } = await request.cache().getData()
+  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
   return { name }
 }
 
