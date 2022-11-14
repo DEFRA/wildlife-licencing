@@ -1,5 +1,4 @@
-
-describe('the map of the site showing the mitigations after development page page handler', () => {
+describe('the map of the site showing the mitigations during development page handler', () => {
   beforeEach(() => jest.resetModules())
 
   it('getData', async () => {
@@ -18,15 +17,17 @@ describe('the map of the site showing the mitigations after development page pag
     }))
     const request = {
       cache: () => ({
-        getData: () => ({ })
+        getData: () => ({})
       })
     }
 
-    const { getData } = await import('../upload-map-3.js')
+    const { getData } = await import(
+      '../upload-map-of-mitigations-during-development.js'
+    )
     expect(await getData(request)).toBeNull()
   })
 
-  it('should calls the s3 upload and redirects to the site national grid reference page', async () => {
+  it('should calls the s3 upload and redirects to the add a map of the site showing the mitigations after development page', async () => {
     const mockSetData = jest.fn()
     const mockS3FileUpload = jest.fn()
     const mockUpdate = jest.fn()
@@ -50,9 +51,14 @@ describe('the map of the site showing the mitigations after development page pag
     const request = {
       cache: () => ({
         getData: () => ({
-          fileUpload: { filename: 'site-after-development.shape', path: '/tmp/path' },
+          fileUpload: { filename: 'demo.jpg', path: '/tmp/path' },
           applicationId: 123,
-          siteData: { id: 45678, name: 'site-name', address: '123 site street, Birmingham, B1 4HY', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg' } }
+          siteData: {
+            id: 45678,
+            name: 'site-name',
+            address: '123 site street, Birmingham, B1 4HY',
+            siteMapFiles: { activity: 'site.pdf' }
+          }
         }),
         setData: mockSetData
       })
@@ -61,13 +67,29 @@ describe('the map of the site showing the mitigations after development page pag
     jest.doMock('../../../../services/s3-upload.js', () => ({
       s3FileUpload: mockS3FileUpload
     }))
-    const { completion } = await import('../upload-map-3.js')
+    const { completion } = await import(
+      '../upload-map-of-mitigations-during-development.js'
+    )
     const result = await completion(request)
-    expect(result).toEqual('/site-grid-ref')
-    expect(mockUpdate).toHaveBeenCalledWith(45678,
-      { address: '123 site street, Birmingham, B1 4HY', name: 'site-name', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg', mitigationsAfterDevelopment: 'site-after-development.shape' } })
-    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shape', '/tmp/path',
-      { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF'] })
+    expect(result).toEqual('/upload-map-of-mitigations-after-development')
+    expect(mockUpdate).toHaveBeenCalledWith(45678, {
+      address: '123 site street, Birmingham, B1 4HY',
+      name: 'site-name',
+      siteMapFiles: {
+        activity: 'site.pdf',
+        mitigationsDuringDevelopment: 'demo.jpg'
+      }
+    })
+    expect(mockS3FileUpload).toHaveBeenCalledWith(
+      123,
+      'demo.jpg',
+      '/tmp/path',
+      {
+        filetype: 'MAP',
+        multiple: true,
+        supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF']
+      }
+    )
     expect(mockSetData).toHaveBeenCalled()
   })
 
@@ -96,7 +118,12 @@ describe('the map of the site showing the mitigations after development page pag
       cache: () => ({
         getData: () => ({
           applicationId: 123,
-          siteData: { id: 45678, name: 'site-name', address: '123 site street, Birmingham, B1 4HY', siteMapFiles: { activity: 'site.pdf' } }
+          siteData: {
+            id: 45678,
+            name: 'site-name',
+            address: '123 site street, Birmingham, B1 4HY',
+            siteMapFiles: { activity: 'site.pdf' }
+          }
         }),
         setData: mockSetData
       })
@@ -105,9 +132,11 @@ describe('the map of the site showing the mitigations after development page pag
     jest.doMock('../../../../services/s3-upload.js', () => ({
       s3FileUpload: mockS3FileUpload
     }))
-    const { completion } = await import('../upload-map-3.js')
+    const { completion } = await import(
+      '../upload-map-of-mitigations-during-development.js'
+    )
     const result = await completion(request)
-    expect(result).toEqual('/site-grid-ref')
+    expect(result).toEqual('/upload-map-of-mitigations-after-development')
     expect(mockUpdate).not.toHaveBeenCalled()
     expect(mockS3FileUpload).not.toHaveBeenCalled()
     expect(mockSetData).not.toHaveBeenCalled()
@@ -138,9 +167,13 @@ describe('the map of the site showing the mitigations after development page pag
     const request = {
       cache: () => ({
         getData: () => ({
-          fileUpload: { filename: 'site-after-development.shape', path: '/tmp/path' },
           applicationId: 123,
-          siteData: { id: 45678, name: 'site-name', address: '123 site street, Birmingham, B1 4HY', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg' } }
+          siteData: {
+            id: 45678,
+            name: 'site-name',
+            address: '123 site street, Birmingham, B1 4HY',
+            siteMapFiles: { activity: 'site.pdf' }
+          }
         }),
         setData: mockSetData
       })
@@ -149,7 +182,9 @@ describe('the map of the site showing the mitigations after development page pag
     jest.doMock('../../../../services/s3-upload.js', () => ({
       s3FileUpload: mockS3FileUpload
     }))
-    const { completion } = await import('../upload-map-3.js')
+    const { completion } = await import(
+      '../upload-map-of-mitigations-during-development.js'
+    )
     expect(await completion(request)).toEqual('/check-site-answers')
   })
 })

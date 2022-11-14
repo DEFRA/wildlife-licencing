@@ -63,7 +63,7 @@ describe('the map of your activity at the development site page handler', () => 
     }))
     const { completion } = await import('../upload-map.js')
     const result = await completion(request)
-    expect(result).toEqual('/upload-map-2')
+    expect(result).toEqual('/upload-map-of-mitigations-during-development')
     expect(mockUpdate).toHaveBeenCalledWith(45678, { address: '123 site street, Birmingham, B1 4HY', name: 'site-name', siteMapFiles: { activity: 'site.pdf' } })
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site.pdf', '/tmp/path',
       { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF'] })
@@ -106,7 +106,7 @@ describe('the map of your activity at the development site page handler', () => 
     }))
     const { completion } = await import('../upload-map.js')
     const result = await completion(request)
-    expect(result).toEqual('/upload-map-2')
+    expect(result).toEqual('/upload-map-of-mitigations-during-development')
     expect(mockUpdate).not.toHaveBeenCalled()
     expect(mockS3FileUpload).not.toHaveBeenCalled()
     expect(mockSetData).not.toHaveBeenCalled()

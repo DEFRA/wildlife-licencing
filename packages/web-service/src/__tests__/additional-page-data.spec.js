@@ -65,8 +65,8 @@ describe('additional page data', () => {
         register: '/register',
         siteGridReference: '/site-grid-ref',
         siteMap: '/upload-map',
-        siteMapThree: '/upload-map-3',
-        siteMapTwo: '/upload-map-2',
+        siteMapThree: '/upload-map-of-mitigations-after-development',
+        siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
         signOut: '/sign-out'
       },

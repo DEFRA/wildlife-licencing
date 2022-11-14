@@ -15,14 +15,14 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
   const { siteData, applicationId, fileUpload } = journeyData
   const { name, address, siteMapFiles } = siteData
+  const { activity, mitigationsDuringDevelopment } = siteMapFiles
   const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
-  const { activity } = siteMapFiles
 
   if (applicationId && fileUpload) {
-    const payload = { name, address, siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } }
+    const payload = { name, address, siteMapFiles: { activity, mitigationsDuringDevelopment, mitigationsAfterDevelopment: fileUpload.filename } }
     await APIRequests.SITE.update(siteData.id, payload)
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
-    journeyData.siteData = Object.assign(journeyData.siteData, { siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } })
+    journeyData.siteData = Object.assign(journeyData.siteData, { siteMapFiles: { activity, mitigationsDuringDevelopment, mitigationsAfterDevelopment: fileUpload.filename } })
     await request.cache().setData(journeyData)
   }
 
@@ -30,12 +30,12 @@ export const completion = async request => {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
 
-  return siteURIs.UPLOAD_MAP_3.uri
+  return siteURIs.SITE_GRID_REF.uri
 }
 
-export const siteMapUploadTwo = fileUploadPageRoute({
-  view: siteURIs.UPLOAD_MAP_2.page,
-  fileUploadUri: siteURIs.UPLOAD_MAP_2.uri,
+export const siteMapUploadThree = fileUploadPageRoute({
+  view: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.page,
+  fileUploadUri: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
   fileUploadCompletion: completion,
   fileType: FILETYPES.SITE_MAP_FILES.filetype
 })

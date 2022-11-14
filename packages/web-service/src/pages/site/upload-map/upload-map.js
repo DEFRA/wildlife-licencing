@@ -29,7 +29,7 @@ export const completion = async request => {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
 
-  return siteURIs.UPLOAD_MAP_2.uri
+  return siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri
 }
 
 export const siteMapUpload = fileUploadPageRoute({

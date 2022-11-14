@@ -47,8 +47,8 @@ export const additionalPageData = (request, h) => {
         siteName: siteURIs.NAME.uri,
         siteGridReference: siteURIs.SITE_GRID_REF.uri,
         siteMap: siteURIs.UPLOAD_MAP.uri,
-        siteMapTwo: siteURIs.UPLOAD_MAP_2.uri,
-        siteMapThree: siteURIs.UPLOAD_MAP_3.uri
+        siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
+        siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri
       },
       credentials: request.auth.credentials
     })

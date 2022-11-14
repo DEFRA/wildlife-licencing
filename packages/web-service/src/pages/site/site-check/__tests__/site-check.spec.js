@@ -27,10 +27,18 @@ describe('The site address and National Grid Reference page', () => {
     }
 
     jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
       APIRequests: {
         SITE: {
           getSiteById: () => {
             return result.siteData
+          }
+        },
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
           }
         }
       }
@@ -50,6 +58,18 @@ describe('The site address and National Grid Reference page', () => {
 
   it('should redirect user to check site answers page', async () => {
     const { completion } = await import('../site-check.js')
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
+          }
+        }
+      }
+    }))
     const request = {
       payload: {},
       cache: () => ({
@@ -68,6 +88,18 @@ describe('The site address and National Grid Reference page', () => {
 
   it('should redirect user to the address page', async () => {
     const { completion } = await import('../site-check.js')
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
+          }
+        }
+      }
+    }))
     const request = {
       payload: {},
       cache: () => ({
@@ -86,6 +118,18 @@ describe('The site address and National Grid Reference page', () => {
 
   it('should redirect user to the site grid reference page', async () => {
     const { completion } = await import('../site-check.js')
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
+          }
+        }
+      }
+    }))
     const request = {
       payload: {},
       cache: () => ({
