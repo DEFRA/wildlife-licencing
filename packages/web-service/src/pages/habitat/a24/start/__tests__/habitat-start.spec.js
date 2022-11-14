@@ -2,32 +2,6 @@ describe('The habitat start page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('habitat start page', () => {
-    it('the habitat start page forwards onto habitat-name page', async () => {
-      const request = {
-        cache: () => {
-          return {
-            getData: () => jest.fn()
-          }
-        }
-      }
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          IN_PROGRESS: 'in-progress'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { set: jest.fn() }
-            }
-          }
-        }
-      }))
-      jest.doMock()
-      const { completion } = await import('../habitat-start.js')
-      expect(await completion(request)).toBe('/habitat-name')
-    })
-
     it('the checkData returns undefined if the journey isnt complete', async () => {
       const request = {
         cache: () => ({
@@ -91,6 +65,36 @@ describe('The habitat start page', () => {
       const { checkData } = await import('../habitat-start.js')
       await checkData(request, h)
       expect(mockRedirect).toHaveBeenCalledWith('/check-habitat-answers')
+    })
+
+    it('getData sets the tag', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => 'not-started',
+                set: mockSet
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { getData } = await import('../habitat-start.js')
+      expect(await getData(request)).toBe(null)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'setts', tagState: 'in-progress' })
     })
   })
 })

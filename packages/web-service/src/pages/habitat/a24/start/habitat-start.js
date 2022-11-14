@@ -1,14 +1,15 @@
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-is-complete-or-confirmed.js'
+import { moveTagInProgress } from '../../../common/move-tag-status-in-progress.js'
 
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.IN_PROGRESS })
-  return habitatURIs.NAME.uri
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  moveTagInProgress(applicationId, SECTION_TASKS.SETTS)
+  return null
 }
 
 export const checkData = async (request, h) => {
@@ -32,6 +33,7 @@ export const checkData = async (request, h) => {
 export default pageRoute({
   page: habitatURIs.START.page,
   uri: habitatURIs.START.uri,
-  completion,
+  completion: habitatURIs.NAME.uri,
+  getData,
   checkData
 })

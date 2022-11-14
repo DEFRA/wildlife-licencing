@@ -51,7 +51,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST_EXPERIENCE) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.WORK_ACTIVITY]: { tagState: tagStatus.NOT_STARTED },
     [SECTION_TASKS.PERMISSIONS]: { tagState: tagStatus.NOT_STARTED },
-    [SECTION_TASKS.SITES]: { tagState: tagStatus.NOT_STARTED },
+    [SECTION_TASKS.SITES]: (applicationTags.find(t => t.tag === SECTION_TASKS.SITES) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SETTS]: (applicationTags.find(t => t.tag === SECTION_TASKS.SETTS) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUPPORTING_INFORMATION]: (applicationTags.find(t => t.tag === SECTION_TASKS.SUPPORTING_INFORMATION) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUBMIT]: { tagState: tagStatus.NOT_STARTED }
