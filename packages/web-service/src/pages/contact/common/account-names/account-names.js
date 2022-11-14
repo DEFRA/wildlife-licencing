@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsFilter, accountOperations, checkHasContact, contactAccountOperations } from '../common.js'
 import { DEFAULT_ROLE } from '../../../../constants.js'
+import { accountsFilter, accountOperations, checkHasContact, contactAccountOperations } from '../common.js'
 
 export const accountNamesCheckData = (contactRole, accountRole, urlBase) => async (request, h) => {
   const ck = await checkHasContact(contactRole, urlBase)(request, h)

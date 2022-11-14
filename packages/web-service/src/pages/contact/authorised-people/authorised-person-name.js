@@ -41,5 +41,6 @@ export const authorisedPersonName = contactNamePage({
   uri: NAME.uri,
   checkData: checkHasApplication,
   setData: setData,
-  completion: getAuthorisedPeopleCompletion
+  completion: getAuthorisedPeopleCompletion,
+  getData
 }, ContactRoles.AUTHORISED_PERSON)
