@@ -8,7 +8,7 @@ import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
-import { moveTagInProgress } from '../common/move-tag-status-in-progress.js'
+import { moveTagInProgress } from '../common/tag-functions.js'
 
 // The pages in the flow
 const {
@@ -188,10 +188,8 @@ export const checkYourAnswersGetData = async request => {
   const unneeded = q => {
     if (q === HAS_LANDOWNER_PERMISSION && eligibility[IS_OWNER_OF_LAND]) {
       return false
-    } if (q === PERMISSION_GRANTED && !eligibility[PERMISSION_REQUIRED]) {
-      return false
     }
-    return true
+    return !(q === PERMISSION_GRANTED && !eligibility[PERMISSION_REQUIRED])
   }
 
   // The check-answers macro requires an array of k, v pair objects

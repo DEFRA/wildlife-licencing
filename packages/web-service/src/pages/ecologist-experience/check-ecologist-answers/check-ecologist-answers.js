@@ -4,7 +4,7 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
-import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()

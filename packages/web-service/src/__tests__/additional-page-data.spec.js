@@ -1,4 +1,3 @@
-import { any } from 'joi'
 
 describe('additional page data', () => {
   beforeEach(() => jest.resetModules())

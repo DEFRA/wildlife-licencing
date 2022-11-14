@@ -29,7 +29,6 @@ describe('site-name page handler', () => {
 
   it('setData', async () => {
     const mockSetData = jest.fn()
-    const mockSet = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
@@ -37,11 +36,6 @@ describe('site-name page handler', () => {
         NOT_STARTED: 'not-started'
       },
       APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { set: mockSet }
-          }
-        },
         SITE: {
           create: jest.fn(() => ({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45' }))
         }
@@ -62,7 +56,6 @@ describe('site-name page handler', () => {
     }
     await setData(request)
 
-    expect(mockSet).toHaveBeenCalledWith({ tag: 'sites', tagState: 'IN_PROGRESS' })
     expect(mockSetData).toHaveBeenCalledWith({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c', siteData: { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'name' } })
   })
 

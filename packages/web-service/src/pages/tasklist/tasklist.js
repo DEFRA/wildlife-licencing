@@ -5,7 +5,7 @@ import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
 import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { isComplete } from '../common/tag-is-complete.js'
+import { isComplete } from '../common/tag-functions.js'
 
 export const getApplication = async request => {
   // If there is no application then create a pre-application

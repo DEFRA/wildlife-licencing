@@ -1,9 +1,8 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { APPLICATIONS, ecologistExperienceURIs } from '../../../uris.js'
-import { moveTagInProgress } from '../../common/move-tag-status-in-progress.js'
-import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 const yesNo = 'yes-no'
 
 export const completion = async request => {

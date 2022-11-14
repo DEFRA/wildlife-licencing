@@ -6,7 +6,7 @@ import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../common/check-application.js'
-import { isCompleteOrConfirmed } from '../../../common/tag-is-complete-or-confirmed.js'
+import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
