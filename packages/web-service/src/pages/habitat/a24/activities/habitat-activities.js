@@ -7,7 +7,7 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
-import { isCompleteOrConfirmed } from '../../../common/tag-is-complete-or-confirmed.js'
+import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 

@@ -5,7 +5,7 @@ import { ecologistExperienceURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../common/check-application.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
-import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
 const key = 'enter-experience'
 

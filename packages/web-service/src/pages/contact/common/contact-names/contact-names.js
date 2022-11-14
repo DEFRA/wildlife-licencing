@@ -3,7 +3,7 @@ import { DEFAULT_ROLE } from '../../../../constants.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
 import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
-import { isComplete } from '../../../common/tag-is-complete.js'
+import { isComplete } from '../../../common/tag-functions.js'
 
 export const checkContactNamesData = () => async (request, h) => {
   const journeyData = await request.cache().getData()

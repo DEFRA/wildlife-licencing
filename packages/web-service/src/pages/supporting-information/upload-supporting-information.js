@@ -1,8 +1,8 @@
 import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILE_UPLOADS } from '../../uris.js'
 import { FILETYPES, fileUploadPageRoute } from '../common/file-upload/file-upload.js'
-import { moveTagInProgress } from '../common/move-tag-status-in-progress.js'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { moveTagInProgress } from '../common/tag-functions.js'
 
 export const completion = async request => {
   const { applicationId, fileUpload } = await request.cache().getData()
@@ -15,7 +15,7 @@ export const completion = async request => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  moveTagInProgress(applicationId, SECTION_TASKS.SUPPORTING_INFORMATION)
+  await moveTagInProgress(applicationId, SECTION_TASKS.SUPPORTING_INFORMATION)
   return null
 }
 

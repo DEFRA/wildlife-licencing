@@ -8,8 +8,7 @@ import {
   siteURIs
 } from '../../uris.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
-import { isComplete } from '../common/tag-is-complete.js'
-import { isCompleteOrConfirmed } from '../common/tag-is-complete-or-confirmed.js'
+import { isComplete, isCompleteOrConfirmed } from '../common/tag-functions.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
