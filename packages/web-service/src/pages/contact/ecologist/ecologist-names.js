@@ -12,7 +12,7 @@ export const ecologistNames = contactNamesPage({
   page: contactURIs.ECOLOGIST.NAMES.page,
   uri: contactURIs.ECOLOGIST.NAMES.uri,
   checkData: checkHasContact(ContactRoles.ECOLOGIST, contactURIs.ECOLOGIST),
-  getData: getContactNamesData(ContactRoles.ECOLOGIST),
+  getData: getContactNamesData(ContactRoles.ECOLOGIST, [ContactRoles.ADDITIONAL_ECOLOGIST]),
   setData: setContactNamesData(ContactRoles.ECOLOGIST),
   completion: contactNamesCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
 })

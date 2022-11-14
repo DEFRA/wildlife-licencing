@@ -13,4 +13,4 @@ export const ecologistName = contactNamePage({
   getData: getContactData(ContactRoles.ECOLOGIST),
   setData: setContactData(ContactRoles.ECOLOGIST),
   completion: contactNameCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
-}, ContactRoles.ECOLOGIST)
+}, [ContactRoles.ECOLOGIST, ContactRoles.ADDITIONAL_ECOLOGIST])

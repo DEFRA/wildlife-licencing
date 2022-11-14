@@ -1,3 +1,10 @@
 {% extends "contact-names.njk" %}
 {% set title = 'Who is the ecologist?' %}
 {% set addText = 'Add someone else' %}
+
+{% set errorMap = {
+        'contact': {
+            'any.required': { ref: '#contact', text: "Choose the ecologist or 'someone else'" }
+        }
+    }
+%}

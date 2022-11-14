@@ -35,4 +35,4 @@ export const authorisedPersonName = contactNamePage({
   getData: getAuthorisedPeopleData(c => c),
   setData: setData,
   completion: getAuthorisedPeopleCompletion
-}, ContactRoles.AUTHORISED_PERSON)
+}, [ContactRoles.AUTHORISED_PERSON])

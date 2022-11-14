@@ -92,6 +92,22 @@ export const contactURIs = {
     POSTCODE: { uri: '/invoice-postcode', page: 'invoice-postcode' },
     ADDRESS: { uri: '/invoice-address', page: 'invoice-address' },
     ADDRESS_FORM: { uri: '/invoice-address-form', page: 'invoice-address-form' }
+  },
+  ADDITIONAL_APPLICANT: {
+    ADD: { uri: '/add-additional-applicant', page: 'add-additional-applicant' },
+    USER: { uri: '/additional-applicant-user', page: 'additional-applicant-user' },
+    NAMES: { uri: '/additional-applicant-names', page: 'additional-applicant-names' },
+    NAME: { uri: '/additional-applicant-name', page: 'additional-applicant-name' },
+    EMAIL: { uri: '/additional-applicant-email', page: 'additional-applicant-email' },
+    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
+  },
+  ADDITIONAL_ECOLOGIST: {
+    ADD: { uri: '/add-additional-ecologist', page: 'add-additional-ecologist' },
+    USER: { uri: '/additional-ecologist-user', page: 'additional-ecologist-user' },
+    NAMES: { uri: '/additional-ecologist-names', page: 'additional-ecologist-names' },
+    NAME: { uri: '/additional-ecologist-name', page: 'additional-ecologist-name' },
+    EMAIL: { uri: '/additional-ecologist-email', page: 'additional-ecologist-email' },
+    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
   }
 }
 

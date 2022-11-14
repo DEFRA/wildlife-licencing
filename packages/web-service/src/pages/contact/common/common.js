@@ -219,6 +219,17 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
           })
         }
       }
+    },
+    setContactIsUser: async contactIsUser => {
+      const contact = await getContact()
+      const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
+      if (contact) {
+        if (contactIsUser && !contact.userId) {
+          await setContactIsUserUnassociated(userId, contactImmutable, contactRole, applicationId, contact)
+        } else if (!contactIsUser && contact.userId) {
+          await setContactIsUserAssociated(contactImmutable, contactRole, applicationId, contact)
+        }
+      }
     }
   }
 }
@@ -351,7 +362,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
   ({
     setEmailAddress: async emailAddress => {
       const contact = await getContact()
-      const account = await getAccount()
+      const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       if (contact && !account) {
         if (contactImmutable) {
@@ -380,7 +391,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
     },
     setAddress: async address => {
       const contact = await getContact()
-      const account = await getAccount()
+      const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
       if (contact && !account) {
@@ -409,7 +420,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
     },
     setOrganisation: async (isOrganisation, name) => {
       const contact = await getContact()
-      const account = await getAccount()
+      const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       if (isOrganisation && (!account || name)) {
         // Add account if name set or there is no account assigned
@@ -423,17 +434,6 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
         // Remove account
         await copyAccountDetailsToContact(applicationId, userId, contactRole, contact, account, contactImmutable)
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
-      }
-    },
-    setContactIsUser: async contactIsUser => {
-      const contact = await getContact()
-      const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (contact) {
-        if (contactIsUser && !contact.userId) {
-          await setContactIsUserUnassociated(userId, contactImmutable, contactRole, applicationId, contact)
-        } else if (!contactIsUser && contact.userId) {
-          await setContactIsUserAssociated(contactImmutable, contactRole, applicationId, contact)
-        }
       }
     }
   })
@@ -681,8 +681,12 @@ const removeContactDetailsFromContact = async (applicationId, userId, contactRol
   }
 }
 
-export const contactsRoute = async (contactRole, userId, applicationId, urlBase) => {
-  const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId, DEFAULT_ROLE)
+export const contactsRoute = async (contactRoles, userId, applicationId, urlBase) => {
+  let contacts = []
+  for await (const contactRole of contactRoles) {
+    contacts = contacts.concat(await APIRequests.CONTACT.role(contactRole).findByUser(userId))
+  }
+
   const filteredContacts = await contactsFilter(applicationId, contacts)
   if (filteredContacts.length < 1) {
     return urlBase.NAME.uri

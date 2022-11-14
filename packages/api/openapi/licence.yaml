@@ -2780,7 +2780,8 @@ components:
         - ECOLOGIST
         - PAYER
         - AUTHORISED-PERSON
-        - ADDITIONAL-CONTACT
+        - ADDITIONAL-APPLICANT
+        - ADDITIONAL-ECOLOGIST
 
     habitatSite:
       type: object

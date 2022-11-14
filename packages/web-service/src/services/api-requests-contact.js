@@ -127,7 +127,7 @@ const unLinkContact = async (role, applicationId, contactId) => {
 const findContactByUser = async (role, userId) => {
   try {
     debug(`Finding ${role}'s for userId: ${userId}`)
-    return API.get(apiUrls.CONTACTS, `userId=${userId}&role=${role}`)
+    return API.get(apiUrls.CONTACTS, role ? `userId=${userId}&role=${role}` : `userId=${userId}`)
   } catch (error) {
     console.error(`Finding ${role}'s for userId: ${userId}`, error)
     Boom.boomify(error, { statusCode: 500 })
@@ -136,6 +136,7 @@ const findContactByUser = async (role, userId) => {
 }
 
 export const CONTACT = {
+  findAllByUser: async userId => findContactByUser(null, userId),
   getById: async contactId => {
     return apiRequestsWrapper(
       async () => {

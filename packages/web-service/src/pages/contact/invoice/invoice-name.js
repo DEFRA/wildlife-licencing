@@ -13,4 +13,4 @@ export const invoiceName = contactNamePage({
   getData: getContactData(ContactRoles.PAYER),
   setData: setContactData(ContactRoles.PAYER),
   completion: contactNameCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
-}, ContactRoles.PAYER)
+}, [ContactRoles.PAYER])

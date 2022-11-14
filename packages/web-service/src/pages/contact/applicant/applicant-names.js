@@ -12,7 +12,7 @@ export const applicantNames = contactNamesPage({
   page: contactURIs.APPLICANT.NAMES.page,
   uri: contactURIs.APPLICANT.NAMES.uri,
   checkData: checkHasContact(ContactRoles.APPLICANT, contactURIs.APPLICANT),
-  getData: getContactNamesData(ContactRoles.APPLICANT),
+  getData: getContactNamesData(ContactRoles.APPLICANT, [ContactRoles.ADDITIONAL_APPLICANT]),
   setData: setContactNamesData(ContactRoles.APPLICANT),
   completion: contactNamesCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

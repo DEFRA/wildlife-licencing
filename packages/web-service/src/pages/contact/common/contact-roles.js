@@ -3,7 +3,8 @@ export const ContactRoles = {
   ECOLOGIST: 'ECOLOGIST',
   PAYER: 'PAYER',
   AUTHORISED_PERSON: 'AUTHORISED-PERSON',
-  ADDITIONAL_CONTACT: 'ADDITIONAL-CONTACT'
+  ADDITIONAL_APPLICANT: 'ADDITIONAL-APPLICANT',
+  ADDITIONAL_ECOLOGIST: 'ADDITIONAL-ECOLOGIST'
 }
 export const AccountRoles = {
   APPLICANT_ORGANISATION: 'APPLICANT-ORGANISATION',
@@ -13,8 +14,11 @@ export const AccountRoles = {
 export const contactRoleIsSingular = contactRole => [
   ContactRoles.APPLICANT,
   ContactRoles.ECOLOGIST,
-  ContactRoles.PAYER
+  ContactRoles.PAYER,
+  ContactRoles.ADDITIONAL_APPLICANT,
+  ContactRoles.ADDITIONAL_ECOLOGIST
 ].includes(contactRole)
+
 export const accountRoleIsSingular = accountRole => [
   AccountRoles.APPLICANT_ORGANISATION,
   AccountRoles.ECOLOGIST_ORGANISATION,

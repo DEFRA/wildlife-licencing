@@ -33,7 +33,7 @@ export const contactNameCompletion = (_contactRole, accountRole, urlBase) => asy
     }
   }
 
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId, DEFAULT_ROLE)
+  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
   const filteredAccounts = await accountsFilter(applicationId, accounts)
   if (filteredAccounts.length) {
     return urlBase.ORGANISATIONS.uri

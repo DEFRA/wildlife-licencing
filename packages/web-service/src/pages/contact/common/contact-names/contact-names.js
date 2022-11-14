@@ -1,5 +1,4 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { DEFAULT_ROLE } from '../../../../constants.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
 import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
@@ -13,10 +12,20 @@ export const checkContactNamesData = () => async (request, h) => {
   return null
 }
 
-export const getContactNamesData = contactRole => async request => {
+/**
+ * Supply contacts from primary and additional roles
+ * @param contactRole
+ * @param additionalContactRoles
+ * @returns {function(*): Promise<{contact: *|undefined, contacts: *}>}
+ */
+export const getContactNamesData = (contactRole, additionalContactRoles = []) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  const contacts = await APIRequests.CONTACT.role(contactRole).findByUser(userId, DEFAULT_ROLE)
+  let contacts = []
+  for await (const cr of [contactRole].concat(additionalContactRoles)) {
+    contacts = contacts.concat(await APIRequests.CONTACT.role(cr).findByUser(userId))
+  }
+
   // Cannot select clones, so filtered out using contactsFilter
   // If we already have one use it to decide if to allow the user associated contacts in the list
   return { contact, contacts: await contactsFilter(applicationId, contacts, contact && contact.userId) }
@@ -52,7 +61,7 @@ const contactNamesCompletionExisting = async (applicationId, contactRole, accoun
     }
   } else {
     // The first time through, go to the organization data collection
-    const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId, DEFAULT_ROLE)
+    const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
     const filteredAccounts = await accountsFilter(applicationId, accounts)
     if (filteredAccounts.length) {
       return urlBase.ORGANISATIONS.uri
