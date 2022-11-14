@@ -7,8 +7,7 @@ import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress, isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
 export const getData = async request => {
-  const { name, applicationId } = await request.cache().getData()
-  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
+  const { name } = await request.cache().getData()
   return { name }
 }
 

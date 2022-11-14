@@ -3,6 +3,18 @@ describe('The site national grid reference page', () => {
 
   it('getData returns the correct object', async () => {
     const result = { gridReference: 'NY123456' }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn(), set: jest.fn() }
+          }
+        }
+      }
+    }))
     const request = {
       cache: () => ({
         getData: () => {

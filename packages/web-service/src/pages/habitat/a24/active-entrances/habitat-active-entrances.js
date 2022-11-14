@@ -63,7 +63,7 @@ export const setData = async request => {
     await putHabitatById(newSett)
   }
   journeyData.habitatData = Object.assign(journeyData.habitatData, { numberOfActiveEntrances, active })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const getData = async request => {

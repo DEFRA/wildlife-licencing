@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
-import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
+import { moveTagInProgress, isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const completion = async request => {
@@ -30,8 +30,9 @@ export const setData = async request => {
 }
 
 export const getData = async request => {
-  const siteData = (await request.cache().getData())
-  const { gridReference } = siteData
+  const siteData = await request.cache().getData()
+  const { applicationId, gridReference } = siteData
+  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
   return { gridReference }
 }
 

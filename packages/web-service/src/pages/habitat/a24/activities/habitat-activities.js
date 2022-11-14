@@ -46,7 +46,7 @@ export const setData = async request => {
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const validator = async payload => {

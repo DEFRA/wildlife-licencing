@@ -2,19 +2,6 @@ describe('site-name page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the correct object', async () => {
     const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-    jest.doMock('../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        IN_PROGRESS: 'IN_PROGRESS',
-        NOT_STARTED: 'not-started'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: jest.fn() }
-          }
-        }
-      }
-    }))
     const request = {
       cache: () => ({
         getData: () => {

@@ -33,7 +33,7 @@ export const setData = async request => {
   }
 
   journeyData.habitatData = Object.assign(journeyData.habitatData, { gridReference })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const getData = async request => {

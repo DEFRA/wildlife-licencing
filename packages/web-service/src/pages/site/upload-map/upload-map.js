@@ -3,7 +3,13 @@ import { s3FileUpload } from '../../../services/s3-upload.js'
 import { siteURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { FILETYPES, fileUploadPageRoute } from '../../common/file-upload/file-upload.js'
-import { isCompleteOrConfirmed } from '../../common/tag-is-complete-or-confirmed.js'
+import { moveTagInProgress, isCompleteOrConfirmed } from '../../common/tag-functions.js'
+
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
+  return null
+}
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()

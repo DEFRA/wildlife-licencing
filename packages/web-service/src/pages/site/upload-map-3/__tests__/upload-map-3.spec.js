@@ -2,6 +2,30 @@
 describe('the map of the site showing the mitigations after development page page handler', () => {
   beforeEach(() => jest.resetModules())
 
+  it('getData', async () => {
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'IN_PROGRESS',
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn() }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => ({ })
+      })
+    }
+
+    const { getData } = await import('../upload-map-3.js')
+    expect(await getData(request)).toBeNull()
+  })
+
   it('should calls the s3 upload and redirects to the site national grid reference page', async () => {
     const mockSetData = jest.fn()
     const mockS3FileUpload = jest.fn()
