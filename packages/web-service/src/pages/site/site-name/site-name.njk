@@ -2,14 +2,28 @@
 
 {% from "input/macro.njk" import govukInput %}
 
+{% set errorMap = {
+        'site-name': {
+          'string.empty': { ref: '#site-name', text: 'Give this site a name' }
+        }
+    }
+%}
+
+{% block topNavigation %}
+<p class="govuk-body sdds-save-link">
+    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
+</p>
+{% endblock %}
+
+{% set title = "What is the name of the site for planned work activity?" %}
+
 {% block pageContent %}
-
-{{ govukInput({
-    id: "site-name",
-    name: "site-name",
-    classes: "govuk-input--width-5",
-    errorMessage: { text: "Enter the name of the site." } if error['site-name'],
-    spellcheck: false
-}) }}
-
+    {{ govukInput({
+      id: "site-name",
+      name: "site-name",
+      classes: "govuk-!-width-three-quarters",
+      spellcheck: false,
+      value: data.name if data.name else payload['site-name'],
+      errorMessage: { text: 'Enter a name for this site' } if error['site-name']
+    }) }}
 {% endblock %}

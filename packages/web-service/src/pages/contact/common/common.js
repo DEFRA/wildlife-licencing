@@ -48,7 +48,7 @@ export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => a
     return ck
   }
   const { userId, applicationId } = await request.cache().getData()
-  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, true)
+  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)
   if (contacts.length < 1) {
     return h.redirect(urlBase.NAME.uri)
   }
@@ -725,7 +725,7 @@ const removeContactDetailsFromContact = async (applicationId, userId, contactRol
 }
 
 export const contactsRoute = async (userId, applicationId, contactRole, additionalContactRoles, urlBase) => {
-  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, true)
+  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)
   if (contacts.length < 1) {
     return urlBase.NAME.uri
   } else {

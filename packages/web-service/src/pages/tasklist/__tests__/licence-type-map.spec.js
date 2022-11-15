@@ -35,6 +35,7 @@ describe('The licence type map', () => {
   it('the decorateMap function works as expected', async () => {
     const decoratedMap = await decorateMap(licenceTypeMap[A24], {
       'eligibility-check': { tagState: 'not-started' },
+      sites: { tagState: 'not-started' },
       setts: { tagState: 'not-started' },
       'ecologist-experience': { tagState: 'not-started' },
       'licence-holder': { tagState: 'not-started' },
@@ -147,6 +148,33 @@ describe('The licence type map', () => {
         'authorised-people': { tagState: 'not-started' }
       })
       expect(result).toBe('not-started')
+    })
+  })
+
+  describe('the site section', () => {
+    it('will return an object from the site section tasks', async () => {
+      const { licenceTypeMap } = await import('../licence-type-map.js')
+      const { A24 } = await import('../licence-type-map.js')
+      const funcEnabled = licenceTypeMap[A24].sections[2].tasks[2].enabled
+      const funcStatus = licenceTypeMap[A24].sections[2].tasks[2].status
+      const funcUri = licenceTypeMap[A24].sections[2].tasks[2].uri
+      expect(licenceTypeMap[A24].sections[2].tasks[2]).toEqual({ enabled: funcEnabled, status: funcStatus, name: 'sites', uri: funcUri })
+    })
+
+    it('will return complete if the user has completed the site journey', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        }
+      }))
+      const { licenceTypeMap } = await import('../licence-type-map.js')
+      const funcStatus = licenceTypeMap[A24].sections[2].tasks[2].status
+      const result = funcStatus({
+        'eligibility-check': { tagState: 'complete' },
+        sites: { tagState: 'complete' }
+      })
+      expect(result).toEqual('complete')
     })
   })
 

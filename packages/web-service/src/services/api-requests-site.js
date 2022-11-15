@@ -1,6 +1,8 @@
 
 import { API } from '@defra/wls-connectors-lib'
 import { apiUrls, apiRequestsWrapper } from './api-requests.js'
+import db from 'debug'
+const debug = db('web-service:api-requests')
 
 export const SITE = {
   /**
@@ -17,6 +19,16 @@ export const SITE = {
         return site
       },
       `Error creating site with applicationId ${applicationId}`,
+      500
+    )
+  },
+  getSiteById: async siteId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Getting site by id: ${siteId}`)
+        return API.get(`${apiUrls.SITE}/${siteId}`)
+      },
+      `Error getting site by id: ${siteId}}`,
       500
     )
   },

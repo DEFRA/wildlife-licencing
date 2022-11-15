@@ -1,0 +1,11 @@
+{% extends "check-answers.njk" %}
+
+{% set questionMap = {
+    siteName: { question: 'Site name', href: _uri.siteName },
+    siteMap: { question: 'Map of activity at the development site', href: _uri.siteMap },
+    siteMapTwo: { question: 'Map of mitigations during development', href: _uri.siteMapTwo },
+    siteMapThree: { question: 'Map of mitigations after development', href: _uri.siteMapThree },
+    siteGridReference: { question: 'Sites National Grid Reference', href: _uri.siteGridReference }
+} %}
+
+{% set checkData = data %}

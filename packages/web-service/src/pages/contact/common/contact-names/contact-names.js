@@ -1,16 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
-import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, contactOperations, contactsFilter, getExistingContactCandidates } from '../common.js'
+import { accountsFilter, contactOperations, getExistingContactCandidates } from '../common.js'
 import { isComplete } from '../../../common/tag-functions.js'
-
-export const checkContactNamesData = () => async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-  return null
-}
 
 /**
  * Supply contacts from primary and additional roles. Additional contacts may only come from other applications

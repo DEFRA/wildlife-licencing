@@ -1,7 +1,10 @@
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 
 export const isComplete = tagState => tagState === tagStatus.COMPLETE
-export const isCompleteOrConfirmed = tagState => (tagState === tagStatus.COMPLETE) || (tagState === tagStatus.COMPLETE_NOT_CONFIRMED) // All of these pages need to do the exact same thing when the journey starts
+
+export const isCompleteOrConfirmed = tagState => (tagState === tagStatus.COMPLETE) || (tagState === tagStatus.COMPLETE_NOT_CONFIRMED)
+
+// All of these pages need to do the exact same thing when the journey starts
 // This allows us to abstract it away into a function to re-use
 // The other states being set (NOT_STARTED, COMPLETE etc.) become more customised, so have been kept inline
 export const moveTagInProgress = async (applicationId, tagKey) => {

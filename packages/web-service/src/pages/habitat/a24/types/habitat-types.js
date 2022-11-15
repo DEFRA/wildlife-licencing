@@ -41,7 +41,7 @@ export const setData = async request => {
   }
 
   Object.assign(journeyData.habitatData, { settType })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export default pageRoute({

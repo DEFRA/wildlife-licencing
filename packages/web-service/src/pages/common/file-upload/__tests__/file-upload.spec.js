@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { MAX_FILE_UPLOAD_SIZE_MB } from '../../../../constants.js'
+import { FILETYPES } from '../file-upload.js'
 
 describe('the generic file-upload page handler', () => {
   beforeEach(() => jest.resetModules())
@@ -22,7 +23,7 @@ describe('the generic file-upload page handler', () => {
   it('a file that contains a virus causes a joi error', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.doc', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.JPG', path: '/tmp/123' } }
     try {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
@@ -35,7 +36,7 @@ describe('the generic file-upload page handler', () => {
       }))
 
       const { validator } = await import('../file-upload.js')
-      expect(await validator(payload))
+      expect(await validator(payload, FILETYPES.SUPPORTING_INFORMATION.filetype))
     } catch (e) {
       expect(e.message).toBe('ValidationError')
       expect(e.details[0].message).toBe('Error: the file contains a virus')

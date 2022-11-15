@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
-import { getExistingContactCandidates } from '../common.js'
+import { addressLine } from '../../../service/address.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
@@ -8,24 +8,6 @@ export const CONTACT_COMPLETE = {
   AUTHORISED_PERSON: 'authorised-person-contact-complete',
   PAYER: 'invoice-payer-complete'
 }
-
-export const addressLine1 = c => [
-  c.address.subBuildingName,
-  c.address.buildingName,
-  c.address.buildingNumber,
-  c.address.street,
-  c.address.addressLine1
-].filter(a => a).join(', ')
-
-export const addressLine = c => [
-  addressLine1(c),
-  c.address.locality,
-  c.address.dependentLocality,
-  c.address.addressLine2,
-  c.address.town,
-  c.address.county,
-  c.address.postcode
-].filter(a => a).join('<br>')
 
 export const getCheckAnswersData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()

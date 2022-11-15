@@ -8,14 +8,20 @@ import { checkApplication } from '../check-application.js'
 export const FILETYPES = {
   SUPPORTING_INFORMATION: {
     filetype: 'METHOD-STATEMENT',
-    multiple: true
+    multiple: true,
+    supportedFileTypes: ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
+  },
+  SITE_MAP_FILES: {
+    filetype: 'MAP',
+    multiple: true,
+    supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF']
   }
 }
 
 export const setData = async request => {
   const { filename, path } = request.payload['scan-file']
   const journeyData = await request.cache().getData()
-  request.cache().setData(Object.assign(journeyData, {
+  await request.cache().setData(Object.assign(journeyData, {
     fileUpload: {
       filename, path
     }
@@ -24,13 +30,18 @@ export const setData = async request => {
   await request.cache().clearPageData()
 }
 
-export const getFileExtension = file => {
+export const getFileExtension = (file, fileType) => {
   const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
-  const supportedFileTypes = ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
-  return supportedFileTypes.indexOf(fileExtension) >= 0
+
+  if (fileType === FILETYPES.SUPPORTING_INFORMATION.filetype) {
+    return FILETYPES.SUPPORTING_INFORMATION.supportedFileTypes.indexOf(fileExtension) >= 0
+  } else if (fileType === FILETYPES.SITE_MAP_FILES.filetype) {
+    return FILETYPES.SITE_MAP_FILES.supportedFileTypes.indexOf(fileExtension) >= 0
+  }
+  return false
 }
 
-export const validator = async payload => {
+export const validator = async (payload, fileType) => {
   // The user hasn't attached a file in their request
   if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
     // Hapi generates a has for a filename, and still attempts to store what the user has sent (an empty file)
@@ -62,7 +73,7 @@ export const validator = async payload => {
     }], null)
   }
 
-  const isFileExtensionSupported = getFileExtension(payload['scan-file'])
+  const isFileExtensionSupported = getFileExtension(payload['scan-file'], fileType)
 
   if (!isFileExtensionSupported) {
     fs.unlinkSync(payload['scan-file'].path)
@@ -100,7 +111,7 @@ export const validator = async payload => {
  * @param h
  * @returns {Promise<null|*>}
  */
-export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion }) => [
+export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion, fileType }) => [
   {
     method: 'GET',
     path: fileUploadUri,
@@ -119,7 +130,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
     },
     options: {
       validate: {
-        payload: validator,
+        payload: payload => validator(payload, fileType),
         failAction: handler().error
       },
       plugins: {

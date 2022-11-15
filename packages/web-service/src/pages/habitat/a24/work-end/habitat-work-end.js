@@ -53,7 +53,7 @@ export const setData = async request => {
     await putHabitatById(newSett)
   }
   journeyData.habitatData = Object.assign(journeyData.habitatData, { workEnd })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const completion = async request => {

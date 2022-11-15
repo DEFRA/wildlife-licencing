@@ -13,7 +13,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const applicationId = journeyData.applicationId
   journeyData.habitatData = Object.assign(journeyData.habitatData || {}, { name, applicationId })
-  request.cache().setData(journeyData)
+  await request.cache().setData(journeyData)
 }
 
 export const getData = async request => {

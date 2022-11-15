@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, LOGIN, SIGN_OUT } from './uris.js'
+import { contactURIs, ecologistExperienceURIs, eligibilityURIs, siteURIs, LOGIN, SIGN_OUT } from './uris.js'
 
 export const additionalPageData = (request, h) => {
   const response = request.response
@@ -57,6 +57,13 @@ export const additionalPageData = (request, h) => {
         invoiceAddress: contactURIs.INVOICE_PAYER.ADDRESS.uri,
         invoiceEmail: contactURIs.INVOICE_PAYER.EMAIL.uri,
         invoiceIsOrganisation: contactURIs.INVOICE_PAYER.IS_ORGANISATION.uri,
+
+        // Site
+        siteName: siteURIs.NAME.uri,
+        siteGridReference: siteURIs.SITE_GRID_REF.uri,
+        siteMap: siteURIs.UPLOAD_MAP.uri,
+        siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
+        siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
