@@ -1,6 +1,8 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
 import { addressLine } from '../../../service/address.js'
+import { canBeUser } from '../common.js'
+import { ContactRoles } from '../contact-roles.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
@@ -18,7 +20,7 @@ export const getCheckAnswersData = (contactRole, accountRole) => async request =
   return {
     hasAccount: !!account,
     checkYourAnswers: [
-      { key: 'contactIsUser', value: yesNoFromBool(contact.userId) },
+      (await canBeUser(request, [contactRole]) && { key: 'contactIsUser', value: yesNoFromBool(contact.userId) }),
       { key: 'whoIsTheLicenceFor', value: contact.fullName },
       { key: 'contactIsOrganisation', value: yesNoFromBool(!!account) },
       (account && { key: 'contactOrganisations', value: account.name }),

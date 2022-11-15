@@ -23,9 +23,7 @@ export const setUserData = contactRole => async request => {
       await contactOps.create(true)
     }
   } else {
-    // Create a contact here, it may be removed one is selected from contact names
     await contactOps.unAssign()
-    await contactOps.create(false)
   }
 }
 

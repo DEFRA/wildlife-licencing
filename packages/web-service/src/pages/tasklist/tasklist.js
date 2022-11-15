@@ -43,10 +43,9 @@ export const getData = async request => {
   await request.cache().clearPageData(siteURIs.UPLOAD_MAP.page)
   await request.cache().clearPageData(siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page)
   await request.cache().clearPageData(siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page)
-  const eligibilityCheckComplete = await APIRequests.APPLICATION.tags(application.id).get(SECTION_TASKS.ELIGIBILITY_CHECK)
 
   return {
-    ...(isComplete(eligibilityCheckComplete) && { reference: application.applicationReferenceNumber }),
+    ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
     licenceType: A24,
     licenceTypeMap: decoratedMap,
     progress

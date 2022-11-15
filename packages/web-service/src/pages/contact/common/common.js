@@ -1,4 +1,4 @@
-import { APPLICATIONS } from '../../../uris.js'
+import { APPLICATIONS, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../constants.js'
 
@@ -22,31 +22,56 @@ export const checkHasApplication = async (request, h) => {
   return null
 }
 
+export const canBeUser = async (request, conflictingRoles) => {
+  const { applicationId, userId } = await request.cache().getData()
+  const contacts = await Promise.all(conflictingRoles.map(async cr => {
+    const contact = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
+    return contact?.userId === userId
+  }))
+
+  return !contacts.find(c => c === true)
+}
+
 /**
- * In many cases a contact must be associated otherwise the journey must restart
- * @param contactRole
+ * if the roles conflict go to the NAMES page
+ * @param conflictingRoles
  * @param urlBase
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
-export const checkHasContact = (contactRole, urlBase) => async (request, h) => {
+export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) => {
   const ck = await checkHasApplication(request, h)
   if (ck) {
     return ck
   }
-  const { applicationId } = await request.cache().getData()
-  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  if (!contact) {
-    return h.redirect(urlBase.USER.uri)
+
+  if (await canBeUser(request, conflictingRoles)) {
+    return null
   }
+
+  return h.redirect(urlBase.NAMES.uri)
+}
+
+/**
+ * Throw back to tasklist if no contact
+ * @param contactRole
+ * @param urlBase
+ * @returns {(function(*, *): Promise<*|null>)|*}
+ */
+export const checkHasContact = (contactRole, _urlBase) => async (request, h) => {
+  const ck = await checkHasApplication(request, h)
+  if (ck) {
+    return ck
+  }
+  // const { applicationId } = await request.cache().getData()
+  // const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  // if (!contact) {
+  //   return h.redirect(TASKLIST.uri)
+  // }
 
   return null
 }
 
 export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => async (request, h) => {
-  const ck = await checkHasContact(contactRole, urlBase)(request, h)
-  if (ck) {
-    return ck
-  }
   const { userId, applicationId } = await request.cache().getData()
   const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)
   if (contacts.length < 1) {
@@ -155,16 +180,9 @@ const duDuplicate = candidates => {
       return im.id
     }
 
-    // TODO Use the most recent clone
-
-    // Use the original
-    const or = cts.find(c => !c.cloneOf)
-    if (or) {
-      return or.id
-    }
-
-    // Use the first (should not happen)
-    return cts[0].id
+    // Use the most recent clone
+    const [rc] = cts.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
+    return rc.id
   })
 }
 

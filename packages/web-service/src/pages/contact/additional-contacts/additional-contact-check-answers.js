@@ -2,7 +2,7 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
-import { checkHasApplication } from '../common/common.js'
+import { canBeUser, checkHasApplication } from '../common/common.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
@@ -17,20 +17,20 @@ export const getData = async request => {
     applicant: additionalApplicant
       ? [
           { key: 'addAdditionalApplicant', value: yesNoFromBool(true) },
-          { key: 'applicantIsUser', value: yesNoFromBool(additionalApplicant.userId) },
+          (await canBeUser(request, [ContactRoles.APPLICANT]) && { key: 'applicantIsUser', value: yesNoFromBool(additionalApplicant.userId) }),
           { key: 'applicantName', value: additionalApplicant.fullName },
           { key: 'applicantEmail', value: additionalApplicant.contactDetails.email }
-        ]
+        ].filter(a => a)
       : [
           { key: 'addAdditionalApplicant', value: yesNoFromBool(false) }
         ],
     ecologist: additionalEcologist
       ? [
           { key: 'addAdditionalEcologist', value: yesNoFromBool(true) },
-          { key: 'ecologistIsUser', value: yesNoFromBool(additionalEcologist.userId) },
+          (await canBeUser(request, [ContactRoles.ECOLOGIST]) && { key: 'ecologistIsUser', value: yesNoFromBool(additionalEcologist.userId) }),
           { key: 'ecologistName', value: additionalEcologist.fullName },
           { key: 'ecologistEmail', value: additionalEcologist.contactDetails.email }
-        ]
+        ].filter(a => a)
       : [
           { key: 'addAdditionalEcologist', value: yesNoFromBool(false) }
         ]

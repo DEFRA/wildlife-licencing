@@ -136,6 +136,13 @@ export const licenceTypeMap = {
           },
 
           {
+            name: SECTION_TASKS.AUTHORISED_PEOPLE,
+            uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
+            status: status => getState(status, SECTION_TASKS.AUTHORISED_PEOPLE),
+            enabled: status => eligibilityCompleted(status)
+          },
+
+          {
             name: SECTION_TASKS.ADDITIONAL_CONTACTS,
             uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ADDITIONAL_CONTACTS].tagState)
               ? contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
@@ -160,14 +167,7 @@ export const licenceTypeMap = {
             uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
               ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri
               : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-            status: status => getStateDependsUpon(
-              status,
-              SECTION_TASKS.INVOICE_PAYER,
-              [
-                SECTION_TASKS.LICENCE_HOLDER,
-                SECTION_TASKS.ECOLOGIST
-              ]
-            ),
+            status: status => getState(status, SECTION_TASKS.INVOICE_PAYER),
             enabled: status => {
               const currState = getStateDependsUpon(
                 status,
@@ -180,14 +180,8 @@ export const licenceTypeMap = {
 
               return currState !== tagStatus.CANNOT_START
             }
-          },
-
-          {
-            name: SECTION_TASKS.AUTHORISED_PEOPLE,
-            uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
-            status: status => getState(status, SECTION_TASKS.AUTHORISED_PEOPLE),
-            enabled: status => eligibilityCompleted(status)
           }
+
         ]
       },
       {

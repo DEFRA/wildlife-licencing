@@ -2,6 +2,8 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { contactAccountOperations, contactsRoute } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactURIs } from '../../../uris.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const additionalContactUserCompletion = (contactRole, additionalContactRoles, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
@@ -13,11 +15,14 @@ export const additionalContactUserCompletion = (contactRole, additionalContactRo
       // Contact is immutable, go to end
       return urlBase.CHECK_ANSWERS.uri
     } else {
-      // Contact is new, gather name
-      return urlBase.NAME.uri
+      // Contact may be new, if so gather name
+      if (!contact.fullName) {
+        return urlBase.NAME.uri
+      } else {
+        return urlBase.CHECK_ANSWERS.uri
+      }
     }
   } else {
-    // Filter out any owner by user, and any clones
     return contactsRoute(userId, applicationId, contactRole, additionalContactRoles, urlBase)
   }
 }
@@ -26,7 +31,7 @@ export const additionalContactNameCompletion = (contactRole, urlBase) => async r
   const { applicationId } = await request.cache().getData()
   // If an organisation is already assigned,
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  if (!contact.contactDetails) {
+  if (!contact?.contactDetails?.email) {
     return urlBase.EMAIL.uri
   } else {
     return urlBase.CHECK_ANSWERS.uri
@@ -39,7 +44,16 @@ export const additionalContactNamesCompletion = (contactRole, urlBase) => async 
     await request.cache().clearPageData(urlBase.NAME.page)
     return urlBase.NAME.uri
   } else {
-    return urlBase.CHECK_ANSWERS.uri
+    const { applicationId } = await request.cache().getData()
+    const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+    // This may not have an email if the email is held on the organisation for an existing application
+    if (!contact.contactDetails?.email) {
+      return urlBase.EMAIL.uri
+    }
+
+    return contactRole === ContactRoles.ADDITIONAL_APPLICANT
+      ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
+      : contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
   }
 }
 
@@ -59,7 +73,14 @@ export const setAdditionalContactEmailAddressData = contactRole => async request
   await contactAccountOps.setEmailAddress(request.payload['email-address'])
 }
 
-export const additionalContactEmailCompletion = (contactRole, _urlBase) => _request =>
-  contactRole === ContactRoles.ADDITIONAL_APPLICANT
+export const additionalContactEmailCompletion = (contactRole, _urlBase) => async request => {
+  const { applicationId } = await request.cache().getData()
+  const state = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.ADDITIONAL_CONTACTS)
+  if (isCompleteOrConfirmed(state)) {
+    return contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
+  }
+
+  return contactRole === ContactRoles.ADDITIONAL_APPLICANT
     ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
     : contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
+}

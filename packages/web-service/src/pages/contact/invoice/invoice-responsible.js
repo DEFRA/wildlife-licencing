@@ -54,7 +54,9 @@ export const getData = async request => {
 const isSignedInUserUsed = async applicationId => {
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
-  return applicant.userId || ecologist.userId
+  const additionalEcologist = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_ECOLOGIST).getByApplicationId(applicationId)
+  const additionalApplicant = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_APPLICANT).getByApplicationId(applicationId)
+  return applicant.userId || ecologist.userId || additionalEcologist.userId || additionalApplicant.userId
 }
 
 export const setData = async request => {

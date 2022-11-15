@@ -7,9 +7,16 @@ export const getContactData = contactRole => async request => {
   return APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
 }
 
+/**
+ * Create a contact if one does not already exist
+ * The user page will create the signed-in user
+ * @param contactRole
+ * @returns {(function(*): Promise<void>)|*}
+ */
 export const setContactData = contactRole => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contactOps = contactOperations(contactRole, applicationId, userId)
+  await contactOps.create(false)
   await contactOps.setName(request.payload.name)
 }
 
