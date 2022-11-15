@@ -137,7 +137,7 @@ export const licenceTypeMap = {
 
           {
             name: SECTION_TASKS.ADDITIONAL_CONTACTS,
-            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ADDITIONAL_CONTACTS].tagState)
               ? contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
               : contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
             status: status => getStateDependsUpon(

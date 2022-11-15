@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
+import { getExistingContactCandidates } from '../common.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',

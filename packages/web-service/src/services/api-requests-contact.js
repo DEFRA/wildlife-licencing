@@ -147,6 +147,16 @@ export const CONTACT = {
       500
     )
   },
+  getApplicationContacts: async contactId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Updating the contact for contactId: ${contactId}`)
+        return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+      },
+      `Error updating the contact for contactId: ${contactId}`,
+      500
+    )
+  },
   update: async (contactId, payload) => {
     return apiRequestsWrapper(
       async () => {

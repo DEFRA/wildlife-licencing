@@ -15,6 +15,7 @@ const isSignedInUserApplicant = async request => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await moveTagInProgress(applicationId, SECTION_TASKS.ADDITIONAL_CONTACTS)
+  return { isSignedInUserApplicant: await isSignedInUserApplicant(request) }
 }
 
 const addAdditionalApplicantCompletion = async request => {

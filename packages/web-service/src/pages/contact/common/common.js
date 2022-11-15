@@ -42,6 +42,19 @@ export const checkHasContact = (contactRole, urlBase) => async (request, h) => {
   return null
 }
 
+export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => async (request, h) => {
+  const ck = await checkHasContact(contactRole, urlBase)(request, h)
+  if (ck) {
+    return ck
+  }
+  const { userId, applicationId } = await request.cache().getData()
+  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, true)
+  if (contacts.length < 1) {
+    return h.redirect(urlBase.NAME.uri)
+  }
+  return null
+}
+
 /**
  * In the address choose there must be a lookup result
  * @param contactRole
@@ -62,7 +75,35 @@ export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
 }
 
 /**
- * Used to produce lists of contact (names) to select from
+ * Find the set of contacts which may be used to pre-select from
+ * These are
+ * The set from the primaryContactRole AND the otherContactRoles where the contact does not exist on the current application
+ * @param contactRole
+ * @param additionalContactRoles
+ * @returns {function(*): Promise<*>}
+ */
+export const getExistingContactCandidates = async (userId, applicationId, primaryContactRole, otherContactRoles = [], allowAssociated) => {
+  const contacts = await APIRequests.CONTACT.findAllByUser(userId)
+
+  const filterValues = await Promise.all(contacts.map(async c => {
+    const applicationContacts = await APIRequests.CONTACT.getApplicationContacts(c.id)
+    // Set (a)
+    const notCurrentSet = applicationContacts.find(ac => [primaryContactRole].concat(otherContactRoles)
+      .includes(ac.contactRole) && ac.applicationId !== applicationId)
+
+    if (notCurrentSet) {
+      return { id: c.id, include: true }
+    }
+
+    return { id: c.id, include: false }
+  }))
+
+  const filteredContacts = contacts.filter(c => filterValues.find(fv => fv.id === c.id && fv.include))
+  return contactsFilter(applicationId, filteredContacts, allowAssociated)
+}
+
+/**
+ * Used to filter lists of contact (names) to select from
  * (1) associated contacts are eliminated if allowAssociated false
  * (2) where there exists clones, if a mutable clone exists pick it otherwise pick the
  * origin record
@@ -113,6 +154,8 @@ const duDuplicate = candidates => {
     if (im) {
       return im.id
     }
+
+    // TODO Use the most recent clone
 
     // Use the original
     const or = cts.find(c => !c.cloneOf)
@@ -681,14 +724,9 @@ const removeContactDetailsFromContact = async (applicationId, userId, contactRol
   }
 }
 
-export const contactsRoute = async (contactRoles, userId, applicationId, urlBase) => {
-  let contacts = []
-  for await (const contactRole of contactRoles) {
-    contacts = contacts.concat(await APIRequests.CONTACT.role(contactRole).findByUser(userId))
-  }
-
-  const filteredContacts = await contactsFilter(applicationId, contacts)
-  if (filteredContacts.length < 1) {
+export const contactsRoute = async (userId, applicationId, contactRole, additionalContactRoles, urlBase) => {
+  const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, true)
+  if (contacts.length < 1) {
     return urlBase.NAME.uri
   } else {
     return urlBase.NAMES.uri

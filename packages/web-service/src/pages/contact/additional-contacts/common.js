@@ -1,5 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { contactAccountOperations, contactsRoute } from '../common/common.js'
+import { ContactRoles } from '../common/contact-roles.js'
+import { contactURIs } from '../../../uris.js'
 
 export const additionalContactUserCompletion = (contactRole, additionalContactRoles, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
@@ -9,14 +11,14 @@ export const additionalContactUserCompletion = (contactRole, additionalContactRo
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to end
-      return urlBase.NAME.uri
+      return urlBase.CHECK_ANSWERS.uri
     } else {
       // Contact is new, gather name
       return urlBase.NAME.uri
     }
   } else {
     // Filter out any owner by user, and any clones
-    return contactsRoute([contactRole].concat(additionalContactRoles), userId, applicationId, urlBase)
+    return contactsRoute(userId, applicationId, contactRole, additionalContactRoles, urlBase)
   }
 }
 
@@ -57,6 +59,7 @@ export const setAdditionalContactEmailAddressData = contactRole => async request
   await contactAccountOps.setEmailAddress(request.payload['email-address'])
 }
 
-export const additionalContactEmailCompletion = (_contactRole, urlBase) => async request => {
-  return urlBase.CHECK_ANSWERS.uri
-}
+export const additionalContactEmailCompletion = (contactRole, _urlBase) => _request =>
+  contactRole === ContactRoles.ADDITIONAL_APPLICANT
+    ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
+    : contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri

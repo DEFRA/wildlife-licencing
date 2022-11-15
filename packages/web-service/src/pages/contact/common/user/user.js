@@ -53,6 +53,6 @@ export const userCompletion = (contactRole, additionalContactRoles, accountRole,
     }
   } else {
     // Filter out any owner by user, and any clones
-    return contactsRoute([contactRole].concat(additionalContactRoles), userId, applicationId, urlBase)
+    return contactsRoute(userId, applicationId, contactRole, additionalContactRoles)
   }
 }

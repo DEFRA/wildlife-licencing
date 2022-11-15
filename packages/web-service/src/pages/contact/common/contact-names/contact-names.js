@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
 import { APPLICATIONS } from '../../../../uris.js'
-import { accountsFilter, contactOperations, contactsFilter } from '../common.js'
+import { accountsFilter, contactOperations, contactsFilter, getExistingContactCandidates } from '../common.js'
 import { isComplete } from '../../../common/tag-functions.js'
 
 export const checkContactNamesData = () => async (request, h) => {
@@ -13,7 +13,8 @@ export const checkContactNamesData = () => async (request, h) => {
 }
 
 /**
- * Supply contacts from primary and additional roles
+ * Supply contacts from primary and additional roles. Additional contacts may only come from other applications
+ * because they will have been assigned to a given role on the current application
  * @param contactRole
  * @param additionalContactRoles
  * @returns {function(*): Promise<{contact: *|undefined, contacts: *}>}
@@ -21,14 +22,9 @@ export const checkContactNamesData = () => async (request, h) => {
 export const getContactNamesData = (contactRole, additionalContactRoles = []) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  let contacts = []
-  for await (const cr of [contactRole].concat(additionalContactRoles)) {
-    contacts = contacts.concat(await APIRequests.CONTACT.role(cr).findByUser(userId))
-  }
-
-  // Cannot select clones, so filtered out using contactsFilter
-  // If we already have one use it to decide if to allow the user associated contacts in the list
-  return { contact, contacts: await contactsFilter(applicationId, contacts, contact && contact.userId) }
+  const contacts = await getExistingContactCandidates(userId, applicationId,
+    contactRole, additionalContactRoles, contact && contact.userId)
+  return { contact, contacts }
 }
 
 export const setContactNamesData = contactRole => async request => {
