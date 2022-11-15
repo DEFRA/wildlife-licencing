@@ -65,7 +65,7 @@ describe('tag-functions', () => {
       expect(isComplete(tagStatus.IN_PROGRESS)).toBe(false)
     })
 
-    it.only('tests whether we can determine `complete` is considered complete', async () => {
+    it('tests whether we can determine `complete` is considered complete', async () => {
       const { tagStatus } = await import('../../../services/api-requests.js')
       const { isComplete } = await import('../tag-functions.js')
       expect(isComplete(tagStatus.COMPLETE)).toBe(true)
