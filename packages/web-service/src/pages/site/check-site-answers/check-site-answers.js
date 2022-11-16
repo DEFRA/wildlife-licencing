@@ -7,8 +7,8 @@ export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   let siteId
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
-  for (const site of sites) {
-    siteId = site.id
+  for (const siteData of sites) {
+    siteId = siteData.id
   }
   const site = await APIRequests.SITE.getSiteById(siteId)
   const result = []
