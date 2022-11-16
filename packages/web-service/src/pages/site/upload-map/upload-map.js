@@ -36,5 +36,6 @@ export const siteMapUpload = fileUploadPageRoute({
   view: siteURIs.UPLOAD_MAP.page,
   fileUploadUri: siteURIs.UPLOAD_MAP.uri,
   fileUploadCompletion: completion,
-  fileType: FILETYPES.SITE_MAP_FILES.filetype
+  fileType: FILETYPES.SITE_MAP_FILES.filetype,
+  getData
 })

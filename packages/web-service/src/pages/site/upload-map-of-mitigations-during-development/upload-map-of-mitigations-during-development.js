@@ -37,5 +37,6 @@ export const siteMapUploadTwo = fileUploadPageRoute({
   view: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page,
   fileUploadUri: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
   fileUploadCompletion: completion,
-  fileType: FILETYPES.SITE_MAP_FILES.filetype
+  fileType: FILETYPES.SITE_MAP_FILES.filetype,
+  getData
 })

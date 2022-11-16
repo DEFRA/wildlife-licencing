@@ -34,6 +34,9 @@ describe('The check site answers page', () => {
         SITE: {
           getSiteById: () => {
             return result.siteData
+          },
+          findByApplicationId: () => {
+            return [result]
           }
         }
       }
