@@ -77,16 +77,15 @@ export const checkData = async (request, h) => {
 export const tasklist = pageRoute({
   page: TASKLIST.page,
   uri: TASKLIST.uri,
-  // backlink: new Backlink(async request => {
-  //   if (request.auth.isAuthenticated) {
-  //     const { userId } = await request.cache().getData()
-  //     const applications = await APIRequests.APPLICATION.findByUser(userId)
-  //     return applications.length > 1 ? Backlink.JAVASCRIPT.value() : Backlink.NO_BACKLINK.value()
-  //   } else {
-  //     return Backlink.NO_BACKLINK.value()
-  //   }
-  // }),
-  backlink: Backlink.URI(TASKLIST.uri),
+  backlink: new Backlink(async request => {
+    if (request.auth.isAuthenticated) {
+      const { userId } = await request.cache().getData()
+      const applications = await APIRequests.APPLICATION.findByUser(userId)
+      return applications.length > 1 ? Backlink.JAVASCRIPT.value() : Backlink.NO_BACKLINK.value()
+    } else {
+      return Backlink.NO_BACKLINK.value()
+    }
+  }),
   options: { auth: { mode: 'optional' } },
   checkData,
   getData
