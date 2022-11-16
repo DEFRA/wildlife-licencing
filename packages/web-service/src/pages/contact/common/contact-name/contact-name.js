@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsFilter, contactOperations } from '../common.js'
+import { accountsFilter } from '../common.js'
+import { contactOperations } from '../operations.js'
 
 export const getContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()

@@ -1,8 +1,8 @@
 import { contactURIs } from '../../../uris.js'
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
-import { contactAccountOperationsForContactAccount } from '../common/common.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 
 const { EMAIL } = contactURIs.AUTHORISED_PEOPLE
 

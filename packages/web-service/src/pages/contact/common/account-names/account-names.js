@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsFilter, accountOperations, checkHasContact, contactAccountOperations } from '../common.js'
+import { accountsFilter, checkHasContact } from '../common.js'
+import { accountOperations, contactAccountOperations } from '../operations.js'
 
 export const accountNamesCheckData = (contactRole, accountRole, urlBase) => async (request, h) => {
   const ck = await checkHasContact(contactRole, urlBase)(request, h)

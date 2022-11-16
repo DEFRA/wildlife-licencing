@@ -3,9 +3,10 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
-import { canBeUser, checkHasApplication, contactOperations } from '../common/common.js'
+import { canBeUser, checkHasApplication } from '../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
+import { contactOperations } from '../common/operations.js'
 
 const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES } = contactURIs.INVOICE_PAYER
 

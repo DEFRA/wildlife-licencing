@@ -1,9 +1,10 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { contactAccountOperations, contactsRoute } from '../common/common.js'
+import { contactsRoute } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactURIs } from '../../../uris.js'
 import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { contactAccountOperations } from '../common/operations.js'
 
 const nextUri = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
   ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri

@@ -1,9 +1,9 @@
-import { contactAccountOperationsForContactAccount } from '../common/common.js'
 import { addressPage } from '../common/address/address-page.js'
 import { contactURIs } from '../../../uris.js'
 import { mapLookedUpAddress } from '../common/address/address.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 
 const { ADDRESS, ADDRESS_FORM, POSTCODE } = contactURIs.AUTHORISED_PEOPLE
 

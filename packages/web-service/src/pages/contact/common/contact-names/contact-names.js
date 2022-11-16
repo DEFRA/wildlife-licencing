@@ -1,7 +1,8 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
-import { accountsFilter, contactOperations, getExistingContactCandidates } from '../common.js'
+import { accountsFilter, getExistingContactCandidates } from '../common.js'
 import { isComplete } from '../../../common/tag-functions.js'
+import { contactOperations } from '../operations.js'
 
 /**
  * Supply contacts from primary and additional roles. Additional contacts may only come from other applications
