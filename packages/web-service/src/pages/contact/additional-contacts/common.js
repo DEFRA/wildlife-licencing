@@ -5,6 +5,10 @@ import { contactURIs } from '../../../uris.js'
 import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
+const nextUri = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
+  ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
+  : contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
+
 export const additionalContactUserCompletion = (contactRole, additionalContactRoles, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
   const { userId, applicationId } = await request.cache().getData()
@@ -13,13 +17,13 @@ export const additionalContactUserCompletion = (contactRole, additionalContactRo
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to end
-      return urlBase.CHECK_ANSWERS.uri
+      return nextUri(contactRole)
     } else {
       // Contact may be new, if so gather name
       if (!contact.fullName) {
         return urlBase.NAME.uri
       } else {
-        return urlBase.CHECK_ANSWERS.uri
+        return nextUri(contactRole)
       }
     }
   } else {
@@ -34,7 +38,7 @@ export const additionalContactNameCompletion = (contactRole, urlBase) => async r
   if (!contact?.contactDetails?.email) {
     return urlBase.EMAIL.uri
   } else {
-    return urlBase.CHECK_ANSWERS.uri
+    return nextUri(contactRole)
   }
 }
 
@@ -51,9 +55,7 @@ export const additionalContactNamesCompletion = (contactRole, urlBase) => async 
       return urlBase.EMAIL.uri
     }
 
-    return contactRole === ContactRoles.ADDITIONAL_APPLICANT
-      ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
-      : contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
+    return nextUri(contactRole)
   }
 }
 
@@ -80,7 +82,5 @@ export const additionalContactEmailCompletion = (contactRole, _urlBase) => async
     return contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
   }
 
-  return contactRole === ContactRoles.ADDITIONAL_APPLICANT
-    ? contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
-    : contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
+  return nextUri(contactRole)
 }

@@ -22,6 +22,12 @@ export const checkHasApplication = async (request, h) => {
   return null
 }
 
+/**
+ * Determines if, for this application, the signed-in user is assigned to any of the conflictingRoles
+ * @param request
+ * @param conflictingRoles
+ * @returns {Promise<boolean>}
+ */
 export const canBeUser = async (request, conflictingRoles) => {
   const { applicationId, userId } = await request.cache().getData()
   const contacts = await Promise.all(conflictingRoles.map(async cr => {
@@ -127,6 +133,15 @@ export const getExistingContactCandidates = async (userId, applicationId, primar
   return contactsFilter(applicationId, filteredContacts, allowAssociated)
 }
 
+const cloneGroups = (recs, id, groupId) => {
+  const contact = recs.find(c => c.id === id)
+  contact.groupId = groupId
+  const clones = recs.filter(c => c.cloneOf === id)
+  for (const clone of clones) {
+    cloneGroups(recs, clone.id, groupId)
+  }
+}
+
 /**
  * Used to filter lists of contact (names) to select from
  * (1) associated contacts are eliminated if allowAssociated false
@@ -136,10 +151,15 @@ export const getExistingContactCandidates = async (userId, applicationId, primar
  * @param contacts
  */
 export const contactsFilter = async (applicationId, contacts, allowAssociated = false) => {
-  const candidates = await Promise.all(contacts.filter(c => c.fullName && (!c.userId || allowAssociated)).map(async c => ({
+  // Decorate the candidate contacts with the immutable flag and the clone group
+  const contactsFiltered = contacts.filter(c => c.fullName && (!c.userId || allowAssociated))
+  const originContacts = contactsFiltered.filter(c => !c.cloneOf)
+  for (const originContact of originContacts) {
+    cloneGroups(contactsFiltered, originContact.id, originContact.id)
+  }
+  const candidates = await Promise.all(contactsFiltered.map(async c => ({
     ...c,
-    isImmutable: await APIRequests.CONTACT.isImmutable(applicationId, c.id),
-    groupId: c.cloneOf || c.id
+    isImmutable: await APIRequests.CONTACT.isImmutable(applicationId, c.id)
   })))
   // Unique list of groups
   const contactIds = duDuplicate(candidates)
@@ -154,10 +174,13 @@ export const contactsFilter = async (applicationId, contacts, allowAssociated = 
  * @param contacts
  */
 export const accountsFilter = async (applicationId, accounts) => {
+  const originAccounts = accounts.filter(c => !c.cloneOf)
+  for (const originAccount of originAccounts) {
+    cloneGroups(accounts, originAccount.id, originAccount.id)
+  }
   const candidates = await Promise.all(accounts.map(async a => ({
     ...a,
-    isImmutable: await APIRequests.ACCOUNT.isImmutable(applicationId, a.id),
-    groupId: a.cloneOf || a.id
+    isImmutable: await APIRequests.ACCOUNT.isImmutable(applicationId, a.id)
   })))
   const accountIds = duDuplicate(candidates)
   return accounts.filter(c => accountIds.includes(c.id))

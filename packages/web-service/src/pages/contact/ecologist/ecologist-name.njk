@@ -1,5 +1,6 @@
 {% extends "contact-name.njk" %}
 {% set title = 'What is your name?' if data.userId else 'Who is the ecologist?' %}
+{% set hintText = 'The name of the user signed in as ' + data.contactDetails.email if data.userId %}
 
 {% set errorMap = {
         'name': {

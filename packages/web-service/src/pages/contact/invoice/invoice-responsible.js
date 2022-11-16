@@ -3,7 +3,7 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
-import { checkHasApplication, contactOperations } from '../common/common.js'
+import { canBeUser, checkHasApplication, contactOperations } from '../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 
@@ -51,14 +51,6 @@ export const getData = async request => {
   }
 }
 
-const isSignedInUserUsed = async applicationId => {
-  const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
-  const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
-  const additionalEcologist = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_ECOLOGIST).getByApplicationId(applicationId)
-  const additionalApplicant = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_APPLICANT).getByApplicationId(applicationId)
-  return applicant.userId || ecologist.userId || additionalEcologist.userId || additionalApplicant.userId
-}
-
 export const setData = async request => {
   const { applicationId, userId } = await request.cache().getData()
   switch (request.payload.responsible) {
@@ -85,7 +77,7 @@ export const setData = async request => {
       break
     default: {
       // Will be created in the user page unless the applicant of the ecologist is the signed-in user in which case created it here
-      if (await isSignedInUserUsed(applicationId)) {
+      if (!await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
         const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
         await contactOps.unAssign()
         await contactOps.create(false)
@@ -110,8 +102,7 @@ export const completion = async request => {
   if (pageData.payload.responsible === 'other') {
     // If the ecologist or applicant contact is the signed-in user then do ask the 'is the payer the signed-in user?'
     // question and set that explicitly to 'no', returning the NAMES page
-    const { applicationId } = await request.cache().getData()
-    if (await isSignedInUserUsed(applicationId)) {
+    if (!await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
       return NAMES.uri
     }
     return USER.uri

@@ -10,7 +10,7 @@ const { CHECK_ANSWERS } = contactURIs.APPLICANT
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  return getCheckAnswersData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION)(request)
+  return getCheckAnswersData(ContactRoles.APPLICANT, [ContactRoles.ADDITIONAL_APPLICANT], AccountRoles.APPLICANT_ORGANISATION)(request)
 }
 
 export const completion = async request => {
