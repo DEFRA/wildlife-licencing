@@ -11,10 +11,6 @@ import { contactOperations } from '../common/operations.js'
 const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES } = contactURIs.INVOICE_PAYER
 
 export const checkData = async (request, h) => {
-  const ck = await checkHasApplication(request, h)
-  if (ck) {
-    return ck
-  }
   const { applicationId } = await request.cache().getData()
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
@@ -115,7 +111,7 @@ export const completion = async request => {
 export const invoiceResponsible = pageRoute({
   page: RESPONSIBLE.page,
   uri: RESPONSIBLE.uri,
-  checkData: checkData,
+  checkData: [checkHasApplication, checkData],
   validator: Joi.object({
     responsible: Joi.any().valid('applicant', 'ecologist', 'other').required()
   }).options({ abortEarly: false, allowUnknown: true }),

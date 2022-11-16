@@ -1,11 +1,6 @@
-import { APPLICATIONS } from '../../../uris.js'
+import { APPLICATIONS, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../../constants.js'
-
-/*
- * This module abstracts the API operations out of the handlers helps simplify this section
- * of the user journey, which is somewhat complex.
- */
 
 /**
  * In all cases an application must be selected to access any of the contact pages
@@ -45,11 +40,6 @@ export const canBeUser = async (request, conflictingRoles) => {
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
 export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) => {
-  const ck = await checkHasApplication(request, h)
-  if (ck) {
-    return ck
-  }
-
   if (await canBeUser(request, conflictingRoles)) {
     return null
   }
@@ -58,25 +48,30 @@ export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) 
 }
 
 /**
- * Throw back to tasklist if no contact
+ * Throw back to the tasklist contact exists for the role. Call from only the point
+ * where a contact must exist.
  * @param contactRole
  * @param urlBase
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
-export const checkHasContact = (contactRole, _urlBase) => async (request, h) => {
-  const ck = await checkHasApplication(request, h)
-  if (ck) {
-    return ck
+export const checkHasContact = contactRole => async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  if (!contact) {
+    return h.redirect(TASKLIST.uri)
   }
-  // const { applicationId } = await request.cache().getData()
-  // const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  // if (!contact) {
-  //   return h.redirect(TASKLIST.uri)
-  // }
 
   return null
 }
 
+/**
+ * Determine if the user is able to multi-select a name from a set of candidates or no. If not redirect to the
+ * new name page
+ * @param contactRole
+ * @param additionalContactRoles
+ * @param urlBase
+ * @returns {(function(*, *): Promise<*|null>)|*}
+ */
 export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => async (request, h) => {
   const { userId, applicationId } = await request.cache().getData()
   const contacts = await getExistingContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)
@@ -93,10 +88,6 @@ export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => a
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
 export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
-  const ck = await checkHasContact(contactRole, urlBase)(request, h)
-  if (ck) {
-    return ck
-  }
   const journeyData = await request.cache().getData()
   if (!journeyData.addressLookup) {
     return h.redirect(urlBase.POSTCODE.uri)
@@ -116,9 +107,12 @@ export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
 export const getExistingContactCandidates = async (userId, applicationId, primaryContactRole, otherContactRoles = [], allowAssociated) => {
   const contacts = await APIRequests.CONTACT.findAllByUser(userId)
 
+  // Find all the contacts of the user
   const filterValues = await Promise.all(contacts.map(async c => {
+    // Fetch their application-role relationships
     const applicationContacts = await APIRequests.CONTACT.getApplicationContacts(c.id)
-    // Set (a)
+
+    // Find those on other applications assigned to the primary and other contact roles
     const notCurrentSet = applicationContacts.find(ac => [primaryContactRole].concat(otherContactRoles)
       .includes(ac.contactRole) && ac.applicationId !== applicationId)
 
@@ -130,6 +124,8 @@ export const getExistingContactCandidates = async (userId, applicationId, primar
   }))
 
   const filteredContacts = contacts.filter(c => filterValues.find(fv => fv.id === c.id && fv.include))
+
+  // Remove old clones and select mutable where exists
   return contactsFilter(applicationId, filteredContacts, allowAssociated)
 }
 
@@ -219,7 +215,7 @@ export const contactsRoute = async (userId, applicationId, contactRole, addition
 }
 
 export const accountsRoute = async (accountRole, userId, applicationId, uriBase) => {
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId, DEFAULT_ROLE)
+  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
   const filteredAccounts = await accountsFilter(applicationId, accounts)
   if (filteredAccounts.length) {
     return uriBase.ORGANISATIONS.uri

@@ -5,11 +5,20 @@ export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c
 
 export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
   get: async (request, h) => {
-    // If checkData exists call it and if returning truthy, return
-    if (checkData && typeof checkData === 'function') {
-      const check = await checkData(request, h)
-      if (check) {
-        return check
+    // Allow check data to be an array
+    if (checkData) {
+      if (typeof checkData === 'function') {
+        const check = await checkData(request, h)
+        if (check) {
+          return check
+        }
+      } else if (Array.isArray(checkData)) {
+        for await (const checkFunc of checkData) {
+          const check = await checkFunc(request, h)
+          if (check) {
+            return check
+          }
+        }
       }
     }
 

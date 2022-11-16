@@ -65,7 +65,7 @@ export const getAdditionalContactEmailAddressData = contactRole => async request
   const { applicationId } = journeyData
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   return {
-    email: contact.contactDetails?.email,
+    email: contact?.contactDetails?.email,
     contactName: contact?.fullName
   }
 }

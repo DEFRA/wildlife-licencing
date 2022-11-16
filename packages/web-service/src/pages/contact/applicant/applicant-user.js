@@ -1,6 +1,6 @@
 import { contactURIs } from '../../../uris.js'
 import { getUserData, setUserData, userCompletion } from '../common/user/user.js'
-import { checkCanBeUser } from '../common/common.js'
+import { checkCanBeUser, checkHasApplication } from '../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
@@ -14,7 +14,7 @@ export const getData = async request => {
 }
 
 export const applicantUser = yesNoPage({
-  checkData: checkCanBeUser([ContactRoles.ADDITIONAL_APPLICANT], contactURIs.APPLICANT),
+  checkData: [checkHasApplication, checkCanBeUser([ContactRoles.ADDITIONAL_APPLICANT], contactURIs.APPLICANT)],
   getData: getData,
   page: USER.page,
   uri: USER.uri,

@@ -1,4 +1,4 @@
-import { checkHasAddress } from '../common/common.js'
+import { checkHasAddress, checkHasApplication, checkHasContact } from '../common/common.js'
 import { addressPage } from '../common/address/address-page.js'
 import { contactURIs } from '../../../uris.js'
 import { getAddressData, setAddressData } from '../common/address/address.js'
@@ -9,7 +9,7 @@ const { ADDRESS, CHECK_ANSWERS } = contactURIs.INVOICE_PAYER
 export const invoiceAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: checkHasAddress(ContactRoles.PAYER, contactURIs.INVOICE_PAYER),
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.PAYER), checkHasAddress(ContactRoles.PAYER, contactURIs.INVOICE_PAYER)],
   getData: getAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
   setData: setAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
   completion: CHECK_ANSWERS.uri
