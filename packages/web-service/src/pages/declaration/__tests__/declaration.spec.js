@@ -69,6 +69,32 @@ describe('the declaration-application handler function', () => {
     })
   })
 
+  it('returns a redirect to the tasklist page is the journeys aren\'t complete', async () => {
+    const request = {
+      cache: () => ({
+        getData: jest.fn(() => ({
+          applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
+        }))
+      })
+    }
+    jest.doMock('../../common/count-complete-sections.js', () => ({
+      countCompleteSections: () => { return [1] }
+    }))
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        APPLICATION: {
+          getById: jest.fn(() => ({
+            userSubmission: false
+          }))
+        }
+      }
+    }))
+    const h = { redirect: jest.fn() }
+    const { checkData } = await import('../declaration.js')
+    await checkData(request, h)
+    expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+  })
+
   describe('the setData function', () => {
     it('correctly calls the API and submits the journey data', async () => {
       const mockGetData = jest.fn(() => ({

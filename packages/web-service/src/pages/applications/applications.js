@@ -36,12 +36,12 @@ export const getData = async request => {
   }
 
   return {
+    statuses,
     applications,
     url: {
       TASKLIST: TASKLIST.uri,
       APPLICATION_SUMMARY: APPLICATION_SUMMARY.uri
-    },
-    statuses
+    }
   }
 }
 

@@ -408,5 +408,51 @@ describe('The API requests application service', () => {
           })
       })
     })
+
+    it('the getAll tag function calls the API', async () => {
+      const mockGet = jest.fn(() => {
+        return {
+          applicationTags: []
+        }
+      })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').getAll('tsg-2')
+      expect(mockGet).toHaveBeenCalledTimes(1)
+    })
+
+    it('the getAll tag function returns the applicationTags from the application object', async () => {
+      const mockGet = jest.fn(() => {
+        return {
+          applicationTags: [
+            { tag: 'setts', tagStatus: 'not-started' }
+          ]
+        }
+      })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      expect(await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').getAll('tsg-2')).toEqual([{ tag: 'setts', tagStatus: 'not-started' }])
+    })
+
+    it('the getAll tag function returns a default empty array if no tags present', async () => {
+      const mockGet = jest.fn(() => {
+        return {}
+      })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      expect(await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').getAll('tsg-2')).toEqual([])
+    })
   })
 })
