@@ -19,7 +19,6 @@ export const validator = async payload => {
       'site-postcode': Joi.string().trim().required().pattern(ukPostcodeRegex).replace(ukPostcodeRegex, '$1 $2').uppercase()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
-  return null
 }
 
 export const getData = async request => {
