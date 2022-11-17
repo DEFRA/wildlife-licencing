@@ -111,6 +111,11 @@ export const APPLICATION = {
         500
       )
     },
+    getAll: async () => {
+      const application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
+      application.applicationTags = application.applicationTags || []
+      return application.applicationTags
+    },
     set: async tagObj => {
       return apiRequestsWrapper(
         async () => {

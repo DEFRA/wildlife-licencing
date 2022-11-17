@@ -7,6 +7,11 @@ describe('applications page', () => {
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
+          tags: () => {
+            return {
+              getAll: () => []
+            }
+          },
           findByUser: mockFindByUser
         }
       }
@@ -26,6 +31,7 @@ describe('applications page', () => {
         {
           id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
           lastSaved: '25 March 2022',
+          statusValue: '0 of 12 sections completed',
           updatedAt: '2022-03-25T14:10:14.861Z',
           submitted: null
         }]

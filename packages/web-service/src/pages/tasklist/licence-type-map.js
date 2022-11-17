@@ -215,8 +215,20 @@ export const licenceTypeMap = {
           {
             name: SECTION_TASKS.SUBMIT,
             uri: DECLARATION.uri,
-            status: tagStatus.NOT_STARTED,
-            enabled: status => eligibilityCompleted(status)
+            status: status => getStateDependsUpon(
+              status,
+              SECTION_TASKS.SUBMIT,
+              Object.values(SECTION_TASKS).slice(0, -1) // This task is dependent upon all tasks in SECTION_TASKS, except itself!
+            ),
+            enabled: status => {
+              const currState = getStateDependsUpon(
+                status,
+                SECTION_TASKS.SUBMIT,
+                Object.values(SECTION_TASKS).slice(0, -1) // This task is dependent upon all tasks in SECTION_TASKS, except itself!
+              )
+
+              return currState !== tagStatus.CANNOT_START
+            }
           }
         ]
       }

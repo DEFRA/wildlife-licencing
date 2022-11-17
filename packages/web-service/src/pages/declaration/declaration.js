@@ -1,7 +1,9 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATIONS, DECLARATION, SUBMISSION } from '../../uris.js'
+import { countCompleteSections } from '../common/count-complete-sections.js'
+import { APPLICATIONS, DECLARATION, SUBMISSION, TASKLIST } from '../../uris.js'
 import { ApplicationService } from '../../services/application.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
 
 // Do not allow an attempt at resubmission
 export const checkData = async (request, h) => {
@@ -14,6 +16,14 @@ export const checkData = async (request, h) => {
   if (application.userSubmission) {
     return h.redirect(APPLICATIONS.uri)
   }
+
+  const totalSections = Object.keys(SECTION_TASKS).length
+  const totalCompletedSections = await countCompleteSections(journeyData.applicationId)
+
+  if (totalSections !== totalCompletedSections.length) {
+    return h.redirect(TASKLIST.uri)
+  }
+
   return null
 }
 
