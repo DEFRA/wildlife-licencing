@@ -6,6 +6,31 @@ describe('The API requests contact service', () => {
   describe('CONTACT requests', () => {
     beforeEach(() => jest.resetModules())
 
+    it('findAllByUser calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.findAllByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(([{ foo: 'bar' }]))
+    })
+
+    it('findAllByUser rethrows on error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.CONTACT.findAllByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
+        .rejects.toThrowError()
+    })
+
     it('getById calls the API correctly', async () => {
       const mockGet = jest.fn(() => ({ foo: 'bar' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({

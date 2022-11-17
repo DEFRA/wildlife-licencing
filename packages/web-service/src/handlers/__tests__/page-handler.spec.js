@@ -28,6 +28,17 @@ describe('the page handler function', () => {
     expect(checkData).toHaveBeenCalledWith(request, h)
   })
 
+  it('the get handler calls an array of checkData functions, returning the first truthy result', async () => {
+    const checkData1 = jest.fn(() => null)
+    const checkData2 = jest.fn(() => ({ foo: 'bar2' }))
+    const request = {}
+    const h = {}
+    const result = await pageHandler(null, [checkData1, checkData2]).get(request, h)
+    expect(result).toEqual({ foo: 'bar2' })
+    expect(checkData1).toHaveBeenCalledWith(request, h)
+    expect(checkData2).toHaveBeenCalledWith(request, h)
+  })
+
   it('the post handler redirects to an explicit page', async () => {
     const mockRedirect = jest.fn(() => 'page')
     const h = { redirect: mockRedirect }

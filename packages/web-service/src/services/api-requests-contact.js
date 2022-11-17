@@ -178,17 +178,20 @@ export const CONTACT = {
     )
   },
   isImmutable: async (applicationId, contactId) => {
-    const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
-    if (contact.submitted) {
-      return true
-    } else {
-      const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
-      if (!applicationContacts.length) {
-        return false
+    return apiRequestsWrapper(async () => {
+      const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
+      if (contact.submitted) {
+        return true
       } else {
-        return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+        const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+        if (!applicationContacts.length) {
+          return false
+        } else {
+          return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+        }
       }
-    }
+    }, `Error determining immutable for contact by id: ${contactId}`,
+    500)
   },
   role: contactRole => {
     if (!Object.values(ContactRoles).find(k => k === contactRole)) {
