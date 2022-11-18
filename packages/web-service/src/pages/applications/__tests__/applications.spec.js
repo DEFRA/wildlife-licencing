@@ -32,7 +32,7 @@ describe('applications page', () => {
         {
           id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
           lastSaved: '25 March 2022',
-          statusValue: '0 of 12 sections completed',
+          statusValue: '0 of 13 sections completed',
           updatedAt: '2022-03-25T14:10:14.861Z',
           submitted: null
         }]
