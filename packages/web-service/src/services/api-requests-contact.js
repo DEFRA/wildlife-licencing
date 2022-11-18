@@ -183,6 +183,10 @@ export const CONTACT = {
       if (contact.submitted) {
         return true
       } else {
+        // A contact is not immutable if for any reason the name is not set. This is possible with certain back-button behaviour.
+        if (!contact.fullName) {
+          return false
+        }
         const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
         if (!applicationContacts.length) {
           return false

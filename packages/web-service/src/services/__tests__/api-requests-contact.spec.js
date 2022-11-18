@@ -105,7 +105,7 @@ describe('The API requests contact service', () => {
     })
 
     it('isImmutable calls the API correctly', async () => {
-      const mockGet = jest.fn().mockReturnValueOnce({ id: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
+      const mockGet = jest.fn().mockReturnValueOnce({ id: 'b306c67f-f5cd-4e69-9986-8390188051b3', fullName: 'set' })
         .mockReturnValue([{ applicationId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' }])
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -117,6 +117,19 @@ describe('The API requests contact service', () => {
       expect(mockGet).toHaveBeenCalledWith('/contact/b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/application-contacts', 'contactId=b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(result).toEqual(true)
+    })
+
+    it('isImmutable calls the API correctly - name not set is never immutable', async () => {
+      const mockGet = jest.fn().mockReturnValueOnce({ id: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.isImmutable('81e36e15-88d0-41e2-9399-1c7646ecc5aa', 'b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/contact/b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(false)
     })
 
     it('isImmutable calls the API correctly - submitted', async () => {
