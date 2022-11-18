@@ -37,5 +37,6 @@ export const siteMapUploadThree = fileUploadPageRoute({
   view: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.page,
   fileUploadUri: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
   fileUploadCompletion: completion,
-  fileType: FILETYPES.SITE_MAP_FILES.filetype
+  fileType: FILETYPES.SITE_MAP_FILES.filetype,
+  getData
 })

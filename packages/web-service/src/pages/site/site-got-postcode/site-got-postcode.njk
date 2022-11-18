@@ -4,7 +4,7 @@
 
 {% set errorMap = {
     'site-postcode-check': {
-      'string.empty': { ref: '#site-postcode-check', text: 'You have not selected an option' }
+      'any.required': { ref: '#site-postcode-check', text: 'You have not selected an option' }
     },
     'site-postcode': {
       'string.empty': { ref: '#site-postcode', text: 'You have not entered a postcode' },
@@ -28,7 +28,7 @@
 
 {% block pageContent %}
   {{ govukRadios({
-            idPrefix: "site-postcode-check",
+            id: "site-postcode-check",
             name: "site-postcode-check",
             errorMessage: { text: 'Select an option' } if error['site-postcode-check'],
             items: [

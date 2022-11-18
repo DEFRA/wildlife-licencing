@@ -13,4 +13,4 @@ export function Backlink (func) {
 
 Backlink.JAVASCRIPT = new Backlink(() => 'javascript: window.history.go(-1)')
 Backlink.NO_BACKLINK = new Backlink(() => null)
-Backlink.URI = s => new Backlink(() => s)
+Backlink.URI = s => new Backlink(() => `javascript: window.location.href = '${s}'`)

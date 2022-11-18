@@ -1,5 +1,44 @@
 describe('site-got-postcode page handler', () => {
   beforeEach(() => jest.resetModules())
+  it('throws an error if an option is not selected', async () => {
+    try {
+      const payload = { 'site-postcode': '', 'site-postcode-check': 'no' }
+      const { validator } = await import('../site-got-postcode.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: You have not selected an option')
+    }
+  })
+
+  it('throws an error if a postcode is not entered', async () => {
+    try {
+      const payload = { 'site-postcode': true, 'site-postcode-check': 'yes' }
+      const { validator } = await import('../site-got-postcode.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: You have not entered a postcode')
+    }
+  })
+
+  it('throws an error if a wrong postcode is entered', async () => {
+    try {
+      const payload = { 'site-postcode': 'B123 TY567', 'site-postcode-check': 'yes' }
+      const { validator } = await import('../site-got-postcode.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: You have not entered a correct postcode')
+    }
+  })
+
+  it('should not throws an error if a correct postcode is entered', async () => {
+    const payload = { 'site-postcode': 'B23 5LT', 'site-postcode-check': 'yes' }
+    const { validator } = await import('../site-got-postcode.js')
+    expect(await validator(payload)).toBeUndefined()
+  })
+
   it('getData returns the correct object', async () => {
     const result = { siteData: { sitePostcode: 'B15 7GF' } }
     const request = {
