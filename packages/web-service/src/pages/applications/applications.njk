@@ -43,7 +43,7 @@
     {{ application.applicationReferenceNumber}}
     </p>
     {% if not application.userSubmission %}
-        <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">0 of N sections completed</p>
+        <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">{{ application.statusValue }}</p>
     {% endif %}
 {% endmacro -%}
 
