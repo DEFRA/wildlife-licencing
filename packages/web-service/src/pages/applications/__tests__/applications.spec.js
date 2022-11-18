@@ -3,20 +3,28 @@ describe('applications page', () => {
 
   it('recalls the applications for a user', async () => {
     const mockFindByUser = jest.fn(() => [
-      { id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', updatedAt: '2022-03-25T14:10:14.861Z' }
+      {
+        id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+        applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }],
+        updatedAt: '2022-03-25T14:10:14.861Z'
+      }
     ])
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return {
-              getAll: () => []
-            }
-          },
-          findByUser: mockFindByUser
+    jest.doMock('../../../services/api-requests.js', () => {
+      const { tagStatus } = jest.requireActual('../../../services/api-requests.js')
+      return {
+        tagStatus,
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                getAll: () => []
+              }
+            },
+            findByUser: mockFindByUser
+          }
         }
       }
-    }))
+    })
     const mockGetData = jest.fn(() => ({ userId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
     const { getData } = await import('../applications.js')
     const request = {
@@ -34,7 +42,8 @@ describe('applications page', () => {
           lastSaved: '25 March 2022',
           statusValue: '0 of 13 sections completed',
           updatedAt: '2022-03-25T14:10:14.861Z',
-          submitted: null
+          submitted: null,
+          applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }]
         }]
     }))
   })

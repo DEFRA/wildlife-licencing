@@ -1,7 +1,7 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
-import { APIRequests } from '../../services/api-requests.js'
+import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { countCompleteSections } from '../common/count-complete-sections.js'
 import { TASKLIST, APPLICATIONS, APPLICATION_SUMMARY } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
@@ -14,6 +14,9 @@ const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
 
 const sortApplications = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 
+const eligibilityCheckFilter = application => application.applicationTags &&
+  application.applicationTags.find(t => t.tag === SECTION_TASKS.ELIGIBILITY_CHECK && t.tagState === tagStatus.COMPLETE)
+
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
@@ -22,7 +25,7 @@ export const getData = async request => {
 
   const totalSections = Object.keys(SECTION_TASKS).length
 
-  const applications = allApplications.map(a => ({
+  const applications = allApplications.filter(eligibilityCheckFilter).map(a => ({
     ...a,
     lastSaved: timestampFormatter(a.updatedAt),
     submitted: timestampFormatter(a?.submitted)
