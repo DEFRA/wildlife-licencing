@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { AWS } from '@defra/wls-connectors-lib'
-import Boom from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 import { v4 as uuidv4 } from 'uuid'
 import db from 'debug'
 import { APIRequests } from './api-requests.js'
@@ -32,7 +32,7 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
     debug(`Removed temporary file ${filepath}`)
   } catch (err) {
     console.error(`Cannot write data with key: ${objectKey} to bucket: ${bucket}`, err)
-    Boom.boomify(err, { statusCode: 500 })
+    boomify(err, { statusCode: 500 })
     throw err
   }
 }

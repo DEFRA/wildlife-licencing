@@ -51,7 +51,7 @@ export async function scanFile (filepath) {
   } catch (err) {
     console.error(err.message)
     fs.unlinkSync(filepath)
-    Boom.boomify(err, { statusCode: 500 })
+    boomify(err, { statusCode: 500 })
     throw new Error(err)
   }
 }

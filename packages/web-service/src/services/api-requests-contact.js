@@ -1,7 +1,7 @@
 import { contactRoleIsSingular, ContactRoles } from '../pages/contact/common/contact-roles.js'
 import { API } from '@defra/wls-connectors-lib'
 import { apiUrls, apiRequestsWrapper } from './api-requests.js'
-import Boom from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 
 import db from 'debug'
 const debug = db('web-service:api-requests')
@@ -15,7 +15,7 @@ const getContactsByApplicationId = async (role, applicationId) => {
     return contactRoleIsSingular(role) ? contacts[0] : contacts
   } catch (error) {
     console.error(`Error getting contacts of ${role} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -50,7 +50,7 @@ const createContact = async (role, applicationId, payload) => {
     return contact
   } catch (error) {
     console.error(`Error creating ${role} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -119,7 +119,7 @@ const unLinkContact = async (role, applicationId, contactId) => {
     }
   } catch (error) {
     console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -130,7 +130,7 @@ const findContactByUser = async (role, userId) => {
     return API.get(apiUrls.CONTACTS, role ? `userId=${userId}&role=${role}` : `userId=${userId}`)
   } catch (error) {
     console.error(`Finding ${role}'s for userId: ${userId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }

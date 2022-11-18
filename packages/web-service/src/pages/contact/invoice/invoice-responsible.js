@@ -6,7 +6,7 @@ import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { canBeUser, checkHasApplication } from '../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
-import { contactOperations } from '../common/operations.js'
+import { accountOperations, contactOperations } from '../common/operations.js'
 
 const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES } = contactURIs.INVOICE_PAYER
 
@@ -74,21 +74,14 @@ export const setData = async request => {
       break
     default: {
       // Will be created in the user page unless the applicant of the ecologist is the signed-in user in which case created it here
+      const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
+      const accountOps = accountOperations(AccountRoles.PAYER_ORGANISATION, applicationId)
+      // Un-assign payer and payer organisation. Will be created in the user handler or the name pages
+      await contactOps.unAssign()
+      await accountOps.unAssign()
       if (!await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
-        const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
-        await contactOps.unAssign()
+        // Un-assign and create here as the user page will not be displayed
         await contactOps.create(false)
-      } else {
-        const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
-        const payerOrganisation = await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).getByApplicationId(applicationId)
-
-        if (payer) {
-          await APIRequests.CONTACT.role(ContactRoles.PAYER).unAssign(applicationId, payer.id)
-        }
-
-        if (payerOrganisation) {
-          await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).unAssign(applicationId, payerOrganisation.id)
-        }
       }
     }
   }

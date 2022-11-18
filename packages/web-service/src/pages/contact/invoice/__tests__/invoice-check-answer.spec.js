@@ -154,6 +154,9 @@ describe('invoice check answers page', () => {
 
     it('creates the correct output for the payer is other', async () => {
       const tagSet = jest.fn()
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => true
+      }))
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'

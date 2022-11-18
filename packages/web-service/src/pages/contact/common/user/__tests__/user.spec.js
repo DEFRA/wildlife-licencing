@@ -42,11 +42,11 @@ describe('the user page', () => {
             getById: jest.fn(() => ({ username: 'Keith Moon' }))
           },
           CONTACT: {
+            findAllByUser: jest.fn(() => [{
+              id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
+            }]),
             role: () => ({
-              getByApplicationId: jest.fn(() => null),
-              findByUser: jest.fn(() => [{
-                id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
-              }])
+              getByApplicationId: jest.fn(() => null)
             })
           },
           APPLICATION: {
@@ -59,7 +59,7 @@ describe('the user page', () => {
 
       const mockCreate = jest.fn()
       const mockUnAssign = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactOperations: () => ({
           create: mockCreate,
           unAssign: mockUnAssign
@@ -94,13 +94,13 @@ describe('the user page', () => {
           },
           CONTACT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => null),
-              findByUser: jest.fn(() => [{
-                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-                userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-                updatedAt: '2022-09-13T08:23:45'
-              }])
-            })
+              getByApplicationId: jest.fn(() => null)
+            }),
+            findAllByUser: jest.fn(() => [{
+              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+              userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
+              updatedAt: '2022-09-13T08:23:45'
+            }])
           }
         }
       }))
@@ -109,12 +109,10 @@ describe('the user page', () => {
       const mockCreate = jest.fn()
       const mockSetContactIsUser = jest.fn()
 
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactOperations: () => ({
           create: mockCreate,
-          assign: mockAssign
-        }),
-        contactAccountOperations: () => ({
+          assign: mockAssign,
           setContactIsUser: mockSetContactIsUser
         })
       }))
@@ -143,13 +141,13 @@ describe('the user page', () => {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
           },
           CONTACT: {
+            findAllByUser: jest.fn(() => [{
+              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+              userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
+              updatedAt: '2022-09-13T08:23:45'
+            }]),
             role: () => ({
-              getByApplicationId: jest.fn(() => null),
-              findByUser: jest.fn(() => [{
-                id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-                userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-                updatedAt: '2022-09-13T08:23:45'
-              }])
+              getByApplicationId: jest.fn(() => null)
             })
           },
           APPLICATION: {
@@ -162,7 +160,7 @@ describe('the user page', () => {
 
       const mockCreate = jest.fn()
       const mockUnAssign = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactOperations: () => ({
           create: mockCreate,
           unAssign: mockUnAssign
@@ -180,7 +178,6 @@ describe('the user page', () => {
         })
       }
       await setUserData('APPLICANT', 'APPLICANT_ORGANIZATION')(request)
-      expect(mockCreate).toHaveBeenCalledWith(false)
       expect(mockUnAssign).toHaveBeenCalled()
     })
   })
@@ -212,7 +209,7 @@ describe('the user page', () => {
           getPageData: jest.fn(() => ({ payload: { 'yes-no': 'yes' } }))
         })
       }
-      const result = await userCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await userCompletion('APPLICANT', ['ADDITIONAL-APPLICANT'], 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-name')
     })
 
@@ -249,7 +246,8 @@ describe('the user page', () => {
           getPageData: jest.fn(() => ({ payload: { 'yes-no': 'yes' } }))
         })
       }
-      const result = await userCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await userCompletion('APPLICANT',
+        ['ADDITIONAL-APPLICANT'], 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-organisations')
     })
 
@@ -284,7 +282,8 @@ describe('the user page', () => {
           getPageData: jest.fn(() => ({ payload: { 'yes-no': 'yes' } }))
         })
       }
-      const result = await userCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await userCompletion('APPLICANT', ['ADDITIONAL-APPLICANT'],
+        'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-organisation')
     })
 
@@ -296,9 +295,7 @@ describe('the user page', () => {
         },
         APIRequests: {
           CONTACT: {
-            role: () => ({
-              findByUser: jest.fn(() => [])
-            })
+            findAllByUser: jest.fn(() => [])
           }
         }
       }))
@@ -313,21 +310,21 @@ describe('the user page', () => {
           getPageData: jest.fn(() => ({ payload: { 'yes-no': 'no' } }))
         })
       }
-      const result = await userCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await userCompletion('APPLICANT', ['ADDITIONAL-APPLICANT'],
+        'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-name')
     })
 
     it('if no, returns the names page where candidate contacts exist', async () => {
-      jest.dontMock('../../common.js')
+      jest.dontMock('../../operations.js')
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
           CONTACT: {
-            role: () => ({
-              findByUser: jest.fn(() => [{ id: '34b5c443-e5e0-4d81-9daa-671a21bd88ca', fullName: 'Keith' }])
-            }),
+            findAllByUser: jest.fn(() => [{ id: '34b5c443-e5e0-4d81-9daa-671a21bd88ca', fullName: 'Keith' }]),
+            getApplicationContacts: jest.fn(() => [{ applicationId: 'e5a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'ADDITIONAL-APPLICANT' }]),
             isImmutable: () => false
           }
         }
@@ -343,7 +340,8 @@ describe('the user page', () => {
           getPageData: jest.fn(() => ({ payload: { 'yes-no': 'no' } }))
         })
       }
-      const result = await userCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await userCompletion('APPLICANT', ['ADDITIONAL-APPLICANT'],
+        'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-names')
     })
   })

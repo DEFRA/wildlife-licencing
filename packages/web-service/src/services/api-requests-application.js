@@ -1,6 +1,6 @@
 import { API } from '@defra/wls-connectors-lib'
 import { apiUrls, tagStatus, apiRequestsWrapper } from './api-requests.js'
-import Boom from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 
 import db from 'debug'
 const debug = db('web-service:api-requests')
@@ -121,7 +121,7 @@ export const APPLICATION = {
           if (Object.values(tagStatus).indexOf(tagState) === -1) {
             const error = new Error('Invalid tag status assignment')
             console.error(`Error adding value key ${key} and value ${tagState} for applicationId: ${applicationId}`, error)
-            Boom.boomify(error, { statusCode: 500 })
+            boomify(error, { statusCode: 500 })
             throw error
           }
 

@@ -7,6 +7,7 @@ import { yesNoFromBool } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 const { CHECK_ANSWERS } = contactURIs.ADDITIONAL_APPLICANT
+
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })

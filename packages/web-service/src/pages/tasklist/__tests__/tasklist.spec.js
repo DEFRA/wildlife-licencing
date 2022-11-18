@@ -307,10 +307,7 @@ describe('The task-list handler', () => {
           getById: jest.fn(() => ({
             id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
             applicationReferenceNumber: 'ref'
-          })),
-          tags: () => ({
-            get: () => 'complete'
-          })
+          }))
         }
       }
     }))
@@ -325,12 +322,17 @@ describe('The task-list handler', () => {
     }
 
     jest.doMock('../licence-type-map.js', () => ({
-      getTaskStatus: jest.fn(() => 'task-status'),
+      getTaskStatus: jest.fn(() => ({
+        'eligibility-check': {
+          tag: 'eligibility-check',
+          tagState: 'complete'
+        }
+      })),
       decorateMap: jest.fn(() => 'decorated-map'),
       getProgress: jest.fn(() => 'progress'),
       licenceTypeMap: [],
       SECTION_TASKS: {
-        ELIGIBILITY_CHECK: 'ec'
+        ELIGIBILITY_CHECK: 'eligibility-check'
       },
       A24: 'a24'
     }))

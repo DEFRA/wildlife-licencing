@@ -42,7 +42,7 @@ describe('the is-organisation page', () => {
   describe('setContactAccountData', () => {
     it('assigns an account if the user returns \'yes\'', async () => {
       const mockSetOrganisation = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
           setOrganisation: mockSetOrganisation
         })
@@ -87,7 +87,7 @@ describe('the is-organisation page', () => {
 
     it('un-assigns an account if the user returns \'no\'', async () => {
       const mockSetOrganisation = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
           setOrganisation: mockSetOrganisation
         })

@@ -3,22 +3,6 @@ import { contactURIs } from '../../../../../uris.js'
 describe('contact-names', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('the checkContactNames function', () => {
-    it('returns to the applications page if no applicationId is set', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkContactNamesData } = await import('../contact-names.js')
-      await checkContactNamesData('APPLICANT', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
-  })
-
   describe('the getContactNamesData function', () => {
     it('will return all of the contacts for the user and a contact assigned to the application', async () => {
       const request = {
@@ -32,8 +16,15 @@ describe('contact-names', () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
+            findAllByUser: jest.fn(() => [
+              { id: 'a829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Keith Moon' },
+              { id: 'b829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Charlie Watts' },
+              { id: 'v829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Keith Moon' }]),
+            getApplicationContacts: jest.fn(() => [
+              { applicationId: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' },
+              { applicationId: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' },
+              { applicationId: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' }]),
             role: () => ({
-              findByUser: jest.fn(() => [{ fullName: 'Keith Moon' }, { fullName: 'Charlie Watts' }, { fullName: 'Keith Moon' }]),
               getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
             }),
             isImmutable: () => false
@@ -45,7 +36,9 @@ describe('contact-names', () => {
       const result = await exampleGetContactNamesData(request)
       expect(result).toEqual({
         contact: { fullName: 'Keith Moon' },
-        contacts: [{ fullName: 'Keith Moon' }, { fullName: 'Charlie Watts' }, { fullName: 'Keith Moon' }]
+        contacts: [expect.objectContaining({ fullName: 'Keith Moon' }),
+          expect.objectContaining({ fullName: 'Charlie Watts' }),
+          expect.objectContaining({ fullName: 'Keith Moon' })]
       })
     })
   })
@@ -80,7 +73,7 @@ describe('contact-names', () => {
 
     it('assigns contact to the application if the user chooses an existing contact', async () => {
       const mockAssign = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactOperations: () => ({
           assign: mockAssign
         })

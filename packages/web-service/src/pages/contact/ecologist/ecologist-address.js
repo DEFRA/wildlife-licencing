@@ -9,7 +9,7 @@ const { ADDRESS, CHECK_ANSWERS } = contactURIs.ECOLOGIST
 export const ecologistAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: [checkHasApplication, checkHasContact(ContactRoles.APPLICANT), checkHasAddress(ContactRoles.APPLICANT, contactURIs.APPLICANT)],
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.ECOLOGIST), checkHasAddress(ContactRoles.APPLICANT, contactURIs.APPLICANT)],
   getData: getAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
   setData: setAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
   completion: CHECK_ANSWERS.uri

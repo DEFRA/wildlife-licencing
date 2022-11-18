@@ -1,6 +1,5 @@
 import { APPLICATIONS, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { DEFAULT_ROLE } from '../../../constants.js'
 
 /**
  * In all cases an application must be selected to access any of the contact pages

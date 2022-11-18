@@ -47,8 +47,8 @@ export const userCompletion = (contactRole, additionalContactRoles, accountRole,
       // Contact is immutable, go to accounts
       return accountsRoute(accountRole, userId, applicationId, urlBase)
     } else {
-      // Contact is new, gather name
-      return urlBase.NAME.uri
+      // Contact is new, gather name, or already set, skip
+      return contact.fullName ? urlBase.CHECK_ANSWERS.uri : urlBase.NAME.uri
     }
   } else {
     // Filter out any owner by user, and any clones

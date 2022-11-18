@@ -2,6 +2,9 @@ describe('the check-answers page', () => {
   beforeEach(() => jest.resetModules())
 
   it('getCheckAnswersData fetch data with account', async () => {
+    jest.doMock('../../../common/common.js', () => ({
+      canBeUser: () => true
+    }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       tagStatus: {
         COMPLETE: 'complete'

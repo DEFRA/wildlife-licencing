@@ -62,13 +62,20 @@ describe('additional page data', () => {
         login: '/login',
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
-        register: '/register',
         siteGridReference: '/site-grid-ref',
         siteMap: '/upload-map',
         siteMapThree: '/upload-map-of-mitigations-after-development',
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
-        signOut: '/sign-out'
+        signOut: '/sign-out',
+        additionalApplicantAdd: '/add-additional-applicant',
+        additionalApplicantEmail: '/additional-applicant-email',
+        additionalApplicantNames: '/additional-applicant-names',
+        additionalApplicantUser: '/additional-applicant-user',
+        additionalEcologistAdd: '/add-additional-ecologist',
+        additionalEcologistEmail: '/additional-ecologist-email',
+        additionalEcologistNames: '/additional-ecologist-names',
+        additionalEcologistUser: '/additional-ecologist-user'
       },
       credentials: 'credentials',
       cspNonce: expect.any(String)
