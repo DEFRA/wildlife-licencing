@@ -36,7 +36,7 @@ describe('site-got-postcode page handler', () => {
   it('should not throws an error if a correct postcode is entered', async () => {
     const payload = { 'site-postcode': 'B23 5LT', 'site-postcode-check': 'yes' }
     const { validator } = await import('../site-got-postcode.js')
-    expect(await validator(payload)).toBeNull()
+    expect(await validator(payload)).toBeUndefined()
   })
 
   it('getData returns the correct object', async () => {
