@@ -53,6 +53,8 @@ export const getData = async request => {
   const state = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.AUTHORISED_PEOPLE)
   if (state === tagStatus.NOT_STARTED) {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
+  } else if (state === tagStatus.COMPLETE) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
   return {
     contacts: contacts.map(c => ({
