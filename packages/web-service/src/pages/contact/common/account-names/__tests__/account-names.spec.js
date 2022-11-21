@@ -33,7 +33,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/applicant-organisation')
     })
 
@@ -69,7 +69,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      const result = await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      const result = await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
       expect(result).toBeNull()
     })
   })

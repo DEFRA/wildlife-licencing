@@ -47,7 +47,7 @@ export const additionalContactCheckAnswers = checkAnswersPage({
   checkData: checkHasApplication,
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
-  getData,
+  getData: getData,
   setData: setData,
   completion: TASKLIST.uri
 })

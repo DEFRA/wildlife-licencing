@@ -1,7 +1,7 @@
 import NodeClam from 'clamscan'
 import * as fs from 'fs'
 import db from 'debug'
-import { Boom } from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 const debug = db('web-service:clam')
 
 const options = {

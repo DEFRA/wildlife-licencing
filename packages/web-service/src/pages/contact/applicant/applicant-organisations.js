@@ -10,7 +10,7 @@ export const applicantOrganisations = accountNamesPage({
   uri: ORGANISATIONS.uri,
   checkData: [checkHasApplication,
     checkHasContact(ContactRoles.APPLICANT),
-    accountNamesCheckData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
+    accountNamesCheckData(AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
   ],
   getData: getAccountNamesData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION),
   setData: setAccountNamesData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION),

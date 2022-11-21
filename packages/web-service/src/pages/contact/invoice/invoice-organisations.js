@@ -11,7 +11,7 @@ export const invoiceOrganisations = accountNamesPage({
   checkData: [
     checkHasApplication,
     checkHasContact(ContactRoles.PAYER),
-    accountNamesCheckData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
+    accountNamesCheckData(AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
   ],
   getData: getAccountNamesData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION),
   setData: setAccountNamesData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION),

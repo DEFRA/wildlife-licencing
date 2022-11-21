@@ -9,7 +9,7 @@ const { ADDRESS, CHECK_ANSWERS } = contactURIs.APPLICANT
 export const applicantAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: [checkHasApplication, checkHasContact(ContactRoles.APPLICANT), checkHasAddress(ContactRoles.APPLICANT, contactURIs.APPLICANT)],
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.APPLICANT), checkHasAddress(contactURIs.APPLICANT)],
   getData: getAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   setData: setAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
   completion: CHECK_ANSWERS.uri

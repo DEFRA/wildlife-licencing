@@ -2,7 +2,7 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { accountsFilter } from '../common.js'
 import { accountOperations, contactAccountOperations } from '../operations.js'
 
-export const accountNamesCheckData = (contactRole, accountRole, urlBase) => async (request, h) => {
+export const accountNamesCheckData = (accountRole, urlBase) => async (request, h) => {
   // if no accounts available then redirect the is-organisation
   const { userId, applicationId } = await request.cache().getData()
   const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)

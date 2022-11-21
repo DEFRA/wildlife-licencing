@@ -11,7 +11,7 @@ export const ecologistOrganisations = accountNamesPage({
   checkData: [
     checkHasApplication,
     checkHasContact(ContactRoles.ECOLOGIST),
-    accountNamesCheckData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
+    accountNamesCheckData(AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
   ],
   getData: getAccountNamesData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
   setData: setAccountNamesData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),

@@ -86,7 +86,7 @@ export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => a
  * @param urlBase
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
-export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
+export const checkHasAddress = urlBase => async (request, h) => {
   const journeyData = await request.cache().getData()
   if (!journeyData.addressLookup) {
     return h.redirect(urlBase.POSTCODE.uri)
@@ -103,7 +103,8 @@ export const checkHasAddress = (contactRole, urlBase) => async (request, h) => {
  * @param additionalContactRoles
  * @returns {function(*): Promise<*>}
  */
-export const getExistingContactCandidates = async (userId, applicationId, primaryContactRole, otherContactRoles = [], allowAssociated) => {
+export const getExistingContactCandidates = async (userId, applicationId, primaryContactRole,
+  otherContactRoles = [], allowAssociated = false) => {
   const contacts = await APIRequests.CONTACT.findAllByUser(userId)
 
   // Find all the contacts of the user

@@ -164,7 +164,7 @@ describe('contact common', () => {
       }
       const h = { redirect: jest.fn() }
       const { checkHasAddress } = await import('../common.js')
-      const result = await checkHasAddress('APPLICANT', contactURIs.APPLICANT)(request, h)
+      const result = await checkHasAddress(contactURIs.APPLICANT)(request, h)
       expect(result).toBeNull()
     })
 
@@ -186,7 +186,7 @@ describe('contact common', () => {
       }
       const h = { redirect: jest.fn() }
       const { checkHasAddress } = await import('../common.js')
-      await checkHasAddress('APPLICANT', contactURIs.APPLICANT)(request, h)
+      await checkHasAddress(contactURIs.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/applicant-postcode')
     })
   })
