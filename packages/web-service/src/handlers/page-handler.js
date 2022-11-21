@@ -4,23 +4,23 @@ import { Backlink } from './backlink.js'
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
 
 const doCheckData = async (checkData, request, h) => {
-  if (checkData) {
-    // Check data is a function
-    if (typeof checkData === 'function') {
-      const check = await checkData(request, h)
+  // Check data is a function
+  if (checkData && typeof checkData === 'function') {
+    const check = await checkData(request, h)
+    if (check) {
+      return check
+    }
+  } else if (checkData && Array.isArray(checkData)) {
+    // Check data is an array of function
+    for await (const checkFunc of checkData) {
+      const check = await checkFunc(request, h)
       if (check) {
         return check
       }
-    } else if (Array.isArray(checkData)) {
-      // Check data is an array of function
-      for await (const checkFunc of checkData) {
-        const check = await checkFunc(request, h)
-        if (check) {
-          return check
-        }
-      }
     }
   }
+
+  return null
 }
 
 export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
