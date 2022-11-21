@@ -78,6 +78,9 @@ const doAccount = (accountRole, key) => async (applicationId, payload) => {
 
 const doApplicant = doContact('APPLICANT', 'applicant')
 const doEcologist = doContact('ECOLOGIST', 'ecologist')
+const doAdditionalApplicant = doContact('ADDITIONAL-APPLICANT', 'additionalApplicant')
+const doAdditionalEcologist = doContact('ADDITIONAL-ECOLOGIST', 'additionalEcologist')
+
 const doPayer = doContact('PAYER', 'payer')
 const doApplicantOrganisation = doAccount('APPLICANT-ORGANISATION', 'applicantOrganization')
 const doEcologistOrganisation = doAccount('ECOLOGIST-ORGANISATION', 'ecologistOrganization')
@@ -205,6 +208,12 @@ export const buildApiObject = async applicationId => {
 
     // Add the ecologist details
     await doEcologist(applicationId, payload)
+
+    // Add the additional applicant details
+    await doAdditionalApplicant(applicationId, payload)
+
+    // Add the additional ecologist details
+    await doAdditionalEcologist(applicationId, payload)
 
     // Add the payer details
     await doPayer(applicationId, payload)

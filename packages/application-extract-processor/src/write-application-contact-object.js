@@ -28,6 +28,9 @@ const doContact = role => async (applicationId, sddsContactId, counter) => {
 
 const doEcologist = doContact('ECOLOGIST')
 const doApplicant = doContact('APPLICANT')
+const doAdditionalApplicant = doContact('ADDITIONAL-APPLICANT')
+const doAdditionalEcologist = doContact('ADDITIONAL-ECOLOGIST')
+
 const doPayer = doContact('PAYER')
 const doAuthorisedPerson = doContact('AUTHORISED-PERSON')
 
@@ -37,6 +40,8 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
   const sddsApplicationId = keys.find(k => k.apiBasePath === 'application')?.powerAppsKey
   const sddsApplicantContactId = keys.find(k => k.apiBasePath === 'application.applicant')?.powerAppsKey
   const sddsEcologistContactId = keys.find(k => k.apiBasePath === 'application.ecologist')?.powerAppsKey
+  const sddsAdditionalApplicantContactId = keys.find(k => k.apiBasePath === 'application.additionalApplicant')?.powerAppsKey
+  const sddsAdditionalEcologistContactId = keys.find(k => k.apiBasePath === 'application.additionalEcologist')?.powerAppsKey
   const sddsPayerContactId = keys.find(k => k.apiBasePath === 'application.payer')?.powerAppsKey
   const sddsAuthorisedPeopleIds = keys.filter(k => k.apiBasePath === 'application.authorisedPeople').map(a => a?.powerAppsKey)
 
@@ -53,6 +58,14 @@ export const writeApplicationContactObject = async ({ _data, keys }) => {
 
       if (sddsEcologistContactId) {
         await doEcologist(application.id, sddsEcologistContactId, counter)
+      }
+
+      if (sddsAdditionalApplicantContactId) {
+        await doAdditionalApplicant(application.id, sddsAdditionalApplicantContactId, counter)
+      }
+
+      if (sddsAdditionalEcologistContactId) {
+        await doAdditionalEcologist(application.id, sddsAdditionalEcologistContactId, counter)
       }
 
       if (sddsPayerContactId) {

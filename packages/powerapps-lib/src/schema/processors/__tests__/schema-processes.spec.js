@@ -26,8 +26,18 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
 
       expect(tableSet.map(t => t.name))
-        .toEqual(['sdds_sites', 'contacts', 'accounts', 'contacts',
-          'accounts', 'contacts', 'accounts', 'contacts', 'sdds_applications'])
+        .toEqual(['sdds_sites',
+          'contacts',
+          'accounts',
+          'contacts',
+          'accounts',
+          'contacts',
+          'contacts',
+          'contacts',
+          'accounts',
+          'contacts',
+          'sdds_applications'
+        ])
 
       expect(tableSet.map(t => t.basePath))
         .toEqual([
@@ -36,9 +46,13 @@ describe('the schema processes', () => {
           'application.applicantOrganization',
           'application.ecologist',
           'application.ecologistOrganization',
+          'application.additionalApplicant',
+          'application.additionalEcologist',
           'application.payer',
           'application.payerOrganization',
-          'application.authorisedPeople', 'application'])
+          'application.authorisedPeople',
+          'application'
+        ])
     })
   })
 
@@ -80,7 +94,9 @@ describe('the schema processes', () => {
           'sdds_ecologistorganisationid@odata.bind': 'sdds_application_ecologistorganisationid_',
           'sdds_organisationid@odata.bind': 'sdds_application_organisationid_Account',
           'sdds_billingcustomerid@odata.bind': 'sdds_application_billingcustomerid_contac',
-          'sdds_billingorganisationid@odata.bind': 'sdds_application_billingorganisationid_ac'
+          'sdds_billingorganisationid@odata.bind': 'sdds_application_billingorganisationid_ac',
+          'sdds_alternativeapplicantcontactid@odata.bind': 'sdds_application_alternativeapplicantcont',
+          'sdds_alternativeecologistcontactid@odata.bind': 'sdds_application_alternativeecologistcont'
         }
       })
     })
