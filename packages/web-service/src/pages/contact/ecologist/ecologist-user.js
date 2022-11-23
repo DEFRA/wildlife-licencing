@@ -1,6 +1,6 @@
 import { contactURIs } from '../../../uris.js'
 import { getUserData, setUserData, userCompletion } from '../common/user/user.js'
-import { checkHasApplication } from '../common/common.js'
+import { checkCanBeUser, checkHasApplication } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
@@ -18,10 +18,11 @@ export const getData = async request => {
 }
 
 export const ecologistUser = yesNoPage({
-  getData,
+  checkData: [checkHasApplication, checkCanBeUser([ContactRoles.ADDITIONAL_ECOLOGIST], contactURIs.ECOLOGIST)],
+  getData: getData,
   page: USER.page,
   uri: USER.uri,
-  setData: setUserData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
-  completion: userCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST),
-  checkData: checkHasApplication
+  setData: setUserData(ContactRoles.ECOLOGIST),
+  completion: userCompletion(ContactRoles.ECOLOGIST, [ContactRoles.ADDITIONAL_ECOLOGIST],
+    AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
 })

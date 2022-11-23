@@ -1,7 +1,7 @@
 import { accountRoleIsSingular, AccountRoles } from '../pages/contact/common/contact-roles.js'
 import { API } from '@defra/wls-connectors-lib'
 import { apiUrls, apiRequestsWrapper } from './api-requests.js'
-import Boom from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 
 import db from 'debug'
 const debug = db('web-service:api-requests')
@@ -51,7 +51,7 @@ const findAccountByUser = async (accountRole, userId) => {
     return API.get(apiUrls.ACCOUNTS, `userId=${userId}&role=${accountRole}`)
   } catch (error) {
     console.error(`Finding ${accountRole}'s for userId: ${userId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -62,7 +62,7 @@ const getAccountsByApplicationId = async (accountRole, applicationId) => {
     return accountRoleIsSingular(accountRole) ? accounts[0] : accounts
   } catch (error) {
     console.error(`Error getting accounts by ${accountRole} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -89,7 +89,7 @@ const createAccount = async (accountRole, applicationId, payload) => {
     return account
   } catch (error) {
     console.error(`Error creating ${accountRole} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -118,7 +118,7 @@ const unLinkAccount = async (accountRole, applicationId, accountId) => {
     }
   } catch (error) {
     console.error(`Error unlinking ${accountRole} from applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }

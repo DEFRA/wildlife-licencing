@@ -21,6 +21,7 @@ export const SECTION_TASKS = {
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
   AUTHORISED_PEOPLE: 'authorised-people',
+  ADDITIONAL_CONTACTS: 'additional-contacts',
   INVOICE_PAYER: 'invoice-payer',
   WORK_ACTIVITY: 'work-activity',
   PERMISSIONS: 'permissions',
@@ -46,6 +47,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.LICENCE_HOLDER]: (applicationTags.find(t => t.tag === SECTION_TASKS.LICENCE_HOLDER) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.ECOLOGIST]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.AUTHORISED_PEOPLE]: (applicationTags.find(t => t.tag === SECTION_TASKS.AUTHORISED_PEOPLE) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.ADDITIONAL_CONTACTS]: (applicationTags.find(t => t.tag === SECTION_TASKS.ADDITIONAL_CONTACTS) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.INVOICE_PAYER]: (applicationTags.find(t => t.tag === SECTION_TASKS.INVOICE_PAYER) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.ECOLOGIST_EXPERIENCE]: (applicationTags.find(t => t.tag === SECTION_TASKS.ECOLOGIST_EXPERIENCE) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.WORK_ACTIVITY]: { tagState: tagStatus.NOT_STARTED },
@@ -125,45 +127,61 @@ export const licenceTypeMap = {
             status: status => getState(status, SECTION_TASKS.LICENCE_HOLDER),
             enabled: status => eligibilityCompleted(status)
           },
+
           {
             name: SECTION_TASKS.ECOLOGIST,
             uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ECOLOGIST].tagState) ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri : contactURIs.ECOLOGIST.USER.uri,
             status: status => getState(status, SECTION_TASKS.ECOLOGIST),
             enabled: status => eligibilityCompleted(status)
           },
+
           {
             name: SECTION_TASKS.AUTHORISED_PEOPLE,
             uri: contactURIs.AUTHORISED_PEOPLE.ADD.uri,
             status: status => getState(status, SECTION_TASKS.AUTHORISED_PEOPLE),
             enabled: status => eligibilityCompleted(status)
           },
+
+          {
+            name: SECTION_TASKS.ADDITIONAL_CONTACTS,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.ADDITIONAL_CONTACTS].tagState)
+              ? contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
+              : contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
+            status: status => getState(status, SECTION_TASKS.ADDITIONAL_CONTACTS),
+            enabled: status => {
+              const currState = getStateDependsUpon(
+                status,
+                SECTION_TASKS.ADDITIONAL_CONTACTS,
+                [
+                  SECTION_TASKS.LICENCE_HOLDER,
+                  SECTION_TASKS.ECOLOGIST
+                ]
+              )
+
+              return currState !== tagStatus.CANNOT_START
+            }
+          },
+
           {
             name: SECTION_TASKS.INVOICE_PAYER,
             uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.INVOICE_PAYER].tagState)
               ? contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri
               : contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-            status: status => getStateDependsUpon(
-              status,
-              SECTION_TASKS.INVOICE_PAYER,
-              [
-                SECTION_TASKS.LICENCE_HOLDER,
-                SECTION_TASKS.ECOLOGIST
-              ]
-            ),
+            status: status => getState(status, SECTION_TASKS.INVOICE_PAYER),
             enabled: status => {
               const currState = getStateDependsUpon(
                 status,
                 SECTION_TASKS.INVOICE_PAYER,
                 [
                   SECTION_TASKS.LICENCE_HOLDER,
-                  SECTION_TASKS.ECOLOGIST,
-                  SECTION_TASKS.AUTHORISED_PEOPLE
+                  SECTION_TASKS.ECOLOGIST
                 ]
               )
 
               return currState !== tagStatus.CANNOT_START
             }
           }
+
         ]
       },
       {

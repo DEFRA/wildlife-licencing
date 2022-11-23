@@ -1,10 +1,11 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
-import { checkHasApplication, contactOperationsForContact } from '../common/common.js'
+import { checkHasApplication } from '../common/common.js'
 import { getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { contactOperationsForContact } from '../common/operations.js'
 const { NAME } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
@@ -41,6 +42,5 @@ export const authorisedPersonName = contactNamePage({
   uri: NAME.uri,
   checkData: checkHasApplication,
   setData: setData,
-  completion: getAuthorisedPeopleCompletion,
-  getData
-}, ContactRoles.AUTHORISED_PERSON)
+  completion: getAuthorisedPeopleCompletion
+}, [ContactRoles.AUTHORISED_PERSON])

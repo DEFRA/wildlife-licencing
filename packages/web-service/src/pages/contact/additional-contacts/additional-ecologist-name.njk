@@ -1,0 +1,12 @@
+{% extends "contact-name.njk" %}
+{% set title = 'What is your name?' if data.userId else 'What is the name of the person we should contact?' %}
+{% set hintText = 'The name of the user signed in as ' + data.contactDetails.email if data.userId %}
+
+{% set errorMap = {
+        'name': {
+            'string.empty': { ref: '#name', text: 'Enter your name' if data.userId else 'Enter the name of the person we should contact' },
+            'string.pattern.base': { ref: '#name', text: 'Enter the name using only letters, spaces, the apostrophe, hyphen, full-stop or comma.' },
+            'any.invalid': { ref: '#name', text: 'The name \'' +  payload.name + '\' has already been used, enter a unique name'  }
+        }
+    }
+%}

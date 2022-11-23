@@ -1,9 +1,9 @@
-import { contactAccountOperationsForContactAccount } from '../common/common.js'
 import { addressPage } from '../common/address/address-page.js'
 import { contactURIs } from '../../../uris.js'
 import { mapLookedUpAddress } from '../common/address/address.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 
 const { ADDRESS, ADDRESS_FORM, POSTCODE } = contactURIs.AUTHORISED_PEOPLE
 
@@ -21,10 +21,6 @@ export const setData = async request => {
 
 // Ensure there is an address
 export const checkData = async (request, h) => {
-  const ck = await checkAuthorisedPeopleData(request, h)
-  if (ck) {
-    return ck
-  }
   const journeyData = await request.cache().getData()
   if (!journeyData.addressLookup) {
     return h.redirect(POSTCODE.uri)
@@ -35,7 +31,7 @@ export const checkData = async (request, h) => {
 export const authorisedPersonAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: checkData,
+  checkData: [checkAuthorisedPeopleData, checkData],
   getData: getAuthorisedPeopleData(async (c, r) => {
     const journeyData = await r.cache().getData()
     return {

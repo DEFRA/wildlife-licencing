@@ -4,22 +4,6 @@ describe('the account-names functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('accountNamesCheckData', () => {
-    it('returns to applications if there is no application set', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn(() => 'redirect')
-      }
-      const { accountNamesCheckData } = await import('../account-names.js')
-      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
-
     it('returns to is-organisations if there is no available account', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -49,7 +33,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/applicant-organisation')
     })
 
@@ -85,7 +69,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      const result = await accountNamesCheckData('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      const result = await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
       expect(result).toBeNull()
     })
   })
@@ -102,7 +86,11 @@ describe('the account-names functions', () => {
           ACCOUNT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({ name: 'The Who' })),
-              findByUser: jest.fn(() => [{ name: 'Led Zeppelin' }, { fullName: 'Yes' }, { fullName: 'The Who' }])
+              findByUser: jest.fn(() => [
+                { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
+                { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
+                { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
+              ])
             }),
             isImmutable: () => false
           }
@@ -121,7 +109,11 @@ describe('the account-names functions', () => {
       expect(result).toEqual({
         contact: { fullName: 'Keith Moon' },
         account: { name: 'The Who' },
-        accounts: [{ name: 'Led Zeppelin' }, { fullName: 'Yes' }, { fullName: 'The Who' }]
+        accounts: [
+          { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
+          { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
+          { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
+        ]
       })
     })
   })
@@ -130,7 +122,7 @@ describe('the account-names functions', () => {
     it('if existing account selected assign it to the application', async () => {
       const mockSetOrganisation = jest.fn()
       const mockAssign = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         accountOperations: () => ({
           assign: mockAssign
         }),

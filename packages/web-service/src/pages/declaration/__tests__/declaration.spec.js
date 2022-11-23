@@ -11,7 +11,7 @@ describe('the declaration-application handler function', () => {
         })
       }
       jest.doMock('../../common/count-complete-sections.js', () => ({
-        countCompleteSections: () => { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }
+        countCompleteSections: () => { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
       }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {

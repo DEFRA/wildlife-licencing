@@ -1,6 +1,6 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
-import { checkHasApplication } from '../common/common.js'
+import { canBeUser, checkHasApplication } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
@@ -26,14 +26,18 @@ export const getData = async request => {
       return { responsible: 'other', name: p.fullName, contact: payer, account }
     }
   })(payer)
-
+  // (await canBeUser(request, [contactRole]) && {
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   const res = {
     responsibility,
     checkYourAnswers: [
       { key: 'whoIsResponsible', value: responsibility.name },
-      (responsibility.responsible === 'other' && { key: 'contactIsUser', value: yesNoFromBool(!!responsibility.contact.userId) }),
-      (responsibility.responsible === 'other' && { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
+      (responsibility.responsible === 'other' &&
+        await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
+        { key: 'contactIsUser', value: yesNoFromBool(!!responsibility.contact.userId) }),
+      (responsibility.responsible === 'other' &&
+        await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
+        { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
       (responsibility.account && { key: 'contactOrganisations', value: responsibility.account.name }),
       { key: 'address', value: addressLine(responsibility.account || responsibility.contact) },
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email }

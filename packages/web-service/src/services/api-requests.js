@@ -9,7 +9,7 @@ import { ECOLOGIST_EXPERIENCE } from './api-requests-ecologist-experience.js'
 import { LICENCES } from './api-requests-licences.js'
 import { FILE_UPLOAD } from './api-requests-file-upload.js'
 
-import { Boom } from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 
 export const apiUrls = {
   USERS: '/users',
@@ -62,7 +62,7 @@ export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {
     return await apiHandler()
   } catch (error) {
     console.error(errorMessage, error)
-    Boom.boomify(error, { statusCode: status })
+    boomify(error, { statusCode: status })
     throw error
   }
 }

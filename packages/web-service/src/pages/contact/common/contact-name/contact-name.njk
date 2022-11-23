@@ -16,6 +16,7 @@
       id: "name",
       name: "name",
       spellcheck: false,
+      hint: { text: hintText } if hintText else '',
       value: data.fullName if data.fullName else payload['name'],
       classes: "govuk-!-width-three-quarters",
       attributes: { maxlength: 160 },

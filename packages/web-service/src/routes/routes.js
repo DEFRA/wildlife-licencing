@@ -43,6 +43,20 @@ import { authorisedPersonAddress } from '../pages/contact/authorised-people/auth
 import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
+import { addAdditionalApplicant } from '../pages/contact/additional-contacts/add-additional-applicant.js'
+import { additionalApplicantUser } from '../pages/contact/additional-contacts/additional-applicant-user.js'
+import { additionalApplicantName } from '../pages/contact/additional-contacts/additional-applicant-name.js'
+import { additionalApplicantNames } from '../pages/contact/additional-contacts/additional-applicant-names.js'
+import { additionalApplicantEmail } from '../pages/contact/additional-contacts/additional-applicant-email.js'
+
+import { addAdditionalEcologist } from '../pages/contact/additional-contacts/add-additional-ecologist.js'
+import { additionalEcologistUser } from '../pages/contact/additional-contacts/additional-ecologist-user.js'
+import { additionalEcologistName } from '../pages/contact/additional-contacts/additional-ecologist-name.js'
+import { additionalEcologistNames } from '../pages/contact/additional-contacts/additional-ecologist-names.js'
+import { additionalEcologistEmail } from '../pages/contact/additional-contacts/additional-ecologist-email.js'
+
+import { additionalContactCheckAnswers } from '../pages/contact/additional-contacts/additional-contact-check-answers.js'
+
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
 import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
@@ -135,6 +149,17 @@ const routes = [
   ...authorisedPersonAddress,
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
+  ...addAdditionalApplicant,
+  ...additionalApplicantUser,
+  ...additionalApplicantNames,
+  ...additionalApplicantName,
+  ...additionalApplicantEmail,
+  ...addAdditionalEcologist,
+  ...additionalEcologistUser,
+  ...additionalEcologistNames,
+  ...additionalEcologistName,
+  ...additionalEcologistEmail,
+  ...additionalContactCheckAnswers,
   ...invoiceResponsible,
   ...invoiceUser,
   ...invoiceName,

@@ -5,14 +5,14 @@ import {
   setContactNamesData,
   contactNamesCompletion
 } from '../common/contact-names/contact-names.js'
-import { checkHasContact } from '../common/common.js'
+import { checkHasApplication, checkHasNames } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 
 export const applicantNames = contactNamesPage({
   page: contactURIs.APPLICANT.NAMES.page,
   uri: contactURIs.APPLICANT.NAMES.uri,
-  checkData: checkHasContact(ContactRoles.APPLICANT, contactURIs.APPLICANT),
-  getData: getContactNamesData(ContactRoles.APPLICANT),
+  checkData: [checkHasApplication, checkHasNames(ContactRoles.APPLICANT, [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.APPLICANT)],
+  getData: getContactNamesData(ContactRoles.APPLICANT, [ContactRoles.ADDITIONAL_APPLICANT]),
   setData: setContactNamesData(ContactRoles.APPLICANT),
   completion: contactNamesCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
 })

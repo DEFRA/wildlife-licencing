@@ -81,6 +81,8 @@ describe('The application job processor', () => {
               .mockReturnValueOnce([])
               .mockReturnValueOnce([])
               .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
           },
           applicationAccounts: { findAll: jest.fn(() => []) },
           contacts: {
@@ -132,6 +134,8 @@ describe('The application job processor', () => {
               .mockReturnValueOnce([{ contactId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'ECOLOGIST' }])
               .mockReturnValueOnce([])
               .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
           },
           applicationAccounts: { findAll: jest.fn(() => []) },
           contacts: {
@@ -179,6 +183,8 @@ describe('The application job processor', () => {
           previousLicences: { findAll: jest.fn(() => []) },
           applicationContacts: {
             findAll: jest.fn()
+              .mockReturnValueOnce([])
+              .mockReturnValueOnce([])
               .mockReturnValueOnce([])
               .mockReturnValueOnce([])
               .mockReturnValueOnce([])

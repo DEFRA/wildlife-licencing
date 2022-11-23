@@ -31,9 +31,10 @@ describe('contact-name page', () => {
   describe('setContactData', () => {
     it('invokes the common operations correctly', async () => {
       const mockSetName = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactOperations: () => ({
-          setName: mockSetName
+          setName: mockSetName,
+          create: jest.fn()
         })
       }))
       const request = {

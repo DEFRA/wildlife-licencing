@@ -1,7 +1,7 @@
 import NodeClam from 'clamscan'
 import * as fs from 'fs'
 import db from 'debug'
-import { Boom } from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 const debug = db('web-service:clam')
 
 const options = {
@@ -51,7 +51,7 @@ export async function scanFile (filepath) {
   } catch (err) {
     console.error(err.message)
     fs.unlinkSync(filepath)
-    Boom.boomify(err, { statusCode: 500 })
+    boomify(err, { statusCode: 500 })
     throw new Error(err)
   }
 }

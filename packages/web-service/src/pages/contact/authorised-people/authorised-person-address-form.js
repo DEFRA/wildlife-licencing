@@ -2,8 +2,8 @@ import { addressFormPage } from '../common/address-form/address-form-page.js'
 import { contactURIs } from '../../../uris.js'
 import { mapInputAddress } from '../common/address-form/address-form.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
-import { contactAccountOperationsForContactAccount } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
+import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 
 const { ADDRESS_FORM, ADD } = contactURIs.AUTHORISED_PEOPLE
 

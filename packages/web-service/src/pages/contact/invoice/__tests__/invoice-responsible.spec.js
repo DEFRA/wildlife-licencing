@@ -1,24 +1,9 @@
+import { canBeUser } from '../../common/common.js'
 
 describe('the invoice-responsible page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('checkData', () => {
-    it('returns to applications page if there is no application set', async () => {
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          }))
-        })
-      }
-      const h = {
-        redirect: jest.fn(() => 'redirect')
-      }
-      const { checkData } = await import('../invoice-responsible.js')
-      await checkData(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
-
     it('returns to the tasklist page if there is no applicant set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -379,34 +364,22 @@ describe('the invoice-responsible page', () => {
       expect(mockAssignAccount).toHaveBeenCalledWith('1c3e7655-bb74-4420-9bf0-0bd710987f10', '66ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
     })
 
-    it('clears correctly with payer set to other', async () => {
-      const mockUnAssignContact = jest.fn()
-      const mockUnAssignAccount = jest.fn()
-
-      const mockContactRole = jest.fn()
-        .mockReturnValue({
-          unAssign: mockUnAssignContact,
-          getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Joe Bloggs' })
+    it('clears correctly with payer set to other - cannot be user', async () => {
+      const mockUnAssignC = jest.fn()
+      const mockUnAssignA = jest.fn()
+      const mockCreate = jest.fn()
+      jest.doMock('../../common/operations.js', () => ({
+        contactOperations: () => ({
+          unAssign: mockUnAssignC,
+          create: mockCreate
+        }),
+        accountOperations: () => ({
+          unAssign: mockUnAssignA
         })
+      }))
 
-      const mockAccountRole = jest.fn()
-        .mockReturnValue({
-          unAssign: mockUnAssignAccount,
-          getByApplicationId: () => ({ id: '66ea844c-a2ba-4af8-9b2d-425a9e1c21c8', name: 'Eco. ltd.' })
-        })
-
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            role: mockContactRole
-          },
-          ACCOUNT: {
-            role: mockAccountRole
-          }
-        }
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => false
       }))
 
       const request = {
@@ -422,27 +395,52 @@ describe('the invoice-responsible page', () => {
 
       const { setData } = await import('../invoice-responsible.js')
       await setData(request)
+      expect(mockUnAssignC).toHaveBeenCalled()
+      expect(mockUnAssignA).toHaveBeenCalled()
+      expect(mockCreate).toHaveBeenCalled()
+    })
 
-      expect(mockContactRole).toHaveBeenCalledWith('PAYER')
-      expect(mockAccountRole).toHaveBeenCalledWith('PAYER-ORGANISATION')
-      expect(mockUnAssignContact).toHaveBeenCalledWith('1c3e7655-bb74-4420-9bf0-0bd710987f10', '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
-      expect(mockUnAssignAccount).toHaveBeenCalledWith('1c3e7655-bb74-4420-9bf0-0bd710987f10', '66ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+    it('clears correctly with payer set to other - can be user', async () => {
+      const mockUnAssignC = jest.fn()
+      const mockUnAssignA = jest.fn()
+      const mockCreate = jest.fn()
+      jest.doMock('../../common/operations.js', () => ({
+        contactOperations: () => ({
+          unAssign: mockUnAssignC,
+          create: mockCreate
+        }),
+        accountOperations: () => ({
+          unAssign: mockUnAssignA
+        })
+      }))
+
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => true
+      }))
+
+      const request = {
+        payload: {
+          responsible: 'other'
+        },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
+          }))
+        })
+      }
+
+      const { setData } = await import('../invoice-responsible.js')
+      await setData(request)
+      expect(mockUnAssignC).toHaveBeenCalled()
+      expect(mockUnAssignA).toHaveBeenCalled()
+      expect(mockCreate).not.toHaveBeenCalled()
     })
   })
 
   describe('completion', () => {
-    it('go to the user page if other is chosen and neither the applicant or the ecologist is the user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn().mockReturnValueOnce({}).mockReturnValueOnce({})
-            })
-          }
-        }
+    it('go to the user page if other is chosen and neither the applicant or the ecologist is not the user', async () => {
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => true
       }))
       const request = {
         cache: () => ({
@@ -460,52 +458,11 @@ describe('the invoice-responsible page', () => {
       expect(result).toEqual('/invoice-user')
     })
 
-    it('go to the names page if other is chosen and the applicant is the user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn()
-                .mockReturnValueOnce({ userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })
-                .mockReturnValueOnce({})
-            })
-          }
-        }
+    it('go to the names page if other is chosen and the ecologist or applicant is the user', async () => {
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => false
       }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({
-            payload: { responsible: 'other' }
-          }),
-          getData: jest.fn(() => ({
-            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
-          }))
-        })
-      }
 
-      const { completion } = await import('../invoice-responsible.js')
-      const result = await completion(request)
-      expect(result).toEqual('/invoice-names')
-    })
-
-    it('go to the names page if other is chosen and the ecologist is the user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            role: jest.fn().mockReturnValueOnce({
-              getByApplicationId: () => ({})
-            }).mockReturnValueOnce({
-              getByApplicationId: () => ({ userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })
-            })
-          }
-        }
-      }))
       const request = {
         cache: () => ({
           getPageData: () => ({

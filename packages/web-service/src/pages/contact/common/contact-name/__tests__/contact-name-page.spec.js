@@ -66,7 +66,7 @@ describe('contact-name page', () => {
       name: 'keith  moon'
     }
     const { getValidator } = await import('../contact-name-page.js')
-    const validator = getValidator('AUTHORISED-PERSON')
+    const validator = getValidator(['AUTHORISED-PERSON'])
     await expect(() => validator(payload, {})).rejects.toThrow()
   })
 
@@ -90,7 +90,7 @@ describe('contact-name page', () => {
       name: 'keith  moon'
     }
     const { getValidator } = await import('../contact-name-page.js')
-    const validator = getValidator('ECOLOGIST')
+    const validator = getValidator(['ECOLOGIST'])
     await expect(() => validator(payload, {})).rejects.toThrow()
   })
 })

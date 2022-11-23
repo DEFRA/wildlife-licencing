@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { DEFAULT_ROLE } from '../../../../constants.js'
-import { accountsFilter, contactOperations } from '../common.js'
+import { accountsFilter } from '../common.js'
+import { contactOperations } from '../operations.js'
 
 export const getContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
@@ -8,9 +8,16 @@ export const getContactData = contactRole => async request => {
   return APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
 }
 
+/**
+ * Create a contact if one does not already exist
+ * The user page will create the signed-in user
+ * @param contactRole
+ * @returns {(function(*): Promise<void>)|*}
+ */
 export const setContactData = contactRole => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contactOps = contactOperations(contactRole, applicationId, userId)
+  await contactOps.create(false)
   await contactOps.setName(request.payload.name)
 }
 
@@ -33,7 +40,7 @@ export const contactNameCompletion = (_contactRole, accountRole, urlBase) => asy
     }
   }
 
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId, DEFAULT_ROLE)
+  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
   const filteredAccounts = await accountsFilter(applicationId, accounts)
   if (filteredAccounts.length) {
     return urlBase.ORGANISATIONS.uri

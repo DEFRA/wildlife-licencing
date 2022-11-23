@@ -64,7 +64,7 @@ describe('the email-address page', () => {
   describe('setEmailAddressData', () => {
     it('assigns the email address', async () => {
       const mockSetEmailAddress = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
           setEmailAddress: mockSetEmailAddress
         })

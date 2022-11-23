@@ -62,6 +62,16 @@ export const SddsApplication = new Table('sdds_applications', [
     RelationshipType.MANY_TO_ONE, 'sdds_ecologistorganisationid', 'ecologistOrganization',
     null, null, OperationType.INBOUND_AND_OUTBOUND, true),
 
+  // The Additional applicant
+  new Relationship('sdds_application_alternativeapplicantcont', 'contacts',
+    RelationshipType.MANY_TO_ONE, 'sdds_alternativeapplicantcontactid', 'additionalApplicant',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  // The additional ecologist
+  new Relationship('sdds_application_alternativeecologistcont', 'contacts',
+    RelationshipType.MANY_TO_ONE, 'sdds_alternativeecologistcontactid', 'additionalEcologist',
+    null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
   // Payer
   new Relationship('sdds_application_billingcustomerid_contac', 'contacts',
     RelationshipType.MANY_TO_ONE, 'sdds_billingcustomerid', 'payer',

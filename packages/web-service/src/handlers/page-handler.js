@@ -3,14 +3,31 @@ import { Backlink } from './backlink.js'
 
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
 
-export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
-  get: async (request, h) => {
-    // If checkData exists call it and if returning truthy, return
-    if (checkData && typeof checkData === 'function') {
-      const check = await checkData(request, h)
+const doCheckData = async (checkData, request, h) => {
+  // Check data is a function
+  if (checkData && typeof checkData === 'function') {
+    const check = await checkData(request, h)
+    if (check) {
+      return check
+    }
+  } else if (checkData && Array.isArray(checkData)) {
+    // Check data is an array of function
+    for await (const checkFunc of checkData) {
+      const check = await checkFunc(request, h)
       if (check) {
         return check
       }
+    }
+  }
+
+  return null
+}
+
+export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
+  get: async (request, h) => {
+    const check = await doCheckData(checkData, request, h)
+    if (check) {
+      return check
     }
 
     // Page data is automatically handled payload and error data

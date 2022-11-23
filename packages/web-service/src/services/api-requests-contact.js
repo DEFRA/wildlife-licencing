@@ -1,7 +1,7 @@
 import { contactRoleIsSingular, ContactRoles } from '../pages/contact/common/contact-roles.js'
 import { API } from '@defra/wls-connectors-lib'
 import { apiUrls, apiRequestsWrapper } from './api-requests.js'
-import Boom from '@hapi/boom'
+import { boomify } from '@hapi/boom'
 
 import db from 'debug'
 const debug = db('web-service:api-requests')
@@ -15,7 +15,7 @@ const getContactsByApplicationId = async (role, applicationId) => {
     return contactRoleIsSingular(role) ? contacts[0] : contacts
   } catch (error) {
     console.error(`Error getting contacts of ${role} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -50,7 +50,7 @@ const createContact = async (role, applicationId, payload) => {
     return contact
   } catch (error) {
     console.error(`Error creating ${role} for applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -119,7 +119,7 @@ const unLinkContact = async (role, applicationId, contactId) => {
     }
   } catch (error) {
     console.error(`Error unlinking ${role} from applicationId: ${applicationId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
@@ -127,15 +127,16 @@ const unLinkContact = async (role, applicationId, contactId) => {
 const findContactByUser = async (role, userId) => {
   try {
     debug(`Finding ${role}'s for userId: ${userId}`)
-    return API.get(apiUrls.CONTACTS, `userId=${userId}&role=${role}`)
+    return API.get(apiUrls.CONTACTS, role ? `userId=${userId}&role=${role}` : `userId=${userId}`)
   } catch (error) {
     console.error(`Finding ${role}'s for userId: ${userId}`, error)
-    Boom.boomify(error, { statusCode: 500 })
+    boomify(error, { statusCode: 500 })
     throw error
   }
 }
 
 export const CONTACT = {
+  findAllByUser: async userId => findContactByUser(null, userId),
   getById: async contactId => {
     return apiRequestsWrapper(
       async () => {
@@ -143,6 +144,16 @@ export const CONTACT = {
         return API.get(`${apiUrls.CONTACT}/${contactId}`)
       },
       `Error getting contact by id: ${contactId}`,
+      500
+    )
+  },
+  getApplicationContacts: async contactId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Updating the contact for contactId: ${contactId}`)
+        return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+      },
+      `Error updating the contact for contactId: ${contactId}`,
       500
     )
   },
@@ -167,17 +178,24 @@ export const CONTACT = {
     )
   },
   isImmutable: async (applicationId, contactId) => {
-    const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
-    if (contact.submitted) {
-      return true
-    } else {
-      const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
-      if (!applicationContacts.length) {
-        return false
+    return apiRequestsWrapper(async () => {
+      const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
+      if (contact.submitted) {
+        return true
       } else {
-        return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+        // A contact is not immutable if for any reason the name is not set. This is possible with certain back-button behaviour.
+        if (!contact.fullName) {
+          return false
+        }
+        const applicationContacts = await API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+        if (!applicationContacts.length) {
+          return false
+        } else {
+          return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+        }
       }
-    }
+    }, `Error determining immutable for contact by id: ${contactId}`,
+    500)
   },
   role: contactRole => {
     if (!Object.values(ContactRoles).find(k => k === contactRole)) {

@@ -53,7 +53,7 @@ describe('the address functions', () => {
   describe('setAddressData', () => {
     it('sets the address', async () => {
       const mockSetAddress = jest.fn()
-      jest.doMock('../../common.js', () => ({
+      jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
           setAddress: mockSetAddress
         })

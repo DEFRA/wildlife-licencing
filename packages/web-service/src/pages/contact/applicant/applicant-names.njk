@@ -1,3 +1,10 @@
 {% extends "contact-names.njk" %}
 {% set title = 'Who is the licence for?' %}
 {% set addText = 'Add someone else' %}
+
+{% set errorMap = {
+        'contact': {
+            'any.required': { ref: '#contact', text: "Choose who the licence is for or 'someone else'" }
+        }
+    }
+%}

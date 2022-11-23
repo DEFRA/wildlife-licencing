@@ -33,10 +33,10 @@
     {% if data.progress.complete !== data.progress.from %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
         <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{data.progress.complete}} of {{data.progress.from}} sections.</p>
-        {% if data.reference %}
-            <p class="govuk-body govuk-!-margin-bottom-7">Reference:<br>{{data.reference}}</p>
-        {% endif %}
+    {% endif %}
 
+    {% if data.reference %}
+        <p class="govuk-body govuk-!-margin-bottom-7">Reference:<br>{{data.reference}}</p>
     {% endif %}
 
     {{ govukTaskList({ sections: tld }) }}
