@@ -105,36 +105,44 @@ export const checkHasAddress = urlBase => async (request, h) => {
  */
 export const getExistingContactCandidates = async (userId, applicationId, primaryContactRole,
   otherContactRoles = [], allowAssociated = false) => {
-  const contacts = await APIRequests.CONTACT.findAllByUser(userId)
+  const allRoles = [primaryContactRole].concat(otherContactRoles)
+  const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
+  const contactApplicationsRoles = contactApplications.filter(ca => allRoles.includes(ca.contactRole))
+  const contactApplicationsRolesAssoc = contactApplicationsRoles.filter(ca => !ca.userId || allowAssociated)
 
-  // Find all the contacts of the user
-  const filterValues = await Promise.all(contacts.map(async c => {
-    // Fetch their application-role relationships
-    const applicationContacts = await APIRequests.CONTACT.getApplicationContacts(c.id)
-
-    // Find those on other applications assigned to the primary and other contact roles
-    const notCurrentSet = applicationContacts.find(ac => [primaryContactRole].concat(otherContactRoles)
-      .includes(ac.contactRole) && ac.applicationId !== applicationId)
-
-    if (notCurrentSet) {
-      return { id: c.id, include: true }
+  // Function to determine if a contact is immutable
+  const isImmutable = ca => {
+    if (ca.submitted) {
+      return true
+    } else {
+      if (!ca.fullName) {
+        return false
+      }
+      return !!contactApplications.find(caa => caa.id === ca.id && caa.applicationId !== ca.applicationId)
     }
+  }
 
-    return { id: c.id, include: false }
-  }))
-
-  const filteredContacts = contacts.filter(c => filterValues.find(fv => fv.id === c.id && fv.include))
-
-  // Remove old clones and select mutable where exists
-  return contactsFilter(applicationId, filteredContacts, allowAssociated)
+  const contactApplicationsFiltered = contactApplicationsRolesAssoc.map(ca => ({ ...ca, immutable: isImmutable(ca) }))
+  decorateWithCloneGroups(contactApplicationsFiltered)
+  const contactIds = duDuplicate(contactApplicationsFiltered)
+  return contactApplicationsFiltered.filter(c => contactIds.includes(c.id))
 }
 
-const cloneGroups = (recs, id, groupId) => {
-  const contact = recs.find(c => c.id === id)
-  contact.groupId = groupId
-  const clones = recs.filter(c => c.cloneOf === id)
-  for (const clone of clones) {
-    cloneGroups(recs, clone.id, groupId)
+const decorateWithCloneGroups = records => {
+  const cloneGroups = (recs, id, groupId) => {
+    // Look for all clones of this
+    const clones = recs.get(id)
+    for (const clone of clones) {
+      cloneGroups(recs, clone.id, groupId)
+    }
+  }
+
+  const mapById = new Map(records.map(r => [r.id, records.filter(f => f.cloneOf === r.id)]))
+  // Start with the un-cloned records
+  for (const record of records) {
+    // For un-cloned the group id the id
+    record.groupId = !record.cloneOf ? record.id : cloneGroups(mapById, record.id, record.id)
+    // cloneGroups(mapByCloneOf, originRecord.id, originRecord.groupId)
   }
 }
 
@@ -151,7 +159,7 @@ export const contactsFilter = async (applicationId, contacts, allowAssociated = 
   const contactsFiltered = contacts.filter(c => c.fullName && (!c.userId || allowAssociated))
   const originContacts = contactsFiltered.filter(c => !c.cloneOf)
   for (const originContact of originContacts) {
-    cloneGroups(contactsFiltered, originContact.id, originContact.id)
+    // cloneGroups(contactsFiltered, originContact.id, originContact.id)
   }
   const candidates = await Promise.all(contactsFiltered.map(async c => ({
     ...c,

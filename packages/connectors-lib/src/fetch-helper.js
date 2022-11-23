@@ -6,6 +6,8 @@ import pkg from 'node-fetch'
 const fetch = pkg.default
 
 const debug = db('connectors-lib:fetch')
+const debugTime = db('connectors-lib:fetch-performance')
+
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
 export class HTTPResponseError extends Error {
@@ -82,11 +84,17 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
 
   try {
     // Make the request
+    const startTs = Date.now()
+
     const responsePromise = fetch(url, options)
 
     // Run the supplied async response function
     const result = await responseFunc(responsePromise)
     debug(`HTTP response data: ${JSON.stringify(result)}`)
+
+    const endTs = Date.now()
+    debugTime(`${url},${options.method} ${endTs - startTs}ms`)
+
     return result
   } catch (err) {
     if (err.name === 'AbortError') {

@@ -124,6 +124,16 @@ const unLinkAccount = async (accountRole, applicationId, accountId) => {
 }
 
 export const ACCOUNT = {
+  findAllAccountApplicationRolesByUser: async userId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Get account-application-accounts by userId: ${userId}`)
+        return API.get(`${apiUrls.APPLICATION_ACCOUNTS_ACCOUNTS}`, `userId=${userId}`)
+      },
+      `Error getting account-application-accounts by userId: ${userId}`,
+      500
+    )
+  },
   getById: async accountId => {
     return apiRequestsWrapper(
       async () => {

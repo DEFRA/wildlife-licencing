@@ -137,6 +137,16 @@ const findContactByUser = async (role, userId) => {
 
 export const CONTACT = {
   findAllByUser: async userId => findContactByUser(null, userId),
+  findAllContactApplicationRolesByUser: async userId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Get contact-application-contacts by userId: ${userId}`)
+        return API.get(`${apiUrls.APPLICATION_CONTACTS_CONTACTS}`, `userId=${userId}`)
+      },
+      `Error getting contact-application-contacts by userId: ${userId}`,
+      500
+    )
+  },
   getById: async contactId => {
     return apiRequestsWrapper(
       async () => {
@@ -150,10 +160,10 @@ export const CONTACT = {
   getApplicationContacts: async contactId => {
     return apiRequestsWrapper(
       async () => {
-        debug(`Updating the contact for contactId: ${contactId}`)
+        debug(`Fetching the contact for contactId: ${contactId}`)
         return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
       },
-      `Error updating the contact for contactId: ${contactId}`,
+      `Error fetching the contact for contactId: ${contactId}`,
       500
     )
   },

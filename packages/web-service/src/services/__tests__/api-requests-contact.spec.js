@@ -31,6 +31,19 @@ describe('The API requests contact service', () => {
         .rejects.toThrowError()
     })
 
+    it('findAllContactApplicationRolesByUser calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.findAllContactApplicationRolesByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('application-contacts/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(([{ foo: 'bar' }]))
+    })
+
     it('getById calls the API correctly', async () => {
       const mockGet = jest.fn(() => ({ foo: 'bar' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
