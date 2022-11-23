@@ -107,8 +107,19 @@ export const getExistingContactCandidates = async (userId, applicationId, primar
   otherContactRoles = [], allowAssociated = false) => {
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
-  const contactApplicationsRoles = contactApplications.filter(ca => allRoles.includes(ca.contactRole))
-  const contactApplicationsRolesAssoc = contactApplicationsRoles.filter(ca => !ca.userId || allowAssociated)
+
+  // Filter by roles
+  const contactApplicationsOfRoles = contactApplications.filter(ca => allRoles.includes(ca.contactRole))
+
+  // Remove duplicates by applicationId
+  const s = contactApplicationsOfRoles.sort((a, b) => a.applicationId === b.applicationId)
+
+  contactApplicationsOfRoles.sort((a, b) => (a.applicationId > b.applicationId) - (a.applicationId < b.applicationId)).reduce((a, c) => {
+    c.applicationId !== a[a.length - 1].applicationId ? c : null
+  }, [])
+
+  // Acts on the de-dupe
+  const contactApplicationsRolesAssoc = contactApplicationsOfRoles.filter(ca => !ca.userId || allowAssociated)
 
   // Function to determine if a contact is immutable
   const isImmutable = ca => {
@@ -130,19 +141,27 @@ export const getExistingContactCandidates = async (userId, applicationId, primar
 
 const decorateWithCloneGroups = records => {
   const cloneGroups = (recs, id, groupId) => {
-    // Look for all clones of this
-    const clones = recs.get(id)
+    // Fetch the record and all clones, clones of clones, ....
+    const { origin, clones } = recs.get(id)
+    origin.groupId = groupId
     for (const clone of clones) {
       cloneGroups(recs, clone.id, groupId)
     }
   }
 
-  const mapById = new Map(records.map(r => [r.id, records.filter(f => f.cloneOf === r.id)]))
+  const mapById = new Map(records.map(r => [r.id, {
+    origin: r,
+    clones: records.filter(f => f.cloneOf === r.id)
+  }]))
+
   // Start with the un-cloned records
   for (const record of records) {
     // For un-cloned the group id the id
-    record.groupId = !record.cloneOf ? record.id : cloneGroups(mapById, record.id, record.id)
-    // cloneGroups(mapByCloneOf, originRecord.id, originRecord.groupId)
+    if (record.cloneOf) {
+      cloneGroups(mapById, record.id, record.id)
+    } else {
+      record.groupId = record.id
+    }
   }
 }
 

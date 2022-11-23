@@ -1,3 +1,5 @@
+import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+
 describe('add authorised person', () => {
   beforeEach(() => jest.resetModules())
   describe('the checkData function', () => {
@@ -150,6 +152,49 @@ describe('add authorised person', () => {
             }
           }]
       })
+    })
+
+    it('calls the set() on the tags, when on the CYA page', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed',
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet,
+              get: () => 'complete'
+            })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
+                fullName: 'Peter Hammill',
+                contactDetails: { email: 'Peter.Hammil@vandergrafgenerator' },
+                address: {
+                  postcode: 'BS32 8IU'
+                }
+              }])
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { getData } = await import('../add-authorised-person.js')
+      await getData(request)
+      expect(mockSet).toHaveBeenCalledTimes(1)
+      expect(mockSet).toHaveBeenCalledWith({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: 'complete-not-confirmed' })
     })
   })
 
