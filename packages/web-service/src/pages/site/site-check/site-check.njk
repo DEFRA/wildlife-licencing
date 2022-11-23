@@ -50,11 +50,13 @@
       items: [
         {
           value: "address",
-          html: getSiteAddress(data.siteAddress)
+          html: getSiteAddress(data.siteAddress),
+          checked: payload['address-and-grid-reference-mismatch'] === 'address'
         },
         {
           value: "gridReference",
-          text: getGridReference(data.gridReference)
+          text: getGridReference(data.gridReference),
+          checked: payload['address-and-grid-reference-mismatch'] === 'gridReference'
         },
         {
           divider: "or"
@@ -62,6 +64,7 @@
         {
           value: "correct",
           text: "These are correct",
+          checked: payload['address-and-grid-reference-mismatch'] === 'correct',
           hint: {
             text: "Your application may take longer to process if you don't give accurate site locations."
           }
