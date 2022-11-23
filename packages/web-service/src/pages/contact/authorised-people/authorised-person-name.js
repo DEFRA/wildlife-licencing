@@ -34,7 +34,7 @@ export const setData = async request => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
-  return getAuthorisedPeopleData(c => c)
+  return getAuthorisedPeopleData(c => c)(request)
 }
 
 export const authorisedPersonName = contactNamePage({
@@ -42,5 +42,6 @@ export const authorisedPersonName = contactNamePage({
   uri: NAME.uri,
   checkData: checkHasApplication,
   setData: setData,
+  getData: getData,
   completion: getAuthorisedPeopleCompletion
 }, [ContactRoles.AUTHORISED_PERSON])
