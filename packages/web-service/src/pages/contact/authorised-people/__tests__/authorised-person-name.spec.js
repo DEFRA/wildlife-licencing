@@ -94,7 +94,7 @@ describe('authorised person name', () => {
         })
       }
       jest.doMock('../common.js', () => ({
-        getAuthorisedPeopleData: () => 'example string return!'
+        getAuthorisedPeopleData: () => () => 'example string return!'
       }))
       const { getData } = await import('../authorised-person-name.js')
       expect(await getData(request)).toBe('example string return!')
