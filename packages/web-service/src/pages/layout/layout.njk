@@ -91,7 +91,9 @@
   <script nonce={{cspNonce}}>
     (function () {
       const backLinkDiv = document.getElementById('backlink-div')
-      backLinkDiv.removeAttribute('hidden')
+      if (backLinkDiv) {
+        backLinkDiv.removeAttribute('hidden')
+      }
       const backLinkAnchor = document.getElementsByClassName('govuk-back-link')[0]
       if (backLinkAnchor) {
           backLinkAnchor.addEventListener('click', function(event) {
