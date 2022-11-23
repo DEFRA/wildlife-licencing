@@ -45,7 +45,7 @@ export const completion = async request => {
   let redirectUrl = siteURIs.SELECT_ADDRESS.uri
 
   if (pageData?.payload[postcodeRadio] === 'no') {
-    redirectUrl = siteURIs.UPLOAD_MAP.uri
+    redirectUrl = `${siteURIs.ADDRESS_NO_LOOKUP.uri}?no-postcode=true`
   }
 
   return redirectUrl

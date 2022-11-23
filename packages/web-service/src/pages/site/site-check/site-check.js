@@ -9,17 +9,16 @@ import { getGridReferenceProximity } from './grid-reference-proximity.js'
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
-  let redirectUrl = siteURIs.CHECK_SITE_ANSWERS.uri
 
   if (pageData?.payload['address-and-grid-reference-mismatch'] === 'address') {
-    redirectUrl = siteURIs.SITE_GOT_POSTCODE.uri
+    return siteURIs.SITE_GOT_POSTCODE.uri
   } else if (pageData?.payload['address-and-grid-reference-mismatch'] === 'gridReference') {
-    redirectUrl = siteURIs.SITE_GRID_REF.uri
+    return siteURIs.SITE_GRID_REF.uri
   }
 
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
 
-  return redirectUrl
+  return siteURIs.CHECK_SITE_ANSWERS.uri
 }
 
 export const getData = async request => {
