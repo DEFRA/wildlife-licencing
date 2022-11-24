@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { Backlink } from './backlink.js'
+import querystring from 'querystring'
 
 export const errorShim = e => e.details.reduce((a, c) => ({ ...a, [c.path[0]]: c.type }), {})
 
@@ -66,7 +67,9 @@ export default (view, checkData, getData, completion, setData, backlink = Backli
   error: async (request, h, err) => {
     if (err instanceof Joi.ValidationError) {
       await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
-      return h.redirect(request.path).takeover()
+      // Take account of any query string in the redirect
+      const qs = querystring.stringify(request.query)
+      return h.redirect(request.path + (qs.length > 0 ? ('?' + qs) : '')).takeover()
     } else {
       // If error is anything other than a validation exception then rethrow it
       throw err
