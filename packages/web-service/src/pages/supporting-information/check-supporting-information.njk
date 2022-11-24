@@ -62,11 +62,13 @@
             items: [
               {
                 value: "yes",
-                text: "Yes"
+                text: "Yes",
+                checked: payload['another-file-check'] === 'yes'
               },
               {
                 value: "no",
-                text: "No"
+                text: "No",
+                checked: payload['another-file-check'] === 'no'
               }
             ]
           }) }}

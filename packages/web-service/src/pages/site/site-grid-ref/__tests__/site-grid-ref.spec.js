@@ -2,7 +2,7 @@ describe('The site national grid reference page', () => {
   beforeEach(() => jest.resetModules())
 
   it('getData returns the correct object', async () => {
-    const result = { gridReference: 'NY123456' }
+    const result = { siteData: { gridReference: 'NY123456' } }
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'

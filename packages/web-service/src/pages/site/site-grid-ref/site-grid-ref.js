@@ -30,8 +30,8 @@ export const setData = async request => {
 }
 
 export const getData = async request => {
-  const siteData = await request.cache().getData()
-  const { applicationId, gridReference } = siteData
+  const { applicationId, siteData } = await request.cache().getData()
+  const { gridReference } = siteData
   await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
   return { gridReference }
 }

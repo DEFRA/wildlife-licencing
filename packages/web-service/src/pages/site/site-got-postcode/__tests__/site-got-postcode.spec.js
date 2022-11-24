@@ -76,7 +76,7 @@ describe('site-got-postcode page handler', () => {
     expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: { postcode: undefined }, addressLookup: [{ Address: { town: 'Bristol' } }] })
   })
 
-  it('should redirect user to upload-map page, when the site does not has a postcode', async () => {
+  it('should redirect user to site-address-no-lookup page, when the site does not has a postcode', async () => {
     const { completion } = await import('../site-got-postcode.js')
     const request = {
       cache: () => ({
@@ -87,7 +87,7 @@ describe('site-got-postcode page handler', () => {
         })
       })
     }
-    expect(await completion(request)).toBe('/upload-map')
+    expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
   })
 
   it('should redirect user to select-address page, when the site does has a postcode', async () => {
