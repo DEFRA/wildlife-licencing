@@ -38,7 +38,7 @@ export const setAdditionalContactData = contactRole => async request => {
   }
 }
 
-export const additionalContactCompletion = (contactRole, uriBase) => async request => {
+export const addAdditionalContactCompletion = (contactRole, uriBase) => async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   if (pageData.payload['yes-no'] === 'yes') {
@@ -58,7 +58,7 @@ export const additionalContactCompletion = (contactRole, uriBase) => async reque
     }
   } else {
     // If the has additional ecologist answer is set go to the check your answers page
-    if (typeof journeyData.additionalContact[ContactRoles.ADDITIONAL_ECOLOGIST] !== 'undefined') {
+    if (typeof journeyData?.additionalContact?.[ContactRoles.ADDITIONAL_ECOLOGIST] !== 'undefined') {
       return contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
     } else {
       return contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
