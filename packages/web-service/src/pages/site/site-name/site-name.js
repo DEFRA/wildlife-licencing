@@ -20,10 +20,10 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, siteData } = journeyData
   const siteName = request.payload['site-name']
-  const site = await APIRequests.SITE.findByApplicationId(applicationId)
+  const singleSite = await APIRequests.SITE.findByApplicationId(applicationId)
   // Create a new site or update a site with the name from the request
-  if (site.length) {
-    const siteInfo = site[0]
+  if (singleSite.length) {
+    const siteInfo = singleSite[0]
     const payload = { ...siteInfo, name: siteName }
     await APIRequests.SITE.update(siteInfo.id, payload)
     journeyData.siteData = { ...siteData, id: siteInfo.id, name: siteName }
