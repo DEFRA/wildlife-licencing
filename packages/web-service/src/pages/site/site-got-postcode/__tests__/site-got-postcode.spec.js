@@ -13,23 +13,12 @@ describe('site-got-postcode page handler', () => {
 
   it('throws an error if a postcode is not entered', async () => {
     try {
-      const payload = { 'site-postcode': true, 'site-postcode-check': 'yes' }
+      const payload = { 'site-postcode': '', 'site-postcode-check': 'yes' }
       const { validator } = await import('../site-got-postcode.js')
       expect(await validator(payload))
     } catch (e) {
       expect(e.message).toBe('ValidationError')
       expect(e.details[0].message).toBe('Error: You have not entered a postcode')
-    }
-  })
-
-  it('throws an error if an invalid postcode is entered', async () => {
-    try {
-      const payload = { 'site-postcode': '%%%%***', 'site-postcode-check': 'yes' }
-      const { validator } = await import('../site-got-postcode.js')
-      expect(await validator(payload))
-    } catch (e) {
-      expect(e.message).toBe('ValidationError')
-      expect(e.details[0].message).toBe('Error: You have not entered a correct postcode')
     }
   })
 
