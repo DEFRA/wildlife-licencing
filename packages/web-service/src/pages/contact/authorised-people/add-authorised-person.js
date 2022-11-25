@@ -48,6 +48,11 @@ export const checkData = async (request, h) => {
 }
 
 export const getData = async request => {
+  // Clear any errors
+  await request.cache().clearPageData(NAME.page)
+  await request.cache().clearPageData(EMAIL.page)
+  await request.cache().clearPageData(POSTCODE.page)
+
   const { applicationId } = await request.cache().getData()
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON).getByApplicationId(applicationId)
   const state = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.AUTHORISED_PEOPLE)
