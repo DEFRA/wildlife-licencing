@@ -39,6 +39,7 @@ export const ApplicationService = {
       journeyData.applicationId = id
       delete journeyData.applicationUserId
       delete journeyData.role
+      delete journeyData.additionalContact
       await request.cache().setData(journeyData)
       await clearPageData(request)
       await clearData(request)

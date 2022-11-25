@@ -9,7 +9,7 @@ describe('the check-supporting-information page handler', () => {
   describe('the getData function', () => {
     it(' returns the file data', async () => {
       const mockRemoveUploadedFile = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e', uploadId: '1234567' }))
-      const mockGetUploadedFiles = jest.fn(() => ([{ id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', createdAt: '2022-03-25T14:10:14.861Z', updatedAt: '2022-03-25T14:10:14.861Z', applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }]))
+      const mockGetUploadedFiles = jest.fn(() => ([{ id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', createdAt: '2022-03-25T14:10:14.861Z', updatedAt: '2022-03-25T14:10:14.861Z', filetype: 'METHOD-STATEMENT', applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }]))
       const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
 
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -37,6 +37,7 @@ describe('the check-supporting-information page handler', () => {
         applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
         id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
         removeUploadUrl: '/remove/upload',
+        filetype: 'METHOD-STATEMENT',
         updatedAt: '2022-03-25T14:10:14.861Z',
         createdAt: '2022-03-25T14:10:14.861Z',
         uploadedDate: '25 March 2022'

@@ -9,10 +9,22 @@ import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 const { CHECK_ANSWERS } = contactURIs.ADDITIONAL_APPLICANT
 
 export const getData = async request => {
-  const { applicationId } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+
   const additionalApplicant = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_APPLICANT).getByApplicationId(applicationId)
   const additionalEcologist = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_ECOLOGIST).getByApplicationId(applicationId)
+
+  // These flags are to help keep track of the page sequence
+  Object.assign(journeyData, {
+    additionalContact: {
+      [ContactRoles.ADDITIONAL_APPLICANT]: !!additionalApplicant,
+      [ContactRoles.ADDITIONAL_ECOLOGIST]: !!additionalEcologist
+    }
+  })
+
+  await request.cache().setData(journeyData)
 
   return {
     applicant: additionalApplicant

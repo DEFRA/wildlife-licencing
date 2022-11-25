@@ -2,12 +2,16 @@ describe('The site national grid reference page', () => {
   beforeEach(() => jest.resetModules())
 
   it('getData returns the correct object', async () => {
-    const result = { gridReference: 'NY123456' }
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
       },
       APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return [{ gridReference: 'NY123456' }]
+          }
+        },
         APPLICATION: {
           tags: () => {
             return { get: jest.fn(), set: jest.fn() }
@@ -18,7 +22,7 @@ describe('The site national grid reference page', () => {
     const request = {
       cache: () => ({
         getData: () => {
-          return result
+          return {}
         }
       })
     }
@@ -27,9 +31,62 @@ describe('The site national grid reference page', () => {
     expect(await getData(request)).toStrictEqual({ gridReference: 'NY123456' })
   })
 
+  it('getData returns  undefined if not site found', async () => {
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return []
+          }
+        },
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn(), set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return {}
+        }
+      })
+    }
+
+    const { getData } = await import('../site-grid-ref.js')
+    expect(await getData(request)).toStrictEqual({ gridReference: undefined })
+  })
+
   it('setData', async () => {
     const mockSetData = jest.fn()
     const mockUpdate = jest.fn()
+    const site = [
+      {
+        id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+        createdAt: '2022-11-24T22:32:41.186Z',
+        updatedAt: '2022-11-24T22:32:50.642Z',
+        name: 'Kealan bravo',
+        address: {
+          town: 'BIRMINGHAM',
+          uprn: '100070567486',
+          street: 'WITTON LODGE ROAD',
+          country: 'ENGLAND',
+          postcode: 'B23 5LT',
+          xCoordinate: 409884,
+          yCoordinate: 293389,
+          buildingNumber: '308'
+        },
+        siteMapFiles: {
+          activity: 'site.pdf',
+          mitigationsDuringDevelopment: 'demo.jpg',
+          mitigationsAfterDevelopment: 'site-after-development.shape'
+        }
+      }
+    ]
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
@@ -37,7 +94,10 @@ describe('The site national grid reference page', () => {
       },
       APIRequests: {
         SITE: {
-          update: mockUpdate
+          update: mockUpdate,
+          findByApplicationId: () => {
+            return site
+          }
         },
         tags: () => {
           return { has: () => false }
@@ -71,8 +131,28 @@ describe('The site national grid reference page', () => {
     await setData(request)
 
     expect(mockSetData).toHaveBeenCalled()
-    expect(mockUpdate).toHaveBeenCalledWith('12345',
-      { address: '123 site street, Birmingham, B1 4HY', gridReference: 'NY123456', name: 'site-name', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg', mitigationsAfterDevelopment: 'site-after-development.shape' } })
+    expect(mockUpdate).toHaveBeenCalledWith('8917f37b-fbf9-4dc7-8cd7-28c354b36781', {
+      id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+      createdAt: '2022-11-24T22:32:41.186Z',
+      updatedAt: '2022-11-24T22:32:50.642Z',
+      name: 'Kealan bravo',
+      gridReference: 'NY123456',
+      address: {
+        town: 'BIRMINGHAM',
+        uprn: '100070567486',
+        street: 'WITTON LODGE ROAD',
+        country: 'ENGLAND',
+        postcode: 'B23 5LT',
+        xCoordinate: 409884,
+        yCoordinate: 293389,
+        buildingNumber: '308'
+      },
+      siteMapFiles: {
+        activity: 'site.pdf',
+        mitigationsDuringDevelopment: 'demo.jpg',
+        mitigationsAfterDevelopment: 'site-after-development.shape'
+      }
+    })
   })
 
   it('should redirect user to site address and grid reference mismatch, when the site tag is in progress', async () => {

@@ -34,7 +34,8 @@ describe('add additional contact check page', () => {
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
             applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
+          }),
+          setData: jest.fn()
         })
       }
       const { getData } = await import('../additional-contact-check-answers.js')

@@ -22,9 +22,9 @@ describe('site-got-postcode page handler', () => {
     }
   })
 
-  it('throws an error if a wrong postcode is entered', async () => {
+  it('throws an error if an invalid postcode is entered', async () => {
     try {
-      const payload = { 'site-postcode': 'B123 TY567', 'site-postcode-check': 'yes' }
+      const payload = { 'site-postcode': '%%%%***', 'site-postcode-check': 'yes' }
       const { validator } = await import('../site-got-postcode.js')
       expect(await validator(payload))
     } catch (e) {
@@ -40,7 +40,7 @@ describe('site-got-postcode page handler', () => {
   })
 
   it('getData returns the correct object', async () => {
-    const result = { siteData: { sitePostcode: 'B15 7GF' } }
+    const result = { siteData: { postcode: 'B15 7GF' } }
     const request = {
       cache: () => ({
         getData: () => {
@@ -76,7 +76,7 @@ describe('site-got-postcode page handler', () => {
     expect(mockSetData).toHaveBeenCalledWith({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: { postcode: undefined }, addressLookup: [{ Address: { town: 'Bristol' } }] })
   })
 
-  it('should redirect user to upload-map page, when the site does not has a postcode', async () => {
+  it('should redirect user to site-address-no-lookup page, when the site does not has a postcode', async () => {
     const { completion } = await import('../site-got-postcode.js')
     const request = {
       cache: () => ({
@@ -87,7 +87,7 @@ describe('site-got-postcode page handler', () => {
         })
       })
     }
-    expect(await completion(request)).toBe('/upload-map')
+    expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
   })
 
   it('should redirect user to select-address page, when the site does has a postcode', async () => {

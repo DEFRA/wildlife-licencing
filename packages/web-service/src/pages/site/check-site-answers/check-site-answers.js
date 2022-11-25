@@ -1,3 +1,4 @@
+import { Backlink } from '../../../handlers/backlink.js'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { APPLICATIONS, siteURIs, TASKLIST } from '../../../uris.js'
@@ -41,6 +42,7 @@ export const completion = async request => {
 export default pageRoute({
   page: siteURIs.CHECK_SITE_ANSWERS.page,
   uri: siteURIs.CHECK_SITE_ANSWERS.uri,
+  backlink: Backlink.NO_BACKLINK,
   checkData,
   getData,
   completion
