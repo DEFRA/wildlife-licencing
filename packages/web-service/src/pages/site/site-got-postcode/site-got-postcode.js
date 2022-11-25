@@ -4,17 +4,17 @@ import { siteURIs } from '../../../uris.js'
 import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
 
-const postcode = 'site-postcode'
+const postcodeInput = 'site-postcode'
 const postcodeRadio = 'site-postcode-check'
 
 export const validator = async payload => {
-  if (!payload[postcode]) {
+  if (!payload[postcodeInput]) {
     Joi.assert(payload, Joi.object({
       'site-postcode-check': Joi.any().valid('yes', 'no').required()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (!payload[postcode] && payload[postcodeRadio] === 'yes') {
+  if (!payload[postcodeInput] && payload[postcodeRadio] === 'yes') {
     Joi.assert(payload, Joi.object({
       'site-postcode': Joi.string().trim().required().pattern(ukPostcodeRegex).replace(ukPostcodeRegex, '$1 $2').uppercase()
     }).options({ abortEarly: false, allowUnknown: true }))
@@ -23,19 +23,20 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const { siteData } = await request.cache().getData()
-  const { sitePostcode } = siteData
-  return { sitePostcode }
+  const { postcode } = siteData
+  return { sitePostcode: postcode }
 }
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
+  const { siteData } = journeyData
   const pageData = await request.cache().getPageData()
-  const sitePostcode = pageData.payload[postcode]
+  const sitePostcode = pageData.payload[postcodeInput]
 
   // address lookup for the postcode from the request
   await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   await addressLookupForPostcode(sitePostcode, journeyData, request)
-  journeyData.siteData = Object.assign(journeyData.siteData, { postcode: sitePostcode })
+  journeyData.siteData = { ...siteData, postcode: sitePostcode }
   await request.cache().setData(journeyData)
 }
 
