@@ -8,10 +8,10 @@ import { checkApplication } from '../../common/check-application.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  const site = await APIRequests.SITE.findByApplicationId(applicationId)
+  const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   let name
-  if (site.length) {
-    name = site[0]?.name
+  if (sites.length) {
+    name = sites[0]?.name
   }
   return { name }
 }

@@ -23,6 +23,29 @@ describe('site-name page handler', () => {
     expect(await getData(request)).toStrictEqual({ name: 'site-name' })
   })
 
+  it('getData returns the site name undefined when there is no site', async () => {
+    const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return []
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return result
+        }
+      })
+    }
+
+    const { getData } = await import('../site-name.js')
+    expect(await getData(request)).toStrictEqual({ name: undefined })
+  })
+
   it('setData - update site', async () => {
     const mockSetData = jest.fn()
     const mockUpdate = jest.fn()
