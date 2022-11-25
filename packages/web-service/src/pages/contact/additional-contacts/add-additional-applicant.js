@@ -1,5 +1,5 @@
 import { yesNoPage } from '../../common/yes-no.js'
-import { canBeUser, checkHasApplication, getExistingContactCandidates } from '../common/common.js'
+import { canBeUser, checkHasApplication, hasContactCandidates } from '../common/common.js'
 import { contactURIs } from '../../../uris.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
@@ -18,12 +18,11 @@ export const addAdditionalApplicantCompletion = async request => {
       return contactURIs.ADDITIONAL_APPLICANT.USER.uri
     } else {
       const { userId, applicationId } = await request.cache().getData()
-      const contacts = await getExistingContactCandidates(userId, applicationId, ContactRoles.ADDITIONAL_APPLICANT,
-        [ContactRoles.APPLICANT], false)
-      if (contacts.length < 1) {
-        return contactURIs.ADDITIONAL_APPLICANT.NAME.uri
-      } else {
+      if (await hasContactCandidates(userId, applicationId, ContactRoles.ADDITIONAL_APPLICANT,
+        [ContactRoles.APPLICANT], false)) {
         return contactURIs.ADDITIONAL_APPLICANT.NAMES.uri
+      } else {
+        return contactURIs.ADDITIONAL_APPLICANT.NAME.uri
       }
     }
   }
