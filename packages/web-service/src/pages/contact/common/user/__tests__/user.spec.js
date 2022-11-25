@@ -228,10 +228,7 @@ describe('the user page', () => {
             isImmutable: () => true
           },
           ACCOUNT: {
-            role: () => ({
-              findByUser: jest.fn(() => [{ id: 'f8387a83-1165-42e6-afab-add01e77bc4c' }])
-            }),
-            isImmutable: () => false
+            findAllAccountApplicationRolesByUser: jest.fn(() => [{ id: 'f8387a83-1165-42e6-afab-add01e77bc4c' }])
           }
         }
       }))

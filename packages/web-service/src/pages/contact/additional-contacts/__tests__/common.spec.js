@@ -136,7 +136,7 @@ describe('additional-contacts: common', () => {
     it('returns the name page if there are no candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
         canBeUser: () => false,
-        getExistingContactCandidates: () => []
+        getContactCandidates: () => []
       }))
       const request = {
         cache: () => ({
@@ -155,7 +155,7 @@ describe('additional-contacts: common', () => {
     it('returns the names page if there are candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
         canBeUser: () => false,
-        getExistingContactCandidates: () => [{}]
+        getContactCandidates: () => [{}]
       }))
       const request = {
         cache: () => ({
