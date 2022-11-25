@@ -6,6 +6,172 @@ describe('additional-contacts: common', () => {
     jest.resetModules()
   })
 
+  describe('getAdditionalContactData', () => {
+    it('fetches the appropriate data', async () => {
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => true
+      }))
+      const request = {
+        cache: () => ({
+          getPageData: () => null,
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true }
+          })
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => {
+        const originalModule = jest.requireActual('../../../../services/api-requests.js')
+        return {
+          APIRequests: {
+            APPLICATION: {
+              tags: () => ({
+                get: jest.fn(),
+                set: jest.fn()
+              })
+            }
+          },
+          tagStatus: originalModule.tagStatus
+        }
+      })
+      const { getAdditionalContactData } = await import('../common.js')
+      const result = await getAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual({ isSignedInUserApplicant: false, yesNo: 'yes' })
+    })
+  })
+
+  describe('setAdditionalContactData', () => {
+    it('set the data correctly if the user responds \'yes\'', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        payload: { 'yes-no': 'yes' },
+        cache: () => ({
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          }),
+          setData: mockSetData
+        })
+      }
+      const { setAdditionalContactData } = await import('../common.js')
+      await setAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        additionalContact: { 'ADDITIONAL-APPLICANT': true },
+        applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+        userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
+      })
+    })
+
+    it('set the data correctly if the user responds \'no\'', async () => {
+      const mockUnlink = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => {
+        const originalModule = jest.requireActual('../../../../services/api-requests.js')
+        return {
+          APIRequests: {
+            CONTACT: {
+              role: () => ({
+                unLink: mockUnlink,
+                getByApplicationId: () => ({ id: '6c77278f-b1d8-4754-97ba-d86b5c05d51e' })
+              })
+            }
+          },
+          tagStatus: originalModule.tagStatus
+        }
+      })
+      const mockSetData = jest.fn()
+      const request = {
+        payload: { 'yes-no': 'no' },
+        cache: () => ({
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          }),
+          setData: mockSetData
+        })
+      }
+      const { setAdditionalContactData } = await import('../common.js')
+      await setAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
+      expect(mockSetData).toHaveBeenCalledWith({
+        additionalContact: { 'ADDITIONAL-APPLICANT': false },
+        applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+        userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
+      })
+      expect(mockUnlink).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18', '6c77278f-b1d8-4754-97ba-d86b5c05d51e')
+    })
+  })
+
+  describe('addAdditionalContactCompletion', () => {
+    it('returns the ecologist-add page if the user answers no', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          }),
+          getPageData: () => ({ payload: { 'yes-no': 'no' } })
+        })
+      }
+      const { addAdditionalContactCompletion } = await import('../common.js')
+      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/add-additional-ecologist')
+    })
+
+    it('returns the user page if the applicant is not the signed in user', async () => {
+      jest.doMock('../../common/common.js', () => ({ canBeUser: () => true }))
+      const request = {
+        cache: () => ({
+          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          })
+        })
+      }
+      const { addAdditionalContactCompletion } = await import('../common.js')
+      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-user')
+    })
+
+    it('returns the name page if there are no candidate contacts', async () => {
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => false,
+        getExistingContactCandidates: () => []
+      }))
+      const request = {
+        cache: () => ({
+          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          })
+        })
+      }
+      const { addAdditionalContactCompletion } = await import('../common.js')
+      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-name')
+    })
+
+    it('returns the names page if there are candidate contacts', async () => {
+      jest.doMock('../../common/common.js', () => ({
+        canBeUser: () => false,
+        getExistingContactCandidates: () => [{}]
+      }))
+      const request = {
+        cache: () => ({
+          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          })
+        })
+      }
+      const { addAdditionalContactCompletion } = await import('../common.js')
+      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-names')
+    })
+  })
+
   describe('additionalContactUserCompletion', () => {
     it('if not the signed in user, return the value returned by contactsRoute', async () => {
       jest.doMock('../../common/common.js', () => ({
@@ -79,7 +245,8 @@ describe('additional-contacts: common', () => {
           getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true, [ContactRoles.ADDITIONAL_ECOLOGIST]: false }
           })
         })
       }
@@ -90,7 +257,7 @@ describe('additional-contacts: common', () => {
       expect(result).toEqual('/additional-contact-check-answers')
     })
 
-    it('if the signed in user, return the next page for a immutable user', async () => {
+    it('if the signed in user, return the next page (add additional ecologist) for a immutable user', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
         const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {
@@ -111,15 +278,16 @@ describe('additional-contacts: common', () => {
           getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true }
           })
         })
       }
 
       const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
+      const result = await additionalContactUserCompletion(ContactRoles.ADDITIONAL_APPLICANT,
+        [ContactRoles.APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/add-additional-ecologist')
     })
   })
 
@@ -335,7 +503,8 @@ describe('additional-contacts: common', () => {
         cache: () => ({
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true, [ContactRoles.ADDITIONAL_ECOLOGIST]: true }
           })
         })
       }
