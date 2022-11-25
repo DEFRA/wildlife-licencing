@@ -23,19 +23,20 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const { siteData } = await request.cache().getData()
-  const { sitePostcode } = siteData
-  return { sitePostcode }
+  const { postcode } = siteData
+  return { sitePostcode: postcode }
 }
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
+  const { siteData } = journeyData
   const pageData = await request.cache().getPageData()
   const sitePostcode = pageData.payload[postcode]
 
   // address lookup for the postcode from the request
   await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   await addressLookupForPostcode(sitePostcode, journeyData, request)
-  journeyData.siteData = Object.assign(journeyData.siteData, { postcode: sitePostcode })
+  journeyData.siteData = { ...siteData, postcode: sitePostcode }
   await request.cache().setData(journeyData)
 }
 

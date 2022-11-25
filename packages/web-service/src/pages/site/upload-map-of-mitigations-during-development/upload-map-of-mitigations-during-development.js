@@ -14,15 +14,22 @@ export const getData = async request => {
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const { siteData, applicationId, fileUpload } = journeyData
-  const { name, address, siteMapFiles } = siteData
   const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
-  const { activity } = siteMapFiles
 
   if (applicationId && fileUpload) {
-    const payload = { name, address, siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } }
-    await APIRequests.SITE.update(siteData.id, payload)
+    const site = await APIRequests.SITE.findByApplicationId(applicationId)
+    let siteInfo = {
+      siteMapFiles: {}
+    }
+    if (site.length) {
+      siteInfo = site[0]
+    }
+    const { siteMapFiles } = siteInfo
+    siteInfo.siteMapFiles = { ...siteMapFiles, mitigationsDuringDevelopment: fileUpload.filename }
+    const payload = { ...siteInfo }
+    await APIRequests.SITE.update(siteInfo.id, payload)
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
-    journeyData.siteData = Object.assign(journeyData.siteData, { siteMapFiles: { activity, mitigationsDuringDevelopment: fileUpload.filename } })
+    journeyData.siteData = { ...siteData, siteMapFiles: { mitigationsDuringDevelopment: fileUpload.filename } }
     await request.cache().setData(journeyData)
   }
 

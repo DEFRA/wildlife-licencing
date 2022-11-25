@@ -22,9 +22,9 @@ describe('site-got-postcode page handler', () => {
     }
   })
 
-  it('throws an error if a wrong postcode is entered', async () => {
+  it('throws an error if an invalid postcode is entered', async () => {
     try {
-      const payload = { 'site-postcode': 'B123 TY567', 'site-postcode-check': 'yes' }
+      const payload = { 'site-postcode': '%%%%***', 'site-postcode-check': 'yes' }
       const { validator } = await import('../site-got-postcode.js')
       expect(await validator(payload))
     } catch (e) {
@@ -40,7 +40,7 @@ describe('site-got-postcode page handler', () => {
   })
 
   it('getData returns the correct object', async () => {
-    const result = { siteData: { sitePostcode: 'B15 7GF' } }
+    const result = { siteData: { postcode: 'B15 7GF' } }
     const request = {
       cache: () => ({
         getData: () => {

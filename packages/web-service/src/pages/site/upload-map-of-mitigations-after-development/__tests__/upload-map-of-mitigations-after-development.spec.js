@@ -30,6 +30,24 @@ describe('the map of the site showing the mitigations after development page pag
     const mockSetData = jest.fn()
     const mockS3FileUpload = jest.fn()
     const mockUpdate = jest.fn()
+    const site = [
+      {
+        id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+        createdAt: '2022-11-24T22:32:41.186Z',
+        updatedAt: '2022-11-24T22:32:50.642Z',
+        name: 'Kealan bravo',
+        address: {
+          town: 'BIRMINGHAM',
+          uprn: '100070567486',
+          street: 'WITTON LODGE ROAD',
+          country: 'ENGLAND',
+          postcode: 'B23 5LT',
+          xCoordinate: 409884,
+          yCoordinate: 293389,
+          buildingNumber: '308'
+        }
+      }
+    ]
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
@@ -37,7 +55,10 @@ describe('the map of the site showing the mitigations after development page pag
       },
       APIRequests: {
         SITE: {
-          update: mockUpdate
+          update: mockUpdate,
+          findByApplicationId: () => {
+            return site
+          }
         },
         APPLICATION: {
           tags: () => {
@@ -64,8 +85,25 @@ describe('the map of the site showing the mitigations after development page pag
     const { completion } = await import('../upload-map-of-mitigations-after-development.js')
     const result = await completion(request)
     expect(result).toEqual('/site-grid-ref')
-    expect(mockUpdate).toHaveBeenCalledWith(45678,
-      { address: '123 site street, Birmingham, B1 4HY', name: 'site-name', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg', mitigationsAfterDevelopment: 'site-after-development.shape' } })
+    expect(mockUpdate).toHaveBeenCalledWith('8917f37b-fbf9-4dc7-8cd7-28c354b36781', {
+      id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+      createdAt: '2022-11-24T22:32:41.186Z',
+      updatedAt: '2022-11-24T22:32:50.642Z',
+      name: 'Kealan bravo',
+      address: {
+        town: 'BIRMINGHAM',
+        uprn: '100070567486',
+        street: 'WITTON LODGE ROAD',
+        country: 'ENGLAND',
+        postcode: 'B23 5LT',
+        xCoordinate: 409884,
+        yCoordinate: 293389,
+        buildingNumber: '308'
+      },
+      siteMapFiles: {
+        mitigationsAfterDevelopment: 'site-after-development.shape'
+      }
+    })
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shape', '/tmp/path',
       { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF'] })
     expect(mockSetData).toHaveBeenCalled()
@@ -125,7 +163,10 @@ describe('the map of the site showing the mitigations after development page pag
       },
       APIRequests: {
         SITE: {
-          update: mockUpdate
+          update: mockUpdate,
+          findByApplicationId: () => {
+            return []
+          }
         },
         APPLICATION: {
           tags: () => {
