@@ -14,7 +14,7 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (payload[postcodeInput] && payload[postcodeRadio] === 'yes') {
+  if ((!payload[postcodeInput] || payload[postcodeInput]) && payload[postcodeRadio] === 'yes') {
     Joi.assert(payload, Joi.object({
       'site-postcode': Joi.string().trim().required().pattern(ukPostcodeRegex).replace(ukPostcodeRegex, '$1 $2').uppercase()
     }).options({ abortEarly: false, allowUnknown: true }))
