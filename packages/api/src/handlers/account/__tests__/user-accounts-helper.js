@@ -22,8 +22,9 @@ const result = [
     cloneOf: null,
     name: 'account-name',
     applicationId: '316881a8-b3a8-4656-a693-eb7772cee366',
-    account_role: 'ECOLOGIST-ORGANISATION',
-    updated_at: new Date('2022-06-20T15:03:49.269Z')
+    accountRole: 'ECOLOGIST-ORGANISATION',
+    updatedAt: new Date('2022-06-20T15:03:49.269Z'),
+    submitted: new Date('2022-06-20T15:03:49.269Z')
   }
 ]
 

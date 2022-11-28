@@ -171,15 +171,12 @@ describe('contact-name page', () => {
     })
 
     it('if a no account is associated and accounts are available, return to the organisations page', async () => {
-      jest.dontMock('../../common.js')
+      jest.doMock('../../common.js', () => ({ hasAccountCandidates: () => true }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           ACCOUNT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => null),
-              findByUser: jest.fn(() => [{
-                id: 'e8387a83-1165-42e6-afab-add01e77bc4c'
-              }])
+              getByApplicationId: jest.fn(() => null)
             }),
             isImmutable: () => false
           }
@@ -202,13 +199,12 @@ describe('contact-name page', () => {
     })
 
     it('if a no account is associated and no accounts are available, return to the is organisation page', async () => {
-      jest.dontMock('../../common.js')
+      jest.doMock('../../common.js', () => ({ hasAccountCandidates: () => false }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           ACCOUNT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => null),
-              findByUser: jest.fn(() => [])
+              getByApplicationId: jest.fn(() => null)
             }),
             isImmutable: () => false
           }

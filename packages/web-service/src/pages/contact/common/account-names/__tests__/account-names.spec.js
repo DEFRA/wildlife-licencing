@@ -5,6 +5,10 @@ describe('the account-names functions', () => {
 
   describe('accountNamesCheckData', () => {
     it('returns to is-organisations if there is no available account', async () => {
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => false
+      }))
+
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -38,6 +42,9 @@ describe('the account-names functions', () => {
     })
 
     it('returns null if there are available accounts', async () => {
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => true
+      }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -76,6 +83,13 @@ describe('the account-names functions', () => {
 
   describe('getAccountNamesData', () => {
     it('returns the contact, the account and the accounts for the user', async () => {
+      jest.doMock('../../common.js', () => ({
+        getAccountCandidates: () => [
+          { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
+          { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
+          { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
+        ]
+      }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -85,12 +99,7 @@ describe('the account-names functions', () => {
           },
           ACCOUNT: {
             role: () => ({
-              getByApplicationId: jest.fn(() => ({ name: 'The Who' })),
-              findByUser: jest.fn(() => [
-                { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
-                { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
-                { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
-              ])
+              getByApplicationId: jest.fn(() => ({ name: 'The Who' }))
             }),
             isImmutable: () => false
           }
@@ -110,9 +119,9 @@ describe('the account-names functions', () => {
         contact: { fullName: 'Keith Moon' },
         account: { name: 'The Who' },
         accounts: [
-          { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
-          { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
-          { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', groupId: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
+          { id: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Led Zeppelin' },
+          { id: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'Yes' },
+          { id: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', name: 'The Who' }
         ]
       })
     })

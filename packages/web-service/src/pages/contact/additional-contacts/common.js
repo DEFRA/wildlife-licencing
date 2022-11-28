@@ -1,11 +1,12 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { canBeUser, contactsRoute, getContactCandidates } from '../common/common.js'
+import { getContactCandidates } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
 import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { yesNoFromBool } from '../../common/common.js'
+import { canBeUser, contactsRoute } from '../common/common-handler.js'
 
 // a contact cannot be the applicant and the additional applicant etc.
 const conflictingRoles = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT

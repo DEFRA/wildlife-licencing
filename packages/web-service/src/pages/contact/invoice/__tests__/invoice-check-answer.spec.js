@@ -154,7 +154,7 @@ describe('invoice check answers page', () => {
 
     it('creates the correct output for the payer is other', async () => {
       const tagSet = jest.fn()
-      jest.doMock('../../common/common.js', () => ({
+      jest.doMock('../../common/common-handler.js', () => ({
         canBeUser: () => true
       }))
       jest.doMock('../../../../services/api-requests.js', () => ({

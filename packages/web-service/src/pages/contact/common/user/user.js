@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsRoute, contactsRoute } from '../common.js'
 import { contactOperations } from '../operations.js'
+import { accountsRoute, contactsRoute } from '../common-handler.js'
 
 export const getUserData = _contactRole => async request => {
   const journeyData = await request.cache().getData()

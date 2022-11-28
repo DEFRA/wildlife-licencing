@@ -1,5 +1,3 @@
-import { canBeUser } from '../../common/common.js'
-
 describe('the invoice-responsible page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -414,7 +412,7 @@ describe('the invoice-responsible page', () => {
         })
       }))
 
-      jest.doMock('../../common/common.js', () => ({
+      jest.doMock('../../common/common-handler.js', () => ({
         canBeUser: () => true
       }))
 
@@ -459,7 +457,7 @@ describe('the invoice-responsible page', () => {
     })
 
     it('go to the names page if other is chosen and the ecologist or applicant is the user', async () => {
-      jest.doMock('../../common/common.js', () => ({
+      jest.doMock('../../common/common-handler.js', () => ({
         canBeUser: () => false
       }))
 

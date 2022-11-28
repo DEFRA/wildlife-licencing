@@ -1,8 +1,8 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
 import { contactNameCompletion, getContactData, setContactData } from '../common/contact-name/contact-name.js'
-import { checkHasApplication } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
+import { checkHasApplication } from '../common/common-handler.js'
 
 const { NAME } = contactURIs.APPLICANT
 

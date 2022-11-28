@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { CONTACT_COMPLETE } from '../check-answers/check-answers.js'
-import { getAccountsCandidates, getContactCandidates } from '../common.js'
+import { getContactCandidates, hasAccountCandidates } from '../common.js'
 import { isComplete } from '../../../common/tag-functions.js'
 import { contactOperations } from '../operations.js'
 
@@ -48,8 +48,7 @@ const contactNamesCompletionExisting = async (userId, applicationId, contactRole
       return urlBase.CHECK_ANSWERS.uri
     }
   } else {
-    const candidateAccounts = await getAccountsCandidates(userId, applicationId, accountRole)
-    if (candidateAccounts.length) {
+    if (await hasAccountCandidates(userId, applicationId, accountRole)) {
       return urlBase.ORGANISATIONS.uri
     } else {
       await request.cache().clearPageData(urlBase.IS_ORGANISATION.page)

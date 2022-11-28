@@ -5,6 +5,23 @@ describe('contact-names', () => {
 
   describe('the getContactNamesData function', () => {
     it('will return all of the contacts for the user and a contact assigned to the application', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
+            })
+          }
+        }
+      }))
+
+      jest.doMock('../../common.js', () => ({
+        getContactCandidates: () => [
+          { fullName: 'Keith Moon' },
+          { fullName: 'Charlie Watts' },
+          { fullName: 'Keith Moon' }
+        ]
+      }))
       const request = {
         cache: () => ({
           getData: jest.fn(() => ({
@@ -13,24 +30,7 @@ describe('contact-names', () => {
           }))
         })
       }
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            findAllByUser: jest.fn(() => [
-              { id: 'a829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Keith Moon' },
-              { id: 'b829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Charlie Watts' },
-              { id: 'v829ad54-bab7-4a78-8ca9-dcf722117a45', fullName: 'Keith Moon' }]),
-            getApplicationContacts: jest.fn(() => [
-              { applicationId: 'a39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' },
-              { applicationId: 'b39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' },
-              { applicationId: 'c39f4e35-9e06-4585-b52a-c4144d94f7f7', contactRole: 'APPLICANT' }]),
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Moon' }))
-            }),
-            isImmutable: () => false
-          }
-        }
-      }))
+
       const { getContactNamesData } = await import('../contact-names.js')
       const exampleGetContactNamesData = getContactNamesData('APPLICANT')
       const result = await exampleGetContactNamesData(request)
@@ -268,7 +268,9 @@ describe('contact-names', () => {
     })
 
     it('check page not visited, has accounts available, return the organisations page', async () => {
-      jest.dontMock('../../common.js') // Because the top level reset does not apply on this level
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => true
+      }))
       const request = {
         cache: () => ({
           getPageData: jest.fn(() => ({ payload: { contact: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' } })),
@@ -303,7 +305,9 @@ describe('contact-names', () => {
     })
 
     it('check page not visited, no accounts available, return the organisations page', async () => {
-      jest.dontMock('../../common.js') // Because the top level reset does not apply on this level
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => false
+      }))
       const request = {
         cache: () => ({
           getPageData: jest.fn(() => ({ payload: { contact: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' } })),

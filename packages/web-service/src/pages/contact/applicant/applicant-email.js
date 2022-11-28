@@ -2,8 +2,8 @@ import { contactURIs } from '../../../uris.js'
 import { getEmailAddressData, setEmailAddressData, emailAddressCompletion }
   from '../common/email-address/email-address.js'
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
-import { checkHasApplication } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
+import { checkHasApplication } from '../common/common-handler.js'
 
 const { EMAIL } = contactURIs.APPLICANT
 

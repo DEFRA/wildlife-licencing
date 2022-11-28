@@ -1,12 +1,11 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { getAccountsCandidates } from '../common.js'
+import { getAccountCandidates, hasAccountCandidates } from '../common.js'
 import { accountOperations, contactAccountOperations } from '../operations.js'
 
 export const accountNamesCheckData = (accountRole, urlBase) => async (request, h) => {
   // if no accounts available then redirect the is-organisation
   const { userId, applicationId } = await request.cache().getData()
-  const candidateAccounts = await getAccountsCandidates(userId, applicationId, accountRole)
-  if (!candidateAccounts.length) {
+  if (!await hasAccountCandidates(userId, applicationId, accountRole)) {
     return h.redirect(urlBase.IS_ORGANISATION.uri)
   }
   return null
@@ -16,7 +15,7 @@ export const getAccountNamesData = (contactRole, accountRole) => async request =
   const { userId, applicationId } = await request.cache().getData()
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  return { contact, account, accounts: await getAccountsCandidates(userId, applicationId, accountRole) }
+  return { contact, account, accounts: await getAccountCandidates(userId, applicationId, accountRole) }
 }
 
 export const setAccountNamesData = (contactRole, accountRole) => async request => {

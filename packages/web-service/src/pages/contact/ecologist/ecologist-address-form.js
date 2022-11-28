@@ -1,8 +1,9 @@
-import { checkHasApplication, checkHasContact } from '../common/common.js'
+
 import { addressFormPage } from '../common/address-form/address-form-page.js'
 import { contactURIs } from '../../../uris.js'
 import { getAddressFormData, setAddressFormData } from '../common/address-form/address-form.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
+import { checkHasApplication, checkHasContact } from '../common/common-handler.js'
 
 const { ADDRESS_FORM, CHECK_ANSWERS } = contactURIs.ECOLOGIST
 

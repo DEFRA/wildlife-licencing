@@ -1,107 +1,14 @@
-import { APPLICATIONS, TASKLIST } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 
-/**
- * In all cases an application must be selected to access any of the contact pages
- * @param request
- * @param h
- * @returns {Promise<null|*>}
- */
-export const checkHasApplication = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-
-  return null
-}
-
-/**
- * Determines if, for this application, the signed-in user is assigned to any of the conflictingRoles
- * @param request
- * @param conflictingRoles
- * @returns {Promise<boolean>}
- */
-export const canBeUser = async (request, conflictingRoles) => {
-  const { applicationId, userId } = await request.cache().getData()
-  const contacts = await Promise.all(conflictingRoles.map(async cr => {
-    const contact = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
-    return contact?.userId === userId
-  }))
-
-  return !contacts.find(c => c === true)
-}
-
-/**
- * if the roles conflict go to the NAMES page
- * @param conflictingRoles
- * @param urlBase
- * @returns {(function(*, *): Promise<*|null>)|*}
- */
-export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) => {
-  if (await canBeUser(request, conflictingRoles)) {
-    return null
-  }
-
-  return h.redirect(urlBase.NAMES.uri)
-}
-
-/**
- * Throw back to the tasklist contact exists for the role. Call from only the point
- * where a contact must exist.
- * @param contactRole
- * @param urlBase
- * @returns {(function(*, *): Promise<*|null>)|*}
- */
-export const checkHasContact = contactRole => async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  if (!contact) {
-    return h.redirect(TASKLIST.uri)
-  }
-
-  return null
-}
-
-/**
- * Determine if the user is able to multi-select a name from a set of candidates or no. If not redirect to the
- * new name page
- * @param contactRole
- * @param additionalContactRoles
- * @param urlBase
- * @returns {(function(*, *): Promise<*|null>)|*}
- */
-export const checkHasNames = (contactRole, additionalContactRoles, urlBase) => async (request, h) => {
-  const { userId, applicationId } = await request.cache().getData()
-  if (!await hasContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)) {
-    return h.redirect(urlBase.NAME.uri)
-  }
-  return null
-}
-
-/**
- * In the address choose there must be a lookup result
- * @param contactRole
- * @param urlBase
- * @returns {(function(*, *): Promise<*|null>)|*}
- */
-export const checkHasAddress = urlBase => async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.addressLookup) {
-    return h.redirect(urlBase.POSTCODE.uri)
-  }
-
-  return null
-}
-
-async function getAllContactCandidate (primaryContactRole, otherContactRoles, userId, allowAssociated, applicationId) {
+const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated) => {
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
 
-  // Filter by roles
-  const contactApplicationsOfRoles = contactApplications.filter(ca => allRoles.includes(ca.contactRole))
+  // Filter by roles and eliminate the current application
+  const contactApplicationsOfRoles = contactApplications
+    .filter(ca => allRoles.includes(ca.contactRole) && ca.applicationId !== applicationId)
 
-  // make a set of the unique contact ids on the roles in question
+  // Make a set of the unique contact ids on the roles in question
   // Determine if they are used by another application
   const contactIds = [...new Set(contactApplicationsOfRoles.map(c => c.id))]
   const mapApplicationsByContactId = new Map(contactIds.map(c => {
@@ -120,6 +27,7 @@ async function getAllContactCandidate (primaryContactRole, otherContactRoles, us
 
   const contactFiltered = [...mapApplicationsByContactId.values()]
     .filter(c => c.assoc).map(c => ({ ...c.contact, isImmutable: c.isImmutable }))
+
   return contactFiltered
 }
 
@@ -133,7 +41,7 @@ async function getAllContactCandidate (primaryContactRole, otherContactRoles, us
  */
 export const getContactCandidates = async (userId, applicationId, primaryContactRole,
   otherContactRoles = [], allowAssociated = false) => {
-  const contactFiltered = await getAllContactCandidate(primaryContactRole, otherContactRoles, userId, allowAssociated, applicationId)
+  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated)
 
   decorateWithCloneGroups(contactFiltered)
   const ids = duDuplicate(contactFiltered)
@@ -143,16 +51,17 @@ export const getContactCandidates = async (userId, applicationId, primaryContact
 
 export const hasContactCandidates = async (userId, applicationId, primaryContactRole,
   otherContactRoles = [], allowAssociated = false) => {
-  const contactFiltered = await getAllContactCandidate(primaryContactRole, otherContactRoles, userId, allowAssociated, applicationId)
+  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated)
   return contactFiltered.length > 0
 }
 
-async function getAllAccountsCandidates (primaryAccountRole, otherAccountRoles, userId, applicationId) {
+const getAccountCandidatesInner = async (primaryAccountRole, otherAccountRoles, userId, applicationId) => {
   const allRoles = [primaryAccountRole].concat(otherAccountRoles)
   const accountApplications = await APIRequests.ACCOUNT.findAllAccountApplicationRolesByUser(userId)
 
   // Filter by roles
-  const accountApplicationsOfRoles = accountApplications.filter(ca => allRoles.includes(ca.accountRole))
+  const accountApplicationsOfRoles = accountApplications.filter(
+    ca => allRoles.includes(ca.accountRole) && ca.applicationId !== applicationId)
 
   // make a set of the unique account ids on the roles in question
   // Determine if they are used by another application
@@ -182,9 +91,9 @@ async function getAllAccountsCandidates (primaryAccountRole, otherAccountRoles, 
  * @param applicationId
  * @param contacts
  */
-export const getAccountsCandidates = async (userId, applicationId, primaryAccountRole,
+export const getAccountCandidates = async (userId, applicationId, primaryAccountRole,
   otherAccountRoles = []) => {
-  const accountFiltered = await getAllAccountsCandidates(primaryAccountRole, otherAccountRoles, userId, applicationId)
+  const accountFiltered = await getAccountCandidatesInner(primaryAccountRole, otherAccountRoles, userId, applicationId)
 
   decorateWithCloneGroups(accountFiltered)
   const ids = duDuplicate(accountFiltered)
@@ -192,12 +101,19 @@ export const getAccountsCandidates = async (userId, applicationId, primaryAccoun
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
-export const hasAccountsCandidates = async (userId, applicationId, primaryAccountRole,
+export const hasAccountCandidates = async (userId, applicationId, primaryAccountRole,
   otherAccountRoles = []) => {
-  const accountFiltered = await getAllAccountsCandidates(primaryAccountRole, otherAccountRoles, userId, applicationId)
+  const accountFiltered = await getAccountCandidatesInner(primaryAccountRole, otherAccountRoles, userId, applicationId)
   return accountFiltered.length > 0
 }
 
+/*
+ * Where the use modifies an existing immutable record, the record is cloned
+ * the association with the original record is maintained via the cloneOf field.
+ * This allows us to create chains of modified records which are associated by a groupId
+ * where the groupId is the id of the origin record
+ * The logic is applicable to both accounts and candidates
+ */
 const decorateWithCloneGroups = records => {
   const cloneGroups = (recs, id, groupId) => {
     // Fetch the record and all clones, clones of clones, ....
@@ -225,6 +141,9 @@ const decorateWithCloneGroups = records => {
   }
 }
 
+/*
+ * This selects a single record from each clone group
+ */
 const duDuplicate = candidates => {
   // Unique list of groups
   const groupIds = [...new Set(candidates.map(c => c.groupId))]
@@ -236,7 +155,8 @@ const duDuplicate = candidates => {
       return cts[0].id
     }
 
-    // Favour any mutable
+    // Favour any mutable, by definition there can only be a
+    // single mutable record in each clone group
     const im = cts.find(c => !c.isImmutable)
     if (im) {
       return im.id
@@ -246,22 +166,4 @@ const duDuplicate = candidates => {
     const [rc] = cts.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
     return rc.id
   })
-}
-
-export const contactsRoute = async (userId, applicationId, contactRole, additionalContactRoles, urlBase) => {
-  const contacts = await getContactCandidates(userId, applicationId, contactRole, additionalContactRoles, false)
-  if (contacts.length < 1) {
-    return urlBase.NAME.uri
-  } else {
-    return urlBase.NAMES.uri
-  }
-}
-
-export const accountsRoute = async (accountRole, userId, applicationId, uriBase) => {
-  const candidateAccounts = await getAccountsCandidates(userId, applicationId, accountRole)
-  if (candidateAccounts.length) {
-    return uriBase.ORGANISATIONS.uri
-  } else {
-    return uriBase.IS_ORGANISATION.uri
-  }
 }

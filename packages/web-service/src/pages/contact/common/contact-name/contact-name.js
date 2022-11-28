@@ -1,5 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { getAccountsCandidates } from '../common.js'
+import { hasAccountCandidates } from '../common.js'
 import { contactOperations } from '../operations.js'
 
 export const getContactData = contactRole => async request => {
@@ -40,8 +40,7 @@ export const contactNameCompletion = (_contactRole, accountRole, urlBase) => asy
     }
   }
 
-  const candidateAccounts = await getAccountsCandidates(userId, applicationId, accountRole)
-  if (candidateAccounts.length) {
+  if (await hasAccountCandidates(userId, applicationId, accountRole)) {
     return urlBase.ORGANISATIONS.uri
   } else {
     return urlBase.IS_ORGANISATION.uri

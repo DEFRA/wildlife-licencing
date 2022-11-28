@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
 import { addressLine } from '../../../service/address.js'
-import { canBeUser } from '../common.js'
+import { canBeUser } from '../common-handler.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',

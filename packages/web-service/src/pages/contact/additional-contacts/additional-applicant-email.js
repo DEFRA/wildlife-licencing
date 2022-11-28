@@ -1,12 +1,12 @@
 import { contactURIs } from '../../../uris.js'
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
-import { checkHasApplication, checkHasContact } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import {
   getAdditionalContactEmailAddressData,
   setAdditionalContactEmailAddressData,
   additionalContactEmailCompletion
 } from './common.js'
+import { checkHasApplication, checkHasContact } from '../common/common-handler.js'
 
 const { EMAIL } = contactURIs.ADDITIONAL_APPLICANT
 
