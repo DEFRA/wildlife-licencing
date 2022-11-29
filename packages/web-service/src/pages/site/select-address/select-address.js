@@ -22,8 +22,6 @@ export const setData = async request => {
 
   const apiAddress = mapLookedUpAddress(lookupAddress)
   await APIRequests.SITE.update(siteData.id, { name, address: apiAddress })
-  delete journeyData.siteData.postcode
-  delete journeyData.addressLookup
   journeyData.siteData = { ...siteData, address: apiAddress }
   await request.cache().setData(journeyData)
 }

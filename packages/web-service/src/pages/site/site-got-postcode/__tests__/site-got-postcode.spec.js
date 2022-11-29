@@ -68,7 +68,8 @@ describe('site-got-postcode page handler', () => {
           payload: {
             'site-postcode-check': 'no'
           }
-        })
+        }),
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
       })
     }
     expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
@@ -82,7 +83,8 @@ describe('site-got-postcode page handler', () => {
           payload: {
             'site-postcode-check': 'yes'
           }
-        })
+        }),
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
       })
     }
     expect(await completion(request)).toBe('/select-address')
