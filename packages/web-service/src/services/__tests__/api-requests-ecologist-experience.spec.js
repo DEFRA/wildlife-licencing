@@ -142,5 +142,31 @@ describe('The API requests ecologist experience service', () => {
       await expect(() => APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicence('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'ABBBC'))
         .rejects.toThrowError()
     })
+
+    it('removePreviousLicences calls the API correctly', async () => {
+      const mockGet = jest.fn(() => [{ id: '35acb529-70bb-4b8d-8688-ccdec837e5d4', licenceNumber: 'ABBBC' }])
+      const mockDelete = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet,
+          delete: mockDelete
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'ABBBC')
+      expect(mockDelete).toHaveBeenCalledWith('/application/35acb529-70bb-4b8d-8688-ccdec837e5d4/previous-licence/35acb529-70bb-4b8d-8688-ccdec837e5d4')
+    })
+
+    it('removePreviousLicences rethrows on error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(() => APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'ABBBC'))
+        .rejects.toThrowError()
+    })
   })
 })
