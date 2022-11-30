@@ -23,6 +23,7 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const { siteData } = await request.cache().getData()
+  await request.cache().clearPageData(siteURIs.SITE_GOT_POSTCODE.page)
   const { postcode } = siteData
   return { sitePostcode: postcode }
 }

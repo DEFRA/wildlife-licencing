@@ -6,6 +6,7 @@ import { mapInputAddress } from '../../contact/common/address-form/address-form.
 import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 
 export const getData = async request => {
+  await request.cache().clearPageData(siteURIs.ADDRESS_NO_LOOKUP.page)
   return { postCode: !request.query['no-postcode'] }
 }
 

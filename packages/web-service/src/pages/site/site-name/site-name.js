@@ -8,6 +8,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  await request.cache().clearPageData(siteURIs.NAME.page)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   let name
   if (sites.length) {

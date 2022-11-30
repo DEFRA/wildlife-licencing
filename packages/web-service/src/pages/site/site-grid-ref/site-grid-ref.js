@@ -35,6 +35,7 @@ export const setData = async request => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  await request.cache().clearPageData(siteURIs.SITE_GRID_REF.page)
   const site = await APIRequests.SITE.findByApplicationId(applicationId)
   let gridReference
   if (site.length) {

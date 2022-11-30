@@ -2,6 +2,7 @@ describe('the map of the site showing the mitigations during development page ha
   beforeEach(() => jest.resetModules())
 
   it('getData', async () => {
+    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'IN_PROGRESS',
@@ -17,7 +18,8 @@ describe('the map of the site showing the mitigations during development page ha
     }))
     const request = {
       cache: () => ({
-        getData: () => ({})
+        getData: () => ({}),
+        clearPageData: mockClearPageData
       })
     }
 
@@ -25,6 +27,7 @@ describe('the map of the site showing the mitigations during development page ha
       '../upload-map-of-mitigations-during-development.js'
     )
     expect(await getData(request)).toBeNull()
+    expect(mockClearPageData).toHaveBeenCalledWith('upload-map-of-mitigations-during-development')
   })
 
   it('should calls the s3 upload and redirects to the add a map of the site showing the mitigations after development page', async () => {
