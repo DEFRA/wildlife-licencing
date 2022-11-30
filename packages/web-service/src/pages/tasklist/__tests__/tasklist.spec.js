@@ -346,4 +346,57 @@ describe('The task-list handler', () => {
       reference: 'ref'
     })
   })
+
+  describe('the tasklist backLink function', () => {
+    it('returns no backlink if not authenticated', async () => {
+      const request = {
+        auth: { isAuthenticated: false }
+      }
+      const { tasklistBacklink } = await import('../tasklist.js')
+      const result = await tasklistBacklink(request)
+      expect(result).toBeFalsy()
+    })
+
+    it('returns no backlink if authenticated without applications', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            findByUser: jest.fn(() => [])
+          }
+        }
+      }))
+      const request = {
+        auth: { isAuthenticated: true },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+          }))
+        })
+      }
+      const { tasklistBacklink } = await import('../tasklist.js')
+      const result = await tasklistBacklink(request)
+      expect(result).toBeFalsy()
+    })
+
+    it('returns the javascript backlink if authenticated with applications', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            findByUser: jest.fn(() => [{}, {}])
+          }
+        }
+      }))
+      const request = {
+        auth: { isAuthenticated: true },
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+          }))
+        })
+      }
+      const { tasklistBacklink } = await import('../tasklist.js')
+      const result = await tasklistBacklink(request)
+      expect(result).toEqual('javascript: window.history.go(-1)')
+    })
+  })
 })
