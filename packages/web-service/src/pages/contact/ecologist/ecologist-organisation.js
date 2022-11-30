@@ -8,12 +8,12 @@ import { isOrganisation } from '../common/is-organisation/is-organisation-page.j
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkHasApplication, checkHasContact } from '../common/common-handler.js'
 
-const { IS_ORGANISATION } = contactURIs.ECOLOGIST
+const { IS_ORGANISATION, USER } = contactURIs.ECOLOGIST
 
 export const ecologistOrganisation = isOrganisation({
   page: IS_ORGANISATION.page,
   uri: IS_ORGANISATION.uri,
-  checkData: [checkHasApplication, checkHasContact(ContactRoles.ECOLOGIST)],
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.ECOLOGIST, USER)],
   getData: getContactAccountData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
   setData: setContactAccountData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
   completion: contactAccountCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)

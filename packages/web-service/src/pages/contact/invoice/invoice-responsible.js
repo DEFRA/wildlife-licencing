@@ -6,9 +6,10 @@ import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { accountOperations, contactOperations } from '../common/operations.js'
-import { canBeUser, checkHasApplication } from '../common/common-handler.js'
+import { canBeUser, checkHasApplication, checkHasContact } from '../common/common-handler.js'
+import { hasContactCandidates } from '../common/common.js'
 
-const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES } = contactURIs.INVOICE_PAYER
+const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES, NAME } = contactURIs.INVOICE_PAYER
 
 export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
@@ -79,10 +80,6 @@ export const setData = async request => {
       // Un-assign payer and payer organisation. Will be created in the user handler or the name pages
       await contactOps.unAssign()
       await accountOps.unAssign()
-      if (!await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
-        // Un-assign and create here as the user page will not be displayed
-        await contactOps.create(false)
-      }
     }
   }
 }
@@ -92,10 +89,16 @@ export const completion = async request => {
   if (pageData.payload.responsible === 'other') {
     // If the ecologist or applicant contact is the signed-in user then do ask the 'is the payer the signed-in user?'
     // question and set that explicitly to 'no', returning the NAMES page
-    if (!await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
-      return NAMES.uri
+    if (await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
+      return USER.uri
+    } else {
+      const { applicationId, userId } = await request.cache().getData()
+      if (await hasContactCandidates(userId, applicationId, ContactRoles.PAYER, [], false)) {
+        return NAMES.uri
+      } else {
+        return NAME.uri
+      }
     }
-    return USER.uri
   }
 
   return CHECK_ANSWERS.uri

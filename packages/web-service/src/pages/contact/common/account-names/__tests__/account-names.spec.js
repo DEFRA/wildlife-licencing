@@ -37,7 +37,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      await accountNamesCheckData('APPLICANT_ORGANISATION', [], contactURIs.APPLICANT)(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/applicant-organisation')
     })
 
@@ -76,7 +76,7 @@ describe('the account-names functions', () => {
         redirect: jest.fn()
       }
       const { accountNamesCheckData } = await import('../account-names.js')
-      const result = await accountNamesCheckData('APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request, h)
+      const result = await accountNamesCheckData('APPLICANT_ORGANISATION', [], contactURIs.APPLICANT)(request, h)
       expect(result).toBeNull()
     })
   })
@@ -114,7 +114,7 @@ describe('the account-names functions', () => {
         })
       }
       const { getAccountNamesData } = await import('../account-names.js')
-      const result = await getAccountNamesData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      const result = await getAccountNamesData('APPLICANT', 'APPLICANT_ORGANISATION', [])(request)
       expect(result).toEqual({
         contact: { fullName: 'Keith Moon' },
         account: { name: 'The Who' },

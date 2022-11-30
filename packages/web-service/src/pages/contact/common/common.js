@@ -4,7 +4,9 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
 
-  // Filter by roles and eliminate the current application
+  // Filter by roles. If the primary (choosing) role is APPLICANT can select
+  // APPLICANTS and ALTERNATIVE APPLICANTS from other applications
+  // When selecting the PAYER, the PAYER role can be from the current application ALTERNATIVE-APPLICANT ROLE
   const contactApplicationsOfRoles = contactApplications
     .filter(ca => allRoles.includes(ca.contactRole) && ca.applicationId !== applicationId)
 
@@ -14,27 +16,27 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
   const mapApplicationsByContactId = new Map(contactIds.map(c => {
     const contact = contactApplicationsOfRoles.find(f => f.id === c)
     return [contact.id, {
-      contact: contact,
+      id: contact.id,
+      cloneOf: contact.cloneOf,
+      fullName: contact.fullName,
+      contactRole: contact.contactRole,
+      updatedAt: contact.updatedAt,
       assoc: !contact.userId || allowAssociated,
       isImmutable: !contact.fullName
         ? false
-        : contact.submitted || !!contactApplications.find(ca =>
-          ca.id === contact.id &&
-        ca.applicationId !== contact.applicationId &&
-        ca.applicationId !== applicationId)
+        : contact.submitted || !!contactApplications.find(ac => ac.id === contact.id &&
+        (ac.applicationId !== applicationId || ac.contactRole !== primaryContactRole))
     }]
   }))
 
-  const contactFiltered = [...mapApplicationsByContactId.values()]
-    .filter(c => c.assoc).map(c => ({ ...c.contact, isImmutable: c.isImmutable }))
-
-  return contactFiltered
+  return [...mapApplicationsByContactId.values()].filter(c => c.assoc)
 }
 
 /**
  * Find the set of contacts which may be used to pre-select from
  * (1) These are the set on all the users applications
  * (2) De-duplicated by clone-group
+ * For contact candidates contacts against other roles on the current application are always excluded
  * @param contactRole
  * @param additionalContactRoles
  * @returns {function(*): Promise<*>}
@@ -56,38 +58,41 @@ export const hasContactCandidates = async (userId, applicationId, primaryContact
 }
 
 const getAccountCandidatesInner = async (primaryAccountRole, otherAccountRoles, userId, applicationId) => {
-  const allRoles = [primaryAccountRole].concat(otherAccountRoles)
   const accountApplications = await APIRequests.ACCOUNT.findAllAccountApplicationRolesByUser(userId)
 
   // Filter by roles
   const accountApplicationsOfRoles = accountApplications.filter(
-    ca => allRoles.includes(ca.accountRole) && ca.applicationId !== applicationId)
+    ca => (primaryAccountRole === ca.accountRole && ca.applicationId !== applicationId) ||
+    (otherAccountRoles.includes(ca.accountRole))
+  )
 
   // make a set of the unique account ids on the roles in question
-  // Determine if they are used by another application
+  // Determine if they are used by another application or the same application in
+  // another role
   const accountIds = [...new Set(accountApplicationsOfRoles.map(c => c.id))]
   const mapApplicationsByAccountId = new Map(accountIds.map(a => {
     const account = accountApplicationsOfRoles.find(f => f.id === a)
     return [account.id, {
-      account: account,
+      id: account.id,
+      cloneOf: account.cloneOf,
+      name: account.name,
+      updatedAt: account.updatedAt,
       isImmutable: !account.name
         ? false
-        : account.submitted || !!accountApplications.find(ca =>
-          ca.id === account.id &&
-        ca.applicationId !== account.applicationId &&
-        ca.applicationId !== applicationId)
+        : account.submitted || !!accountApplications.find(ac => ac.id === account.id &&
+            (ac.applicationId !== applicationId || ac.accountRole !== primaryAccountRole))
     }]
   }))
 
-  const accountFiltered = [...mapApplicationsByAccountId.values()]
-    .map(c => ({ ...c.account, isImmutable: c.isImmutable }))
-  return accountFiltered
+  return [...mapApplicationsByAccountId.values()]
 }
 
 /**
  * Used to produce lists of account (names) to select from
  * Where there exists clones, if an immutable clone exists pick it otherwise pick the
- * origin record
+ * origin record.
+ * For account candidates contacts against other roles on the current application are allowed if they
+ * exist in the otherAccountRoles roles set. Example, a payer is a new contact at the ecologist company
  * @param applicationId
  * @param contacts
  */

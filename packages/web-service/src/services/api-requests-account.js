@@ -173,7 +173,8 @@ export const ACCOUNT = {
       if (!applicationAccounts.length) {
         return false
       } else {
-        return !!applicationAccounts.find(ac => ac.applicationId !== applicationId)
+        const rolesOnCurrent = new Set(applicationAccounts.filter(ac => ac.applicationId === applicationId).map(ac => ac.accountRole))
+        return !!applicationAccounts.find(ac => ac.applicationId !== applicationId) || rolesOnCurrent.size > 1
       }
     }
   },

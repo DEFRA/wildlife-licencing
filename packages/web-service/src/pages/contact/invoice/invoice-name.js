@@ -12,5 +12,6 @@ export const invoiceName = contactNamePage({
   checkData: checkHasApplication,
   getData: getContactData(ContactRoles.PAYER),
   setData: setContactData(ContactRoles.PAYER),
-  completion: contactNameCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
+  completion: contactNameCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION,
+    [AccountRoles.APPLICANT_ORGANISATION, AccountRoles.ECOLOGIST_ORGANISATION], contactURIs.INVOICE_PAYER)
 }, [ContactRoles.PAYER])

@@ -6,7 +6,17 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
 import { canBeUser, checkHasApplication } from '../common/common-handler.js'
-const { CHECK_ANSWERS } = contactURIs.INVOICE_PAYER
+const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+
+export const checkHasPayer = async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const contact = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
+  if (!contact) {
+    return h.redirect(RESPONSIBLE.uri)
+  }
+
+  return null
+}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -43,7 +53,6 @@ export const getData = async request => {
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email }
     ].filter(a => a)
   }
-  console.log(JSON.stringify(res, null, 4))
   return res
 }
 
@@ -54,7 +63,7 @@ export const completion = async request => {
 }
 
 export const invoiceCheckAnswers = checkAnswersPage({
-  checkData: checkHasApplication,
+  checkData: [checkHasApplication, checkHasPayer],
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
   getData,

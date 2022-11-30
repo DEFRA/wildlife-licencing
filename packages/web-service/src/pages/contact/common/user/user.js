@@ -45,7 +45,7 @@ export const userCompletion = (contactRole, additionalContactRoles, accountRole,
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to accounts
-      return accountsRoute(accountRole, userId, applicationId, urlBase)
+      return accountsRoute(accountRole, [], userId, applicationId, urlBase)
     } else {
       // Contact is new, gather name, or already set, skip
       return contact.fullName ? urlBase.CHECK_ANSWERS.uri : urlBase.NAME.uri

@@ -297,15 +297,14 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       if (isOrganisation && (!account || name)) {
-        // Add account if name set or there is no account assigned
-        const newAccount = await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
-        await copyContactDetailsToAccount(applicationId, accountRole, contact, newAccount, false)
+        // Add account if name set or there is no account assigned, from is-organisation: yes, given the organisation name
+        await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
         await removeContactDetailsFromContact(applicationId, userId, contactRole, contact, contactImmutable)
       } else if (isOrganisation && account) {
-        // If there is an account there should be no details on the contact
+        // If there is an account there should be no details on the contact. On selecting a new account (account-names)
         await removeContactDetailsFromContact(applicationId, userId, contactRole, contact, contactImmutable)
       } else if (!isOrganisation && account) {
-        // Remove account
+        // Remove account, from is_organisation: no
         await copyAccountDetailsToContact(applicationId, userId, contactRole, contact, account, contactImmutable)
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
       }
@@ -547,7 +546,9 @@ const removeContactDetailsFromContact = async (applicationId, userId, contactRol
   if (contact.address || contact.contactDetails) {
     const user = await APIRequests.USER.getById(userId)
     if (contact.userId) {
-      await removeContactDetailsFromContactAssociatedUser(contactImmutable, contactRole, applicationId, contact, user)
+      if (contact.address || contact.contactDetails.email !== user.username) {
+        await removeContactDetailsFromContactAssociatedUser(contactImmutable, contactRole, applicationId, contact, user)
+      }
     } else {
       await removeContactDetailsFromContactUnassociatedUser(contactImmutable, contactRole, applicationId, contact)
     }

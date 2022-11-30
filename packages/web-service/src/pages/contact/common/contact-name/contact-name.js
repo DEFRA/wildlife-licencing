@@ -21,7 +21,7 @@ export const setContactData = contactRole => async request => {
   await contactOps.setName(request.payload.name)
 }
 
-export const contactNameCompletion = (_contactRole, accountRole, urlBase) => async request => {
+export const contactNameCompletion = (_contactRole, accountRole, otherAccountRoles, urlBase) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   // If an organisation is already assigned,
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
@@ -40,7 +40,7 @@ export const contactNameCompletion = (_contactRole, accountRole, urlBase) => asy
     }
   }
 
-  if (await hasAccountCandidates(userId, applicationId, accountRole)) {
+  if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
     return urlBase.ORGANISATIONS.uri
   } else {
     return urlBase.IS_ORGANISATION.uri

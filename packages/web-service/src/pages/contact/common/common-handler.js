@@ -51,11 +51,12 @@ export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) 
  * @param urlBase
  * @returns {(function(*, *): Promise<*|null>)|*}
  */
-export const checkHasContact = contactRole => async (request, h) => {
+export const checkHasContact = (contactRole, page = TASKLIST) => async (request, h) => {
   const { applicationId } = await request.cache().getData()
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+
   if (!contact) {
-    return h.redirect(TASKLIST.uri)
+    return h.redirect(page.uri)
   }
 
   return null
@@ -99,8 +100,8 @@ export const contactsRoute = async (userId, applicationId, contactRole, addition
   }
 }
 
-export const accountsRoute = async (accountRole, userId, applicationId, uriBase) => {
-  if (await hasAccountCandidates(userId, applicationId, accountRole)) {
+export const accountsRoute = async (accountRole, otherAccountRoles, userId, applicationId, uriBase) => {
+  if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
     return uriBase.ORGANISATIONS.uri
   } else {
     return uriBase.IS_ORGANISATION.uri

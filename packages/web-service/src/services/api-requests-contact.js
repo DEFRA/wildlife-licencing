@@ -201,7 +201,9 @@ export const CONTACT = {
         if (!applicationContacts.length) {
           return false
         } else {
-          return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+          // Immutable if used on another application or on the same application in different role
+          const rolesOnCurrent = new Set(applicationContacts.filter(ac => ac.applicationId === applicationId).map(ac => ac.contactRole))
+          return !!applicationContacts.find(ac => ac.applicationId !== applicationId) || rolesOnCurrent > 1
         }
       }
     }, `Error determining immutable for contact by id: ${contactId}`,

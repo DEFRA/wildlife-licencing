@@ -12,5 +12,5 @@ export const applicantName = contactNamePage({
   checkData: checkHasApplication,
   getData: getContactData(ContactRoles.APPLICANT),
   setData: setContactData(ContactRoles.APPLICANT),
-  completion: contactNameCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
+  completion: contactNameCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, [], contactURIs.APPLICANT)
 }, [ContactRoles.APPLICANT, ContactRoles.ADDITIONAL_APPLICANT])

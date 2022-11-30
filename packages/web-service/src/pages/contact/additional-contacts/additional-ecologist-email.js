@@ -8,13 +8,13 @@ import {
 } from './common.js'
 import { checkHasApplication, checkHasContact } from '../common/common-handler.js'
 
-const { EMAIL } = contactURIs.ADDITIONAL_ECOLOGIST
+const { EMAIL, ADD } = contactURIs.ADDITIONAL_ECOLOGIST
 
 export const additionalEcologistEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
-  checkData: [checkHasApplication, checkHasContact(ContactRoles.ADDITIONAL_ECOLOGIST)],
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.ADDITIONAL_ECOLOGIST, ADD)],
   getData: getAdditionalContactEmailAddressData(ContactRoles.ADDITIONAL_ECOLOGIST),
   setData: setAdditionalContactEmailAddressData(ContactRoles.ADDITIONAL_ECOLOGIST),
   completion: additionalContactEmailCompletion(ContactRoles.ADDITIONAL_ECOLOGIST, contactURIs.ADDITIONAL_ECOLOGIST)
-})
+}, ContactRoles.ADDITIONAL_ECOLOGIST)

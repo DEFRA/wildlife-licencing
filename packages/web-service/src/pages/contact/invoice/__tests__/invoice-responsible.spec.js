@@ -365,11 +365,9 @@ describe('the invoice-responsible page', () => {
     it('clears correctly with payer set to other - cannot be user', async () => {
       const mockUnAssignC = jest.fn()
       const mockUnAssignA = jest.fn()
-      const mockCreate = jest.fn()
       jest.doMock('../../common/operations.js', () => ({
         contactOperations: () => ({
-          unAssign: mockUnAssignC,
-          create: mockCreate
+          unAssign: mockUnAssignC
         }),
         accountOperations: () => ({
           unAssign: mockUnAssignA
@@ -395,7 +393,6 @@ describe('the invoice-responsible page', () => {
       await setData(request)
       expect(mockUnAssignC).toHaveBeenCalled()
       expect(mockUnAssignA).toHaveBeenCalled()
-      expect(mockCreate).toHaveBeenCalled()
     })
 
     it('clears correctly with payer set to other - can be user', async () => {
@@ -456,9 +453,12 @@ describe('the invoice-responsible page', () => {
       expect(result).toEqual('/invoice-user')
     })
 
-    it('go to the names page if other is chosen and the ecologist or applicant is the user', async () => {
+    it('go to the names page if other is chosen if there are candidates, and the ecologist or applicant is the user', async () => {
       jest.doMock('../../common/common-handler.js', () => ({
         canBeUser: () => false
+      }))
+      jest.doMock('../../common/common.js', () => ({
+        hasContactCandidates: () => true
       }))
 
       const request = {
@@ -475,6 +475,30 @@ describe('the invoice-responsible page', () => {
       const { completion } = await import('../invoice-responsible.js')
       const result = await completion(request)
       expect(result).toEqual('/invoice-names')
+    })
+
+    it('go to the name page if other is chosen if there are candidates, and the ecologist or applicant is the user', async () => {
+      jest.doMock('../../common/common-handler.js', () => ({
+        canBeUser: () => false
+      }))
+      jest.doMock('../../common/common.js', () => ({
+        hasContactCandidates: () => false
+      }))
+
+      const request = {
+        cache: () => ({
+          getPageData: () => ({
+            payload: { responsible: 'other' }
+          }),
+          getData: jest.fn(() => ({
+            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
+          }))
+        })
+      }
+
+      const { completion } = await import('../invoice-responsible.js')
+      const result = await completion(request)
+      expect(result).toEqual('/invoice-name')
     })
 
     it('go to the tasklist page if other is not chosen', async () => {
