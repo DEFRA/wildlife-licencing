@@ -42,10 +42,12 @@ export const setData = async request => {
 
 // when the user selects the site does not have a post code should be directed to the upload file
 export const completion = async request => {
+  const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
   let redirectUrl = siteURIs.SELECT_ADDRESS.uri
 
   if (pageData?.payload[postcodeRadio] === 'no') {
+    delete journeyData?.siteData?.postcode
     redirectUrl = `${siteURIs.ADDRESS_NO_LOOKUP.uri}?no-postcode=true`
   }
 
