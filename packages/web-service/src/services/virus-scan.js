@@ -26,22 +26,18 @@ export const initializeClamScan = async () => {
     try {
       const cs = new NodeClam()
       clamScan = await cs.init(options)
-      if (clamScan.initialized) {
-        debug('clam virus scanner container is initialized')
-      } else {
-        console.error('Clam virus scanner container is not initialized')
-        return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
-      }
-      return Promise.resolve()
     } catch (err) {
       console.error(err)
-      return Promise.reject(new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`))
+      throw new Error(`Error initializing clam. Options: ${JSON.stringify(options)}`)
+    }
+    if (clamScan.initialized) {
+      debug('clam virus scanner container is initialized')
+    } else {
+      throw new Error('Clam virus scanner container is not initialized')
     }
   } else {
     debug('virus scanner is disabled')
   }
-
-  return undefined
 }
 
 export async function scanFile (filepath) {
