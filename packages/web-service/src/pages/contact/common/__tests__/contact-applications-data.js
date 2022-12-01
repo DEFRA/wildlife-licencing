@@ -207,5 +207,34 @@ export const contactApplicationsData = [
     contactRole: 'ECOLOGIST',
     updatedAt: '2022-11-28T08:15:17.507Z',
     applicationId: '759d47d4-4511-4684-b184-9159161ead0b'
+  },
+  {
+    id: 'g608d4f0-100e-495f-811f-510a28336ca5',
+    cloneOf: null,
+    fullName: null,
+    userId: null,
+    contactRole: 'ECOLOGIST',
+    updatedAt: '2022-11-28T08:15:17.507Z',
+    applicationId: '859d47d4-4511-4684-b184-9159161ead0b'
+  },
+  {
+    id: 'g608d4f0-100e-495f-811f-510a28336ca5',
+    cloneOf: '8bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+    fullName: 'Submitted',
+    userId: null,
+    contactRole: 'ECOLOGIST',
+    updatedAt: '2022-11-28T08:15:17.507Z',
+    applicationId: '859d47d4-4511-4684-b184-9159161ead0b',
+    submitted: true
+  },
+  {
+    id: 'h608d4f0-100e-495f-811f-510a28336ca5',
+    cloneOf: '8bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+    fullName: 'Submitted',
+    userId: null,
+    contactRole: 'ECOLOGIST',
+    updatedAt: '2022-11-28T08:15:17.507Z',
+    applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10',
+    submitted: true
   }
 ]

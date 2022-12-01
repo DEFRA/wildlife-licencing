@@ -31,6 +31,16 @@ describe('contact common', () => {
           isImmutable: true,
           updatedAt: '2022-11-28T08:15:17.507Z',
           assoc: true
+        },
+        {
+          assoc: true,
+          cloneOf: null,
+          contactRole: 'ECOLOGIST',
+          fullName: null,
+          groupId: 'g608d4f0-100e-495f-811f-510a28336ca5',
+          id: 'g608d4f0-100e-495f-811f-510a28336ca5',
+          isImmutable: false,
+          updatedAt: '2022-11-28T08:15:17.507Z'
         }
       ])
     })
@@ -70,6 +80,16 @@ describe('contact common', () => {
           isImmutable: true,
           updatedAt: '2022-11-28T08:15:17.507Z',
           assoc: true
+        },
+        {
+          assoc: true,
+          cloneOf: null,
+          contactRole: 'ECOLOGIST',
+          fullName: null,
+          groupId: 'g608d4f0-100e-495f-811f-510a28336ca5',
+          id: 'g608d4f0-100e-495f-811f-510a28336ca5',
+          isImmutable: false,
+          updatedAt: '2022-11-28T08:15:17.507Z'
         }
       ])
     })
@@ -117,8 +137,14 @@ describe('contact common', () => {
           isImmutable: true,
           name: '43a9336630f376572de2-F-G-H-I-J',
           updatedAt: '2022-11-28T08:15:18.025Z'
-        },
-        {
+        }, {
+          cloneOf: null,
+          groupId: 'd5c5bde4-003b-43e7-8324-79ab0841ee10',
+          id: 'd5c5bde4-003b-43e7-8324-79ab0841ee10',
+          isImmutable: true,
+          name: '43a9336630f376572de2-F-G-H-I-J',
+          updatedAt: '2022-11-28T08:15:18.025Z'
+        }, {
           cloneOf: '1144158f-a6cd-45fc-ba7e-db292d59fa3c',
           groupId: '55e64f90-0b3c-4441-abf0-fbbfeaf34b0e',
           id: '667c5943-77c0-4d15-af8b-33d5128e0dee',

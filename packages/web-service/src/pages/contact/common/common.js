@@ -48,7 +48,7 @@ export const getContactCandidates = async (userId, applicationId, primaryContact
   decorateWithCloneGroups(contactFiltered)
   const ids = duDuplicate(contactFiltered)
   return contactFiltered.filter(c => ids.includes(c.id))
-    .sort((a, b) => a.fullName.localeCompare(b.fullName))
+    .sort((a, b) => a.fullName?.localeCompare(b?.fullName))
 }
 
 export const hasContactCandidates = async (userId, applicationId, primaryContactRole,
