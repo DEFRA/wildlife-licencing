@@ -25,16 +25,19 @@ describe('site-got-postcode page handler', () => {
 
   it('getData returns the correct object', async () => {
     const result = { siteData: { postcode: 'B15 7GF' } }
+    const mockClearPageData = jest.fn()
     const request = {
       cache: () => ({
         getData: () => {
           return result
-        }
+        },
+        clearPageData: mockClearPageData
       })
     }
 
     const { getData } = await import('../site-got-postcode.js')
     expect(await getData(request)).toStrictEqual({ sitePostcode: 'B15 7GF' })
+    expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
   })
 
   it('setData', async () => {

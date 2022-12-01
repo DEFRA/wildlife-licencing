@@ -5,9 +5,11 @@ describe('site-got-postcode page handler', () => {
       siteData: { postcode: 'B15 7GF' },
       addressLookup: [{ Address: { town: 'Bristol' } }]
     }
+    const mockClearPageData = jest.fn()
     const request = {
       cache: () => ({
-        getData: () => result
+        getData: () => result,
+        clearPageData: mockClearPageData
       })
     }
 
@@ -17,6 +19,7 @@ describe('site-got-postcode page handler', () => {
       uri: { addressForm: '/site-address-no-lookup', postcode: '/site-got-postcode' },
       addressLookup: [{ Address: { town: 'Bristol' } }]
     })
+    expect(mockClearPageData).toHaveBeenCalledWith('select-address')
   })
 
   it('setData', async () => {
