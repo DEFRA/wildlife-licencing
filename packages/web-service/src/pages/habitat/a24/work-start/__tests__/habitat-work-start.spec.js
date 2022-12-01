@@ -205,7 +205,7 @@ describe('The habitat work start page', () => {
       }
     })
 
-    it('you cant pass a date outside of the license season', async () => {
+    it('you cant pass a date outside of the licence season', async () => {
       try {
         const payload = { 'habitat-work-start-day': 1, 'habitat-work-start-month': 12, 'habitat-work-start-year': new Date().getFullYear() + 1 }
         const { validator } = await import('../habitat-work-start.js')
@@ -216,7 +216,7 @@ describe('The habitat work start page', () => {
       }
     })
 
-    it('you can pass a date in future license seasons', async () => {
+    it('you can pass a date in future licence seasons', async () => {
       try {
         const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() + 10 }
         const { validator } = await import('../habitat-work-start.js')
