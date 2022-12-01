@@ -306,4 +306,51 @@ describe('invoice check answers page', () => {
       expect(tagSet).toHaveBeenCalledTimes(1)
     })
   })
+
+  it('getData calls the necessary contact APIs', async () => {
+    const roleFn = jest.fn()
+    const getByApplicationIdMock = jest.fn()
+    const accountRoleFn = jest.fn()
+
+    roleFn.mockImplementation(() => { return { id: '', getByApplicationId: getByApplicationIdMock } })
+    getByApplicationIdMock.mockImplementation(() => { return { id: '' } })
+    accountRoleFn.mockImplementation(() => { return { getByApplicationId: jest.fn() } })
+
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
+        ACCOUNT: {
+          role: accountRoleFn
+        },
+        CONTACT: {
+          role: roleFn
+        }
+      }
+    }))
+    const request = {
+      cache: () => {
+        return {
+          getData: () => {
+            return {
+              applicationId: 'abe123'
+            }
+          }
+        }
+      }
+    }
+    const { getData } = await import('../invoice-check-answers.js')
+    await getData(request)
+    expect(roleFn).toHaveBeenCalledWith('APPLICANT')
+    expect(roleFn).toHaveBeenCalledWith('ECOLOGIST')
+    expect(roleFn).toHaveBeenCalledWith('PAYER')
+  })
 })
