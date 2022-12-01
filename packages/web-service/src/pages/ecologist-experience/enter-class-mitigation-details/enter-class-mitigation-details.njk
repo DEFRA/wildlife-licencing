@@ -9,7 +9,7 @@
     }
 %}
 
-{% set title = "Enter the class license reference number" %}
+{% set title = "Enter the class licence reference number" %}
 
 {% block pageContent %}
   {{ govukInput({
@@ -17,7 +17,7 @@
     name: "enter-class-mitigation-details",
     value: data,
     hint: {
-      text: "This can be found on the license document."
+      text: "This can be found on the licence document."
     },
     errorMessage: { text: "Enter the reference number of your previously held licence" } if error['enter-class-mitigation-details'],
     classes: "govuk-input--width-10",
