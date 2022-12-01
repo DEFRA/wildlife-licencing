@@ -123,7 +123,7 @@ describe('getApplicationUploads handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
-  it.only('returns 404 if the application-upload does not exist', async () => {
+  it('returns 404 if the application-upload does not exist', async () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {

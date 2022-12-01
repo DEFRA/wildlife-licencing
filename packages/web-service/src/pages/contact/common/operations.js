@@ -124,23 +124,6 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
 export const accountOperations = (accountRole, applicationId) =>
   accountOperationsFunctions(
     async () => APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId), accountRole, applicationId)
-/**
- * Encapsulate the various operations made against account
- * This wrapper is used when there is a single contact per role
- * @param accountRole
- * @param applicationId
- * @returns {{
- * setName: ((function(*): Promise<void>)|*),
- * unAssign: ((function(): Promise<void>)|*),
- * create: ((function(*): Promise<*|undefined>)|*),
- * assign: ((function(*): Promise<*|undefined>)|*)
- * }}
- **/
-export const accountOperationsForAccount = (accountRole, applicationId, accountId) =>
-  accountOperationsFunctions(
-    async () => accountId ? APIRequests.ACCOUNT.getById(accountId) : null,
-    accountRole,
-    applicationId)
 
 const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
   return {
@@ -428,25 +411,6 @@ const updateAccountFields = async (currentAccount, {
     contactDetails: contactDetails || currentAccount.contactDetails,
     ...(currentAccount.cloneOf && { cloneOf: currentAccount.cloneOf })
   })
-}
-
-const copyContactDetailsToAccount = async (applicationId, accountRole, contact, account, accountImmutable) => {
-  if (accountImmutable) {
-    await APIRequests.ACCOUNT.role(accountRole).unAssign(applicationId, account.id)
-    await APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
-      cloneOf: account.id,
-      name: account.name,
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address })
-    })
-  } else {
-    await APIRequests.ACCOUNT.update(account.id, {
-      ...(account.name && { name: account.name }),
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address }),
-      ...(account.cloneOf && { cloneOf: account.cloneOf })
-    })
-  }
 }
 
 const copyAccountDetailsToContactAssociatedUser = async (contactImmutable, contactRole,
