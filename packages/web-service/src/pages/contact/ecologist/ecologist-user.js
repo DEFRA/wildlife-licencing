@@ -1,11 +1,11 @@
 import { contactURIs } from '../../../uris.js'
 import { getUserData, setUserData, userCompletion } from '../common/user/user.js'
-import { checkCanBeUser, checkHasApplication } from '../common/common.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { checkCanBeUser, checkHasApplication } from '../common/common-handler.js'
 const { USER } = contactURIs.ECOLOGIST
 
 export const getData = async request => {

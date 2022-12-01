@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsRoute, contactsRoute } from '../common.js'
 import { contactOperations } from '../operations.js'
+import { accountsRoute, contactsRoute } from '../common-handler.js'
 
 export const getUserData = _contactRole => async request => {
   const journeyData = await request.cache().getData()
@@ -45,7 +45,7 @@ export const userCompletion = (contactRole, additionalContactRoles, accountRole,
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
       // Contact is immutable, go to accounts
-      return accountsRoute(accountRole, userId, applicationId, urlBase)
+      return accountsRoute(accountRole, [], userId, applicationId, urlBase)
     } else {
       // Contact is new, gather name, or already set, skip
       return contact.fullName ? urlBase.CHECK_ANSWERS.uri : urlBase.NAME.uri

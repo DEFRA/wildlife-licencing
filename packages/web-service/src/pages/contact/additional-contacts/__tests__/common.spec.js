@@ -8,7 +8,7 @@ describe('additional-contacts: common', () => {
 
   describe('getAdditionalContactData', () => {
     it('fetches the appropriate data', async () => {
-      jest.doMock('../../common/common.js', () => ({
+      jest.doMock('../../common/common-handler.js', () => ({
         canBeUser: () => true
       }))
       const request = {
@@ -135,8 +135,10 @@ describe('additional-contacts: common', () => {
 
     it('returns the name page if there are no candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
-        canBeUser: () => false,
-        getExistingContactCandidates: () => []
+        getContactCandidates: () => []
+      }))
+      jest.doMock('../../common/common-handler.js', () => ({
+        canBeUser: () => false
       }))
       const request = {
         cache: () => ({
@@ -154,8 +156,10 @@ describe('additional-contacts: common', () => {
 
     it('returns the names page if there are candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
-        canBeUser: () => false,
-        getExistingContactCandidates: () => [{}]
+        getContactCandidates: () => [{}]
+      }))
+      jest.doMock('../../common/common-handler.js', () => ({
+        canBeUser: () => false
       }))
       const request = {
         cache: () => ({
@@ -174,7 +178,7 @@ describe('additional-contacts: common', () => {
 
   describe('additionalContactUserCompletion', () => {
     it('if not the signed in user, return the value returned by contactsRoute', async () => {
-      jest.doMock('../../common/common.js', () => ({
+      jest.doMock('../../common/common-handler.js', () => ({
         contactsRoute: () => 'contacts-route'
       }))
       const request = {

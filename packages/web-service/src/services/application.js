@@ -17,6 +17,7 @@ export const ApplicationService = {
     const journeyData = await request.cache().getData() || {}
     const application = await APIRequests.APPLICATION.create(PowerPlatformKeys.APPLICATION_TYPES.A24,
       PowerPlatformKeys.APPLICATION_PURPOSES.DEVELOPMENT)
+    delete journeyData.additionalContact
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
     await clearPageData(request)
@@ -39,6 +40,7 @@ export const ApplicationService = {
       journeyData.applicationId = id
       delete journeyData.applicationUserId
       delete journeyData.role
+      delete journeyData.additionalContact
       await request.cache().setData(journeyData)
       await clearPageData(request)
       await clearData(request)

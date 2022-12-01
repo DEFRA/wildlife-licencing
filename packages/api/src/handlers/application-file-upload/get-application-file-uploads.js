@@ -21,7 +21,7 @@ export default async (context, req, h) => {
     })
 
     // Check the applicationUpload exists
-    if (!applicationUploads) {
+    if (!applicationUploads.length) {
       return h.response().code(404)
     }
 

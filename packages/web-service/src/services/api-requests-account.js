@@ -124,6 +124,16 @@ const unLinkAccount = async (accountRole, applicationId, accountId) => {
 }
 
 export const ACCOUNT = {
+  findAllAccountApplicationRolesByUser: async userId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Get account-application-accounts by userId: ${userId}`)
+        return API.get(`${apiUrls.APPLICATION_ACCOUNTS_ACCOUNTS}`, `userId=${userId}`)
+      },
+      `Error getting account-application-accounts by userId: ${userId}`,
+      500
+    )
+  },
   getById: async accountId => {
     return apiRequestsWrapper(
       async () => {
@@ -163,7 +173,8 @@ export const ACCOUNT = {
       if (!applicationAccounts.length) {
         return false
       } else {
-        return !!applicationAccounts.find(ac => ac.applicationId !== applicationId)
+        const rolesOnCurrent = new Set(applicationAccounts.filter(ac => ac.applicationId === applicationId).map(ac => ac.accountRole))
+        return !!applicationAccounts.find(ac => ac.applicationId !== applicationId) || rolesOnCurrent.size > 1
       }
     }
   },

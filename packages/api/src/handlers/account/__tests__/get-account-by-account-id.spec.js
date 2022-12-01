@@ -75,4 +75,13 @@ describe('The getAccountByAccountId handler', () => {
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
+
+  it('throws on a query error', async () => {
+    cache.restore = jest.fn(() => null)
+    models.accounts = { findByPk: jest.fn(() => { throw new Error() }) }
+    const getAccount = (await import('../get-account-by-account-id.js')).default
+    await expect(async () => {
+      await getAccount(context, req, h)
+    }).rejects.toThrow()
+  })
 })

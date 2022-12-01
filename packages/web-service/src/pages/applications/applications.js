@@ -2,7 +2,6 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
-import { countCompleteSections } from '../common/count-complete-sections.js'
 import { TASKLIST, APPLICATIONS, APPLICATION_SUMMARY } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
@@ -28,17 +27,12 @@ export const getData = async request => {
   const applications = allApplications.filter(eligibilityCheckFilter).map(a => ({
     ...a,
     lastSaved: timestampFormatter(a.updatedAt),
-    submitted: timestampFormatter(a?.submitted)
+    submitted: timestampFormatter(a?.submitted),
+    completed: a?.applicationTags.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
   })).sort(sortApplications)
 
-  for (let i = 0; i < applications.length; i++) {
-    if (applications[i].id) {
-      const completedSections = await countCompleteSections(applications[i].id)
-      applications[i].statusValue = `${completedSections.length} of ${totalSections} sections completed`
-    }
-  }
-
   return {
+    totalSections,
     statuses,
     applications,
     url: {

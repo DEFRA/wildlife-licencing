@@ -2461,6 +2461,62 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/application-contacts/contacts':
+    get:
+      description: Get all the contact/roles for all applications created by a user
+      summary: User contacts helper
+      operationId: userContactsHelper
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userContactsHelper'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application-accounts/accounts':
+    get:
+      description: Get all the accounts/roles for all applications created by a user
+      summary: User accounts helper
+      operationId: userAccountsHelper
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAccountsHelper'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Option sets
 ################################################################################################
@@ -2878,7 +2934,6 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
-
     sites:
       type: array
       items:
@@ -2933,6 +2988,48 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    userContactsHelper:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/uuid'
+          cloneOf:
+            $ref: '#/components/schemas/uuid'
+          fullName:
+            type: string
+          userId:
+            $ref: '#/components/schemas/uuid'
+          applicationId:
+            $ref: '#/components/schemas/uuid'
+          contactRole:
+            $ref: '#/components/schemas/contactRoles'
+          submitted:
+            $ref: '#/components/schemas/timestamp'
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
+
+    userAccountsHelper:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/uuid'
+          cloneOf:
+            $ref: '#/components/schemas/uuid'
+          name:
+            type: string
+          applicationId:
+            $ref: '#/components/schemas/uuid'
+          accountRole:
+            $ref: '#/components/schemas/accountRoles'
+          submitted:
+            $ref: '#/components/schemas/timestamp'
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
 
     roles:
       type: string

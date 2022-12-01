@@ -214,7 +214,9 @@ describe('the user page', () => {
     })
 
     it('if yes, returns the organisations page with a immutable contact where organisations exist', async () => {
-      jest.dontMock('../../common.js')
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => true
+      }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete',
@@ -226,12 +228,6 @@ describe('the user page', () => {
               getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
             }),
             isImmutable: () => true
-          },
-          ACCOUNT: {
-            role: () => ({
-              findByUser: jest.fn(() => [{ id: 'f8387a83-1165-42e6-afab-add01e77bc4c' }])
-            }),
-            isImmutable: () => false
           }
         }
       }))
@@ -252,7 +248,9 @@ describe('the user page', () => {
     })
 
     it('if yes, returns the organisation page with a immutable contact where no organisations exist', async () => {
-      jest.dontMock('../../common.js')
+      jest.doMock('../../common.js', () => ({
+        hasAccountCandidates: () => false
+      }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -263,11 +261,6 @@ describe('the user page', () => {
               getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
             }),
             isImmutable: () => true
-          },
-          ACCOUNT: {
-            role: () => ({
-              findByUser: jest.fn(() => [])
-            })
           }
         }
       }))
@@ -288,16 +281,8 @@ describe('the user page', () => {
     })
 
     it('if no, returns the name page where no candidate contacts exist', async () => {
-      jest.dontMock('../../common.js')
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            findAllByUser: jest.fn(() => [])
-          }
-        }
+      jest.doMock('../../common.js', () => ({
+        hasContactCandidates: () => false
       }))
 
       const { userCompletion } = await import('../user.js')
@@ -316,18 +301,8 @@ describe('the user page', () => {
     })
 
     it('if no, returns the names page where candidate contacts exist', async () => {
-      jest.dontMock('../../operations.js')
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          CONTACT: {
-            findAllByUser: jest.fn(() => [{ id: '34b5c443-e5e0-4d81-9daa-671a21bd88ca', fullName: 'Keith' }]),
-            getApplicationContacts: jest.fn(() => [{ applicationId: 'e5a6c59e-0faf-438b-b4d5-6967d8d075cb', contactRole: 'ADDITIONAL-APPLICANT' }]),
-            isImmutable: () => false
-          }
-        }
+      jest.doMock('../../common.js', () => ({
+        hasContactCandidates: () => true
       }))
 
       const { userCompletion } = await import('../user.js')

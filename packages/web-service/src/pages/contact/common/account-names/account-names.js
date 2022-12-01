@@ -1,24 +1,21 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsFilter } from '../common.js'
+import { getAccountCandidates, hasAccountCandidates } from '../common.js'
 import { accountOperations, contactAccountOperations } from '../operations.js'
 
-export const accountNamesCheckData = (accountRole, urlBase) => async (request, h) => {
+export const accountNamesCheckData = (accountRole, otherAccountRoles, urlBase) => async (request, h) => {
   // if no accounts available then redirect the is-organisation
   const { userId, applicationId } = await request.cache().getData()
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
-  const filteredAccounts = await accountsFilter(applicationId, accounts)
-  if (!filteredAccounts.length) {
+  if (!await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
     return h.redirect(urlBase.IS_ORGANISATION.uri)
   }
   return null
 }
 
-export const getAccountNamesData = (contactRole, accountRole) => async request => {
+export const getAccountNamesData = (contactRole, accountRole, additionalAccountRoles) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
-  return { contact, account, accounts: await accountsFilter(applicationId, accounts) }
+  return { contact, account, accounts: await getAccountCandidates(userId, applicationId, accountRole, additionalAccountRoles) }
 }
 
 export const setAccountNamesData = (contactRole, accountRole) => async request => {
@@ -33,23 +30,13 @@ export const setAccountNamesData = (contactRole, accountRole) => async request =
   }
 }
 
-export const accountNamesCompletion = (accountRole, baseUri) => async request => {
+export const accountNamesCompletion = (_accountRole, baseUri) => async request => {
   const { payload: { account: accountId } } = await request.cache().getPageData()
   if (accountId === 'new') {
     await request.cache().clearPageData(baseUri.IS_ORGANISATION.page)
     return baseUri.IS_ORGANISATION.uri
   } else {
-    // If the selected account is submitted return to check answers page, otherwise the address flow.
-    const { applicationId } = await request.cache().getData()
-    const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-    if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-      return baseUri.CHECK_ANSWERS.uri
-    } else if (!account.contactDetails) {
-      return baseUri.EMAIL.uri
-    } else if (!account.address) {
-      return baseUri.POSTCODE.uri
-    } else {
-      return baseUri.CHECK_ANSWERS.uri
-    }
+    // Always go to the email page
+    return baseUri.EMAIL.uri
   }
 }

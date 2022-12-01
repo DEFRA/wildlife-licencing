@@ -92,6 +92,19 @@ describe('The API requests account service', () => {
         .rejects.toThrowError()
     })
 
+    it('findAllAccountApplicationRolesByUser calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.ACCOUNT.findAllAccountApplicationRolesByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('application-accounts/accounts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(([{ foo: 'bar' }]))
+    })
+
     it('getById calls the API correctly', async () => {
       const mockGet = jest.fn(() => ({ foo: 'bar' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
