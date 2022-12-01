@@ -26,9 +26,8 @@ export const getData = async request => {
       return { responsible: 'other', name: p.fullName, contact: payer, account }
     }
   })(payer)
-  // (await canBeUser(request, [contactRole]) && {
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  const res = {
+  return {
     responsibility,
     checkYourAnswers: [
       { key: 'whoIsResponsible', value: responsibility.name },
@@ -43,7 +42,6 @@ export const getData = async request => {
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email }
     ].filter(a => a)
   }
-  return res
 }
 
 export const completion = async request => {
