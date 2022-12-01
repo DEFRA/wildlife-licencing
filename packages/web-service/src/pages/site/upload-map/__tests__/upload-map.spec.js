@@ -3,6 +3,7 @@ describe('the map of your activity at the development site page handler', () => 
   beforeEach(() => jest.resetModules())
 
   it('getData', async () => {
+    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'IN_PROGRESS',
@@ -18,12 +19,14 @@ describe('the map of your activity at the development site page handler', () => 
     }))
     const request = {
       cache: () => ({
-        getData: () => ({ })
+        getData: () => ({ }),
+        clearPageData: mockClearPageData
       })
     }
 
     const { getData } = await import('../upload-map.js')
     expect(await getData(request)).toBeNull()
+    expect(mockClearPageData).toHaveBeenCalledWith('upload-map')
   })
 
   it('should calls the s3 upload and update the database with new activity file and redirects to the add a map of the site showing the mitigations during development page', async () => {

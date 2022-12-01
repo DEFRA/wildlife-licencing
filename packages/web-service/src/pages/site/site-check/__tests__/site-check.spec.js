@@ -25,6 +25,7 @@ describe('The site address and National Grid Reference page', () => {
         }
       }
     }
+    const mockClearPageData = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
@@ -48,12 +49,14 @@ describe('The site address and National Grid Reference page', () => {
       cache: () => ({
         getData: () => {
           return result
-        }
+        },
+        clearPageData: mockClearPageData
       })
     }
 
     const { getData } = await import('../site-check.js')
     expect(await getData(request)).toStrictEqual({ proximityFlag: true, siteAddress: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY', gridReference: 'NY123456' })
+    expect(mockClearPageData).toHaveBeenCalled()
   })
 
   it('should redirect user to check site answers page', async () => {

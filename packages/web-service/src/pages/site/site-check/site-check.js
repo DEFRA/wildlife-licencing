@@ -26,6 +26,7 @@ export const completion = async request => {
 export const getData = async request => {
   const siteId = (await request.cache().getData())?.siteData?.id
   const site = await APIRequests.SITE.getSiteById(siteId)
+  await request.cache().clearPageData(siteURIs.SITE_CHECK.page)
   const { address, gridReference } = site
   const { xCoordinate, yCoordinate } = address
   const proximity = getGridReferenceProximity(gridReference, xCoordinate, yCoordinate)
