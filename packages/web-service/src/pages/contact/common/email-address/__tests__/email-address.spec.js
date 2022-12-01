@@ -74,12 +74,34 @@ describe('the email-address page', () => {
           getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
         }),
         payload: {
-          'email-address': 'Keith@therollingstones.com'
+          'email-address': 'Keith@therollingstones.com',
+          'change-email': 'yes'
         }
       }
       const { setEmailAddressData } = await import('../email-address.js')
       await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
       expect(mockSetEmailAddress).toHaveBeenCalledWith('Keith@therollingstones.com')
+    })
+
+    it('ignore if the email is not changing', async () => {
+      const mockSetEmailAddress = jest.fn()
+      jest.doMock('../../operations.js', () => ({
+        contactAccountOperations: () => ({
+          setEmailAddress: mockSetEmailAddress
+        })
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+        }),
+        payload: {
+          'email-address': 'Keith@therollingstones.com',
+          'change-email': 'no'
+        }
+      }
+      const { setEmailAddressData } = await import('../email-address.js')
+      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetEmailAddress).not.toHaveBeenCalled()
     })
   })
 

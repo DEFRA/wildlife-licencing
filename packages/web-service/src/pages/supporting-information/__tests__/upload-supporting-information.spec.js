@@ -2,7 +2,7 @@
 describe('the upload-supporting-information page handler', () => {
   beforeEach(() => jest.resetModules())
 
-  it('should calls the s3 upload and redirects to the check-supporting-information page', async () => {
+  it('should call the s3 upload and redirects to the check-supporting-information page', async () => {
     const request = {
       cache: () => ({
         getData: () => ({
@@ -43,8 +43,20 @@ describe('the upload-supporting-information page handler', () => {
       })
   })
 
+  it('should not call the s3 upload and redirects to the check-supporting-information page', async () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({}),
+        getPageData: jest.fn(() => ({}))
+      })
+    }
+    const { completion } = await import('../upload-supporting-information.js')
+    expect(await completion(request)).toStrictEqual('/check-supporting-information')
+  })
+
   it('getData sets the tag', async () => {
     const mockSet = jest.fn()
+    const mockClearPageData = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
         NOT_STARTED: 'not-started',
@@ -65,11 +77,13 @@ describe('the upload-supporting-information page handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({
           applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
-        }))
+        })),
+        clearPageData: mockClearPageData
       })
     }
     const { getData } = await import('../upload-supporting-information.js')
     expect(await getData(request)).toBe(null)
+    expect(mockClearPageData).toHaveBeenCalledWith('upload-supporting-information')
     expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'in-progress' })
   })
 })

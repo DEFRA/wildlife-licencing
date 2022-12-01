@@ -137,6 +137,16 @@ const findContactByUser = async (role, userId) => {
 
 export const CONTACT = {
   findAllByUser: async userId => findContactByUser(null, userId),
+  findAllContactApplicationRolesByUser: async userId => {
+    return apiRequestsWrapper(
+      async () => {
+        debug(`Get contact-application-contacts by userId: ${userId}`)
+        return API.get(`${apiUrls.APPLICATION_CONTACTS_CONTACTS}`, `userId=${userId}`)
+      },
+      `Error getting contact-application-contacts by userId: ${userId}`,
+      500
+    )
+  },
   getById: async contactId => {
     return apiRequestsWrapper(
       async () => {
@@ -150,10 +160,10 @@ export const CONTACT = {
   getApplicationContacts: async contactId => {
     return apiRequestsWrapper(
       async () => {
-        debug(`Updating the contact for contactId: ${contactId}`)
+        debug(`Fetching the contact for contactId: ${contactId}`)
         return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
       },
-      `Error updating the contact for contactId: ${contactId}`,
+      `Error fetching the contact for contactId: ${contactId}`,
       500
     )
   },
@@ -191,7 +201,9 @@ export const CONTACT = {
         if (!applicationContacts.length) {
           return false
         } else {
-          return !!applicationContacts.find(ac => ac.applicationId !== applicationId)
+          // Immutable if used on another application or on the same application in different role
+          const rolesOnCurrent = new Set(applicationContacts.filter(ac => ac.applicationId === applicationId).map(ac => ac.contactRole))
+          return !!applicationContacts.find(ac => ac.applicationId !== applicationId) || rolesOnCurrent.size > 1
         }
       }
     }, `Error determining immutable for contact by id: ${contactId}`,

@@ -17,7 +17,8 @@ import {
   postContact,
   getContactByContactId,
   putContact,
-  deleteContact
+  deleteContact,
+  userContactsHelper
 } from './handlers/contact/contact.js'
 
 import {
@@ -25,7 +26,8 @@ import {
   postAccount,
   getAccountByAccountId,
   putAccount,
-  deleteAccount
+  deleteAccount,
+  userAccountsHelper
 } from './handlers/account/account.js'
 
 import {
@@ -149,6 +151,7 @@ const handlers = {
   getContactByContactId,
   putContact,
   deleteContact,
+  userContactsHelper,
 
   // account handlers
   getAccounts,
@@ -156,6 +159,7 @@ const handlers = {
   getAccountByAccountId,
   putAccount,
   deleteAccount,
+  userAccountsHelper,
 
   // application-contact handlers
   getApplicationContacts,

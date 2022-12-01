@@ -14,9 +14,11 @@ export const getEmailAddressData = (contactRole, accountRole) => async request =
 }
 
 export const setEmailAddressData = (contactRole, accountRole) => async request => {
-  const { userId, applicationId } = await request.cache().getData()
-  const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
-  await contactAccountOps.setEmailAddress(request.payload['email-address'])
+  if (request.payload['change-email'] === 'yes') {
+    const { userId, applicationId } = await request.cache().getData()
+    const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
+    await contactAccountOps.setEmailAddress(request.payload['email-address'])
+  }
 }
 
 export const emailAddressCompletion = (contactRole, accountRole, urlBase) => async request => {

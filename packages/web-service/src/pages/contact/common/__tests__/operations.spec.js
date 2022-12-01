@@ -1055,7 +1055,6 @@ describe('contact operations', () => {
 
   describe('contactAccountOperations - setOrganisation to true', () => {
     it('contact mutable - user assigned', async () => {
-      const mockUpdateAccount = jest.fn()
       const mockUpdateContact = jest.fn()
       const mockCreateAccount = jest.fn(() => ({ id: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c' }))
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -1082,8 +1081,7 @@ describe('contact operations', () => {
               getByApplicationId: jest.fn().mockReturnValue(null),
               create: mockCreateAccount
             }),
-            isImmutable: () => null,
-            update: mockUpdateAccount
+            isImmutable: () => null
           }
         }
       }))
@@ -1092,10 +1090,6 @@ describe('contact operations', () => {
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
-      expect(mockUpdateAccount).toHaveBeenCalledWith('3ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
-        address: 'Contact address',
-        contactDetails: { email: 'David.Gilmore@floyd.com' }
-      })
       expect(mockUpdateContact).toHaveBeenCalledWith('4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
         fullName: 'Roger Walters',
         contactDetails: { email: 'Roger.Walters@email.com' },
@@ -1107,7 +1101,6 @@ describe('contact operations', () => {
     it('contact immutable - user assigned', async () => {
       const mockCreateAccount = jest.fn(() => ({ id: '09328cd0-65e7-4831-bb47-1ad3ee1d0069' }))
       const mockCreateContact = jest.fn(() => ({ id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b' }))
-      const mockUpdateAccount = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           USER: {
@@ -1133,8 +1126,7 @@ describe('contact operations', () => {
               getByApplicationId: jest.fn().mockReturnValue(null),
               create: mockCreateAccount
             }),
-            isImmutable: () => null,
-            update: mockUpdateAccount
+            isImmutable: () => null
           }
         }
       }))
@@ -1143,10 +1135,6 @@ describe('contact operations', () => {
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
-      expect(mockUpdateAccount).toHaveBeenCalledWith('09328cd0-65e7-4831-bb47-1ad3ee1d0069', {
-        address: 'Contact address',
-        contactDetails: { email: 'David.Gilmore@floyd.com' }
-      })
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
         cloneOf: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
         contactDetails: { email: 'Roger.Walters@email.com' },
@@ -1156,7 +1144,6 @@ describe('contact operations', () => {
     })
 
     it('contact mutable - user not assigned', async () => {
-      const mockUpdateAccount = jest.fn()
       const mockUpdateContact = jest.fn()
       const mockCreateAccount = jest.fn(() => ({ id: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c' }))
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -1182,8 +1169,7 @@ describe('contact operations', () => {
               getByApplicationId: jest.fn().mockReturnValue(null),
               create: mockCreateAccount
             }),
-            isImmutable: () => null,
-            update: mockUpdateAccount
+            isImmutable: () => null
           }
         }
       }))
@@ -1192,10 +1178,6 @@ describe('contact operations', () => {
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
-      expect(mockUpdateAccount).toHaveBeenCalledWith('3ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
-        address: 'Contact address',
-        contactDetails: { email: 'David.Gilmore@floyd.com' }
-      })
       expect(mockUpdateContact).toHaveBeenCalledWith('4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
         fullName: 'Richard Wright',
         cloneOf: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
@@ -1205,7 +1187,6 @@ describe('contact operations', () => {
     it('contact immutable - user not assigned', async () => {
       const mockCreateAccount = jest.fn(() => ({ id: '09328cd0-65e7-4831-bb47-1ad3ee1d0069' }))
       const mockCreateContact = jest.fn(() => ({ id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b' }))
-      const mockUpdateAccount = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           USER: {
@@ -1230,8 +1211,7 @@ describe('contact operations', () => {
               getByApplicationId: jest.fn().mockReturnValue(null),
               create: mockCreateAccount
             }),
-            isImmutable: () => null,
-            update: mockUpdateAccount
+            isImmutable: () => null
           }
         }
       }))
@@ -1240,14 +1220,73 @@ describe('contact operations', () => {
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
       await ops.setOrganisation(true)
       expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
-      expect(mockUpdateAccount).toHaveBeenCalledWith('09328cd0-65e7-4831-bb47-1ad3ee1d0069', {
-        address: 'Contact address',
-        contactDetails: { email: 'David.Gilmore@floyd.com' }
-      })
       expect(mockCreateContact).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
         cloneOf: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
         fullName: 'Richard Wright'
       })
+    })
+
+    it('set true via contactAccountOperationsForContactAccount, no address, setting email to username', async () => {
+      const mockUpdate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: () => ({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Roger.Walters@email.com' })
+          },
+          CONTACT: {
+            isImmutable: () => false,
+            getById: () => ({
+              id: '7b1215e5-5426-4ef9-b412-a3df1b9c29be',
+              userId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+              address: {},
+              contactDetails: { email: 'Nick.Mason@email.com' }
+            }),
+            update: mockUpdate
+          },
+          ACCOUNT: {
+            isImmutable: () => false,
+            getById: () => ({ id: '668ee1f0-073d-480c-a802-59db362897e6' })
+          }
+        }
+      }))
+
+      const { contactAccountOperationsForContactAccount } = await import('../operations.js')
+      const ops = contactAccountOperationsForContactAccount('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        '7b1215e5-5426-4ef9-b412-a3df1b9c29be', '668ee1f0-073d-480c-a802-59db362897e6')
+      await ops.setOrganisation(true)
+      expect(mockUpdate).toHaveBeenCalledWith('7b1215e5-5426-4ef9-b412-a3df1b9c29be', { contactDetails: { email: 'Roger.Walters@email.com' }, fullName: undefined, userId: 'e8387a83-1165-42e6-afab-add01e77bc4c' })
+    })
+
+    it('set true via contactAccountOperationsForContactAccount, ignores if no change to username', async () => {
+      const mockUpdate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: () => ({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Roger.Walters@email.com' })
+          },
+          CONTACT: {
+            isImmutable: () => false,
+            getById: () => ({
+              id: '7b1215e5-5426-4ef9-b412-a3df1b9c29be',
+              userId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+              contactDetails: { email: 'Roger.Walters@email.com' }
+            }),
+            update: mockUpdate
+          },
+          ACCOUNT: {
+            isImmutable: () => false,
+            getById: () => ({ id: '668ee1f0-073d-480c-a802-59db362897e6' })
+          }
+        }
+      }))
+
+      const { contactAccountOperationsForContactAccount } = await import('../operations.js')
+      const ops = contactAccountOperationsForContactAccount('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        '7b1215e5-5426-4ef9-b412-a3df1b9c29be', '668ee1f0-073d-480c-a802-59db362897e6')
+      await ops.setOrganisation(true)
+      expect(mockUpdate).not.toHaveBeenCalled()
     })
   })
 

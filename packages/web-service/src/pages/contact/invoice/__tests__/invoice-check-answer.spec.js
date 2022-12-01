@@ -154,9 +154,13 @@ describe('invoice check answers page', () => {
 
     it('creates the correct output for the payer is other', async () => {
       const tagSet = jest.fn()
-      jest.doMock('../../common/common.js', () => ({
-        canBeUser: () => true
-      }))
+      jest.doMock('../../common/common-handler.js', () => {
+        const actual = jest.requireActual('../../common/common-handler.js')
+        return {
+          checkHasContact: actual.checkHasContact,
+          canBeUser: () => true
+        }
+      })
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
@@ -305,5 +309,52 @@ describe('invoice check answers page', () => {
       expect(await completion(request)).toBe('/tasklist')
       expect(tagSet).toHaveBeenCalledTimes(1)
     })
+  })
+
+  it('getData calls the necessary contact APIs', async () => {
+    const roleFn = jest.fn()
+    const getByApplicationIdMock = jest.fn()
+    const accountRoleFn = jest.fn()
+
+    roleFn.mockImplementation(() => { return { id: '', getByApplicationId: getByApplicationIdMock } })
+    getByApplicationIdMock.mockImplementation(() => { return { id: '' } })
+    accountRoleFn.mockImplementation(() => { return { getByApplicationId: jest.fn() } })
+
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
+        ACCOUNT: {
+          role: accountRoleFn
+        },
+        CONTACT: {
+          role: roleFn
+        }
+      }
+    }))
+    const request = {
+      cache: () => {
+        return {
+          getData: () => {
+            return {
+              applicationId: 'abe123'
+            }
+          }
+        }
+      }
+    }
+    const { getData } = await import('../invoice-check-answers.js')
+    await getData(request)
+    expect(roleFn).toHaveBeenCalledWith('APPLICANT')
+    expect(roleFn).toHaveBeenCalledWith('ECOLOGIST')
+    expect(roleFn).toHaveBeenCalledWith('PAYER')
   })
 })

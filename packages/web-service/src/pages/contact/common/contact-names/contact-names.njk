@@ -7,7 +7,7 @@
         {{ items.push({ value: contact.id, text: contact.fullName, checked: contact.id === data.contact.id, label: { classes: 'display-wrapped' } }) }}
     {% endfor %}
     {{ items.push({ divider: "or" }) }}
-    {{ items.push({ value: 'new', text: addText }) }}
+    {{ items.push({ value: 'new', text: addText, id: 'new' }) }}
 </div>
 
 {% block pageContent %}

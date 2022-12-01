@@ -1,7 +1,15 @@
+jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('The virus scanning service', () => {
   beforeEach(() => jest.resetModules())
   describe('The clam initialization', () => {
+    it('does nothing if no scanning required', async () => {
+      const { initializeClamScan } = await import('../virus-scan.js')
+      process.env.NO_SCANNING_REQUIRED = 'true'
+      await expect(() => initializeClamScan()).resolves
+      delete process.env.NO_SCANNING_REQUIRED
+    })
+
     it('resolves when initialized', async () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
         init: () => Promise.resolve({ initialized: true })
@@ -9,13 +17,15 @@ describe('The virus scanning service', () => {
       const { initializeClamScan } = await import('../virus-scan.js')
       await expect(() => initializeClamScan()).resolves
     })
+
     it('rejects when initialization fails', async () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
         init: () => Promise.reject(new Error())
       })))
       const { initializeClamScan } = await import('../virus-scan.js')
-      await expect(() => initializeClamScan()).rejects
+      await expect(() => initializeClamScan()).rejects.toThrow()
     })
+
     it('rejects when uninitialized fails', async () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => ({
         init: () => Promise.resolve({ initialized: false })

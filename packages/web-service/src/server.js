@@ -129,7 +129,9 @@ const init = async server => {
   }
 
   // Log any errors
-  server.ext('onPreResponse', errorHandler)
+  if (!process.env.NO_ERROR_ROUTE) {
+    server.ext('onPreResponse', errorHandler)
+  }
 
   /*
    * Set up shutdown handlers

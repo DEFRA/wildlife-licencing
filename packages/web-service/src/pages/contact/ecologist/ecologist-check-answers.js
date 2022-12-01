@@ -1,10 +1,10 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { getCheckAnswersData } from '../common/check-answers/check-answers.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
-import { checkHasApplication } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { checkHasApplication } from '../common/common-handler.js'
 const { CHECK_ANSWERS } = contactURIs.ECOLOGIST
 
 export const completion = async request => {

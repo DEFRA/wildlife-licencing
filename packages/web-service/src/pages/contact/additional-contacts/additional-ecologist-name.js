@@ -1,9 +1,9 @@
 import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
 import { getContactData, setContactData } from '../common/contact-name/contact-name.js'
-import { checkHasApplication } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { additionalContactNameCompletion } from './common.js'
+import { checkHasApplication } from '../common/common-handler.js'
 
 const { NAME } = contactURIs.ADDITIONAL_ECOLOGIST
 

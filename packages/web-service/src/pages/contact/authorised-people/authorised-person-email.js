@@ -24,4 +24,4 @@ export const authorisedPersonEmail = emailAddressPage({
   })),
   setData: setData,
   completion: getAuthorisedPeopleCompletion
-})
+}, null)

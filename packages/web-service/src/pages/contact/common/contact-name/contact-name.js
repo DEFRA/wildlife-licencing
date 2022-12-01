@@ -1,5 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { accountsFilter } from '../common.js'
+import { hasAccountCandidates } from '../common.js'
 import { contactOperations } from '../operations.js'
 
 export const getContactData = contactRole => async request => {
@@ -21,7 +21,7 @@ export const setContactData = contactRole => async request => {
   await contactOps.setName(request.payload.name)
 }
 
-export const contactNameCompletion = (_contactRole, accountRole, urlBase) => async request => {
+export const contactNameCompletion = (_contactRole, accountRole, otherAccountRoles, urlBase) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   // If an organisation is already assigned,
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
@@ -40,9 +40,7 @@ export const contactNameCompletion = (_contactRole, accountRole, urlBase) => asy
     }
   }
 
-  const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
-  const filteredAccounts = await accountsFilter(applicationId, accounts)
-  if (filteredAccounts.length) {
+  if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
     return urlBase.ORGANISATIONS.uri
   } else {
     return urlBase.IS_ORGANISATION.uri

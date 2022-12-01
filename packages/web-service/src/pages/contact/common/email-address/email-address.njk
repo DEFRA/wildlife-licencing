@@ -1,5 +1,6 @@
 {% extends "standard-form.njk" %}
 {% from "input/macro.njk" import govukInput %}
+{% from "radios/macro.njk" import govukRadios %}
 
 {% block topNavigation %}
 <p class="govuk-body sdds-save-link">
@@ -10,13 +11,14 @@
 {% set errorMap = {
         'email-address': {
             'string.empty': { ref: '#email-address', text: 'Enter an email address' },
-            'string.email': { ref: '#email-address', text: 'You did not enter a valid email address' }
+            'string.email': { ref: '#email-address', text: 'You did not enter a valid email address' },
+            'any.invalid': { ref: '#email-address', text: 'Enter a different email address'  }
         }
     }
 %}
 
-{% block pageContent %}
-    {{ govukInput({
+{% set emailAddress %}
+   {{ govukInput({
       label: {
         text: 'Email address'
       },
@@ -25,9 +27,38 @@
       type: "email",
       autocomplete: "email",
       spellcheck: false,
-      value: data.email if data.email else payload['email-address'],
       classes: "govuk-input--width-20",
       attributes: { maxlength: 50 },
-      errorMessage: { text: 'Enter your email address' } if error['email-address']
+      errorMessage: { text: 'Enter the email address' } if error['email-address']
     }) }}
+{% endset -%}
+
+{% block pageContent %}
+    {% if not data.email %}
+        {{ emailAddress | safe }}
+        <input type="hidden" id="change-email" name="change-email" value="yes">
+    {% else %}
+        {{ govukRadios({
+          idPrefix: "change-email",
+          name: "change-email",
+          errorMessage: {
+            text: noneSelected
+          } if error['change-email'] === 'any.required',
+          items: [
+           {
+                value: "no",
+                text: data.email,
+                checked: payload['change-email'] === 'no'
+            },
+            {
+              value: "yes",
+              text: "Other",
+              checked: payload['change-email'] === 'yes',
+              conditional: {
+                html: emailAddress
+              }
+            }
+          ]
+        }) }}
+    {% endif %}
 {% endblock %}

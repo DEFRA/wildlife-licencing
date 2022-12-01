@@ -1,8 +1,8 @@
 import { yesNoPage } from '../../common/yes-no.js'
-import { checkHasApplication } from '../common/common.js'
 import { contactURIs } from '../../../uris.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { addAdditionalContactCompletion, getAdditionalContactData, setAdditionalContactData } from './common.js'
+import { checkHasApplication } from '../common/common-handler.js'
 
 export const addAdditionalEcologist = yesNoPage({
   page: contactURIs.ADDITIONAL_ECOLOGIST.ADD.page,

@@ -11,15 +11,10 @@ describe('site-got-postcode page handler', () => {
     }
   })
 
-  it('throws an error if a postcode is not entered', async () => {
-    try {
-      const payload = { 'site-postcode': '', 'site-postcode-check': 'yes' }
-      const { validator } = await import('../site-got-postcode.js')
-      expect(await validator(payload))
-    } catch (e) {
-      expect(e.message).toBe('ValidationError')
-      expect(e.details[0].message).toBe('Error: You have not entered a postcode')
-    }
+  it('should not throws an error if a correct postcode is entered', async () => {
+    const payload = { 'site-postcode': 'B23 5LT', 'site-postcode-check': 'yes' }
+    const { validator } = await import('../site-got-postcode.js')
+    expect(await validator(payload)).toBeUndefined()
   })
 
   it('should not throws an error if a correct postcode is entered', async () => {
@@ -30,16 +25,19 @@ describe('site-got-postcode page handler', () => {
 
   it('getData returns the correct object', async () => {
     const result = { siteData: { postcode: 'B15 7GF' } }
+    const mockClearPageData = jest.fn()
     const request = {
       cache: () => ({
         getData: () => {
           return result
-        }
+        },
+        clearPageData: mockClearPageData
       })
     }
 
     const { getData } = await import('../site-got-postcode.js')
     expect(await getData(request)).toStrictEqual({ sitePostcode: 'B15 7GF' })
+    expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
   })
 
   it('setData', async () => {
@@ -73,7 +71,8 @@ describe('site-got-postcode page handler', () => {
           payload: {
             'site-postcode-check': 'no'
           }
-        })
+        }),
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
       })
     }
     expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
@@ -87,7 +86,8 @@ describe('site-got-postcode page handler', () => {
           payload: {
             'site-postcode-check': 'yes'
           }
-        })
+        }),
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
       })
     }
     expect(await completion(request)).toBe('/select-address')

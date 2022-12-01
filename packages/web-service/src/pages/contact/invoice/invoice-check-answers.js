@@ -1,12 +1,12 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
-import { canBeUser, checkHasApplication } from '../common/common.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
-const { CHECK_ANSWERS } = contactURIs.INVOICE_PAYER
+import { canBeUser, checkHasApplication, checkHasContact } from '../common/common-handler.js'
+const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -26,9 +26,8 @@ export const getData = async request => {
       return { responsible: 'other', name: p.fullName, contact: payer, account }
     }
   })(payer)
-  // (await canBeUser(request, [contactRole]) && {
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  const res = {
+  return {
     responsibility,
     checkYourAnswers: [
       { key: 'whoIsResponsible', value: responsibility.name },
@@ -43,8 +42,6 @@ export const getData = async request => {
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email }
     ].filter(a => a)
   }
-  console.log(JSON.stringify(res, null, 4))
-  return res
 }
 
 export const completion = async request => {
@@ -54,7 +51,7 @@ export const completion = async request => {
 }
 
 export const invoiceCheckAnswers = checkAnswersPage({
-  checkData: checkHasApplication,
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.PAYER, RESPONSIBLE)],
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
   getData,
