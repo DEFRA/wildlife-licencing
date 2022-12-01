@@ -5,18 +5,8 @@ import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
-import { canBeUser, checkHasApplication } from '../common/common-handler.js'
+import { canBeUser, checkHasApplication, checkHasContact } from '../common/common-handler.js'
 const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
-
-export const checkHasPayer = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  const contact = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
-  if (!contact) {
-    return h.redirect(RESPONSIBLE.uri)
-  }
-
-  return null
-}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -63,7 +53,7 @@ export const completion = async request => {
 }
 
 export const invoiceCheckAnswers = checkAnswersPage({
-  checkData: [checkHasApplication, checkHasPayer],
+  checkData: [checkHasApplication, checkHasContact(ContactRoles.PAYER, RESPONSIBLE)],
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
   getData,

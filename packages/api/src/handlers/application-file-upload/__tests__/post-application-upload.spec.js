@@ -106,8 +106,8 @@ describe(' postApplicationUpload handler', () => {
         }
       }
     }))
-    const putApplicationFileUpload = (await import('../post-application-file-upload.js')).default
-    await putApplicationFileUpload(context, req, h)
+    const postApplicationFileUpload = (await import('../post-application-file-upload.js')).default
+    await postApplicationFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
@@ -120,7 +120,7 @@ describe(' postApplicationUpload handler', () => {
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const putApplicationFileUpload = (await import('../get-application-file-uploads.js')).default
-    await expect(async () => await putApplicationFileUpload(context, req, h)).rejects.toThrow()
+    const postApplicationFileUpload = (await import('../post-application-file-upload.js')).default
+    await expect(() => postApplicationFileUpload(context, req, h)).rejects.toThrow()
   })
 })

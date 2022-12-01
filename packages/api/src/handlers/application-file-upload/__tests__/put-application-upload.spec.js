@@ -175,7 +175,7 @@ describe(' putApplicationUpload handler', () => {
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const putApplicationFileUpload = (await import('../get-application-file-uploads.js')).default
-    await expect(async () => await putApplicationFileUpload(context, req, h)).rejects.toThrow()
+    const putApplicationFileUpload = (await import('../put-application-file-upload.js')).default
+    await expect(() => putApplicationFileUpload(context, req, h)).rejects.toThrow()
   })
 })
