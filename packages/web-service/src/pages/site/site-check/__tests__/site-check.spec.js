@@ -55,7 +55,7 @@ describe('The site address and National Grid Reference page', () => {
     }
 
     const { getData } = await import('../site-check.js')
-    expect(await getData(request)).toStrictEqual({ proximityFlag: true, siteAddress: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY', gridReference: 'NY123456' })
+    expect(await getData(request)).toStrictEqual({ siteAddress: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY', gridReference: 'NY123456' })
     expect(mockClearPageData).toHaveBeenCalled()
   })
 

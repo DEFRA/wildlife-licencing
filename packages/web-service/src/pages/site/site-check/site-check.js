@@ -5,7 +5,6 @@ import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { addressLine } from '../../service/address.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
-import { getGridReferenceProximity } from './grid-reference-proximity.js'
 
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
@@ -27,15 +26,11 @@ export const getData = async request => {
   const siteId = (await request.cache().getData())?.siteData?.id
   const site = await APIRequests.SITE.getSiteById(siteId)
   await request.cache().clearPageData(siteURIs.SITE_CHECK.page)
-  const { address, gridReference } = site
-  const { xCoordinate, yCoordinate } = address
-  const proximity = getGridReferenceProximity(gridReference, xCoordinate, yCoordinate)
+  const { gridReference } = site
 
   const data = {}
   const siteAddress = addressLine(site)
-  //  proximity test of 10 Km since it is large enough to cover most postcodes
-  const proximityFlag = proximity > 10
-  Object.assign(data, { siteAddress, proximityFlag, gridReference })
+  Object.assign(data, { siteAddress, gridReference })
   return data
 }
 

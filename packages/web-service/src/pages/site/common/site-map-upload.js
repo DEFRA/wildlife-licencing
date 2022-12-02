@@ -1,6 +1,9 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { s3FileUpload } from '../../../services/s3-upload.js'
 import { FILETYPES } from '../../common/file-upload/file-upload.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
+import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { siteURIs } from '../../../uris.js'
 
 export const uploadAndUpdateSiteMap = async (request, siteMapFile) => {
   const journeyData = await request.cache().getData()
@@ -27,7 +30,26 @@ export const uploadAndUpdateSiteMap = async (request, siteMapFile) => {
     const payload = { ...siteInfo }
     await APIRequests.SITE.update(siteInfo.id, payload)
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
-    console.log(journeyData)
     await request.cache().setData(journeyData)
   }
+}
+
+export const siteAddressCompletion = async request => {
+  const { applicationId } = await request.cache().getData()
+
+  const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
+  if (isCompleteOrConfirmed(appTagStatus)) {
+    return siteURIs.CHECK_SITE_ANSWERS.uri
+  }
+
+  return siteURIs.UPLOAD_MAP.uri
+}
+
+export const getSite = async applicationId => {
+  const site = await APIRequests.SITE.findByApplicationId(applicationId)
+  let siteInfo = {}
+  if (site.length) {
+    siteInfo = site[0]
+  }
+  return siteInfo
 }

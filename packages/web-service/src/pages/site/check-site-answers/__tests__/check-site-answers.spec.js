@@ -54,38 +54,13 @@ describe('The check site answers page', () => {
     expect(await getData(request)).toStrictEqual(
       [
         { key: 'siteName', value: 'site-name' },
+        { key: 'siteAddress', value: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY' },
         { key: 'siteMap', value: 'site.pdf' },
         { key: 'siteMapTwo', value: 'demo.jpg' },
         { key: 'siteMapThree', value: 'site-after-development.shape' },
         { key: 'siteGridReference', value: 'NY123456' }
       ]
     )
-  })
-
-  it('should return null from checkData, when there is an application id', async () => {
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
-      })
-    }
-    const { checkData } = await import('../check-site-answers.js')
-    expect(await checkData(request)).toBeNull()
-  })
-
-  it('checkData', async () => {
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({})
-      })
-    }
-    const { checkData } = await import('../check-site-answers.js')
-    const mockRedirect = jest.fn(() => '/applications')
-    const result = await checkData(request, { redirect: () => mockRedirect })
-    expect(result()).toEqual('/applications')
   })
 
   it('completion', async () => {

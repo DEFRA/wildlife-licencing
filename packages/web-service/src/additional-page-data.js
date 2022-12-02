@@ -61,6 +61,7 @@ export const additionalPageData = (request, h) => {
 
         // Site
         siteName: siteURIs.NAME.uri,
+        siteAddress: siteURIs.SITE_GOT_POSTCODE.uri,
         siteGridReference: siteURIs.SITE_GRID_REF.uri,
         siteMap: siteURIs.UPLOAD_MAP.uri,
         siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,

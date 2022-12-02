@@ -24,19 +24,68 @@ describe('site-got-postcode page handler', () => {
   })
 
   it('getData returns the correct object', async () => {
-    const result = { siteData: { postcode: 'B15 7GF' } }
     const mockClearPageData = jest.fn()
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return [{ address: { postcode: 'Bristol' } }]
+          }
+        },
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn(), set: jest.fn() }
+          }
+        }
+      }
+    }))
     const request = {
       cache: () => ({
         getData: () => {
-          return result
+          return {}
         },
         clearPageData: mockClearPageData
       })
     }
 
     const { getData } = await import('../site-got-postcode.js')
-    expect(await getData(request)).toStrictEqual({ sitePostcode: 'B15 7GF' })
+    expect(await getData(request)).toStrictEqual({ sitePostcode: 'Bristol' })
+    expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
+  })
+
+  it('getData returns  undefined if not site found', async () => {
+    const mockClearPageData = jest.fn()
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return []
+          }
+        },
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn(), set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return {}
+        },
+        clearPageData: mockClearPageData
+      })
+    }
+
+    const { getData } = await import('../site-got-postcode.js')
+    expect(await getData(request)).toStrictEqual({ sitePostcode: undefined })
     expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
   })
 

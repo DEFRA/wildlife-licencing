@@ -67,6 +67,7 @@ describe('additional page data', () => {
         siteMapThree: '/upload-map-of-mitigations-after-development',
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
+        siteAddress: '/site-got-postcode',
         signOut: '/sign-out',
         additionalApplicantAdd: '/add-additional-applicant',
         additionalApplicantEmail: '/additional-applicant-email',
