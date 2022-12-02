@@ -2,6 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
+import { checkApplication } from '../../common/check-application.js'
 import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
 
@@ -63,6 +64,7 @@ export const completion = async request => {
 export default pageRoute({
   page: siteURIs.SITE_GOT_POSTCODE.page,
   uri: siteURIs.SITE_GOT_POSTCODE.uri,
+  checkData: checkApplication,
   validator,
   getData,
   setData,

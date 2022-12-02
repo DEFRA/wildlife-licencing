@@ -1,7 +1,8 @@
 import { Backlink } from '../../../handlers/backlink.js'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
-import { APPLICATIONS, siteURIs, TASKLIST } from '../../../uris.js'
+import { siteURIs, TASKLIST } from '../../../uris.js'
+import { checkApplication } from '../../common/check-application.js'
 import { addressLine } from '../../service/address.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
@@ -25,15 +26,6 @@ export const getData = async request => {
   return result
 }
 
-export const checkData = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  if (!applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-
-  return null
-}
-
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
   // Mark the site journey tag as complete
@@ -46,7 +38,7 @@ export default pageRoute({
   page: siteURIs.CHECK_SITE_ANSWERS.page,
   uri: siteURIs.CHECK_SITE_ANSWERS.uri,
   backlink: Backlink.NO_BACKLINK,
-  checkData,
+  checkData: checkApplication,
   getData,
   completion
 })

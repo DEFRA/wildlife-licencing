@@ -63,32 +63,6 @@ describe('The check site answers page', () => {
     )
   })
 
-  it('should return null from checkData, when there is an application id', async () => {
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
-      })
-    }
-    const { checkData } = await import('../check-site-answers.js')
-    expect(await checkData(request)).toBeNull()
-  })
-
-  it('checkData', async () => {
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({})
-      })
-    }
-    const { checkData } = await import('../check-site-answers.js')
-    const mockRedirect = jest.fn(() => '/applications')
-    const result = await checkData(request, { redirect: () => mockRedirect })
-    expect(result()).toEqual('/applications')
-  })
-
   it('completion', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
