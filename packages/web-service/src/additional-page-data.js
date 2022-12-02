@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import { contactURIs, ecologistExperienceURIs, eligibilityURIs, siteURIs, LOGIN, SIGN_OUT } from './uris.js'
+import { version } from '../dirname.cjs'
 
 export const additionalPageData = (request, h) => {
   const response = request.response
@@ -76,6 +77,11 @@ export const additionalPageData = (request, h) => {
       },
       credentials: request.auth.credentials
     })
+
+    // Add the version number in the test environments
+    if (process.env.ALLOW_RESET) {
+      Object.assign(response.source.context, { version })
+    }
 
     // Generate the nonce
     const nonce = crypto.randomBytes(16).toString('base64')
