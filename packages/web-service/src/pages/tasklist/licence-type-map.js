@@ -236,13 +236,39 @@ export const licenceTypeMap = {
             status: status => getStateDependsUpon(
               status,
               SECTION_TASKS.SUBMIT,
-              Object.values(SECTION_TASKS).slice(0, -1) // This task is dependent upon all tasks in SECTION_TASKS, except itself!
+              [
+                'eligibility-check',
+                'licence-holder',
+                'ecologist',
+                'authorised-people',
+                'additional-contacts',
+                'invoice-payer',
+                // 'work-activity',
+                // 'permissions',
+                'sites',
+                'setts',
+                'ecologist-experience',
+                'supporting-information'
+              ]
             ),
             enabled: status => {
               const currState = getStateDependsUpon(
                 status,
                 SECTION_TASKS.SUBMIT,
-                Object.values(SECTION_TASKS).slice(0, -1) // This task is dependent upon all tasks in SECTION_TASKS, except itself!
+                [
+                  'eligibility-check',
+                  'licence-holder',
+                  'ecologist',
+                  'authorised-people',
+                  'additional-contacts',
+                  'invoice-payer',
+                  // 'work-activity',
+                  // 'permissions',
+                  'sites',
+                  'setts',
+                  'ecologist-experience',
+                  'supporting-information'
+                ]
               )
 
               return currState !== tagStatus.CANNOT_START
