@@ -2541,6 +2541,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/reset':
+    post:
+      description: For testing environments, clears application data
+      operationId: 'postResetHandler'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 components:
 ################################################################################################

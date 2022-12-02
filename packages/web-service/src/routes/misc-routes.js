@@ -3,9 +3,10 @@ import createApplication from '../handlers/create-application.js'
 import removeUpload from '../handlers/remove-uploaded-file.js'
 
 import path from 'path'
-import __dirname from '../../dirname.cjs'
+import { __dirname } from '../../dirname.cjs'
+import { APIRequests } from '../services/api-requests.js'
 
-export default [
+const miscRoutes = [
   {
     method: 'GET',
     path: HEALTH.uri,
@@ -39,3 +40,17 @@ export default [
     handler: removeUpload
   }
 ]
+
+if (process.env.ALLOW_RESET === 'YES') {
+  miscRoutes.push({
+    method: 'GET',
+    path: '/reset',
+    options: { auth: false },
+    handler: async (_request, h) => {
+      await APIRequests.OTHER.reset()
+      return h.response('Ok!').code(200).type('text/plain')
+    }
+  })
+}
+
+export default miscRoutes

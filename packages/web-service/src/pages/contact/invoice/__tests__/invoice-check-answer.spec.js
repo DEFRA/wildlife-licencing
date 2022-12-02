@@ -158,6 +158,7 @@ describe('invoice check answers page', () => {
         const actual = jest.requireActual('../../common/common-handler.js')
         return {
           checkHasContact: actual.checkHasContact,
+          checkAccountComplete: () => null,
           canBeUser: () => true
         }
       })

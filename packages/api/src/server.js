@@ -128,6 +128,7 @@ import { getOptionSets } from './handlers/reference-data/option-sets.js'
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
+import postResetHandler from './handlers/reset.js'
 
 /**
  * Create the hapi server. Exported for unit testing purposes
@@ -239,6 +240,7 @@ const handlers = {
   getOptionSets,
   validationFail,
   notFound,
+  postResetHandler,
   postResponseHandler
 }
 
