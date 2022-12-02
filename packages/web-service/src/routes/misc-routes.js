@@ -4,8 +4,9 @@ import removeUpload from '../handlers/remove-uploaded-file.js'
 
 import path from 'path'
 import __dirname from '../../dirname.cjs'
+import { APIRequests } from '../services/api-requests.js'
 
-export default [
+const routes = [
   {
     method: 'GET',
     path: HEALTH.uri,
@@ -39,3 +40,13 @@ export default [
     handler: removeUpload
   }
 ]
+
+if (process.env.ALLOW_RESET === 'YES') {
+  routes.push({
+    method: 'GET',
+    path: '/reset',
+    handler: () => APIRequests.OTHER.reset()
+  })
+}
+
+export default routes

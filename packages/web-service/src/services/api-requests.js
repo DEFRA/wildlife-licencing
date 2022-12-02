@@ -10,6 +10,7 @@ import { LICENCES } from './api-requests-licences.js'
 import { FILE_UPLOAD } from './api-requests-file-upload.js'
 
 import { boomify } from '@hapi/boom'
+import { OTHER } from './api-requests-other.js'
 
 export const apiUrls = {
   USERS: '/users',
@@ -82,5 +83,6 @@ export const APIRequests = {
   HABITAT,
   ECOLOGIST_EXPERIENCE,
   LICENCES,
-  FILE_UPLOAD
+  FILE_UPLOAD,
+  OTHER
 }

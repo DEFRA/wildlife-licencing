@@ -61,6 +61,29 @@ export const checkHasContact = (contactRole, page = TASKLIST) => async (request,
 
   return null
 }
+
+/**
+ * Checks that if an account is assigned, it is complete
+ * @param accountRole
+ * @param urlBase
+ * @returns {(function(*, *): Promise<void>)|*}
+ */
+export const checkAccountComplete = (accountRole, urlBase) => async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
+  if (account) {
+    if (!account.address) {
+      if (!account?.contactDetails?.email) {
+        return h.redirect(urlBase.EMAIL.uri)
+      }
+      if (!account.address) {
+        return h.redirect(urlBase.POSTCODE.uri)
+      }
+    }
+  }
+  return null
+}
+
 /**
  * Determine if the user is able to multi-select a name from a set of candidates or no. If not redirect to the
  * new name page
