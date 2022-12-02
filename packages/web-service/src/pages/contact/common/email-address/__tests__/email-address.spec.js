@@ -63,6 +63,20 @@ describe('the email-address page', () => {
 
   describe('setEmailAddressData', () => {
     it('assigns the email address', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
+            })
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
+          }
+        }
+      }))
       const mockSetEmailAddress = jest.fn()
       jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
@@ -83,7 +97,55 @@ describe('the email-address page', () => {
       expect(mockSetEmailAddress).toHaveBeenCalledWith('Keith@therollingstones.com')
     })
 
+    it('assigns the email address if needed in account', async () => {
+      const mockSetEmailAddress = jest.fn()
+      jest.doMock('../../operations.js', () => ({
+        contactAccountOperations: () => ({
+          setEmailAddress: mockSetEmailAddress
+        })
+      }))
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
+            })
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ name: 'The Rolling STones' }))
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+        }),
+        payload: {
+          'change-email': 'no'
+        }
+      }
+      const { setEmailAddressData } = await import('../email-address.js')
+      await setEmailAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetEmailAddress).toHaveBeenCalledWith('keith@mail.com')
+    })
+
     it('ignore if the email is not changing', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', contactDetails: { email: 'keith@mail.com' } }))
+            })
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
+          }
+        }
+      }))
       const mockSetEmailAddress = jest.fn()
       jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
