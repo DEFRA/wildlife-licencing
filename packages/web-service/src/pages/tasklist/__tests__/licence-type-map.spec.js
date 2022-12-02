@@ -204,6 +204,46 @@ describe('The licence type map', () => {
       })
       expect(result).toEqual('complete')
     })
+
+    it('status function will return the state, or IN_PROGRESS if the user is ONE_COMPLETE_AND_REST_IN_PROGRESS', async () => {
+      const funcStatus = licenceTypeMap[A24].sections[2].tasks[3].status
+      const result = funcStatus({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'not-started' },
+        setts: { tagState: 'one-complete-and-rest-in-progress' }
+      })
+      expect(result).toBe('in-progress')
+    })
+
+    it('uri function will return to the cya page if the applicant is COMPLETE', async () => {
+      const uriFunc = licenceTypeMap[A24].sections[2].tasks[3].uri
+      const result = uriFunc({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'not-started' },
+        setts: { tagState: 'complete' }
+      })
+      expect(result).toBe('/check-habitat-answers')
+    })
+
+    it('uri function will return to the cya page if the applicant is COMPLETE_NOT_CONFIRMED', async () => {
+      const uriFunc = licenceTypeMap[A24].sections[2].tasks[3].uri
+      const result = uriFunc({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'not-started' },
+        setts: { tagState: 'complete-not-confirmed' }
+      })
+      expect(result).toBe('/check-habitat-answers')
+    })
+
+    it('uri function will return to the cya page if the applicant is ONE_COMPLETE_AND_REST_IN_PROGRESS', async () => {
+      const uriFunc = licenceTypeMap[A24].sections[2].tasks[3].uri
+      const result = uriFunc({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'not-started' },
+        setts: { tagState: 'one-complete-and-rest-in-progress' }
+      })
+      expect(result).toBe('/check-habitat-answers')
+    })
   })
 
   describe('the supporting information section', () => {

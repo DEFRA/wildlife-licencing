@@ -205,8 +205,22 @@ export const licenceTypeMap = {
           },
           {
             name: SECTION_TASKS.SETTS,
-            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.SETTS].tagState) ? habitatURIs.CHECK_YOUR_ANSWERS.uri : habitatURIs.START.uri,
-            status: status => getState(status, SECTION_TASKS.SETTS),
+            uri: status => {
+              const state = status[SECTION_TASKS.SETTS].tagState
+              if (state === tagStatus.COMPLETE ||
+                  state === tagStatus.COMPLETE_NOT_CONFIRMED ||
+                  state === tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS) {
+                return habitatURIs.CHECK_YOUR_ANSWERS.uri
+              }
+              return habitatURIs.START.uri
+            },
+            status: status => {
+              const state = getState(status, SECTION_TASKS.SETTS)
+              if (state === tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS) {
+                return tagStatus.IN_PROGRESS
+              }
+              return state
+            },
             enabled: status => eligibilityCompleted(status)
           },
           {
