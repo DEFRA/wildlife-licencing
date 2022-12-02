@@ -6,7 +6,7 @@ import path from 'path'
 import { __dirname } from '../../dirname.cjs'
 import { APIRequests } from '../services/api-requests.js'
 
-const routes = [
+const miscRoutes = [
   {
     method: 'GET',
     path: HEALTH.uri,
@@ -42,11 +42,15 @@ const routes = [
 ]
 
 if (process.env.ALLOW_RESET === 'YES') {
-  routes.push({
+  miscRoutes.push({
     method: 'GET',
     path: '/reset',
-    handler: () => APIRequests.OTHER.reset()
+    options: { auth: false },
+    handler: async (_request, h) => {
+      await APIRequests.OTHER.reset()
+      return h.response('Ok!').code(200).type('text/plain')
+    }
   })
 }
 
-export default routes
+export default miscRoutes
