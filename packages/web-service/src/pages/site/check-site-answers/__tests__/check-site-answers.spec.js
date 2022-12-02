@@ -54,6 +54,7 @@ describe('The check site answers page', () => {
     expect(await getData(request)).toStrictEqual(
       [
         { key: 'siteName', value: 'site-name' },
+        { key: 'siteAddress', value: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY' },
         { key: 'siteMap', value: 'site.pdf' },
         { key: 'siteMapTwo', value: 'demo.jpg' },
         { key: 'siteMapThree', value: 'site-after-development.shape' },

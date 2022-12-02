@@ -32,9 +32,6 @@
 {% block pageContent %}
 
   <p class="govuk-body">The site address and national grid reference must be at the same location.</p>
-  {% if (data.proximityFlag) %}
-     <p class="govuk-body">The site address and national grid reference are not at the same location.</p>
-  {% endif %}
 
 
   {{ govukRadios({

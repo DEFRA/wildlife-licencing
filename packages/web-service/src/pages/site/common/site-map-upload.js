@@ -27,7 +27,6 @@ export const uploadAndUpdateSiteMap = async (request, siteMapFile) => {
     const payload = { ...siteInfo }
     await APIRequests.SITE.update(siteInfo.id, payload)
     await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SITE_MAP_FILES)
-    console.log(journeyData)
     await request.cache().setData(journeyData)
   }
 }

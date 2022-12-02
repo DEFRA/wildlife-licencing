@@ -104,9 +104,6 @@ describe('The site national grid reference page', () => {
           findByApplicationId: () => {
             return site
           }
-        },
-        tags: () => {
-          return { has: () => false }
         }
       }
     }))
@@ -175,9 +172,6 @@ describe('The site national grid reference page', () => {
           findByApplicationId: () => {
             return []
           }
-        },
-        tags: () => {
-          return { has: () => false }
         }
       }
     }))
@@ -211,15 +205,45 @@ describe('The site national grid reference page', () => {
     expect(mockUpdate).toHaveBeenCalled()
   })
 
-  it('should redirect user to site address and grid reference mismatch, when the site tag is in progress', async () => {
+  it('should redirect user to site address and grid reference mismatch, when there is proximity flag', async () => {
+    const result = {
+      siteData: {
+        id: '12345',
+        address: {
+          subBuildingName: 'site street',
+          buildingName: 'jubilee',
+          buildingNumber: '123',
+          street: 'site street',
+          town: 'Peckham',
+          county: 'kent',
+          postcode: 'SW1W 0NY',
+          xCoordinate: '123567',
+          yCoordinate: '145345'
+        },
+        name: 'site-name',
+        gridReference: 'NY123456',
+        siteMapFiles: {
+          activity: 'site.pdf',
+          mitigationsDuringDevelopment: 'demo.jpg',
+          mitigationsAfterDevelopment: 'site-after-development.shape'
+        }
+      },
+      applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+    }
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
       },
       APIRequests: {
+        SITE: {
+          getSiteById: () => (result.siteData)
+        },
         APPLICATION: {
           tags: () => {
-            return { get: () => false }
+            return {
+              get: () => false,
+              set: () => false
+            }
           }
         }
       }
@@ -232,24 +256,51 @@ describe('The site national grid reference page', () => {
         gridReference: 'NY123456'
       },
       cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
+        getData: () => (result)
       })
     }
     expect(await completion(request)).toBe('/site-check')
   })
 
-  it('should redirect user to check your answers page, when the tag is complete', async () => {
+  it('should redirect user to check your answers page, when the site address and grid reference match', async () => {
+    const result = {
+      siteData: {
+        id: '12345',
+        address: {
+          subBuildingName: 'site street',
+          buildingName: 'jubilee',
+          buildingNumber: '123',
+          street: 'site street',
+          town: 'Peckham',
+          county: 'kent',
+          postcode: 'B38 8BG',
+          xCoordinate: '404314',
+          yCoordinate: '278431'
+        },
+        name: 'site-name',
+        gridReference: 'SP043784',
+        siteMapFiles: {
+          activity: 'site.pdf',
+          mitigationsDuringDevelopment: 'demo.jpg',
+          mitigationsAfterDevelopment: 'site-after-development.shape'
+        }
+      },
+      applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+    }
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
-        NOT_STARTED: 'NOT_STARTED',
-        COMPLETE: 'complete'
+        NOT_STARTED: 'NOT_STARTED'
       },
       APIRequests: {
+        SITE: {
+          getSiteById: () => (result.siteData)
+        },
         APPLICATION: {
           tags: () => {
-            return { get: jest.fn(() => 'complete') }
+            return {
+              get: () => false,
+              set: () => false
+            }
           }
         }
       }
@@ -262,9 +313,7 @@ describe('The site national grid reference page', () => {
         gridReference: 'NY123456'
       },
       cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
+        getData: () => (result)
       })
     }
     expect(await completion(request)).toBe('/check-site-answers')

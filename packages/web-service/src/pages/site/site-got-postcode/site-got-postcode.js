@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
@@ -22,10 +23,14 @@ export const validator = async payload => {
 }
 
 export const getData = async request => {
-  const { siteData } = await request.cache().getData()
+  const { applicationId } = await request.cache().getData()
   await request.cache().clearPageData(siteURIs.SITE_GOT_POSTCODE.page)
-  const { postcode } = siteData
-  return { sitePostcode: postcode }
+  const sites = await APIRequests.SITE.findByApplicationId(applicationId)
+  let sitePostcode
+  if (sites.length) {
+    sitePostcode = sites[0]?.address?.postcode
+  }
+  return { sitePostcode }
 }
 
 export const setData = async request => {

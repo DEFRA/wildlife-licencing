@@ -2,6 +2,7 @@ import { Backlink } from '../../../handlers/backlink.js'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { APPLICATIONS, siteURIs, TASKLIST } from '../../../uris.js'
+import { addressLine } from '../../service/address.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 
 export const getData = async request => {
@@ -12,9 +13,11 @@ export const getData = async request => {
     siteId = siteData.id
   }
   const site = await APIRequests.SITE.getSiteById(siteId)
+  const siteAddress = addressLine(site)
   const result = []
 
   result.push({ key: 'siteName', value: site?.name })
+  result.push({ key: 'siteAddress', value: siteAddress })
   result.push({ key: 'siteMap', value: site?.siteMapFiles?.activity })
   result.push({ key: 'siteMapTwo', value: site?.siteMapFiles?.mitigationsDuringDevelopment })
   result.push({ key: 'siteMapThree', value: site?.siteMapFiles?.mitigationsAfterDevelopment })
