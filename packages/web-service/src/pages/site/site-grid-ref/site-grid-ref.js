@@ -30,7 +30,7 @@ export const completion = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const { siteData, applicationId } = journeyData
+  const { applicationId } = journeyData
 
   const gridReference = pageData.payload['site-grid-ref']
   const site = await APIRequests.SITE.findByApplicationId(applicationId)
@@ -40,7 +40,7 @@ export const setData = async request => {
   }
   const payload = { ...siteInfo, gridReference }
   await APIRequests.SITE.update(siteInfo.id, payload)
-  journeyData.siteData = { ...siteData, gridReference }
+  journeyData.siteData = { ...siteInfo, gridReference }
   await request.cache().setData(journeyData)
 }
 
