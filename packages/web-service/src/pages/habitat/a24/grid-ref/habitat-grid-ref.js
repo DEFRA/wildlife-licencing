@@ -7,6 +7,7 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
+import { gridReferenceRegex } from '../../../common/common.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -45,7 +46,7 @@ export default pageRoute({
   page: habitatURIs.GRID_REF.page,
   uri: habitatURIs.GRID_REF.uri,
   validator: Joi.object({
-    'habitat-grid-ref': Joi.string().trim().pattern(/[a-zA-Z]{2}\d{6}/).required()
+    'habitat-grid-ref': Joi.string().trim().pattern(gridReferenceRegex).required()
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkApplication,
   completion,
