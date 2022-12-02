@@ -169,7 +169,7 @@ describe('contact common handler functions', () => {
     })
   })
 
-  describe.only('checkAccountComplete', () => {
+  describe('checkAccountComplete', () => {
     it('return null if no account is assigned', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {

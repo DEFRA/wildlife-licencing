@@ -15,7 +15,7 @@ const deletes = [
   'applications'
 ]
 
-export default async (_context, req, h) => {
+export default async (_context, _req, h) => {
   try {
     const sequelize = SEQUELIZE.getSequelize()
     await Promise.all(deletes.map(d => sequelize.query(`delete from "${d}"`, { type: sequelize.QueryTypes.DELETE })))

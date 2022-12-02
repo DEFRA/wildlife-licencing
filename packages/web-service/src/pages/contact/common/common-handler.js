@@ -72,15 +72,14 @@ export const checkAccountComplete = (accountRole, urlBase) => async (request, h)
   const { applicationId } = await request.cache().getData()
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   if (account) {
+    if (!account?.contactDetails?.email) {
+      return h.redirect(urlBase.EMAIL.uri)
+    }
     if (!account.address) {
-      if (!account?.contactDetails?.email) {
-        return h.redirect(urlBase.EMAIL.uri)
-      }
-      if (!account.address) {
-        return h.redirect(urlBase.POSTCODE.uri)
-      }
+      return h.redirect(urlBase.POSTCODE.uri)
     }
   }
+
   return null
 }
 

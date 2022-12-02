@@ -1,1 +1,2 @@
-module.exports = __dirname
+const { version } = require('./package.json')
+module.exports = { __dirname, version }

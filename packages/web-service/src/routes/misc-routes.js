@@ -3,7 +3,7 @@ import createApplication from '../handlers/create-application.js'
 import removeUpload from '../handlers/remove-uploaded-file.js'
 
 import path from 'path'
-import __dirname from '../../dirname.cjs'
+import { __dirname } from '../../dirname.cjs'
 import { APIRequests } from '../services/api-requests.js'
 
 const routes = [
