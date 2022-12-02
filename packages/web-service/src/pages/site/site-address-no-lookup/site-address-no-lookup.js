@@ -27,7 +27,9 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => await siteAddressCompletion(request)
+export const completion = async request => {
+  return await siteAddressCompletion(request)
+}
 
 export default pageRoute({
   page: siteURIs.ADDRESS_NO_LOOKUP.page,
