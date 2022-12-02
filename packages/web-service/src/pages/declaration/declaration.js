@@ -17,7 +17,7 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  const totalSections = Object.keys(SECTION_TASKS).length - 2 // TEMP TODO
+  const totalSections = Object.keys(SECTION_TASKS).length - 3 // TEMP
   const totalCompletedSections = await countCompleteSections(journeyData.applicationId)
 
   if (totalCompletedSections.length < totalSections) {
