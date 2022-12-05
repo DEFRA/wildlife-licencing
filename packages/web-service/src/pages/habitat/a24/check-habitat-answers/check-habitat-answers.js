@@ -36,11 +36,7 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  const redirectUrl = await checkApplication(request)
-
-  if (redirectUrl) {
-    return redirectUrl
-  }
+  await checkApplication(request, h)
 
   // Ensure if a user just deleted their only sett, we take them back to /tasklist
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)

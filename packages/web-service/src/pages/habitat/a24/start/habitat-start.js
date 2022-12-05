@@ -13,11 +13,7 @@ export const getData = async request => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  const redirectUrl = await checkApplication(request)
-
-  if (redirectUrl) {
-    return redirectUrl
-  }
+  await checkApplication(request, h)
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)

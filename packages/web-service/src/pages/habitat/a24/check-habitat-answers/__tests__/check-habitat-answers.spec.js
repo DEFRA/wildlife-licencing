@@ -376,19 +376,19 @@ describe('The check habitat answers page', () => {
       expect(await checkData(request)).toBe(undefined)
     })
 
-    it('will return applications uri  if the user has not got an application id', async () => {
+    it('will redirect to the application uri if the user has not got an application id', async () => {
+      const redirectMock = jest.fn()
       const request = {
         cache: () => ({
           getData: () => ({})
         })
       }
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        }
-      }))
+      const h = {
+        redirect: redirectMock
+      }
       const { checkData } = await import('../check-habitat-answers.js')
-      expect(await checkData(request)).toBe('/applications')
+      await checkData(request, h)
+      expect(redirectMock).toHaveBeenCalledWith('/applications')
     })
   })
 })
