@@ -2517,6 +2517,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/application-sites/sites':
+    get:
+      description: Get all the application/sites created by a user
+      summary: User applications sites helper
+      operationId: userSitesHelper
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userSitesHelper'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
 ################################################################################################
 # Option sets
 ################################################################################################
@@ -2965,7 +2994,7 @@ components:
         name:
           type: string
           minLength: 1
-          maxLength: 36
+          maxLength: 100
         address:
           $ref: '#/components/schemas/address'
         gridReference:
@@ -3045,6 +3074,20 @@ components:
             $ref: '#/components/schemas/accountRoles'
           submitted:
             $ref: '#/components/schemas/timestamp'
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
+
+    userSitesHelper:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/uuid'
+          name:
+            type: string
+          applicationId:
+            $ref: '#/components/schemas/uuid'
           updatedAt:
             $ref: '#/components/schemas/timestamp'
 

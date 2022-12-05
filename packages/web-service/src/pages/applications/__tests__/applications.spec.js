@@ -14,6 +14,9 @@ describe('applications page', () => {
       return {
         tagStatus,
         APIRequests: {
+          SITE: {
+            getApplicationSitesByUserId: jest.fn(() => [])
+          },
           APPLICATION: {
             tags: () => {
               return {
@@ -55,6 +58,9 @@ describe('applications page', () => {
     const mockGetTags = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
+        SITE: {
+          getApplicationSitesByUserId: jest.fn()
+        },
         APPLICATION: {
           tags: () => {
             return {

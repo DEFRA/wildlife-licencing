@@ -39,7 +39,9 @@ export const getData = async request => {
   await request.cache().setData(Object.assign(journeyData, { applicationId }))
   const application = await APIRequests.APPLICATION.getById(applicationId)
   const applicationType = findApplicationType(application)
-  Object.assign(application, { applicationType })
+  const sites = await APIRequests.SITE.findByApplicationId(applicationId)
+  const name = sites.length ? sites[0].name : ''
+  Object.assign(application, { applicationType, name })
   Object.assign(application, { submitted: timestampFormatter(application?.submitted) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
   const licences = await APIRequests.LICENCES.findByApplicationId(application.id)

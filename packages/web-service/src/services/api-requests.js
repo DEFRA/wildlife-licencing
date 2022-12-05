@@ -32,7 +32,8 @@ export const apiUrls = {
   SITE: '/site',
   SITES: '/sites',
   APPLICATION_SITE: '/application-site',
-  APPLICATION_SITES: '/application-sites'
+  APPLICATION_SITES: '/application-sites',
+  APPLICATION_SITES_SITES: '/application-sites/sites'
 }
 
 // These states are common goverment pattern states, and are mirrored in /applications-text.njk
