@@ -4,6 +4,7 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
+import { gridReferenceRegex } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { getGridReferenceProximity } from './grid-reference-proximity.js'
 
@@ -29,7 +30,7 @@ export const completion = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const { siteData, applicationId } = journeyData
+  const { applicationId } = journeyData
 
   const gridReference = pageData.payload['site-grid-ref']
   const site = await APIRequests.SITE.findByApplicationId(applicationId)
@@ -39,7 +40,7 @@ export const setData = async request => {
   }
   const payload = { ...siteInfo, gridReference }
   await APIRequests.SITE.update(siteInfo.id, payload)
-  journeyData.siteData = { ...siteData, gridReference }
+  journeyData.siteData = { ...siteInfo, gridReference }
   await request.cache().setData(journeyData)
 }
 
@@ -60,7 +61,7 @@ export default pageRoute({
   uri: siteURIs.SITE_GRID_REF.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'site-grid-ref': Joi.string().trim().pattern(/[a-zA-Z]{2}\d{6}/).required()
+    'site-grid-ref': Joi.string().trim().pattern(gridReferenceRegex).required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,
