@@ -262,6 +262,63 @@ describe('The site national grid reference page', () => {
     expect(await completion(request)).toBe('/site-check')
   })
 
+  it('should redirect user to site address and grid reference mismatch, when the entered site grid reference is invalid', async () => {
+    const result = {
+      siteData: {
+        id: '12345',
+        address: {
+          subBuildingName: 'site street',
+          buildingName: 'jubilee',
+          buildingNumber: '123',
+          street: 'site street',
+          town: 'Peckham',
+          county: 'kent',
+          postcode: 'SW1W 0NY',
+          xCoordinate: '123567',
+          yCoordinate: '145345'
+        },
+        name: 'site-name',
+        gridReference: 'HH123123',
+        siteMapFiles: {
+          activity: 'site.pdf',
+          mitigationsDuringDevelopment: 'demo.jpg',
+          mitigationsAfterDevelopment: 'site-after-development.shape'
+        }
+      },
+      applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+    }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          getSiteById: () => (result.siteData)
+        },
+        APPLICATION: {
+          tags: () => {
+            return {
+              get: () => false,
+              set: () => false
+            }
+          }
+        }
+      }
+    }))
+    const { completion } = await import('../site-grid-ref.js')
+    const request = {
+      payload: {
+        name: 'site-name',
+        address: 'address',
+        gridReference: 'NY123456'
+      },
+      cache: () => ({
+        getData: () => (result)
+      })
+    }
+    expect(await completion(request)).toBe('/site-check')
+  })
+
   it('should redirect user to check your answers page, when the site address and grid reference match', async () => {
     const result = {
       siteData: {

@@ -16,11 +16,10 @@ export const completion = async request => {
   const { address, gridReference } = site
   const { xCoordinate, yCoordinate } = address
   const proximity = getGridReferenceProximity(gridReference, xCoordinate, yCoordinate)
-
   //  proximity test of 10 Km since it is large enough to cover most postcodes
   const proximityFlag = proximity > 10
 
-  if (!proximityFlag) {
+  if (proximity && !proximityFlag) {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
