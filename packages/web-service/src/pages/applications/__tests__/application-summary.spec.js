@@ -106,6 +106,12 @@ describe('application-summary page', () => {
 
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
+          SITE: {
+            findByApplicationId: jest.fn(() => [{
+              id: '11de2969-91d4-48d6-a5fe-d828a244aa18',
+              name: 'Site 1'
+            }])
+          },
           APPLICATION: {
             getById: jest.fn(() => ({
               id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
@@ -142,7 +148,8 @@ describe('application-summary page', () => {
           applicationType: 'A24',
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          submitted: '10 August 2022'
+          submitted: '10 August 2022',
+          name: 'Site 1'
         },
         licences: [{
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',

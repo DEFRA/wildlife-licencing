@@ -43,6 +43,18 @@ describe('The API requests site service', () => {
       expect(result).toEqual({ siteId: 123456789 })
     })
 
+    it('getApplicationSitesByUserId calls the API correctly', async () => {
+      const mockGet = jest.fn().mockReturnValueOnce([{ name: 'Site 2' }])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.SITE.getApplicationSitesByUserId('668ee1f0-073d-480c-a802-59db362897e6')
+      expect(mockGet).toHaveBeenCalledWith('/application-sites/sites', 'userId=668ee1f0-073d-480c-a802-59db362897e6')
+    })
+
     it('update calls the API correctly', async () => {
       const mockPut = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({

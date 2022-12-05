@@ -11,15 +11,21 @@ const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
   .map(([k, v]) => ({ [v]: k }))
   .reduce((p, c) => ({ ...p, ...c }))
 
-const sortApplications = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+const sorter = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 
 const eligibilityCheckFilter = application => application.applicationTags &&
   application.applicationTags.find(t => t.tag === SECTION_TASKS.ELIGIBILITY_CHECK && t.tagState === tagStatus.COMPLETE)
+
+export const addSiteName = (userApplicationSites, applicationId) => {
+  const [site] = userApplicationSites.filter(uas => uas.applicationId === applicationId).sort(sorter)
+  return site
+}
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const { userId } = journeyData
   const allApplications = await APIRequests.APPLICATION.findByUser(userId)
+  const userApplicationSites = await APIRequests.SITE.getApplicationSitesByUserId(userId)
   Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())
 
   const totalSections = Object.keys(SECTION_TASKS).length
@@ -28,8 +34,9 @@ export const getData = async request => {
     ...a,
     lastSaved: timestampFormatter(a.updatedAt),
     submitted: timestampFormatter(a?.submitted),
+    site: addSiteName(userApplicationSites, a.id),
     completed: a?.applicationTags.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
-  })).sort(sortApplications)
+  })).sort(sorter)
 
   return {
     totalSections,

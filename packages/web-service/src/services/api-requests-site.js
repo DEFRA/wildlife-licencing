@@ -28,6 +28,14 @@ export const SITE = {
     `Error getting site by id: ${siteId}}`,
     500
   ),
+  getApplicationSitesByUserId: async userId => apiRequestsWrapper(
+    async () => {
+      debug(`Getting application-sites site by user id: ${userId}`)
+      return API.get(`${apiUrls.APPLICATION_SITES_SITES}`, `userId=${userId}`)
+    },
+      `Error getting application-sites site by id: ${userId}}`,
+      500
+  ),
   findByApplicationId: async applicationId => apiRequestsWrapper(
     async () => {
       const applicationSites = await API.get(`${apiUrls.APPLICATION_SITES}`, `applicationId=${applicationId}`)
