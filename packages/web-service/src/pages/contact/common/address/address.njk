@@ -16,7 +16,7 @@
 %}
 
 {% set items = [] %}
-{{ items.push({ value: 'top', text: data.addressLookup.length + ' addresses found' } if (data.addressLookup.length) else { value: 'top', text: '0 address found' }) }}
+{{ items.push({ value: 'top', text: data.addressLookup.length + ' addresses found' }) }}
 {% for a in data.addressLookup %}
     {{ items.push({ value: a.Address.UPRN, text: a.Address.AddressLine }) }}
 {% endfor %}
