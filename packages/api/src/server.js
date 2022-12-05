@@ -71,7 +71,8 @@ import {
   postSite,
   putSite,
   deleteSite,
-  getSites
+  getSites,
+  userSitesHelper
 } from './handlers/site/site.js'
 
 import {
@@ -182,6 +183,7 @@ const handlers = {
   postSite,
   putSite,
   deleteSite,
+  userSitesHelper,
 
   // Application handlers
   getApplicationByApplicationId,

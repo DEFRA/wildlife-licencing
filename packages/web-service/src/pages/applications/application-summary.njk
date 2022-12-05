@@ -11,6 +11,7 @@
         { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
         { key: { text: "Type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
         { key: { text: "Reference" }, value: { text: data.application.applicationReferenceNumber } },
+        { key: { text: "Site" }, value: { text: data.application.name } },
         { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } }
     ]
 %}

@@ -32,6 +32,14 @@ export const SITE = {
       500
     )
   },
+  getApplicationSitesByUserId: async userId => apiRequestsWrapper(
+    async () => {
+      debug(`Getting application-sites site by user id: ${userId}`)
+      return API.get(`${apiUrls.APPLICATION_SITES_SITES}`, `userId=${userId}`)
+    },
+      `Error getting application-sites site by id: ${userId}}`,
+      500
+  ),
   findByApplicationId: async applicationId => {
     return apiRequestsWrapper(
       async () => {

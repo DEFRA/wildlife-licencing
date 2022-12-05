@@ -75,7 +75,7 @@
     <div hidden>
         {{ tableRows.push([
             { html: applicationReferenceHtml(application) },
-            { html: '<p>&nbsp<p/>' },
+            { html: '<p>' + application.site.name if application.site.name else '&nbsp' + '<p/>' },
             { html: lastSavedHtml(application) },
             { html: statusHtml(application), classes: "govuk-!-text-align-right" }])
          }}
