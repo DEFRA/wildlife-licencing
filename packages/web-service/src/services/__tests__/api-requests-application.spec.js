@@ -20,18 +20,6 @@ describe('The API requests application service', () => {
       })
     })
 
-    it('create rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.create('fred.flintstone@email.co.uk'))
-        .rejects.toThrowError()
-    })
-
     it('initialize calls the API connector correctly where no association exists', async () => {
       const mockPost = jest.fn(() => ({
         id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
@@ -163,19 +151,6 @@ describe('The API requests application service', () => {
       })
     })
 
-    it('initialize rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
-        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1'))
-        .rejects.toThrowError()
-    })
-
     it('findByUser calls the API correctly', async () => {
       const mockGet = jest.fn(() => [{ foo: 'bar' }])
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -187,18 +162,6 @@ describe('The API requests application service', () => {
       const result = await APIRequests.APPLICATION.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(mockGet).toHaveBeenCalledWith('/applications', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3')
       expect(result).toEqual([{ foo: 'bar' }])
-    })
-
-    it('findByUser rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.findByUser('b306c67f-f5cd-4e69-9986-8390188051b3'))
-        .rejects.toThrowError()
     })
 
     it('getById calls the API correctly', async () => {
@@ -214,18 +177,6 @@ describe('The API requests application service', () => {
       expect(result).toEqual([{ foo: 'bar' }])
     })
 
-    it('getById rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
-        .rejects.toThrowError()
-    })
-
     it('findRoles calls the API correctly', async () => {
       const mockGet = jest.fn(() => ['USER'])
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -238,18 +189,6 @@ describe('The API requests application service', () => {
       expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=9913c6c2-1cdf-4582-a591-92c058d0e07d&applicationId=USER')
     })
 
-    it('findRoles rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.findRoles('9913c6c2-1cdf-4582-a591-92c058d0e07d', 'USER'))
-        .rejects.toThrowError()
-    })
-
     it('submit calls the API correctly', async () => {
       const mockSubmit = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -260,18 +199,6 @@ describe('The API requests application service', () => {
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.APPLICATION.submit('9913c6c2-1cdf-4582-a591-92c058d0e07d')
       expect(mockSubmit).toHaveBeenCalledWith('/application/9913c6c2-1cdf-4582-a591-92c058d0e07d/submit')
-    })
-
-    it('submit rethrows an error', async () => {
-      const mockSubmit = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          post: mockSubmit
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.APPLICATION.submit('b306c67f-f5cd-4e69-9986-8390188051b3', '9913c6c2-1cdf-4582-a591-92c058d0e07d'))
-        .rejects.toThrowError()
     })
 
     describe('the tag functions', () => {
@@ -316,18 +243,6 @@ describe('The API requests application service', () => {
         expect(mockPut).not.toHaveBeenCalledWith()
       })
 
-      it('the set tag function rethrows an error', async () => {
-        const mockSet = jest.fn(() => { throw new Error() })
-        jest.doMock('@defra/wls-connectors-lib', () => ({
-          API: {
-            set: mockSet
-          }
-        }))
-        const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }))
-          .rejects.toThrowError()
-      })
-
       it('the get tag function calls the the API correctly if the tags present', async () => {
         const mockGet = jest.fn(() => (
           {
@@ -365,18 +280,6 @@ describe('The API requests application service', () => {
         const { APIRequests } = await import('../api-requests.js')
         const result = await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('missingSTRING')
         expect(result).toEqual('not-started')
-      })
-
-      it('the get tag function rethrows an error', async () => {
-        const mockGet = jest.fn(() => { throw new Error() })
-        jest.doMock('@defra/wls-connectors-lib', () => ({
-          API: {
-            get: mockGet
-          }
-        }))
-        const { APIRequests } = await import('../api-requests.js')
-        await expect(() => APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').get('tsg-2'))
-          .rejects.toThrowError()
       })
 
       it('the set tag function calls the the API correctly if tag present', async () => {

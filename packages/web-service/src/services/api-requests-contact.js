@@ -137,58 +137,48 @@ const findContactByUser = async (role, userId) => {
 
 export const CONTACT = {
   findAllByUser: async userId => findContactByUser(null, userId),
-  findAllContactApplicationRolesByUser: async userId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Get contact-application-contacts by userId: ${userId}`)
-        return API.get(`${apiUrls.APPLICATION_CONTACTS_CONTACTS}`, `userId=${userId}`)
-      },
-      `Error getting contact-application-contacts by userId: ${userId}`,
-      500
-    )
-  },
-  getById: async contactId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Get contact by id: ${contactId}`)
-        return API.get(`${apiUrls.CONTACT}/${contactId}`)
-      },
-      `Error getting contact by id: ${contactId}`,
-      500
-    )
-  },
-  getApplicationContacts: async contactId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Fetching the contact for contactId: ${contactId}`)
-        return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
-      },
-      `Error fetching the contact for contactId: ${contactId}`,
-      500
-    )
-  },
-  update: async (contactId, payload) => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Updating the contact for contactId: ${contactId}`)
-        return API.put(`${apiUrls.CONTACT}/${contactId}`, payload)
-      },
-      `Error updating the contact for contactId: ${contactId}`,
-      500
-    )
-  },
-  destroy: async contactId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Delete contact by id: ${contactId}`)
-        return API.delete(`${apiUrls.CONTACT}/${contactId}`)
-      },
-      `Error deleting contact by id: ${contactId}`,
-      500
-    )
-  },
-  isImmutable: async (applicationId, contactId) => {
-    return apiRequestsWrapper(async () => {
+  findAllContactApplicationRolesByUser: async userId => apiRequestsWrapper(
+    async () => {
+      debug(`Get contact-application-contacts by userId: ${userId}`)
+      return API.get(`${apiUrls.APPLICATION_CONTACTS_CONTACTS}`, `userId=${userId}`)
+    },
+    `Error getting contact-application-contacts by userId: ${userId}`,
+    500
+  ),
+  getById: async contactId => apiRequestsWrapper(
+    async () => {
+      debug(`Get contact by id: ${contactId}`)
+      return API.get(`${apiUrls.CONTACT}/${contactId}`)
+    },
+    `Error getting contact by id: ${contactId}`,
+    500
+  ),
+  getApplicationContacts: async contactId => apiRequestsWrapper(
+    async () => {
+      debug(`Fetching the contact for contactId: ${contactId}`)
+      return API.get(apiUrls.APPLICATION_CONTACTS, `contactId=${contactId}`)
+    },
+    `Error fetching the contact for contactId: ${contactId}`,
+    500
+  ),
+  update: async (contactId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Updating the contact for contactId: ${contactId}`)
+      return API.put(`${apiUrls.CONTACT}/${contactId}`, payload)
+    },
+    `Error updating the contact for contactId: ${contactId}`,
+    500
+  ),
+  destroy: async contactId => apiRequestsWrapper(
+    async () => {
+      debug(`Delete contact by id: ${contactId}`)
+      return API.delete(`${apiUrls.CONTACT}/${contactId}`)
+    },
+    `Error deleting contact by id: ${contactId}`,
+    500
+  ),
+  isImmutable: async (applicationId, contactId) => apiRequestsWrapper(
+    async () => {
       const contact = await API.get(`${apiUrls.CONTACT}/${contactId}`)
       if (contact.submitted) {
         return true
@@ -206,9 +196,10 @@ export const CONTACT = {
           return !!applicationContacts.find(ac => ac.applicationId !== applicationId) || rolesOnCurrent.size > 1
         }
       }
-    }, `Error determining immutable for contact by id: ${contactId}`,
-    500)
-  },
+    },
+    `Error determining immutable for contact by id: ${contactId}`,
+    500
+  ),
   role: contactRole => {
     if (!Object.values(ContactRoles).find(k => k === contactRole)) {
       throw new Error(`Unknown contact role: ${contactRole}`)
