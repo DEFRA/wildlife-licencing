@@ -16,17 +16,5 @@ describe('The API requests licence service', () => {
       await APIRequests.LICENCES.findByApplicationId('9d62e5b8-9c77-ec11-8d21-000d3a87431b')
       expect(mockGet).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/licences')
     })
-
-    it('findByApplicationId rethrows an error', async () => {
-      const mockGet = jest.fn(() => { throw new Error() })
-      jest.doMock('@defra/wls-connectors-lib', () => ({
-        API: {
-          get: mockGet
-        }
-      }))
-      const { APIRequests } = await import('../api-requests.js')
-      await expect(() => APIRequests.LICENCES.findByApplicationId('9d62e5b8-9c77-ec11-8d21-000d3a87431b'))
-        .rejects.toThrowError()
-    })
   })
 })
