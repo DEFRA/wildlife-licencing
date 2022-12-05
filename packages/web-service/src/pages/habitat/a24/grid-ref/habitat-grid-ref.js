@@ -5,7 +5,7 @@ import { habitatURIs } from '../../../../uris.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { gridReferenceRegex } from '../../../common/common.js'
 

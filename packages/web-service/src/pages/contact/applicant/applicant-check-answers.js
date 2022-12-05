@@ -4,7 +4,9 @@ import { checkAnswersPage } from '../../common/check-answers.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
-import { checkAccountComplete, checkHasApplication, checkHasContact } from '../common/common-handler.js'
+import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
+
 const { CHECK_ANSWERS, USER } = contactURIs.APPLICANT
 
 export const getData = async request => {
@@ -21,7 +23,7 @@ export const completion = async request => {
 
 export const applicantCheckAnswers = checkAnswersPage({
   checkData: [
-    checkHasApplication,
+    checkApplication,
     checkHasContact(ContactRoles.APPLICANT, USER),
     checkAccountComplete(AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
   ],

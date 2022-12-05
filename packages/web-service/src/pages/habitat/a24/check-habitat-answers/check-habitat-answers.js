@@ -4,7 +4,7 @@ import { habitatURIs, TASKLIST } from '../../../../uris.js'
 import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },

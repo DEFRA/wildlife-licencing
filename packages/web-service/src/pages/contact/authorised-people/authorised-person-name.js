@@ -5,7 +5,7 @@ import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { contactOperationsForContact } from '../common/operations.js'
-import { checkHasApplication } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
 const { NAME } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
@@ -40,7 +40,7 @@ export const getData = async request => {
 export const authorisedPersonName = contactNamePage({
   page: NAME.page,
   uri: NAME.uri,
-  checkData: checkHasApplication,
+  checkData: checkApplication,
   setData: setData,
   getData: getData,
   completion: getAuthorisedPeopleCompletion

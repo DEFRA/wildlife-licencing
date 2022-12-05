@@ -5,11 +5,11 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { addressLine } from '../../service/address.js'
-import { checkHasApplication } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
-  const ck = await checkHasApplication(request, h)
+  const ck = await checkApplication(request, h)
   if (ck) {
     return ck
   }

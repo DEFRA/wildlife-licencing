@@ -6,8 +6,9 @@ import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { accountOperations, contactOperations } from '../common/operations.js'
-import { canBeUser, checkHasApplication } from '../common/common-handler.js'
+import { canBeUser } from '../common/common-handler.js'
 import { hasContactCandidates } from '../common/common.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES, NAME } = contactURIs.INVOICE_PAYER
 
@@ -107,7 +108,7 @@ export const completion = async request => {
 export const invoiceResponsible = pageRoute({
   page: RESPONSIBLE.page,
   uri: RESPONSIBLE.uri,
-  checkData: [checkHasApplication, checkData],
+  checkData: [checkApplication, checkData],
   validator: Joi.object({
     responsible: Joi.any().valid('applicant', 'ecologist', 'other').required()
   }).options({ abortEarly: false, allowUnknown: true }),

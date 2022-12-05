@@ -1,33 +1,7 @@
-import { APPLICATIONS, contactURIs } from '../../../../uris.js'
+import { contactURIs } from '../../../../uris.js'
 
 describe('contact common handler functions', () => {
   beforeEach(() => jest.resetModules())
-
-  describe('checkHasApplication', () => {
-    it('returns redirect to the application page if applicationId is not set', async () => {
-      const { checkHasApplication } = await import('../common-handler.js')
-      const request = {
-        cache: () => ({ getData: jest.fn(() => ({})) })
-      }
-      const mockRedirect = jest.fn(() => 'redirect')
-      const h = {
-        redirect: mockRedirect
-      }
-      const result = await checkHasApplication(request, h)
-      expect(result).toEqual('redirect')
-      expect(mockRedirect).toHaveBeenCalledWith(APPLICATIONS.uri)
-    })
-
-    it('returns null if applicationId is set', async () => {
-      const { checkHasApplication } = await import('../common-handler.js')
-      const request = {
-        cache: () => ({ getData: jest.fn(() => ({ applicationId: '64154be7-35d3-480b-ae97-38331605bf28' })) })
-      }
-      const h = {}
-      const result = await checkHasApplication(request, h)
-      expect(result).toBeNull()
-    })
-  })
 
   describe('checkHasContact', () => {
     it('returns null if a contact name is set', async () => {
