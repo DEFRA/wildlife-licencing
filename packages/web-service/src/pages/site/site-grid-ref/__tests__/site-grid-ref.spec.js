@@ -1,6 +1,45 @@
 describe('The site national grid reference page', () => {
   beforeEach(() => jest.resetModules())
 
+  it('should throw an error for an empty grid reference', async () => {
+    try {
+      const payload = { 'site-grid-ref': '' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: You have not entered a grid reference')
+    }
+  })
+
+  it('should throw an error for an incorrect grid reference format', async () => {
+    try {
+      const payload = { 'site-grid-ref': 'N123456' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: The grid reference you have entered is not in the right format')
+    }
+  })
+
+  it('should throw an error for a grid reference that does not exist', async () => {
+    try {
+      const payload = { 'site-grid-ref': 'hh123456' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: The reference you have entered is not an existing grid reference')
+    }
+  })
+
+  it('should not throw an error for a valid grid reference that exist', async () => {
+    const payload = { 'site-grid-ref': 'NY395557' }
+    const { validator } = await import('../site-grid-ref.js')
+    expect(await validator(payload)).toBeUndefined()
+  })
+
   it('getData returns the correct object', async () => {
     const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({

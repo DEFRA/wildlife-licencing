@@ -4,8 +4,9 @@
 
 {% set errorMap = {
         'site-grid-ref': {
-          'string.empty': { ref: '#site-grid-ref', text: 'You have not entered a grid reference' },
-          'string.pattern.base': { ref: '#site-grid-ref', text: 'A grid reference must be 2 letters, followed by 6 numbers' }
+          'no-grid-reference': { ref: '#site-grid-ref', text: 'You have not entered a grid reference' },
+          'grid-reference-wrong-format': { ref: '#site-grid-ref', text: 'The grid reference you have entered is not in the right format' },
+          'grid-reference-do-not-exist': { ref: '#site-grid-ref', text: 'The reference you have entered is not an existing grid reference' }
         }
     }
 %}

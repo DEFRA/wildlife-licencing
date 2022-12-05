@@ -4,9 +4,51 @@ import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
-import { gridReferenceRegex } from '../../common/common.js'
+import { gridReferenceFormatRegex, gridReferenceValidRegex } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { getGridReferenceProximity } from './grid-reference-proximity.js'
+
+const siteGridReference = 'site-grid-ref'
+export const validator = async payload => {
+  if (!payload[siteGridReference]) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: You have not entered a grid reference',
+      path: [siteGridReference],
+      type: 'no-grid-reference',
+      context: {
+        label: siteGridReference,
+        value: 'Error',
+        key: siteGridReference
+      }
+    }], null)
+  }
+
+  if (payload[siteGridReference] && !payload[siteGridReference].match(gridReferenceFormatRegex)) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: The grid reference you have entered is not in the right format',
+      path: [siteGridReference],
+      type: 'grid-reference-wrong-format',
+      context: {
+        label: siteGridReference,
+        value: 'Error',
+        key: siteGridReference
+      }
+    }], null)
+  }
+
+  if (payload[siteGridReference] && !payload[siteGridReference].match(gridReferenceValidRegex)) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: The reference you have entered is not an existing grid reference',
+      path: [siteGridReference],
+      type: 'grid-reference-do-not-exist',
+      context: {
+        label: siteGridReference,
+        value: 'Error',
+        key: siteGridReference
+      }
+    }], null)
+  }
+}
 
 export const completion = async request => {
   const { applicationId, siteData } = await request.cache().getData()
@@ -59,9 +101,7 @@ export default pageRoute({
   page: siteURIs.SITE_GRID_REF.page,
   uri: siteURIs.SITE_GRID_REF.uri,
   checkData: checkApplication,
-  validator: Joi.object({
-    'site-grid-ref': Joi.string().trim().pattern(gridReferenceRegex).required()
-  }).options({ abortEarly: false, allowUnknown: true }),
+  validator,
   getData,
   setData,
   completion
