@@ -35,6 +35,59 @@ describe('The check habitat answers page', () => {
       expect(setTagsMock).toHaveBeenCalledTimes(1)
     })
 
+    it('if the user clicks "yes" to add a new sett, we should clear the journeyData for the new sett addition', async () => {
+      const setData = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { set: jest.fn() }
+            }
+          }
+        })
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({
+              applicationId: '123abc',
+              habitatData: {
+                name: 'pool party',
+                applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
+                settType: 100000002,
+                willReopen: true,
+                numberOfEntrances: 54,
+                numberOfActiveEntrances: 23,
+                active: true,
+                gridReference: 'NY574735',
+                workStart: '11-03-2222',
+                workEnd: '11-30-3001',
+                methodIds: [100000010, 100000011],
+                speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+                activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24'
+              }
+            }),
+            getPageData: () => ({
+              payload: {
+                'additional-sett': 'yes'
+              }
+            }),
+            setData: setData
+          }
+        }
+      }
+      const { completion } = await import('../check-habitat-answers.js')
+      const result = await completion(request)
+      expect(result).toBe('/habitat-name')
+      expect(setData).toHaveBeenCalledWith({
+        applicationId: '123abc'
+      })
+    })
+
     it('the check-habitat-answers page forwards onto the habitat-name page if additional setts required', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -260,57 +313,7 @@ describe('The check habitat answers page', () => {
       expect(await checkData(request)).toBe(undefined)
     })
 
-    it('checks the journeyData object length and returns tasklist URL if incorrect', async () => {
-      const h = {
-        redirect: jest.fn()
-      }
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
-            habitatData: {
-              name: 'pool party',
-              applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
-              settType: 100000002,
-              willReopen: true,
-              numberOfEntrances: 54,
-              numberOfActiveEntrances: 23,
-              active: true,
-              gridReference: 'NY574735',
-              workStart: '11-03-2222',
-              workEnd: '11-30-3001',
-              methodIds: [100000010, 100000011],
-              speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
-            }
-          })
-        })
-      }
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          HABITAT: {
-            getHabitatsById: jest.fn()
-          }
-        }
-      }))
-      const { checkData } = await import('../check-habitat-answers.js')
-      await checkData(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
-    })
-
-    it('should checks the journeyData object length and returns tasklist URL if it is empty', async () => {
-      jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          HABITAT: {
-            getHabitatsById: jest.fn()
-          }
-        }
-      }))
+    it('checks at least one sett has been sucessfully created, and returns tasklist URL if incorrect', async () => {
       const h = {
         redirect: jest.fn()
       }
@@ -321,9 +324,56 @@ describe('The check habitat answers page', () => {
           })
         })
       }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: () => []
+          }
+        }
+      }))
       const { checkData } = await import('../check-habitat-answers.js')
       await checkData(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('if one sett had been sucessfully created, it returns undefined', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f'
+          })
+        })
+      }
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          HABITAT: {
+            getHabitatsById: () => [
+              {
+                name: 'pool party',
+                applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
+                settType: 100000002,
+                willReopen: true,
+                numberOfEntrances: 54,
+                numberOfActiveEntrances: 23,
+                active: true,
+                gridReference: 'NY574735',
+                workStart: '11-03-2222',
+                workEnd: '11-30-3001',
+                methodIds: [100000010, 100000011],
+                speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+              }
+            ]
+          }
+        }
+      }))
+      const { checkData } = await import('../check-habitat-answers.js')
+      expect(await checkData(request)).toBe(undefined)
     })
 
     it('will return applications uri  if the user has not got an application id', async () => {

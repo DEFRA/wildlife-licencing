@@ -46,9 +46,10 @@ export const checkData = async (request, h) => {
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
   // Ensure the object is populated with the correct (and enough) keys
-  if (Object.keys(journeyData?.habitatData || {}).length < 13 || habitatSites.length === 0) {
+  if (habitatSites.length === 0) {
     return h.redirect(TASKLIST.uri)
   }
+
   return undefined
 }
 
@@ -93,6 +94,9 @@ export const completion = async request => {
 
   if (pageData.payload[addSett] === 'yes') {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
+    delete journeyData.habitatData
+    await request.cache().setData(journeyData)
+
     return habitatURIs.NAME.uri
   } else if (pageData.payload[addSett] === 'no') {
     // Mark the journey as complete if the user clicks "No" to adding any final setts
