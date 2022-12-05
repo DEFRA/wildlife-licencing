@@ -262,7 +262,7 @@ describe('The site national grid reference page', () => {
     expect(await completion(request)).toBe('/site-check')
   })
 
-  it('should redirect user to site address and grid reference mismatch, when the entered site grid reference is invalid', async () => {
+  it('should redirect user to site address and grid reference mismatch, when the proximity distance is undefined', async () => {
     const result = {
       siteData: {
         id: '12345',
