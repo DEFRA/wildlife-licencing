@@ -124,46 +124,38 @@ const unLinkAccount = async (accountRole, applicationId, accountId) => {
 }
 
 export const ACCOUNT = {
-  findAllAccountApplicationRolesByUser: async userId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Get account-application-accounts by userId: ${userId}`)
-        return API.get(`${apiUrls.APPLICATION_ACCOUNTS_ACCOUNTS}`, `userId=${userId}`)
-      },
-      `Error getting account-application-accounts by userId: ${userId}`,
-      500
-    )
-  },
-  getById: async accountId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Get account by id: ${accountId}`)
-        return API.get(`${apiUrls.ACCOUNT}/${accountId}`)
-      },
-      `Error getting account by id: ${accountId}`,
-      500
-    )
-  },
-  update: async (accountId, payload) => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Updating the account for contactId: ${accountId}`)
-        return API.put(`${apiUrls.ACCOUNT}/${accountId}`, payload)
-      },
-      `Error updating the contact for contactId: ${accountId}`,
-      500
-    )
-  },
-  destroy: async accountId => {
-    return apiRequestsWrapper(
-      async () => {
-        debug(`Delete account by id: ${accountId}`)
-        return API.delete(`${apiUrls.ACCOUNT}/${accountId}`)
-      },
-      `Error deleting account by id: ${accountId}`,
-      500
-    )
-  },
+  findAllAccountApplicationRolesByUser: async userId => apiRequestsWrapper(
+    async () => {
+      debug(`Get account-application-accounts by userId: ${userId}`)
+      return API.get(`${apiUrls.APPLICATION_ACCOUNTS_ACCOUNTS}`, `userId=${userId}`)
+    },
+    `Error getting account-application-accounts by userId: ${userId}`,
+    500
+  ),
+  getById: async accountId => apiRequestsWrapper(
+    async () => {
+      debug(`Get account by id: ${accountId}`)
+      return API.get(`${apiUrls.ACCOUNT}/${accountId}`)
+    },
+    `Error getting account by id: ${accountId}`,
+    500
+  ),
+  update: async (accountId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Updating the account for contactId: ${accountId}`)
+      return API.put(`${apiUrls.ACCOUNT}/${accountId}`, payload)
+    },
+    `Error updating the contact for contactId: ${accountId}`,
+    500
+  ),
+  destroy: async accountId => apiRequestsWrapper(
+    async () => {
+      debug(`Delete account by id: ${accountId}`)
+      return API.delete(`${apiUrls.ACCOUNT}/${accountId}`)
+    },
+    `Error deleting account by id: ${accountId}`,
+    500
+  ),
   isImmutable: async (applicationId, accountId) => {
     const account = await API.get(`${apiUrls.ACCOUNT}/${accountId}`)
     if (account.submitted) {

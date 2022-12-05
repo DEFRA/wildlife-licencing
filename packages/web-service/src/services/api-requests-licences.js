@@ -5,15 +5,13 @@ import db from 'debug'
 const debug = db('web-service:api-requests')
 
 export const LICENCES = {
-  findByApplicationId: async applicationId => {
-    return apiRequestsWrapper(
-      async () => {
-        const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/licences`)
-        debug(`Found licences for ${JSON.stringify(applicationId)}`)
-        return licences
-      },
-      `Error getting licences for ${applicationId}`,
-      500
-    )
-  }
+  findByApplicationId: async applicationId => apiRequestsWrapper(
+    async () => {
+      const licences = await API.get(`${apiUrls.APPLICATION}/${applicationId}/licences`)
+      debug(`Found licences for ${JSON.stringify(applicationId)}`)
+      return licences
+    },
+    `Error getting licences for ${applicationId}`,
+    500
+  )
 }
