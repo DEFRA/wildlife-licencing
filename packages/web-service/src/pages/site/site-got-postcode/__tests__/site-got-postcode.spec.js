@@ -121,10 +121,25 @@ describe('site-got-postcode page handler', () => {
             'site-postcode-check': 'no'
           }
         }),
-        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
+        getData: jest.fn(() => ({ applicationId: '739f4e35' }))
       })
     }
     expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
+  })
+
+  it('should redirect user to site-address-no-lookup page, when the postcode lookup do not match an address', async () => {
+    const { completion } = await import('../site-got-postcode.js')
+    const request = {
+      cache: () => ({
+        getPageData: () => ({
+          payload: {
+            'site-postcode-check': 'yes'
+          }
+        }),
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B1 9ZZ' } }))
+      })
+    }
+    expect(await completion(request)).toBe('/site-address-no-lookup')
   })
 
   it('should redirect user to select-address page, when the site does has a postcode', async () => {
@@ -136,7 +151,7 @@ describe('site-got-postcode page handler', () => {
             'site-postcode-check': 'yes'
           }
         }),
-        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' } }))
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' }, addressLookup: [{ Address: { town: 'liverpool' } }] }))
       })
     }
     expect(await completion(request)).toBe('/select-address')

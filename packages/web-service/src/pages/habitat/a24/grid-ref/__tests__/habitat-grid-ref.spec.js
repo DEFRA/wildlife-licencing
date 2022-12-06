@@ -144,5 +144,44 @@ describe('The habitat grid ref page', () => {
       const { getData } = await import('../habitat-grid-ref.js')
       expect(await getData(request)).toStrictEqual({ gridReference: result.habitatData.gridReference })
     })
+
+    it('should throw an error when the user does not enter a habitat grid refernce', async () => {
+      try {
+        const payload = { 'habitat-grid-ref': '' }
+        const { validator } = await import('../habitat-grid-ref.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: You have not entered a grid reference')
+      }
+    })
+
+    it('should throw an error when the habitat grid reference is wrong', async () => {
+      try {
+        const payload = { 'habitat-grid-ref': 'N123456' }
+        const { validator } = await import('../habitat-grid-ref.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: The grid reference you have entered is not in the right format')
+      }
+    })
+
+    it('should throw an when the user enters the habitat grid reference does not exist', async () => {
+      try {
+        const payload = { 'habitat-grid-ref': 'hh123456' }
+        const { validator } = await import('../habitat-grid-ref.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: The reference you have entered is not an existing grid reference')
+      }
+    })
+
+    it('should not throw an error for a correct grid reference of the habitat', async () => {
+      const payload = { 'habitat-grid-ref': 'NY395557' }
+      const { validator } = await import('../habitat-grid-ref.js')
+      expect(await validator(payload)).toBeUndefined()
+    })
   })
 })

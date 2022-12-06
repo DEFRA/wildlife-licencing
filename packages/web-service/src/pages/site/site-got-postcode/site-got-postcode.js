@@ -53,6 +53,11 @@ export const completion = async request => {
   const pageData = await request.cache().getPageData()
   let redirectUrl = siteURIs.SELECT_ADDRESS.uri
 
+  if (!journeyData.addressLookup) {
+    delete journeyData?.siteData?.postcode
+    redirectUrl = siteURIs.ADDRESS_NO_LOOKUP.uri
+  }
+
   if (pageData?.payload[postcodeRadio] === 'no') {
     delete journeyData?.siteData?.postcode
     redirectUrl = `${siteURIs.ADDRESS_NO_LOOKUP.uri}?no-postcode=true`

@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -7,7 +6,10 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
-import { gridReferenceRegex } from '../../../common/common.js'
+import { gridReferenceValidator } from '../../../common/grid-ref-validator.js'
+
+const habitatGridReference = 'habitat-grid-ref'
+export const validator = payload => gridReferenceValidator(payload, habitatGridReference)
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -45,10 +47,8 @@ export const getData = async request => {
 export default pageRoute({
   page: habitatURIs.GRID_REF.page,
   uri: habitatURIs.GRID_REF.uri,
-  validator: Joi.object({
-    'habitat-grid-ref': Joi.string().trim().pattern(gridReferenceRegex).required()
-  }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkApplication,
+  validator,
   completion,
   getData,
   setData

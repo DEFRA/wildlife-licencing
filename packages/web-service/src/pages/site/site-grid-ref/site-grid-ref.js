@@ -1,12 +1,14 @@
-import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
-import { gridReferenceRegex } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { getGridReferenceProximity } from './grid-reference-proximity.js'
+import { gridReferenceValidator } from '../../common/grid-ref-validator.js'
+
+const siteGridReference = 'site-grid-ref'
+export const validator = payload => gridReferenceValidator(payload, siteGridReference)
 
 export const completion = async request => {
   const { applicationId, siteData } = await request.cache().getData()
@@ -16,11 +18,10 @@ export const completion = async request => {
   const { address, gridReference } = site
   const { xCoordinate, yCoordinate } = address
   const proximity = getGridReferenceProximity(gridReference, xCoordinate, yCoordinate)
-
   //  proximity test of 10 Km since it is large enough to cover most postcodes
   const proximityFlag = proximity > 10
 
-  if (!proximityFlag) {
+  if (proximity && !proximityFlag) {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
@@ -60,9 +61,7 @@ export default pageRoute({
   page: siteURIs.SITE_GRID_REF.page,
   uri: siteURIs.SITE_GRID_REF.uri,
   checkData: checkApplication,
-  validator: Joi.object({
-    'site-grid-ref': Joi.string().trim().pattern(gridReferenceRegex).required()
-  }).options({ abortEarly: false, allowUnknown: true }),
+  validator,
   getData,
   setData,
   completion

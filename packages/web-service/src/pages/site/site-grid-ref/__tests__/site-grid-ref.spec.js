@@ -1,6 +1,45 @@
 describe('The site national grid reference page', () => {
   beforeEach(() => jest.resetModules())
 
+  it('should throw an error for an empty grid reference', async () => {
+    try {
+      const payload = { 'site-grid-ref': '' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: You have not entered a grid reference')
+    }
+  })
+
+  it('should throw an error for an incorrect grid reference format', async () => {
+    try {
+      const payload = { 'site-grid-ref': 'N123456' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: The grid reference you have entered is not in the right format')
+    }
+  })
+
+  it('should throw an error for a grid reference that does not exist', async () => {
+    try {
+      const payload = { 'site-grid-ref': 'hh123456' }
+      const { validator } = await import('../site-grid-ref.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: The reference you have entered is not an existing grid reference')
+    }
+  })
+
+  it('should not throw an error for a valid grid reference that exist', async () => {
+    const payload = { 'site-grid-ref': 'NY395557' }
+    const { validator } = await import('../site-grid-ref.js')
+    expect(await validator(payload)).toBeUndefined()
+  })
+
   it('getData returns the correct object', async () => {
     const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
@@ -222,6 +261,63 @@ describe('The site national grid reference page', () => {
         },
         name: 'site-name',
         gridReference: 'NY123456',
+        siteMapFiles: {
+          activity: 'site.pdf',
+          mitigationsDuringDevelopment: 'demo.jpg',
+          mitigationsAfterDevelopment: 'site-after-development.shape'
+        }
+      },
+      applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+    }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          getSiteById: () => (result.siteData)
+        },
+        APPLICATION: {
+          tags: () => {
+            return {
+              get: () => false,
+              set: () => false
+            }
+          }
+        }
+      }
+    }))
+    const { completion } = await import('../site-grid-ref.js')
+    const request = {
+      payload: {
+        name: 'site-name',
+        address: 'address',
+        gridReference: 'NY123456'
+      },
+      cache: () => ({
+        getData: () => (result)
+      })
+    }
+    expect(await completion(request)).toBe('/site-check')
+  })
+
+  it('should redirect user to site address and grid reference mismatch, when the proximity distance is undefined', async () => {
+    const result = {
+      siteData: {
+        id: '12345',
+        address: {
+          subBuildingName: 'site street',
+          buildingName: 'jubilee',
+          buildingNumber: '123',
+          street: 'site street',
+          town: 'Peckham',
+          county: 'kent',
+          postcode: 'SW1W 0NY',
+          xCoordinate: '123567',
+          yCoordinate: '145345'
+        },
+        name: 'site-name',
+        gridReference: 'HH123123',
         siteMapFiles: {
           activity: 'site.pdf',
           mitigationsDuringDevelopment: 'demo.jpg',

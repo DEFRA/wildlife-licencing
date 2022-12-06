@@ -9,5 +9,3 @@ export const yesNoFromBool = a => {
     return a ? 'yes' : 'no'
   }
 }
-
-export const gridReferenceRegex = /^[a-zA-Z]{2}\d{6}$/
