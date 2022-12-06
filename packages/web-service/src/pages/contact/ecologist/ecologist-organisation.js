@@ -6,7 +6,8 @@ import {
 import { contactURIs } from '../../../uris.js'
 import { isOrganisation } from '../common/is-organisation/is-organisation-page.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { checkApplication, checkHasContact } from '../common/common-handler.js'
+import { checkHasContact } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { IS_ORGANISATION, USER } = contactURIs.ECOLOGIST
 

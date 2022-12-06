@@ -35,7 +35,7 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/application/${dataValues.id}`, responseBody)
+    await cache.save(`/application/${applicationId}/habitat-site/${responseBody.id}`, responseBody)
 
     return h.response(responseBody)
       .type(APPLICATION_JSON)
