@@ -1,3 +1,4 @@
+jest.spyOn(console, 'error').mockImplementation(() => null)
 
 /*
  * Mock the hapi request object
@@ -39,8 +40,9 @@ describe('The postApplicationSubmit handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     postApplicationSubmit = (await import('../post-application-submit.js')).default
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
+    const { SEQUELIZE, REDIS } = (await import('@defra/wls-connectors-lib'))
     cache = REDIS.cache
+    SEQUELIZE.getSequelize = () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
   })
 
   it('returns a 204 on a successful submission', async () => {
@@ -59,7 +61,7 @@ describe('The postApplicationSubmit handler', () => {
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(204)
     expect(mockUpdate).toHaveBeenCalledWith({
-      userSubmission: true
+      userSubmission: new Date('October 13, 2023 11:13:00')
     }, expect.any(Object))
   })
 

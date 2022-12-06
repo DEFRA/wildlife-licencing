@@ -1,3 +1,4 @@
+import { SEQUELIZE } from '@defra/wls-connectors-lib'
 import { models } from '@defra/wls-database-model'
 import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import { clearCaches } from './application-cache.js'
@@ -34,7 +35,7 @@ export default async (context, req, h) => {
       debug(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
     }
 
-    await models.applications.update({ userSubmission: true }, { where: { id: applicationId } })
+    await models.applications.update({ userSubmission: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id: applicationId } })
 
     return h.response().code(204)
   } catch (err) {

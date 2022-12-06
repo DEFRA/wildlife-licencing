@@ -2684,7 +2684,7 @@ components:
         submitted:
           $ref: '#/components/schemas/timestamp'
         userSubmission:
-          type: boolean
+          $ref: '#/components/schemas/timestamp'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

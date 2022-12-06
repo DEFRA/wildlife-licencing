@@ -33,7 +33,7 @@ export const getData = async request => {
   const applications = allApplications.filter(eligibilityCheckFilter).map(a => ({
     ...a,
     lastSaved: timestampFormatter(a.updatedAt),
-    submitted: timestampFormatter(a?.submitted),
+    submitted: timestampFormatter(a?.userSubmission),
     site: addSiteName(userApplicationSites, a.id),
     completed: a?.applicationTags.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
   })).sort(sorter)

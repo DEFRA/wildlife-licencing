@@ -18,7 +18,7 @@ export const prepareResponse = a => Object.assign((({
   createdAt: a.createdAt.toISOString(),
   updatedAt: a.updatedAt.toISOString(),
   submitted: a.submitted?.toISOString(),
-  userSubmission: !!a.userSubmission,
+  userSubmission: a.userSubmission?.toISOString(),
   ...a.application
 })
 
