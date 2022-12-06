@@ -2,14 +2,14 @@ import { contactURIs } from '../../../uris.js'
 import { contactNamePage } from '../common/contact-name/contact-name-page.js'
 import { contactNameCompletion, getContactData, setContactData } from '../common/contact-name/contact-name.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { checkHasApplication } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { NAME } = contactURIs.INVOICE_PAYER
 
 export const invoiceName = contactNamePage({
   page: NAME.page,
   uri: NAME.uri,
-  checkData: checkHasApplication,
+  checkData: checkApplication,
   getData: getContactData(ContactRoles.PAYER),
   setData: setContactData(ContactRoles.PAYER),
   completion: contactNameCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION,

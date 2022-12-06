@@ -4,7 +4,7 @@ import { habitatURIs, TASKLIST } from '../../../../uris.js'
 import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
@@ -36,11 +36,7 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  const redirectUrl = await checkApplication(request)
-
-  if (redirectUrl) {
-    return redirectUrl
-  }
+  await checkApplication(request, h)
 
   // Ensure if a user just deleted their only sett, we take them back to /tasklist
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
