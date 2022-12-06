@@ -116,7 +116,7 @@ describe('application-summary page', () => {
             getById: jest.fn(() => ({
               id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
               applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
-              submitted: '2022-08-10T08:18:07.363Z'
+              userSubmission: '2022-08-10T08:18:07.363Z'
             }))
           },
           CONTACT: {
@@ -148,7 +148,7 @@ describe('application-summary page', () => {
           applicationType: 'A24',
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          submitted: '10 August 2022',
+          userSubmission: '10 August 2022',
           name: 'Site 1'
         },
         licences: [{

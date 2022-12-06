@@ -4,6 +4,7 @@ import { getAccountNamesData, setAccountNamesData, accountNamesCompletion, accou
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+
 const { ORGANISATIONS, USER } = contactURIs.ECOLOGIST
 
 export const ecologistOrganisations = accountNamesPage({

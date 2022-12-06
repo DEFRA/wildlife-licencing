@@ -42,7 +42,7 @@ export const getData = async request => {
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const name = sites.length ? sites[0].name : ''
   Object.assign(application, { applicationType, name })
-  Object.assign(application, { submitted: timestampFormatter(application?.submitted) })
+  Object.assign(application, { userSubmission: timestampFormatter(application?.userSubmission) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
   const licences = await APIRequests.LICENCES.findByApplicationId(application.id)
   licences.forEach(licence => {
