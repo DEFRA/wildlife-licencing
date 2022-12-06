@@ -5,7 +5,7 @@ import { habitatURIs } from '../../../../uris.js'
 import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 export const completion = async request => {

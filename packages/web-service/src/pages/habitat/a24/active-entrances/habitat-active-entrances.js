@@ -6,7 +6,7 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 export const completion = async request => {

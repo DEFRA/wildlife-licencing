@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 
 const nameReg = /^[/\s0-9._,\p{L}-]{1,100}$/u
 

@@ -1,21 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { APPLICATIONS, TASKLIST } from '../../../uris.js'
+import { TASKLIST } from '../../../uris.js'
 import { hasAccountCandidates, hasContactCandidates } from './common.js'
 
-/**
- * In all cases an application must be selected to access any of the contact pages
- * @param request
- * @param h
- * @returns {Promise<null|*>}
- */
-export const checkHasApplication = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-
-  return null
-}
 /**
  * Determines if, for this application, the signed-in user is assigned to any of the conflictingRoles
  * @param request

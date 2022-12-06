@@ -5,7 +5,8 @@ import { yesNoPage } from '../../common/yes-no.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
-import { checkCanBeUser, checkHasApplication } from '../common/common-handler.js'
+import { checkCanBeUser } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
 const { USER } = contactURIs.ECOLOGIST
 
 export const getData = async request => {
@@ -18,7 +19,7 @@ export const getData = async request => {
 }
 
 export const ecologistUser = yesNoPage({
-  checkData: [checkHasApplication, checkCanBeUser([ContactRoles.ADDITIONAL_ECOLOGIST], contactURIs.ECOLOGIST)],
+  checkData: [checkApplication, checkCanBeUser([ContactRoles.ADDITIONAL_ECOLOGIST], contactURIs.ECOLOGIST)],
   getData: getData,
   page: USER.page,
   uri: USER.uri,

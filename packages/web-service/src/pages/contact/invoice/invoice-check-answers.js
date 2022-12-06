@@ -5,7 +5,9 @@ import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
-import { canBeUser, checkAccountComplete, checkHasApplication, checkHasContact } from '../common/common-handler.js'
+import { canBeUser, checkAccountComplete, checkHasContact } from '../common/common-handler.js'
+import { checkApplication } from '../../common/check-application.js'
+
 const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
@@ -52,7 +54,7 @@ export const completion = async request => {
 
 export const invoiceCheckAnswers = checkAnswersPage({
   checkData: [
-    checkHasApplication,
+    checkApplication,
     checkHasContact(ContactRoles.PAYER, RESPONSIBLE),
     checkAccountComplete(AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
   ],

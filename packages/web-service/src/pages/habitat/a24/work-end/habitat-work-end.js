@@ -7,7 +7,7 @@ import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 export const validator = async (payload, context) => {
