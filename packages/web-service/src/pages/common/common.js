@@ -10,5 +10,5 @@ export const yesNoFromBool = a => {
   }
 }
 
-export const gridReferenceValidRegex = /^(?=HO|HP|HT|HU|HW|HX|HY|HZ|NA|NB|NC|ND|NE|NF|NG|NH|NJ|NK|NL|NM|NN|NO|NP|NR|NS|NT|NU|NW|NX|NY|NZ|OV|SC|SD|SE|TA|SH|SJ|SK|TF|TG|SM|SN|SO|SP|TL|TM|SR|SS|ST|SU|TQ|TR|SV|SW|SX|SY)[a-zA-Z]{2}\d{6}$/
+export const gridReferenceValidRegex = /^(H[OPTUW-Z]|N[A-HJ-PR-UW-Z]|OV|S[C-EHJKM-PR-Y]|T[AFGLMQR])\d{6}$/i
 export const gridReferenceFormatRegex = /^[a-zA-Z]{2}\d{6}$/
