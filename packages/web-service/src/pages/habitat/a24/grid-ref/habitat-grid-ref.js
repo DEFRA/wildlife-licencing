@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -7,49 +6,10 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
-import { gridReferenceFormatRegex, gridReferenceValidRegex } from '../../../common/common.js'
+import { gridReferenceValidator } from '../../../common/grid-ref-validator.js'
 
 const habitatGridReference = 'habitat-grid-ref'
-export const validator = async payload => {
-  if (!payload[habitatGridReference]) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: You have not entered a grid reference',
-      path: [habitatGridReference],
-      type: 'no-grid-reference',
-      context: {
-        label: habitatGridReference,
-        value: 'Error',
-        key: habitatGridReference
-      }
-    }], null)
-  }
-
-  if (payload[habitatGridReference] && !payload[habitatGridReference].match(gridReferenceFormatRegex)) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: The grid reference you have entered is not in the right format',
-      path: [habitatGridReference],
-      type: 'grid-reference-wrong-format',
-      context: {
-        label: habitatGridReference,
-        value: 'Error',
-        key: habitatGridReference
-      }
-    }], null)
-  }
-
-  if (payload[habitatGridReference] && !payload[habitatGridReference].match(gridReferenceValidRegex)) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: The reference you have entered is not an existing grid reference',
-      path: [habitatGridReference],
-      type: 'grid-reference-do-not-exist',
-      context: {
-        label: habitatGridReference,
-        value: 'Error',
-        key: habitatGridReference
-      }
-    }], null)
-  }
-}
+export const validator = payload => gridReferenceValidator(payload, habitatGridReference)
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
