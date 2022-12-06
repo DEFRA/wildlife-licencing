@@ -16,8 +16,8 @@
     ]
 %}
 
-{% if data.application.submitted %}
-    {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.submitted } }) }}
+{% if data.application.userSubmission %}
+    {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.userSubmission } }) }}
 {% endif %}
 
 {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
