@@ -13,6 +13,9 @@
             'string.empty': { ref: '#email-address', text: 'Enter an email address' },
             'string.email': { ref: '#email-address', text: 'You did not enter a valid email address' },
             'any.invalid': { ref: '#email-address', text: 'Enter a different email address'  }
+        },
+        'change-email': {
+            'any.required': { ref: '#email-address', text: 'What is the email address'  }
         }
     }
 %}
@@ -48,12 +51,11 @@
            {
                 value: "no",
                 text: data.email,
-                checked: payload['change-email'] === 'no'
+                checked: true
             },
             {
               value: "yes",
               text: "Other",
-              checked: payload['change-email'] === 'yes',
               conditional: {
                 html: emailAddress
               }
