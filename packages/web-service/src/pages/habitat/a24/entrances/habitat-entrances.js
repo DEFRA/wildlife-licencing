@@ -46,7 +46,7 @@ export default pageRoute({
   page: habitatURIs.ENTRANCES.page,
   uri: habitatURIs.ENTRANCES.uri,
   validator: Joi.object({
-    [page]: Joi.number().integer().required().max(100)
+    [page]: Joi.number().integer().required().max(100).min(1)
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkApplication,
   completion,
