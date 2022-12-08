@@ -95,7 +95,7 @@ describe('the page handler function', () => {
     await expect(() => pageHandler().error(request, h, err)).rejects.toThrowError()
   })
 
-  describe.only('getPageData', () => {
+  describe('getPageData', () => {
     it('returns the result from the cache if there is no referrer', async () => {
       const { getPageData } = await import('../page-handler.js')
       const result = await getPageData({

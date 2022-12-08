@@ -28,7 +28,7 @@ describe('the map of the site showing the mitigations after development page pag
     expect(mockClearPageData).toHaveBeenCalled()
   })
 
-  it.only('should calls the s3 upload and redirects to the site national grid reference page', async () => {
+  it('should calls the s3 upload and redirects to the site national grid reference page', async () => {
     const mockSetData = jest.fn()
     const mockS3FileUpload = jest.fn()
     const mockUpdate = jest.fn()
