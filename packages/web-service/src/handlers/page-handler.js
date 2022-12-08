@@ -24,11 +24,11 @@ const doCheckData = async (checkData, request, h) => {
   return null
 }
 
-const getPageData = async request => {
+export const getPageData = async request => {
   if (request.info.referrer.length) {
     const referrer = new URL(request.info.referrer)
     if (referrer?.pathname !== request.path) {
-      await request.cache().setPageData({})
+      await request.cache().clearPageData()
       return {}
     }
   }

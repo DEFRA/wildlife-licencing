@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { s3FileUpload } from '../../../services/s3-upload.js'
 import { FILETYPES } from '../../common/file-upload/file-upload.js'
-import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
+import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { siteURIs } from '../../../uris.js'
 
@@ -52,4 +52,23 @@ export const getSite = async applicationId => {
     siteInfo = site[0]
   }
   return siteInfo
+}
+
+export const uploadMapGetData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await request.cache().clearPageData()
+  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
+  return null
+}
+
+export const uploadMapCompletion = (siteMapFile, nextUri) => async request => {
+  const { applicationId } = await request.cache().getData()
+  const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
+  await uploadAndUpdateSiteMap(request, siteMapFile)
+
+  if (isCompleteOrConfirmed(appTagStatus)) {
+    return siteURIs.CHECK_SITE_ANSWERS.uri
+  }
+
+  return nextUri.uri
 }

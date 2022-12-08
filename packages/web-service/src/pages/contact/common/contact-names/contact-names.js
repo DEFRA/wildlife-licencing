@@ -28,7 +28,7 @@ export const setContactNamesData = contactRole => async request => {
   }
 }
 
-const contactNamesCompletionExisting = async (userId, applicationId, contactRole, accountRole, contactId, urlBase, request) => {
+const contactNamesCompletionExisting = async (userId, applicationId, contactRole, accountRole, contactId, urlBase) => {
   // Already completed without an account, then gather data against the contact.
   // If already complete with an account go to the check page
   // if no contact or address then set data will have produced a new immutable contact
@@ -63,6 +63,6 @@ export const contactNamesCompletion = (contactRole, accountRole, urlBase) => asy
     return urlBase.NAME.uri
   } else {
     return contactNamesCompletionExisting(userId, applicationId, contactRole, accountRole,
-      contactId, urlBase, request)
+      contactId, urlBase)
   }
 }
