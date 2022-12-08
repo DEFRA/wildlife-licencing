@@ -26,8 +26,6 @@ export const setData = async request => {
       filename, path
     }
   }))
-
-  await request.cache().clearPageData()
 }
 
 export const getFileExtension = (file, fileType) => {

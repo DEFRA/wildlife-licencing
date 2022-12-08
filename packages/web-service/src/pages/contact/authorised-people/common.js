@@ -55,22 +55,17 @@ export const getAuthorisedPeopleCompletion = async request => {
   const journeyData = await request.cache().getData()
   const contact = await APIRequests.CONTACT.getById(journeyData.authorisedPeople.contactId)
 
-  const returnAndClear = async p => {
-    await request.cache().clearPageData(p.page)
-    return p.uri
-  }
-
   if (!contact.fullName) {
-    return returnAndClear(NAME)
+    return NAME.uri
   }
 
   if (!contact?.contactDetails?.email) {
-    return returnAndClear(EMAIL)
+    return EMAIL.uri
   }
 
   if (contact?.address?.uprn || contact?.address?.addressLine1) {
-    return returnAndClear(ADD)
+    return ADD.uri
   }
 
-  return returnAndClear(POSTCODE)
+  return POSTCODE.uri
 }

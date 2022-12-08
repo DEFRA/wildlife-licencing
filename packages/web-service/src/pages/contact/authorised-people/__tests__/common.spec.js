@@ -227,7 +227,6 @@ describe('authorised person common', () => {
       }))
       const request = {
         cache: () => ({
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
           }))
@@ -251,7 +250,6 @@ describe('authorised person common', () => {
       }))
       const request = {
         cache: () => ({
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
           }))
@@ -277,7 +275,6 @@ describe('authorised person common', () => {
       }))
       const request = {
         cache: () => ({
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
           }))
@@ -303,7 +300,6 @@ describe('authorised person common', () => {
       }))
       const request = {
         cache: () => ({
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
           }))
@@ -328,7 +324,6 @@ describe('authorised person common', () => {
       }))
       const request = {
         cache: () => ({
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             authorisedPeople: { contactId: '35acb529-70bb-4b8d-8688-ccdec837e5d4' }
           }))

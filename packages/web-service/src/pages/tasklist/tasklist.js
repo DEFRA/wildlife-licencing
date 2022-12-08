@@ -1,5 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATIONS, TASKLIST, FILE_UPLOADS, siteURIs } from '../../uris.js'
+import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
@@ -37,12 +37,6 @@ export const getData = async request => {
   const status = await getTaskStatus(request)
   const decoratedMap = await decorateMap(licenceTypeMap[A24], status)
   const progress = getProgress(status)
-
-  // If you navigate to the TASKLIST page, we need to ensure we've cleared all the error states on the file-upload page
-  await request.cache().clearPageData(FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.page)
-  await request.cache().clearPageData(siteURIs.UPLOAD_MAP.page)
-  await request.cache().clearPageData(siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page)
-  await request.cache().clearPageData(siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page)
 
   return {
     ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),

@@ -27,7 +27,7 @@ describe('the map of the site showing the mitigations during development page ha
       '../upload-map-of-mitigations-during-development.js'
     )
     expect(await getData(request)).toBeNull()
-    expect(mockClearPageData).toHaveBeenCalledWith('upload-map-of-mitigations-during-development')
+    expect(mockClearPageData).toHaveBeenCalled()
   })
 
   it('should calls the s3 upload and redirects to the add a map of the site showing the mitigations after development page', async () => {

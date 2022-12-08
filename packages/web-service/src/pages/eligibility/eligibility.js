@@ -86,14 +86,12 @@ export const getData = question => async request => {
 const consolidateAnswers = async (request, eligibility) => {
   if (eligibility[IS_OWNER_OF_LAND]) {
     delete eligibility[HAS_LANDOWNER_PERMISSION]
-    await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
   }
   if (eligibility[HAS_LANDOWNER_PERMISSION]) {
     eligibility[IS_OWNER_OF_LAND] = false
   }
   if (!eligibility[PERMISSION_REQUIRED]) {
     delete eligibility[PERMISSION_GRANTED]
-    await request.cache().clearPageData(CONSENT_GRANTED.page)
   }
   if (eligibility[PERMISSION_GRANTED]) {
     eligibility[PERMISSION_REQUIRED] = true

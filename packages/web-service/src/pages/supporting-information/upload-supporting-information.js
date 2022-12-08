@@ -15,7 +15,7 @@ export const completion = async request => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  await request.cache().clearPageData(FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.page)
+  await request.cache().clearPageData()
   await moveTagInProgress(applicationId, SECTION_TASKS.SUPPORTING_INFORMATION)
   return null
 }

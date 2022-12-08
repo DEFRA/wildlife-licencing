@@ -187,8 +187,7 @@ describe('the email-address page', () => {
             payload: {
               'email-address': 'Keith@therollingstones.com'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
@@ -218,8 +217,7 @@ describe('the email-address page', () => {
             payload: {
               'email-address': 'Keith@therollingstones.com'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
@@ -251,8 +249,7 @@ describe('the email-address page', () => {
             payload: {
               'email-address': 'Keith@therollingstones.com'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
@@ -287,8 +284,7 @@ describe('the email-address page', () => {
             payload: {
               'email-address': 'Keith@therollingstones.com'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')

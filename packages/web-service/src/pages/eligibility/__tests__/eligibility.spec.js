@@ -53,14 +53,12 @@ describe('the eligibility pages', () => {
 
   describe('the setData function', () => {
     it('saves the eligibility data - not landowner but has permission', async () => {
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({
             applicationId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          })),
-          clearPageData: mockClearPageData
+          }))
         })
       }
       const mockPutById = jest.fn()
@@ -81,18 +79,15 @@ describe('the eligibility pages', () => {
       const { setData } = await import('../eligibility.js')
       await setData('hasLandOwnerPermission')(request)
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { hasLandOwnerPermission: true, isOwnerOfLand: false })
-      expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
     })
 
     it('saves the eligibility data - is landowner and has landowner permission (disallowed)', async () => {
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({
             applicationId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          })),
-          clearPageData: mockClearPageData
+          }))
         })
       }
       const mockPutById = jest.fn()
@@ -113,18 +108,15 @@ describe('the eligibility pages', () => {
       const { setData } = await import('../eligibility.js')
       await setData('hasLandOwnerPermission')(request)
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', { isOwnerOfLand: true })
-      expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
     })
 
     it('saves the eligibility data - permissions required and granted', async () => {
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({
             applicationId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          })),
-          clearPageData: mockClearPageData
+          }))
         })
       }
       const mockPutById = jest.fn()
@@ -151,14 +143,12 @@ describe('the eligibility pages', () => {
     })
 
     it('saves the eligibility data - permissions not required but granted (disallowed)', async () => {
-      const mockClearPageData = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: jest.fn(() => ({
             applicationId: '412d7297-643d-485b-8745-cc25a0e6ec0a'
-          })),
-          clearPageData: mockClearPageData
+          }))
         })
       }
       const mockPutById = jest.fn()
@@ -181,7 +171,6 @@ describe('the eligibility pages', () => {
       expect(mockPutById).toHaveBeenCalledWith('412d7297-643d-485b-8745-cc25a0e6ec0a', {
         permissionsRequired: false
       })
-      expect(mockClearPageData).toHaveBeenCalledWith('consent-granted')
     })
   })
 

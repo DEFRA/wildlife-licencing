@@ -166,8 +166,7 @@ describe('the account-names functions', () => {
           })),
           getPageData: jest.fn(() => ({
             payload: { account: 'new' }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       const { accountNamesCompletion } = await import('../account-names.js')
@@ -183,8 +182,7 @@ describe('the account-names functions', () => {
           })),
           getPageData: jest.fn(() => ({
             payload: { account: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -210,8 +208,7 @@ describe('the account-names functions', () => {
           })),
           getPageData: jest.fn(() => ({
             payload: { account: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({

@@ -25,7 +25,6 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  await request.cache().clearPageData(siteURIs.SITE_GOT_POSTCODE.page)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   let sitePostcode
   if (sites.length) {
@@ -41,7 +40,6 @@ export const setData = async request => {
   const sitePostcode = pageData.payload[postcodeInput]
 
   // address lookup for the postcode from the request
-  await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   await addressLookupForPostcode(sitePostcode, journeyData, request)
   journeyData.siteData = { ...siteData, postcode: sitePostcode }
   await request.cache().setData(journeyData)

@@ -170,8 +170,7 @@ describe('the is-organisation page', () => {
               'is-organisation': 'yes',
               'organisation-name': 'The Who'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 
@@ -206,8 +205,7 @@ describe('the is-organisation page', () => {
               'is-organisation': 'yes',
               'organisation-name': 'The Who'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 
@@ -243,8 +241,7 @@ describe('the is-organisation page', () => {
               'is-organisation': 'yes',
               'organisation-name': 'The Who'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 
@@ -277,8 +274,7 @@ describe('the is-organisation page', () => {
             payload: {
               'is-organisation': 'no'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 
@@ -312,8 +308,7 @@ describe('the is-organisation page', () => {
             payload: {
               'is-organisation': 'no'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 
@@ -348,8 +343,7 @@ describe('the is-organisation page', () => {
             payload: {
               'is-organisation': 'no'
             }
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
 

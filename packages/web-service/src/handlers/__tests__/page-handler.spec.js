@@ -6,7 +6,7 @@ describe('the page handler function', () => {
     const getData = () => ({ foo: 'bar' })
     const mockView = jest.fn(() => 'view')
     const h = { view: mockView }
-    const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
+    const request = { info: { referrer: '' }, cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
     const view = { view: 'view' }
     const result = await pageHandler(view, null, getData).get(request, h)
     expect(mockView).toHaveBeenLastCalledWith({ view: 'view' }, {

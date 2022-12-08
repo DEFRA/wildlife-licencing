@@ -24,6 +24,17 @@ const doCheckData = async (checkData, request, h) => {
   return null
 }
 
+const getPageData = async request => {
+  if (request.info.referrer.length) {
+    const referrer = new URL(request.info.referrer)
+    if (referrer?.pathname !== request.path) {
+      await request.cache().setPageData({})
+      return {}
+    }
+  }
+  return await request.cache().getPageData() || {}
+}
+
 export default (view, checkData, getData, completion, setData, backlink = Backlink.JAVASCRIPT) => ({
   get: async (request, h) => {
     const check = await doCheckData(checkData, request, h)
@@ -32,7 +43,7 @@ export default (view, checkData, getData, completion, setData, backlink = Backli
     }
 
     // Page data is automatically handled payload and error data
-    const pageData = await request.cache().getPageData() || {}
+    const pageData = await getPageData(request)
 
     // The gotData is data augmented by the handler
     if (getData && typeof getData === 'function') {

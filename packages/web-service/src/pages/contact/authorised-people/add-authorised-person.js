@@ -18,29 +18,24 @@ export const checkData = async (request, h) => {
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
     .getByApplicationId(journeyData.applicationId)
 
-  const returnAndClear = async p => {
-    await request.cache().clearPageData(p.page)
-    return h.redirect(p.uri)
-  }
-
   // Check any that are incomplete because of back-button actions
   for (const contact of contacts) {
     if (!contact.fullName) {
       Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
       await request.cache().setData(journeyData)
-      return returnAndClear(NAME)
+      return h.redirect(NAME.uri)
     }
 
     if (!contact?.contactDetails?.email) {
       Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
       await request.cache().setData(journeyData)
-      return returnAndClear(EMAIL)
+      return h.redirect(EMAIL.uri)
     }
 
     if (!contact?.address) {
       Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
       await request.cache().setData(journeyData)
-      return returnAndClear(POSTCODE)
+      return h.redirect(POSTCODE.uri)
     }
   }
 
@@ -48,11 +43,6 @@ export const checkData = async (request, h) => {
 }
 
 export const getData = async request => {
-  // Clear any errors
-  await request.cache().clearPageData(NAME.page)
-  await request.cache().clearPageData(EMAIL.page)
-  await request.cache().clearPageData(POSTCODE.page)
-
   const { applicationId } = await request.cache().getData()
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON).getByApplicationId(applicationId)
   const state = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.AUTHORISED_PEOPLE)
@@ -83,7 +73,6 @@ export const setData = async request => {
   const { applicationId } = journeyData
   if (request.payload['yes-no'] === 'yes') {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
-    await request.cache().clearPageData(NAME.page)
   } else {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.COMPLETE })
   }

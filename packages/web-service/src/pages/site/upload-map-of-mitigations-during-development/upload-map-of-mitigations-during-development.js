@@ -7,7 +7,7 @@ import { uploadAndUpdateSiteMap } from '../common/site-map-upload.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  await request.cache().clearPageData(siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.page)
+  await request.cache().clearPageData()
   await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
   return null
 }

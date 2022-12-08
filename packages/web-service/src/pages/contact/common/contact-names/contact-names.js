@@ -51,7 +51,6 @@ const contactNamesCompletionExisting = async (userId, applicationId, contactRole
     if (await hasAccountCandidates(userId, applicationId, accountRole)) {
       return urlBase.ORGANISATIONS.uri
     } else {
-      await request.cache().clearPageData(urlBase.IS_ORGANISATION.page)
       return urlBase.IS_ORGANISATION.uri
     }
   }
@@ -61,7 +60,6 @@ export const contactNamesCompletion = (contactRole, accountRole, urlBase) => asy
   const { userId, applicationId } = await request.cache().getData()
   const { payload: { contact: contactId } } = await request.cache().getPageData()
   if (contactId === 'new') {
-    await request.cache().clearPageData(urlBase.NAME.page)
     return urlBase.NAME.uri
   } else {
     return contactNamesCompletionExisting(userId, applicationId, contactRole, accountRole,

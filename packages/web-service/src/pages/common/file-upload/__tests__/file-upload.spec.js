@@ -49,7 +49,6 @@ describe('the generic file-upload page handler', () => {
       }
     }))
     const mockSetData = jest.fn()
-    const mockClearPageData = jest.fn()
 
     const request = {
       payload: {
@@ -62,8 +61,7 @@ describe('the generic file-upload page handler', () => {
       cache: () => (
         {
           getData: () => ({ applicationId: '68855554-59ed-ec11-bb3c-000d3a0cee24' }),
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         }
       )
     }
@@ -72,7 +70,6 @@ describe('the generic file-upload page handler', () => {
     }))
     const { setData } = await import('../file-upload.js')
     await setData(request)
-    expect(mockClearPageData).toHaveBeenCalled()
   })
 
   it('getFileExtension', async () => {
@@ -139,8 +136,7 @@ describe('the generic file-upload page handler', () => {
           fileUpload: { filename: 'hello.txt', path: '/tmp/path' },
           applicationId: 123
         }),
-        setData: jest.fn(() => ({})),
-        clearPageData: jest.fn()
+        setData: jest.fn(() => ({}))
       }),
       payload: {
         'scan-file': { filename: 'hello.txt', path: '/tmp/path' }
@@ -171,8 +167,7 @@ describe('the generic file-upload page handler', () => {
         getData: () => ({
           applicationId: 123
         }),
-        setData: jest.fn(),
-        clearPageData: jest.fn()
+        setData: jest.fn()
       }),
       payload: {
         'scan-file': { filename: 'hello.txt', path: '/tmp/path' }

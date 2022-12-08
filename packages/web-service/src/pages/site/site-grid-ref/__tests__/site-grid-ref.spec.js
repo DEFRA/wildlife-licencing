@@ -41,7 +41,6 @@ describe('The site national grid reference page', () => {
   })
 
   it('getData returns the correct object', async () => {
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
@@ -63,18 +62,15 @@ describe('The site national grid reference page', () => {
       cache: () => ({
         getData: () => {
           return {}
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-grid-ref.js')
     expect(await getData(request)).toStrictEqual({ gridReference: 'NY123456' })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-grid-ref')
   })
 
   it('getData returns  undefined if not site found', async () => {
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
@@ -96,14 +92,12 @@ describe('The site national grid reference page', () => {
       cache: () => ({
         getData: () => {
           return {}
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-grid-ref.js')
     expect(await getData(request)).toStrictEqual({ gridReference: undefined })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-grid-ref')
   })
 
   it('setData with site', async () => {

@@ -34,7 +34,6 @@ describe('authorised person postcode', () => {
           postcode: 'BS9 1HK'
         },
         cache: () => ({
-          clearPageData: jest.fn(),
           setData: mockSetData,
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',

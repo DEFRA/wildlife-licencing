@@ -8,7 +8,6 @@ import { siteAddressCompletion, getSite } from '../common/site-map-upload.js'
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  await request.cache().clearPageData(siteURIs.SELECT_ADDRESS.page)
   return {
     postcode: journeyData?.siteData?.postcode,
     uri: { addressForm: siteURIs.ADDRESS_NO_LOOKUP.uri, postcode: siteURIs.SITE_GOT_POSTCODE.uri },

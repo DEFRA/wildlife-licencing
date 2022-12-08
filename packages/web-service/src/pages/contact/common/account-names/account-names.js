@@ -33,7 +33,6 @@ export const setAccountNamesData = (contactRole, accountRole) => async request =
 export const accountNamesCompletion = (_accountRole, baseUri) => async request => {
   const { payload: { account: accountId } } = await request.cache().getPageData()
   if (accountId === 'new') {
-    await request.cache().clearPageData(baseUri.IS_ORGANISATION.page)
     return baseUri.IS_ORGANISATION.uri
   } else {
     // Always go to the email page

@@ -90,6 +90,7 @@ describe('The enter experience page', () => {
         view: (view, pageData) => pageData
       }
       const request = {
+        info: { referrer: '' },
         payload: {
           'enter-experience': 'experience'
         },

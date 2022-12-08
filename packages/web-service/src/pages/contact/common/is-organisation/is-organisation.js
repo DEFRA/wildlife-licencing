@@ -40,10 +40,8 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
       return urlBase.CHECK_ANSWERS.uri
     } else {
       if (!account.contactDetails) {
-        await request.cache().clearPageData(urlBase.EMAIL.page)
         return urlBase.EMAIL.uri
       } else if (!account.address) {
-        await request.cache().clearPageData(urlBase.POSTCODE.page)
         return urlBase.POSTCODE.uri
       } else {
         return urlBase.CHECK_ANSWERS.uri
@@ -53,10 +51,8 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
     // No organisation
     const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     if (!contact.contactDetails) {
-      await request.cache().clearPageData(urlBase.EMAIL.page)
       return urlBase.EMAIL.uri
     } else if (!contact.address) {
-      await request.cache().clearPageData(urlBase.POSTCODE.page)
       return urlBase.POSTCODE.uri
     } else {
       return urlBase.CHECK_ANSWERS.uri
