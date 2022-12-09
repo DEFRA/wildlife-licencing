@@ -1,12 +1,6 @@
 {% extends "standard-form.njk" %}
 {% from "input/macro.njk" import govukInput %}
 
-{% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
-{% endblock %}
-
 {% set errorMap = {
         'address-line-1': {
             'string.empty': { ref: '#address-line-1', text: 'Enter building and street' },

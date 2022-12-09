@@ -2,12 +2,6 @@
 {% from "input/macro.njk" import govukInput %}
 {% from "radios/macro.njk" import govukRadios %}
 
-{% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
-{% endblock %}
-
 {% set errorMap = {
         'email-address': {
             'string.empty': { ref: '#email-address', text: 'Enter an email address' },

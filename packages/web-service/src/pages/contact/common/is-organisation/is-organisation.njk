@@ -2,12 +2,6 @@
 {% from "radios/macro.njk" import govukRadios %}
 {% from "input/macro.njk" import govukInput %}
 
-{% block topNavigation %}
-    <p class="govuk-body sdds-save-link">
-        <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-    </p>
-{% endblock %}
-
 {% set errorMap = {
         'is-organisation': {
             'any.required': { ref: '#is-organisation', text: noneSelected }

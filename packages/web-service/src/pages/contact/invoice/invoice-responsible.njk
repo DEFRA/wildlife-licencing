@@ -2,12 +2,6 @@
 {% from "radios/macro.njk" import govukRadios %}
 {% set title = 'Who is responsible for paying the invoice?' %}
 
-{% block topNavigation %}
-    <p class="govuk-body sdds-save-link">
-        <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-    </p>
-{% endblock %}
-
 {% set errorMap = {
         'responsible': {
             'any.required': { ref: '#responsible', text: 'Choose who is responsible for paying the invoice' }
