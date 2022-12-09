@@ -2671,6 +2671,8 @@ components:
           maxLength: 300
         applicationCategory:
           type: number
+        exemptFromPayment:
+          type: boolean
         applicationTypeId:
           $ref: '#/components/schemas/uuid'
         applicationPurposeId:
