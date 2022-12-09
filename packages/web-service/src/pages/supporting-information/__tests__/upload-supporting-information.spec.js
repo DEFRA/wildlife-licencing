@@ -83,7 +83,7 @@ describe('the upload-supporting-information page handler', () => {
     }
     const { getData } = await import('../upload-supporting-information.js')
     expect(await getData(request)).toBe(null)
-    expect(mockClearPageData).toHaveBeenCalledWith('upload-supporting-information')
+    expect(mockClearPageData).toHaveBeenCalled()
     expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'in-progress' })
   })
 })

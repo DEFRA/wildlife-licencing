@@ -25,7 +25,6 @@ describe('authorised person address form', () => {
           'address-line-1': 'Hill View Road.'
         },
         cache: () => ({
-          clearPageData: jest.fn(),
           setData: jest.fn(),
           getData: jest.fn(() => ({
             userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',

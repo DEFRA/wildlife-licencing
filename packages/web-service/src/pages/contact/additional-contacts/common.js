@@ -115,7 +115,6 @@ export const additionalContactNameCompletion = (contactRole, urlBase) => async r
 export const additionalContactNamesCompletion = (contactRole, urlBase) => async request => {
   const { payload: { contact: contactId } } = await request.cache().getPageData()
   if (contactId === 'new') {
-    await request.cache().clearPageData(urlBase.NAME.page)
     return urlBase.NAME.uri
   } else {
     const { applicationId } = await request.cache().getData()

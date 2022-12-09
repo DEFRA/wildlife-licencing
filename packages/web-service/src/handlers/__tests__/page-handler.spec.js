@@ -6,7 +6,7 @@ describe('the page handler function', () => {
     const getData = () => ({ foo: 'bar' })
     const mockView = jest.fn(() => 'view')
     const h = { view: mockView }
-    const request = { cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
+    const request = { info: { referrer: '' }, cache: () => ({ getPageData: jest.fn(), setPageData: jest.fn() }) }
     const view = { view: 'view' }
     const result = await pageHandler(view, null, getData).get(request, h)
     expect(mockView).toHaveBeenLastCalledWith({ view: 'view' }, {
@@ -93,5 +93,42 @@ describe('the page handler function', () => {
     const mockRedirect = jest.fn(() => ({ takeover: jest.fn() }))
     const h = { redirect: mockRedirect }
     await expect(() => pageHandler().error(request, h, err)).rejects.toThrowError()
+  })
+
+  describe('getPageData', () => {
+    it('returns the result from the cache if there is no referrer', async () => {
+      const { getPageData } = await import('../page-handler.js')
+      const result = await getPageData({
+        info: { referrer: '' },
+        cache: () => ({
+          getPageData: () => ({ foo: 'bar' })
+        })
+      })
+      expect(result).toEqual({ foo: 'bar' })
+    })
+    it('returns the result from the cache if the referrer is the path', async () => {
+      const { getPageData } = await import('../page-handler.js')
+      const result = await getPageData({
+        info: { referrer: 'http://hostname:0000/path' },
+        path: '/path',
+        cache: () => ({
+          getPageData: () => ({ foo: 'bar' })
+        })
+      })
+      expect(result).toEqual({ foo: 'bar' })
+    })
+    it('returns the empty object and clears the cache if the referrer differs from the path', async () => {
+      const mockClearPageData = jest.fn()
+      const { getPageData } = await import('../page-handler.js')
+      const result = await getPageData({
+        info: { referrer: 'http://hostname:0000/path' },
+        path: '/path2',
+        cache: () => ({
+          clearPageData: mockClearPageData
+        })
+      })
+      expect(result).toEqual({ })
+      expect(mockClearPageData).toHaveBeenCalled()
+    })
   })
 })

@@ -83,17 +83,15 @@ export const getData = question => async request => {
   return { yesNo: yesNoFromBool(eligibility[question]) }
 }
 
-const consolidateAnswers = async (request, eligibility) => {
+const consolidateAnswers = async eligibility => {
   if (eligibility[IS_OWNER_OF_LAND]) {
     delete eligibility[HAS_LANDOWNER_PERMISSION]
-    await request.cache().clearPageData(LANDOWNER_PERMISSION.page)
   }
   if (eligibility[HAS_LANDOWNER_PERMISSION]) {
     eligibility[IS_OWNER_OF_LAND] = false
   }
   if (!eligibility[PERMISSION_REQUIRED]) {
     delete eligibility[PERMISSION_GRANTED]
-    await request.cache().clearPageData(CONSENT_GRANTED.page)
   }
   if (eligibility[PERMISSION_GRANTED]) {
     eligibility[PERMISSION_REQUIRED] = true
@@ -110,7 +108,7 @@ export const setData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
   Object.assign(eligibility, { [question]: isYes(request) })
-  await consolidateAnswers(request, eligibility)
+  await consolidateAnswers(eligibility)
   await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.IN_PROGRESS })
 }

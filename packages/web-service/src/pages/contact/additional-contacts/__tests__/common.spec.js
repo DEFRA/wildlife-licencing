@@ -372,8 +372,7 @@ describe('additional-contacts: common', () => {
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
             applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          }),
-          clearPageData: jest.fn()
+          })
         })
       }
       const { additionalContactNamesCompletion } = await import('../common.js')
@@ -401,8 +400,7 @@ describe('additional-contacts: common', () => {
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
             applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          }),
-          clearPageData: jest.fn()
+          })
         })
       }
       const { additionalContactNamesCompletion } = await import('../common.js')
@@ -417,8 +415,7 @@ describe('additional-contacts: common', () => {
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
             applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          }),
-          clearPageData: jest.fn()
+          })
         })
       }
       const { additionalContactNamesCompletion } = await import('../common.js')

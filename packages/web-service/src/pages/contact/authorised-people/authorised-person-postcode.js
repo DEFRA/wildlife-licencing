@@ -3,13 +3,11 @@ import { postcodePage } from '../common/postcode/postcode-page.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleData } from './common.js'
 import { addressLookupForPostcode, postcodeCompletion } from '../common/postcode/postcode.js'
 
-const { POSTCODE, ADDRESS_FORM, ADDRESS } = contactURIs.AUTHORISED_PEOPLE
+const { POSTCODE, ADDRESS_FORM } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const postcode = request.payload.postcode
-  await request.cache().clearPageData(ADDRESS.page)
-  await request.cache().clearPageData(ADDRESS_FORM.page)
   await addressLookupForPostcode(postcode, journeyData, request)
 }
 

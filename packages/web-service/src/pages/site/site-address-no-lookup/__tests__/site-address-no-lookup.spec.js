@@ -1,17 +1,12 @@
 describe('site-got-postcode page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the correct object', async () => {
-    const mockClearPageData = jest.fn()
     const request = {
-      query: { postcode: 'B15 7GF' },
-      cache: () => ({
-        clearPageData: mockClearPageData
-      })
+      query: { postcode: 'B15 7GF' }
     }
 
     const { getData } = await import('../site-address-no-lookup.js')
     expect(await getData(request)).toStrictEqual({ postCode: true })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-address-no-lookup')
   })
 
   it('setData with site info', async () => {

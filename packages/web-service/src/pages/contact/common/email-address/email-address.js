@@ -35,7 +35,6 @@ export const emailAddressCompletion = (contactRole, accountRole, urlBase) => asy
     if (account.address) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
-      await request.cache().clearPageData(urlBase.POSTCODE.page)
       return urlBase.POSTCODE.uri
     }
   } else {
@@ -43,7 +42,6 @@ export const emailAddressCompletion = (contactRole, accountRole, urlBase) => asy
     if (contact.address) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
-      await request.cache().clearPageData(urlBase.POSTCODE.page)
       return urlBase.POSTCODE.uri
     }
   }

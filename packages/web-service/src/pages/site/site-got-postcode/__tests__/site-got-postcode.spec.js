@@ -24,7 +24,6 @@ describe('site-got-postcode page handler', () => {
   })
 
   it('getData returns the correct object', async () => {
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
@@ -46,18 +45,15 @@ describe('site-got-postcode page handler', () => {
       cache: () => ({
         getData: () => {
           return {}
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-got-postcode.js')
     expect(await getData(request)).toStrictEqual({ sitePostcode: 'Bristol' })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
   })
 
   it('getData returns  undefined if not site found', async () => {
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
@@ -79,14 +75,12 @@ describe('site-got-postcode page handler', () => {
       cache: () => ({
         getData: () => {
           return {}
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-got-postcode.js')
     expect(await getData(request)).toStrictEqual({ sitePostcode: undefined })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-got-postcode')
   })
 
   it('setData', async () => {
@@ -95,8 +89,7 @@ describe('site-got-postcode page handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: {} })),
         getPageData: jest.fn(() => ({ payload: { postcode: 'SW1W 0NY' } })),
-        setData: mockSetData,
-        clearPageData: jest.fn()
+        setData: mockSetData
       })
     }
     const mockLookup = jest.fn(() => ({ results: [{ Address: { town: 'Bristol' } }] }))

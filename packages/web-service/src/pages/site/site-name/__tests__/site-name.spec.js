@@ -2,7 +2,6 @@ describe('site-name page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the correct object', async () => {
     const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {
         SITE: {
@@ -16,19 +15,16 @@ describe('site-name page handler', () => {
       cache: () => ({
         getData: () => {
           return result
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-name.js')
     expect(await getData(request)).toStrictEqual({ name: 'site-name' })
-    expect(mockClearPageData).toHaveBeenCalledWith('site-name')
   })
 
   it('getData returns the site name undefined when there is no site', async () => {
     const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-    const mockClearPageData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {
         SITE: {
@@ -42,14 +38,12 @@ describe('site-name page handler', () => {
       cache: () => ({
         getData: () => {
           return result
-        },
-        clearPageData: mockClearPageData
+        }
       })
     }
 
     const { getData } = await import('../site-name.js')
     expect(await getData(request)).toStrictEqual({ name: undefined })
-    expect(mockClearPageData).toHaveBeenCalled()
   })
 
   it('setData - update site', async () => {

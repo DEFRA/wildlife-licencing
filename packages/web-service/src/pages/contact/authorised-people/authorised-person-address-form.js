@@ -5,7 +5,7 @@ import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorised
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 
-const { ADDRESS_FORM, ADD } = contactURIs.AUTHORISED_PEOPLE
+const { ADDRESS_FORM } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
@@ -15,7 +15,6 @@ export const setData = async request => {
   const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,
     applicationId, userId, journeyData.authorisedPeople.contactId, null)
   await contactAcctOps.setAddress(apiAddress)
-  await request.cache().clearPageData(ADD.page)
 }
 
 export const authorisedPersonAddressForm = addressFormPage({

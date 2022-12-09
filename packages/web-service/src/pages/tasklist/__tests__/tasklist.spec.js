@@ -39,8 +39,7 @@ describe('The task-list handler', () => {
         auth: { isAuthenticated: true },
         query: {},
         cache: () => ({
-          getData: jest.fn(() => ({})),
-          clearPageData: jest.fn()
+          getData: jest.fn(() => ({}))
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -137,12 +136,10 @@ describe('The task-list handler', () => {
       // Mock out the cache
       const mockGetData = jest.fn(() => ({}))
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
       const request = {
         cache: () => ({
           getData: mockGetData,
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
 
@@ -150,7 +147,6 @@ describe('The task-list handler', () => {
       const result = await getApplication(request)
       expect(result).toEqual({ id: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de' })
-      expect(mockClearPageData).toHaveBeenCalled()
     })
 
     it('gets an application from the query parameter without causing a switch of application', async () => {
@@ -222,14 +218,12 @@ describe('The task-list handler', () => {
       }))
 
       const mockSetData = jest.fn()
-      const mockClearPageData = jest.fn()
 
       const request = {
         query: { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' },
         cache: () => ({
           getData: mockGetData,
-          setData: mockSetData,
-          clearPageData: mockClearPageData
+          setData: mockSetData
         })
       }
 
@@ -316,8 +310,7 @@ describe('The task-list handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({
           applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
-        })),
-        clearPageData: jest.fn()
+        }))
       })
     }
 

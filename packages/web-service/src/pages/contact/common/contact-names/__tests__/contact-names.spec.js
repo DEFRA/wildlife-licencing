@@ -104,7 +104,6 @@ describe('contact-names', () => {
       const request = {
         cache: () => ({
           getPageData: jest.fn(() => ({ payload: { contact: 'new' } })),
-          clearPageData: jest.fn(),
           getData: jest.fn(() => ({
             userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
             applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
@@ -314,8 +313,7 @@ describe('contact-names', () => {
           getData: jest.fn(() => ({
             userId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
             applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
-          })),
-          clearPageData: jest.fn()
+          }))
         })
       }
       jest.doMock('../../../../../services/api-requests.js', () => ({

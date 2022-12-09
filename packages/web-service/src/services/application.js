@@ -1,6 +1,6 @@
 import { APIRequests } from './api-requests.js'
 import db from 'debug'
-import { clearPageData, clearData } from './cache-operations.js'
+import { clearData } from './cache-operations.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const debug = db('web-service:application-service')
 
@@ -20,7 +20,6 @@ export const ApplicationService = {
     delete journeyData.additionalContact
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)
-    await clearPageData(request)
     await clearData(request)
     return application
   },
@@ -42,7 +41,6 @@ export const ApplicationService = {
       delete journeyData.role
       delete journeyData.additionalContact
       await request.cache().setData(journeyData)
-      await clearPageData(request)
       await clearData(request)
     }
     return id

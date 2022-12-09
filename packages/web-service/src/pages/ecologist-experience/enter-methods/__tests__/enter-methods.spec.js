@@ -89,6 +89,7 @@ describe('The enter methods page', () => {
         view: (view, pageData) => pageData
       }
       const request = {
+        info: { referrer: '' },
         payload: {
           'enter-methods': 'experience'
         },
