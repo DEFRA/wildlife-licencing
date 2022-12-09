@@ -2,12 +2,6 @@
 {% from "input/macro.njk" import govukInput %}
 {% from "select/macro.njk" import govukSelect %}
 
-{% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
-{% endblock %}
-
 {% set errorMap = {
         'uprn': {
             'number.base': { ref: '#address', text: 'Select an address' }
