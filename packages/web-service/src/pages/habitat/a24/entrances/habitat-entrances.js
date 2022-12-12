@@ -32,31 +32,31 @@ export const validator = async (payload, context) => {
 
   if (!/^\d*(\.\d+)?$/.test(payload[page])) {
     throwJoiError(
-      'habitat-entrances',
+      page,
       'Unauthorized: input must be a number',
       'entrancesMustBeNumber'
     )
   } else if (!Number.isInteger(intInput)) {
     throwJoiError(
-      'habitat-entrances',
+      page,
       'Unauthorized: input must be an integer',
       'entrancesMustBeInteger'
     )
   } else if (intInput >= 101) {
     throwJoiError(
-      'habitat-entrances',
+      page,
       'Unauthorized: input must be equal, or less than 100',
       'entrancesMustBeLessThan100'
     )
   } else if (intInput <= 0) {
     throwJoiError(
-      'habitat-entrances',
+      page,
       'Unauthorized: input must be greater than 0',
       'entrancesMustBeMoreThan1'
     )
   } else if (parseInt(currentHabitat.numberOfActiveEntrances) > intInput) {
     throwJoiError(
-      'habitat-entrances',
+      page,
       'Unauthorized: total entrance holes must be greater than the amount of active entrance holes',
       'entrancesMustBeLessThanActiveHoles'
     )
