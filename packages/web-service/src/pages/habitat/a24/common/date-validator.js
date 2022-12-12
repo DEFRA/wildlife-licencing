@@ -1,20 +1,7 @@
 
-import Joi from 'joi'
+import { throwJoiError } from './error-handler.js'
 import { isDate } from '../../../../common/is-date.js'
 import { isDateInvalid } from '../../../../common/is-date-invalid.js'
-
-const throwJoiError = (pageName, message, type) => {
-  throw new Joi.ValidationError('ValidationError', [{
-    message: message,
-    path: [pageName],
-    type: type,
-    context: {
-      label: pageName,
-      value: 'Error',
-      key: pageName
-    }
-  }], null)
-}
 
 export const validateDates = (payload, pageName) => {
   const day = payload[`${pageName}-day`]

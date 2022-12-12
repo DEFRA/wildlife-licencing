@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import { throwJoiError } from '../common/error-handler.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -21,19 +21,6 @@ export const completion = async request => {
   return habitatURIs.ACTIVE_ENTRANCES.uri
 }
 
-const throwJoiError = (errorMessage, errorKey) => {
-  throw new Joi.ValidationError('ValidationError', [{
-    message: errorMessage,
-    path: [page],
-    type: errorKey,
-    context: {
-      label: page,
-      value: page,
-      key: page
-    }
-  }], null)
-}
-
 export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
   const { context: { query: { id: settId } } } = context
@@ -45,26 +32,31 @@ export const validator = async (payload, context) => {
 
   if (!/^\d*(\.\d+)?$/.test(payload[page])) {
     throwJoiError(
+      'habitat-entrances',
       'Unauthorized: input must be a number',
       'entrancesMustBeNumber'
     )
   } else if (!Number.isInteger(intInput)) {
     throwJoiError(
+      'habitat-entrances',
       'Unauthorized: input must be an integer',
       'entrancesMustBeInteger'
     )
   } else if (intInput >= 101) {
     throwJoiError(
+      'habitat-entrances',
       'Unauthorized: input must be equal, or less than 100',
       'entrancesMustBeLessThan100'
     )
   } else if (intInput <= 0) {
     throwJoiError(
+      'habitat-entrances',
       'Unauthorized: input must be greater than 0',
       'entrancesMustBeMoreThan1'
     )
   } else if (parseInt(currentHabitat.numberOfActiveEntrances) > intInput) {
     throwJoiError(
+      'habitat-entrances',
       'Unauthorized: total entrance holes must be greater than the amount of active entrance holes',
       'entrancesMustBeLessThanActiveHoles'
     )
