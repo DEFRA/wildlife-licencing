@@ -147,5 +147,194 @@ describe('The habitat entrances page', () => {
       const { getData } = await import('../habitat-entrances.js')
       expect(await getData(request)).toStrictEqual({ numberOfEntrances: result.habitatData.numberOfEntrances })
     })
+
+    describe('the validator function will throw an eror for ...', () => {
+      it('a string input', async () => {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+          cacheDirect: () => ({
+            getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+          })
+        }))
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          APIRequests: ({
+            HABITAT: {
+              getHabitatsById: () => {
+                return [
+                  {
+                    id: 'abc-123'
+                  }
+                ]
+              }
+            }
+          })
+        }))
+        const payload = {
+          'habitat-entrances': 'ab'
+        }
+        const context = {
+          context: {
+            query: {
+              id: 'abc-123'
+            }
+          }
+        }
+        const { validator } = await import('../habitat-entrances.js')
+        try {
+          await validator(payload, context)
+        } catch (e) {
+          expect(e.message).toBe('ValidationError')
+          expect(e.details[0].message).toBe('Unauthorized: input must be a number')
+        }
+      })
+      it('a decimal input', async () => {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+          cacheDirect: () => ({
+            getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+          })
+        }))
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          APIRequests: ({
+            HABITAT: {
+              getHabitatsById: () => {
+                return [
+                  {
+                    id: 'abc-123'
+                  }
+                ]
+              }
+            }
+          })
+        }))
+        const payload = {
+          'habitat-entrances': '1.4'
+        }
+        const context = {
+          context: {
+            query: {
+              id: 'abc-123'
+            }
+          }
+        }
+        const { validator } = await import('../habitat-entrances.js')
+        try {
+          await validator(payload, context)
+        } catch (e) {
+          expect(e.message).toBe('ValidationError')
+          expect(e.details[0].message).toBe('Unauthorized: input must be an integer')
+        }
+      })
+      it('an input greater than 100', async () => {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+          cacheDirect: () => ({
+            getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+          })
+        }))
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          APIRequests: ({
+            HABITAT: {
+              getHabitatsById: () => {
+                return [
+                  {
+                    id: 'abc-123'
+                  }
+                ]
+              }
+            }
+          })
+        }))
+        const payload = {
+          'habitat-entrances': '101'
+        }
+        const context = {
+          context: {
+            query: {
+              id: 'abc-123'
+            }
+          }
+        }
+        const { validator } = await import('../habitat-entrances.js')
+        try {
+          await validator(payload, context)
+        } catch (e) {
+          expect(e.message).toBe('ValidationError')
+          expect(e.details[0].message).toBe('Unauthorized: input must be equal, or less than 100')
+        }
+      })
+      it('a zero input', async () => {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+          cacheDirect: () => ({
+            getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+          })
+        }))
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          APIRequests: ({
+            HABITAT: {
+              getHabitatsById: () => {
+                return [
+                  {
+                    id: 'abc-123'
+                  }
+                ]
+              }
+            }
+          })
+        }))
+        const payload = {
+          'habitat-entrances': '0'
+        }
+        const context = {
+          context: {
+            query: {
+              id: 'abc-123'
+            }
+          }
+        }
+        const { validator } = await import('../habitat-entrances.js')
+        try {
+          await validator(payload, context)
+        } catch (e) {
+          expect(e.message).toBe('ValidationError')
+          expect(e.details[0].message).toBe('Unauthorized: input must be greater than 0')
+        }
+      })
+      it('a zero input', async () => {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+          cacheDirect: () => ({
+            getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+          })
+        }))
+        jest.doMock('../../../../../services/api-requests.js', () => ({
+          APIRequests: ({
+            HABITAT: {
+              getHabitatsById: () => {
+                return [
+                  {
+                    id: 'abc-123',
+                    numberOfActiveEntrances: 100
+                  }
+                ]
+              }
+            }
+          })
+        }))
+        const payload = {
+          'habitat-entrances': '10'
+        }
+        const context = {
+          context: {
+            query: {
+              id: 'abc-123'
+            }
+          }
+        }
+        const { validator } = await import('../habitat-entrances.js')
+        try {
+          await validator(payload, context)
+        } catch (e) {
+          expect(e.message).toBe('ValidationError')
+          expect(e.details[0].message).toBe('Unauthorized: total entrance holes must be greater than the amount of active entrance holes')
+        }
+      })
+    })
   })
 })
