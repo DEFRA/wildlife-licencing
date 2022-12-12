@@ -2660,7 +2660,7 @@ components:
         proposalDescription:
           type: string
           minLength: 1
-          maxLength: 300
+          maxLength: 4000
         detailsOfConvictions:
           type: string
           minLength: 1
@@ -2671,6 +2671,8 @@ components:
           maxLength: 300
         applicationCategory:
           type: number
+        exemptFromPayment:
+          type: boolean
         applicationTypeId:
           $ref: '#/components/schemas/uuid'
         applicationPurposeId:

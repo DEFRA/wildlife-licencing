@@ -19,12 +19,6 @@
 {% set title = 'Add a map of the site showing the mitigations during development' %}
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
-{% block topNavigation %}
-<p class="govuk-body sdds-save-link">
-    <a class="govuk-link govuk-link--no-visited-state" href="/applications">Save and return later</a>
-</p>
-{% endblock %}
-
 {% block content %}
 
 {{ errorSummary(error, errorMap, 'There is a problem') }}
