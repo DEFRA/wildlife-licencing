@@ -5,8 +5,8 @@ export const SddsLicensableActions = new Table('sdds_licensableactions', [
   new Column('sdds_species', 'name'), // Note: error in the data-verse
   new Column('sdds_osgridref', 'gridReference'),
   new Column('sdds_setttype', 'settType'),
-  new Column('sdds_proposedstartdate', 'startDate'),
-  new Column('sdds_proposedenddate', 'endDate'),
+  new Column('sdds_proposedstartdate', 'workStart'),
+  new Column('sdds_proposedenddate', 'workEnd'),
   new Column('sdds_activebadgersett', 'active'),
   new Column('sdds_badgersettbereopenedafterdevelopment', 'willReopen'),
   new Column('sdds_noentranceholeofbadgersett', 'numberOfEntrances')
