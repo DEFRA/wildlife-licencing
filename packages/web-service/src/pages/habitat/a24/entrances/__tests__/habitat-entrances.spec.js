@@ -297,7 +297,7 @@ describe('The habitat entrances page', () => {
           expect(e.details[0].message).toBe('Unauthorized: input must be greater than 0')
         }
       })
-      it('a zero input', async () => {
+      it('an input where the total entrances is less than the amount of active entrances', async () => {
         jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
           cacheDirect: () => ({
             getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
