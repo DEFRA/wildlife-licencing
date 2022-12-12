@@ -4,7 +4,8 @@
 
 {% set errorMap = {
         'enter-licence-details': {
-          'string.empty': { ref: '#enter-licence-details', text: 'You have not entered a licence number' }
+          'emptyLicenceDetails': { ref: '#enter-licence-details', text: 'You have not entered a licence number' },
+          'existingLicenceDetails': { ref: '#enter-licence-details', text: 'You have already entered this badger mitigation licence' }
         }
     }
 %}
@@ -16,6 +17,7 @@
   {{ govukInput({
     id: "enter-licence-details",
     name: "enter-licence-details",
+    value: payload['enter-licence-details'],
     hint: {
       text: "Enter the reference number of any previously held badger mitigation licence."
     },
