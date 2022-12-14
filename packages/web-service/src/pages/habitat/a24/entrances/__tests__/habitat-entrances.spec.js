@@ -65,15 +65,15 @@ describe('The habitat entrances page', () => {
       }))
 
       const request = {
-        orig: {
-          payload: {
-            'habitat-entrances': '99'
-          }
-        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
             habitatData: {}
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-entrances': 99
+            }
           })
         })
       }
@@ -100,11 +100,6 @@ describe('The habitat entrances page', () => {
         }
       }))
       const request = {
-        orig: {
-          payload: {
-            'habitat-entrances': 5
-          }
-        },
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
         },
@@ -112,6 +107,11 @@ describe('The habitat entrances page', () => {
           setData: mockSetData,
           getData: () => ({
             habitatData: {
+            }
+          }),
+          getPageData: () => ({
+            payload: {
+              'habitat-entrances': 5
             }
           })
         })
@@ -182,8 +182,8 @@ describe('The habitat entrances page', () => {
         try {
           await validator(payload, context)
         } catch (e) {
-          expect(e.message).toBe('ValidationError')
-          expect(e.details[0].message).toBe('Unauthorized: input must be a number')
+          // eslint-disable-next-line
+          expect(e.details[0].message).toBe('"habitat-entrances\" must be a number')
         }
       })
       it('a decimal input', async () => {
@@ -219,8 +219,8 @@ describe('The habitat entrances page', () => {
         try {
           await validator(payload, context)
         } catch (e) {
-          expect(e.message).toBe('ValidationError')
-          expect(e.details[0].message).toBe('Unauthorized: input must be an integer')
+          // eslint-disable-next-line
+          expect(e.details[0].message).toBe('\"habitat-entrances\" must be an integer')
         }
       })
       it('an input greater than 100', async () => {
@@ -256,8 +256,8 @@ describe('The habitat entrances page', () => {
         try {
           await validator(payload, context)
         } catch (e) {
-          expect(e.message).toBe('ValidationError')
-          expect(e.details[0].message).toBe('Unauthorized: input must be equal, or less than 100')
+          // eslint-disable-next-line
+          expect(e.details[0].message).toBe('"habitat-entrances\" must be less than or equal to 100')
         }
       })
       it('a zero input', async () => {
@@ -293,8 +293,8 @@ describe('The habitat entrances page', () => {
         try {
           await validator(payload, context)
         } catch (e) {
-          expect(e.message).toBe('ValidationError')
-          expect(e.details[0].message).toBe('Unauthorized: input must be greater than 0')
+          // eslint-disable-next-line
+          expect(e.details[0].message).toBe("\"habitat-entrances\" must be greater than 0")
         }
       })
       it('an input where the total entrances is less than the amount of active entrances', async () => {
@@ -310,7 +310,7 @@ describe('The habitat entrances page', () => {
                 return [
                   {
                     id: 'abc-123',
-                    numberOfActiveEntrances: 100
+                    numberOfActiveEntrances: 90
                   }
                 ]
               }
@@ -331,8 +331,8 @@ describe('The habitat entrances page', () => {
         try {
           await validator(payload, context)
         } catch (e) {
-          expect(e.message).toBe('ValidationError')
-          expect(e.details[0].message).toBe('Unauthorized: total entrance holes must be greater than the amount of active entrance holes')
+          // eslint-disable-next-line
+          expect(e.details[0].message).toBe('"habitat-entrances\" must be greater than 90')
         }
       })
     })
