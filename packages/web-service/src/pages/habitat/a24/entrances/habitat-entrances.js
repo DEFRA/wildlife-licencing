@@ -26,8 +26,7 @@ export const validator = async (payload, context) => {
   const { context: { query: { id: settId } } } = context
 
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
-  const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0]
-
+  const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
   const intInput = +payload[page]
 
   if (!/^\d*(\.\d+)?$/.test(payload[page])) {
@@ -64,11 +63,10 @@ export const validator = async (payload, context) => {
 }
 
 export const setData = async request => {
-  const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
-  const numberOfEntrances = parseInt(pageData.payload[page])
+  const numberOfEntrances = parseInt(request.orig.payload[page])
 
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })

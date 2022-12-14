@@ -65,15 +65,15 @@ describe('The habitat entrances page', () => {
       }))
 
       const request = {
+        orig: {
+          payload: {
+            'habitat-entrances': '99'
+          }
+        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
             habitatData: {}
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-entrances': 99
-            }
           })
         })
       }
@@ -100,6 +100,11 @@ describe('The habitat entrances page', () => {
         }
       }))
       const request = {
+        orig: {
+          payload: {
+            'habitat-entrances': '99'
+          }
+        },
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
         },
@@ -107,11 +112,6 @@ describe('The habitat entrances page', () => {
           setData: mockSetData,
           getData: () => ({
             habitatData: {
-            }
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-entrances': 5
             }
           })
         })
@@ -130,7 +130,7 @@ describe('The habitat entrances page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { numberOfEntrances: 5 }
+          { numberOfEntrances: 99 }
       })
     })
 
