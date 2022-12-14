@@ -336,5 +336,38 @@ describe('The habitat entrances page', () => {
         }
       })
     })
+
+    it('the validator will return null, if no errors are thrown', async () => {
+      jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+        cacheDirect: () => ({
+          getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+        })
+      }))
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: () => {
+              return [
+                {
+                  id: 'abcdefg-123'
+                }
+              ]
+            }
+          }
+        })
+      }))
+      const payload = {
+        'habitat-entrances': '10'
+      }
+      const context = {
+        context: {
+          query: {
+            id: 'abc-123'
+          }
+        }
+      }
+      const { validator } = await import('../habitat-entrances.js')
+      expect(await validator(payload, context)).toBe(undefined)
+    })
   })
 })
