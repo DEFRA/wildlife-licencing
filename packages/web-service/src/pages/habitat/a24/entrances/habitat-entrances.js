@@ -28,10 +28,13 @@ export const validator = async (payload, context) => {
   const activeEntranceCount = currentHabitat?.numberOfActiveEntrances || 0
 
   const schema = Joi.object({
-    [habitatURIs.ENTRANCES.page]: Joi.number().integer().required().min(0).max(100).greater(activeEntranceCount)
-  })
+    [habitatURIs.ENTRANCES.page]: Joi.number().required().integer().min(0).max(100).greater(activeEntranceCount)
+  }).options({ abortEarly: false, allowUnknown: true })
 
-  Joi.assert(payload, schema, 'name', { abortEarly: false, allowUnknown: true })
+  Joi.assert(
+    payload,
+    schema
+  )
 }
 
 export const setData = async request => {

@@ -337,7 +337,7 @@ describe('The habitat entrances page', () => {
       })
     })
 
-    it('the validator will return null, if no errors are thrown', async () => {
+    it('the validator will return undefined, if no errors are thrown', async () => {
       jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
         cacheDirect: () => ({
           getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
