@@ -19,40 +19,44 @@ export const completion = async request => {
   return habitatURIs.GRID_REF.uri
 }
 
-const validation = Joi.object({
-  'habitat-active-entrances': Joi.number().integer().required().max(100)
-}).options({ abortEarly: false, allowUnknown: true })
-
 export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
-  const { habitatData } = journeyData
-  const { numberOfEntrances } = habitatData
-  const habitatActiveEntrances = 'habitat-active-entrances'
-  const numberOfActiveEntrances = payload[habitatActiveEntrances]
+  const { context: { query: { id: settId } } } = context
 
-  Joi.assert({ 'habitat-active-entrances': numberOfActiveEntrances }, validation)
-
-  if (numberOfActiveEntrances > numberOfEntrances) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: the user has entered more active holes than total holes',
-      path: [habitatActiveEntrances],
-      type: 'tooManyActiveHoles',
-      context: {
-        label: habitatActiveEntrances,
-        value: 'Error',
-        key: habitatActiveEntrances
-      }
-    }], null)
+  let numberOfTotalEntrances = 0
+  if (settId) {
+    const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
+    const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
+    numberOfTotalEntrances = currentHabitat?.numberOfEntrances || 0
+  } else {
+    numberOfTotalEntrances = journeyData.habitatData.numberOfEntrances // todo: does this work with 3 habitats?
   }
+
+  const numberOfActiveEntrances = payload[habitatURIs.ACTIVE_ENTRANCES.page]
+
+  Joi.assert(
+    { [habitatURIs.ACTIVE_ENTRANCES.page]: numberOfActiveEntrances },
+    Joi.object({
+      [habitatURIs.ACTIVE_ENTRANCES.page]: Joi.number().integer().required().max(100).less(numberOfTotalEntrances)
+    }).options({ abortEarly: false, allowUnknown: true })
+  )
 }
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
 
-  const habitatActiveEntrances = 'habitat-active-entrances'
-  const numberOfActiveEntrances = pageData.payload[habitatActiveEntrances]
-  const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatActiveEntrances] > 0
+  let numberOfEntrances = 0
+  if (request.query.id) {
+    const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
+    const currentHabitat = habitatSites.filter(obj => obj.id === request.query.id)[0] || {}
+    numberOfEntrances = currentHabitat?.numberOfEntrances || 0
+  } else {
+    numberOfEntrances = journeyData.habitatData.numberOfEntrances
+  }
+
+  const numberOfActiveEntrances = +pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]
+  const active = numberOfEntrances > 0 && numberOfActiveEntrances > 0
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 

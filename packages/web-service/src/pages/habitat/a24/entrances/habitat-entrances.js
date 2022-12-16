@@ -23,9 +23,14 @@ export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
   const { context: { query: { id: settId } } } = context
 
-  const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
-  const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
-  const activeEntranceCount = currentHabitat?.numberOfActiveEntrances || 0
+  let activeEntranceCount = 0
+  if (settId) {
+    const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
+    const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
+    activeEntranceCount = currentHabitat?.numberOfActiveEntrances || 0
+  } else {
+    activeEntranceCount = journeyData.habitatData.numberOfActiveEntrances
+  }
 
   const schema = Joi.object({
     [habitatURIs.ENTRANCES.page]: Joi.number().required().integer().min(0).max(100).greater(activeEntranceCount)

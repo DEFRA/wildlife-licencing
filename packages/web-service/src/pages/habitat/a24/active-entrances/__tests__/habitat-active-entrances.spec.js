@@ -68,6 +68,9 @@ describe('The habitat active entrances page', () => {
       }))
 
       const request = {
+        query: {
+          id: ''
+        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
@@ -96,6 +99,27 @@ describe('The habitat active entrances page', () => {
           COMPLETE: 'complete'
         },
         APIRequests: {
+          HABITAT: {
+            getHabitatsById: () => {
+              return [
+                {
+                  id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
+                  name: 'the edge of the big field',
+                  applicationId: 'd44db455-3fee-48eb-9100-f2ca7d490b4f',
+                  settType: 100000002,
+                  willReopen: true,
+                  numberOfEntrances: 54,
+                  numberOfActiveEntrances: 23,
+                  gridReference: 'NY574735',
+                  workStart: '11-03-2222',
+                  workEnd: '11-30-3001',
+                  methodIds: [100000010, 100000011],
+                  speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+                  activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24'
+                }
+              ]
+            }
+          },
           APPLICATION: {
             tags: () => {
               return { get: () => 'complete' }
@@ -142,6 +166,12 @@ describe('The habitat active entrances page', () => {
     it('returns an error if more active entrances than entrances', async () => {
       try {
         const payload = { 'habitat-active-entrances': 13 }
+        const context = {
+          context: {
+            query: {
+            }
+          }
+        }
         jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
           return {
             cacheDirect: () => {
@@ -154,33 +184,34 @@ describe('The habitat active entrances page', () => {
           }
         })
         const { validator } = await import('../habitat-active-entrances.js')
-        expect(await validator(payload))
+        expect(await validator(payload, context))
       } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the user has entered more active holes than total holes')
+        // eslint-disable-next-line
+        expect(e.details[0].message).toBe("\"habitat-active-entrances\" must be less than 3")
       }
     })
 
-    it('should not returns an error if less active entrances than entrances', async () => {
-      try {
-        const payload = { 'habitat-active-entrances': 3 }
-        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
-          return {
-            cacheDirect: () => {
-              return {
-                getData: () => ({
-                  habitatData: { numberOfEntrances: 13 }
-                })
-              }
+    it('should not return an error if there are less active entrances than entrances', async () => {
+      const payload = { 'habitat-active-entrances': 3 }
+      const context = {
+        context: {
+          query: {
+          }
+        }
+      }
+      jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => {
+            return {
+              getData: () => ({
+                habitatData: { numberOfEntrances: 13 }
+              })
             }
           }
-        })
-        const { validator } = await import('../habitat-active-entrances.js')
-        expect(await validator(payload)).toBeUndefined()
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the user has entered more active holes than total holes')
-      }
+        }
+      })
+      const { validator } = await import('../habitat-active-entrances.js')
+      expect(await validator(payload, context)).toBeUndefined()
     })
 
     it('getData returns the correct object', async () => {
