@@ -7,7 +7,7 @@ describe('the check-supporting-information page handler', () => {
   })
 
   describe('the getData function', () => {
-    it(' returns the file data', async () => {
+    it(' should return the supporting information uploaded file', async () => {
       const mockRemoveUploadedFile = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e', uploadId: '1234567' }))
       const mockGetUploadedFiles = jest.fn(() => ([{ id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', createdAt: '2022-03-25T14:10:14.861Z', updatedAt: '2022-03-25T14:10:14.861Z', filetype: 'METHOD-STATEMENT', applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }]))
       const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
@@ -43,6 +43,29 @@ describe('the check-supporting-information page handler', () => {
         uploadedDate: '25 March 2022'
       }]
       )
+    })
+
+    it(' should return undefined when no uploaded supporting information file found ', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: ({
+          FILE_UPLOAD: {
+            removeUploadedFile: jest.fn(),
+            getUploadedFiles: jest.fn(() => null)
+          }
+        })
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
+        })
+      }
+      const { getData } = await import('../check-supporting-information.js')
+      const result = await getData(request)
+      expect(result).toBeUndefined()
     })
   })
 
