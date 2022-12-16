@@ -27,8 +27,9 @@ export const validator = async (payload, context) => {
   if (settId) {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
-    numberOfTotalEntrances = currentHabitat?.numberOfEntrances || 0
+    numberOfTotalEntrances = currentHabitat.numberOfEntrances || 0
   } else {
+    console.log(journeyData.habitatData)
     numberOfTotalEntrances = journeyData.habitatData.numberOfEntrances // todo: does this work with 3 habitats?
   }
 
@@ -50,7 +51,7 @@ export const setData = async request => {
   if (request.query.id) {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === request.query.id)[0] || {}
-    numberOfEntrances = currentHabitat?.numberOfEntrances || 0
+    numberOfEntrances = currentHabitat.numberOfEntrances || 0
   } else {
     numberOfEntrances = journeyData.habitatData.numberOfEntrances
   }
