@@ -8,10 +8,9 @@
 {% endif %}
 
 {% set noneSelected = 'Choose yes if you want to add an authorised person' %}
-{% set radioHint = 'This is a person authorised to carry out the licensed activities.' %}
-
 
 {% block pageContent %}
+
 {% if data.contacts.length !== 0 %}
     {% for contact in data.contacts %}
         <h2 class="govuk-heading-m">Authorised person</h2>
@@ -26,6 +25,9 @@
         {{ answerSummary(questionMap, contact.details) }}
     {% endfor %}
     <h2 class="govuk-heading-m">Do you want to add another authorised person?</h2>
+{% else %}
+    <p class="govuk-body-m">This is a person who will be responsible for everything done under the licence.</p>
+    <p class="govuk-body-m">It does not include any assistants who will work under the direct supervision of the licence holder or any authorised people.</p>
 {% endif %}
 
 {{ super() }}
