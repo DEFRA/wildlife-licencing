@@ -44,15 +44,8 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
 
-  let numberOfEntrances = 0
-  if (request.query.id) {
-    const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
-    const currentHabitat = habitatSites.filter(obj => obj.id === request.query.id)[0] || {}
-    numberOfEntrances = currentHabitat.numberOfEntrances || 0
-  }
-
-  const numberOfActiveEntrances = +pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]
-  const active = numberOfEntrances > 0 && numberOfActiveEntrances > 0
+  const numberOfActiveEntrances = pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]
+  const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page] > 0
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
