@@ -97,6 +97,50 @@ describe('add authorised person', () => {
   })
 
   describe('the getData function ', () => {
+    it('sets the tag status to in-progress if not-stared', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet,
+              get: () =>
+                'not-started'
+            })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
+                fullName: 'Peter Hammill',
+                contactDetails: { email: 'Peter.Hammil@vandergrafgenerator' },
+                address: {
+                  postcode: 'BS32 8IU'
+                }
+              }])
+            })
+          }
+        }
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { getData } = await import('../add-authorised-person.js')
+      await getData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'authorised-people', tagState: 'in-progress' })
+    })
+
     it('returns the check-answers data correctly', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
