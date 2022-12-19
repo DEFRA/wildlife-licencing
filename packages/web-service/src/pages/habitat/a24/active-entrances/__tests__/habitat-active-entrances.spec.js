@@ -268,5 +268,44 @@ describe('The habitat active entrances page', () => {
       await validator(payload, context)
       expect(mockGetHabitatsById).toHaveBeenCalledTimes(1)
     })
+
+    it('the validator can default values if the user is going through the flow for the first time', async () => {
+      const payload = { 'habitat-active-entrances': 1 }
+      const mockGetHabitatsById = jest.fn()
+      mockGetHabitatsById.mockImplementation(() => {
+        return [
+          {
+            id: 'abc-123',
+            numberOfEntrances: 11
+          }
+        ]
+      })
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: mockGetHabitatsById
+          }
+        })
+      }))
+      const context = {
+        context: {
+          query: {
+          }
+        }
+      }
+      jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => {
+            return {
+              getData: () => ({
+                habitatData: {}
+              })
+            }
+          }
+        }
+      })
+      const { validator } = await import('../habitat-active-entrances.js')
+      expect(await validator(payload, context)).toBe(undefined)
+    })
   })
 })

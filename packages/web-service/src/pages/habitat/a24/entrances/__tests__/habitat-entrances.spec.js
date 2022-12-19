@@ -403,5 +403,38 @@ describe('The habitat entrances page', () => {
       const { validator } = await import('../habitat-entrances.js')
       expect(await validator(payload, context)).toBe(undefined)
     })
+
+    it('if the user is going through the flow for the first time, it tests validates against 0', async () => {
+      jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
+        cacheDirect: () => ({
+          getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
+        })
+      }))
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: () => {
+              return [
+                {
+                  id: 'abc-123',
+                  numberOfEntrances: 11
+                }
+              ]
+            }
+          }
+        })
+      }))
+      const payload = {
+        'habitat-entrances': 22
+      }
+      const context = {
+        context: {
+          query: {
+          }
+        }
+      }
+      const { validator } = await import('../habitat-entrances.js')
+      expect(await validator(payload, context)).toBe(undefined)
+    })
   })
 })
