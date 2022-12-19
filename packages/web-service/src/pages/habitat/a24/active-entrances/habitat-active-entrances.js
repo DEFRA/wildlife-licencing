@@ -29,8 +29,7 @@ export const validator = async (payload, context) => {
     const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
     numberOfTotalEntrances = currentHabitat.numberOfEntrances || 0
   } else {
-    console.log(journeyData.habitatData)
-    numberOfTotalEntrances = journeyData.habitatData.numberOfEntrances // todo: does this work with 3 habitats?
+    numberOfTotalEntrances = journeyData.habitatData.numberOfEntrances
   }
 
   const numberOfActiveEntrances = payload[habitatURIs.ACTIVE_ENTRANCES.page]
