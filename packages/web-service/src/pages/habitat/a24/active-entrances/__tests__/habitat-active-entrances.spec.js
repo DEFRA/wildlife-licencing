@@ -227,5 +227,46 @@ describe('The habitat active entrances page', () => {
       const { getData } = await import('../habitat-active-entrances.js')
       expect(await getData(request)).toStrictEqual({ numberOfActiveEntrances: result.habitatData.numberOfActiveEntrances })
     })
+
+    it('the validator hits the api to ensure it has the correct data', async () => {
+      const payload = { 'habitat-active-entrances': 1 }
+      const mockGetHabitatsById = jest.fn()
+      mockGetHabitatsById.mockImplementation(() => {
+        return [
+          {
+            id: 'abc-123',
+            numberOfEntrances: 11
+          }
+        ]
+      })
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: mockGetHabitatsById
+          }
+        })
+      }))
+      const context = {
+        context: {
+          query: {
+            id: 'abc-123'
+          }
+        }
+      }
+      jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => {
+            return {
+              getData: () => ({
+                habitatData: { numberOfEntrances: 11 }
+              })
+            }
+          }
+        }
+      })
+      const { validator } = await import('../habitat-active-entrances.js')
+      await validator(payload, context)
+      expect(mockGetHabitatsById).toHaveBeenCalledTimes(1)
+    })
   })
 })
