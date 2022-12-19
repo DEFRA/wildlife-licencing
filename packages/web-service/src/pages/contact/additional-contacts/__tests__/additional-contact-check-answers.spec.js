@@ -80,4 +80,32 @@ describe('add additional contact check page', () => {
       })
     })
   })
+
+  describe('setData', () => {
+    it('sets the tag status to completed', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => {
+        const actual = jest.requireActual('../../../../services/api-requests.js')
+        return {
+          tagStatus: actual.tagStatus,
+          APIRequests: {
+            APPLICATION: {
+              tags: () => ({ set: mockSet })
+            }
+          }
+        }
+      })
+      const { setData } = await import('../additional-contact-check-answers.js')
+      const request = {
+        cache: () => ({
+          getData: () => ({ applicationId: '6c77278f-b1d8-4754-97ba-d86b5c05d51e' })
+        })
+      }
+      await setData(request)
+      expect(mockSet).toHaveBeenCalledWith({
+        tag: 'additional-contacts',
+        tagState: 'complete'
+      })
+    })
+  })
 })

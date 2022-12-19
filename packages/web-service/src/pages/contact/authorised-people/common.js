@@ -1,14 +1,9 @@
 import { contactURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
-import { checkApplication } from '../../common/check-application.js'
 const { NAME, EMAIL, POSTCODE, ADD } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkAuthorisedPeopleData = async (request, h) => {
-  const ck = await checkApplication(request, h)
-  if (ck) {
-    return ck
-  }
   const journeyData = await request.cache().getData()
   const params = new URLSearchParams(request.query)
   const id = params.get('id')

@@ -139,6 +139,34 @@ describe('authorised person common', () => {
       expect(h.redirect).toHaveBeenCalledWith('/add-authorised-person')
     })
 
+    it('returns null if an ID parameter is set and the contact does exist', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            getById: jest.fn(() => ({ id: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }))
+          }
+        }
+      }))
+      const request = {
+        query: { id: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' },
+        cache: () => ({
+          setData: mockSetData,
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+            authorisedPeople: { contactId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }
+          }))
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const { checkAuthorisedPeopleData } = await import('../common.js')
+      await checkAuthorisedPeopleData(request, h)
+      expect(h.redirect).not.toHaveBeenCalled()
+    })
+
     it('returns null if the authorisedPeople.contactId is set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {

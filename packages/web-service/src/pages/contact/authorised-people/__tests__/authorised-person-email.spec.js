@@ -1,5 +1,20 @@
 describe('authorised person email', () => {
   beforeEach(() => jest.resetModules())
+  describe('the ofContact function', () => {
+    it('returns page data', async () => {
+      const { ofContact } = await import('../authorised-person-email.js')
+      const contact = {
+        fullName: 'name',
+        contactDetails: { email: 'a@b.c' }
+      }
+      const result = await ofContact(contact)
+      expect(result).toEqual({
+        contactName: 'name',
+        email: 'a@b.c'
+      })
+    })
+  })
+
   describe('the setData function', () => {
     it('sets the email address on the contact', async () => {
       const mockUpdate = jest.fn()

@@ -1,5 +1,24 @@
 describe('authorised person postcode', () => {
   beforeEach(() => jest.resetModules())
+
+  describe('the ofContact function', () => {
+    it('returns page data', async () => {
+      const { ofContact } = await import('../authorised-person-postcode.js')
+      const contact = {
+        fullName: 'name',
+        address: { postcode: 'BS27 2EU' }
+      }
+      const result = await ofContact(contact)
+      expect(result).toEqual({
+        contactName: 'name',
+        postcode: 'BS27 2EU',
+        uri: {
+          addressForm: '/authorised-person-address-form?no-postcode=true'
+        }
+      })
+    })
+  })
+
   describe('the setData function', () => {
     const mockSetData = jest.fn()
     it('sets the postcode correctly', async () => {
