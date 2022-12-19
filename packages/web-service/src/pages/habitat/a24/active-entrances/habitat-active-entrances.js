@@ -23,13 +23,11 @@ export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
   const { context: { query: { id: settId } } } = context
 
-  let numberOfTotalEntrances = 0
+  let numberOfTotalEntrances = journeyData?.habitatData?.numberOfEntrances || 100
   if (settId) {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
     numberOfTotalEntrances = currentHabitat.numberOfEntrances || 0
-  } else {
-    numberOfTotalEntrances = journeyData.habitatData.numberOfEntrances
   }
 
   const numberOfActiveEntrances = payload[habitatURIs.ACTIVE_ENTRANCES.page]
@@ -37,7 +35,7 @@ export const validator = async (payload, context) => {
   Joi.assert(
     { [habitatURIs.ACTIVE_ENTRANCES.page]: numberOfActiveEntrances },
     Joi.object({
-      [habitatURIs.ACTIVE_ENTRANCES.page]: Joi.number().integer().required().max(100).less(numberOfTotalEntrances)
+      [habitatURIs.ACTIVE_ENTRANCES.page]: Joi.number().integer().required().less(numberOfTotalEntrances)
     }).options({ abortEarly: false, allowUnknown: true })
   )
 }
@@ -51,8 +49,6 @@ export const setData = async request => {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === request.query.id)[0] || {}
     numberOfEntrances = currentHabitat.numberOfEntrances || 0
-  } else {
-    numberOfEntrances = journeyData.habitatData.numberOfEntrances
   }
 
   const numberOfActiveEntrances = +pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]

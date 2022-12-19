@@ -28,14 +28,12 @@ export const validator = async (payload, context) => {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
     activeEntranceCount = currentHabitat.numberOfActiveEntrances || 0
-  } else {
-    activeEntranceCount = journeyData.habitatData.numberOfActiveEntrances
   }
 
   Joi.assert(
     payload,
     Joi.object({
-      [habitatURIs.ENTRANCES.page]: Joi.number().required().integer().min(0).max(100).greater(activeEntranceCount)
+      [habitatURIs.ENTRANCES.page]: Joi.number().required().integer().min(1).max(100).greater(activeEntranceCount)
     }).options({ abortEarly: false, allowUnknown: true })
   )
 }

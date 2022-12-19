@@ -294,7 +294,7 @@ describe('The habitat entrances page', () => {
           await validator(payload, context)
         } catch (e) {
           // eslint-disable-next-line
-          expect(e.details[0].message).toBe("\"habitat-entrances\" must be greater than 0")
+          expect(e.details[0].message).toBe("\"habitat-entrances\" must be greater than or equal to 1")
         }
       })
       it('an input where the total entrances is less than the amount of active entrances', async () => {
