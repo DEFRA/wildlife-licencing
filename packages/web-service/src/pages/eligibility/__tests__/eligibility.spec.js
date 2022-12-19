@@ -7,20 +7,6 @@ const {
 
 describe('the eligibility pages', () => {
   beforeEach(() => jest.resetModules())
-  it('the checkData function redirects to the tasklist if the applicationId is not set', async () => {
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({}))
-      })
-    }
-    const mockRedirect = jest.fn()
-    const h = {
-      redirect: mockRedirect
-    }
-    const { checkData } = await import('../eligibility.js')
-    await checkData(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/tasklist')
-  })
 
   it('the getData function returns the eligibility data from the API', async () => {
     const request = {
@@ -450,6 +436,45 @@ describe('the eligibility pages', () => {
         { key: 'permissionsGranted', value: 'yes' }
       ])
     })
+  })
+
+  it('getDataEligibility', async () => {
+    const mockSet = jest.fn(() => 'completed_not_confirmed')
+    const request = {
+      url: {
+        pathname: ''
+      },
+      cache: () => ({
+        getData: jest.fn(() => ({
+          applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45'
+        }))
+      })
+    }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE_NOT_CONFIRMED: 'completed_not_confirmed'
+      },
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: jest.fn(() => ({
+            isOwnerOfLand: true,
+            permissionsGranted: true,
+            permissionsRequired: false
+          }))
+        },
+        APPLICATION: {
+          tags: () => ({ set: mockSet })
+        }
+      }
+    }))
+
+    const { getDataEligibility } = await import('../eligibility.js')
+    const result = await getDataEligibility(request)
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'eligibility-check', tagState: 'completed_not_confirmed' })
+    expect(result).toEqual([
+      { key: 'isOwnerOfLand', value: 'yes' },
+      { key: 'permissionsRequired', value: 'no' }
+    ])
   })
 
   it('the checkYourAnswersGetData function removes unneeded permissionsGranted', async () => {

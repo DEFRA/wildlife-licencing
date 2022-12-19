@@ -9,6 +9,7 @@ import pageRoute from '../../routes/page-route.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
 import { moveTagInProgress } from '../common/tag-functions.js'
+import { checkApplication } from '../common/check-application.js'
 
 // The pages in the flow
 const {
@@ -69,14 +70,6 @@ export const eligibilityStateMachine = async request => {
   }
 }
 
-// Ensure we have created an application
-export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData?.applicationId) {
-    return h.redirect(TASKLIST.uri)
-  }
-}
-
 export const getData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
@@ -123,7 +116,7 @@ export const landOwner = yesNoPage({
   getData: landOwnerGetData,
   completion: eligibilityStateMachine,
   setData: setData(IS_OWNER_OF_LAND),
-  checkData
+  checkData: checkApplication
 })
 
 /**************************************************************
@@ -136,7 +129,7 @@ export const landOwnerPermission = yesNoPage({
   getData: getData(HAS_LANDOWNER_PERMISSION),
   setData: setData(HAS_LANDOWNER_PERMISSION),
   completion: eligibilityStateMachine,
-  checkData
+  checkData: checkApplication
 })
 
 /**************************************************************
@@ -149,7 +142,7 @@ export const consent = yesNoPage({
   setData: setData(PERMISSION_REQUIRED),
   options: { auth: { mode: 'optional' } },
   completion: eligibilityStateMachine,
-  checkData
+  checkData: checkApplication
 })
 
 /**************************************************************
@@ -162,7 +155,7 @@ export const consentGranted = yesNoPage({
   getData: getData(PERMISSION_GRANTED),
   setData: setData(PERMISSION_GRANTED),
   completion: eligibilityStateMachine,
-  checkData
+  checkData: checkApplication
 })
 
 export const notEligibleLandowner = pageRoute({ page: NOT_ELIGIBLE_LANDOWNER.page, uri: NOT_ELIGIBLE_LANDOWNER.uri, options: { auth: { mode: 'optional' } } })
@@ -202,6 +195,12 @@ export const checkYourAnswersSetData = async request => {
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE })
 }
 
+export const getDataEligibility = async request => {
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  return checkYourAnswersGetData(request)
+}
+
 export const checkAnswersCompletion = async request => {
   // Rerun the state machine to check all the answers are still Ok
   const result = await eligibilityStateMachine(request)
@@ -213,14 +212,10 @@ export const eligibilityCheck = checkAnswersPage(
     page: ELIGIBILITY_CHECK.page,
     uri: ELIGIBILITY_CHECK.uri,
     options: { auth: { mode: 'optional' } },
-    getData: async request => {
-      const { applicationId } = await request.cache().getData()
-      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-      return checkYourAnswersGetData(request)
-    },
+    getData: getDataEligibility,
     setData: checkYourAnswersSetData,
     completion: checkAnswersCompletion,
-    checkData: checkData
+    checkData: checkApplication
   })
 
 /**************************************************************
