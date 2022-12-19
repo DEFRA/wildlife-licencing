@@ -3,6 +3,7 @@ import { emailAddressPage } from '../common/email-address/email-address-page.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactAccountOperationsForContactAccount } from '../common/operations.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { EMAIL } = contactURIs.AUTHORISED_PEOPLE
 
@@ -14,14 +15,16 @@ export const setData = async request => {
   await contactAcctOps.setEmailAddress(request.payload['email-address'])
 }
 
+export const ofContact = contact => ({
+  contactName: contact.fullName,
+  email: contact?.contactDetails?.email
+})
+
 export const authorisedPersonEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
-  checkData: checkAuthorisedPeopleData,
-  getData: getAuthorisedPeopleData(c => ({
-    contactName: c.fullName,
-    email: c?.contactDetails?.email
-  })),
+  checkData: [checkApplication, checkAuthorisedPeopleData],
+  getData: getAuthorisedPeopleData(ofContact),
   setData: setData,
   completion: getAuthorisedPeopleCompletion
 }, null)

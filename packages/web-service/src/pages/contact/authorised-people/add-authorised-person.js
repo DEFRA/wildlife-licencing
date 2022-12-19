@@ -9,11 +9,6 @@ import { checkApplication } from '../../common/check-application.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
-  const ck = await checkApplication(request, h)
-  if (ck) {
-    return ck
-  }
-
   const journeyData = await request.cache().getData()
   const contacts = await APIRequests.CONTACT.role(ContactRoles.AUTHORISED_PERSON)
     .getByApplicationId(journeyData.applicationId)
@@ -88,7 +83,7 @@ export const completion = async request => {
 export const addAuthorisedPerson = yesNoPage({
   page: ADD.page,
   uri: ADD.uri,
-  checkData: checkData,
+  checkData: [checkApplication, checkData],
   getData: getData,
   setData: setData,
   completion: completion

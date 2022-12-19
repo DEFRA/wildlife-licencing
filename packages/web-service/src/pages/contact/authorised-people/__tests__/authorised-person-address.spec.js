@@ -57,6 +57,32 @@ describe('authorised person address', () => {
     })
   })
 
+  describe('the ofContact function', () => {
+    it('returns page data', async () => {
+      const { ofContact } = await import('../authorised-person-address.js')
+      const contact = {
+        fullName: 'name',
+        postcode: 'BS66 8UI'
+      }
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            addressLookup: 'lookup-result'
+          })
+        })
+      }
+      const result = await ofContact(contact, request)
+      expect(result).toEqual({
+        addressLookup: 'lookup-result',
+        contactName: 'name',
+        uri: {
+          addressForm: '/authorised-person-address-form',
+          postcode: '/authorised-person-postcode'
+        }
+      })
+    })
+  })
+
   describe('the setData function', () => {
     it('sets the address on the contact', async () => {
       const mockUpdate = jest.fn()
