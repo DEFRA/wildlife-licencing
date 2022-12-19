@@ -11,8 +11,6 @@ import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
-const page = 'habitat-activities'
-
 const {
   SPECIES: { BADGER },
   ACTIVITY_ID: { INTERFERE_WITH_BADGER_SETT }
@@ -30,7 +28,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
 
-  const activities = [].concat(pageData.payload[page])
+  const activities = [].concat(pageData.payload[habitatURIs.ACTIVITIES.page])
   const methodIds = activities.map(method => parseInt(method))
 
   if (isCompleteOrConfirmed(tagState)) {
@@ -50,15 +48,15 @@ export const setData = async request => {
 }
 
 export const validator = async payload => {
-  if (!payload[page]) {
+  if (!payload[habitatURIs.ACTIVITIES.page]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
-      path: [page],
+      path: [habitatURIs.ACTIVITIES.page],
       type: 'no-checkbox-selected',
       context: {
-        label: page,
+        label: habitatURIs.ACTIVITIES.page,
         value: 'Error',
-        key: page
+        key: habitatURIs.ACTIVITIES.page
       }
     }], null)
   }

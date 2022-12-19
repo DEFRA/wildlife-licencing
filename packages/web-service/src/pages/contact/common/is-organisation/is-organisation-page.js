@@ -4,8 +4,6 @@ import Joi from 'joi'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 
-const nameReg = /^[\s\p{L}\d.,'-]{1,160}$/u
-
 export const getValidator = accountRole => async (payload, context) => {
   const cd = cacheDirect(context)
   const { userId } = await cd.getData()
@@ -16,7 +14,7 @@ export const getValidator = accountRole => async (payload, context) => {
     'is-organisation': Joi.any().valid('yes', 'no').required(),
     'organisation-name': Joi.alternatives().conditional('is-organisation', {
       is: 'yes',
-      then: Joi.string().trim().replace(/((\s+){2,})/gm, '$2').pattern(nameReg).invalid(...names).insensitive().required(),
+      then: Joi.string().trim().replace(/((\s+){2,})/gm, '$2').invalid(...names).insensitive().required(),
       otherwise: Joi.any().optional()
     })
   }).options({ abortEarly: false, allowUnknown: true })
