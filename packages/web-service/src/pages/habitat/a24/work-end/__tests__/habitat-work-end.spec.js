@@ -374,4 +374,41 @@ describe('The habitat work end page', () => {
     const { getData } = await import('../habitat-work-end.js')
     expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
   })
+
+  it('seData can pad zeros at the start of the day or month, if only 1 digit is entered', async () => {
+    const mockSetData = jest.fn()
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'in-progress' }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        setData: mockSetData,
+        getData: () => ({
+          habitatData: {}
+        }),
+        getPageData: () => ({
+          payload: {
+            'habitat-work-end-day': '1',
+            'habitat-work-end-month': '7',
+            'habitat-work-end-year': new Date().getFullYear()
+          }
+        })
+      })
+    }
+    const { setData } = await import('../habitat-work-end.js')
+    await setData(request)
+    expect(mockSetData).toHaveBeenCalledWith({
+      habitatData:
+        { endDate: `${new Date().getFullYear()}-07-01` }
+    })
+  })
 })
