@@ -161,7 +161,9 @@ const duDuplicate = candidates => {
     }
 
     // Favour any mutable, by definition there can only be a
-    // single mutable record in each clone group
+    // single mutable record in each clone group.
+    // This should never arise in reality as the mutable record will not
+    // be returned by the top-query, this is a logical statement hence not covered
     const im = cts.find(c => !c.isImmutable)
     if (im) {
       return im.id

@@ -23,6 +23,16 @@ describe('contact common', () => {
       )
       expect(result).toEqual([
         {
+          assoc: true,
+          cloneOf: '1bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+          contactRole: 'ECOLOGIST',
+          fullName: 'Broken clone',
+          groupId: 'j608d4f0-100e-495f-811f-510a28336ca5',
+          id: 'j608d4f0-100e-495f-811f-510a28336ca5',
+          isImmutable: true,
+          updatedAt: '2022-11-28T08:15:17.507Z'
+        },
+        {
           cloneOf: '8bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
           contactRole: 'ECOLOGIST',
           fullName: 'ed14f4d5e5e734349975-F-G-H-I-J',
@@ -70,6 +80,16 @@ describe('contact common', () => {
           isImmutable: true,
           updatedAt: '2022-11-28T08:15:17.251Z',
           assoc: true
+        },
+        {
+          assoc: true,
+          cloneOf: '1bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+          contactRole: 'ECOLOGIST',
+          fullName: 'Broken clone',
+          groupId: 'j608d4f0-100e-495f-811f-510a28336ca5',
+          id: 'j608d4f0-100e-495f-811f-510a28336ca5',
+          isImmutable: true,
+          updatedAt: '2022-11-28T08:15:17.507Z'
         },
         {
           cloneOf: '8bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
