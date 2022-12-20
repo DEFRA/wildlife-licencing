@@ -15,7 +15,7 @@ export const validateDates = (payload, pageName) => {
 
   // Empty user validation
   if (day === '' || month === '' || year === '') {
-    throwJoiError(pageName, 'Error: no date has been sent', 'no-date-sent')
+    throwJoiError(pageName, 'Error: no date has been sent', 'noDateSent')
   }
 
   // We can immediately return on these values
@@ -37,5 +37,9 @@ export const validateDates = (payload, pageName) => {
   // Is it after when the badger licence opens and before the badger licence end?
   if ((new Date(dateString)) < (new Date(badgerSeasonOpen)) || (new Date(dateString)) > (new Date(badgerSeasonClose))) {
     throwJoiError(pageName, 'Error: a date has been chosen outside the licence period', 'outsideLicence')
+  }
+
+  if (year.length !== 4) {
+    throwJoiError(pageName, 'Error: the year has to be 4 digits long', 'yearCantAbbreviate')
   }
 }

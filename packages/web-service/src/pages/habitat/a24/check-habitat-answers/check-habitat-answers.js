@@ -59,10 +59,10 @@ export const getData = async request => {
   for (const habitat of habitatSites) {
     const habitatType = habitat.settType
     const methodTypes = habitat.methodIds
-    const workStart = dateProcessor(habitat.workStart)
-    const workEnd = dateProcessor(habitat.workEnd)
+    const startDate = dateProcessor(habitat.startDate)
+    const endDate = dateProcessor(habitat.endDate)
     const reopen = habitat.willReopen ? 'Yes' : 'No'
-    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, workStart, workEnd, activityTypes, settTypes })
+    const habitatData = Object.assign(habitat, { habitatType, reopen, methodTypes, startDate, endDate, activityTypes, settTypes })
     data.pageData.push(habitatData)
   }
   data.confirmDelete = habitatURIs.CONFIRM_DELETE.uri

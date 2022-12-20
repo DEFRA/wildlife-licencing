@@ -4,10 +4,11 @@
 
 {% set errorMap = {
         'habitat-work-start': {
-          'no-date-sent': { ref: '#habitat-work-start', text: 'Enter a start date' },
+          'noDateSent': { ref: '#habitat-work-start', text: 'Enter a start date' },
           'invalidDate': { ref: '#habitat-work-start', text: 'Start date must be a real date' },
           'dateHasPassed': { ref: '#habitat-work-start', text: 'Start date must be in the future' },
-          'outsideLicence': { ref: '#habitat-work-start', text: 'The start date must be within the licence period' }
+          'outsideLicence': { ref: '#habitat-work-start', text: 'The start date must be within the licence period' },
+          'yearCantAbbreviate': { ref: '#habitat-work-start', text: 'The start date year must be 4 digits' }
         }
     }
 %}
