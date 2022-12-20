@@ -138,6 +138,89 @@ describe('The putApplicationAccount handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
+  it.only('returns a 200 on successful update', async () => {
+    const mockSave = jest.fn()
+
+    const mockUpdate = jest.fn(() => [true, [{
+      dataValues: {
+        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+        accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+        applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+        accountRole: 'APPLICANT',
+        ...ts
+      }
+    }]])
+
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          save: mockSave
+        }
+      }
+    }))
+
+    const mockFindOrCreate = jest.fn(async () => ([{
+      dataValues:
+        {
+          id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+          accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+          applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+          accountRole: 'APPLICANT',
+          ...ts
+        }
+    }, false]))
+
+    jest.doMock('@defra/wls-database-model', () => ({
+      models: {
+        applications: {
+          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+        },
+        accounts: {
+          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+        },
+        applicationAccounts: {
+          findOrCreate: mockFindOrCreate,
+          update: mockUpdate
+        }
+      }
+    }))
+    const putApplicationAccount = (await import('../put-application-account.js')).default
+    await putApplicationAccount(context, req, h)
+    expect(mockFindOrCreate).toHaveBeenCalledWith({
+      defaults: {
+        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+        updateStatus: 'L',
+        ...req.payload
+      },
+      where: {
+        id: context.request.params.applicationAccountId
+      }
+    })
+    expect(mockSave).toHaveBeenCalledWith('application-account/1e470963-e8bf-41f5-9b0b-52d19c21cb78', {
+      id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+      accountRole: 'APPLICANT',
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+      accountRole: 'APPLICANT',
+      ...tsR
+    })
+    expect(mockUpdate).toHaveBeenCalledWith({
+      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+      accountRole: 'APPLICANT',
+      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+      updateStatus: 'L'
+    },
+    { returning: true, where: { id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78' } })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
   it('throws with an update query error', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
