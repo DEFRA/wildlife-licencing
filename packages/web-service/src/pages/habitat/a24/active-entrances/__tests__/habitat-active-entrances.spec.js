@@ -111,8 +111,8 @@ describe('The habitat active entrances page', () => {
                   numberOfEntrances: 54,
                   numberOfActiveEntrances: 23,
                   gridReference: 'NY574735',
-                  workStart: '11-03-2222',
-                  workEnd: '11-30-3001',
+                  startDate: '11-03-2222',
+                  endDate: '11-30-3001',
                   methodIds: [100000010, 100000011],
                   speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
                   activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24'

@@ -332,7 +332,7 @@ describe('The habitat entrances page', () => {
           await validator(payload, context)
         } catch (e) {
           // eslint-disable-next-line
-          expect(e.details[0].message).toBe('"habitat-entrances\" must be greater than 90')
+          expect(e.details[0].message).toBe('"habitat-entrances\" must be greater than 89')
         }
       })
     })

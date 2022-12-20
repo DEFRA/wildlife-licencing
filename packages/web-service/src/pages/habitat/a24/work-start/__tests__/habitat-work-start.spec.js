@@ -218,7 +218,7 @@ describe('The habitat work start page', () => {
 
     it('you can pass a date in future licence seasons', async () => {
       try {
-        const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() + 10 }
+        const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': `${new Date().getFullYear() + 10}` }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload)).toBe(payload)
       } catch (e) {
@@ -260,7 +260,7 @@ describe('The habitat work start page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { workStart: `7-10-${new Date().getFullYear}` }
+          { startDate: `${new Date().getFullYear}-7-10` }
       })
     })
 
@@ -311,7 +311,7 @@ describe('The habitat work start page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { workStart: `7-10-${new Date().getFullYear}` }
+          { startDate: `${new Date().getFullYear}-7-10` }
       })
     })
   })
@@ -323,7 +323,7 @@ describe('The habitat work start page', () => {
           getData: () => {
             return {
               habitatData: {
-                workStart: '10-10-3022'
+                startDate: '3022-10-10'
               }
             }
           }

@@ -4,9 +4,16 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
 
-  // Filter by roles. If the primary (choosing) role is APPLICANT can select
-  // APPLICANTS and ALTERNATIVE APPLICANTS from other applications
-  // When selecting the PAYER, the PAYER role can be from the current application ALTERNATIVE-APPLICANT ROLE
+  /*
+    Filter by roles. If the primary (choosing) role is APPLICANT, then the candidates are the
+    APPLICANTS and ALTERNATIVE APPLICANTS from other applications.
+    The contact roles are mutually exclusive within the same application except for the payer,
+    which, if selected as the applicant or ecologist contact is
+    handled by explicit selection, not by the candidate generator.
+    Currently, the payer does not select the alternative applicants and ecologists
+    as candidate. That would require a change here to get the immutability for same
+    application-different role scenario
+  */
   const contactApplicationsOfRoles = contactApplications
     .filter(ca => allRoles.includes(ca.contactRole) && ca.applicationId !== applicationId)
 
@@ -25,7 +32,7 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
       isImmutable: !contact.fullName
         ? false
         : contact.submitted || !!contactApplications.find(ac => ac.id === contact.id &&
-        (ac.applicationId !== applicationId || ac.contactRole !== primaryContactRole))
+        ac.applicationId !== applicationId)
     }]
   }))
 
@@ -161,7 +168,9 @@ const duDuplicate = candidates => {
     }
 
     // Favour any mutable, by definition there can only be a
-    // single mutable record in each clone group
+    // single mutable record in each clone group.
+    // This should never arise in reality as the mutable record will not
+    // be returned by the top-query, this is a logical statement hence not covered
     const im = cts.find(c => !c.isImmutable)
     if (im) {
       return im.id

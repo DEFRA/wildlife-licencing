@@ -4,11 +4,12 @@
 
 {% set errorMap = {
         'habitat-work-end': {
-          'no-date-sent': { ref: '#habitat-work-end', text: 'Enter an end date' },
+          'noDateSent': { ref: '#habitat-work-end', text: 'Enter an end date' },
           'invalidDate': { ref: '#habitat-work-end', text: 'End date must be a real date' },
           'dateHasPassed': { ref: '#habitat-work-end', text: 'End date must be in the future' },
           'outsideLicence': { ref: '#habitat-work-end', text: 'The end date must be within the licence period' },
-          'endDateBeforeStart': { ref: '#habitat-work-start', text: 'The end date must be after the start date' }
+          'endDateBeforeStart': { ref: '#habitat-work-end', text: 'The end date must be after the start date' },
+          'yearCantAbbreviate': { ref: '#habitat-work-end', text: 'The end date year must be 4 digits' }
         }
     }
 %}
