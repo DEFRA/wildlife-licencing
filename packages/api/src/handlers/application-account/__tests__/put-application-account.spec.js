@@ -138,7 +138,7 @@ describe('The putApplicationAccount handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns a 200 on successful update', async () => {
+  it('returns a 200 on successful update', async () => {
     const mockSave = jest.fn()
 
     const mockUpdate = jest.fn(() => [true, [{
