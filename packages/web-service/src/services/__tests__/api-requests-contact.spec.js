@@ -45,6 +45,19 @@ describe('The API requests contact service', () => {
       expect(result).toEqual(({ foo: 'bar' }))
     })
 
+    it('getApplicationContacts calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ({ app: 'app-contacts' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.getApplicationContacts('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/application-contacts', 'contactId=b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(({ app: 'app-contacts' }))
+    })
+
     it('update calls the API correctly', async () => {
       const mockPut = jest.fn(() => ({ foo: 'bar' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -86,6 +99,19 @@ describe('The API requests contact service', () => {
 
     it('isImmutable calls the API correctly - name not set is never immutable', async () => {
       const mockGet = jest.fn().mockReturnValueOnce({ id: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.CONTACT.isImmutable('81e36e15-88d0-41e2-9399-1c7646ecc5aa', 'b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/contact/b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(false)
+    })
+
+    it('isImmutable calls the API correctly - no applicationContacts', async () => {
+      const mockGet = jest.fn(() => ({ fullName: 'set' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
           get: mockGet
@@ -147,6 +173,19 @@ describe('The API requests contact service', () => {
       expect(result).toEqual(({ foo: 'bar' }))
     })
 
+    it('getByApplicationId throws error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(async () =>
+        await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId('b306c67f-f5cd-4e69-9986-8390188051b3')
+      ).rejects.toThrowError()
+    })
+
     it('create calls the API correctly where there is an existing applicant', async () => {
       const mockPost = jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' }))
       const mockGet = jest.fn(() => [{
@@ -192,6 +231,19 @@ describe('The API requests contact service', () => {
         contactRole: 'APPLICANT'
       })
       expect(mockPost).toHaveBeenCalledWith('/contact', { foo: 'bar' })
+    })
+
+    it('createContact throws error', async () => {
+      const mockPost = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(async () =>
+        await APIRequests.CONTACT.role(ContactRoles.APPLICANT).create('b306c67f-f5cd-4e69-9986-8390188051b3', { foo: 'bar' })
+      ).rejects.toThrowError()
     })
 
     it('assign calls the API correctly where there is an existing relationship', async () => {
@@ -305,23 +357,30 @@ describe('The API requests contact service', () => {
       expect(mockGet).toHaveBeenCalledWith('/contacts', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&role=APPLICANT')
     })
 
+    it('findByUser throws error', async () => {
+      const mockPost = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(async () =>
+        await APIRequests.CONTACT.role(ContactRoles.APPLICANT).findByUser('b306c67f-f5cd-4e69-9986-8390188051b3', 'USER')
+      ).rejects.toThrowError()
+    })
+
     it('unlink calls the API correctly - with immutable', async () => {
       const mockDelete = jest.fn()
-      const mockGet = jest.fn()
-        .mockReturnValueOnce([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
-        .mockReturnValue([{
-          id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }, {
-          id: '8c3b13ef-c2fb-4955-942e-764593cf0ada',
-          contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
-          applicationId: '45acb529-70bb-4b8d-8688-ccdec837e5d4'
-        }])
+      const mockGet = jest.fn(() => [{
+        id: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
+        applicationId: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+      }, {
+        id: '8c3b13ef-c2fb-4955-942e-764593cf0ada',
+        contactId: '412d7297-643d-485b-8745-cc25a0e6ec0a',
+        applicationId: '45acb529-70bb-4b8d-8688-ccdec837e5d4'
+      }])
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
           get: mockGet,
@@ -352,6 +411,19 @@ describe('The API requests contact service', () => {
       await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
       expect(mockDelete).toHaveBeenCalledWith('/application-contact/7c3b13ef-c2fb-4955-942e-764593cf0ada')
       expect(mockDelete).toHaveBeenCalledWith('/contact/412d7297-643d-485b-8745-cc25a0e6ec0a')
+    })
+
+    it('unLinkContact throws error', async () => {
+      const mockGet = jest.fn(() => { throw new Error() })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await expect(async () =>
+        await APIRequests.CONTACT.role(ContactRoles.APPLICANT).unLink('35acb529-70bb-4b8d-8688-ccdec837e5d4')
+      ).rejects.toThrowError()
     })
   })
 })

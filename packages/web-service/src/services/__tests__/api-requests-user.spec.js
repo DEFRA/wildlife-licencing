@@ -4,6 +4,18 @@ describe('The API requests user service', () => {
   describe('USER requests', () => {
     beforeEach(() => jest.resetModules())
 
+    it('authenticate calls the API connector correctly', async () => {
+      const mockGet = jest.fn(() => ({ username: 'Keith Moon' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.USER.authenticate('Keith', '123456')
+      expect(mockGet).toHaveBeenCalledWith('/user/Keith/123456/authenticate')
+    })
+
     it('findById calls the API connector correctly', async () => {
       const mockGet = jest.fn(() => ({ username: 'Keith Moon' }))
       jest.doMock('@defra/wls-connectors-lib', () => ({

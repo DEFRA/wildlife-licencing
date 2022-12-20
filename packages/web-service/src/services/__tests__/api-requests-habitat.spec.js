@@ -30,6 +30,18 @@ describe('The API requests habitats service', () => {
       expect(mockPost).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site', { name: 'Corner of field' })
     })
 
+    it('should retrieve habitats by sett ID', async () => {
+      const mockGet = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.HABITAT.getHabitatBySettId('9d62e5b8-9c77-ec11-8d21-000d3a87431b', 'sett-1234-567')
+      expect(mockGet).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-site/sett-1234-567')
+    })
+
     it('retrieves habitats by ID', async () => {
       const mockGet = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -42,7 +54,7 @@ describe('The API requests habitats service', () => {
       expect(mockGet).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b/habitat-sites')
     })
 
-    it('retrieves habitats by ID', async () => {
+    it('update habitats by ID', async () => {
       const mockPut = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
