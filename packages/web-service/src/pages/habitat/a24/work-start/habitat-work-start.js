@@ -18,7 +18,7 @@ export const completion = async request => {
 }
 
 export const validator = async payload => {
-  validateDates(payload, 'habitat-work-start')
+  validateDates(payload, habitatURIs.WORK_START.page)
 
   return payload
 }
@@ -27,26 +27,26 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
 
-  const day = pageData.payload['habitat-work-start-day']
-  const month = pageData.payload['habitat-work-start-month']
-  const year = pageData.payload['habitat-work-start-year']
-  const workStart = `${month}-${day}-${year}`
+  const day = pageData.payload[`${habitatURIs.WORK_START.page}-day`]
+  const month = pageData.payload[`${habitatURIs.WORK_START.page}-month`]
+  const year = pageData.payload[`${habitatURIs.WORK_START.page}-year`]
+  const startDate = `${year}-${month}-${day}`
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)
-    Object.assign(journeyData.habitatData, { workStart })
+    Object.assign(journeyData.habitatData, { startDate })
     await putHabitatById(newSett)
   }
-  journeyData.habitatData = Object.assign(journeyData.habitatData, { workStart })
+  journeyData.habitatData = Object.assign(journeyData.habitatData, { startDate })
   await request.cache().setData(journeyData)
 }
 
 export const getData = async request => {
-  const workStart = (await request.cache().getData())?.habitatData?.workStart || ''
-  const [month, day, year] = workStart.split('-')
-  return { month, day, year }
+  const startDate = (await request.cache().getData())?.habitatData?.startDate || ''
+  const [year, month, day] = startDate.split('-')
+  return { year, month, day }
 }
 
 export default pageRoute({

@@ -233,7 +233,7 @@ describe('The habitat work end page', () => {
             cacheDirect: () => {
               return {
                 getData: () => ({
-                  habitatData: { workStart: '10-10-3022' }
+                  habitatData: { startDate: '10-10-3022' }
                 })
               }
             }
@@ -280,7 +280,7 @@ describe('The habitat work end page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { workEnd: `7-10-${new Date().getFullYear()}` }
+          { endDate: `${new Date().getFullYear()}-7-10` }
       })
     })
     it('sets the work end data correctly on return journey', async () => {
@@ -328,7 +328,7 @@ describe('The habitat work end page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { workEnd: `7-10-${new Date().getFullYear}` }
+          { endDate: `${new Date().getFullYear}-7-10` }
       })
     })
     it('validator returns nothing if no error is thrown', async () => {
@@ -342,7 +342,7 @@ describe('The habitat work end page', () => {
           cacheDirect: () => {
             return {
               getData: () => ({
-                habitatData: { workStart: `11-11-${new Date().getFullYear()}` }
+                habitatData: { startDate: `11-11-${new Date().getFullYear()}` }
               })
             }
           }
@@ -363,7 +363,7 @@ describe('The habitat work end page', () => {
           getData: () => {
             return {
               habitatData: {
-                workEnd: '10-10-3022'
+                endDate: '3022-10-10'
               }
             }
           }
