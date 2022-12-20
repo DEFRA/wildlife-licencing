@@ -39,8 +39,17 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
 
-  const day = pageData.payload['habitat-work-end-day']
-  const month = pageData.payload['habitat-work-end-month']
+  let day = pageData.payload[`${habitatURIs.WORK_END.page}-day`]
+  let month = pageData.payload[`${habitatURIs.WORK_END.page}-month`]
+
+  if (day.length === 1) {
+    day = `0${day}` // Done to meet the schema requirements
+  }
+
+  if (month.length === 1) {
+    month = `0${month}` // Done to meet the schema requirements
+  }
+
   const year = pageData.payload['habitat-work-end-year']
   const endDate = `${year}-${month}-${day}`
 
