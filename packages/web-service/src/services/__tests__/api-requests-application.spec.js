@@ -207,10 +207,7 @@ describe('The API requests application service', () => {
         const mockPut = jest.fn()
         const mockGet = jest.fn(() => (
           {
-            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-            applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }
-            ]
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
           }
         ))
         jest.doMock('@defra/wls-connectors-lib', () => ({
@@ -224,6 +221,13 @@ describe('The API requests application service', () => {
         expect(mockPut).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', {
           applicationTags: expect.arrayContaining([{ tag: 'setts', tagState: tagStatus.COMPLETE }]), applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         })
+      })
+
+      it('the set tag function throws error if the tag state does not exist', async () => {
+        const { APIRequests } = await import('../api-requests.js')
+        await expect(async () =>
+          await APIRequests.APPLICATION.tags('b306c67f-f5cd-4e69-9986-8390188051b3').set({ tag: 'ecologist-experience', tagState: 'blocked' })
+        ).rejects.toThrowError()
       })
 
       it('the set tag function ignores duplicate tag updates', async () => {
@@ -266,10 +270,7 @@ describe('The API requests application service', () => {
       it('the get tag function calls the the API correctly if the tags not present', async () => {
         const mockGet = jest.fn(() => (
           {
-            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
-            applicationTags: [
-              { tag: 'ecologist-experience', tagState: tagStatus.COMPLETE }
-            ]
+            applicationId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
           }
         ))
         jest.doMock('@defra/wls-connectors-lib', () => ({
