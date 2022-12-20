@@ -200,5 +200,23 @@ export const accountApplicationsData = [
     applicationId: '77f27d42-7409-4d5d-8395-4c6bb3ba2888',
     accountRole: 'ECOLOGIST-ORGANISATION',
     updatedAt: '2022-11-28T08:15:18.025Z'
+  },
+  {
+    id: 'h5c5bde4-003b-43e7-8324-79ab0841ee10',
+    cloneOf: null,
+    name: 'Twice on same application',
+    applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10',
+    accountRole: 'PAYER-ORGANISATION',
+    updatedAt: '2022-11-28T08:15:18.025Z',
+    submitted: false
+  },
+  {
+    id: 'h5c5bde4-003b-43e7-8324-79ab0841ee10',
+    cloneOf: null,
+    name: 'Twice on same application',
+    applicationId: '9c3e7655-bb74-4420-9bf0-0bd710987f10',
+    accountRole: 'ECOLOGIST-ORGANISATION',
+    updatedAt: '2022-11-28T08:15:18.025Z',
+    submitted: false
   }
 ]

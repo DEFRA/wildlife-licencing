@@ -6,7 +6,9 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
 
   // Filter by roles. If the primary (choosing) role is APPLICANT can select
   // APPLICANTS and ALTERNATIVE APPLICANTS from other applications
-  // When selecting the PAYER, the PAYER role can be from the current application ALTERNATIVE-APPLICANT ROLE
+  // When selecting the PAYER, the PAYER role can be from the current application ALTERNATIVE-APPLICANT ROLE.
+  // i.e. the contact roles are mutually exclusive within the same application except for the payer,
+  // which is handled by explicit selection, not by the candidate generator.
   const contactApplicationsOfRoles = contactApplications
     .filter(ca => allRoles.includes(ca.contactRole) && ca.applicationId !== applicationId)
 
@@ -24,8 +26,7 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
       assoc: !contact.userId || allowAssociated,
       isImmutable: !contact.fullName
         ? false
-        : contact.submitted || !!contactApplications.find(ac => ac.id === contact.id &&
-        (ac.applicationId !== applicationId || ac.contactRole !== primaryContactRole))
+        : contact.submitted || !!contactApplications.find(ac => ac.id === contact.id && ac.applicationId !== applicationId)
     }]
   }))
 

@@ -171,6 +171,14 @@ describe('contact common', () => {
           isImmutable: true,
           name: 'a6a6c6f5ce64cfd6a9d2-A-B-C-D-E',
           updatedAt: '2022-11-28T08:15:17.806Z'
+        },
+        {
+          cloneOf: null,
+          groupId: 'h5c5bde4-003b-43e7-8324-79ab0841ee10',
+          id: 'h5c5bde4-003b-43e7-8324-79ab0841ee10',
+          isImmutable: true,
+          name: 'Twice on same application',
+          updatedAt: '2022-11-28T08:15:18.025Z'
         }
       ])
     })
