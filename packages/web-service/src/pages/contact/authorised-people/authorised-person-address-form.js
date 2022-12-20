@@ -4,6 +4,7 @@ import { mapInputAddress } from '../common/address-form/address-form.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactAccountOperationsForContactAccount } from '../common/operations.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { ADDRESS_FORM } = contactURIs.AUTHORISED_PEOPLE
 
@@ -20,7 +21,7 @@ export const setData = async request => {
 export const authorisedPersonAddressForm = addressFormPage({
   page: ADDRESS_FORM.page,
   uri: ADDRESS_FORM.uri,
-  checkData: checkAuthorisedPeopleData,
+  checkData: [checkApplication, checkAuthorisedPeopleData],
   getData: getAuthorisedPeopleData((c, r) => ({
     contactName: c.fullName,
     postCode: !r.query['no-postcode']

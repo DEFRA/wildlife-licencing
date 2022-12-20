@@ -85,7 +85,9 @@ describe('the map of the site showing the mitigations after development page pag
       s3FileUpload: mockS3FileUpload
     }))
     const { uploadMapCompletion } = await import('../site-map-upload.js')
-    const result = await uploadMapCompletion('mitigationsAfterDevelopment', { uri: '/next' })(request)
+    let result
+
+    result = await uploadMapCompletion('activity', { uri: '/next' })(request)
     expect(result).toEqual('/next')
     expect(mockUpdate).toHaveBeenCalledWith('8917f37b-fbf9-4dc7-8cd7-28c354b36781', {
       id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
@@ -103,6 +105,57 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
+        activity: 'site-after-development.shape'
+      }
+    })
+    expect(mockS3FileUpload).toHaveBeenCalled()
+    expect(mockSetData).toHaveBeenCalled()
+
+    result = await uploadMapCompletion('mitigationsDuringDevelopment', { uri: '/next' })(request)
+    expect(result).toEqual('/next')
+    expect(mockUpdate).toHaveBeenCalledWith('8917f37b-fbf9-4dc7-8cd7-28c354b36781', {
+      id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+      createdAt: '2022-11-24T22:32:41.186Z',
+      updatedAt: '2022-11-24T22:32:50.642Z',
+      name: 'Kealan bravo',
+      address: {
+        town: 'BIRMINGHAM',
+        uprn: '100070567486',
+        street: 'WITTON LODGE ROAD',
+        country: 'ENGLAND',
+        postcode: 'B23 5LT',
+        xCoordinate: 409884,
+        yCoordinate: 293389,
+        buildingNumber: '308'
+      },
+      siteMapFiles: {
+        activity: 'site-after-development.shape',
+        mitigationsDuringDevelopment: 'site-after-development.shape'
+      }
+    })
+    expect(mockS3FileUpload).toHaveBeenCalled()
+    expect(mockSetData).toHaveBeenCalled()
+
+    result = await uploadMapCompletion('mitigationsAfterDevelopment', { uri: '/next' })(request)
+    expect(result).toEqual('/next')
+    expect(mockUpdate).toHaveBeenCalledWith('8917f37b-fbf9-4dc7-8cd7-28c354b36781', {
+      id: '8917f37b-fbf9-4dc7-8cd7-28c354b36781',
+      createdAt: '2022-11-24T22:32:41.186Z',
+      updatedAt: '2022-11-24T22:32:50.642Z',
+      name: 'Kealan bravo',
+      address: {
+        town: 'BIRMINGHAM',
+        uprn: '100070567486',
+        street: 'WITTON LODGE ROAD',
+        country: 'ENGLAND',
+        postcode: 'B23 5LT',
+        xCoordinate: 409884,
+        yCoordinate: 293389,
+        buildingNumber: '308'
+      },
+      siteMapFiles: {
+        activity: 'site-after-development.shape',
+        mitigationsDuringDevelopment: 'site-after-development.shape',
         mitigationsAfterDevelopment: 'site-after-development.shape'
       }
     })

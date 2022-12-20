@@ -4,6 +4,7 @@ import { mapLookedUpAddress } from '../common/address/address.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactAccountOperationsForContactAccount } from '../common/operations.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { ADDRESS, ADDRESS_FORM, POSTCODE } = contactURIs.AUTHORISED_PEOPLE
 
@@ -28,19 +29,21 @@ export const checkData = async (request, h) => {
   return null
 }
 
+export const ofContact = async (contact, request) => {
+  const journeyData = await request.cache().getData()
+  return {
+    contactName: contact?.fullName,
+    postcode: contact?.address?.postcode,
+    uri: { addressForm: ADDRESS_FORM.uri, postcode: POSTCODE.uri },
+    addressLookup: journeyData.addressLookup
+  }
+}
+
 export const authorisedPersonAddress = addressPage({
   page: ADDRESS.page,
   uri: ADDRESS.uri,
-  checkData: [checkAuthorisedPeopleData, checkData],
-  getData: getAuthorisedPeopleData(async (c, r) => {
-    const journeyData = await r.cache().getData()
-    return {
-      contactName: c?.fullName,
-      postcode: c?.address?.postcode,
-      uri: { addressForm: ADDRESS_FORM.uri, postcode: POSTCODE.uri },
-      addressLookup: journeyData.addressLookup
-    }
-  }),
+  checkData: [checkApplication, checkAuthorisedPeopleData, checkData],
+  getData: getAuthorisedPeopleData(ofContact),
   setData: setData,
   completion: getAuthorisedPeopleCompletion
 })

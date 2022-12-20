@@ -3,6 +3,7 @@ import { contactURIs } from '../../../uris.js'
 import { checkAuthorisedPeopleData, getAuthorisedPeopleData } from './common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactOperationsForContact } from '../common/operations.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const { ADD, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
@@ -20,7 +21,7 @@ export const setData = async request => {
 export const removeAuthorisedPerson = yesNoPage({
   page: REMOVE.page,
   uri: REMOVE.uri,
-  checkData: checkAuthorisedPeopleData,
+  checkData: [checkApplication, checkAuthorisedPeopleData],
   getData: getAuthorisedPeopleData(c => ({
     contactName: c.fullName
   })),

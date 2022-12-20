@@ -2,7 +2,7 @@ describe('the postcode functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('getPostcodeData', () => {
-    it('gets the contact name, the account name and the postcode', async () => {
+    it('gets the contact name, the account name and the postcode from the account', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -30,6 +30,41 @@ describe('the postcode functions', () => {
       const result = await getPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
       expect(result).toEqual({
         accountName: 'The Rolling Stones',
+        contactName: 'Keith Richards',
+        postcode: 'SW1W 0NY',
+        uri: {
+          addressForm: '/applicant-address-form?no-postcode=true'
+        }
+      })
+    })
+
+    it('gets the contact name, the account name and the postcode from the contact', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({ fullName: 'Keith Richards', address: { postcode: 'SW1W 0NY' } }))
+            })
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => null)
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' }))
+        })
+      }
+      const urlBase = {
+        ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
+        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+      }
+      const { getPostcodeData } = await import('../postcode.js')
+      const result = await getPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
+      expect(result).toEqual({
         contactName: 'Keith Richards',
         postcode: 'SW1W 0NY',
         uri: {

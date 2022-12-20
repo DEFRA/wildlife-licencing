@@ -96,11 +96,10 @@ describe('the user page', () => {
             role: () => ({
               getByApplicationId: jest.fn(() => null)
             }),
-            findAllByUser: jest.fn(() => [{
-              id: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-              userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
-              updatedAt: '2022-09-13T08:23:45'
-            }])
+            findAllByUser: jest.fn(() => [
+              { id: 'e8387a83-1165-42e6-afab-add01e77bc4c', userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', updatedAt: '2022-12-19T10:22:53Z' },
+              { id: 'e8387a83-1165-42e6-afab-add01e77bc4d', userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', updatedAt: '2021-12-19T10:22:53Z' }
+            ])
           }
         }
       }))

@@ -27,7 +27,7 @@ export const validator = async payload => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
-  return data.filter(upload => (upload.filetype === 'METHOD-STATEMENT')).map(upload => ({
+  return data?.filter(upload => (upload.filetype === 'METHOD-STATEMENT')).map(upload => ({
     ...upload,
     removeUploadUrl: REMOVE_FILE_UPLOAD.uri,
     uploadedDate: timestampFormatter(upload.createdAt)
