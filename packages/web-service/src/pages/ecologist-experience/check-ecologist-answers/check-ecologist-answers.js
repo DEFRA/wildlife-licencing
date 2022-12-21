@@ -49,7 +49,7 @@ export default pageRoute({
   page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page,
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
   checkData: [checkApplication, checkData],
-  getData,
   backlink: Backlink.NO_BACKLINK,
+  getData,
   completion
 })
