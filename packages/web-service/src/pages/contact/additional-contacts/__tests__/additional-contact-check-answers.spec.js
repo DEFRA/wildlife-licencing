@@ -79,6 +79,52 @@ describe('add additional contact check page', () => {
         ]
       })
     })
+
+    it('fetches the required data when no additional applicant or ecologist', async () => {
+      jest.doMock('../../../common/tag-functions.js')
+      jest.doMock('../../common/common.js', () => ({ canBeUser: () => true }))
+      jest.doMock('../../../../services/api-requests.js', () => {
+        const actual = jest.requireActual('../../../../services/api-requests.js')
+        return {
+          tagStatus: actual.tagStatus,
+          APIRequests: {
+            APPLICATION: {
+              tags: () => ({ set: jest.fn() })
+            },
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: jest.fn(() => undefined)
+              })
+            }
+          }
+        }
+      })
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          }),
+          setData: jest.fn()
+        })
+      }
+      const { getData } = await import('../additional-contact-check-answers.js')
+      const result = await getData(request)
+      expect(result).toEqual({
+        applicant: [
+          {
+            key: 'addAdditionalApplicant',
+            value: 'no'
+          }
+        ],
+        ecologist: [
+          {
+            key: 'addAdditionalEcologist',
+            value: 'no'
+          }
+        ]
+      })
+    })
   })
 
   describe('setData', () => {
