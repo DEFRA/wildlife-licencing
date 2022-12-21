@@ -2,17 +2,6 @@ describe('The check ecologist answers page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('check data function', () => {
-    it('redirects to the applications if applicationId is not set', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({})
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkData } = await import('../check-ecologist-answers.js')
-      await checkData(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applications')
-    })
     it('redirects to the previous licence if the tag is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {

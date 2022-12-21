@@ -1,5 +1,6 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { APPLICATIONS, ecologistExperienceURIs } from '../../../uris.js'
+import { ecologistExperienceURIs } from '../../../uris.js'
+import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
@@ -21,10 +22,6 @@ export const completion = async request => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
-
   if (request.query?.change !== 'true') {
     const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
     if (isCompleteOrConfirmed(tagState)) {
@@ -59,8 +56,8 @@ export const setData = async request => {
 export default yesNoPage({
   page: ecologistExperienceURIs.PREVIOUS_LICENCE.page,
   uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
+  checkData: [checkApplication, checkData],
   completion,
   getData,
-  setData,
-  checkData
+  setData
 })

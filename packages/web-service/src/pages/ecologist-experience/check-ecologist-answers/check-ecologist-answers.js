@@ -1,16 +1,14 @@
 import pageRoute from '../../../routes/page-route.js'
-import { APPLICATIONS, ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
+import { ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
 import { APIRequests, tagStatus } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
 import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
+import { checkApplication } from '../../common/check-application.js'
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
   if (!isCompleteOrConfirmed(tagState)) {
@@ -50,8 +48,8 @@ export const completion = async request => {
 export default pageRoute({
   page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page,
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
-  checkData: checkData,
-  getData: getData,
+  checkData: [checkApplication, checkData],
+  getData,
   backlink: Backlink.NO_BACKLINK,
   completion
 })

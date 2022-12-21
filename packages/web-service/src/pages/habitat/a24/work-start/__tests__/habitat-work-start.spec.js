@@ -249,9 +249,9 @@ describe('The habitat work start page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-start-day': 10,
-              'habitat-work-start-month': 7,
-              'habitat-work-start-year': new Date().getFullYear
+              'habitat-work-start-day': '10',
+              'habitat-work-start-month': '7',
+              'habitat-work-start-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -260,7 +260,7 @@ describe('The habitat work start page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { startDate: `${new Date().getFullYear}-7-10` }
+          { startDate: `${new Date().getFullYear()}-07-10` }
       })
     })
 
@@ -290,9 +290,9 @@ describe('The habitat work start page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-start-day': 10,
-              'habitat-work-start-month': 7,
-              'habitat-work-start-year': new Date().getFullYear
+              'habitat-work-start-day': '10',
+              'habitat-work-start-month': '7',
+              'habitat-work-start-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -311,7 +311,7 @@ describe('The habitat work start page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { startDate: `${new Date().getFullYear}-7-10` }
+          { startDate: `${new Date().getFullYear()}-07-10` }
       })
     })
   })
@@ -359,7 +359,7 @@ describe('The habitat work start page', () => {
           payload: {
             'habitat-work-start-day': '1',
             'habitat-work-start-month': '7',
-            'habitat-work-start-year': new Date().getFullYear()
+            'habitat-work-start-year': `${new Date().getFullYear()}`
           }
         })
       })
