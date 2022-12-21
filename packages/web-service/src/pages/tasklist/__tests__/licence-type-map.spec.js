@@ -32,6 +32,41 @@ describe('The licence type map', () => {
     expect(taskStatus).toEqual(expect.objectContaining({ 'eligibility-check': { tag: 'eligibility-check', tagState: 'in-progress' } }))
   })
 
+  it('the getTaskStatus function', async () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({ applicationId: '8a3e8c32-0138-402c-8913-87e78ed44ebd' })
+      })
+    }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          getById: jest.fn(() => ({
+            applicationTags: undefined
+          }))
+        }
+      }
+    }))
+    const { getTaskStatus } = await import('../licence-type-map.js')
+    const taskStatus = await getTaskStatus(request)
+    expect(taskStatus).toEqual(expect.objectContaining(
+      { 'additional-contacts': { tagState: 'not-started' } },
+      { 'authorised-people': { tagState: 'not-started' } },
+      { ecologist: { tagState: 'not-started' } },
+      { 'ecologist-experience': { tagState: 'not-started' } },
+      { 'invoice-payer': { tagState: 'not-started' } },
+      { 'licence-holder': { tagState: 'not-started' } },
+      { 'send-application': { tagState: 'not-started' } },
+      { setts: { tagState: 'not-started' } },
+      { sites: { tagState: 'not-started' } },
+      { 'supporting-information': { tagState: 'not-started' } },
+      { 'work-activity': { tagState: 'not-started' } }
+    ))
+  })
+
   it('the decorateMap function works as expected', async () => {
     const decoratedMap = await decorateMap(licenceTypeMap[A24], {
       'eligibility-check': { tagState: 'not-started' },
@@ -71,7 +106,6 @@ describe('The licence type map', () => {
     })
 
     it('status function will return not-started if the applicant has not completed the section task', async () => {
-      const funcStatus = licenceTypeMap[A24].sections[1].tasks[0].status
       const result = funcStatus({
         'eligibility-check': { tagState: 'complete' },
         'licence-holder': { tagState: 'not-started' }
@@ -90,6 +124,110 @@ describe('The licence type map', () => {
     it('uri function will return the check-page if the applicant has not started the section task', async () => {
       const result = funcUri({ 'licence-holder': { tagState: 'complete' } })
       expect(result).toBe('/applicant-check-answers')
+    })
+  })
+
+  describe('the invoice-payer section', () => {
+    const funcStatus = licenceTypeMap[A24].sections[1].tasks[4].status
+    const funcUri = licenceTypeMap[A24].sections[1].tasks[4].uri
+    const funcEnabled = licenceTypeMap[A24].sections[1].tasks[4].enabled
+
+    it('status function will return completed if the invoice-payer has completed the section task', async () => {
+      const result = funcStatus(
+        {
+          'invoice-payer': { tagState: 'complete' },
+          'eligibility-check': { tagState: 'complete' }
+        }
+      )
+      expect(result).toBe('complete')
+    })
+
+    it('enabled function will return true if the dependent tasks are completed', async () => {
+      const result = funcEnabled({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'complete' },
+        'additional-contacts': { tagState: 'complete' },
+        ecologist: { tagState: 'complete' },
+        'invoice-payer': { tagState: 'not-started' }
+      })
+      expect(result).toBeTruthy()
+    })
+
+    it('enabled function will return false if the dependent tasks are not completed', async () => {
+      const result = funcEnabled({
+        'eligibility-check': { tagState: 'complete' },
+        'licence-holder': { tagState: 'complete' },
+        'additional-contacts': { tagState: 'not-started' },
+        ecologist: { tagState: 'not-started' },
+        'invoice-payer': { tagState: 'can-not-started' }
+      })
+      expect(result).toBeFalsy()
+    })
+
+    it('uri function will return the user-page if the invoice-payer has not started the section task', async () => {
+      const result = funcUri({
+        'eligibility-check': { tagState: 'not-started' },
+        'invoice-payer': { tagState: 'not-started' }
+      })
+      expect(result).toBe('/invoice-responsible')
+    })
+
+    it('uri function will return the check-page if the invoice-payer has not started the section task', async () => {
+      const result = funcUri({ 'invoice-payer': { tagState: 'complete' } })
+      expect(result).toBe('/invoice-check-answers')
+    })
+  })
+
+  describe('eligibility-check section', () => {
+    const funcStatus = licenceTypeMap[A24].sections[0].tasks[0].status
+    const funcUri = licenceTypeMap[A24].sections[0].tasks[0].uri
+
+    it('status function will return completed if eligibility-check has completed the section task', async () => {
+      const result = funcStatus(
+        {
+          'eligibility-check': { tagState: 'complete' }
+        }
+      )
+      expect(result).toBe('complete')
+    })
+
+    it('uri function will return the user-page if the eligibility-check has not started the section task', async () => {
+      const result = funcUri({
+        'eligibility-check': { tagState: 'not-started' }
+      })
+      expect(result).toBe('/landowner')
+    })
+
+    it('uri function will return the check-page if the eligibility-check has not started the section task', async () => {
+      const result = funcUri({ 'eligibility-check': { tagState: 'complete' } })
+      expect(result).toBe('/eligibility-check')
+    })
+  })
+
+  describe('additional-contacts section', () => {
+    const funcStatus = licenceTypeMap[A24].sections[1].tasks[3].status
+    const funcUri = licenceTypeMap[A24].sections[1].tasks[3].uri
+
+    it('status function will return completed if additional-contacts has completed the section task', async () => {
+      const result = funcStatus(
+        {
+          'additional-contacts': { tagState: 'complete' },
+          'eligibility-check': { tagState: 'complete' }
+        }
+      )
+      expect(result).toBe('complete')
+    })
+
+    it('uri function will return the user-page if the additional-contacts has not started the section task', async () => {
+      const result = funcUri({
+        'additional-contacts': { tagState: 'not-started' }
+      })
+      expect(result).toBe('/add-additional-applicant')
+    })
+
+    it('uri function will return the check-page if the additional-contacts has not started the section task', async () => {
+      const result = funcUri({ 'additional-contacts': { tagState: 'complete' } })
+      expect(result).toBe('/additional-contact-check-answers')
     })
   })
 
@@ -176,6 +314,12 @@ describe('The licence type map', () => {
         sites: { tagState: 'complete' }
       })
       expect(result).toEqual('complete')
+    })
+
+    it('uri function will return the check-page if the site task is completed', async () => {
+      const funcUri = licenceTypeMap[A24].sections[2].tasks[2].uri
+      const result = funcUri({ sites: { tagState: 'complete' } })
+      expect(result).toBe('/check-site-answers')
     })
   })
 
@@ -322,6 +466,12 @@ describe('The licence type map', () => {
         'eligibility-check': { tagState: 'complete' },
         'ecologist-experience': { tagState: 'complete' }
       })).toBe('complete')
+    })
+
+    it('uri function will return the check-page if the ecologist experience task is completed', async () => {
+      const funcUri = licenceTypeMap[A24].sections[2].tasks[4].uri
+      const result = funcUri({ 'ecologist-experience': { tagState: 'complete' } })
+      expect(result).toBe('/check-ecologist-answers')
     })
   })
 })
