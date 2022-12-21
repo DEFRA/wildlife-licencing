@@ -269,9 +269,9 @@ describe('The habitat work end page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-end-day': 10,
-              'habitat-work-end-month': 7,
-              'habitat-work-end-year': new Date().getFullYear()
+              'habitat-work-end-day': '10',
+              'habitat-work-end-month': '7',
+              'habitat-work-end-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -280,7 +280,7 @@ describe('The habitat work end page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { endDate: `${new Date().getFullYear()}-7-10` }
+          { endDate: `${new Date().getFullYear()}-07-10` }
       })
     })
     it('sets the work end data correctly on return journey', async () => {
@@ -296,9 +296,9 @@ describe('The habitat work end page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-end-day': 10,
-              'habitat-work-end-month': 7,
-              'habitat-work-end-year': new Date().getFullYear
+              'habitat-work-end-day': '10',
+              'habitat-work-end-month': '7',
+              'habitat-work-end-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -328,14 +328,14 @@ describe('The habitat work end page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { endDate: `${new Date().getFullYear}-7-10` }
+          { endDate: `${new Date().getFullYear()}-07-10` }
       })
     })
     it('validator returns nothing if no error is thrown', async () => {
       const payload = {
         'habitat-work-end-day': '1',
         'habitat-work-end-month': '9',
-        'habitat-work-end-year': new Date().getFullYear() + 1
+        'habitat-work-end-year': `${new Date().getFullYear() + 1}`
       }
       jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
         return {
@@ -373,5 +373,42 @@ describe('The habitat work end page', () => {
 
     const { getData } = await import('../habitat-work-end.js')
     expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
+  })
+
+  it('seData can pad zeros at the start of the day or month, if only 1 digit is entered', async () => {
+    const mockSetData = jest.fn()
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'in-progress' }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        setData: mockSetData,
+        getData: () => ({
+          habitatData: {}
+        }),
+        getPageData: () => ({
+          payload: {
+            'habitat-work-end-day': '1',
+            'habitat-work-end-month': '7',
+            'habitat-work-end-year': `${new Date().getFullYear()}`
+          }
+        })
+      })
+    }
+    const { setData } = await import('../habitat-work-end.js')
+    await setData(request)
+    expect(mockSetData).toHaveBeenCalledWith({
+      habitatData:
+        { endDate: `${new Date().getFullYear()}-07-01` }
+    })
   })
 })

@@ -39,10 +39,10 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
 
-  const day = pageData.payload['habitat-work-end-day']
-  const month = pageData.payload['habitat-work-end-month']
+  const day = pageData.payload[`${habitatURIs.WORK_END.page}-day`]
+  const month = pageData.payload[`${habitatURIs.WORK_END.page}-month`]
   const year = pageData.payload['habitat-work-end-year']
-  const endDate = `${year}-${month}-${day}`
+  const endDate = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   if (isCompleteOrConfirmed(tagState)) {

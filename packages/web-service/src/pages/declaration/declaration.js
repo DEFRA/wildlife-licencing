@@ -4,13 +4,11 @@ import { APPLICATIONS, DECLARATION, SUBMISSION, TASKLIST } from '../../uris.js'
 import { ApplicationService } from '../../services/application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { checkApplication } from '../common/check-application.js'
 
 // Do not allow an attempt at resubmission
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  if (!journeyData.applicationId) {
-    return h.redirect(APPLICATIONS.uri)
-  }
 
   const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
   if (application.userSubmission) {
@@ -32,6 +30,6 @@ export default pageRoute({
   page: DECLARATION.page,
   uri: DECLARATION.uri,
   completion: SUBMISSION.uri,
-  checkData,
+  checkData: [checkApplication, checkData],
   setData
 })

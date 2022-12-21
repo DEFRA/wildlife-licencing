@@ -249,9 +249,9 @@ describe('The habitat work start page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-start-day': 10,
-              'habitat-work-start-month': 7,
-              'habitat-work-start-year': new Date().getFullYear
+              'habitat-work-start-day': '10',
+              'habitat-work-start-month': '7',
+              'habitat-work-start-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -260,7 +260,7 @@ describe('The habitat work start page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { startDate: `${new Date().getFullYear}-7-10` }
+          { startDate: `${new Date().getFullYear()}-07-10` }
       })
     })
 
@@ -290,9 +290,9 @@ describe('The habitat work start page', () => {
           }),
           getPageData: () => ({
             payload: {
-              'habitat-work-start-day': 10,
-              'habitat-work-start-month': 7,
-              'habitat-work-start-year': new Date().getFullYear
+              'habitat-work-start-day': '10',
+              'habitat-work-start-month': '7',
+              'habitat-work-start-year': `${new Date().getFullYear()}`
             }
           })
         })
@@ -311,7 +311,7 @@ describe('The habitat work start page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { startDate: `${new Date().getFullYear}-7-10` }
+          { startDate: `${new Date().getFullYear()}-07-10` }
       })
     })
   })
@@ -333,5 +333,42 @@ describe('The habitat work start page', () => {
 
     const { getData } = await import('../habitat-work-start.js')
     expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
+  })
+
+  it('seData can pad zeros at the start of the day or month, if only 1 digit is entered', async () => {
+    const mockSetData = jest.fn()
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'in-progress' }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        setData: mockSetData,
+        getData: () => ({
+          habitatData: {}
+        }),
+        getPageData: () => ({
+          payload: {
+            'habitat-work-start-day': '1',
+            'habitat-work-start-month': '7',
+            'habitat-work-start-year': `${new Date().getFullYear()}`
+          }
+        })
+      })
+    }
+    const { setData } = await import('../habitat-work-start.js')
+    await setData(request)
+    expect(mockSetData).toHaveBeenCalledWith({
+      habitatData:
+        { startDate: `${new Date().getFullYear()}-07-01` }
+    })
   })
 })

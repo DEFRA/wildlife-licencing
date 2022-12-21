@@ -30,7 +30,7 @@ export const setData = async request => {
   const day = pageData.payload[`${habitatURIs.WORK_START.page}-day`]
   const month = pageData.payload[`${habitatURIs.WORK_START.page}-month`]
   const year = pageData.payload[`${habitatURIs.WORK_START.page}-year`]
-  const startDate = `${year}-${month}-${day}`
+  const startDate = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
   if (isCompleteOrConfirmed(tagState)) {
