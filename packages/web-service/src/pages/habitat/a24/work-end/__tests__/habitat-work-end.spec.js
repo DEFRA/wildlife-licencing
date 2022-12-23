@@ -181,6 +181,17 @@ describe('The habitat work end page', () => {
       }
     })
 
+    it('you cant pass a year less than four digits', async () => {
+      try {
+        const payload = { 'habitat-work-end-day': '12', 'habitat-work-end-month': '10', 'habitat-work-end-year': '23' }
+        const { validator } = await import('../habitat-work-end.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: the year has to be 4 digits long')
+      }
+    })
+
     it('you cant pass a string as a month', async () => {
       try {
         const payload = { 'habitat-work-end-day': '1', 'habitat-work-end-month': 'string', 'habitat-work-end-year': (new Date().getFullYear()) }
