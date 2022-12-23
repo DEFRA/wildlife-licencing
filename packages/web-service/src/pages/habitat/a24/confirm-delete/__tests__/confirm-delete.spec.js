@@ -25,6 +25,28 @@ describe('The confirm delte page', () => {
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
+    it('the confirm-delete page forwards onto task list page if you have no sett', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: ({
+          HABITAT: {
+            getHabitatsById: () => []
+          }
+        })
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({ habitatData: { applicationId: '123abc' } })
+          }
+        }
+      }
+      const { completion } = await import('../confirm-delete.js')
+      expect(await completion(request)).toBe('/tasklist')
+    })
+
     it('setData calls the connectors lib correctly if user selects confirm delete', async () => {
       const mockDelete = jest.fn()
       const request = {

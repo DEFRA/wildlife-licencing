@@ -118,6 +118,36 @@ describe('The check habitat answers page', () => {
       const { completion } = await import('../check-habitat-answers.js')
       expect(await completion(request)).toBe('/habitat-name')
     })
+    it('the check-habitat-answers return undefined if the user does not clicked yes or no', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { set: () => jest.fn() }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({}),
+            getPageData: () => ({
+              payload: {
+                'additional-sett': 'boom'
+              }
+            }),
+            setData: () => ({})
+          }
+        }
+      }
+      const { completion } = await import('../check-habitat-answers.js')
+      expect(await completion(request)).toBeUndefined()
+    })
 
     it('forms a date correctly', async () => {
       const dateObj = '03-31-2012'
