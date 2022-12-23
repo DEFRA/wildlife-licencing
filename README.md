@@ -126,6 +126,20 @@ cp env.example .env
 node -r dotenv/config src/api-service.js
 ```
 
+#### How to restart your Docker swarm
+
+Sometimes, changes may go into `master` that will break your Docker swarm if you don't rebuild it. This isn't true for every change, but it's important to know how to bring your swarm down, rebuild it - and then start it again.
+
+The process is pretty simple:
+
+1. Pull from `master` and ensure you're upto date
+2. You need to drop all your database tables inside `wls`. You'll need your database container to be up, for this to work. Sometimes you may face with some issues with tables having a foreign key that's used elsewhere so it can't be deleted. You'll just have to delete the tables relying on the key first. You can always do this step via calling the delete script that the Jenkins pipelines use: https://gitlab-dev.aws-int.defra.cloud/new/new-jenkins-scripts/-/blob/master/drop_db_tables.sql 
+3. Ensure you haven't lost your Docker .env variables, as pulling will often overwrite them
+4. Stop your swarm with `npm run docker:stop`
+5. Double check you don't need to run `npm i` from the top level of the repo, if the dependencies have changed. Often doesn't happen, just worth a check
+6. Build your swarm again with `npm run docker:build`
+7. Start your swarm again with `npm run docker:start`
+
 #### To start the queue processor locally
 
 ```shell
