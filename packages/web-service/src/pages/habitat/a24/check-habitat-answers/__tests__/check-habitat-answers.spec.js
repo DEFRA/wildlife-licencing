@@ -179,6 +179,13 @@ describe('The check habitat answers page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           HABITAT: {
             getHabitatsById: mockHabitats
           }
@@ -216,6 +223,49 @@ describe('The check habitat answers page', () => {
       })
     })
 
+    it('getData calls the set() tag function', async () => {
+      const mockSet = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {
+              applicationId: '079665ab-4547-4506-9915-67f84f87bd6e'
+            }
+          })
+        })
+      }
+      const mockHabitats = jest.fn(() => [
+        {
+          settType: 100000000,
+          methodIds: [100000011],
+          startDate: '07-25-2023',
+          endDate: '07-28-2023',
+          willReopen: true
+        }
+      ])
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
+          HABITAT: {
+            getHabitatsById: mockHabitats
+          }
+        }
+      }))
+      const { getData } = await import('../check-habitat-answers.js')
+      await getData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'setts', tagState: 'complete-not-confirmed' })
+    })
+
     it('gets data correctly if willReopen is false', async () => {
       const request = {
         cache: () => ({
@@ -242,6 +292,13 @@ describe('The check habitat answers page', () => {
         APIRequests: {
           tagStatus: {
             NOT_STARTED: 'not-started'
+          },
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
           },
           HABITAT: {
             getHabitatsById: mockHabitats
