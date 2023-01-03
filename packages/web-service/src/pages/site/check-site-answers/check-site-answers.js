@@ -10,6 +10,9 @@ export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   let siteId
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
+
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+
   for (const siteData of sites) {
     siteId = siteData.id
   }

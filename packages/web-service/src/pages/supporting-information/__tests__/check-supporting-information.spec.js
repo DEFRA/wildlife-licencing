@@ -17,6 +17,13 @@ describe('the check-supporting-information page handler', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           FILE_UPLOAD: {
             removeUploadedFile: mockRemoveUploadedFile,
             getUploadedFiles: mockGetUploadedFiles
@@ -45,12 +52,55 @@ describe('the check-supporting-information page handler', () => {
       )
     })
 
+    it(' getData calls the set() tag function', async () => {
+      const mockSet = jest.fn()
+      const mockRemoveUploadedFile = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e', uploadId: '1234567' }))
+      const mockGetUploadedFiles = jest.fn(() => ([{ id: '8179c2f2-6eec-43d6-899b-6504d6a1e798', createdAt: '2022-03-25T14:10:14.861Z', updatedAt: '2022-03-25T14:10:14.861Z', filetype: 'METHOD-STATEMENT', applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }]))
+      const mockGetData = jest.fn(() => ({ applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e' }))
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
+          FILE_UPLOAD: {
+            removeUploadedFile: mockRemoveUploadedFile,
+            getUploadedFiles: mockGetUploadedFiles
+          }
+        })
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: mockGetData
+        })
+      }
+      const { getData } = await import('../check-supporting-information.js')
+      await getData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete-not-confirmed' })
+    })
+
     it(' should return undefined when no uploaded supporting information file found ', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
           NOT_STARTED: 'not-started'
         },
         APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn()
+              }
+            }
+          },
           FILE_UPLOAD: {
             removeUploadedFile: jest.fn(),
             getUploadedFiles: jest.fn(() => null)

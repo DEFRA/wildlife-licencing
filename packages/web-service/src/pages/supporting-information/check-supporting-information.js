@@ -25,8 +25,13 @@ export const validator = async payload => {
 }
 
 export const getData = async request => {
+  const journeyData = await request.cache().getData()
+
   const { applicationId } = await request.cache().getData()
   const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
+
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+
   return data?.filter(upload => (upload.filetype === 'METHOD-STATEMENT')).map(upload => ({
     ...upload,
     removeUploadUrl: REMOVE_FILE_UPLOAD.uri,
