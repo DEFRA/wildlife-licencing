@@ -23,7 +23,7 @@ describe('site-got-postcode page handler', () => {
     expect(await validator(payload)).toBeUndefined()
   })
 
-  it('getData returns the correct object', async () => {
+  it('getData returns the postcode', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         IN_PROGRESS: 'in-progress'
@@ -31,7 +31,7 @@ describe('site-got-postcode page handler', () => {
       APIRequests: {
         SITE: {
           findByApplicationId: () => {
-            return [{ address: { postcode: 'Bristol' } }]
+            return [{ address: { postcode: 'B45 3GP' } }]
           }
         },
         APPLICATION: {
@@ -50,7 +50,37 @@ describe('site-got-postcode page handler', () => {
     }
 
     const { getData } = await import('../site-got-postcode.js')
-    expect(await getData(request)).toStrictEqual({ sitePostcode: 'Bristol' })
+    expect(await getData(request)).toStrictEqual({ sitePostcode: 'B45 3GP', siteManualAddress: undefined })
+  })
+
+  it('getData set true flag if the site address is manually entered', async () => {
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        SITE: {
+          findByApplicationId: () => {
+            return [{ address: { town: 'Bristol' } }]
+          }
+        },
+        APPLICATION: {
+          tags: () => {
+            return { get: jest.fn(), set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return {}
+        }
+      })
+    }
+
+    const { getData } = await import('../site-got-postcode.js')
+    expect(await getData(request)).toStrictEqual({ sitePostcode: undefined, siteManualAddress: true })
   })
 
   it('getData returns  undefined if not site found', async () => {
@@ -80,7 +110,7 @@ describe('site-got-postcode page handler', () => {
     }
 
     const { getData } = await import('../site-got-postcode.js')
-    expect(await getData(request)).toStrictEqual({ sitePostcode: undefined })
+    expect(await getData(request)).toStrictEqual({ sitePostcode: undefined, siteManualAddress: undefined })
   })
 
   it('setData', async () => {
