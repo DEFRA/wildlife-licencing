@@ -35,7 +35,7 @@
               {
                 value: "yes",
                 text: "Yes",
-                checked: payload['site-postcode-check'] === 'yes' or data.sitePostcode,
+                checked: payload['site-postcode-check'] === 'yes' or true if data.sitePostcode,
                 conditional: {
                   html: postcodeHtml
                 }
@@ -43,7 +43,7 @@
               {
                 value: "no",
                 text: "No",
-                checked: payload['site-postcode-check'] === 'no'
+                checked: payload['site-postcode-check'] === 'no'  or true if data.siteManualAddress
               }
             ]
           }) }}

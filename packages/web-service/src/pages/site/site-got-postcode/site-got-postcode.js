@@ -26,11 +26,14 @@ export const validator = async payload => {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
-  let sitePostcode
+  let sitePostcode, siteManualAddress
   if (sites.length) {
     sitePostcode = sites[0]?.address?.postcode
+    if (sites[0]?.address && !sitePostcode) {
+      siteManualAddress = true
+    }
   }
-  return { sitePostcode }
+  return { sitePostcode, siteManualAddress }
 }
 
 export const setData = async request => {
