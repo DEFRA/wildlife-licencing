@@ -13,6 +13,7 @@ const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROO
 
 const {
   SPECIES: { BADGER },
+  SPECIES_SUBJECT: { BADGER: BADGER_SUBJECT },
   ACTIVITY_ID: { INTERFERE_WITH_BADGER_SETT }
 } = PowerPlatformKeys
 
@@ -39,7 +40,8 @@ export const setData = async request => {
   } else {
     const speciesId = BADGER
     const activityId = INTERFERE_WITH_BADGER_SETT
-    Object.assign(journeyData.habitatData, { methodIds, speciesId, activityId })
+    const speciesSubjectId = BADGER_SUBJECT
+    Object.assign(journeyData.habitatData, { methodIds, speciesId, speciesSubjectId, activityId })
 
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })

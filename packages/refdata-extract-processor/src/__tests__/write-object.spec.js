@@ -182,6 +182,37 @@ describe('The reference data extract processor: write-object', () => {
     expect(result).toEqual({ update: 1 })
   })
 
+  it('performs an upsert on species-subject', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockUpsert = jest.fn(() => [{}, false])
+
+    models.speciesSubject = {
+      upsert: mockUpsert
+    }
+
+    const { writeSpeciesSubject } = await import('../write-object.js')
+    const result = await writeSpeciesSubject({
+      data: {
+        null: {
+          name: 'species-subject name',
+          description: 'species-subject-desc'
+        }
+      },
+      keys: [{
+        powerAppsTable: 'sdds_speciesubjects',
+        powerAppsKey: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a'
+      }]
+    })
+
+    expect(mockUpsert).toHaveBeenCalledWith({
+      id: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a',
+      json: {
+        name: 'species-subject name'
+      }
+    })
+    expect(result).toEqual({ update: 1 })
+  })
+
   it('maintain activity-methods', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockSet = jest.fn()

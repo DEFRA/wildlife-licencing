@@ -10,6 +10,7 @@ import {
   SddsLicenseActivities,
   SddsLicenseMethods,
   SddsSpecies,
+  SddsSpeciesSubject,
   SddsLicence,
   columnSourceRemote
 } from '../schema/tables/tables.js'
@@ -70,8 +71,8 @@ const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationR
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
 /* Licensable actions */
-const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies])
-const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies])
+const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
+const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
@@ -110,6 +111,12 @@ const speciesRequestPath = buildRequestPath(SddsSpecies)
 const speciesTableSet = createTableSet(SddsSpecies)
 const speciesObjectTransformer = buildObjectTransformer(SddsSpecies, speciesTableSet)
 export const speciesReadStream = () => powerAppsReadStream(speciesRequestPath, speciesObjectTransformer)
+
+/* Species Subject */
+const speciesSubjectRequestPath = buildRequestPath(SddsSpeciesSubject)
+const speciesSubjectTableSet = createTableSet(SddsSpeciesSubject)
+const speciesSubjectObjectTransformer = buildObjectTransformer(SddsSpeciesSubject, speciesSubjectTableSet)
+export const speciesSubjectReadStream = () => powerAppsReadStream(speciesSubjectRequestPath, speciesSubjectObjectTransformer)
 
 /* Activity-Method */
 const SddsLicenseActivitiesRelations = Table.relations(SddsLicenseActivities)

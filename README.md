@@ -74,8 +74,10 @@ Then run ```aws configure``` to generate a fake set of credentials. (Localstack 
 
 The service stores files in an S3 bucket before moving them into sharepoint. It is necessary to set up a bucket in local stack as follows
 
-```aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region us-west-2```
-```aws --endpoint-url=http://localhost:4566 s3 ls```
+```
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region us-west-2
+aws --endpoint-url=http://localhost:4566 s3 ls
+```
 
 Here 4566 is the edge port for the localstack s4 interface
 

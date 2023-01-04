@@ -59,6 +59,14 @@ export const writeSpecies = async obj => {
   })
 }
 
+export const writeSpeciesSubject = async obj => {
+  const { data, keys } = obj
+  const v = Object.values(data)[0]
+  return generalUpsert(models.speciesSubject, keys[0].powerAppsKey, {
+    name: v?.name
+  })
+}
+
 export const writeActivityMethods = async ({ keys }) => {
   const activityId = keys.find(k => k.apiTable === 'activities').powerAppsKey
   const methodIds = keys.filter(k => k.apiTable === 'methods').map(k => k.powerAppsKey)
