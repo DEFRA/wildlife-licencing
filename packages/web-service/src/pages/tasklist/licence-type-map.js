@@ -9,6 +9,7 @@ import {
 } from '../../uris.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { isComplete, isCompleteOrConfirmed } from '../common/tag-functions.js'
+import { countCompleteSections } from '../common/count-complete-sections.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
@@ -30,6 +31,15 @@ export const SECTION_TASKS = {
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   SUPPORTING_INFORMATION: 'supporting-information',
   SUBMIT: 'send-application'
+}
+
+// Determine if an application is submmitable
+export const isAppSubmittable = async applicationId => {
+  // Temporary taking out WORK_ACTIVITY and PERMISSIONS from the length of the section tasks
+  const totalSections = Object.keys(SECTION_TASKS).length - 3
+  const totalCompletedSections = await countCompleteSections(applicationId)
+
+  return totalCompletedSections.length < totalSections
 }
 
 // Return a progress object containing the number of completed tasks of total tasks )
