@@ -187,7 +187,7 @@ describe('The habitat active entrances page', () => {
         expect(await validator(payload, context))
       } catch (e) {
         // eslint-disable-next-line
-        expect(e.details[0].message).toBe("\"habitat-active-entrances\" must be less than 3")
+        expect(e.details[0].message).toBe("\"habitat-active-entrances\" must be less than 4")
       }
     })
 

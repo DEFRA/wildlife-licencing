@@ -23,11 +23,11 @@ export const validator = async (payload, context) => {
   const journeyData = await cacheDirect(context).getData()
   const { context: { query: { id: settId } } } = context
 
-  let numberOfTotalEntrances = journeyData?.habitatData?.numberOfEntrances || 100
+  let numberOfTotalEntrances = (journeyData?.habitatData?.numberOfEntrances + 1) || 100
   if (settId) {
     const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
     const currentHabitat = habitatSites.filter(obj => obj.id === settId)[0] || {}
-    numberOfTotalEntrances = currentHabitat.numberOfEntrances || 0
+    numberOfTotalEntrances = (currentHabitat.numberOfEntrances + 1) || 0
   }
 
   const numberOfActiveEntrances = payload[habitatURIs.ACTIVE_ENTRANCES.page]
