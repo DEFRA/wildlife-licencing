@@ -1,24 +1,20 @@
 import pageRoute from '../../routes/page-route.js'
-import { countCompleteSections } from '../common/count-complete-sections.js'
 import { APPLICATIONS, DECLARATION, SUBMISSION, TASKLIST } from '../../uris.js'
 import { ApplicationService } from '../../services/application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { isAppSubmittable } from '../tasklist/licence-type-map.js'
 import { checkApplication } from '../common/check-application.js'
 
 // Do not allow an attempt at resubmission
 export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
+  const { applicationId } = await request.cache().getData()
 
-  const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
+  const application = await APIRequests.APPLICATION.getById(applicationId)
   if (application.userSubmission) {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  const totalSections = Object.keys(SECTION_TASKS).length - 3 // TEMP
-  const totalCompletedSections = await countCompleteSections(journeyData.applicationId)
-
-  if (totalCompletedSections.length < totalSections) {
+  if (!isAppSubmittable(applicationId)) {
     return h.redirect(TASKLIST.uri)
   }
 

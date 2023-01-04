@@ -10,8 +10,8 @@ describe('submission spec', () => {
           })
         })
       }
-      jest.doMock('../../common/count-complete-sections.js', () => ({
-        countCompleteSections: () => { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
+      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+        isAppSubmittable: () => { return true }
       }))
 
       const { checkData } = await import('../submission.js')
@@ -26,8 +26,8 @@ describe('submission spec', () => {
           })
         })
       }
-      jest.doMock('../../common/count-complete-sections.js', () => ({
-        countCompleteSections: () => { return [1] }
+      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+        isAppSubmittable: () => { return false }
       }))
       const mockRedirect = jest.fn()
       const h = {

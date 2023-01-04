@@ -475,3 +475,27 @@ describe('The licence type map', () => {
     })
   })
 })
+
+describe('The isAppSubmittable function', () => {
+  beforeEach(() => jest.resetModules())
+
+  it('should return true when all the app sections are complete and subimmatable', async () => {
+    jest.doMock('../../common/count-complete-sections.js', () => ({
+      countCompleteSections: () => { return [1, 2, 3, 4] }
+    }))
+    const applicationId = '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
+
+    const { isAppSubmittable } = await import('../licence-type-map.js')
+    expect(await isAppSubmittable(applicationId)).toBeTruthy()
+  })
+
+  it('should return false when the app is not subimmatable', async () => {
+    jest.doMock('../../common/count-complete-sections.js', () => ({
+      countCompleteSections: () => { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
+    }))
+    const applicationId = '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
+
+    const { isAppSubmittable } = await import('../licence-type-map.js')
+    expect(await isAppSubmittable(applicationId)).toBeFalsy()
+  })
+})

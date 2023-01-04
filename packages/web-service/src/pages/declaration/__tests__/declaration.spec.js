@@ -10,8 +10,8 @@ describe('the declaration-application handler function', () => {
           }))
         })
       }
-      jest.doMock('../../common/count-complete-sections.js', () => ({
-        countCompleteSections: () => { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
+      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+        isAppSubmittable: () => { return true }
       }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -77,8 +77,8 @@ describe('the declaration-application handler function', () => {
         }))
       })
     }
-    jest.doMock('../../common/count-complete-sections.js', () => ({
-      countCompleteSections: () => { return [1] }
+    jest.doMock('../../tasklist/licence-type-map.js', () => ({
+      isAppSubmittable: () => { return false }
     }))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
