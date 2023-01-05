@@ -1,6 +1,7 @@
 describe('site-got-postcode page handler', () => {
   beforeEach(() => jest.resetModules())
   const mockSetData = jest.fn()
+  const mockSetPageData = jest.fn()
   it('throws an error if an option is not selected', async () => {
     try {
       const payload = { 'site-postcode': '', 'site-postcode-check': 'no' }
@@ -145,11 +146,13 @@ describe('site-got-postcode page handler', () => {
           }
         }),
         getData: jest.fn(() => ({ applicationId: '739f4e35' })),
-        setData: mockSetData
+        setData: mockSetData,
+        setPageData: mockSetPageData
       })
     }
-    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
+    expect(mockSetData).toHaveBeenCalled()
+    expect(mockSetPageData).toHaveBeenCalled()
   })
 
   it('should redirect user to site-address-no-lookup page, when the postcode lookup do not match an address', async () => {
@@ -162,11 +165,13 @@ describe('site-got-postcode page handler', () => {
           }
         }),
         getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B1 9ZZ' } })),
-        setData: mockSetData
+        setData: mockSetData,
+        setPageData: mockSetPageData
       })
     }
-    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/site-address-no-lookup')
+    expect(mockSetData).toHaveBeenCalled()
+    expect(mockSetPageData).toHaveBeenCalled()
   })
 
   it('should redirect user to select-address page, when the site does has a postcode', async () => {
@@ -179,10 +184,12 @@ describe('site-got-postcode page handler', () => {
           }
         }),
         getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' }, addressLookup: [{ Address: { town: 'liverpool' } }] })),
-        setData: mockSetData
+        setData: mockSetData,
+        setPageData: mockSetPageData
       })
     }
-    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/select-address')
+    expect(mockSetData).toHaveBeenCalled()
+    expect(mockSetPageData).toHaveBeenCalled()
   })
 })

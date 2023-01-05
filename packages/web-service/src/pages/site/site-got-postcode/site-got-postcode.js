@@ -52,6 +52,7 @@ export const setData = async request => {
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
+  delete pageData.payload[postcodeInput]
   let redirectUrl = siteURIs.SELECT_ADDRESS.uri
 
   if (!journeyData.addressLookup) {
@@ -67,6 +68,7 @@ export const completion = async request => {
     redirectUrl = `${siteURIs.ADDRESS_NO_LOOKUP.uri}?no-postcode=true`
   }
   await request.cache().setData(journeyData)
+  await request.cache().setPageData(pageData)
   return redirectUrl
 }
 
