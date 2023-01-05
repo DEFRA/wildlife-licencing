@@ -1,5 +1,6 @@
 describe('site-got-postcode page handler', () => {
   beforeEach(() => jest.resetModules())
+  const mockSetData = jest.fn()
   it('throws an error if an option is not selected', async () => {
     try {
       const payload = { 'site-postcode': '', 'site-postcode-check': 'no' }
@@ -114,7 +115,6 @@ describe('site-got-postcode page handler', () => {
   })
 
   it('setData', async () => {
-    const mockSetData = jest.fn()
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7', siteData: {} })),
@@ -144,9 +144,11 @@ describe('site-got-postcode page handler', () => {
             'site-postcode-check': 'no'
           }
         }),
-        getData: jest.fn(() => ({ applicationId: '739f4e35' }))
+        getData: jest.fn(() => ({ applicationId: '739f4e35' })),
+        setData: mockSetData
       })
     }
+    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/site-address-no-lookup?no-postcode=true')
   })
 
@@ -159,9 +161,11 @@ describe('site-got-postcode page handler', () => {
             'site-postcode-check': 'yes'
           }
         }),
-        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B1 9ZZ' } }))
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B1 9ZZ' } })),
+        setData: mockSetData
       })
     }
+    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/site-address-no-lookup')
   })
 
@@ -174,9 +178,11 @@ describe('site-got-postcode page handler', () => {
             'site-postcode-check': 'yes'
           }
         }),
-        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' }, addressLookup: [{ Address: { town: 'liverpool' } }] }))
+        getData: jest.fn(() => ({ applicationId: '739f4e35', siteData: { postcode: 'B15 7GF' }, addressLookup: [{ Address: { town: 'liverpool' } }] })),
+        setData: mockSetData
       })
     }
+    expect(mockSetData).toHaveBeenCalled()
     expect(await completion(request)).toBe('/select-address')
   })
 })
