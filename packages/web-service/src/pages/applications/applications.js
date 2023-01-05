@@ -13,8 +13,8 @@ const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
 
 const sorter = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 
-const eligibilityCheckFilter = application => application.applicationTags &&
-  application.applicationTags.find(t => t.tag === SECTION_TASKS.ELIGIBILITY_CHECK && t.tagState === tagStatus.COMPLETE)
+const eligibilityCheckFilter = application => application.submitted || (application.applicationTags &&
+  application.applicationTags.find(t => t.tag === SECTION_TASKS.ELIGIBILITY_CHECK && t.tagState === tagStatus.COMPLETE))
 
 export const addSiteName = (userApplicationSites, applicationId) => {
   const [site] = userApplicationSites.filter(uas => uas.applicationId === applicationId).sort(sorter)
@@ -35,7 +35,7 @@ export const getData = async request => {
     lastSaved: timestampFormatter(a.updatedAt),
     submitted: timestampFormatter(a?.userSubmission),
     site: addSiteName(userApplicationSites, a.id),
-    completed: a?.applicationTags.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
+    completed: a?.applicationTags?.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
   })).sort(sorter)
 
   return {

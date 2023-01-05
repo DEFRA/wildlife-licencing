@@ -7,6 +7,11 @@ describe('applications page', () => {
         id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
         applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }],
         updatedAt: '2022-03-25T14:10:14.861Z'
+      },
+      {
+        id: '9179c2f2-6eec-43d6-899b-6504d6a1e798',
+        updatedAt: '2022-04-25T14:10:14.861Z',
+        submitted: '2022-04-25T14:10:14.861Z'
       }
     ])
     jest.doMock('../../../services/api-requests.js', () => {
@@ -38,17 +43,23 @@ describe('applications page', () => {
     const result = await getData(request)
     expect(mockGetData).toHaveBeenCalled()
     expect(mockFindByUser).toHaveBeenCalledWith('afda812d-c4df-4182-9978-19e6641c4a6e')
-    expect(result).toEqual(expect.objectContaining({
-      applications: [
-        {
-          id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
-          lastSaved: '25 March 2022',
-          completed: 1,
-          updatedAt: '2022-03-25T14:10:14.861Z',
-          submitted: null,
-          applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }]
-        }]
-    }))
+    expect(result.applications).toEqual([
+      {
+        id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+        lastSaved: '25 March 2022',
+        completed: 1,
+        updatedAt: '2022-03-25T14:10:14.861Z',
+        submitted: null,
+        applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }]
+      },
+      {
+        completed: 0,
+        id: '9179c2f2-6eec-43d6-899b-6504d6a1e798',
+        lastSaved: '25 April 2022',
+        submitted: null,
+        updatedAt: '2022-04-25T14:10:14.861Z'
+      }
+    ])
   })
 
   it('if theres no application id, it wont hit the api', async () => {
