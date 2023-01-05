@@ -106,6 +106,14 @@ describe('The read-streams provider', () => {
     expect(mockPowerAppsReadStream).toHaveBeenLastCalledWith(expect.any(String), expect.any(Function))
   })
 
+  it('calls power-apps read-stream with the correct parameters for the species-subject-read-stream', async () => {
+    const mockPowerAppsReadStream = jest.fn()
+    jest.doMock('../powerapps-read-stream.js', () => ({ powerAppsReadStream: mockPowerAppsReadStream }))
+    const { speciesSubjectReadStream } = await import('../read-streams.js')
+    speciesSubjectReadStream()
+    expect(mockPowerAppsReadStream).toHaveBeenLastCalledWith(expect.any(String), expect.any(Function))
+  })
+
   it('calls power-apps read-stream with the correct parameters for the licensable actions', async () => {
     const mockPowerAppsReadStream = jest.fn()
     jest.doMock('../powerapps-read-stream.js', () => ({ powerAppsReadStream: mockPowerAppsReadStream }))

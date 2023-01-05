@@ -43,7 +43,8 @@ export class Relationship {
    * @param tgtFunc - A function operating on the data at source path (INBOUND)
    * @param operationType - dictate if the relation expanded on INBOUND, OUTBOUND or both operations
    * @param keyOnly - If the relation is expanded on the INBOUND operation then expand only the keys -
-   * do not traverse. Ignored for the outbound operation
+   * do not traverse. Ignored for the outbound operation. This data is augmented on to the keys object and
+   * does not appear in the transformed JSON payload
    */
   constructor (name, relatedTable, type, lookupColumnName, srcPath, srcFunc,
     tgtFunc, operationType = OperationType.INBOUND_AND_OUTBOUND, keyOnly = false) {

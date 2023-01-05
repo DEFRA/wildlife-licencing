@@ -109,6 +109,7 @@ describe('The habitat activities page', () => {
           numberOfEntrances: 10,
           numberOfActiveEntrances: 5,
           speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+          speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b',
           activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
           methodIds: [1000000, 10000001]
         }

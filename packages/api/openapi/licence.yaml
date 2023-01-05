@@ -2904,6 +2904,8 @@ components:
           $ref: '#/components/schemas/uuid'
         speciesId:
           $ref: '#/components/schemas/uuid'
+        speciesSubjectId:
+          $ref: '#/components/schemas/uuid'
         methodIds:
           type: array
           items:

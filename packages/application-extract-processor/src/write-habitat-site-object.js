@@ -41,6 +41,7 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
     const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
     const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
     const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
+    const speciesSubjectId = keys.find(k => k.apiTable === 'speciesSubject')?.powerAppsKey
 
     // Look for the application, activity and method - if it does not have all 3 then ignore it
     if (sddsApplicationId && activityId && speciesId) {
@@ -49,8 +50,7 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
       })
 
       if (application) {
-        Object.assign(data.habitatSite, { activityId })
-        Object.assign(data.habitatSite, { speciesId })
+        Object.assign(data.habitatSite, { activityId, speciesId, speciesSubjectId })
         // Create or update the habitable sites
         await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
       }
