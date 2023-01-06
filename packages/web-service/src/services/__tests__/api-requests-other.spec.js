@@ -11,8 +11,8 @@ describe('The API requests other service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.OTHER.reset()
-      expect(mockPost).toHaveBeenCalledWith('/reset')
+      await APIRequests.OTHER.reset('email@email.com')
+      expect(mockPost).toHaveBeenCalledWith('/reset', { username: 'email@email.com' })
     })
   })
 })

@@ -29,7 +29,7 @@ describe('The miscellaneous route handlers', () => {
     const misc = (await import('../misc-routes.js')).default
     const route = misc.find(r => r.method === 'GET' && r.path === '/reset')
     const mockCode = jest.fn(() => ({ type: jest.fn() }))
-    await route.handler(null, { response: () => ({ code: mockCode }) })
+    await route.handler({ request: { query: { username: 'user0@email.com' } } }, { response: () => ({ code: mockCode }) })
     expect(mockCode).toHaveBeenCalledWith(200)
     delete process.env.ALLOW_RESET
   })
