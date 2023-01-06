@@ -1,5 +1,5 @@
 import { models } from '@defra/wls-database-model'
-import { clearCaches } from './application-cache.js'
+import { clearApplicationCaches } from './application-cache.js'
 
 export default async (context, _req, h) => {
   const { applicationId } = context.request.params
@@ -15,7 +15,7 @@ export default async (context, _req, h) => {
     return h.response().code(409)
   }
 
-  await clearCaches(applicationId)
+  await clearApplicationCaches(applicationId)
   const count = await models.applications.destroy({
     where: {
       id: applicationId

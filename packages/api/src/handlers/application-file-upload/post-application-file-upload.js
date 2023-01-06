@@ -1,7 +1,7 @@
 import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './application-upload-proc.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { clearCaches } from '../application/application-cache.js'
+import { clearApplicationCaches } from '../application/application-cache.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 import { v4 as uuidv4 } from 'uuid'
 const { cache } = REDIS
@@ -16,7 +16,7 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    await clearCaches(applicationId)
+    await clearApplicationCaches(applicationId)
     const { filetype, filename, bucket, objectKey } = req.payload
 
     const { dataValues } = await models.applicationUploads.create({

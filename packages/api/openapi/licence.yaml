@@ -2574,13 +2574,23 @@ paths:
     post:
       description: For testing environments, clears application data
       operationId: 'postResetHandler'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                username:
+                  $ref: '#/components/schemas/email'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
+                type: object
         500:
           description: Unexpected error on server
           content:
