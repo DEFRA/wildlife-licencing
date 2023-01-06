@@ -42,7 +42,7 @@ describe('The reset handler', () => {
     await expect(() => resetHandler(null, request, h)).rejects.toThrowError()
   })
 
-  it.only('deletes all data for a user', async () => {
+  it('deletes all data for a user', async () => {
     const mockDestroyApplicationUsers = jest.fn()
     const mockDestroyApplicationContacts = jest.fn()
     const mockDestroyApplicationAccounts = jest.fn()
