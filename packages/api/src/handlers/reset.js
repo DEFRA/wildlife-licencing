@@ -60,10 +60,10 @@ export default async (_context, req, h) => {
     response.applicationUploads = await models.applicationUploads.destroy(inApplicationIds(applicationIds))
     response.applications = await models.applications.destroy(inIds(applicationIds))
 
-    await Promise.all(applicationIds.map(async id => await clearApplicationCaches(id)))
-    await Promise.all(contactIds.map(async id => await cache.delete(`/contact/${id}`)))
-    await Promise.all(accountIds.map(async id => await cache.delete(`/account/${id}`)))
-    await Promise.all(siteIds.map(async id => await cache.delete(`/site/${id}`)))
+    await Promise.all(applicationIds.map(async id => clearApplicationCaches(id)))
+    await Promise.all(contactIds.map(async id => cache.delete(`/contact/${id}`)))
+    await Promise.all(accountIds.map(async id => cache.delete(`/account/${id}`)))
+    await Promise.all(siteIds.map(async id => cache.delete(`/site/${id}`)))
 
     return h.response(response).type(APPLICATION_JSON).code(200)
   } catch (err) {
