@@ -46,9 +46,9 @@ if (process.env.ALLOW_RESET === 'YES') {
     method: 'GET',
     path: '/reset',
     options: { auth: false },
-    handler: async (_request, h) => {
-      await APIRequests.OTHER.reset()
-      return h.response('Ok!').code(200).type('text/plain')
+    handler: async (request, h) => {
+      const response = await APIRequests.OTHER.reset(request.query?.username)
+      return h.response(response).code(200).type('application/json')
     }
   })
 }

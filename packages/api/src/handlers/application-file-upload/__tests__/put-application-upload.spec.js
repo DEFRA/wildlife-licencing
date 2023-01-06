@@ -51,7 +51,8 @@ describe(' putApplicationUpload handler', () => {
       REDIS: {
         cache: {
           delete: mockCacheDelete,
-          save: mockCacheSave
+          save: mockCacheSave,
+          keys: jest.fn(() => [])
         }
       }
     }))
@@ -98,7 +99,8 @@ describe(' putApplicationUpload handler', () => {
       REDIS: {
         cache: {
           delete: mockCacheDelete,
-          save: mockCacheSave
+          save: mockCacheSave,
+          keys: jest.fn(() => [])
         }
       }
     }))

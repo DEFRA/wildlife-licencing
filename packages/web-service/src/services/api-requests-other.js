@@ -6,5 +6,6 @@ export const OTHER = {
    * The hidden reset handler
    * @returns {Promise<*|undefined>}
    */
-  reset: async () => apiRequestsWrapper(async () => API.post('/reset'), 'Error resetting', 500)
+  reset: async username =>
+    apiRequestsWrapper(async () => API.post('/reset', { username }), 'Error resetting', 500)
 }

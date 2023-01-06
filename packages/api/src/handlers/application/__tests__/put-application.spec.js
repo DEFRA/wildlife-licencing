@@ -69,6 +69,7 @@ describe('The putApplication handler', () => {
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
     cache.delete = jest.fn()
+    cache.keys = jest.fn(() => [])
     await putApplication(context, req, h)
     expect(models.applications.findOrCreate).toHaveBeenCalledWith({
       defaults: {
@@ -101,6 +102,7 @@ describe('The putApplication handler', () => {
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
     cache.delete = jest.fn()
+    cache.keys = jest.fn(() => [])
     await putApplication(context, req, h)
     expect(models.applications.update).toHaveBeenCalledWith({
       updateStatus: 'L',

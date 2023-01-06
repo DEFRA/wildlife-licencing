@@ -1,6 +1,6 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
-import { clearCaches } from './application-cache.js'
+import { clearApplicationCaches } from './application-cache.js'
 import { prepareResponse, alwaysExclude } from './application-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
@@ -21,7 +21,7 @@ export default async (context, req, h) => {
         .code(409)
     }
 
-    await clearCaches(applicationId)
+    await clearApplicationCaches(applicationId)
 
     const [application, created] = await models.applications.findOrCreate({
       where: { id: context.request.params.applicationId },

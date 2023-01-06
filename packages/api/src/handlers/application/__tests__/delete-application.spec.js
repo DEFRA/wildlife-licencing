@@ -40,6 +40,7 @@ describe('The deleteApplication handler', () => {
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
+    cache.keys = jest.fn(() => [])
     models.applicationSites = { findAll: jest.fn(() => []) }
     models.applications = { destroy: jest.fn(() => 1) }
     await deleteApplication(context, req, h)
@@ -50,6 +51,7 @@ describe('The deleteApplication handler', () => {
 
   it('returns a 404 on id not found', async () => {
     cache.delete = jest.fn()
+    cache.keys = jest.fn(() => [])
     models.applicationSites = { findAll: jest.fn(() => []) }
     models.applications = { destroy: jest.fn(() => 0) }
     await deleteApplication(context, req, h)

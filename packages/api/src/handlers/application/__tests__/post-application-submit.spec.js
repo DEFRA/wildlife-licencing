@@ -55,6 +55,7 @@ describe('The postApplicationSubmit handler', () => {
       findAll: jest.fn(async () => [{ dataValues: { id: '123' } }])
     }
     cache.delete = jest.fn(() => null)
+    cache.keys = jest.fn(() => [])
     await postApplicationSubmit(context, req, h)
 
     expect(cache.delete).toHaveBeenCalledWith(`/application/${context.request.params.applicationId}`)
