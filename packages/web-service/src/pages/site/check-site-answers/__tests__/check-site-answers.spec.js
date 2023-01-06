@@ -134,6 +134,7 @@ describe('The check site answers page', () => {
   })
 
   it('completion', async () => {
+    const mockSetData = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       tagStatus: {
         NOT_STARTED: 'NOT_STARTED'
@@ -146,16 +147,17 @@ describe('The check site answers page', () => {
         }
       }
     }))
-
     const request = {
       payload: {},
       cache: () => ({
         getData: () => ({
           applicationId: '123456789'
-        })
+        }),
+        setData: mockSetData
       })
     }
     const { completion } = await import('../check-site-answers.js')
     expect(await completion(request)).toEqual('/tasklist')
+    expect(mockSetData).toHaveBeenCalled()
   })
 })

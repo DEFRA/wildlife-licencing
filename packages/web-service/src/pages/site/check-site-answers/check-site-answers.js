@@ -30,9 +30,12 @@ export const getData = async request => {
 }
 
 export const completion = async request => {
-  const { applicationId } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
+  delete journeyData?.addressLookup
+
+  await request.cache().setData(journeyData)
   // Mark the site journey tag as complete
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE })
+  await APIRequests.APPLICATION.tags(journeyData?.applicationId).set({ tag: SECTION_TASKS.SITES, tagState: tagStatus.COMPLETE })
 
   return TASKLIST.uri
 }
