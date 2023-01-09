@@ -279,7 +279,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const contact = await getContact()
       const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (isOrganisation && (!account || name)) {
+      if (isOrganisation && (!account || (name && account.name.toUpperCase() !== name.toUpperCase()))) {
         // Add account if name set or there is no account assigned, from is-organisation: yes, given the organisation name
         await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
         await removeContactDetailsFromContact(applicationId, userId, contactRole, contact, contactImmutable)

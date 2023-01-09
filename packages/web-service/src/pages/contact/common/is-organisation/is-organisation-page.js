@@ -4,11 +4,13 @@ import Joi from 'joi'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 
+// Allow the current organisation name if set
 export const getValidator = accountRole => async (payload, context) => {
   const cd = cacheDirect(context)
-  const { userId } = await cd.getData()
+  const { userId, applicationId } = await cd.getData()
   const accounts = await APIRequests.ACCOUNT.role(accountRole).findByUser(userId)
-  const names = accounts.map(c => c.name).filter(a => a)
+  const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
+  const names = accounts.map(c => c.name).filter(name => name !== account?.name)
 
   const schema = Joi.object({
     'is-organisation': Joi.any().valid('yes', 'no').required(),

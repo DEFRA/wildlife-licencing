@@ -34,7 +34,8 @@ describe('the is-organisation page', () => {
         },
         contact: {
           fullName: 'Keith Moon'
-        }
+        },
+        isOrganization: 'yes'
       })
     })
   })
