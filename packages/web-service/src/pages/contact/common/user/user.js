@@ -1,11 +1,14 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactOperations } from '../operations.js'
 import { accountsRoute, contactsRoute } from '../common-handler.js'
+import { yesNoFromBool } from '../../../common/common.js'
 
-export const getUserData = _contactRole => async request => {
+export const getUserData = contactRole => async request => {
   const journeyData = await request.cache().getData()
-  const { userId } = journeyData
-  return APIRequests.USER.getById(userId)
+  const { userId, applicationId } = journeyData
+  const user = await APIRequests.USER.getById(userId)
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  return Object.assign(user, { yesNo: contact ? yesNoFromBool(contact.userId === user.id) : null })
 }
 
 const mostRecent = (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)

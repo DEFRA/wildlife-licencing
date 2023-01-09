@@ -3,7 +3,7 @@ import { contactURIs } from '../../../../../uris.js'
 describe('the user page', () => {
   beforeEach(() => jest.resetModules())
 
-  it('getUserData', async () => {
+  it('getUserData - user is contact', async () => {
     const request = {
       cache: () => ({
         getData: jest.fn(() => ({ userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }))
@@ -21,14 +21,85 @@ describe('the user page', () => {
             }
           }
         },
+        CONTACT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => ({ userId: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c' }))
+          })
+        },
         USER: {
-          getById: jest.fn(() => ({ username: 'Keith Moon' }))
+          getById: jest.fn(() => ({ id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Keith Moon' }))
         }
       }
     }))
     const { getUserData } = await import('../user.js')
     const result = await getUserData('APPLICANT')(request)
-    expect(result).toEqual({ username: 'Keith Moon' })
+    expect(result).toEqual({ username: 'Keith Moon', yesNo: 'yes', id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+  })
+
+  it('getUserData - user is not contact', async () => {
+    const request = {
+      cache: () => ({
+        getData: jest.fn(() => ({ userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }))
+      })
+    }
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
+        CONTACT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => ({ userId: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c' }))
+          })
+        },
+        USER: {
+          getById: jest.fn(() => ({ id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Keith Moon' }))
+        }
+      }
+    }))
+    const { getUserData } = await import('../user.js')
+    const result = await getUserData('APPLICANT')(request)
+    expect(result).toEqual({ username: 'Keith Moon', yesNo: 'no', id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+  })
+
+  it('getUserData - no contact', async () => {
+    const request = {
+      cache: () => ({
+        getData: jest.fn(() => ({ userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }))
+      })
+    }
+    jest.doMock('../../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return {
+              set: jest.fn()
+            }
+          }
+        },
+        CONTACT: {
+          role: () => ({
+            getByApplicationId: jest.fn(() => null)
+          })
+        },
+        USER: {
+          getById: jest.fn(() => ({ id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Keith Moon' }))
+        }
+      }
+    }))
+    const { getUserData } = await import('../user.js')
+    const result = await getUserData('APPLICANT')(request)
+    expect(result).toEqual({ username: 'Keith Moon', yesNo: null, id: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
   })
 
   describe('setUserData', () => {
