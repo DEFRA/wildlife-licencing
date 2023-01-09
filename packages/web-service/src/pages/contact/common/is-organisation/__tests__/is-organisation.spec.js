@@ -4,6 +4,13 @@ describe('the is-organisation page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('getContactAccountData', () => {
+    it('logic on getIsOrganization', async () => {
+      const { getIsOrganization } = await import('../is-organisation.js')
+      expect(getIsOrganization({}, {})).toBeTruthy()
+      expect(getIsOrganization({ address: {} }, null)).toBeFalsy()
+      expect(getIsOrganization({ address: null }, null)).toBeNull()
+    })
+
     it('returns the contact and account data for the role', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {

@@ -2,7 +2,7 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
 import { yesNoFromBool } from '../../../common/common.js'
 
-const getIsOrganization = (contact, account) => {
+export const getIsOrganization = (contact, account) => {
   if (account) {
     return true
   } else {
