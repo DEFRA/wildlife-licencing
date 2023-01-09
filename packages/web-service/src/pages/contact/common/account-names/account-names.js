@@ -35,7 +35,7 @@ export const accountNamesCompletion = (_accountRole, baseUri) => async request =
   if (accountId === 'new') {
     return baseUri.IS_ORGANISATION.uri
   } else {
-    // Always go to the email page
+    // Always go to the email page.
     return baseUri.EMAIL.uri
   }
 }

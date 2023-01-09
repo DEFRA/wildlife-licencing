@@ -1,12 +1,25 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
+import { yesNoFromBool } from '../../../common/common.js'
+
+export const getIsOrganization = (contact, account) => {
+  if (account) {
+    return true
+  } else {
+    if (contact.address) {
+      return false
+    } else {
+      return null
+    }
+  }
+}
 
 export const getContactAccountData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  return { contact, account }
+  return { contact, account, isOrganization: yesNoFromBool(getIsOrganization(contact, account)) }
 }
 
 export const setContactAccountData = (contactRole, accountRole) => async request => {

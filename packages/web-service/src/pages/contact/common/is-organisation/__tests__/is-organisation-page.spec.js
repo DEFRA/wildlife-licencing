@@ -59,8 +59,8 @@ describe('is-organisation page', () => {
       APIRequests: {
         ACCOUNT: {
           role: () => ({
-            findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }]),
-            findByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones' }))
+            findByUser: jest.fn(() => [{ name: 'The Jimi Hendrix Experience' }, { name: 'The Rolling Stones' }]),
+            getByApplicationId: jest.fn(() => ({ name: 'The Rolling Stones' }))
           })
         }
       }
@@ -72,5 +72,10 @@ describe('is-organisation page', () => {
     const { getValidator } = await import('../is-organisation-page')
     const validator = getValidator('APPLICANT_ORGANISATION')
     await expect(() => validator(payload, {})).resolves
+    const payload2 = {
+      'is-organisation': 'yes',
+      'organisation-name': 'The Jimi Hendrix Experience'
+    }
+    await expect(() => validator(payload2, {})).rejects.toThrow()
   })
 })

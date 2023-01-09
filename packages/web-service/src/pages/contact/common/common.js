@@ -69,9 +69,7 @@ const getAccountCandidatesInner = async (primaryAccountRole, otherAccountRoles, 
 
   // Filter by roles
   const accountApplicationsOfRoles = accountApplications.filter(
-    ca => (primaryAccountRole === ca.accountRole && ca.applicationId !== applicationId) ||
-    (otherAccountRoles.includes(ca.accountRole))
-  )
+    ca => primaryAccountRole === ca.accountRole || otherAccountRoles.includes(ca.accountRole))
 
   // make a set of the unique account ids on the roles in question
   // Determine if they are used by another application or the same application in
