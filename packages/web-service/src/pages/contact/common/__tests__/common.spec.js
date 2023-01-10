@@ -6,7 +6,7 @@ describe('contact common', () => {
   beforeEach(() => jest.resetModules())
 
   describe('findClones', () => {
-    it.only('correctly identifies all the clones from any clone in a chain', async () => {
+    it('correctly identifies all the clones from any clone in a chain', async () => {
       const expectedResult = [
         'e6510354-be7e-49be-b90e-7c8ce147c057',
         'f22733cd-c535-4b1e-98bb-79cb090c400b',

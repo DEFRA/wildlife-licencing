@@ -2,9 +2,10 @@ import { APIRequests } from '../../../services/api-requests.js'
 
 export const findClones = (rec, recs, clones = []) => {
   clones.push(rec.id)
+
   const currentClones = recs.filter(r => !clones.includes(r.id))
     .filter(r => r.id === rec?.cloneOf || r?.cloneOf === rec.id)
-  clones.concat(currentClones.map(r => r.id))
+
   for (const clone of currentClones) {
     findClones(clone, recs, clones)
   }
@@ -29,7 +30,7 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
 
   const clones = []
   for (const record of conflicting) {
-    clones.concat(findClones(record, contactApplicationsOfRoles, clones))
+    findClones(record, contactApplicationsOfRoles, clones).forEach(c => clones.push(c))
   }
 
   const contactApplicationsOfRoles2 = contactApplicationsOfRoles
