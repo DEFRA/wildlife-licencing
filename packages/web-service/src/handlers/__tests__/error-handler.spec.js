@@ -12,12 +12,12 @@ describe('the error-page handler function', () => {
     expect(result).toEqual('continue')
   })
 
-  it('it returns the client-error page with a error status 400', async () => {
+  it('it returns the client-error page with a error status 404', async () => {
     const request = {
       response: {
         isBoom: true,
         output: {
-          statusCode: 400
+          statusCode: 404
         }
       }
     }
@@ -29,7 +29,7 @@ describe('the error-page handler function', () => {
     }
     await errorHandler(request, h)
     expect(mockView).toHaveBeenCalledWith('client-error', expect.any(Object))
-    expect(mockCode).toHaveBeenCalledWith(400)
+    expect(mockCode).toHaveBeenCalledWith(404)
   })
 
   it('it returns the server-error page with a error status 500', async () => {

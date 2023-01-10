@@ -10,9 +10,9 @@ export const errorHandler = (request, h) => {
   if (!request.response.isBoom) {
     return h.continue
   }
-  if (Math.floor(request.response.output.statusCode / 100) === 4) {
+  if (request?.response?.output?.statusCode === 404) {
     /*
-     * 4xx client errors and are not logged
+     * 404 page not found client errors
      */
     return h
       .view(ERRORS.CLIENT.page, {
@@ -20,6 +20,7 @@ export const errorHandler = (request, h) => {
       })
       .code(request.response.output.statusCode)
   } else {
+    // other 4xx or 5xx errors
     const requestDetail = {
       url: request.url,
       path: request.path,
