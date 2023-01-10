@@ -10,16 +10,17 @@ export const errorHandler = (request, h) => {
   if (!request.response.isBoom) {
     return h.continue
   }
-  if (Math.floor(request.response.output.statusCode / 100) === 4) {
+  if (request?.response?.output?.statusCode === 404) {
     /*
-     * 4xx client errors and are not logged
+     * 404 page not found errors
      */
     return h
-      .view(ERRORS.CLIENT.page, {
-        clientError: request.response.output.payload
+      .view(ERRORS.NOT_FOUND.page, {
+        notFoundError: request.response.output.payload
       })
       .code(request.response.output.statusCode)
   } else {
+    // other 4xx or 5xx errors
     const requestDetail = {
       url: request.url,
       path: request.path,
@@ -33,8 +34,8 @@ export const errorHandler = (request, h) => {
 
     console.error('Error processing request. Request: %j', requestDetail)
     return h
-      .view(ERRORS.SERVER.page, {
-        serverError: request.response.output.payload
+      .view(ERRORS.SERVICE_ERROR.page, {
+        serviceError: request.response.output.payload
       })
       .code(request.response.output.statusCode)
   }
