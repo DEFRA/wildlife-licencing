@@ -126,8 +126,8 @@ export const siteURIs = {
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
-  CLIENT: { page: 'client-error' },
-  SERVER: { page: 'server-error' }
+  NOT_FOUND: { page: 'not-found' },
+  SERVICE_ERROR: { page: 'service-error' }
 }
 
 export const FILE_UPLOADS = {
