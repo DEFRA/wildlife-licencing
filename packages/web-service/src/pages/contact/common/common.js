@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../services/api-requests.js'
 
-const findClones = (rec, recs, clones = []) => {
+export const findClones = (rec, recs, clones = []) => {
   clones.push(rec.id)
   const currentClones = recs.filter(r => !clones.includes(r.id))
     .filter(r => r.id === rec?.cloneOf || r?.cloneOf === rec.id)
