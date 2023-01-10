@@ -26,7 +26,7 @@ const duplicateNames = async (primaryRole, contactRoles, userId, applicationId) 
   }
   if (contactRoleIsSingular(primaryRole)) {
     const currentContact = await APIRequests.CONTACT.role(primaryRole).getByApplicationId(applicationId)
-    return contacts.map(c => c.fullName).filter(c => c.toUpperCase() !== currentContact?.fullName.toUpperCase())
+    return contacts.map(c => c.fullName).filter(c => c && c.toUpperCase() !== currentContact?.fullName?.toUpperCase())
   } else {
     return contacts.map(c => c.fullName).filter(c => c)
   }

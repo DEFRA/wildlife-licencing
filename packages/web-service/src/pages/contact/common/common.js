@@ -40,7 +40,7 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
   // Determine if they are used by another application
   const contactIds = [...new Set(contactApplicationsOfRoles2.map(c => c.id))]
   const mapApplicationsByContactId = new Map(contactIds.map(c => {
-    const contact = contactApplicationsOfRoles.find(f => f.id === c)
+    const contact = contactApplicationsOfRoles2.find(f => f.id === c)
     return [contact.id, {
       id: contact.id,
       cloneOf: contact.cloneOf,
