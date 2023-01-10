@@ -1,8 +1,45 @@
 import { contactApplicationsData } from './contact-applications-data.js'
 import { accountApplicationsData } from './account-applications-data.js'
+import { cloneChain } from './clone-chain-data.spec.js'
 
 describe('contact common', () => {
   beforeEach(() => jest.resetModules())
+
+  describe('findClones', () => {
+    it('correctly identifies all the clones from any clone in a chain', async () => {
+      const expectedResult = [
+        'e6510354-be7e-49be-b90e-7c8ce147c057',
+        'f22733cd-c535-4b1e-98bb-79cb090c400b',
+        '41207613-b08d-4b45-ad2a-c044e5966aa2',
+        '78afdc1e-01a5-48e6-9edb-070a9859fcb6',
+        '64986a41-34ef-4d1c-b9f7-70a3717c7e86'
+      ]
+      const { findClones } = await import('../common.js')
+      const res0 = findClones(cloneChain[0], cloneChain, [])
+      const res1 = findClones(cloneChain[1], cloneChain, [])
+      const res2 = findClones(cloneChain[2], cloneChain, [])
+      const res3 = findClones(cloneChain[3], cloneChain, [])
+      const res4 = findClones(cloneChain[4], cloneChain, [])
+
+      expect(res0).toEqual(expect.arrayContaining(expectedResult))
+      expect(res1).toEqual(expect.arrayContaining(expectedResult))
+      expect(res2).toEqual(expect.arrayContaining(expectedResult))
+      expect(res3).toEqual(expect.arrayContaining(expectedResult))
+      expect(res4).toEqual(expect.arrayContaining(expectedResult))
+
+      expect(res0).not.toContain('74986a41-34ef-4d1c-b9f7-70a3717c7e86')
+      expect(res1).not.toContain('74986a41-34ef-4d1c-b9f7-70a3717c7e86')
+      expect(res2).not.toContain('74986a41-34ef-4d1c-b9f7-70a3717c7e86')
+      expect(res3).not.toContain('74986a41-34ef-4d1c-b9f7-70a3717c7e86')
+      expect(res4).not.toContain('74986a41-34ef-4d1c-b9f7-70a3717c7e86')
+
+      expect(res0).toHaveLength(5)
+      expect(res1).toHaveLength(5)
+      expect(res2).toHaveLength(5)
+      expect(res3).toHaveLength(5)
+      expect(res4).toHaveLength(5)
+    })
+  })
 
   describe('getContactCandidates and hasContactCandidates', () => {
     it('calculates the candidate set where: the contacts are not assigned to any user', async () => {
@@ -24,7 +61,7 @@ describe('contact common', () => {
       expect(result).toEqual([
         {
           assoc: true,
-          cloneOf: '1bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+          cloneOf: null,
           contactRole: 'ECOLOGIST',
           fullName: 'Broken clone',
           groupId: 'j608d4f0-100e-495f-811f-510a28336ca5',
@@ -83,7 +120,7 @@ describe('contact common', () => {
         },
         {
           assoc: true,
-          cloneOf: '1bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
+          cloneOf: null,
           contactRole: 'ECOLOGIST',
           fullName: 'Broken clone',
           groupId: 'j608d4f0-100e-495f-811f-510a28336ca5',

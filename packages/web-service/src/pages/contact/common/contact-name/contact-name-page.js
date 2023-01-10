@@ -7,14 +7,15 @@ const nameReg = /^[\s\p{L}'.,-]{1,160}$/u
 
 /**
  * Find the duplicate names to validate against
- * For a singular role the duplicate check is across the user
- * otherwise it is across the application
+ * For a singular role, ecologists etc, the duplicate check is across the user
+ * otherwise, for authorised people, it is across the application.
+ * For a singular role, the current name is excepted
  * @param contactRoles
  * @param userId
  * @param applicationId
  * @returns {Promise<*[]|*>}
  */
-const duplicateNames = async (contactRoles, userId, applicationId) => {
+const duplicateNames = async (primaryRole, contactRoles, userId, applicationId) => {
   let contacts = []
   for await (const cr of contactRoles) {
     if (contactRoleIsSingular(cr)) {
@@ -23,13 +24,18 @@ const duplicateNames = async (contactRoles, userId, applicationId) => {
       contacts = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
     }
   }
-  return contacts.map(c => c.fullName).filter(c => c)
+  if (contactRoleIsSingular(primaryRole)) {
+    const currentContact = await APIRequests.CONTACT.role(primaryRole).getByApplicationId(applicationId)
+    return contacts.map(c => c.fullName).filter(c => c && c.toUpperCase() !== currentContact?.fullName?.toUpperCase())
+  } else {
+    return contacts.map(c => c.fullName).filter(c => c)
+  }
 }
 
-export const getValidator = contactRoles => async (payload, context) => {
+export const getValidator = (primaryRole, contactRoles) => async (payload, context) => {
   const cd = cacheDirect(context)
   const { userId, applicationId } = await cd.getData()
-  const names = await duplicateNames(contactRoles, userId, applicationId)
+  const names = await duplicateNames(primaryRole, contactRoles, userId, applicationId)
   Joi.assert({ name: payload.name }, Joi.object({
     // Remove double spacing
     name: Joi.string().trim().replace(/((\s+){2,})/gm, '$2')
@@ -37,7 +43,7 @@ export const getValidator = contactRoles => async (payload, context) => {
   }), 'name', { abortEarly: false, allowUnknown: true })
 }
 
-export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, contactRoles) =>
+export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, primaryRole, contactRoles) =>
   pageRoute({
     page,
     uri,
@@ -45,5 +51,5 @@ export const contactNamePage = ({ page, uri, checkData, getData, completion, set
     getData,
     completion,
     setData,
-    validator: getValidator(contactRoles)
+    validator: getValidator(primaryRole, contactRoles)
   })

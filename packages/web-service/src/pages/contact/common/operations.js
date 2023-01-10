@@ -73,9 +73,9 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
       }
     },
     setName: async contactName => {
-      // Assign the name
+      // Assign the name, if there exists a contact and the name is changing
       const contact = await getContact()
-      if (contact) {
+      if (contact && contactName.toUpperCase() !== contact.fullName?.toUpperCase()) {
         if (await APIRequests.CONTACT.isImmutable(applicationId, contact.id)) {
           // Migrate when changing name
           await migrateContact(userId, applicationId, contact, contactRole, {

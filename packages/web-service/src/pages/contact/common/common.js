@@ -1,5 +1,17 @@
 import { APIRequests } from '../../../services/api-requests.js'
 
+export const findClones = (rec, recs, clones = []) => {
+  clones.push(rec.id)
+
+  const currentClones = recs.filter(r => !clones.includes(r.id))
+    .filter(r => r.id === rec?.cloneOf || r?.cloneOf === rec.id)
+
+  for (const clone of currentClones) {
+    findClones(clone, recs, clones)
+  }
+  return clones
+}
+
 const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated) => {
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
@@ -7,21 +19,28 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
   /*
     Filter by roles. If the primary (choosing) role is APPLICANT, then the candidates are the
     APPLICANTS and ALTERNATIVE APPLICANTS from other applications.
-    The contact roles are mutually exclusive within the same application except for the payer,
-    which, if selected as the applicant or ecologist contact is
-    handled by explicit selection, not by the candidate generator.
-    Currently, the payer does not select the alternative applicants and ecologists
-    as candidate. That would require a change here to get the immutability for same
-    application-different role scenario
+    Include all roles on all applications excluding any conflicting (other) roles
+    on the same application. This filter needs to all so act on all the clones
   */
   const contactApplicationsOfRoles = contactApplications
-    .filter(ca => allRoles.includes(ca.contactRole) && ca.applicationId !== applicationId)
+    .filter(ca => allRoles.includes(ca.contactRole))
+
+  const conflicting = contactApplicationsOfRoles
+    .filter(ca => ca.applicationId === applicationId && otherContactRoles.includes(ca.contactRole))
+
+  const clones = []
+  for (const record of conflicting) {
+    findClones(record, contactApplicationsOfRoles, clones).forEach(c => clones.push(c))
+  }
+
+  const contactApplicationsOfRoles2 = contactApplicationsOfRoles
+    .filter(ca => !clones.includes(ca.id))
 
   // Make a set of the unique contact ids on the roles in question
   // Determine if they are used by another application
-  const contactIds = [...new Set(contactApplicationsOfRoles.map(c => c.id))]
+  const contactIds = [...new Set(contactApplicationsOfRoles2.map(c => c.id))]
   const mapApplicationsByContactId = new Map(contactIds.map(c => {
-    const contact = contactApplicationsOfRoles.find(f => f.id === c)
+    const contact = contactApplicationsOfRoles2.find(f => f.id === c)
     return [contact.id, {
       id: contact.id,
       cloneOf: contact.cloneOf,
@@ -122,7 +141,11 @@ export const hasAccountCandidates = async (userId, applicationId, primaryAccount
  * the association with the original record is maintained via the cloneOf field.
  * This allows us to create chains of modified records which are associated by a groupId
  * where the groupId is the id of the origin record
- * The logic is applicable to both accounts and candidates
+ * The logic is applicable to both accounts and candidates.
+ *
+ * It is possible that the origin record has been unlinked or deleted in which case the cloneOf
+ * will refer to a record that is not included in the set. Therefore, any cloneOf record that is not found in the
+ * set will be set null, making it the effective origin.
  */
 const decorateWithCloneGroups = records => {
   const cloneGroups = (recs, id, groupId) => {
@@ -139,15 +162,14 @@ const decorateWithCloneGroups = records => {
     clones: records.filter(f => f.cloneOf === r.id)
   }]))
 
+  // Unset cloneOf where the parent does not appear in the set
+  for (const record of records.filter(r => r.cloneOf && !records.find(r2 => r2.id === r.cloneOf))) {
+    record.cloneOf = null
+  }
+
   // Start with the un-cloned records
   for (const record of records.filter(r => !r.cloneOf)) {
     cloneGroups(mapById, record.id, record.id)
-  }
-
-  // If the clone-chain is corrupted the group may not have been found
-  // set any orphans groups' to self.
-  for (const record of records.filter(r => !r.groupId)) {
-    record.groupId = record.id
   }
 }
 

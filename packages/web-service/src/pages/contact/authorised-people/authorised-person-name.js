@@ -44,4 +44,4 @@ export const authorisedPersonName = contactNamePage({
   setData: setData,
   getData: getData,
   completion: getAuthorisedPeopleCompletion
-}, [ContactRoles.AUTHORISED_PERSON])
+}, ContactRoles.AUTHORISED_PERSON, [ContactRoles.AUTHORISED_PERSON])
