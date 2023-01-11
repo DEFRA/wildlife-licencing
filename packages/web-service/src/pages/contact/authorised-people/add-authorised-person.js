@@ -6,6 +6,7 @@ import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
 import { addressLine } from '../../service/address.js'
 import { checkApplication } from '../../common/check-application.js'
+import { Backlink } from '../../../handlers/backlink.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
@@ -86,5 +87,6 @@ export const addAuthorisedPerson = yesNoPage({
   checkData: [checkApplication, checkData],
   getData: getData,
   setData: setData,
-  completion: completion
+  completion: completion,
+  backlink: Backlink.NO_BACKLINK
 })
