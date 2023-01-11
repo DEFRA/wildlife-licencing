@@ -1,4 +1,4 @@
-import { tagStatus } from '../api-requests.js'
+import { tagStatus } from '../status-tags.js'
 
 jest.spyOn(console, 'error').mockImplementation(code => {})
 

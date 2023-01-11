@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { getContactCandidates } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
 import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'

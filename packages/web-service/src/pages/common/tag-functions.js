@@ -1,4 +1,5 @@
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 export const isComplete = tagState => tagState === tagStatus.COMPLETE
 

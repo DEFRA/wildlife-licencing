@@ -2,10 +2,11 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import { getCheckAnswersData } from '../common/check-answers/check-answers.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 const { CHECK_ANSWERS, USER } = contactURIs.APPLICANT
 

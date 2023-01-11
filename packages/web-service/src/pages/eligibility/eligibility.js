@@ -4,12 +4,13 @@
 import { yesNoPage, isYes } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import pageRoute from '../../routes/page-route.js'
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { APIRequests } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
 import { moveTagInProgress } from '../common/tag-functions.js'
 import { checkApplication } from '../common/check-application.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 // The pages in the flow
 const {

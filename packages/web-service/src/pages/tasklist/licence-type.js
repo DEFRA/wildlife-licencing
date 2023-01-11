@@ -1,11 +1,8 @@
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
-import { isComplete } from '../common/tag-functions.js'
-import { countCompleteSections } from '../common/count-complete-sections.js'
-import { A24_MAP } from './a24-map.js'
+import { tagStatus } from '../../services/status-tags.js'
 
-export const A13 = 'A13 Bat mitigation licence'
-export const A14 = 'A13 Great crested newt mitigation licence'
-export const A24 = 'A24 Badger mitigation licence'
+// export const A13 = 'A13 Bat mitigation licence'
+// export const A14 = 'A13 Great crested newt mitigation licence'
+// export const A24 = 'A24 Badger mitigation licence'
 
 // Determine if an application is submittable
 // export const isAppSubmittable = async applicationId => {
@@ -16,6 +13,8 @@ export const A24 = 'A24 Badger mitigation licence'
 //   return totalCompletedSections.length < totalSections
 // }
 
+export const isAppSubmittable = async applicationId => true
+
 // Return a progress object containing the number of completed tasks of total tasks )
 export const getProgress = status => ({
   complete: Object.values(status).filter(s => s).length,
@@ -23,6 +22,7 @@ export const getProgress = status => ({
 })
 
 export const getTaskStatus = async (request, task) => tagStatus.NOT_STARTED
+export const hasTaskStatus = async (request, task, ...statuses) => false
 export const isTaskStatus = async (request, task, status) => false
 
 // export const getTaskStatus = async request => {
@@ -46,9 +46,11 @@ export const isTaskStatus = async (request, task, status) => false
 //   }
 // }
 
-export const decorateMap = (request, map) => {
-
-}
+// export const decorateMap = (request, map) => {
+//   Object.entries(map.sections).forEach(([k, v]) => {
+//     console.log(k, v)
+//   })
+// }
 
 // A function to take the static map for a given licence type and decorate it using the current cache state
 // export const decorateMap = (currentLicenceTypeMap, taskStatus) => currentLicenceTypeMap.sections.map(s => ({
@@ -78,7 +80,7 @@ export const decorateMap = (request, map) => {
 // But it also checks other features are complete too
 // E.g. 'Add invoice details' depends upon 3 other flows being complete
 export const getStateDependsUpon = (status, sectionTaskKey, dependUpon) => {
-  if (!eligibilityCompleted(status)) {
+  /* if (!eligibilityCompleted(status)) {
     return tagStatus.CANNOT_START
   }
 
@@ -89,10 +91,29 @@ export const getStateDependsUpon = (status, sectionTaskKey, dependUpon) => {
     }
   }
 
-  return status[sectionTaskKey].tagState
+  return status[sectionTaskKey].tagState */
 }
 
 // A map of the sections and tasks by licence type
-export const licenceTypeMap = {
-  [A24]: A24_MAP
+export class LicenceType {
+  constructor (name, sectionTasks) {
+    this.name = name
+    this.sectionTasks = sectionTasks
+  }
+
+  async makeTask (request, task) {
+    return {
+      name: task.name,
+      uri: await task.uri(request),
+      status: await task.status(request),
+      enabled: await task.enabled(request)
+    }
+  }
+
+  async decorate (request) {
+    return Promise.all(this.sectionTasks.map(async st => ({
+      name: st.section.name,
+      tasks: await Promise.all(st.tasks.map(async t => this.makeTask(request, t)))
+    })))
+  }
 }

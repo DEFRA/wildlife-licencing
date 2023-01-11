@@ -1,11 +1,12 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ecologistExperienceURIs, TASKLIST } from '../../../uris.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
 import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { checkApplication } from '../../common/check-application.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()

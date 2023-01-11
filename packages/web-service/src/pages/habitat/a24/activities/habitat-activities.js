@@ -2,12 +2,13 @@ import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
+import { tagStatus } from '../../../../services/status-tags.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 

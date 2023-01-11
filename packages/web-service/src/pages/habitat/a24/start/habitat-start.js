@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs } from '../../../../uris.js'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../../common/tag-functions.js'
 

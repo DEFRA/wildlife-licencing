@@ -1,10 +1,11 @@
 import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
+import { tagStatus } from '../../../../services/status-tags.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },

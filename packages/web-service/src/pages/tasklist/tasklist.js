@@ -3,9 +3,8 @@ import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { licenceTypeMap, decorateMap, getProgress, getTaskStatus, SECTION_TASKS, A24 } from './licence-type-map.js'
+import { A24 } from './a24-badger-licence.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { isComplete } from '../common/tag-functions.js'
 
 export const getApplication = async request => {
   // If there is no application then create a pre-application
@@ -34,14 +33,14 @@ export const getApplication = async request => {
 export const getData = async request => {
   const application = await getApplication(request)
 
-  const decoratedMap = await decorateMap(licenceTypeMap[A24], request)
-  // const progress = getProgress(status)
+  const x = await A24.decorate(request)
+  console.log(JSON.stringify(x, null, 4))
 
   return {
     // ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
     reference: application.applicationReferenceNumber,
-    licenceType: A24,
-    licenceTypeMap: decoratedMap,
+    licenceType: A24.name,
+    licenceTypeMap: await A24.decorate(request),
     progress: null
   }
 }

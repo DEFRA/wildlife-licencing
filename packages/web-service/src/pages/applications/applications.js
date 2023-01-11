@@ -1,10 +1,11 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { APIRequests } from '../../services/api-requests.js'
 import { TASKLIST, APPLICATIONS, APPLICATION_SUMMARY } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 // Values to keys and keys to values
 const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)

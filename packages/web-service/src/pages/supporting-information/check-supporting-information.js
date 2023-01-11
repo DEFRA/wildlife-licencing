@@ -1,11 +1,12 @@
 import { FILE_UPLOADS, REMOVE_FILE_UPLOAD, TASKLIST } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import Joi from 'joi'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
+import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 const anotherFileUpload = 'another-file-check'
 

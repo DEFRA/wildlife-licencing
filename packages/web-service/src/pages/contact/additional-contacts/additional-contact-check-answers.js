@@ -1,11 +1,12 @@
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { yesNoFromBool } from '../../common/common.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { canBeUser } from '../common/common-handler.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 const { CHECK_ANSWERS } = contactURIs.ADDITIONAL_APPLICANT
 

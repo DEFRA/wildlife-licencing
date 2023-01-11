@@ -1,9 +1,10 @@
 import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
+import { tagStatus } from '../../../../services/status-tags.js'
 
 let tempId = ''
 

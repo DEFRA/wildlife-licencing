@@ -2,7 +2,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { s3FileUpload } from '../../../services/s3-upload.js'
 import { FILETYPES } from '../../common/file-upload/file-upload.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { siteURIs } from '../../../uris.js'
 
 export const uploadAndUpdateSiteMap = async (request, siteMapFile) => {

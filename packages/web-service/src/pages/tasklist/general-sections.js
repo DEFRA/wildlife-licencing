@@ -1,7 +1,6 @@
-import { isCompleteOrConfirmed } from '../common/tag-functions.js'
 import { eligibilityURIs } from '../../uris.js'
-import { getTaskStatus, isTaskStatus } from './licence-type-map.js'
-import { tagStatus } from '../../services/api-requests.js'
+import { getTaskStatus, isTaskStatus, hasTaskStatus } from './licence-type.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
 
@@ -12,7 +11,7 @@ export const SECTIONS = {
   APPLY: { name: 'apply' }
 }
 
-export const TASK_NAMES = {
+export const SECTION_TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
   LICENCE_HOLDER: 'licence-holder',
   ECOLOGIST: 'ecologist',
@@ -29,9 +28,10 @@ export const TASK_NAMES = {
 }
 
 export const TASKS = {
-  [TASK_NAMES.ELIGIBILITY_CHECK]: {
-    uri: r => [tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED].includes(getTaskStatus(r, TASK_NAMES.ELIGIBILITY_CHECK)) ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri,
-    status: r => getTaskStatus(r, TASK_NAMES.ELIGIBILITY_CHECK),
-    enabled: r => !isTaskStatus(r, TASK_NAMES.ELIGIBILITY_CHECK, tagStatus.COMPLETE)
+  [SECTION_TASKS.ELIGIBILITY_CHECK]: {
+    name: SECTION_TASKS.ELIGIBILITY_CHECK,
+    uri: async r => await hasTaskStatus(r, SECTION_TASKS.ELIGIBILITY_CHECK, tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED) ? ELIGIBILITY_CHECK.uri : LANDOWNER.uri,
+    status: r => getTaskStatus(r, SECTION_TASKS.ELIGIBILITY_CHECK),
+    enabled: r => !isTaskStatus(r, SECTION_TASKS.ELIGIBILITY_CHECK, tagStatus.COMPLETE)
   }
 }

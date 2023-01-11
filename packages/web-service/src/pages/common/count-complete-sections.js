@@ -1,4 +1,5 @@
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 // We can determine from the applicationTags on application
 // How close to completing the application, the user is
