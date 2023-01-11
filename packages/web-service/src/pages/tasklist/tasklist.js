@@ -3,7 +3,7 @@ import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
+import { licenceTypeMap, decorateMap, getProgress, getTaskStatus, SECTION_TASKS, A24 } from './licence-type-map.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { isComplete } from '../common/tag-functions.js'
 
@@ -34,15 +34,15 @@ export const getApplication = async request => {
 export const getData = async request => {
   const application = await getApplication(request)
 
-  const status = await getTaskStatus(request)
-  const decoratedMap = await decorateMap(licenceTypeMap[A24], status)
-  const progress = getProgress(status)
+  const decoratedMap = await decorateMap(licenceTypeMap[A24], request)
+  // const progress = getProgress(status)
 
   return {
-    ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
+    // ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
+    reference: application.applicationReferenceNumber,
     licenceType: A24,
     licenceTypeMap: decoratedMap,
-    progress
+    progress: null
   }
 }
 

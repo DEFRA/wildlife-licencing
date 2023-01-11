@@ -13,7 +13,9 @@ export const PowerPlatformKeys = {
     RED_KITES: '3b8d5ad6-53a8-ec11-9840-0022481aca85'
   },
   SPECIES_SUBJECT: {
-    BADGER: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+    BADGER: '60ce79d8-87fb-ec11-82e5-002248c5c45b',
+    BATS: 'e4af9af9-682f-ed11-9db1-0022481b5cc7',
+    GREAT_CRESTED_NEWTS: 'f506efdf-4a2f-ed11-9db1-0022481b5cc7'
   },
   SETT_TYPE: {
     MAIN_NO_ALTERNATIVE_SETT: 100000000,

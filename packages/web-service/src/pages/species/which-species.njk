@@ -1,0 +1,46 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'species': {
+          'any.required': { ref: '#species', text: 'Enter a species' }
+        }
+    }
+%}
+
+{% set title = 'Which species will the work affect?' %}
+
+{% block pageContent %}
+  {{ govukRadios({
+    id: "species",
+    name: "species",
+    hint: {
+      text: "Select one."
+    },
+    errorMessage: { text: "Select a species type." } if error['species'],
+    items: [
+      {
+        checked: data.settType === data.MAIN_NO_ALTERNATIVE_SETT,
+        value: data.MAIN_NO_ALTERNATIVE_SETT,
+        text: 'Main'
+      },
+      {
+        checked: data.settType === data.ANNEXE,
+        value: data.ANNEXE,
+        text: 'Annexe'
+      },
+      {
+        checked: data.settType === data.SUBSIDIARY,
+        value: data.SUBSIDIARY,
+        text: 'Subsidiary'
+      },
+      {
+        checked: data.settType === data.OUTLIER,
+        value: data.OUTLIER,
+        text: 'Outlier'
+      }
+    ]
+  }) }}
+
+{% endblock %}

@@ -1,3 +1,4 @@
+import species from '../pages/species/which-species.js'
 import applications from '../pages/applications/applications.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import login from '../pages/auth/login/login.js'
@@ -106,6 +107,7 @@ import removeLicence from '../pages/ecologist-experience/remove-licence/remove-l
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
+  ...species,
   ...applications,
   ...applicationSummary,
   ...login,

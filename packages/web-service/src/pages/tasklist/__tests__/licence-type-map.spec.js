@@ -1,10 +1,10 @@
 import {
-  A24,
   licenceTypeMap,
   SECTION_TASKS,
   getProgress,
   decorateMap
 } from '../licence-type-map.js'
+import { A24 } from '../a24-map.js'
 
 describe('The licence type map', () => {
   beforeEach(() => jest.resetModules())
