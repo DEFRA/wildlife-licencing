@@ -1,13 +1,10 @@
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 
 describe('add authorised person', () => {
   beforeEach(() => jest.resetModules())
   describe('the checkData function', () => {
     it('redirects to the name page with no name', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -34,9 +31,6 @@ describe('add authorised person', () => {
     })
     it('redirects to the email page with no email', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -65,9 +59,6 @@ describe('add authorised person', () => {
 
     it('redirects to the postcode page with no address', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -100,11 +91,6 @@ describe('add authorised person', () => {
     it('sets the tag status to in-progress if not-stared', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress',
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -143,9 +129,6 @@ describe('add authorised person', () => {
 
     it('returns the check-answers data correctly', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -198,11 +181,6 @@ describe('add authorised person', () => {
     it('calls the set() on the tags, when on the CYA page', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started',
-          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed',
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -243,10 +221,6 @@ describe('add authorised person', () => {
     it('when adding another removes the tag', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress',
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -276,10 +250,6 @@ describe('add authorised person', () => {
     it('if you add no authorised people, journey marked as complete', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress',
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({
@@ -309,9 +279,6 @@ describe('add authorised person', () => {
     it('when not adding another contact adds the tag', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({

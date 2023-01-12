@@ -2,10 +2,11 @@
  * This is the location for sections and tasks which appear on the A24 licence.
  */
 import {
+  countTasksCompleted,
   getTaskStatus,
   hasTaskCompleted,
   hasTaskStatusIn, haveTasksCompleted,
-  LicenceType
+  LicenceType, LicenceTypes
 } from './licence-type.js'
 import { eligibilityCheckHelper, SECTION_TASKS, SECTIONS, TASKS } from './general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
@@ -34,41 +35,49 @@ const submissionDependsOn = [
   SECTION_TASKS.SUPPORTING_INFORMATION
 ]
 
-export const A24 = new LicenceType('A24 Badger', [
-  {
-    section: SECTIONS.CHECK_BEFORE_YOU_START,
-    tasks: [
-      TASKS[SECTION_TASKS.ELIGIBILITY_CHECK]
-    ]
-  },
-  {
-    section: SECTIONS.CONTACT_DETAILS,
-    tasks: [
-      TASKS[SECTION_TASKS.LICENCE_HOLDER],
-      TASKS[SECTION_TASKS.ECOLOGIST],
-      TASKS[SECTION_TASKS.AUTHORISED_PEOPLE],
-      TASKS[SECTION_TASKS.ADDITIONAL_CONTACTS],
-      TASKS[SECTION_TASKS.INVOICE_PAYER]
-    ]
-  },
-  {
-    section: SECTIONS.PLANNED_WORK_ACTIVITY,
-    tasks: [
-      TASKS[SECTION_TASKS.WORK_ACTIVITY],
-      TASKS[SECTION_TASKS.PERMISSIONS],
-      TASKS[SECTION_TASKS.SITES],
-      A24_SETTS_TASK,
-      TASKS[SECTION_TASKS.ECOLOGIST_EXPERIENCE],
-      TASKS[SECTION_TASKS.SUPPORTING_INFORMATION]
-    ]
-  },
-  {
-    section: SECTIONS.APPLY,
-    tasks: [
-      TASKS[SECTION_TASKS.SUBMIT]({
-        status: tags => haveTasksCompleted(submissionDependsOn, tags) ? tagStatus.NOT_STARTED : tagStatus.CANNOT_START,
-        enabled: tags => haveTasksCompleted(submissionDependsOn, tags)
-      })
-    ]
-  }
-])
+const A24 = new LicenceType({
+  name: 'A24 Badger',
+  canShowReferenceFunc: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags),
+  getProgressFunc: tags => ({ complete: countTasksCompleted(submissionDependsOn, tags), from: submissionDependsOn.length }),
+  canSubmitFunc: tags => haveTasksCompleted(submissionDependsOn, tags),
+  sectionTasks: [
+    {
+      section: SECTIONS.CHECK_BEFORE_YOU_START,
+      tasks: [
+        TASKS[SECTION_TASKS.ELIGIBILITY_CHECK]
+      ]
+    },
+    {
+      section: SECTIONS.CONTACT_DETAILS,
+      tasks: [
+        TASKS[SECTION_TASKS.LICENCE_HOLDER],
+        TASKS[SECTION_TASKS.ECOLOGIST],
+        TASKS[SECTION_TASKS.AUTHORISED_PEOPLE],
+        TASKS[SECTION_TASKS.ADDITIONAL_CONTACTS],
+        TASKS[SECTION_TASKS.INVOICE_PAYER]
+      ]
+    },
+    {
+      section: SECTIONS.PLANNED_WORK_ACTIVITY,
+      tasks: [
+        TASKS[SECTION_TASKS.WORK_ACTIVITY],
+        TASKS[SECTION_TASKS.PERMISSIONS],
+        TASKS[SECTION_TASKS.SITES],
+        A24_SETTS_TASK,
+        TASKS[SECTION_TASKS.ECOLOGIST_EXPERIENCE],
+        TASKS[SECTION_TASKS.SUPPORTING_INFORMATION]
+      ]
+    },
+    {
+      section: SECTIONS.APPLY,
+      tasks: [
+        TASKS[SECTION_TASKS.SUBMIT]({
+          status: tags => haveTasksCompleted(submissionDependsOn, tags) ? tagStatus.NOT_STARTED : tagStatus.CANNOT_START,
+          enabled: tags => haveTasksCompleted(submissionDependsOn, tags)
+        })
+      ]
+    }
+  ]
+})
+
+LicenceTypes.A24 = A24

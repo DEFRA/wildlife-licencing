@@ -3,7 +3,7 @@ import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { A24 } from './a24-badger-licence.js'
+import { LicenceTypes } from './licence-type.js'
 import { Backlink } from '../../handlers/backlink.js'
 
 export const getApplication = async request => {
@@ -32,16 +32,14 @@ export const getApplication = async request => {
 
 export const getData = async request => {
   const application = await getApplication(request)
-
-  const x = await A24.decorate(request)
-  console.log(JSON.stringify(x, null, 4))
-
+  const licenceType = LicenceTypes.A24
+  const showReference = await licenceType.canShowReference(request)
   return {
-    // ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
+    ...(showReference && { reference: application.applicationReferenceNumber }),
     reference: application.applicationReferenceNumber,
-    licenceType: A24.name,
-    licenceTypeMap: await A24.decorate(request),
-    progress: null
+    licenceType: licenceType.name,
+    licenceTypeMap: await licenceType.decorate(request),
+    progress: licenceType.getProgress(request)
   }
 }
 
