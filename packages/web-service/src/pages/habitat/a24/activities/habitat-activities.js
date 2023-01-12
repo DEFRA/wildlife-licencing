@@ -5,10 +5,10 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
-import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { tagStatus } from '../../../../services/status-tags.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
@@ -28,7 +28,7 @@ export const getData = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   const activities = [].concat(pageData.payload[habitatURIs.ACTIVITIES.page])
   const methodIds = activities.map(method => parseInt(method))
@@ -45,7 +45,7 @@ export const setData = async request => {
     Object.assign(journeyData.habitatData, { methodIds, speciesId, speciesSubjectId, activityId })
 
     await APIRequests.HABITAT.create(journeyData.applicationId, journeyData.habitatData)
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
   await request.cache().setData(journeyData)
 }

@@ -7,10 +7,11 @@ import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
   if (isCompleteOrConfirmed(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
   }
@@ -32,7 +33,7 @@ export const setData = async request => {
   const year = pageData.payload[`${habitatURIs.WORK_START.page}-year`]
   const startDate = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
     const newSett = await getHabitatById(journeyData, journeyData.redirectId)

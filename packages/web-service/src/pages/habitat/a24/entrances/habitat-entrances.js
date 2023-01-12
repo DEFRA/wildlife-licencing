@@ -8,10 +8,11 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   if (isCompleteOrConfirmed(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
@@ -41,7 +42,7 @@ export const validator = async (payload, context) => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   const numberOfEntrances = parseInt(pageData.payload[habitatURIs.ENTRANCES.page])
 

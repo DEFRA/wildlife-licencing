@@ -2,9 +2,9 @@ import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
-import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { tagStatus } from '../../../../services/status-tags.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 let tempId = ''
 
@@ -17,7 +17,7 @@ export const setData = async request => {
 
     if (totalSites.length === 1) {
       // If you remove the only sett you have, your journey is no longer complete
-      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.IN_PROGRESS })
+      await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.IN_PROGRESS })
     }
   }
 

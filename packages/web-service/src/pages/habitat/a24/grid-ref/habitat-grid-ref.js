@@ -7,13 +7,14 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { gridReferenceValidator } from '../../../common/grid-ref-validator.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 const habitatGridReference = 'habitat-grid-ref'
 export const validator = payload => gridReferenceValidator(payload, habitatGridReference)
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   if (isCompleteOrConfirmed(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
@@ -24,7 +25,7 @@ export const completion = async request => {
 export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   const gridReference = pageData.payload['habitat-grid-ref']
 
