@@ -42,11 +42,7 @@ export const getData = async request => {
   return {
     totalSections,
     statuses,
-    applications,
-    url: {
-      TASKLIST: TASKLIST.uri,
-      APPLICATION_SUMMARY: APPLICATION_SUMMARY.uri
-    }
+    applications
   }
 }
 

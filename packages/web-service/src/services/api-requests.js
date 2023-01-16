@@ -8,10 +8,10 @@ import { HABITAT } from './api-requests-habitat.js'
 import { ECOLOGIST_EXPERIENCE } from './api-requests-ecologist-experience.js'
 import { LICENCES } from './api-requests-licences.js'
 import { FILE_UPLOAD } from './api-requests-file-upload.js'
+import { APPLICATION_TYPES } from './api-requests-application-types.js'
 
 import { boomify } from '@hapi/boom'
 import { OTHER } from './api-requests-other.js'
-import { tagStatus } from './status-tags.js'
 
 export const apiUrls = {
   USERS: '/users',
@@ -34,7 +34,8 @@ export const apiUrls = {
   SITES: '/sites',
   APPLICATION_SITE: '/application-site',
   APPLICATION_SITES: '/application-sites',
-  APPLICATION_SITES_SITES: '/application-sites/sites'
+  APPLICATION_SITES_SITES: '/application-sites/sites',
+  APPLICATION_TYPES: '/application-types'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {
@@ -60,5 +61,6 @@ export const APIRequests = {
   ECOLOGIST_EXPERIENCE,
   LICENCES,
   FILE_UPLOAD,
+  APPLICATION_TYPES,
   OTHER
 }

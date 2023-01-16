@@ -11,6 +11,31 @@
 
 {% set title = 'Which species will the work affect?' %}
 
+{% set speciesTextMap = {
+        BADGER: 'Badgers',
+        BATS: 'Bats',
+        GREAT_CRESTED_NEWTS: 'Great crested newts'
+    }
+%}
+
+{% set radioItems = [] %}
+
+<div hidden>
+{{error|dump}}
+    {% for key, id in data.speciesSubject %}
+       {{ radioItems.push({
+            text: speciesTextMap[key],
+            value: id
+       }) }}
+    {% endfor %}
+
+    {{ radioItems.push({ divider: 'or' }) }}
+    {{ radioItems.push({
+        text: 'another species',
+        value: 'other'
+    }) }}
+</div>
+
 {% block pageContent %}
   {{ govukRadios({
     id: "species",
@@ -19,28 +44,7 @@
       text: "Select one."
     },
     errorMessage: { text: "Select a species type." } if error['species'],
-    items: [
-      {
-        checked: data.settType === data.MAIN_NO_ALTERNATIVE_SETT,
-        value: data.MAIN_NO_ALTERNATIVE_SETT,
-        text: 'Main'
-      },
-      {
-        checked: data.settType === data.ANNEXE,
-        value: data.ANNEXE,
-        text: 'Annexe'
-      },
-      {
-        checked: data.settType === data.SUBSIDIARY,
-        value: data.SUBSIDIARY,
-        text: 'Subsidiary'
-      },
-      {
-        checked: data.settType === data.OUTLIER,
-        value: data.OUTLIER,
-        text: 'Outlier'
-      }
-    ]
+    items: radioItems
   }) }}
 
 {% endblock %}

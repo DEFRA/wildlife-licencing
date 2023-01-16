@@ -364,12 +364,21 @@ async function defineMethods (sequelize) {
   }, ReferenceDataType.attributes), ReferenceDataType.options)
 }
 
-async function defineSpecies (sequelize) {
-  models.species = await sequelize.define('species', ReferenceDataType.attributes, ReferenceDataType.options)
+async function defineSpeciesSubject (sequelize) {
+  models.speciesSubject = await sequelize.define('species-subject', ReferenceDataType.attributes, ReferenceDataType.options)
 }
 
-async function defineSpeciesSubject (sequelize) {
-  models.speciesSubject = await sequelize.define('speciesSubject', ReferenceDataType.attributes, ReferenceDataType.options)
+async function defineSpecies (sequelize) {
+  models.species = await sequelize.define('species', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    species_subject_id: { type: DataTypes.UUID },
+    json: { type: DataTypes.JSONB }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['species_subject_id'], name: 'species_species_subject_fk' }
+    ]
+  })
 }
 
 async function activityMethods (sequelize) {
@@ -465,7 +474,7 @@ async function defineApplicationRefSeq (sequelize) {
 const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
 
-  // Define the tables
+  // Define the tables (THE ORDERING REFLECTS INTERDEPENDENCIES)
   await defineUsers(sequelize)
   await defineUserRoles(sequelize)
 
@@ -495,8 +504,8 @@ const createModels = async () => {
   await defineApplicationPurposes(sequelize)
   await defineActivities(sequelize)
   await defineMethods(sequelize)
-  await defineSpecies(sequelize)
   await defineSpeciesSubject(sequelize)
+  await defineSpecies(sequelize)
   await activityMethods(sequelize)
   await applicationTypeActivities(sequelize)
   await applicationTypeSpecies(sequelize)
@@ -551,8 +560,8 @@ const createModels = async () => {
   await models.applicationPurposes.sync()
   await models.activities.sync()
   await models.methods.sync()
-  await models.species.sync()
   await models.speciesSubject.sync()
+  await models.species.sync()
   await models.activityMethods.sync()
   await models.applicationTypeActivities.sync()
   await models.applicationTypeSpecies.sync()

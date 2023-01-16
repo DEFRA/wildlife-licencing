@@ -78,7 +78,6 @@ export const tasklist = pageRoute({
   page: TASKLIST.page,
   uri: TASKLIST.uri,
   backlink: new Backlink(tasklistBacklink),
-  options: { auth: { mode: 'optional' } },
   checkData,
   getData
 })

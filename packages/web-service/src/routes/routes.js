@@ -1,4 +1,6 @@
 import species from '../pages/species/which-species.js'
+import otherSpecies from '../pages/species/other-species.js'
+
 import applications from '../pages/applications/applications.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import login from '../pages/auth/login/login.js'
@@ -108,6 +110,7 @@ import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
   ...species,
+  ...otherSpecies,
   ...applications,
   ...applicationSummary,
   ...login,

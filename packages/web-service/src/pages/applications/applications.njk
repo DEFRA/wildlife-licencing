@@ -27,15 +27,15 @@
 
 {{ govukButton({
   text: 'New application',
-  href: 'application/create'
+  href: _uri.species
 }) }}
 
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
         {% if application.userSubmission %}
-            <a href="{{data.url.APPLICATION_SUMMARY}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+            <a href="{{_uri.applicationSummary}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% else %}
-            <a href="{{data.url.TASKLIST}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+            <a href="{{_uri.taskList}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% endif %}
     </p>
     <p class="govuk-body govuk-!-margin-bottom-2">

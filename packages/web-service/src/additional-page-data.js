@@ -1,5 +1,14 @@
 import crypto from 'crypto'
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, siteURIs, LOGIN, SIGN_OUT } from './uris.js'
+import {
+  contactURIs,
+  ecologistExperienceURIs,
+  eligibilityURIs,
+  siteURIs,
+  LOGIN,
+  SIGN_OUT,
+  SPECIES,
+  APPLICATION_SUMMARY, TASKLIST
+} from './uris.js'
 import { version } from '../dirname.cjs'
 
 export const additionalPageData = (request, h) => {
@@ -9,6 +18,11 @@ export const additionalPageData = (request, h) => {
       _uri: {
         login: LOGIN.uri,
         signOut: SIGN_OUT.uri,
+        applicationSummary: APPLICATION_SUMMARY.uri,
+        taskList: TASKLIST.uri,
+
+        // Species
+        species: SPECIES.uri,
 
         // Eligibility
         landowner: eligibilityURIs.LANDOWNER.uri,

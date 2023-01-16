@@ -124,6 +124,8 @@ import {
   getApplicationPurposes
 } from './handlers/reference-data/reference-data.js'
 
+import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
+
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
 
 import validationFail from './handlers/validation-fail.js'
@@ -237,6 +239,7 @@ const handlers = {
   deleteEcologistExperience,
 
   // Miscellaneous handlers
+  findApplicationTypes,
   getApplicationTypes,
   getApplicationPurposes,
   getOptionSets,
