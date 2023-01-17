@@ -33,6 +33,7 @@ describe('additional page data', () => {
         applicantNames: '/applicant-names',
         applicantOrganisations: '/applicant-organisations',
         applicantPostcode: '/applicant-postcode',
+        applicationSummary: '/application-summary',
         applicantUser: '/applicant-user',
         classMitigation: '/class-mitigation',
         classMitigationDetails: '/enter-class-mitigation-details',
@@ -76,7 +77,9 @@ describe('additional page data', () => {
         additionalEcologistAdd: '/add-additional-ecologist',
         additionalEcologistEmail: '/additional-ecologist-email',
         additionalEcologistNames: '/additional-ecologist-names',
-        additionalEcologistUser: '/additional-ecologist-user'
+        additionalEcologistUser: '/additional-ecologist-user',
+        species: '/which-species',
+        taskList: '/tasklist'
       },
       credentials: 'credentials',
       cspNonce: expect.any(String)

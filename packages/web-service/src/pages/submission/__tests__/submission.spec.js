@@ -10,7 +10,7 @@ describe('submission spec', () => {
           })
         })
       }
-      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+      jest.doMock('../../tasklist/licence-type.js', () => ({
         isAppSubmittable: () => { return true }
       }))
 
@@ -26,7 +26,7 @@ describe('submission spec', () => {
           })
         })
       }
-      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+      jest.doMock('../../tasklist/licence-type.js', () => ({
         isAppSubmittable: () => { return false }
       }))
       const mockRedirect = jest.fn()
