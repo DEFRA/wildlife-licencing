@@ -14,7 +14,7 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  if (!await isAppSubmittable(applicationId)) {
+  if (!await isAppSubmittable(request)) {
     return h.redirect(TASKLIST.uri)
   }
 

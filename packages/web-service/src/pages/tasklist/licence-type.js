@@ -1,8 +1,12 @@
 import { APIRequests } from '../../services/api-requests.js'
 import { tagStatus } from '../../services/status-tags.js'
 
-// TODO
-export const isAppSubmittable = async applicationId => true
+export const isAppSubmittable = async request => {
+  const { applicationId } = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(applicationId)
+  const licenceType = LICENCE_TYPE_TASKLISTS[application.applicationTypeId]
+  return licenceType.canSubmit(request)
+}
 
 export const getTaskStatus = (task, tags = []) => tags.find(t => t.tag === task)?.tagState
 export const hasTaskStatusOf = (task, tags = [], status) => getTaskStatus(task, tags) === status
@@ -12,7 +16,7 @@ export const hasTaskCompletedOrCompletedNotConfirmed = (task, tags) => hasTaskSt
 export const haveTasksCompleted = (tasks, tags) => tasks.every(t => hasTaskCompleted(t, tags))
 export const countTasksCompleted = (tasks, tags) => tasks.filter(t => hasTaskCompleted(t, tags)).length
 
-export const LicenceTypes = {}
+export const LICENCE_TYPE_TASKLISTS = {}
 
 export class LicenceType {
   /**

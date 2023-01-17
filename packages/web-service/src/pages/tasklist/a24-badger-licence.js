@@ -5,12 +5,15 @@ import {
   countTasksCompleted,
   getTaskStatus,
   hasTaskCompleted,
-  hasTaskStatusIn, haveTasksCompleted,
-  LicenceType, LicenceTypes
+  hasTaskStatusIn,
+  haveTasksCompleted,
+  LICENCE_TYPE_TASKLISTS,
+  LicenceType
 } from './licence-type.js'
 import { eligibilityCheckHelper, SECTION_TASKS, SECTIONS, TASKS } from './general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
 import { habitatURIs } from '../../uris.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 export const A24_SETT = 'setts'
 const A24_SETTS_TASK = {
@@ -80,4 +83,4 @@ const A24 = new LicenceType({
   ]
 })
 
-LicenceTypes.A24 = A24
+LICENCE_TYPE_TASKLISTS[PowerPlatformKeys.APPLICATION_TYPES.A24] = A24

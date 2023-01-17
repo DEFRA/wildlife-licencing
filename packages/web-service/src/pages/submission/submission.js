@@ -4,9 +4,7 @@ import { Backlink } from '../../handlers/backlink.js'
 import { isAppSubmittable } from '../tasklist/licence-type.js'
 
 export const checkData = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-
-  if (!await isAppSubmittable(applicationId)) {
+  if (!await isAppSubmittable(request)) {
     return h.redirect(TASKLIST.uri)
   }
 

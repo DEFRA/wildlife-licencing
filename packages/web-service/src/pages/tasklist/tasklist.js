@@ -3,7 +3,7 @@ import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { LicenceTypes } from './licence-type.js'
+import { LICENCE_TYPE_TASKLISTS } from './licence-type.js'
 import { Backlink } from '../../handlers/backlink.js'
 
 export const getApplication = async request => {
@@ -32,7 +32,8 @@ export const getApplication = async request => {
 
 export const getData = async request => {
   const application = await getApplication(request)
-  const licenceType = LicenceTypes.A24
+  // Select the tasklist based on the licence type
+  const licenceType = LICENCE_TYPE_TASKLISTS[application.applicationTypeId]
   const showReference = await licenceType.canShowReference(request)
   return {
     ...(showReference && { reference: application.applicationReferenceNumber }),

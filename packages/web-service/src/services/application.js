@@ -8,15 +8,14 @@ const debug = db('web-service:application-service')
  * Cache and API operations concerning applications.
  * @type {{
  * switchApplication: (function(*, *): Promise<*>),
- * createApplication: (function(*): Promise<*>),
+ * createApplication: (function(*, *, *): Promise<*>),
  * submitApplication: ((function(*): Promise<void>)|*), associateApplication: (function(*, *): Promise<*>)
  * }}
  */
 export const ApplicationService = {
-  createApplication: async request => {
+  createApplication: async (request, typeId, purposeId) => {
     const journeyData = await request.cache().getData() || {}
-    const application = await APIRequests.APPLICATION.create(PowerPlatformKeys.APPLICATION_TYPES.A24,
-      PowerPlatformKeys.APPLICATION_PURPOSES.DEVELOPMENT)
+    const application = await APIRequests.APPLICATION.create(typeId, purposeId)
     delete journeyData.additionalContact
     Object.assign(journeyData, { applicationId: application.id })
     await request.cache().setData(journeyData)

@@ -84,7 +84,7 @@ export const TASKS = {
     uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.ADDITIONAL_CONTACTS, tags)
       ? contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
       : contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
-    status: tags => getTaskStatus(SECTION_TASKS.AUTHORISED_PEOPLE, tags) || eligibilityCheckHelper(tags),
+    status: tags => getTaskStatus(SECTION_TASKS.ADDITIONAL_CONTACTS, tags) || eligibilityCheckHelper(tags),
     enabled: tags => haveTasksCompleted([SECTION_TASKS.LICENCE_HOLDER, SECTION_TASKS.ECOLOGIST], tags)
   },
 

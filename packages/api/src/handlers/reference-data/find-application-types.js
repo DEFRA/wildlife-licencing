@@ -7,16 +7,16 @@ const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
   '       "a-t-a-p".application_purpose_id as "applicationPurposeIds",\n' +
   '       s.id as "speciesIds",\n' +
   '       s.species_subject_id as "speciesSubjectIds",\n' +
-  '       s.id as "activityIds",\n' +
+  '       a.id as "activityIds",\n' +
   '       m.option as "methods"\n' +
   'from "application-types"  "a-t"\n' +
   '         join "application-type-application-purposes" "a-t-a-p" on "a-t".id = "a-t-a-p".application_type_id\n' +
   '         join "application-type-species" "a-t-s" on "a-t".id = "a-t-s".application_type_id\n' +
   '         join species s on "a-t-s".species_id = s.id\n' +
-  '         left join "application-type-activities" "a-t-a" on "a-t".id = "a-t-a".application_type_id\n' +
-  '         left join "activities" a on "a-t-a".activity_id = a.id\n' +
-  '         left join "activity-methods" "a-m" on a.id = "a-m".activity_id\n' +
-  '         left join "methods" m on "a-m".method_id = m.id'
+  '         join "application-type-activities" "a-t-a" on "a-t".id = "a-t-a".application_type_id\n' +
+  '         join "activities" a on "a-t-a".activity_id = a.id\n' +
+  '         join "activity-methods" "a-m" on a.id = "a-m".activity_id\n' +
+  '         join "methods" m on "a-m".method_id = m.id'
 
 /**
  * Wrap in single quotes
