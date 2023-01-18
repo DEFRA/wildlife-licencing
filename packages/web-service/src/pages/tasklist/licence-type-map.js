@@ -5,7 +5,8 @@ import {
   FILE_UPLOADS,
   habitatURIs,
   ecologistExperienceURIs,
-  siteURIs
+  siteURIs,
+  convictionsURIs
 } from '../../uris.js'
 import { APIRequests, tagStatus } from '../../services/api-requests.js'
 import { isComplete, isCompleteOrConfirmed } from '../common/tag-functions.js'
@@ -30,6 +31,7 @@ export const SECTION_TASKS = {
   SETTS: 'setts',
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   SUPPORTING_INFORMATION: 'supporting-information',
+  DECLARE_CONVICTIONS: 'declare-convictions',
   SUBMIT: 'send-application'
 }
 
@@ -65,6 +67,7 @@ export const getTaskStatus = async request => {
     [SECTION_TASKS.SITES]: (applicationTags.find(t => t.tag === SECTION_TASKS.SITES) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SETTS]: (applicationTags.find(t => t.tag === SECTION_TASKS.SETTS) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUPPORTING_INFORMATION]: (applicationTags.find(t => t.tag === SECTION_TASKS.SUPPORTING_INFORMATION) || { tagState: tagStatus.NOT_STARTED }),
+    [SECTION_TASKS.DECLARE_CONVICTIONS]: (applicationTags.find(t => t.tag === SECTION_TASKS.DECLARE_CONVICTIONS) || { tagState: tagStatus.NOT_STARTED }),
     [SECTION_TASKS.SUBMIT]: { tagState: tagStatus.NOT_STARTED }
   }
 }
@@ -254,6 +257,14 @@ export const licenceTypeMap = {
       {
         name: 'apply',
         tasks: [
+          {
+            name: SECTION_TASKS.DECLARE_CONVICTIONS,
+            uri: status => isCompleteOrConfirmed(status[SECTION_TASKS.DECLARE_CONVICTIONS].tagState)
+              ? convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri
+              : convictionsURIs.ANY_CONVICTIONS.uri,
+            status: status => getState(status, SECTION_TASKS.DECLARE_CONVICTIONS),
+            enabled: status => eligibilityCompleted(status)
+          },
           {
             name: SECTION_TASKS.SUBMIT,
             uri: DECLARATION.uri,

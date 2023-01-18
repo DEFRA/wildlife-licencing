@@ -1,0 +1,35 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% set errorMap = {
+        'conviction-details': {
+          'string.empty': { ref: '#conviction-details', text: 'You have not entered the conviction details' }
+        }
+    } %}
+{% set title = "Convictions for animal or wildlife offences" %}
+{% block pageContent %}
+{{data|dump}}
+  <p class="govuk-body">You only need to tell us about convictions within the last 5 years or unspent convictions.
+    <a
+      href="https://www.gov.uk/tell-employer-or-college-about-criminal-record/check-your-conviction-caution"
+      class="govuk-link">Check whether your convictions are spent</a>.</p>
+  <p class="govuk-body">If people listed on this application have animal related or wildlife convictions the application
+    may:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>be subject to more checks</li>
+    <li>take more time to process</li>
+  </ul>
+  <p class="govuk-body">You may need to give Natural England more information about these offences.</p>
+  {{ govukTextarea({
+  name: "conviction-details",
+  id: "conviction-details",
+  value: data.detailsOfConvictions if data.detailsOfConvictions else payload['conviction-details'],
+  label: {
+    text: "Describe the convictions and their dates",
+    classes: "govuk-label--m",
+    isPageHeading: true
+  },
+  errorMessage: {
+    text: "Enter conviction details"
+  } if error['conviction-details']
+}) }}
+{% endblock %}

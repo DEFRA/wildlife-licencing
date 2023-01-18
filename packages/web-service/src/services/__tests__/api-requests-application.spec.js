@@ -164,6 +164,20 @@ describe('The API requests application service', () => {
       expect(result).toEqual([{ foo: 'bar' }])
     })
 
+    it('update calls the API connector correctly', async () => {
+      const mockPut = jest.fn(() => ({ id: 'applicationId' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.APPLICATION.update('9d62e5b8-9c77-ec11-8d21-000d3a87431b', { detailsOfConviction: 'detailsOfConviction' })
+      expect(mockPut).toHaveBeenCalledWith('/application/9d62e5b8-9c77-ec11-8d21-000d3a87431b', {
+        detailsOfConviction: 'detailsOfConviction'
+      })
+    })
+
     it('getById calls the API correctly', async () => {
       const mockGet = jest.fn(() => [{ foo: 'bar' }])
       jest.doMock('@defra/wls-connectors-lib', () => ({

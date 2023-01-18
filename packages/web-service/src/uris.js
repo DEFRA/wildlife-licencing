@@ -123,6 +123,12 @@ export const siteURIs = {
   CHECK_SITE_ANSWERS: { uri: '/check-site-answers', page: 'check-site-answers' }
 }
 
+export const convictionsURIs = {
+  ANY_CONVICTIONS: { uri: '/any-convictions', page: 'any-convictions' },
+  CONVICTION_DETAILS: { uri: '/conviction-details', page: 'conviction-details' },
+  CHECK_CONVICTIONS_ANSWERS: { uri: '/convictions-check-answers', page: 'convictions-check-answers' }
+}
+
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
