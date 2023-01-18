@@ -1,0 +1,30 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% set errorMap = {
+    'convictions-check': {
+      'any.required': { ref: '#convictions-check', text: 'You have not selected an option' }
+    }
+  } %}
+{% set title = 'Have you or any person listed in the application been convicted of any wildlife-related or animal welfare offence?' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+            id: "convictions-check",
+            name: "convictions-check",
+            errorMessage: { text: 'Select an option' } if error['convictions-check'],
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['convictions-check'] === 'yes' or true if data.yesNo ===  true
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['convictions-check'] === 'no'  or true if data.yesNo === false
+              }
+            ]
+          }) }}
+{% endblock %}

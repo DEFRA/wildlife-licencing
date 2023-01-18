@@ -77,6 +77,7 @@ describe('The licence type map', () => {
       ecologist: { tagState: 'not-started' },
       'invoice-payer': { tagState: 'not-started' },
       'additional-contacts': { tagState: 'not-started' },
+      'declare-convictions': { tagState: 'not-started' },
       'supporting-information': { tagState: 'not-started' }
     })
     const startCheck = decoratedMap.find(m => m.name === 'check-before-you-start')
@@ -198,9 +199,37 @@ describe('The licence type map', () => {
       expect(result).toBe('/landowner')
     })
 
-    it('uri function will return the check-page if the eligibility-check has not started the section task', async () => {
+    it('uri function will return the check-page if the eligibility-check has completed the section task', async () => {
       const result = funcUri({ 'eligibility-check': { tagState: 'complete' } })
       expect(result).toBe('/eligibility-check')
+    })
+  })
+
+  describe('declare-convictions section', () => {
+    const funcStatus = licenceTypeMap[A24].sections[3].tasks[0].status
+    const funcUri = licenceTypeMap[A24].sections[3].tasks[0].uri
+
+    it('status function will return completed if declare-convictions has completed the section task', async () => {
+      const result = funcStatus(
+        {
+          'eligibility-check': { tagState: 'complete' },
+          'declare-convictions': { tagState: 'complete' }
+        }
+      )
+      expect(result).toBe('complete')
+    })
+
+    it('uri function will return the user-page if the declare-convictions has not started the section task', async () => {
+      const result = funcUri({
+        'eligibility-check': { tagState: 'complete' },
+        'declare-convictions': { tagState: 'not-started' }
+      })
+      expect(result).toBe('/any-convictions')
+    })
+
+    it('uri function will return the check-page if the declare-convictions has completed the section task', async () => {
+      const result = funcUri({ 'declare-convictions': { tagState: 'complete' } })
+      expect(result).toBe('/convictions-check-answers')
     })
   })
 

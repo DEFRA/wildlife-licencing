@@ -4,6 +4,7 @@ export const srcObj = {
       id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
       applicationReferenceNumber: '2022-500000-EPS-MIT',
       proposalDescription: 'Badgers are proposed to be moved',
+      isRelatedConviction: true,
       detailsOfConvictions: 'no convictions',
       licenceReason: 'need to move some badgers',
       applicationCategory: 100000001,
@@ -131,6 +132,7 @@ export const initialGeneratedAssignmentsObject = [
       sdds_sourceremote: true,
       sdds_applicationnumber: '2022-500000-EPS-MIT',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
+      sdds_wildliferelatedconviction: true,
       sdds_detailsofconvictions: 'no convictions',
       sdds_whydoyouneedalicence: 'need to move some badgers'
     },
@@ -213,6 +215,7 @@ export const updatedGeneratedAssignmentsObject = [
       'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(001)',
       'sdds_applicationtypesid@odata.bind': '/sdds_applicationtypeses(001)',
       sdds_descriptionofproposal: 'Badgers are proposed to be moved',
+      sdds_wildliferelatedconviction: true,
       sdds_detailsofconvictions: 'no convictions',
       sdds_sourceremote: true,
       'sdds_ecologistid@odata.bind': '$5',
@@ -248,13 +251,14 @@ export const updatedGeneratedAssignmentsObject = [
   })
 ]
 
-export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_sourceremote,sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_licenceexempted,sdds_isapplicantonwnerofland,sdds_ownerpermissionreceived,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_badgermitigationclasslicence,sdds_heldbadgerlicence,sdds_ecologistexperienceofmethods,sdds_ecologistexperienceofbadgerecology,statuscode&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix;$expand=sdds_applicationtypes_sdds_applicationpur($select=sdds_applicationpurposeid)),sdds_applicationpurpose($select=sdds_applicationpurposeid),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid),sdds_alternativeapplicantcontactid($select=contactid),sdds_alternativeecologistcontactid($select=contactid),sdds_billingcustomerid($select=contactid),sdds_billingorganisationid($select=accountid),sdds_application_Contact_Authorisedpersons($select=contactid)'
+export const expectedApplicationRequestPath = 'sdds_applications?$select=sdds_sourceremote,sdds_applicationnumber,sdds_descriptionofproposal,sdds_wildliferelatedconviction,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,sdds_licenceexempted,sdds_isapplicantonwnerofland,sdds_ownerpermissionreceived,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_badgermitigationclasslicence,sdds_heldbadgerlicence,sdds_ecologistexperienceofmethods,sdds_ecologistexperienceofbadgerecology,statuscode&$filter=sdds_sourceremote eq true&$expand=sdds_applicationtypesid($select=sdds_applicationname,sdds_description,sdds_appsuffix;$expand=sdds_applicationtypes_sdds_applicationpur($select=sdds_applicationpurposeid)),sdds_applicationpurpose($select=sdds_applicationpurposeid),sdds_applicantid($select=contactid),sdds_organisationid($select=accountid),sdds_ecologistid($select=contactid),sdds_ecologistorganisationid($select=accountid),sdds_alternativeapplicantcontactid($select=contactid),sdds_alternativeecologistcontactid($select=contactid),sdds_billingcustomerid($select=contactid),sdds_billingorganisationid($select=accountid),sdds_application_Contact_Authorisedpersons($select=contactid)'
 
 export const applicationResponseObject = {
   '@odata.context': 'https://sdds-dev.crm11.dynamics.com/api/data/v9.0/$metadata#sdds_applications(sdds_applicationnumber,sdds_descriptionofproposal,sdds_detailsofconvictions,sdds_whydoyouneedalicence,sdds_applicationcategory,,sdds_isapplicantonwnerofland,sdds_receivedonwerpermission,sdds_doestheprojectneedanypermissions,sdds_projectpermissionsgranted,sdds_applicantid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_organisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistid(lastname,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_ecologistorganisationid(name,telephone1,emailaddress1,address1_line1,address1_line2,address1_line3,address1_county,address1_city,address1_postalcode),sdds_applicationtypesid(sdds_applicationname,sdds_description),sdds_applicationpurpose(sdds_name,sdds_description))/$entity',
   '@odata.etag': 'W/"3285321"',
   sdds_applicationnumber: '2022-500000-EPS-MIT',
   sdds_descriptionofproposal: 'Removal of badgers by dogs',
+  sdds_wildliferelatedconviction: false,
   sdds_detailsofconvictions: null,
   sdds_whydoyouneedalicence: 'New hosuing development',
   sdds_applicationcategory: 100000001,
@@ -358,6 +362,7 @@ export const applicationResponseTransformedDataObject = {
     eligibility: {
       hasLandOwnerPermission: false
     },
+    isRelatedConviction: false,
     licenceReason: 'New hosuing development',
     proposalDescription: 'Removal of badgers by dogs'
   }

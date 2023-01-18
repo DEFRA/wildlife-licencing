@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { contactURIs, ecologistExperienceURIs, eligibilityURIs, siteURIs, LOGIN, SIGN_OUT } from './uris.js'
+import { contactURIs, ecologistExperienceURIs, eligibilityURIs, siteURIs, LOGIN, SIGN_OUT, convictionsURIs } from './uris.js'
 import { version } from '../dirname.cjs'
 
 export const additionalPageData = (request, h) => {
@@ -66,6 +66,10 @@ export const additionalPageData = (request, h) => {
         siteMap: siteURIs.UPLOAD_MAP.uri,
         siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
         siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
+
+        // Conviction
+        isAnyConviction: convictionsURIs.ANY_CONVICTIONS.uri,
+        convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,

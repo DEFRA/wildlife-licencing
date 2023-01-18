@@ -67,6 +67,14 @@ export const APPLICATION = {
     const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
     return applicationUsers.map(au => au.role)
   },
+  update: async (applicationId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Amend applications by applicationId: ${applicationId}`)
+      return API.put(`${apiUrls.APPLICATION}/${applicationId}`, payload)
+    },
+    `Error amending application by applicationId: ${applicationId}`,
+    500
+  ),
   getById: async applicationId => apiRequestsWrapper(
     async () => {
       debug(`Get applications by applicationId: ${applicationId}`)
