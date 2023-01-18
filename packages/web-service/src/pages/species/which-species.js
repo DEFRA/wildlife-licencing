@@ -26,7 +26,7 @@ const LICENCE_TYPES = {
   }
 }
 
-const setSpeciesData = async request => {
+export const setSpeciesData = async request => {
   if (request.payload.species !== 'other') {
   // Look up the application type
     const filter = {
@@ -40,7 +40,7 @@ const setSpeciesData = async request => {
   }
 }
 
-const speciesCompletion = async request => {
+export const speciesCompletion = async request => {
   if (request.payload.species === 'other') {
     return OTHER_SPECIES.uri
   }
