@@ -41,7 +41,7 @@ const submissionDependsOn = [
 const A24 = new LicenceType({
   name: 'A24 Badger',
   canShowReferenceFunc: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags),
-  getProgressFunc: tags => ({ complete: countTasksCompleted(submissionDependsOn, tags), from: submissionDependsOn.length }),
+  getProgressFunc: tags => ({ complete: countTasksCompleted(submissionDependsOn, tags), from: submissionDependsOn.length + 1 }), // Add 1 for the apply section
   canSubmitFunc: tags => haveTasksCompleted(submissionDependsOn, tags),
   sectionTasks: [
     {
@@ -82,5 +82,7 @@ const A24 = new LicenceType({
     }
   ]
 })
+
+Object.freeze(A24)
 
 LICENCE_TYPE_TASKLISTS[PowerPlatformKeys.APPLICATION_TYPES.A24] = A24

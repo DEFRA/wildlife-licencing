@@ -1,6 +1,5 @@
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
-import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
 import { habitatURIs } from '../../../../uris.js'
 import { validateDates } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
