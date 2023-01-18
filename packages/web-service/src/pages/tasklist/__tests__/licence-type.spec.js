@@ -1,5 +1,4 @@
 import { tagStatus } from '../../../services/status-tags.js'
-import { SECTION_TASKS, SECTIONS } from '../general-sections.js'
 import { hasTaskStatusOf } from '../licence-type.js'
 
 const TASKS = {

@@ -16,7 +16,7 @@ import { habitatURIs } from '../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 export const A24_SETT = 'setts'
-const A24_SETTS_TASK = {
+export const A24_SETTS_TASK = {
   name: A24_SETT,
   uri: tags => hasTaskStatusIn(A24_SETT, tags, [tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED, tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS])
     ? habitatURIs.CHECK_YOUR_ANSWERS.uri
@@ -38,7 +38,7 @@ const submissionDependsOn = [
   SECTION_TASKS.SUPPORTING_INFORMATION
 ]
 
-const A24 = new LicenceType({
+export const A24 = new LicenceType({
   name: 'A24 Badger',
   canShowReferenceFunc: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags),
   getProgressFunc: tags => ({ complete: countTasksCompleted(submissionDependsOn, tags), from: submissionDependsOn.length + 1 }), // Add 1 for the apply section

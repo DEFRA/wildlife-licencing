@@ -32,13 +32,13 @@ export class LicenceType {
    */
   constructor ({ name, sectionTasks, canShowReferenceFunc, getProgressFunc, canSubmitFunc }) {
     this.name = name
-    this.sectionTasks = sectionTasks
-    this.canShowReferenceFunc = canShowReferenceFunc
-    this.getProgressFunc = getProgressFunc
-    this.canSubmitFunc = canSubmitFunc
+    this._sectionTasks = sectionTasks
+    this._canShowReferenceFunc = canShowReferenceFunc
+    this._getProgressFunc = getProgressFunc
+    this._canSubmitFunc = canSubmitFunc
   }
 
-  async getTags (request) {
+  async _getTags (request) {
     const journeyData = await request.cache().getData()
     return APIRequests.APPLICATION.tags(journeyData.applicationId).getAll()
   }
@@ -53,25 +53,25 @@ export class LicenceType {
   }
 
   async decorate (request) {
-    const tags = await this.getTags(request)
-    return this.sectionTasks.map(st => ({
+    const tags = await this._getTags(request)
+    return this._sectionTasks.map(st => ({
       name: st.section.name,
       tasks: st.tasks.map(t => this.makeTask(t, tags))
     }))
   }
 
   async canShowReference (request) {
-    const tags = await this.getTags(request)
-    return this.canShowReferenceFunc(tags)
+    const tags = await this._getTags(request)
+    return this._canShowReferenceFunc(tags)
   }
 
   async getProgress (request) {
-    const tags = await this.getTags(request)
-    return this.getProgressFunc(tags)
+    const tags = await this._getTags(request)
+    return this._getProgressFunc(tags)
   }
 
   async canSubmit (request) {
-    const tags = await this.getTags(request)
-    return this.canSubmitFunc(tags)
+    const tags = await this._getTags(request)
+    return this._canSubmitFunc(tags)
   }
 }
