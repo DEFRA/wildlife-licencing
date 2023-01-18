@@ -10,8 +10,11 @@ const filterKeys = speciesSubjects => Object.entries(PowerPlatformKeys.SPECIES_S
   .filter(([_k, v]) => speciesSubjects.includes(v))
   .reduce((a, [c, v]) => ({ ...a, [c]: v }), {})
 
-// Currently only badger
-const getSpeciesData = async () => ({ speciesSubject: filterKeys([PowerPlatformKeys.SPECIES_SUBJECT.BADGER]) })
+/**
+ * Returns th species subjects to drive the page selections
+ * @returns {Promise<{speciesSubject: *}>}
+ */
+export const getSpeciesData = async () => ({ speciesSubject: filterKeys([PowerPlatformKeys.SPECIES_SUBJECT.BADGER]) })
 
 // Temporary map to set up the A24 activities, purposes and species (subject)
 // This will gradually be replaced by a uuser journey to derive these properties

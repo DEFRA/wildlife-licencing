@@ -2,7 +2,6 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
 import { checkCache } from '../utils.js'
 const { cache } = REDIS
-
 const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
   '       "a-t-a-p".application_purpose_id as "applicationPurposeIds",\n' +
   '       s.id as "speciesIds",\n' +
@@ -44,7 +43,9 @@ const unique = (result, field) => [...new Set(result.map(r => r[field])).values(
 
 export const findApplicationTypes = async (_context, req, h) => {
   try {
-    const cacheResult = await checkCache(req)
+    const sp = new URLSearchParams(req.query)
+    const cacheKey = `${req.path}?${sp}`
+    const cacheResult = await checkCache(cacheKey)
 
     if (cacheResult) {
       return h.response(cacheResult)
@@ -95,7 +96,7 @@ export const findApplicationTypes = async (_context, req, h) => {
       methods: unique(result, 'methods')
     }
 
-    await cache.save(req.path, responseBody)
+    await cache.save(cacheKey, responseBody)
     return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error searching application-types', err)
