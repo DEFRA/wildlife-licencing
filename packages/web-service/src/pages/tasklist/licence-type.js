@@ -9,8 +9,8 @@ export const isAppSubmittable = async request => {
 }
 
 export const getTaskStatus = (task, tags = []) => tags.find(t => t.tag === task)?.tagState
-export const hasTaskStatusOf = (task, tags = [], status) => getTaskStatus(task, tags) === status
-export const hasTaskStatusIn = (task, tags = [], ...statuses) => statuses.find(s => hasTaskStatusOf(task, tags, s))
+export const hasTaskStatusOf = (task, tags, status) => getTaskStatus(task, tags) === status
+export const hasTaskStatusIn = (task, tags, ...statuses) => statuses.find(s => hasTaskStatusOf(task, tags, s))
 export const hasTaskCompleted = (task, tags) => hasTaskStatusOf(task, tags, tagStatus.COMPLETE)
 export const hasTaskCompletedOrCompletedNotConfirmed = (task, tags) => hasTaskStatusIn(task, tags, tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED)
 export const haveTasksCompleted = (tasks, tags) => tasks.every(t => hasTaskCompleted(t, tags))

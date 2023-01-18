@@ -56,7 +56,7 @@ export const TASKS = {
 
   [SECTION_TASKS.LICENCE_HOLDER]: {
     name: SECTION_TASKS.LICENCE_HOLDER,
-    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.LICENCE_HOLDER)
+    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.LICENCE_HOLDER, tags)
       ? contactURIs.APPLICANT.CHECK_ANSWERS.uri
       : contactURIs.APPLICANT.USER.uri,
     status: tags => getTaskStatus(SECTION_TASKS.LICENCE_HOLDER, tags) || eligibilityCheckHelper(tags),
