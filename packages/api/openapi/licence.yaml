@@ -2652,7 +2652,7 @@ components:
 
     application:
       type: object
-      additionalProperties: true
+      additionalProperties: false
       required:
         - applicationTypeId
         - applicationPurposeId
