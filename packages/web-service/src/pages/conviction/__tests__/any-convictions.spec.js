@@ -79,11 +79,13 @@ describe('Any convictions page handler', () => {
       }
     }))
     const request = {
+      payload: {
+        'convictions-check': 'yes'
+      },
       cache: () => ({
         getData: () => {
           return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-        },
-        getPageData: () => ({ payload: { 'convictions-check': 'yes' } })
+        }
       })
     }
 
@@ -108,11 +110,13 @@ describe('Any convictions page handler', () => {
       }
     }))
     const request = {
+      payload: {
+        'convictions-check': 'no'
+      },
       cache: () => ({
         getData: () => {
           return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-        },
-        getPageData: () => ({ payload: { 'convictions-check': 'no' } })
+        }
       })
     }
 
@@ -135,9 +139,9 @@ describe('Any convictions page handler', () => {
       }
     }))
     const request = {
-      cache: () => ({
-        getPageData: () => ({ payload: { 'convictions-check': 'no' } })
-      })
+      payload: {
+        'convictions-check': 'no'
+      }
     }
 
     const { completion } = await import('../any-conviction/any-convictions.js')
@@ -155,9 +159,9 @@ describe('Any convictions page handler', () => {
       }
     }))
     const request = {
-      cache: () => ({
-        getPageData: () => ({ payload: { 'convictions-check': 'yes' } })
-      })
+      payload: {
+        'convictions-check': 'yes'
+      }
     }
 
     const { completion } = await import('../any-conviction/any-convictions.js')

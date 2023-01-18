@@ -16,9 +16,8 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const pageData = await request.cache().getPageData()
+  const convictionDetailsText = await request.payload[convictionDetails]
   const application = await APIRequests.APPLICATION.getById(applicationId)
-  const convictionDetailsText = pageData.payload[convictionDetails]
   const payload = { ...application, detailsOfConvictions: convictionDetailsText }
 
   await APIRequests.APPLICATION.update(applicationId, payload)

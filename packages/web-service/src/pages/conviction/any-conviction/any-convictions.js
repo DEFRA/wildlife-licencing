@@ -21,10 +21,10 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const pageData = await request.cache().getPageData()
+  const pageData = await request.payload[convictionsRadio]
   const application = await APIRequests.APPLICATION.getById(applicationId)
   let isRelatedConviction = false
-  if (pageData.payload[convictionsRadio] === 'yes') {
+  if (pageData === 'yes') {
     isRelatedConviction = true
   }
   const payload = { ...application, isRelatedConviction }
@@ -32,8 +32,8 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  const pageData = await request.cache().getPageData()
-  if (pageData.payload[convictionsRadio] === 'no') {
+  const pageData = await request.payload[convictionsRadio]
+  if (pageData === 'no') {
     return convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri
   }
   return convictionsURIs.CONVICTION_DETAILS.uri

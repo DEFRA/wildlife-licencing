@@ -35,11 +35,13 @@ describe('conviction details page handler', () => {
       }
     }))
     const request = {
+      payload: {
+        'conviction-details': 'conviction'
+      },
       cache: () => ({
         getData: () => {
           return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
-        },
-        getPageData: () => ({ payload: { 'conviction-details': 'conviction' } })
+        }
       })
     }
 
