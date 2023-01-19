@@ -3,7 +3,7 @@
  */
 import { tagStatus } from '../../services/status-tags.js'
 import {
-  contactURIs,
+  contactURIs, convictionsURIs,
   DECLARATION,
   ecologistExperienceURIs,
   eligibilityURIs,
@@ -37,6 +37,7 @@ export const SECTION_TASKS = {
   SITES: 'sites',
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   SUPPORTING_INFORMATION: 'supporting-information',
+  DECLARE_CONVICTIONS: 'declare-convictions',
   SUBMIT: 'send-application'
 }
 
@@ -135,6 +136,15 @@ export const TASKS = {
       ? FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri
       : FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri,
     status: tags => getTaskStatus(SECTION_TASKS.SUPPORTING_INFORMATION, tags) || eligibilityCheckHelper(tags),
+    enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
+  },
+
+  [SECTION_TASKS.DECLARE_CONVICTIONS]: {
+    name: SECTION_TASKS.DECLARE_CONVICTIONS,
+    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.DECLARE_CONVICTIONS, tags)
+      ? convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri
+      : convictionsURIs.ANY_CONVICTIONS.uri,
+    status: tags => getTaskStatus(SECTION_TASKS.DECLARE_CONVICTIONS, tags) || eligibilityCheckHelper(tags),
     enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },
 

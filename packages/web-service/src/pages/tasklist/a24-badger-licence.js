@@ -74,6 +74,7 @@ export const A24 = new LicenceType({
     {
       section: SECTIONS.APPLY,
       tasks: [
+        TASKS[SECTION_TASKS.DECLARE_CONVICTIONS],
         TASKS[SECTION_TASKS.SUBMIT]({
           status: tags => haveTasksCompleted(submissionDependsOn, tags) ? tagStatus.NOT_STARTED : tagStatus.CANNOT_START,
           enabled: tags => haveTasksCompleted(submissionDependsOn, tags)
