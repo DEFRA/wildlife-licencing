@@ -1,3 +1,4 @@
+import { tagStatus } from '../../../services/status-tags.js'
 
 describe('The licence type class', () => {
   beforeEach(() => jest.resetModules())
@@ -27,13 +28,18 @@ describe('The licence type class', () => {
   })
 
   it('the A24 specific task functions', async () => {
-    const tags = [{ tag: 'eligibility-check', tagState: 'complete' }]
     const { A24_SETTS_TASK } = await import('../a24-badger-licence.js')
-    const csr = A24_SETTS_TASK.uri(tags)
+    const csr = A24_SETTS_TASK.uri([])
     expect(csr).toEqual('/habitat-start')
-    const enabled = A24_SETTS_TASK.enabled(tags)
+    const csr2 = A24_SETTS_TASK.uri([{ tag: 'setts', tagState: tagStatus.NOT_STARTED }])
+    expect(csr2).toEqual('/habitat-start')
+    const enabled = A24_SETTS_TASK.enabled([{ tag: 'eligibility-check', tagState: tagStatus.COMPLETE }])
     expect(enabled).toBeTruthy()
-    const status = A24_SETTS_TASK.status(tags)
-    expect(status).toEqual('not-started')
+    const status = A24_SETTS_TASK.status([])
+    expect(status).toEqual(tagStatus.CANNOT_START)
+    const status2 = A24_SETTS_TASK.status([
+      { tag: 'setts', tagState: tagStatus.COMPLETE }
+    ])
+    expect(status2).toEqual(tagStatus.COMPLETE)
   })
 })

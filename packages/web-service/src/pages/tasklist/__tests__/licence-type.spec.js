@@ -1,5 +1,6 @@
 import { tagStatus } from '../../../services/status-tags.js'
 import { hasTaskStatusOf } from '../licence-type.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 const TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
@@ -38,6 +39,36 @@ const tags = [
 
 describe('The licence type class', () => {
   beforeEach(() => jest.resetModules())
+
+  it('the isAppSubmittable function', async () => {
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        APPLICATION: {
+          tags: () => ({ getAll: () => [] }),
+          getById: () => ({ applicationTypeId: PowerPlatformKeys.APPLICATION_TYPES.A24 })
+        }
+      }
+    }))
+    const { isAppSubmittable, LicenceType, LICENCE_TYPE_TASKLISTS } = await import('../licence-type.js')
+    LICENCE_TYPE_TASKLISTS[PowerPlatformKeys.APPLICATION_TYPES.A24] = new LicenceType({
+      canSubmitFunc: () => true
+    })
+    const request = {
+      cache: () => ({
+        getData: () => ({
+          applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+        })
+      })
+    }
+    const result = await isAppSubmittable(request)
+    await expect(result).toBeTruthy()
+    LICENCE_TYPE_TASKLISTS[PowerPlatformKeys.APPLICATION_TYPES.A24] = new LicenceType({
+      canSubmitFunc: () => false
+    })
+    const result2 = await isAppSubmittable(request)
+    await expect(result2).toBeFalsy()
+  })
+
   it('the tag functions  ', async () => {
     const {
       getTaskStatus,
