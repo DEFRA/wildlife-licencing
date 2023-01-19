@@ -69,6 +69,8 @@ describe('additional page data', () => {
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
         siteAddress: '/site-got-postcode',
+        convictionDetails: '/conviction-details',
+        isAnyConviction: '/any-convictions',
         signOut: '/sign-out',
         additionalApplicantAdd: '/add-additional-applicant',
         additionalApplicantEmail: '/additional-applicant-email',

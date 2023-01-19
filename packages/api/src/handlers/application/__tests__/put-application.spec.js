@@ -6,6 +6,7 @@ const req = {
   path,
   payload: {
     proposalDescription: 'a proposal',
+    isRelatedConviction: true,
     detailsOfConvictions: 'convictions',
     applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
     applicationPurposeId: '3db073af-201b-ec11-b6e7-0022481a8f18'

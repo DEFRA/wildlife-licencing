@@ -106,6 +106,10 @@ import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist
 import licence from '../pages/ecologist-experience/licence/licence.js'
 import removeLicence from '../pages/ecologist-experience/remove-licence/remove-licence.js'
 
+import anyConvictions from '../pages/conviction/any-conviction/any-convictions.js'
+import convictionDetails from '../pages/conviction/conviction-details/conviction-details.js'
+import convictionsCheckAnswers from '../pages/conviction/convictions-check-answers/convictions-check-answers.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
@@ -207,6 +211,9 @@ const routes = [
   ...licence,
   ...removeLicence,
   ...confirmDelete,
+  ...anyConvictions,
+  ...convictionsCheckAnswers,
+  ...convictionDetails,
 
   signOut,
   ...miscRoutes

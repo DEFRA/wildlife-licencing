@@ -81,6 +81,7 @@ describe('the schema processes', () => {
           sdds_applicationcategory: 100000001,
           sdds_applicationnumber: '2022-500000-EPS-MIT',
           sdds_descriptionofproposal: 'Badgers are proposed to be moved',
+          sdds_wildliferelatedconviction: true,
           sdds_detailsofconvictions: 'no convictions',
           sdds_sourceremote: true,
           sdds_whydoyouneedalicence: 'need to move some badgers'
