@@ -1,0 +1,40 @@
+{% extends "yes-no.njk" %}
+{% set title = 'Is the development a Nationally Significant Infrastructure Project?' %}
+{% set noneSelected = 'you have not selected an option' %}
+
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: 'you have not selected an option' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      hint: {
+        html: '<p class="govuk-body-m"><a href="https://infrastructure.planninginspectorate.gov.uk/projects/register-of-applications/" target="_blank">Check if your development is listed as a Nationally Significant Infrastructure Project</a></p>'
+      } if not error,
+      errorMessage: {
+        html: '<p class="govuk-hint">Nationally Significant Infrastructure Projects (NSIPs) are large scale projects falling into five general categories: Energy, Transport, Water, Waste Water and Waste.</p> Select an option'
+      } if error['yes-no'] === 'any.required',
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

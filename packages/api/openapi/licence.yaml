@@ -2745,6 +2745,8 @@ components:
           type: string
           minLength: 1
           maxLength: 300
+        nationallySignificantInfrastructure:
+          type: boolean
         licenceReason:
           type: string
           minLength: 1
@@ -2991,9 +2993,9 @@ components:
           items:
             $ref: '#/components/schemas/option'
         startDate:
-          $ref: '#/components/schemas/date'
+          $ref: '#/components/schemas/timestamp'
         endDate:
-          $ref: '#/components/schemas/date'
+          $ref: '#/components/schemas/timestamp'
         gridReference:
           $ref: '#/components/schemas/gridReference'
         createdAt:

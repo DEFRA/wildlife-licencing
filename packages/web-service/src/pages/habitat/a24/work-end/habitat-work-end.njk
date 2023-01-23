@@ -9,7 +9,7 @@
           'dateHasPassed': { ref: '#habitat-work-end', text: 'End date must be in the future' },
           'outsideLicence': { ref: '#habitat-work-end', text: 'The end date must be within the licence period' },
           'endDateBeforeStart': { ref: '#habitat-work-end', text: 'The end date must be after the start date' },
-          'yearCantAbbreviate': { ref: '#habitat-work-end', text: 'The end date year must be 4 digits' }
+          'workTooLong': { ref: '#habitat-work-end', text: 'The end date must be within 7 months of the start date' }
         }
     }
 %}
@@ -17,7 +17,6 @@
 {% set title = "When will the work end?" %}
 
 {% block pageContent %}
-
   {{ govukDateInput({
     id: "habitat-work-end",
     namePrefix: "habitat-work-end",

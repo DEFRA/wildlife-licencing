@@ -1,5 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
-import { OTHER_SPECIES, SPECIES, eligibilityURIs } from '../../uris.js'
+import { OTHER_SPECIES, SPECIES, NSIP } from '../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import Joi from 'joi'
 import { ApplicationService } from '../../services/application.js'
@@ -44,7 +44,7 @@ export const speciesCompletion = async request => {
   if (request.payload.species === 'other') {
     return OTHER_SPECIES.uri
   }
-  return eligibilityURIs.LANDOWNER.uri
+  return NSIP.uri
 }
 
 const validator = Joi.object({

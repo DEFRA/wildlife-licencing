@@ -70,13 +70,13 @@ describe('The which-species answers page', () => {
     expect(mockCreate).not.toHaveBeenCalled()
   })
 
-  it('speciesCompletion returns the landowner page if badger is selected', async () => {
+  it('speciesCompletion returns the NSIP page if badger is selected', async () => {
     const request = {
       payload: { species: '60ce79d8-87fb-ec11-82e5-002248c5c45b' }
     }
     const { speciesCompletion } = await import('../which-species.js')
     const result = await speciesCompletion(request)
-    expect(result).toEqual('/landowner')
+    expect(result).toEqual('/nsip')
   })
 
   it('speciesCompletion returns the other-species page if other is selected', async () => {

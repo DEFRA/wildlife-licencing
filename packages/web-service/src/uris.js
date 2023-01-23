@@ -1,6 +1,8 @@
 export const HEALTH = { uri: '/health', page: 'health' }
 export const SPECIES = { uri: '/which-species', page: 'which-species' }
 export const OTHER_SPECIES = { uri: '/other-species', page: 'other-species' }
+export const NSIP = { uri: '/nsip', page: 'nsip' }
+export const WINDOW_NOT_OPEN = { uri: '/window-not-open', page: 'window-not-open' }
 
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }

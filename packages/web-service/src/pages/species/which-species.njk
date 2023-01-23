@@ -21,7 +21,6 @@
 {% set radioItems = [] %}
 
 <div hidden>
-{{error|dump}}
     {% for key, id in data.speciesSubject %}
        {{ radioItems.push({
             text: speciesTextMap[key],

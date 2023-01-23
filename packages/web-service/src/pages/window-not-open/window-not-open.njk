@@ -1,0 +1,20 @@
+{% extends "information-page.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% set title = 'Licences are typically issued between July and November to protect badger welfare' %}
+
+{% block pageContent %}
+    <p class="govuk-body-m">If you need a licence for work outside this time, you need:</p>
+    <ul class="govuk-list govuk-list--bullet">
+         <li>a valid reason for doing the works now</li>
+         <li>to demonstrate how badger welfare will be protected under your proposed licensed activity</li>
+    </ul>
+    <p class="govuk-body-m">If you do not need a licence until July do not submit an application now. Natural England typically begins processing applications in April.</p>
+    <p class="govuk-body-m">You can prepare an application and save it.</p>
+    {{ govukButton({
+        attributes: { id: 'continue' },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Continue',
+        classes: "govuk-!-margin-top-5"
+    }) }}
+{% endblock %}
