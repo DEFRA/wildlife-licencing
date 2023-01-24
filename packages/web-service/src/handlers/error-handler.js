@@ -18,7 +18,7 @@ export const errorHandler = (request, h) => {
       .view(ERRORS.NOT_FOUND.page, {
         notFoundError: request.response.output.payload
       })
-      .code(request.response.output.statusCode)
+      .code(200)
   } else {
     // other 4xx or 5xx errors
     const requestDetail = {
@@ -37,6 +37,6 @@ export const errorHandler = (request, h) => {
       .view(ERRORS.SERVICE_ERROR.page, {
         serviceError: request.response.output.payload
       })
-      .code(request.response.output.statusCode)
+      .code(200)
   }
 }

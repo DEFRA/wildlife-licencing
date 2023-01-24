@@ -17,7 +17,7 @@ describe('the error-page handler function', () => {
     expect(result).toEqual('continue')
   })
 
-  it('it returns the service-error page with a error status 401', async () => {
+  it('it returns the service-error page with a error status 200', async () => {
     const request = {
       response: {
         isBoom: true,
@@ -32,10 +32,10 @@ describe('the error-page handler function', () => {
     }
     await errorHandler(request, h)
     expect(mockView).toHaveBeenCalledWith('service-error', expect.any(Object))
-    expect(mockCode).toHaveBeenCalledWith(401)
+    expect(mockCode).toHaveBeenCalledWith(200)
   })
 
-  it('it returns the service-error page with a error status 500', async () => {
+  it('it returns the service-error page with a error status 200', async () => {
     const request = {
       url: '/page',
       path: 'path',
@@ -58,10 +58,10 @@ describe('the error-page handler function', () => {
     }
     await errorHandler(request, h)
     expect(mockView).toHaveBeenCalledWith('service-error', expect.any(Object))
-    expect(mockCode).toHaveBeenCalledWith(500)
+    expect(mockCode).toHaveBeenCalledWith(200)
   })
 
-  it('it returns the not-found page with a error status 404', async () => {
+  it('it returns the not-found page with a error status 200', async () => {
     const request = {
       response: {
         isBoom: true,
@@ -75,7 +75,7 @@ describe('the error-page handler function', () => {
       view: mockView
     }
     await errorHandler(request, h)
-    expect(mockCode).toHaveBeenCalledWith(404)
+    expect(mockCode).toHaveBeenCalledWith(200)
     expect(mockView).toHaveBeenCalledWith('not-found', expect.any(Object))
   })
 })

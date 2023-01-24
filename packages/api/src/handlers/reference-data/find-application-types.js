@@ -1,6 +1,5 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
-import { checkCache } from '../utils.js'
 const { cache } = REDIS
 const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
   '       "a-t-a-p".application_purpose_id as "applicationPurposeIds",\n' +
@@ -45,7 +44,7 @@ export const findApplicationTypes = async (_context, req, h) => {
   try {
     const sp = new URLSearchParams(req.query)
     const cacheKey = `${req.path}?${sp}`
-    const cacheResult = await checkCache(cacheKey)
+    const cacheResult = JSON.parse(await cache.restore(cacheKey))
 
     if (cacheResult) {
       return h.response(cacheResult)
