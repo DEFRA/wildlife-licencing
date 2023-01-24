@@ -1,11 +1,12 @@
 import pageRoute from '../../../routes/page-route.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { getGridReferenceProximity } from './grid-reference-proximity.js'
 import { gridReferenceValidator } from '../../common/grid-ref-validator.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 const siteGridReference = 'site-grid-ref'
 export const validator = payload => gridReferenceValidator(payload, siteGridReference)

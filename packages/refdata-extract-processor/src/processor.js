@@ -28,8 +28,8 @@ const extracts = async () => {
   await databaseWriter(applicationPurposesReadStream(), writeApplicationPurposes, 'Application Purposes')
   await databaseWriter(activitiesReadStream(), writeActivities, 'Activities')
   await databaseWriter(methodsReadStream(), writeMethods, 'Methods')
-  await databaseWriter(speciesReadStream(), writeSpecies, 'Species')
   await databaseWriter(speciesSubjectReadStream(), writeSpeciesSubject, 'Species-Subject')
+  await databaseWriter(speciesReadStream(), writeSpecies, 'Species') // Has FK to species subject
   await databaseWriter(activityMethodsReadStream(), writeActivityMethods, 'Activity-Methods')
   await databaseWriter(applicationTypeActivitiesReadStream(), writeApplicationTypeActivities, 'Application type Activities')
   await databaseWriter(applicationTypeSpeciesReadStream(), writeApplicationTypeSpecies, 'Application type Species')

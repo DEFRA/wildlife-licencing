@@ -1,9 +1,10 @@
 import { Backlink } from '../../../handlers/backlink.js'
 import pageRoute from '../../../routes/page-route.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { tagStatus } from '../../../services/status-tags.js'
 import { convictionsURIs, TASKLIST } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()

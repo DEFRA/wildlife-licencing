@@ -1,10 +1,11 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
-import { APIRequests, tagStatus } from '../../services/api-requests.js'
-import { TASKLIST, APPLICATIONS, APPLICATION_SUMMARY } from '../../uris.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { APPLICATIONS, SPECIES } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
+import { tagStatus } from '../../services/status-tags.js'
 
 // Values to keys and keys to values
 const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
@@ -19,6 +20,16 @@ const eligibilityCheckFilter = application => application.submitted || (applicat
 export const addSiteName = (userApplicationSites, applicationId) => {
   const [site] = userApplicationSites.filter(uas => uas.applicationId === applicationId).sort(sorter)
   return site
+}
+
+export const checkData = async (request, h) => {
+  // If the user has no applications redirect to the which-species
+  const { userId } = await request.cache().getData()
+  const allApplications = await APIRequests.APPLICATION.findByUser(userId)
+  if (!allApplications.length) {
+    return h.redirect(SPECIES.uri)
+  }
+  return null
 }
 
 export const getData = async request => {
@@ -41,11 +52,7 @@ export const getData = async request => {
   return {
     totalSections,
     statuses,
-    applications,
-    url: {
-      TASKLIST: TASKLIST.uri,
-      APPLICATION_SUMMARY: APPLICATION_SUMMARY.uri
-    }
+    applications
   }
 }
 
@@ -53,5 +60,6 @@ export default pageRoute({
   page: APPLICATIONS.page,
   uri: APPLICATIONS.uri,
   backlink: Backlink.NO_BACKLINK,
+  checkData,
   getData
 })

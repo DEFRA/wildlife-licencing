@@ -1,6 +1,6 @@
 describe('The miscellaneous route handlers', () => {
   beforeEach(() => jest.resetModules())
-  it('Unauthorized access redirects to the login handler', async () => {
+  it('Unauthorized access redirects to the which-species handler', async () => {
     const misc = (await import('../misc-routes.js')).default
     const route = misc.find(r => r.method === 'GET' && r.path === '/')
     const mockRedirect = jest.fn()
@@ -8,7 +8,7 @@ describe('The miscellaneous route handlers', () => {
       redirect: mockRedirect
     }
     await route.handler(null, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/applications')
+    expect(mockRedirect).toHaveBeenCalledWith('/which-species')
   })
   it('The health route returns a status of 200', async () => {
     const misc = (await import('../misc-routes.js')).default

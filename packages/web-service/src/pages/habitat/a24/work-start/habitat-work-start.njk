@@ -8,7 +8,8 @@
           'invalidDate': { ref: '#habitat-work-start', text: 'Start date must be a real date' },
           'dateHasPassed': { ref: '#habitat-work-start', text: 'Start date must be in the future' },
           'outsideLicence': { ref: '#habitat-work-start', text: 'The start date must be within the licence period' },
-          'yearCantAbbreviate': { ref: '#habitat-work-start', text: 'The start date year must be 4 digits' }
+          'endDateBeforeStart': { ref: '#habitat-work-end', text: 'The start date must be before the end date' },
+          'workTooLong': { ref: '#habitat-work-end', text: 'The end date must be within 7 months of the start date' }
         }
     }
 %}
@@ -16,7 +17,6 @@
 {% set title = "When will the work start?" %}
 
 {% block pageContent %}
-
   {{ govukDateInput({
     id: "habitat-work-start",
     namePrefix: "habitat-work-start",

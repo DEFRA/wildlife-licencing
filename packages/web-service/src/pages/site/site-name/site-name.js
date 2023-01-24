@@ -2,7 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { siteURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import Joi from 'joi'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { moveTagInProgress, isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { checkApplication } from '../../common/check-application.js'
 

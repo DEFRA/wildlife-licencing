@@ -20,9 +20,6 @@ describe('the eligibility pages', () => {
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        IN_PROGRESS: 'in-progress'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({ question: 'answer' }))
@@ -49,9 +46,6 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false })),
@@ -78,9 +72,6 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true })),
@@ -107,9 +98,6 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: true })),
@@ -139,9 +127,6 @@ describe('the eligibility pages', () => {
       }
       const mockPutById = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ permissionsRequired: false })),
@@ -164,9 +149,6 @@ describe('the eligibility pages', () => {
     it('Returns the landowner page if no eligibility data set', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({}))
@@ -181,9 +163,6 @@ describe('the eligibility pages', () => {
     it('Returns the landowner permissions page not the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false }))
@@ -198,9 +177,6 @@ describe('the eligibility pages', () => {
     it('Returns the project permissions (consent) page not the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true }))
@@ -215,9 +191,6 @@ describe('the eligibility pages', () => {
     it('Returns the not-eligible page if no permissions from the landowner', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false, hasLandOwnerPermission: false }))
@@ -232,9 +205,6 @@ describe('the eligibility pages', () => {
     it('Returns the project permissions page not the landowner but have landowner permission', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: false, hasLandOwnerPermission: true }))
@@ -249,9 +219,6 @@ describe('the eligibility pages', () => {
     it('Returns the eligibility-check page if no permissions required', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: false }))
@@ -266,9 +233,6 @@ describe('the eligibility pages', () => {
     it('Returns the permissions granted page if permissions are required', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: true }))
@@ -283,9 +247,6 @@ describe('the eligibility pages', () => {
     it('Returns the not-eligible-project page if permissions are required and not granted', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -307,9 +268,6 @@ describe('the eligibility pages', () => {
     it('Returns the eligibility-check page if permissions are required and granted', async () => {
       const request = { cache: () => ({ getData: jest.fn() }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: true, permissionsGranted: true }))
@@ -333,9 +291,6 @@ describe('the eligibility pages', () => {
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -377,9 +332,6 @@ describe('the eligibility pages', () => {
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({
@@ -413,9 +365,6 @@ describe('the eligibility pages', () => {
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({
@@ -451,9 +400,6 @@ describe('the eligibility pages', () => {
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        COMPLETE_NOT_CONFIRMED: 'completed_not_confirmed'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({
@@ -470,7 +416,7 @@ describe('the eligibility pages', () => {
 
     const { getDataEligibility } = await import('../eligibility.js')
     const result = await getDataEligibility(request)
-    expect(mockSet).toHaveBeenCalledWith({ tag: 'eligibility-check', tagState: 'completed_not_confirmed' })
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'eligibility-check', tagState: 'complete-not-confirmed' })
     expect(result).toEqual([
       { key: 'isOwnerOfLand', value: 'yes' },
       { key: 'permissionsRequired', value: 'no' }
@@ -489,9 +435,6 @@ describe('the eligibility pages', () => {
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({
@@ -515,9 +458,6 @@ describe('the eligibility pages', () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
     const mockSet = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        COMPLETE: 'complete'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({
@@ -540,9 +480,6 @@ describe('the eligibility pages', () => {
   it('the checkYourAnswersCompletion function returns the eligible page if the answers are consistent', async () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({
@@ -562,9 +499,6 @@ describe('the eligibility pages', () => {
   it('the checkYourAnswersCompletion function redirects to the not eligible landowner dropout', async () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         ELIGIBILITY: {
           getById: jest.fn(() => ({
@@ -584,9 +518,6 @@ describe('the eligibility pages', () => {
   it('the checkYourAnswersCompletion function redirects to the not eligible permissions dropout', async () => {
     const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
     jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -614,9 +545,6 @@ describe('the eligibility pages', () => {
     it('returns the a redirect to the landowner page if isOwnerOfLand is not set', async () => {
       const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({}))
@@ -636,9 +564,6 @@ describe('the eligibility pages', () => {
     it('returns the a redirect to the consent page if permissionsRequired is not set', async () => {
       const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true }))
@@ -658,9 +583,6 @@ describe('the eligibility pages', () => {
     it('returns null if isOwnerOfLand and permissionsRequired are set', async () => {
       const request = { cache: () => ({ getData: jest.fn(() => ({ applicationId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' })) }) }
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ isOwnerOfLand: true, permissionsRequired: false }))
@@ -681,10 +603,6 @@ describe('the eligibility pages', () => {
   describe('the eligibleCompletion function', () => {
     it('returns the tasklist if authenticated', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started',
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => {
@@ -710,9 +628,6 @@ describe('the eligibility pages', () => {
     })
     it('returns the login page if not authenticated', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           APPLICATION: {
             tags: () => ({ set: jest.fn() })
@@ -738,10 +653,6 @@ describe('the eligibility pages', () => {
     it('getData sets the tag', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started',
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           ELIGIBILITY: {
             getById: jest.fn(() => ({ question: 'answer' }))

@@ -3,8 +3,7 @@
  * @param request
  * @returns {Promise<Awaited<*>[]>}
  */
-export const clearData = async request => {
-  const journeyData = await request.cache().getData()
+export const clearData = async journeyData => {
   delete journeyData.habitatData
-  await request.cache().setData(journeyData)
+  delete journeyData.additionalContact
 }

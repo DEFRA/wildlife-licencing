@@ -1,7 +1,7 @@
 import { s3FileUpload } from '../../services/s3-upload.js'
 import { FILE_UPLOADS } from '../../uris.js'
 import { FILETYPES, fileUploadPageRoute } from '../common/file-upload/file-upload.js'
-import { SECTION_TASKS } from '../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { moveTagInProgress } from '../common/tag-functions.js'
 
 export const completion = async request => {

@@ -2415,9 +2415,77 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+
 ################################################################################################
 # Reference Data
 ################################################################################################
+  '/application-types':
+    get:
+      description: Get the application types using a filter
+      summary:
+          "The licence types allowed by applying a filter in the query of the form
+          {
+            purposes: [], -- uuid
+            species: [], -- uuid
+            speciesSubjects: [], -- uuid
+            activities: [], -- uuid
+            methods: [] -- options
+          }
+          This is encoded with JSON.stringify
+        "
+      operationId: findApplicationTypes
+      parameters:
+        - name: query
+          in: query
+          description: The filter
+          required: true
+          schema:
+            type: string
+          example: "{\"purposes\":[\"3db073af-201b-ec11-b6e7-0022481a8f18\",\"1c3e7655-bb74-4420-9bf0-0bd710987f10\"],\"species\":[\"fedb14b6-53a8-ec11-9840-0022481aca85\"]}"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  types:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  purposes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  species:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  speciesSubjects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  activities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  methods:
+                    type: array
+                    items:
+                      type: string
+
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+
   '/application/types':
     get:
       description: Get the application types
@@ -2677,6 +2745,8 @@ components:
           type: string
           minLength: 1
           maxLength: 300
+        nationallySignificantInfrastructure:
+          type: boolean
         licenceReason:
           type: string
           minLength: 1
@@ -2923,9 +2993,9 @@ components:
           items:
             $ref: '#/components/schemas/option'
         startDate:
-          $ref: '#/components/schemas/date'
+          $ref: '#/components/schemas/timestamp'
         endDate:
-          $ref: '#/components/schemas/date'
+          $ref: '#/components/schemas/timestamp'
         gridReference:
           $ref: '#/components/schemas/gridReference'
         createdAt:

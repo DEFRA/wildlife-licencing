@@ -1,8 +1,9 @@
 import { API } from '@defra/wls-connectors-lib'
-import { apiUrls, tagStatus, apiRequestsWrapper } from './api-requests.js'
+import { apiUrls, apiRequestsWrapper } from './api-requests.js'
 import { boomify } from '@hapi/boom'
 
 import db from 'debug'
+import { tagStatus } from './status-tags.js'
 const debug = db('web-service:api-requests')
 
 export const APPLICATION = {

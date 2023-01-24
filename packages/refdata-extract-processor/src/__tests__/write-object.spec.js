@@ -168,15 +168,21 @@ describe('The reference data extract processor: write-object', () => {
         }
       },
       keys: [{
-        powerAppsTable: 'sdds_species',
+        apiTable: 'species',
         powerAppsKey: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a'
+      },
+      {
+        apiTable: 'speciesSubject',
+        powerAppsKey: '8add5ba9-3f60-42cb-aaf9-0999923a5e2a'
       }]
     })
 
     expect(mockUpsert).toHaveBeenCalledWith({
       id: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a',
+      species_subject_id: '8add5ba9-3f60-42cb-aaf9-0999923a5e2a',
       json: {
-        name: 'species name'
+        name: 'species name',
+        description: 'species-desc'
       }
     })
     expect(result).toEqual({ update: 1 })

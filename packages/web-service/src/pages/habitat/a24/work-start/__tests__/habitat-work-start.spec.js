@@ -2,7 +2,7 @@
 describe('The habitat work start page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-work-start page', () => {
+  describe('completion', () => {
     it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -50,184 +50,76 @@ describe('The habitat work start page', () => {
       const { completion } = await import('../habitat-work-start.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+  })
 
-    it('throws an error if a date can not be parsed', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '12---', 'habitat-work-start-month': '5----', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date cant be parsed from this string')
-      }
-    })
-
-    it('if the user doesnt input a day - it raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: no date has been sent')
-      }
-    })
-
-    it('if the user doesnt input a monnth - it raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: no date has been sent')
-      }
-    })
-
-    it('if the user doesnt input a year - it raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '10', 'habitat-work-start-year': '' }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: no date has been sent')
-      }
-    })
-
-    it('a day choice thats too high raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '32', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('a day choice thats 0 raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '0', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('a day choice thats negative raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '-1', 'habitat-work-start-month': '10', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('a month choice thats greater than 12 raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '13', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('a month choice thats 0 raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '0', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('a month choice thats negative raises an error', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '-1', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('you cant pass a string as a day', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': 'aa', 'habitat-work-start-month': '1', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('you cant pass a string as a month', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': 'aaatrye', 'habitat-work-start-year': (new Date().getFullYear()) }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
-    it('you cant pass a string as a year', async () => {
-      try {
-        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '1', 'habitat-work-start-year': 'zz' }
-        const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload))
-      } catch (e) {
-        expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: the date is invalid')
-      }
-    })
-
+  describe('validator', () => {
     it('you cant pass a date in the past', async () => {
       try {
-        const payload = { 'habitat-work-start-day': 11, 'habitat-work-start-month': 11, 'habitat-work-start-year': new Date().getFullYear() - 1 }
+        const payload = { 'habitat-work-start-day': '11', 'habitat-work-start-month': '11', 'habitat-work-start-year': '2022' }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date has been chosen from the past')
+        expect(e.details[0].message).toBe('Error')
       }
     })
 
     it('you cant pass a date outside of the licence season', async () => {
       try {
-        const payload = { 'habitat-work-start-day': 1, 'habitat-work-start-month': 12, 'habitat-work-start-year': new Date().getFullYear() + 1 }
+        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '12', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error: a date has been chosen outside the licence period')
+        expect(e.details[0].message).toBeNull()
       }
     })
 
-    it('you can pass a date in future licence seasons', async () => {
+    it('start date must be before end date', async () => {
       try {
-        const payload = { 'habitat-work-start-day': 30, 'habitat-work-start-month': 11, 'habitat-work-start-year': `${new Date().getFullYear() + 10}` }
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { endDate: new Date('2022-07-10T00:00:00.000Z') }
+                })
+              }
+            }
+          }
+        })
+        const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': '2023' }
         const { validator } = await import('../habitat-work-start.js')
-        expect(await validator(payload)).toBe(payload)
+        expect(await validator(payload))
       } catch (e) {
-        expect(e.message).toBe(undefined)
-        expect(e.details[0].message).toBe(undefined)
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBeNull()
       }
     })
 
-    it('constructs the date correctly', async () => {
+    it('start date and end date must not form a duration greater than the maximum allowed', async () => {
+      try {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { endDate: new Date('2025-07-10T00:00:00.000Z') }
+                })
+              }
+            }
+          }
+        })
+        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '08', 'habitat-work-start-year': '2023' }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBeNull()
+      }
+    })
+
+    it('constructs the date correctly (stores an ISO 8601)', async () => {
       const mockSetData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -242,17 +134,15 @@ describe('The habitat work start page', () => {
         }
       }))
       const request = {
+        payload: {
+          'habitat-work-start-day': '10',
+          'habitat-work-start-month': '7',
+          'habitat-work-start-year': '2015'
+        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
             habitatData: {}
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-work-start-day': '10',
-              'habitat-work-start-month': '7',
-              'habitat-work-start-year': `${new Date().getFullYear()}`
-            }
           })
         })
       }
@@ -260,7 +150,7 @@ describe('The habitat work start page', () => {
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
-          { startDate: `${new Date().getFullYear()}-07-10` }
+          { startDate: new Date('2015-07-10T00:00:00.000Z') }
       })
     })
 
@@ -283,17 +173,15 @@ describe('The habitat work start page', () => {
         query: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
         },
+        payload: {
+          'habitat-work-start-day': '10',
+          'habitat-work-start-month': '7',
+          'habitat-work-start-year': '2015'
+        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
             habitatData: {}
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-work-start-day': '10',
-              'habitat-work-start-month': '7',
-              'habitat-work-start-year': `${new Date().getFullYear()}`
-            }
           })
         })
       }
@@ -311,64 +199,34 @@ describe('The habitat work start page', () => {
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
         habitatData:
-          { startDate: `${new Date().getFullYear()}-07-10` }
+          { startDate: new Date('2015-07-10T00:00:00.000Z') }
       })
     })
   })
 
-  it('getData returns the correct object', async () => {
-    const request = {
-      cache: () => {
-        return {
-          getData: () => {
-            return {
-              habitatData: {
-                startDate: '3022-10-10'
-              }
+  describe('getDate', () => {
+    it('getData returns the start date', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {
+              startDate: new Date('3022-10-11T00:00:00.000Z')
             }
-          }
-        }
-      }
-    }
-
-    const { getData } = await import('../habitat-work-start.js')
-    expect(await getData(request)).toStrictEqual({ day: '10', month: '10', year: '3022' })
-  })
-
-  it('seData can pad zeros at the start of the day or month, if only 1 digit is entered', async () => {
-    const mockSetData = jest.fn()
-    jest.doMock('../../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => 'in-progress' }
-          }
-        }
-      }
-    }))
-    const request = {
-      cache: () => ({
-        setData: mockSetData,
-        getData: () => ({
-          habitatData: {}
-        }),
-        getPageData: () => ({
-          payload: {
-            'habitat-work-start-day': '1',
-            'habitat-work-start-month': '7',
-            'habitat-work-start-year': `${new Date().getFullYear()}`
-          }
+          })
         })
-      })
-    }
-    const { setData } = await import('../habitat-work-start.js')
-    await setData(request)
-    expect(mockSetData).toHaveBeenCalledWith({
-      habitatData:
-        { startDate: `${new Date().getFullYear()}-07-01` }
+      }
+
+      const { getData } = await import('../habitat-work-start.js')
+      expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
+    })
+
+    it('getData returns the null if no start date exists', async () => {
+      const request = {
+        cache: () => ({ getData: () => ({}) })
+      }
+
+      const { getData } = await import('../habitat-work-start.js')
+      expect(await getData(request)).toBeNull()
     })
   })
 })

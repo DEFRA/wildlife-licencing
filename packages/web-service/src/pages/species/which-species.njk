@@ -1,0 +1,49 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'species': {
+          'any.required': { ref: '#species', text: 'Enter a species' }
+        }
+    }
+%}
+
+{% set title = 'Which species will the work affect?' %}
+
+{% set speciesTextMap = {
+        BADGER: 'Badgers',
+        BATS: 'Bats',
+        GREAT_CRESTED_NEWTS: 'Great crested newts'
+    }
+%}
+
+{% set radioItems = [] %}
+
+<div hidden>
+    {% for key, id in data.speciesSubject %}
+       {{ radioItems.push({
+            text: speciesTextMap[key],
+            value: id
+       }) }}
+    {% endfor %}
+
+    {{ radioItems.push({ divider: 'or' }) }}
+    {{ radioItems.push({
+        text: 'another species',
+        value: 'other'
+    }) }}
+</div>
+
+{% block pageContent %}
+  {{ govukRadios({
+    id: "species",
+    name: "species",
+    hint: {
+      text: "Select one."
+    },
+    errorMessage: { text: "Select a species type." } if error['species'],
+    items: radioItems
+  }) }}
+
+{% endblock %}

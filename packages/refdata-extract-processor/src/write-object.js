@@ -53,10 +53,10 @@ export const writeMethods = async obj => {
 
 export const writeSpecies = async obj => {
   const { data, keys } = obj
-  const v = Object.values(data)[0]
-  return generalUpsert(models.species, keys[0].powerAppsKey, {
-    name: v?.name
-  })
+  const id = keys.find(k => k.apiTable === 'species').powerAppsKey
+  const speciesSubjectId = keys.find(k => k.apiTable === 'speciesSubject')?.powerAppsKey
+  await models.species.upsert({ id, species_subject_id: speciesSubjectId, json: Object.values(data)[0] })
+  return { update: 1 }
 }
 
 export const writeSpeciesSubject = async obj => {

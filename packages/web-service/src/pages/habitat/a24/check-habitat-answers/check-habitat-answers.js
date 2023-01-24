@@ -1,10 +1,11 @@
 import Joi from 'joi'
 import pageRoute from '../../../../routes/page-route.js'
 import { habitatURIs, TASKLIST } from '../../../../uris.js'
-import { APIRequests, tagStatus } from '../../../../services/api-requests.js'
+import { APIRequests } from '../../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { checkApplication } from '../../../common/check-application.js'
+import { tagStatus } from '../../../../services/status-tags.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
@@ -52,7 +53,7 @@ export const checkData = async (request, h) => {
 export const getData = async request => {
   const journeyData = await request.cache().getData()
 
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
 
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
   const data = {
@@ -91,14 +92,14 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
 
   if (pageData.payload[addSett] === 'yes') {
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
     delete journeyData.habitatData
     await request.cache().setData(journeyData)
 
     return habitatURIs.NAME.uri
   } else if (pageData.payload[addSett] === 'no') {
     // Mark the journey as complete if the user clicks "No" to adding any final setts
-    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SETTS, tagState: tagStatus.COMPLETE })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.COMPLETE })
     return TASKLIST.uri
   }
 

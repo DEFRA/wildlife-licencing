@@ -2,7 +2,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 const yesNo = 'yes-no'
 

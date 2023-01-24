@@ -107,8 +107,8 @@ const methodsObjectTransformer = buildObjectTransformer(SddsLicenseMethods, meth
 export const methodsReadStream = () => powerAppsReadStream(methodsRequestPath, methodsObjectTransformer)
 
 /* Species */
-const speciesRequestPath = buildRequestPath(SddsSpecies)
-const speciesTableSet = createTableSet(SddsSpecies)
+const speciesRequestPath = buildRequestPath(SddsSpecies, [SddsSpeciesSubject])
+const speciesTableSet = createTableSet(SddsSpecies, [SddsSpeciesSubject])
 const speciesObjectTransformer = buildObjectTransformer(SddsSpecies, speciesTableSet)
 export const speciesReadStream = () => powerAppsReadStream(speciesRequestPath, speciesObjectTransformer)
 

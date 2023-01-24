@@ -39,6 +39,7 @@
     "@hapi/vision": "^6.1.0",
     "accessible-autocomplete": "^2.0.3",
     "clamscan": "^2.1.2",
+    "date-fns": "^2.29.3",
     "debug": "^4.3.3",
     "del": "^6.0.0",
     "disinfect": "^2.0.0",

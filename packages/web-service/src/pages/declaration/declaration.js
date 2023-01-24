@@ -2,7 +2,7 @@ import pageRoute from '../../routes/page-route.js'
 import { APPLICATIONS, DECLARATION, SUBMISSION, TASKLIST } from '../../uris.js'
 import { ApplicationService } from '../../services/application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { isAppSubmittable } from '../tasklist/licence-type-map.js'
+import { isAppSubmittable } from '../tasklist/licence-type.js'
 import { checkApplication } from '../common/check-application.js'
 
 // Do not allow an attempt at resubmission
@@ -14,7 +14,7 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
-  if (!isAppSubmittable(applicationId)) {
+  if (!await isAppSubmittable(request)) {
     return h.redirect(TASKLIST.uri)
   }
 

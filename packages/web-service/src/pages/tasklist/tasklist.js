@@ -3,67 +3,72 @@ import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
-import { licenceTypeMap, A24, decorateMap, getProgress, getTaskStatus, SECTION_TASKS } from './licence-type-map.js'
+import { LICENCE_TYPE_TASKLISTS } from './licence-type.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { isComplete } from '../common/tag-functions.js'
 
+/**
+ * Assumes to be authenticated
+ * @param request
+ * @returns {Promise<*>}
+ */
 export const getApplication = async request => {
-  // If there is no application then create a pre-application
-  let journeyData = await request.cache().getData() || {}
-
   const params = new URLSearchParams(request.query)
   const id = params.get('applicationId')
-
+  // Switching the application. It is previously checked for a valid user association
   if (id) {
     await ApplicationService.switchApplication(request, id)
-    journeyData = await request.cache().getData()
+    return APIRequests.APPLICATION.getById(id)
+  } else {
+    // Expect the application to be set in the cache
+    const { applicationId, userId } = await request.cache().getData()
+    // If created newly, it requires to be associated to the user and assigned a reference number
+    // (The call is idempotent
+    const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE)
+    return application
   }
-
-  let application = journeyData.applicationId
-    ? await APIRequests.APPLICATION.getById(journeyData.applicationId)
-    : await ApplicationService.createApplication(request)
-
-  // If we are signed in then the application can be associated with the user if it has not already
-  if (journeyData.userId && !journeyData.applicationUserId) {
-    application = await ApplicationService.associateApplication(request, DEFAULT_ROLE)
-  }
-
-  return application
 }
 
 export const getData = async request => {
   const application = await getApplication(request)
-
-  const status = await getTaskStatus(request)
-  const decoratedMap = await decorateMap(licenceTypeMap[A24], status)
-  const progress = getProgress(status)
-
+  // Select the tasklist based on the licence type
+  const licenceType = LICENCE_TYPE_TASKLISTS[application.applicationTypeId]
+  const showReference = await licenceType.canShowReference(request)
   return {
-    ...(isComplete(status[SECTION_TASKS.ELIGIBILITY_CHECK].tagState) && { reference: application.applicationReferenceNumber }),
-    licenceType: A24,
-    licenceTypeMap: decoratedMap,
-    progress
+    ...(showReference && { reference: application.applicationReferenceNumber }),
+    reference: application.applicationReferenceNumber,
+    licenceType: licenceType.name,
+    licenceTypeMap: await licenceType.decorate(request),
+    progress: await licenceType.getProgress(request)
   }
 }
 
 /**
- * If signed in and there is no selected application but there are saved applications then redirect
- * to the applications-page, unless you are selecting an existing application
+ * Redirect to the applications' page if:
+ * (1) given an applicationId in the query parameter, and it does not belong to the signed-in user
+ * (2) If there is no applicationId set in the user cache
+ * (3) The applicationId set in the user cache does not exist
  */
 export const checkData = async (request, h) => {
-  if (request.auth.isAuthenticated) {
-    const params = new URLSearchParams(request.query)
-    if (!params.get('applicationId')) {
-      const journeyData = await request.cache().getData()
-      const { userId } = journeyData
-      if (!journeyData.applicationId) {
-        const applications = await APIRequests.APPLICATION.findByUser(userId)
-        if (applications.length) {
-          return h.redirect(APPLICATIONS.uri)
-        }
+  const journeyData = await request.cache().getData()
+  const params = new URLSearchParams(request.query)
+  if (params.get('applicationId')) {
+    const id = params.get('applicationId')
+    // Check is assigned to the user with the default role
+    const roles = await APIRequests.APPLICATION.findRoles(journeyData.userId, id)
+    if (!roles.includes(DEFAULT_ROLE)) {
+      return h.redirect(APPLICATIONS.uri)
+    }
+  } else {
+    if (!journeyData.applicationId) {
+      return h.redirect(APPLICATIONS.uri)
+    } else {
+      const application = APIRequests.APPLICATION.getById(journeyData.applicationId)
+      if (!application) {
+        return h.redirect(APPLICATIONS.uri)
       }
     }
   }
+
   return null
 }
 
@@ -81,7 +86,6 @@ export const tasklist = pageRoute({
   page: TASKLIST.page,
   uri: TASKLIST.uri,
   backlink: new Backlink(tasklistBacklink),
-  options: { auth: { mode: 'optional' } },
   checkData,
   getData
 })

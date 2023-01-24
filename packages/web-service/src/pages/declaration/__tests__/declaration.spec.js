@@ -10,7 +10,7 @@ describe('the declaration-application handler function', () => {
           }))
         })
       }
-      jest.doMock('../../tasklist/licence-type-map.js', () => ({
+      jest.doMock('../../tasklist/licence-type.js', () => ({
         isAppSubmittable: () => { return true }
       }))
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -77,7 +77,7 @@ describe('the declaration-application handler function', () => {
         }))
       })
     }
-    jest.doMock('../../tasklist/licence-type-map.js', () => ({
+    jest.doMock('../../tasklist/licence-type.js', () => ({
       isAppSubmittable: () => { return false }
     }))
     jest.doMock('../../../services/api-requests.js', () => ({

@@ -1,12 +1,13 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
 import { canBeUser, checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 

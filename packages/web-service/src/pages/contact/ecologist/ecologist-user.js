@@ -3,10 +3,11 @@ import { getUserData, setUserData, userCompletion } from '../common/user/user.js
 
 import { yesNoPage } from '../../common/yes-no.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { checkCanBeUser } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+import { tagStatus } from '../../../services/status-tags.js'
 const { USER } = contactURIs.ECOLOGIST
 
 export const getData = async request => {

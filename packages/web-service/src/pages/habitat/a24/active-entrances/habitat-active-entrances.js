@@ -4,14 +4,14 @@ import { habitatURIs } from '../../../../uris.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { APIRequests } from '../../../../services/api-requests.js'
-import { SECTION_TASKS } from '../../../tasklist/licence-type-map.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
+import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   if (isCompleteOrConfirmed(tagState)) {
     return habitatURIs.CHECK_YOUR_ANSWERS.uri
@@ -47,7 +47,7 @@ export const setData = async request => {
   const numberOfActiveEntrances = pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]
   const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page] > 0
 
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.SETTS)
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })

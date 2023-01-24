@@ -1,12 +1,13 @@
 import { contactURIs, TASKLIST } from '../../../uris.js'
 
 import { yesNoPage } from '../../common/yes-no.js'
-import { APIRequests, tagStatus } from '../../../services/api-requests.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
-import { SECTION_TASKS } from '../../tasklist/licence-type-map.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { addressLine } from '../../service/address.js'
 import { checkApplication } from '../../common/check-application.js'
 import { Backlink } from '../../../handlers/backlink.js'
+import { tagStatus } from '../../../services/status-tags.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
