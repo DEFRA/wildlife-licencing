@@ -18,7 +18,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 export const checkHasStart = async (request, h) => {
   const { habitatData } = await request.cache().getData()
 
-  if (!habitatData.startDate) {
+  if (!habitatData?.startDate) {
     return h.redirect(habitatURIs.WORK_START.uri)
   }
 

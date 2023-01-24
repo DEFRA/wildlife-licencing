@@ -2,7 +2,7 @@
 describe('The habitat work start page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-work-start page', () => {
+  describe('completion', () => {
     it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -50,7 +50,9 @@ describe('The habitat work start page', () => {
       const { completion } = await import('../habitat-work-start.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+  })
 
+  describe('validator', () => {
     it('you cant pass a date in the past', async () => {
       try {
         const payload = { 'habitat-work-start-day': '11', 'habitat-work-start-month': '11', 'habitat-work-start-year': '2022' }
@@ -65,6 +67,50 @@ describe('The habitat work start page', () => {
     it('you cant pass a date outside of the licence season', async () => {
       try {
         const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '12', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBeNull()
+      }
+    })
+
+    it('start date must be before end date', async () => {
+      try {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { endDate: new Date('2022-07-10T00:00:00.000Z') }
+                })
+              }
+            }
+          }
+        })
+        const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': '2023' }
+        const { validator } = await import('../habitat-work-start.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBeNull()
+      }
+    })
+
+    it('start date and end date must not form a duration greater than the maximum allowed', async () => {
+      try {
+        jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  habitatData: { endDate: new Date('2025-07-10T00:00:00.000Z') }
+                })
+              }
+            }
+          }
+        })
+        const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '08', 'habitat-work-start-year': '2023' }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
@@ -158,22 +204,29 @@ describe('The habitat work start page', () => {
     })
   })
 
-  it('getData returns the correct object', async () => {
-    const request = {
-      cache: () => {
-        return {
-          getData: () => {
-            return {
-              habitatData: {
-                startDate: new Date('3022-10-11T00:00:00.000Z')
-              }
+  describe('getDate', () => {
+    it('getData returns the start date', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {
+              startDate: new Date('3022-10-11T00:00:00.000Z')
             }
-          }
-        }
+          })
+        })
       }
-    }
 
-    const { getData } = await import('../habitat-work-start.js')
-    expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
+      const { getData } = await import('../habitat-work-start.js')
+      expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
+    })
+
+    it('getData returns the null if no start date exists', async () => {
+      const request = {
+        cache: () => ({ getData: () => ({}) })
+      }
+
+      const { getData } = await import('../habitat-work-start.js')
+      expect(await getData(request)).toBeNull()
+    })
   })
 })

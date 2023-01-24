@@ -18,7 +18,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 export const getData = async request => {
   const { habitatData } = await request.cache().getData()
-  if (habitatData.startDate) {
+  if (habitatData?.startDate) {
     const startDate = new Date(habitatData.startDate)
     return {
       year: startDate.getFullYear(),
@@ -26,6 +26,7 @@ export const getData = async request => {
       day: startDate.getDate()
     }
   }
+  return null
 }
 
 export const validator = async (payload, context) => {

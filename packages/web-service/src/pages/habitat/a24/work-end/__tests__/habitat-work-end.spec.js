@@ -1,8 +1,38 @@
-
 describe('The habitat work end page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-work-end page', () => {
+  describe('the checkData function', () => {
+    it('checkData returns null if the startDate is set', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {
+              startDate: new Date('3022-10-11T00:00:00.000Z')
+            }
+          })
+        })
+      }
+
+      const { checkHasStart } = await import('../habitat-work-end.js')
+      expect(await checkHasStart(request)).toBeNull()
+    })
+
+    it('checkData to redirect to the start date page if the startDate is not set', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            habitatData: {}
+          })
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkHasStart } = await import('../habitat-work-end.js')
+      await checkHasStart(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/habitat-work-start')
+    })
+  })
+
+  describe('completed function', () => {
     it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
@@ -50,10 +80,16 @@ describe('The habitat work end page', () => {
       const { completion } = await import('../habitat-work-end.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+  })
 
+  describe('the validator function', () => {
     it('if the user does not input a day - it raises an error', async () => {
       try {
-        const payload = { 'habitat-work-end-day': '', 'habitat-work-end-month': '10', 'habitat-work-end-year': (new Date().getFullYear()) }
+        const payload = {
+          'habitat-work-end-day': '',
+          'habitat-work-end-month': '10',
+          'habitat-work-end-year': (new Date().getFullYear())
+        }
         jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
           return {
             cacheDirect: () => {
@@ -73,7 +109,11 @@ describe('The habitat work end page', () => {
 
     it('if the user does not input a month - it raises an error', async () => {
       try {
-        const payload = { 'habitat-work-end-day': '1', 'habitat-work-end-month': '', 'habitat-work-end-year': (new Date().getFullYear()) }
+        const payload = {
+          'habitat-work-end-day': '1',
+          'habitat-work-end-month': '',
+          'habitat-work-end-year': (new Date().getFullYear())
+        }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
       } catch (e) {
@@ -84,7 +124,11 @@ describe('The habitat work end page', () => {
 
     it('you cant pass a date in the past', async () => {
       try {
-        const payload = { 'habitat-work-end-day': '11', 'habitat-work-end-month': '11', 'habitat-work-end-year': (new Date().getFullYear() - 1).toString() }
+        const payload = {
+          'habitat-work-end-day': '11',
+          'habitat-work-end-month': '11',
+          'habitat-work-end-year': (new Date().getFullYear() - 1).toString()
+        }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
       } catch (e) {
@@ -95,7 +139,11 @@ describe('The habitat work end page', () => {
 
     it('you cant pass a date outside of the licence season', async () => {
       try {
-        const payload = { 'habitat-work-end-day': '1', 'habitat-work-end-month': '12', 'habitat-work-end-year': (new Date().getFullYear()).toString() }
+        const payload = {
+          'habitat-work-end-day': '1',
+          'habitat-work-end-month': '12',
+          'habitat-work-end-year': (new Date().getFullYear()).toString()
+        }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
       } catch (e) {
@@ -106,7 +154,11 @@ describe('The habitat work end page', () => {
 
     it('you cant pass an end date before the start date', async () => {
       try {
-        const payload = { 'habitat-work-end-day': '10', 'habitat-work-end-month': '10', 'habitat-work-end-year': '3021' }
+        const payload = {
+          'habitat-work-end-day': '10',
+          'habitat-work-end-month': '10',
+          'habitat-work-end-year': '3021'
+        }
         jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
           return {
             cacheDirect: () => {
@@ -141,17 +193,15 @@ describe('The habitat work end page', () => {
         }
       }))
       const request = {
+        payload: {
+          'habitat-work-end-day': '10',
+          'habitat-work-end-month': '7',
+          'habitat-work-end-year': '2015'
+        },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({
             habitatData: {}
-          }),
-          getPageData: () => ({
-            payload: {
-              'habitat-work-end-day': '10',
-              'habitat-work-end-month': '7',
-              'habitat-work-end-year': '2015'
-            }
           })
         })
       }
@@ -233,22 +283,24 @@ describe('The habitat work end page', () => {
     })
   })
 
-  it.only('getData returns the correct object', async () => {
-    const request = {
-      cache: () => {
-        return {
-          getData: () => {
-            return {
-              habitatData: {
-                endDate: new Date('3022-10-11T00:00:00.000Z')
+  describe('the getData function', () => {
+    it('getData returns the correct object', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return {
+                habitatData: {
+                  endDate: new Date('3022-10-11T00:00:00.000Z')
+                }
               }
             }
           }
         }
       }
-    }
 
-    const { getData } = await import('../habitat-work-end.js')
-    expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
+      const { getData } = await import('../habitat-work-end.js')
+      expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
+    })
   })
 })
