@@ -278,7 +278,7 @@ const init = async server => {
    */
   server.events.on('response', request => {
     // you can use request.log or server.log it's depends
-    debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode}`)
+    debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode} uri: ${request.raw.req.url}`)
   })
 
   /*
