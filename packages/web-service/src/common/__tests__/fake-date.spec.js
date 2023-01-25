@@ -22,7 +22,6 @@ describe('fake-date', () => {
       expect([
         'Wed Oct 05 2011 15:48:00 GMT+0100 (British Summer Time)',
         'Wed Oct 05 2011 14:48:00 GMT+0000 (Coordinated Universal Time)']).toContain(Date())
-      expect(Date()).toEqual('Wed Oct 05 2011 15:48:00 GMT+0100 (British Summer Time)')
     })
 
     it('when called as a constructor, returns a new Date object', () => {
