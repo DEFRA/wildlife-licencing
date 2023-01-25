@@ -7,6 +7,8 @@ import path from 'path'
 import { __dirname } from '../../dirname.cjs'
 import { APIRequests } from '../services/api-requests.js'
 
+const APPLICATION_JSON = 'application/json'
+
 const miscRoutes = [
   {
     method: 'GET',
@@ -49,7 +51,7 @@ if (process.env.ALLOW_RESET === 'YES') {
     options: { auth: false },
     handler: async (request, h) => {
       const response = await APIRequests.OTHER.reset(request.query?.username)
-      return h.response(response).code(200).type('application/json')
+      return h.response(response).code(200).type(APPLICATION_JSON)
     }
   })
 
@@ -63,7 +65,7 @@ if (process.env.ALLOW_RESET === 'YES') {
     handler: async (request, h) => {
       const { 'iso-string': isoString } = request.query
       setGlobalDate(isoString)
-      return h.response({ now: Date() }).code(200).type('application/json')
+      return h.response({ now: Date() }).code(200).type(APPLICATION_JSON)
     }
   })
 
@@ -71,9 +73,9 @@ if (process.env.ALLOW_RESET === 'YES') {
     method: 'GET',
     path: '/reset-sysdate',
     options: { auth: false },
-    handler: async (request, h) => {
+    handler: async (_request, h) => {
       unsetGlobalDate()
-      return h.response({ now: Date() }).code(200).type('application/json')
+      return h.response({ now: Date() }).code(200).type(APPLICATION_JSON)
     }
   })
 }
