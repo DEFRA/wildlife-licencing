@@ -19,7 +19,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, siteData } = journeyData
-  const siteName = request.payload['site-name']
+  const siteName = request?.payload['site-name']?.trim()
   const singleSite = await APIRequests.SITE.findByApplicationId(applicationId)
   // Create a new site or update a site with the name from the request
   if (singleSite.length) {
@@ -52,7 +52,7 @@ export default pageRoute({
   uri: siteURIs.NAME.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'site-name': Joi.string().required()
+    'site-name': Joi.string().required().trim().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
   getData,
