@@ -294,6 +294,17 @@ describe('contact common handler functions', () => {
           hasAccountCandidates: jest.fn(() => true)
         }
       })
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => null
+              }
+            }
+          }
+        }
+      }))
       const { accountsRoute } = await import('../common-handler.js')
       const result = await accountsRoute('ANOTHER_ROLE', [], '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
         '45a6c59e-0faf-438b-b4d5-6967d8d075cb',

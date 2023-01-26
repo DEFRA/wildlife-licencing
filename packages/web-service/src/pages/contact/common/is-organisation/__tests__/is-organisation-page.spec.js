@@ -9,10 +9,12 @@ describe('is-organisation page', () => {
     }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
       APIRequests: {
-        ACCOUNT: {
-          role: () => ({
-            findByUser: jest.fn(() => [{ name: 'The Rolling Stones' }, {}])
-          })
+        APPLICATION: {
+          tags: () => {
+            return {
+              get: () => null
+            }
+          }
         }
       }
     }))
