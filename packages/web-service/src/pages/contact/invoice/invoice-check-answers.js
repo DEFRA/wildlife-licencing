@@ -38,7 +38,6 @@ export const getData = async request => {
         await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
         { key: 'contactIsUser', value: yesNoFromBool(!!responsibility.contact.userId) }),
       (responsibility.responsible === 'other' &&
-        await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
         { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
       (responsibility.account && { key: 'contactOrganisations', value: responsibility.account.name }),
       { key: 'address', value: addressLine(responsibility.account || responsibility.contact) },

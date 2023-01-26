@@ -1,6 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { TASKLIST } from '../../../uris.js'
 import { hasAccountCandidates, hasContactCandidates } from './common.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 /**
  * Determines if, for this application, the signed-in user is assigned to any of the conflictingRoles
@@ -109,7 +110,10 @@ export const contactsRoute = async (userId, applicationId, contactRole, addition
 }
 
 export const accountsRoute = async (accountRole, otherAccountRoles, userId, applicationId, uriBase) => {
-  if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
+  const isOrgStatus = await APIRequests.APPLICATION.tags(applicationId).get(accountRole)
+  if (isOrgStatus === tagStatus.COMPLETE) {
+    return uriBase.CHECK_ANSWERS.uri
+  } else if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
     return uriBase.ORGANISATIONS.uri
   } else {
     return uriBase.IS_ORGANISATION.uri

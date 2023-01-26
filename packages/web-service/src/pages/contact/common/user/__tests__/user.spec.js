@@ -10,9 +10,6 @@ describe('the user page', () => {
       })
     }
     jest.doMock('../../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -43,9 +40,6 @@ describe('the user page', () => {
       })
     }
     jest.doMock('../../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -76,9 +70,6 @@ describe('the user page', () => {
       })
     }
     jest.doMock('../../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started'
-      },
       APIRequests: {
         APPLICATION: {
           tags: () => {
@@ -105,9 +96,6 @@ describe('the user page', () => {
   describe('setUserData', () => {
     it('if yes, invokes the common operations correctly if no user contact is found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          IN_PROGRESS: 'in-progress'
-        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ username: 'Keith Moon' }))
@@ -155,10 +143,6 @@ describe('the user page', () => {
 
     it('if yes, invokes the common operations correctly if user contacts are found', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
@@ -203,9 +187,6 @@ describe('the user page', () => {
 
     it('if no, invokes the common operations correctly', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
           USER: {
             getById: jest.fn(() => ({ id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', username: 'Keith Moon' }))
@@ -255,10 +236,6 @@ describe('the user page', () => {
   describe('userCompletion', () => {
     it('if yes, returns the name page with a mutable contact', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: () => ({
@@ -288,11 +265,14 @@ describe('the user page', () => {
         hasAccountCandidates: () => true
       }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => null
+              }
+            }
+          },
           CONTACT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
@@ -322,10 +302,14 @@ describe('the user page', () => {
         hasAccountCandidates: () => false
       }))
       jest.doMock('../../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => null
+              }
+            }
+          },
           CONTACT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))

@@ -1,14 +1,16 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
-import { yesNoFromBool } from '../../../common/common.js'
+import { tagStatus } from '../../../../services/status-tags.js'
 
-export const getIsOrganization = (contact, account) => {
+export const getIsOrganization = async (applicationId, accountRole, account) => {
   if (account) {
-    return true
+    return 'yes'
   } else {
-    if (contact.address) {
-      return false
+    const isOrgStatus = await APIRequests.APPLICATION.tags(applicationId).get(accountRole)
+    if (isOrgStatus === tagStatus.COMPLETE) {
+      return 'no'
     } else {
+      // Don't know
       return null
     }
   }
@@ -19,12 +21,15 @@ export const getContactAccountData = (contactRole, accountRole) => async request
   const { applicationId } = journeyData
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
-  return { contact, account, isOrganization: yesNoFromBool(getIsOrganization(contact, account)) }
+  return { contact, account, isOrganization: await getIsOrganization(applicationId, accountRole, account) }
 }
 
 export const setContactAccountData = (contactRole, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, userId } = journeyData
+
+  // Set tag to indicate that the organisation question has been answered, once at least
+  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: accountRole, tagState: tagStatus.COMPLETE })
 
   if (request.payload['is-organisation'] === 'yes') {
     // Assign a new organisation

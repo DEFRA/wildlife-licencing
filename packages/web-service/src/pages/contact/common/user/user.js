@@ -51,7 +51,9 @@ export const userCompletion = (contactRole, additionalContactRoles, accountRole,
       return accountsRoute(accountRole, [], userId, applicationId, urlBase)
     } else {
       // Contact is new, gather name, or already set, skip
-      return contact.fullName ? urlBase.CHECK_ANSWERS.uri : urlBase.NAME.uri
+      return contact.fullName
+        ? accountsRoute(accountRole, [], userId, applicationId, urlBase)
+        : urlBase.NAME.uri
     }
   } else {
     // Filter out any owner by user, and any clones

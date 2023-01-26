@@ -5,10 +5,21 @@ describe('the is-organisation page', () => {
 
   describe('getContactAccountData', () => {
     it('logic on getIsOrganization', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              get: jest.fn().mockReturnValueOnce('complete')
+                .mockReturnValueOnce('complete')
+                .mockReturnValueOnce(null)
+            })
+          }
+        }
+      }))
       const { getIsOrganization } = await import('../is-organisation.js')
-      expect(getIsOrganization({}, {})).toBeTruthy()
-      expect(getIsOrganization({ address: {} }, null)).toBeFalsy()
-      expect(getIsOrganization({ address: null }, null)).toBeNull()
+      expect(getIsOrganization('98296f05-5b7c-4fd9-bfed-859d882be805', 'Role', {})).toBeTruthy()
+      expect(getIsOrganization('98296f05-5b7c-4fd9-bfed-859d882be805', 'Role', null)).toBeTruthy()
+      expect(getIsOrganization('98296f05-5b7c-4fd9-bfed-859d882be805', 'Role', null)).toBeTruthy()
     })
 
     it('returns the contact and account data for the role', async () => {
