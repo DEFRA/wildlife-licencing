@@ -11,7 +11,8 @@ import {
   activityMethodsReadStream,
   applicationTypeActivitiesReadStream,
   applicationTypeSpeciesReadStream,
-  applicationTypeApplicationPurposesReadStream
+  applicationTypeApplicationPurposesReadStream,
+  authoritiesReadStream
 } from '@defra/wls-powerapps-lib'
 import { databaseWriter } from './database-writer.js'
 
@@ -19,7 +20,8 @@ import {
   writeApplicationTypes, writeApplicationPurposes,
   writeActivities, writeMethods, writeSpecies, writeSpeciesSubject, writeActivityMethods,
   writeApplicationTypeActivities, writeApplicationTypeSpecies,
-  writeApplicationApplicationPurpose, writeOptionSets
+  writeApplicationApplicationPurpose, writeOptionSets,
+  writeAuthorities
 } from './write-object.js'
 import fs from 'fs'
 
@@ -34,6 +36,8 @@ const extracts = async () => {
   await databaseWriter(applicationTypeActivitiesReadStream(), writeApplicationTypeActivities, 'Application type Activities')
   await databaseWriter(applicationTypeSpeciesReadStream(), writeApplicationTypeSpecies, 'Application type Species')
   await databaseWriter(applicationTypeApplicationPurposesReadStream(), writeApplicationApplicationPurpose, 'Application type Application Purposes')
+  await databaseWriter(authoritiesReadStream(), writeAuthorities, 'Authorities')
+
   await databaseWriter(globalOptionSetReadStream(), writeOptionSets, 'Option sets')
 }
 

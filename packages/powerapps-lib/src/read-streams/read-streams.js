@@ -12,6 +12,7 @@ import {
   SddsSpecies,
   SddsSpeciesSubject,
   SddsLicence,
+  SddsCouncils,
   columnSourceRemote
 } from '../schema/tables/tables.js'
 
@@ -93,6 +94,12 @@ const applicationPurposesRequestPath = buildRequestPath(SddsApplicationPurpose)
 const applicationPurposesTableSet = createTableSet(SddsApplicationPurpose)
 const applicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationPurpose, applicationPurposesTableSet)
 export const applicationPurposesReadStream = () => powerAppsReadStream(applicationPurposesRequestPath, applicationPurposesObjectTransformer)
+
+/* Authorities (Councils) */
+const authoritiesRequestPath = buildRequestPath(SddsCouncils)
+const authoritiesTableSet = createTableSet(SddsCouncils)
+const authoritiesObjectTransformer = buildObjectTransformer(SddsCouncils, authoritiesTableSet)
+export const authoritiesReadStream = () => powerAppsReadStream(authoritiesRequestPath, authoritiesObjectTransformer)
 
 /* Activities */
 const activitiesRequestPath = buildRequestPath(SddsLicenseActivities)

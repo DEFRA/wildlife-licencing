@@ -126,6 +126,12 @@ export const writeApplicationTypeSpecies = async ({ keys }) => {
   return { update: await applicationType.countSpecies() }
 }
 
+export const writeAuthorities = async ({ data, keys }) => {
+  const id = keys.find(k => k.apiTable === 'authorities').powerAppsKey
+  await models.authorities.upsert({ id, json: Object.values(data)[0] })
+  return { update: 1 }
+}
+
 export const writeApplicationApplicationPurpose = async ({ keys }) => {
   const applicationTypeId = keys.find(k => k.apiTable === 'applicationTypes').powerAppsKey
   const purposeIds = keys.filter(k => k.apiTable === 'applicationPurposes').map(k => k.powerAppsKey)
