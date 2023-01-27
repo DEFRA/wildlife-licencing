@@ -3,7 +3,7 @@ import db from 'debug'
 import {
   applicationReadStream, sitesReadStream, applicationSitesReadStream,
   contactsReadStream, accountsReadStream, applicationContactsReadStream,
-  applicationAccountsReadStream, licensableActionsReadStream,
+  applicationAccountsReadStream, licensableActionsReadStream, planningConsentsReadStream,
   licenceReadStream, previousLicencesReadStream
 } from '@defra/wls-powerapps-lib'
 
@@ -20,6 +20,7 @@ import { writeHabitatSiteObject } from './write-habitat-site-object.js'
 import { writeLicenceObject } from './write-licence-object.js'
 import { writePreviousLicenceObject } from './write-previous-licence-object.js'
 import fs from 'fs'
+import { writePermissionsObject } from './write-permissions-object.js'
 
 const extracts = async () => {
   await databaseWriter(sitesReadStream(), writeSiteObject, new Date(), 'Sites')
@@ -30,6 +31,7 @@ const extracts = async () => {
   await databaseWriter(applicationAccountsReadStream(), writeApplicationAccountObject, new Date(), 'Application-Accounts')
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
   await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
+  await databaseWriter(planningConsentsReadStream(), writePermissionsObject, new Date(), 'permissions')
   await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
   await databaseWriter(previousLicencesReadStream(), writePreviousLicenceObject, new Date(), 'previous-licences')
 }

@@ -9,6 +9,7 @@ import {
   SddsEcologistExperience,
   SddsLicenseActivities,
   SddsLicenseMethods,
+  SddsPlanningConsents,
   SddsSpecies,
   SddsSpeciesSubject,
   SddsLicence,
@@ -76,6 +77,12 @@ const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [Sd
 const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
+
+/* Planning consents (permissions) */
+const planningConsentsRequestPath = buildRequestPath(SddsPlanningConsents, [SddsApplicationRelations])
+const planningConsentsTableSet = createTableSet(SddsPlanningConsents, [SddsApplicationRelations])
+const planningConsentsObjectTransformer = buildObjectTransformer(SddsPlanningConsents, planningConsentsTableSet)
+export const planningConsentsReadStream = () => powerAppsReadStream(planningConsentsRequestPath, planningConsentsObjectTransformer)
 
 /* Previous Licences (part of ecologist experience) */
 const previousLicencesRequestPath = buildRequestPath(SddsEcologistExperience, [SddsApplicationRelations])

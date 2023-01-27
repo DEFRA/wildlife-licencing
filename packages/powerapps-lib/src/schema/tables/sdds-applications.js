@@ -96,6 +96,10 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Licensable actions
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
-    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites')
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites'),
+
+  // Permissions
+  new Relationship('sdds_planningconsent_sdds_applicationid_s', 'sdds_planningconsents',
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'permissions')
 
 ], 'application', 'applications', 'sdds_applicationid')
