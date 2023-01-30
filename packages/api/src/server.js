@@ -112,6 +112,12 @@ import {
 } from './handlers/application/eligibility/eligibility.js'
 
 import {
+  getPermissionsSection,
+  putPermissionsSection,
+  deletePermissionsSection
+} from './handlers/application/permissions-section/permissions-sections.js'
+
+import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
@@ -197,6 +203,9 @@ const handlers = {
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
+  getPermissionsSection,
+  putPermissionsSection,
+  deletePermissionsSection,
   postApplicationSubmit,
 
   // Licences

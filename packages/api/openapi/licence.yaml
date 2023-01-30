@@ -620,6 +620,100 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  ################################################################################################
+  # Permissions section
+  ################################################################################################
+  '/application/{applicationId}/permissions-section':
+    put:
+      description: Update the application permissions details
+      summary: Create or update the application permissions details
+      operationId: putPermissionsSection
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/permissionsSection'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permissionsSection'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the application permissions details
+      summary: Get the permissions details for an application
+      operationId: getPermissionsSection
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permissionsSection'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete the application permissions details
+      summary: Delete the permissions details for an application
+      operationId: deletePermissionsSection
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
 ################################################################################################
 # Licences
 ################################################################################################
@@ -2761,6 +2855,8 @@ components:
           $ref: '#/components/schemas/uuid'
         eligibility:
           $ref: '#/components/schemas/eligibility'
+        permissionsSection:
+          $ref: '#/components/schemas/permissionsSection'
         ecologistExperience:
           $ref: '#/components/schemas/ecologistExperience'
         statusCode:
@@ -2785,6 +2881,28 @@ components:
           type: boolean
         permissionsGranted:
           type: boolean
+
+    permissionsSection:
+      type: object
+      properties:
+        noPermissionReason:
+          $ref: '#/components/schemas/option'
+        noPermissionDescription:
+          type: string
+          minLength: 1
+          maxLength: 100
+        potentialConflicts:
+          type: boolean
+        potentialConflictDescription:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        allOtherConditionsMet:
+          type: boolean
+        conditionsNotMetReason:
+          type: string
+          minLength: 1
+          maxLength: 4000
 
     applicationAccounts:
       type: array

@@ -15,13 +15,9 @@ export const deleteSectionHandler = (section, removeKeyFunc) => async (context, 
     await cache.delete(req.path)
     await cache.delete(`/application/${applicationId}`)
     const sequelize = SEQUELIZE.getSequelize()
-    let targetKeys = result.dataValues.targetKeys
-    if (removeKeyFunc && targetKeys) {
-      targetKeys = removeKeyFunc(targetKeys)
-    }
 
     await sequelize.query('UPDATE applications ' +
-      `SET application = application::jsonb - '${section}', target_keys = '${targetKeys ? JSON.stringify(targetKeys) : null}' WHERE id = ?`, {
+      `SET application = application::jsonb - '${section}' WHERE id = ?`, {
       type: sequelize.QueryTypes.UPDATE,
       replacements: [applicationId]
     })
