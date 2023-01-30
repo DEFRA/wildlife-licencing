@@ -1,5 +1,3 @@
-jest.spyOn(console, 'error').mockImplementation(() => null)
-
 /*
  * Mock the hapi response toolkit in order to test the results of the request
  */
@@ -34,7 +32,7 @@ let models
 let getPermissions
 const applicationJson = 'application/json'
 
-describe('The getPreviousLicences handler', () => {
+describe('The getPermissions handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     getPermissions = (await import('../get-permissions-by-application-id.js')).default
@@ -63,6 +61,7 @@ describe('The getPreviousLicences handler', () => {
   })
 
   it('throws with an insert error', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => null)
     models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
     await expect(async () => {
       await getPermissions(context, { }, h)

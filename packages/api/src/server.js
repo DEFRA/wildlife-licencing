@@ -119,7 +119,10 @@ import {
 
 import {
   postPermission,
-  getPermissions
+  getPermissions,
+  getPermission,
+  putPermission,
+  deletePermission
 } from './handlers/permission/permission.js'
 
 import {
@@ -250,6 +253,9 @@ const handlers = {
   // Permissions
   postPermission,
   getPermissions,
+  getPermission,
+  putPermission,
+  deletePermission,
 
   // ecologist experience handlers
   getEcologistExperience,
