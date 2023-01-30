@@ -118,6 +118,11 @@ import {
 } from './handlers/application/permissions-section/permissions-sections.js'
 
 import {
+  postPermission,
+  getPermissions
+} from './handlers/permission/permission.js'
+
+import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
@@ -241,6 +246,10 @@ const handlers = {
   getHabitatSitesByApplicationId,
   putHabitatSite,
   deleteHabitatSite,
+
+  // Permissions
+  postPermission,
+  getPermissions,
 
   // ecologist experience handlers
   getEcologistExperience,
