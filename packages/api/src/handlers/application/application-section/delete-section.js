@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { REDIS, SEQUELIZE } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const deleteSectionHandler = (section, removeKeyFunc) => async (context, req, h) => {
+export const deleteSectionHandler = section => async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const result = await models.applications.findByPk(applicationId)
