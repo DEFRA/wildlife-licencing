@@ -40,6 +40,7 @@ export const writePermissionsObject = async ({ data, keys }, ts) => {
   try {
     const sddsPlanningConsentId = keys.find(k => k.apiTable === 'permissions').powerAppsKey
     const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
+    const authority = keys.find(k => k.apiTable === 'authorities')?.powerAppsKey
 
     // Look for the application, and permission
     if (sddsApplicationId && sddsPlanningConsentId) {
@@ -49,6 +50,7 @@ export const writePermissionsObject = async ({ data, keys }, ts) => {
 
       if (application) {
         // Create or update the habitable sites
+        Object.assign(data.permissions, { authority })
         await doPermission(sddsPlanningConsentId, ts, data, counter, application)
       }
     }

@@ -17,7 +17,8 @@ export const postProcess = async targetKeys => {
     contacts: { sddsKey: 'sddsContactId' },
     accounts: { sddsKey: 'sddsAccountId' },
     habitatSites: { sddsKey: 'sddsHabitatSiteId' },
-    previousLicences: { sddsKey: 'sddsPreviousLicenceId' }
+    previousLicences: { sddsKey: 'sddsPreviousLicenceId' },
+    permissions: { sddsKey: 'sddsPermissionsId' }
   }
 
   try {
@@ -166,6 +167,24 @@ const doPreviousLicences = async (applicationId, payload) => {
   }
 }
 
+const doPermissions = async (applicationId, payload) => {
+  const applicationPermissions = await models.permissions.findAll({
+    where: { applicationId }
+  })
+
+  if (applicationPermissions.length) {
+    const permissions = applicationPermissions.map(ap => ({
+      data: ap.permission,
+      keys: {
+        apiKey: ap.id,
+        sddsKey: ap.sddsPermissionsId
+      }
+    }))
+
+    Object.assign(payload.application, { permissions })
+  }
+}
+
 /**
  * The processor anticipates a structure where associated entities have their own nested structure under applications
  *
@@ -238,6 +257,9 @@ export const buildApiObject = async applicationId => {
 
     // Add in the previous licences (ecologist-experience)
     await doPreviousLicences(applicationId, payload)
+
+    // Add in the permissions
+    await doPermissions(applicationId, payload)
 
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload

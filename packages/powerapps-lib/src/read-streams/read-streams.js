@@ -79,8 +79,8 @@ const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensable
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
 /* Planning consents (permissions) */
-const planningConsentsRequestPath = buildRequestPath(SddsPlanningConsents, [SddsApplicationRelations])
-const planningConsentsTableSet = createTableSet(SddsPlanningConsents, [SddsApplicationRelations])
+const planningConsentsRequestPath = buildRequestPath(SddsPlanningConsents, [SddsApplicationRelations, SddsCouncils])
+const planningConsentsTableSet = createTableSet(SddsPlanningConsents, [SddsApplicationRelations, SddsCouncils])
 const planningConsentsObjectTransformer = buildObjectTransformer(SddsPlanningConsents, planningConsentsTableSet)
 export const planningConsentsReadStream = () => powerAppsReadStream(planningConsentsRequestPath, planningConsentsObjectTransformer)
 
