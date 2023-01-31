@@ -2,7 +2,8 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% set errorMap = {
         'conviction-details': {
-          'string.empty': { ref: '#conviction-details', text: 'You have not entered the conviction details' }
+          'string.empty': { ref: '#conviction-details', text: 'You have not entered the conviction details' },
+          'string.max': { ref: '#conviction-details', text: 'You have entered too many characters'}
         }
     } %}
 {% set title = "Convictions for animal or wildlife offences" %}
