@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { REDIS, SEQUELIZE } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const deleteSectionHandler = (section, removeKeyFunc) => async (context, req, h) => {
+export const deleteSectionHandler = section => async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
     const result = await models.applications.findByPk(applicationId)
@@ -15,13 +15,9 @@ export const deleteSectionHandler = (section, removeKeyFunc) => async (context, 
     await cache.delete(req.path)
     await cache.delete(`/application/${applicationId}`)
     const sequelize = SEQUELIZE.getSequelize()
-    let targetKeys = result.dataValues.targetKeys
-    if (removeKeyFunc && targetKeys) {
-      targetKeys = removeKeyFunc(targetKeys)
-    }
 
     await sequelize.query('UPDATE applications ' +
-      `SET application = application::jsonb - '${section}', target_keys = '${targetKeys ? JSON.stringify(targetKeys) : null}' WHERE id = ?`, {
+      `SET application = application::jsonb - '${section}' WHERE id = ?`, {
       type: sequelize.QueryTypes.UPDATE,
       replacements: [applicationId]
     })

@@ -11,10 +11,12 @@ import { SddsSpecies } from './sdds-species.js'
 import { SddsSpeciesSubject } from './sdds-species-subject.js'
 import { SddsLicence } from './sdds-licence.js'
 import { SddsEcologistExperience } from './sdds-ecologist-experience.js'
+import { SddsCouncils } from './sdds-council.js'
+import { SddsPlanningConsents } from './sdds_planningconsents.js'
 
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
   SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsSpeciesSubject, SddsLicence,
-  columnSourceRemote, SddsEcologistExperience
+  columnSourceRemote, SddsEcologistExperience, SddsCouncils, SddsPlanningConsents
 }

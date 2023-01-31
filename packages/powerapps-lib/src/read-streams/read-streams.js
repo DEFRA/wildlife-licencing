@@ -9,9 +9,11 @@ import {
   SddsEcologistExperience,
   SddsLicenseActivities,
   SddsLicenseMethods,
+  SddsPlanningConsents,
   SddsSpecies,
   SddsSpeciesSubject,
   SddsLicence,
+  SddsCouncils,
   columnSourceRemote
 } from '../schema/tables/tables.js'
 
@@ -76,6 +78,12 @@ const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApp
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
+/* Planning consents (permissions) */
+const planningConsentsRequestPath = buildRequestPath(SddsPlanningConsents, [SddsApplicationRelations, SddsCouncils])
+const planningConsentsTableSet = createTableSet(SddsPlanningConsents, [SddsApplicationRelations, SddsCouncils])
+const planningConsentsObjectTransformer = buildObjectTransformer(SddsPlanningConsents, planningConsentsTableSet)
+export const planningConsentsReadStream = () => powerAppsReadStream(planningConsentsRequestPath, planningConsentsObjectTransformer)
+
 /* Previous Licences (part of ecologist experience) */
 const previousLicencesRequestPath = buildRequestPath(SddsEcologistExperience, [SddsApplicationRelations])
 const previousLicencesPathTableSet = createTableSet(SddsEcologistExperience, [SddsApplicationRelations])
@@ -93,6 +101,12 @@ const applicationPurposesRequestPath = buildRequestPath(SddsApplicationPurpose)
 const applicationPurposesTableSet = createTableSet(SddsApplicationPurpose)
 const applicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationPurpose, applicationPurposesTableSet)
 export const applicationPurposesReadStream = () => powerAppsReadStream(applicationPurposesRequestPath, applicationPurposesObjectTransformer)
+
+/* Authorities (Councils) */
+const authoritiesRequestPath = buildRequestPath(SddsCouncils)
+const authoritiesTableSet = createTableSet(SddsCouncils)
+const authoritiesObjectTransformer = buildObjectTransformer(SddsCouncils, authoritiesTableSet)
+export const authoritiesReadStream = () => powerAppsReadStream(authoritiesRequestPath, authoritiesObjectTransformer)
 
 /* Activities */
 const activitiesRequestPath = buildRequestPath(SddsLicenseActivities)

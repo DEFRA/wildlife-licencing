@@ -1,52 +1,32 @@
-const data = {
-  habitatSite: {
-    name: 'Destructive',
-    startDate: '2022-01-29',
-    endDate: '2022-02-03'
-  }
-}
+jest.spyOn(console, 'error').mockImplementation(() => null)
+
+const data = { permissions: { refNumber: '2349-8949-52672' } }
 
 const keys = [
   {
-    apiTable: 'habitatSites',
+    apiTable: 'permissions',
     apiKey: null,
-    apiBasePath: 'habitatSite',
-    powerAppsTable: 'sdds_licensableactions',
+    apiBasePath: 'permissions',
+    powerAppsTable: 'sdds_planningconsents',
     contentId: null,
-    powerAppsKey: '858b9fad-7106-ed11-82e4-002248c5c45b'
+    powerAppsKey: 'c8a2bb18-3b1f-ed11-b83d-002248c5c45b'
   },
   {
     apiTable: 'applications',
     apiKey: null,
-    apiBasePath: 'habitatSite.applicationId',
+    apiBasePath: 'permissions.applicationId',
     powerAppsTable: 'sdds_applications',
     contentId: null,
-    powerAppsKey: 'fc1a9675-db01-ed11-82e5-002248c5c45b'
-  },
-  {
-    apiTable: 'activities',
-    apiKey: null,
-    apiBasePath: 'habitatSite.activityId',
-    powerAppsTable: 'sdds_licenseactivities',
-    contentId: null,
-    powerAppsKey: '68855554-59ed-ec11-bb3c-000d3a0cee24'
-  },
-  {
-    apiTable: 'species',
-    apiKey: null,
-    apiBasePath: 'habitatSite.speciesId',
-    powerAppsTable: 'sdds_species',
-    contentId: null,
-    powerAppsKey: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+    powerAppsKey: 'a52db13b-f3de-40b9-9b23-ea7adbd21460'
   }
 ]
 
-describe('The application extract processor: write-habitat-site-object', () => {
+describe('The permissions extract processor: write-permissions-object', () => {
   beforeEach(() => jest.resetModules())
 
   it('does nothing if no application key found', async () => {
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data: {}, keys: [keys[0]] }, null)
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data: {}, keys: [keys[0]] }, null)
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
@@ -55,136 +35,130 @@ describe('The application extract processor: write-habitat-site-object', () => {
     models.applications = {
       findOne: jest.fn(() => null)
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({
       data: {},
       keys: keys
     }, null)
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
-  it('creates a new habitat-site', async () => {
+  it('creates a new permission', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockCreate = jest.fn()
     models.applications = {
       findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
     }
-    models.habitatSites = {
+    models.permissions = {
       findOne: jest.fn(() => null),
       create: mockCreate
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, null)
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, null)
     expect(mockCreate).toHaveBeenCalledWith({
       applicationId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
-      habitatSite: {
-        endDate: '2022-02-03',
-        name: 'Destructive',
-        startDate: '2022-01-29',
-        activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
-        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+      permission: {
+        refNumber: '2349-8949-52672'
       },
       id: expect.any(String),
-      sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',
+      sddsPermissionsId: 'c8a2bb18-3b1f-ed11-b83d-002248c5c45b',
       updateStatus: 'U'
     })
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
   })
 
-  it('makes an update on a found, pending habitat-site with a timestamp older than the extract start time', async () => {
+  it('makes an update on a found, pending permission with a timestamp older than the extract start time', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockUpdate = jest.fn()
     models.applications = {
       findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
     }
-    models.habitatSites = {
+    models.permissions = {
       findOne: jest.fn(() => ({
         id: '9487013e-abf5-4f42-95fa-15ad404570a1',
         updateStatus: 'P',
         updatedAt: new Date(2020, 0, 1),
-        habitatSite: data.habitatSite
+        permission: data.permission
       })),
       update: mockUpdate
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, new Date())
     expect(mockUpdate).toHaveBeenCalledWith({
-      habitatSite: data.habitatSite,
+      permission: {
+        refNumber: '2349-8949-52672'
+      },
       updateStatus: 'U'
     }, { returning: false, where: { id: '9487013e-abf5-4f42-95fa-15ad404570a1' } })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
   })
 
-  it('makes an update on a found, unlocked habitat-site, if data has changed', async () => {
+  it('makes an update on a found, unlocked permission, if data has changed', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockUpdate = jest.fn()
     models.applications = {
       findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
     }
-    models.habitatSites = {
+    models.permissions = {
       findOne: jest.fn(() => ({
         id: '9487013e-abf5-4f42-95fa-15ad404570a1',
         updateStatus: 'U',
         updatedAt: new Date(2020, 0, 1),
-        habitatSite: {
-          name: 'Destructive 2',
-          startDate: '2022-01-29',
-          endDate: '2022-02-03'
+        permission: {
+          refNumber: '2349-8949-52674'
         }
       })),
       update: mockUpdate
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, new Date())
     expect(mockUpdate).toHaveBeenCalledWith({
-      habitatSite: data.habitatSite,
+      permission: data.permissions,
       updateStatus: 'U'
     }, { returning: false, where: { id: '9487013e-abf5-4f42-95fa-15ad404570a1' } })
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 1 })
   })
 
-  it('ignores an update on a found, unlocked habitat-site, if data has not changed', async () => {
+  it('ignores an update on a found, unlocked permission, if data has not changed', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockUpdate = jest.fn()
     models.applications = {
       findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
     }
-    models.habitatSites = {
+    models.permissions = {
       findOne: jest.fn(() => ({
         id: '9487013e-abf5-4f42-95fa-15ad404570a1',
         updateStatus: 'U',
         updatedAt: new Date(2020, 0, 1),
-        habitatSite: data.habitatSite
+        permission: data.permissions
       })),
       update: mockUpdate
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, new Date())
     expect(mockUpdate).not.toHaveBeenCalled()
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
-  it('does not make an update on a found, pending habitat-site with a timestamp newer than the extract', async () => {
+  it('does not make an update on a found, pending permission with a timestamp newer than the extract', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockUpdate = jest.fn()
     models.applications = {
       findOne: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
     }
-    models.habitatSites = {
+    models.permissions = {
       findOne: jest.fn(() => ({
         id: '9487013e-abf5-4f42-95fa-15ad404570a1',
         updateStatus: 'P',
         updatedAt: new Date(2022, 0, 2),
-        habitatSite: {
-          name: 'Destructive 2',
-          startDate: '2022-01-29',
-          endDate: '2022-02-03'
+        permission: {
+          refNumber: '2349-8949-52674'
         }
       })),
       update: mockUpdate
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, new Date(2022, 0, 1))
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, new Date(2022, 0, 1))
     expect(mockUpdate).not.toHaveBeenCalled()
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
@@ -194,8 +168,8 @@ describe('The application extract processor: write-habitat-site-object', () => {
     models.applications = {
       findOne: jest.fn(() => { throw new Error() })
     }
-    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const result = await writeHabitatSiteObject({ data, keys }, new Date())
+    const { writePermissionsObject } = await import('../write-permissions-object.js')
+    const result = await writePermissionsObject({ data, keys }, new Date())
     expect(result).toEqual({ error: 1, insert: 0, pending: 0, update: 0 })
   })
 })

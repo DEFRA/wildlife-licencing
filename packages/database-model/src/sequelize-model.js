@@ -123,6 +123,28 @@ async function defineHabitatSites (sequelize) {
   })
 }
 
+async function definePermissions (sequelize) {
+  models.permissions = await sequelize.define('permissions', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    permission: { type: DataTypes.JSONB },
+    sddsPermissionsId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'permissions_application_fk' }
+    ]
+  })
+}
+
 async function defineApplications (sequelize) {
   models.applications = await sequelize.define('applications', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -358,6 +380,10 @@ async function defineActivities (sequelize) {
   models.activities = await sequelize.define('activities', ReferenceDataType.attributes, ReferenceDataType.options)
 }
 
+async function defineAuthorities (sequelize) {
+  models.authorities = await sequelize.define('authorities', ReferenceDataType.attributes, ReferenceDataType.options)
+}
+
 async function defineMethods (sequelize) {
   models.methods = await sequelize.define('methods', Object.assign({
     option: { type: DataTypes.BIGINT }
@@ -488,6 +514,7 @@ const createModels = async () => {
   await defineApplications(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
+  await definePermissions(sequelize)
 
   await defineApplicationUsers(sequelize)
 
@@ -503,6 +530,7 @@ const createModels = async () => {
   await defineApplicationTypes(sequelize)
   await defineApplicationPurposes(sequelize)
   await defineActivities(sequelize)
+  await defineAuthorities(sequelize)
   await defineMethods(sequelize)
   await defineSpeciesSubject(sequelize)
   await defineSpecies(sequelize)
@@ -547,6 +575,7 @@ const createModels = async () => {
   await models.applications.sync()
   await models.applicationUploads.sync()
   await models.habitatSites.sync()
+  await models.permissions.sync()
   await models.sites.sync()
   await models.applicationUsers.sync()
 
@@ -559,6 +588,7 @@ const createModels = async () => {
   await models.applicationTypes.sync()
   await models.applicationPurposes.sync()
   await models.activities.sync()
+  await models.authorities.sync()
   await models.methods.sync()
   await models.speciesSubject.sync()
   await models.species.sync()

@@ -27,6 +27,16 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_ecologistexperienceofmethods', 'ecologistExperience.methodExperience'),
   new Column('sdds_ecologistexperienceofbadgerecology', 'ecologistExperience.experienceDetails'),
 
+  // The permissions
+  new Column('sdds_whynopermissionrequired', 'permissionsSection.noPermissionReason'),
+  new Column('sdds_nopermissionrequiredother', 'permissionsSection.noPermissionDescription'),
+
+  new Column('sdds_conflictsbtwappotherlegalcommitment', 'permissionsSection.potentialConflicts'),
+  new Column('sdds_describethepotentialconflicts', 'permissionsSection.potentialConflictDescription'),
+
+  new Column('sdds_otherprotectedspeciecommitment', 'permissionsSection.allOtherConditionsMet'),
+  new Column('sdds_yesotherprotectedspeciecommitment', 'permissionsSection.conditionsNotMetReason'),
+
   new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND)
 
 ], [
@@ -96,6 +106,10 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Licensable actions
   new Relationship('sdds_licensableaction_applicationid_sdds_', 'sdds_licensableactions',
-    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites')
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'habitatSites'),
+
+  // Permissions
+  new Relationship('sdds_planningconsent_sdds_applicationid_s', 'sdds_planningconsents',
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'permissions')
 
 ], 'application', 'applications', 'sdds_applicationid')

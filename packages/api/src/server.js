@@ -112,6 +112,20 @@ import {
 } from './handlers/application/eligibility/eligibility.js'
 
 import {
+  getPermissionsSection,
+  putPermissionsSection,
+  deletePermissionsSection
+} from './handlers/application/permissions-section/permissions-sections.js'
+
+import {
+  postPermission,
+  getPermissions,
+  getPermission,
+  putPermission,
+  deletePermission
+} from './handlers/permission/permission.js'
+
+import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
@@ -197,6 +211,9 @@ const handlers = {
   getApplicationEligibility,
   putApplicationEligibility,
   deleteApplicationEligibility,
+  getPermissionsSection,
+  putPermissionsSection,
+  deletePermissionsSection,
   postApplicationSubmit,
 
   // Licences
@@ -232,6 +249,13 @@ const handlers = {
   getHabitatSitesByApplicationId,
   putHabitatSite,
   deleteHabitatSite,
+
+  // Permissions
+  postPermission,
+  getPermissions,
+  getPermission,
+  putPermission,
+  deletePermission,
 
   // ecologist experience handlers
   getEcologistExperience,
