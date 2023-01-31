@@ -30,8 +30,10 @@ export const SddsApplication = new Table('sdds_applications', [
   // The permissions
   new Column('sdds_whynopermissionrequired', 'permissionsSection.noPermissionReason'),
   new Column('sdds_nopermissionrequiredother', 'permissionsSection.noPermissionDescription'),
+
   new Column('sdds_conflictsbtwappotherlegalcommitment', 'permissionsSection.potentialConflicts'),
   new Column('sdds_describethepotentialconflicts', 'permissionsSection.potentialConflictDescription'),
+
   new Column('sdds_otherprotectedspeciecommitment', 'permissionsSection.allOtherConditionsMet'),
   new Column('sdds_yesotherprotectedspeciecommitment', 'permissionsSection.conditionsNotMetReason'),
 
