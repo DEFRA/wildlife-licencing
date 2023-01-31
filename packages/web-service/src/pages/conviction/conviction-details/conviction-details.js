@@ -16,7 +16,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const convictionDetailsText = await request.payload[convictionDetails]
+  const convictionDetailsText = await request?.payload[convictionDetails]?.trim()
   const application = await APIRequests.APPLICATION.getById(applicationId)
   const payload = { ...application, detailsOfConvictions: convictionDetailsText }
 
@@ -29,7 +29,7 @@ export default pageRoute({
   uri: convictionsURIs.CONVICTION_DETAILS.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'conviction-details': Joi.string().required()
+    'conviction-details': Joi.string().required().trim().max(300)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
   getData,
