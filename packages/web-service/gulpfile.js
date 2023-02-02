@@ -21,7 +21,8 @@ const sass = gulpSass(s)
 const paths = {
   assets: 'assets/',
   public: 'public/',
-  govUk: path.join('node_modules', 'govuk-frontend', 'govuk/')
+  govUk: path.join('node_modules', 'govuk-frontend', 'govuk/'),
+  autocompleteAssets: path.join('node_modules', 'accessible-autocomplete', '/dist/{*.js,*.js.map}')
 }
 
 Object.assign(paths, {
@@ -55,12 +56,17 @@ const copyJs = () => {
     .pipe(gulp.dest(`${paths.public}javascript`))
 }
 
+const copyAutocompleteJs = () => {
+  return gulp.src([paths.autocompleteAssets])
+    .pipe(gulp.dest(`${paths.public}javascript`))
+}
+
 // Build the sass
 const buildSass = () => {
   return gulp.src(`${paths.assets}sass/*.scss`)
     .pipe(sourcemaps.init())
     .pipe(sass({
-      outputStyle: 'compressed',
+      outputStyle: 'compressed', // 'compressed' or 'expanded' for human-readable
       includePaths: path.join('..', 'node_modules')
     }).on('error', sass.logError))
     .pipe(sourcemaps.write())
@@ -72,6 +78,7 @@ gulp.task('build', gulp.series(
   clean,
   copyAssets,
   copyJs,
+  copyAutocompleteJs,
   copyRobots,
   buildSass
 ))

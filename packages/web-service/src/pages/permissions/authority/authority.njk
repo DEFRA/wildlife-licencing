@@ -1,0 +1,77 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% set title = 'Which planning authority granted the planning permission for this development?' %}
+
+{% set errorMap = {
+        'id': {
+          'string.empty': { ref: '#autocomplete', text: 'Enter the authority' }
+        }
+    }
+%}
+
+{% block pageContent %}
+<div id="fallback">
+    {% set items = [{ value: '', text: '' }] %}
+    <div hidden>
+    {% for rec in data.authorities %}
+          {{ items.push({ value: rec.id, text: rec.name, selected: rec.id === data.selected.id }) }}
+    {% endfor %}
+    </div>
+    {{ govukSelect({
+      id: "authority-select",
+      name: "fbAuthorityId",
+      label: {
+        text: "Choose your planning authority"
+      },
+      errorMessage: { text: "Enter the authority." } if error['id'],
+      items: items
+    }) }}
+</div>
+
+<div id="enhanced" class="govuk-form-group" hidden>
+    <label class="govuk-label" for="autocomplete">Choose your planning authority</label>
+    <div id="autocomplete-container"></div>
+    <input hidden id="autocomplete-input" name="authorityId">
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/public/javascript/accessible-autocomplete.min.js"></script>
+    <script nonce={{cspNonce}} type="module">
+     (function () {
+       try {
+            {% if error %}
+            document.querySelector('#enhanced').classList.add("govuk-form-group--error");
+            {% endif %}
+            let lookup = []
+            {% for rec in data.authorities %}
+                lookup.push({ id: '{{rec.id}}', name: '{{rec.name}}' })
+            {% endfor %}
+            let names = lookup.map(m => m.name)
+            accessibleAutocomplete({
+                element: document.querySelector('#autocomplete-container'),
+                id: 'autocomplete',
+                onConfirm: a => document.querySelector('#autocomplete-input').value = lookup.find(l => l.name === a).id,
+                confirmOnBlur: false,
+                source: names
+            })
+            // Deal with the error condition
+            let err = '{{error|dump}}'
+
+            // Deal with the pre-selection
+            {% if data.selected %}
+            document.querySelector('#autocomplete-input').value = data.selected.id
+            {% endif %}
+
+            // Use the autocomplete
+            document.querySelector('#fallback').hidden = true
+            document.querySelector('#enhanced').hidden = false
+        } catch (err) {
+            // Fallback on error
+            document.querySelector('#fallback').hidden = false
+            document.querySelector('#enhanced').hidden = true
+        }
+     })()
+    </script>
+{% endblock %}

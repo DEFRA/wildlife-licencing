@@ -97,6 +97,8 @@ import habitatActivities from '../pages/habitat/a24/activities/habitat-activitie
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
 import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
 
+import authority from '../pages/permissions/authority/authority.js'
+
 import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
 import enterLicenceDetails from '../pages/ecologist-experience/enter-licence-details/enter-licence-details.js'
 import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
@@ -204,6 +206,7 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
+  ...authority,
   ...ecologistPreviousLicence,
   ...enterLicenceDetails,
   ...enterExperience,

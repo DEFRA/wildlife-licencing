@@ -2809,6 +2809,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/authorities':
+    get:
+      description: Get the authorities
+      summary: Get the authorities
+      operationId: getAuthorities
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/application-contacts/contacts':
     get:
       description: Get all the contact/roles for all applications created by a user
