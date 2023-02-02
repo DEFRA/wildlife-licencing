@@ -135,7 +135,8 @@ import {
 
 import {
   getApplicationTypes,
-  getApplicationPurposes
+  getApplicationPurposes,
+  getAuthorities
 } from './handlers/reference-data/reference-data.js'
 
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
@@ -266,6 +267,7 @@ const handlers = {
   findApplicationTypes,
   getApplicationTypes,
   getApplicationPurposes,
+  getAuthorities,
   getOptionSets,
   validationFail,
   notFound,
