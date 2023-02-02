@@ -69,5 +69,6 @@ describe('The permissions authority page', () => {
     }))
     const { setData } = await import('../authority.js')
     await expect(() => setData({ payload: { authorityId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' } })).resolves
+    await expect(() => setData({ payload: { fbAuthorityId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' } })).resolves
   })
 })
