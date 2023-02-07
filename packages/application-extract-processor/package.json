@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-application-extract-processor",
-  "version": "11.0.0-alpha.0",
+  "version": "11.1.1-alpha.0",
   "description": "Interface to Microsoft Dynamics. Extract processor.",
   "main": "",
   "type": "module",
@@ -30,8 +30,8 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@defra/wls-connectors-lib": "^10.0.1-alpha.0",
-    "@defra/wls-database-model": "^11.0.0-alpha.0",
-    "@defra/wls-powerapps-lib": "^11.0.0-alpha.0",
+    "@defra/wls-database-model": "^11.1.1-alpha.0",
+    "@defra/wls-powerapps-lib": "^11.1.1-alpha.0",
     "debug": "^4.3.3",
     "dotenv": "^10.0.0",
     "object-hash": "^2.2.0",
