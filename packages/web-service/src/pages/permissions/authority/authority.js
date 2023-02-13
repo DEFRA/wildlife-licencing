@@ -3,8 +3,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import Joi from 'joi'
 
 export const getData = async () => ({
-  authorities: await APIRequests.OTHER.authorities(),
-  selected: { id: '1f64da5a-4276-ed11-81ad-0022481b5bf5' } // The pre-selected item
+  authorities: await APIRequests.OTHER.authorities()
 })
 
 export const validator = async payload => {
