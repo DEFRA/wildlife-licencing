@@ -29,10 +29,7 @@ describe('The permissions authority page', () => {
           id: '8829ad54-bab7-4a78-8ca9-dcf722117a45',
           name: 'Auth 2'
         }
-      ],
-      selected: {
-        id: '1f64da5a-4276-ed11-81ad-0022481b5bf5'
-      }
+      ]
     })
   })
 

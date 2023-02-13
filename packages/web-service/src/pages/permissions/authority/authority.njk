@@ -14,7 +14,7 @@
     {% set items = [{ value: '', text: '' }] %}
     <div hidden>
     {% for rec in data.authorities %}
-          {{ items.push({ value: rec.id, text: rec.name, selected: rec.id === data.selected.id }) }}
+          {{ items.push({ value: rec.id, text: rec.name }) }}
     {% endfor %}
     </div>
     {{ govukSelect({
@@ -46,7 +46,7 @@
             {% endif %}
             let lookup = []
             {% for rec in data.authorities %}
-                lookup.push({ id: '{{rec.id}}', name: '{{rec.name}}' })
+                 lookup.push({ id: '{{rec.id}}', name: '{{rec.name}}' })
             {% endfor %}
             let names = lookup.map(m => m.name)
             accessibleAutocomplete({
@@ -56,13 +56,6 @@
                 confirmOnBlur: false,
                 source: names
             })
-            // Deal with the error condition
-            let err = '{{error|dump}}'
-
-            // Deal with the pre-selection
-            {% if data.selected %}
-            document.querySelector('#autocomplete-input').value = data.selected.id
-            {% endif %}
 
             // Use the autocomplete
             document.querySelector('#fallback').hidden = true
