@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
         {{ errorSummary(error, errorMap, 'There is a problem') }}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate id="main-content">
             {% call govukFieldset({
               legend: {
                 text: title,
