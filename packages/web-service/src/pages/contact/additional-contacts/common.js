@@ -139,9 +139,11 @@ export const getAdditionalContactEmailAddressData = contactRole => async request
 }
 
 export const setAdditionalContactEmailAddressData = contactRole => async request => {
-  const { userId, applicationId } = await request.cache().getData()
-  const contactAccountOps = contactAccountOperations(contactRole, null, applicationId, userId)
-  await contactAccountOps.setEmailAddress(request.payload['email-address'])
+  if (request.payload['change-email'] === 'yes') {
+    const { userId, applicationId } = await request.cache().getData()
+    const contactAccountOps = contactAccountOperations(contactRole, null, applicationId, userId)
+    await contactAccountOps.setEmailAddress(request.payload['email-address'])
+  }
 }
 
 export const additionalContactEmailCompletion = (contactRole, _urlBase) => async request => nextUri(contactRole, request)
