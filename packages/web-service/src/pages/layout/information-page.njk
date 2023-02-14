@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
 
-        <form method="post" novalidate>
+        <form method="post" novalidate id="main-content">
             {% call govukFieldset({
               legend: {
                 text: title,

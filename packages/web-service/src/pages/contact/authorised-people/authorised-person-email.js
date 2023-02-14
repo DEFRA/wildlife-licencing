@@ -10,9 +10,11 @@ const { EMAIL } = contactURIs.AUTHORISED_PEOPLE
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
-  const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,
-    applicationId, userId, journeyData.authorisedPeople.contactId, null)
-  await contactAcctOps.setEmailAddress(request.payload['email-address'])
+  if (request.payload['change-email'] === 'yes') {
+    const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,
+      applicationId, userId, journeyData.authorisedPeople.contactId, null)
+    await contactAcctOps.setEmailAddress(request.payload['email-address'])
+  }
 }
 
 export const ofContact = contact => ({

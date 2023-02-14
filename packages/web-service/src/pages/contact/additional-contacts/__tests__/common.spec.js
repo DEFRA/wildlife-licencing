@@ -465,7 +465,7 @@ describe('additional-contacts: common', () => {
     it('sets the email address data as expected', async () => {
       const mockSetEmailAddress = jest.fn()
       const request = {
-        payload: { 'email-address': 'bob@strummer.com' },
+        payload: { 'email-address': 'bob@strummer.com', 'change-email': 'yes' },
         cache: () => ({
           getData: () => ({
             userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
