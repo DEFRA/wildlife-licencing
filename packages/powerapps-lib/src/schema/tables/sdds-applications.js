@@ -26,6 +26,7 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_heldbadgerlicence', 'ecologistExperience.previousLicence'),
   new Column('sdds_ecologistexperienceofmethods', 'ecologistExperience.methodExperience'),
   new Column('sdds_ecologistexperienceofbadgerecology', 'ecologistExperience.experienceDetails'),
+  new Column('sdds_mitigationclassrefno', 'ecologistExperience.classMitigationDetails'),
 
   // The permissions
   new Column('sdds_whynopermissionrequired', 'permissionsSection.noPermissionReason'),
