@@ -105,6 +105,15 @@ export const additionalPageData = (request, h) => {
       Object.assign(response.source.context, { version })
     }
 
+    // Add the analytics tag
+    if (process.env.ANALYTICS_TAG) {
+      Object.assign(response.source.context, { tag: process.env.ANALYTICS_TAG })
+    }
+
+    if (process.env.MANAGER_TAG) {
+      Object.assign(response.source.context, { gtm: process.env.MANAGER_TAG })
+    }
+
     // Generate the nonce
     const nonce = crypto.randomBytes(16).toString('base64')
 
@@ -112,7 +121,7 @@ export const additionalPageData = (request, h) => {
     Object.assign(response.source.context, { cspNonce: nonce })
     // Add additional headers
     const defaultSrc = '\'self\''
-    const scriptSrc = `'self' unsafe-inline 'nonce-${nonce}'`
+    const scriptSrc = `'self' unsafe-inline 'nonce-${nonce}' script-src: 'unsafe-inline' https://www.googletagmanager.com`
     const fontSrc = '\'self\' fonts.gstatic.com'
     const imageSrc = '\'self\''
     request.response.header('Content-Security-Policy', `default-src ${defaultSrc}; font-src ${fontSrc}; script-src ${scriptSrc}; img-src ${imageSrc}`)
