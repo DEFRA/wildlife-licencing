@@ -8,6 +8,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   let name
   if (sites.length) {
@@ -35,16 +36,15 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
+export const checkData = async (request, _h) => {
   const { applicationId } = await request.cache().getData()
 
   const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
   if (isCompleteOrConfirmed(appTagStatus)) {
     return siteURIs.CHECK_SITE_ANSWERS.uri
   }
-  await moveTagInProgress(applicationId, SECTION_TASKS.SITES)
 
-  return siteURIs.SITE_GOT_POSTCODE.uri
+  return undefined
 }
 
 export default pageRoute({
@@ -54,7 +54,7 @@ export default pageRoute({
   validator: Joi.object({
     'site-name': Joi.string().required().trim().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
-  completion,
+  completion: siteURIs.SITE_GOT_POSTCODE.uri,
   getData,
   setData
 })

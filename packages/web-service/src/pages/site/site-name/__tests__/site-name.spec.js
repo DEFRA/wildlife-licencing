@@ -4,6 +4,11 @@ describe('site-name page handler', () => {
     const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'complete', set: jest.fn() }
+          }
+        },
         SITE: {
           findByApplicationId: () => {
             return [result]
@@ -27,6 +32,11 @@ describe('site-name page handler', () => {
     const result = { name: 'site-name', applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'complete', set: jest.fn() }
+          }
+        },
         SITE: {
           findByApplicationId: () => {
             return []
@@ -138,60 +148,35 @@ describe('site-name page handler', () => {
     expect(mockCreate).toHaveBeenCalled()
   })
 
-  it('should redirect user to site postcode page, when the site tag is in progress', async () => {
-    jest.doMock('../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        IN_PROGRESS: 'IN_PROGRESS'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => true }
-          }
-        }
-      }
-    }))
-    const { completion } = await import('../site-name.js')
-    const request = {
-      payload: {
-        'site-name': 'name'
-      },
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-          siteData: {}
-        })
-      })
-    }
-    expect(await completion(request)).toBe('/site-got-postcode')
-  })
+  it('getData sets the journey tag to be in-progress', async () => {
+    const mockTagFn = jest.fn()
 
-  it('should redirect user to check your answers page, when the tag is complete', async () => {
+    jest.doMock('../../../common/tag-functions.js', () => ({
+      moveTagInProgress: mockTagFn,
+      isCompleteOrConfirmed: (tagState) => (tagState === 'complete') || (tagState === 'complete-not-confirmed')
+    }))
     jest.doMock('../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
       APIRequests: {
+        SITE: {
+          findByApplicationId: () => []
+        },
         APPLICATION: {
-          tags: () => {
-            return { get: jest.fn(() => 'complete') }
+          getById: () => {
+            return { isRelatedConviction: true, applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
           }
         }
       }
     }))
-    const { completion } = await import('../site-name.js')
     const request = {
-      payload: {
-        'site-name': 'name'
-      },
       cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-          siteData: {}
-        })
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
       })
     }
-    expect(await completion(request)).toBe('/check-site-answers')
+
+    const { getData } = await import('../site-name.js')
+    await getData(request)
+    expect(mockTagFn).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c', 'sites')
   })
 })
