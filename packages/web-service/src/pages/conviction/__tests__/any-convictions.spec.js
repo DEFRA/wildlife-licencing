@@ -204,7 +204,7 @@ describe('Any convictions page handler', () => {
     const mockRedirect = jest.fn()
     const request = {
       headers: {
-        referer: 'url/convictions-check-answers'
+        referer: 'https://www.defra.com/tasklist'
       },
       cache: () => ({
         getData: () => ({ applicationId: '123abc' })
