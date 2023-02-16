@@ -91,16 +91,6 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 {% endif %}
-{% if tag %}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2JQZPSZFMJ"></script>
-    <script nonce={{cspNonce}}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '{{tag}}');
-    </script>
-{% endif %}
 {% endblock %}
 
 {% block footer %}

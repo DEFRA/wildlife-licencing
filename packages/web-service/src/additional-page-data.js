@@ -105,11 +105,7 @@ export const additionalPageData = (request, h) => {
       Object.assign(response.source.context, { version })
     }
 
-    // Add the analytics tag
-    if (process.env.ANALYTICS_TAG) {
-      Object.assign(response.source.context, { tag: process.env.ANALYTICS_TAG })
-    }
-
+    // Add the GTM tag
     if (process.env.MANAGER_TAG) {
       Object.assign(response.source.context, { gtm: process.env.MANAGER_TAG })
     }
