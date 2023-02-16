@@ -116,11 +116,11 @@ export const additionalPageData = (request, h) => {
     // Add the nonce to the template data
     Object.assign(response.source.context, { cspNonce: nonce })
     // Add additional headers
-    const defaultSrc = '\'self\''
-    const scriptSrc = `'self' unsafe-inline 'nonce-${nonce}' script-src: 'unsafe-inline' https://www.googletagmanager.com https://region1.google-analytics.com/`
+    const defaultSrc = '\'self\' https://region1.google-analytics.com https://www.googletagmanager.com'
+    const scriptSrc = `'self' 'nonce-${nonce}' https://www.googletagmanager.com`
     const fontSrc = '\'self\' fonts.gstatic.com'
     const imageSrc = '\'self\''
-    request.response.header('Content-Security-Policy', `default-src ${defaultSrc}; font-src ${fontSrc}; script-src ${scriptSrc}; img-src ${imageSrc}`)
+    request.response.header('Content-Security-Policy', `default-src ${defaultSrc}; font-src ${fontSrc}; script-src ${scriptSrc}; img-src ${imageSrc};`)
   }
 
   return h.continue
