@@ -36,12 +36,12 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const checkData = async (request, _h) => {
+export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
 
   const appTagStatus = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.SITES)
   if (isCompleteOrConfirmed(appTagStatus)) {
-    return siteURIs.CHECK_SITE_ANSWERS.uri
+    return h.redirect(siteURIs.CHECK_SITE_ANSWERS.uri)
   }
 
   return undefined

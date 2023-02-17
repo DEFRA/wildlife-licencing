@@ -179,4 +179,31 @@ describe('site-name page handler', () => {
     await getData(request)
     expect(mockTagFn).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c', 'sites')
   })
+
+  it('the checkData returns the user to the cya page if the journey is complete', async () => {
+    const mockRedirect = jest.fn()
+    const request = {
+      cache: () => ({
+        getData: () => ({ applicationId: '123abc' })
+      })
+    }
+    const h = {
+      redirect: mockRedirect
+    }
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'complete' }
+          }
+        }
+      }
+    }))
+    const { checkData } = await import('../site-name.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/check-site-answers')
+  })
 })

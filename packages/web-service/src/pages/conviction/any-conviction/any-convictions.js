@@ -53,6 +53,8 @@ export const checkData = async (request, h) => {
   if (isCompleteOrConfirmed(tagState) && !request.headers.referer.includes(convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri)) {
     return h.redirect(convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri)
   }
+
+  return null
 }
 
 export default pageRoute({
