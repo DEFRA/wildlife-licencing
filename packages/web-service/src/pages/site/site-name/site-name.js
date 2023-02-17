@@ -44,7 +44,7 @@ export const checkData = async (request, h) => {
     return h.redirect(siteURIs.CHECK_SITE_ANSWERS.uri)
   }
 
-  return undefined
+  return null
 }
 
 export default pageRoute({

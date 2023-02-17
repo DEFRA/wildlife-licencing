@@ -206,4 +206,27 @@ describe('site-name page handler', () => {
     await checkData(request, h)
     expect(mockRedirect).toHaveBeenCalledWith('/check-site-answers')
   })
+
+  it('the checkData returns null is the journey isnt complete', async () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({ applicationId: '123abc' })
+      })
+    }
+    const h = {}
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'in-progress', set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const { checkData } = await import('../site-name.js')
+    expect(await checkData(request, h)).toBeNull()
+  })
 })
