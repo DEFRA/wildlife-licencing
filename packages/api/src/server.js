@@ -47,7 +47,8 @@ import {
 } from './handlers/application-account/application-account.js'
 
 import {
-  getApplicationLicences
+  getApplicationLicences,
+  postLicenceResendSubmit
 } from './handlers/licence/licence.js'
 
 import {
@@ -224,6 +225,7 @@ const handlers = {
   putPermissionsSection,
   deletePermissionsSection,
   postApplicationSubmit,
+  postLicenceResendSubmit,
 
   // Licences
   getApplicationLicences,

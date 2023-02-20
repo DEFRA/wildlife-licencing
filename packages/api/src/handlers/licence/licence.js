@@ -1,3 +1,3 @@
 import getApplicationLicences from './get-application-licences.js'
-
-export { getApplicationLicences }
+import postLicenceResendSubmit from './post-licence-resend-submit.js'
+export { getApplicationLicences, postLicenceResendSubmit }

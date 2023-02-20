@@ -434,6 +434,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/application/licence/resend/{applicationId}/submit':
+    post:
+      description: Queue the request for a licence resend email
+      summary: Queue the request for a licence resend email
+      operationId: postLicenceResendSubmit
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # ecologist-experience
 ################################################################################################
@@ -3657,6 +3683,19 @@ components:
           $ref: '#/components/schemas/date'
         endDate:
           $ref: '#/components/schemas/date'
+        annotations:
+          type: array
+          items:
+            type: object
+            properties:
+              filename:
+                type: string
+              mimetype:
+                type: string
+              objectTypeCode:
+                type: string
+              modifiedOn:
+                $ref: '#/components/schemas/timestamp'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -3936,7 +3975,7 @@ components:
       readOnly: true
       example: 2021-12-06T15:56:46.825Z
       nullable: true
-      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z$
+      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?Z$
 
     date:
       type: string
