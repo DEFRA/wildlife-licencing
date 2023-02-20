@@ -14,7 +14,7 @@ import {
   SddsSpeciesSubject,
   SddsLicence,
   SddsCouncils,
-  columnSourceRemote
+  columnSourceRemote, SddsLicenceNotes
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
@@ -25,8 +25,8 @@ import { Table } from '../schema/schema.js'
 const SddsApplicationRelations = Table.relations(SddsApplication).addColumn(columnSourceRemote)
 
 /* Licences */
-const licenceRequestPath = buildRequestPath(SddsLicence, [SddsApplicationRelations])
-const licenceTableSet = createTableSet(SddsLicence, [SddsApplicationRelations])
+const licenceRequestPath = buildRequestPath(SddsLicence, [SddsApplicationRelations, SddsLicenceNotes])
+const licenceTableSet = createTableSet(SddsLicence, [SddsApplicationRelations, SddsLicenceNotes])
 const licenceObjectTransformer = buildObjectTransformer(SddsLicence, licenceTableSet)
 export const licenceReadStream = () => powerAppsReadStream(licenceRequestPath, licenceObjectTransformer)
 
