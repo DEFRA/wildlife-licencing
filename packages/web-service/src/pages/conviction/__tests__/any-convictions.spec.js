@@ -4,6 +4,9 @@ describe('Any convictions page handler', () => {
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
+          tags: () => {
+            return { get: () => 'complete', set: jest.fn() }
+          },
           getById: () => {
             return { isRelatedConviction: true, applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
           }
@@ -20,6 +23,35 @@ describe('Any convictions page handler', () => {
 
     const { getData } = await import('../any-conviction/any-convictions.js')
     expect(await getData(request)).toStrictEqual({ yesNo: true })
+  })
+
+  it('getData sets the journey tag to be in-progress', async () => {
+    const mockTagFn = jest.fn()
+
+    jest.doMock('../../common/tag-functions.js', () => ({
+      moveTagInProgress: mockTagFn,
+      isCompleteOrConfirmed: (tagState) => (tagState === 'complete') || (tagState === 'complete-not-confirmed')
+    }))
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        APPLICATION: {
+          getById: () => {
+            return { isRelatedConviction: true, applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
+    }
+
+    const { getData } = await import('../any-conviction/any-convictions.js')
+    await getData(request)
+    expect(mockTagFn).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c', 'declare-convictions')
   })
 
   it('getData returns there are no any convictions', async () => {
@@ -166,5 +198,58 @@ describe('Any convictions page handler', () => {
 
     const { completion } = await import('../any-conviction/any-convictions.js')
     expect(await completion(request)).toBe('/conviction-details')
+  })
+
+  it('the checkData returns the user to the cya page if the journey is complete', async () => {
+    const mockRedirect = jest.fn()
+    const request = {
+      headers: {
+        referer: 'https://www.defra.com/tasklist'
+      },
+      cache: () => ({
+        getData: () => ({ applicationId: '123abc' })
+      })
+    }
+    const h = {
+      redirect: mockRedirect
+    }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'complete', set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const { checkData } = await import('../any-conviction/any-convictions.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/convictions-check-answers')
+  })
+
+  it('the checkData returns null is the journey isnt complete', async () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({ applicationId: '123abc' })
+      })
+    }
+    const h = {}
+    jest.doMock('../../../services/api-requests.js', () => ({
+      tagStatus: {
+        COMPLETE: 'complete'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => {
+            return { get: () => 'in-progress', set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const { checkData } = await import('../any-conviction/any-convictions.js')
+    expect(await checkData(request, h)).toBeNull()
   })
 })
