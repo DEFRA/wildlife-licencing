@@ -1,0 +1,48 @@
+import pageRoute from '../../../routes/page-route.js'
+import { workActivityURIs } from '../../../uris.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+
+const {
+  APPLICATION_CATEGORY: {
+    BARN_CONVERSION,
+    COMMERCIAL,
+    COMMUNICATIONS,
+    ENERGY_GENERATION__ENERGY_SUPPLY,
+    FLOOD_AND_COASTAL_DEFENCES,
+    HOUSING__NON_HOUSEHOLDER,
+    INDUSTRIAL__MANUFACTURING,
+    MINERAL_EXTRACTION__QUARRYING,
+    NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
+    PUBLIC_BUILDINGS_AND_LAND,
+    TOURISM__LEISURE,
+    TRANSPORT__HIGHWAYS,
+    WASTE_MANAGEMENT,
+    WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT
+  }
+} = PowerPlatformKeys
+
+export const getData = async request => {
+  return {
+    developmentType: '', // todo: whatever the user selects
+    BARN_CONVERSION,
+    COMMERCIAL,
+    COMMUNICATIONS,
+    ENERGY_GENERATION__ENERGY_SUPPLY,
+    FLOOD_AND_COASTAL_DEFENCES,
+    HOUSING__NON_HOUSEHOLDER,
+    INDUSTRIAL__MANUFACTURING,
+    MINERAL_EXTRACTION__QUARRYING,
+    NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
+    PUBLIC_BUILDINGS_AND_LAND,
+    TOURISM__LEISURE,
+    TRANSPORT__HIGHWAYS,
+    WASTE_MANAGEMENT,
+    WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT
+  }
+}
+
+export default pageRoute({
+  uri: workActivityURIs.WORK_CATEGORY.uri,
+  page: workActivityURIs.WORK_CATEGORY.page,
+  completion: workActivityURIs.LICENCE_COST.uri
+})

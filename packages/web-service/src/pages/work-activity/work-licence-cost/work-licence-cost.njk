@@ -1,0 +1,29 @@
+{% extends "information-page.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set title = 'Cost of this licence' %}
+
+{% block pageContent %}
+  <p class="govuk-body">The cost of this licence ranges from £171 to £768.</p>
+
+  <p class="govuk-body">The cost varies depending on how complex your application is. Things that affect this include:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+      <li>the number of setts affected</li>
+      <li>whether a protected site is affected</li>
+      <li>whether badgers will be present</li>
+      <li>likely impact on badgers</li>
+      <li>methods used</li>
+      <li>completeness and conciseness of the information in the application</li>
+  </ul>
+
+  <p class="govuk-body">The cost may be more if you need to make a change to your application once you have submitted it.</p>  
+
+  {{ govukButton({
+    text: 'Continue',
+    name: 'continue',
+    attributes: { id: 'continue' },
+    preventDoubleClick: true
+  }) }}
+  
+{% endblock %}

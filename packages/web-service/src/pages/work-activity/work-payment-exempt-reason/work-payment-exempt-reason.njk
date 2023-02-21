@@ -1,0 +1,78 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'habitat-types': {
+          'any.required': { ref: '#habitat-types', text: 'Enter a sett type' }
+        },
+        'exempt-details': {
+          'string.empty': { ref: '#exempt-details', text: 'You have not entered a postcode' },
+          'string.pattern.base': { ref: '#exempt-details', text: 'You have not entered a correct postcode' }
+        }
+    }
+%}
+
+{% set title = 'What are the badgers using this sett for?' %}
+
+{% set detailsHTML %}
+  {{ govukTextarea({
+    name: "exempt-details",
+    id: "exempt-details",
+    hint: {
+      text: "Provide more detail on the reason you think your development is exempt from license payments."
+    }
+  }) }}
+{% endset -%}
+
+{% block pageContent %}
+
+  {{ govukRadios({
+    id: "habitat-types",
+    name: "habitat-types",
+    hint: {
+      text: "Select one option."
+    },
+    errorMessage: { text: "Select a sett type." } if error['habitat-types'],
+    items: [
+      {
+        checked: data.exemptReason === data.REGISTERED_PLACES_OF_WORSHIP,
+        value: data.REGISTERED_PLACES_OF_WORSHIP,
+        text: 'Registered places of worship'
+      },
+      {
+        checked: data.exemptReason === data.SCHEDULED_MONUMENTS,
+        value: data.SCHEDULED_MONUMENTS,
+        text: 'Scheduled monuments'
+      },
+      {
+        checked: data.exemptReason === data.LISTED_BUILDINGS,
+        value: data.LISTED_BUILDINGS,
+        text: 'Listed buildings'
+      },
+      {
+        checked: data.exemptReason === data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+        value: data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+        text: 'Traditional farm buildings in a countryside stewardship agreement'
+      },
+      {
+        checked: data.exemptReason === data.HOUSEHOLDER_HOME_IMPROVEMENTS,
+        value: data.HOUSEHOLDER_HOME_IMPROVEMENTS,
+        text: 'Homes being improved through householder planning permission or permitted development'
+      },
+      {
+        divider: "or"
+      },
+      {
+        checked: data.exemptReason === data.OTHER,
+        value: data.OTHER,
+        text: 'Other',
+        conditional: {
+          html: detailsHTML
+        }
+      }
+    ]
+  }) }}
+
+{% endblock %}
