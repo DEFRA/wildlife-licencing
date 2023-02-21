@@ -3,7 +3,7 @@ import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import db from 'debug'
 const debug = db('api:submission')
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)

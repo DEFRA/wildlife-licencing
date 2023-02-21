@@ -241,7 +241,7 @@ function assignColumns (payload, tableColumnsPayload, contentId, table, updateOb
     contentId: contentId,
     assignments: Object.assign(tableColumnsPayload.columnPayload,
       substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-    powerAppsId: keys.sddsKey,
+    powerAppsId: keys?.sddsKey,
     method: keys?.sddsKey ? Methods.PATCH : Methods.POST
   })
   contentId++

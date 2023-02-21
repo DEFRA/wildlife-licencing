@@ -34,6 +34,7 @@
     "@defra/wls-powerapps-lib": "^11.2.1-alpha.0",
     "@defra/wls-queue-defs": "^10.0.1-alpha.0",
     "debug": "^4.3.3",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "sequelize": "^6.12.5"
   }
 }
