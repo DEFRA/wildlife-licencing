@@ -1,8 +1,9 @@
 {% extends "information-page.njk" %}
-{% from "summary-list/macro.njk" import govukSummaryList %}
-{% from "table/macro.njk" import govukTable %}
 {% import "common-text.njk" as descriptions %}
 {% import "applications-text.njk" as text %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "table/macro.njk" import govukTable %}
 
 {% set widthClass = 'govuk-grid-column-two-thirds' %}
 {% set title = 'Licence application' %}
@@ -23,7 +24,7 @@
 {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
     {% set tableRows = [] %}
     {% for licence in data.licences %}
-        {{ tableRows.push([  { text: licence.licenceNumber },  { text: licence.startDate }, { text: licence.endDate } ]) }}
+        {{ tableRows.push([  { text: licence.licenceNumber },  { text: licence.startDate }, { text: licence.endDate }, { text: licence.lastSent } ]) }}
     {% endfor %}
 {% endif %}
 
@@ -37,7 +38,8 @@
           head: [
             { text: "Licence number" },
             { text: "Valid from" },
-            { text: "Expires" }
+            { text: "Expires" },
+            { text: "Emailed on" }
           ],
           rows: tableRows
         }) }}
