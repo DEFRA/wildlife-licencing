@@ -10,6 +10,7 @@ export const errorHandler = (request, h) => {
   if (!request.response.isBoom) {
     return h.continue
   }
+  console.log(' request?.response?.output ===>  ', request?.response)
   if (request?.response?.output?.statusCode === 404) {
     /*
      * 404 page not found errors

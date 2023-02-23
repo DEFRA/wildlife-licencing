@@ -1,0 +1,13 @@
+{% extends "information-page.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% set title = 'Tell us about each permission the project has got' %}
+{% block pageContent %}
+  <p class="govuk-body">For example, planning permission or listed building consent.</p>
+  <p class="govuk-body">You can add more than one permission.</p>
+  {{ govukButton({
+    text: 'Add the first oermission',
+    name: 'continue',
+    attributes: { id: 'continue' },
+    preventDoubleClick: true
+  }) }}
+{% endblock %}

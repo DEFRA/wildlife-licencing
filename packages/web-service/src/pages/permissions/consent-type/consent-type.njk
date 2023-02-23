@@ -1,0 +1,60 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% set errorMap = {
+    'consent-type-check': {
+      'any.required': { ref: '#consent-type-check', text: 'You have not selected an option' }
+    }
+  } %}
+{% set title = 'What permission has the project got?' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+    id: "consent-type-check",
+    name: "consent-type-check",
+    errorMessage: { text: 'Select an option' } if error['consent-type-check'],
+    items: [ 
+    {
+      value: data.PLANNING_PERMISSION,
+      text: "Planning permission",
+      checked: data.consentType === data.PLANNING_PERMISSION
+    },
+    {
+      value: data.DEMOLITION_CONSENT,
+      text: "Demolition consent",
+      checked: data.consentType === data.DEMOLITION_CONSENT
+    },
+    {
+      value: data.LISTED_BUILDING_CONSENT,
+      text: "Listed building consent",
+      checked: data.consentType === data.LISTED_BUILDING_CONSENT
+    },
+    {
+      value: data.HIGHWAYS_ACT_CONSENT,
+      text: "Highways Act consent",
+      checked: data.consentType === data.HIGHWAYS_ACT_CONSENT
+    },
+    {
+      value: data.MINERAL_CONSENT,
+      text: "Mineral consent",
+      checked: data.consentType === data.MINERAL_CONSENT
+    },
+    {
+      value: data.CONSERVATION_AREA_CONSENT,
+      text: "Conservation area consentr",
+      checked: data.consentType === data.CONSERVATION_AREA_CONSENT
+    },
+    {
+      value: data.TREE_PRESERVATION_ORDER,
+      text: "Tree preservation order",
+      checked: data.consentType === data.TREE_PRESERVATION_ORDER
+    },
+    {
+      value: data.UTILITIES_CONSENT,
+      text: "Utilities consent",
+      checked: data.consentType === data.UTILITIES_CONSENT
+    }
+  ]
+}) }}
+{% endblock %}
