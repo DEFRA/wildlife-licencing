@@ -33,7 +33,7 @@ export const PERMISSION = {
   createPermission: async (applicationId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Create a new permission with applicationId: ${applicationId}`)
-      return await API.post(`${apiUrls.APPLICATION}/${applicationId}/permission`, payload)
+      return API.post(`${apiUrls.APPLICATION}/${applicationId}/permission`, payload)
     },
     `Error creating a new permission with applicationId ${applicationId}`,
     500

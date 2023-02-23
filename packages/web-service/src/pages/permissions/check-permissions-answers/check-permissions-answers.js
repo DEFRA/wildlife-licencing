@@ -10,9 +10,8 @@ const addPermissionRadio = 'add-another-permission'
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const permissionData = await APIRequests.PERMISSION.getPermissions(applicationId)
-  const data = getCheckYourAnswersData(permissionData)
 
-  return data
+  return getCheckYourAnswersData(permissionData)
 }
 
 export const completion = request => {
