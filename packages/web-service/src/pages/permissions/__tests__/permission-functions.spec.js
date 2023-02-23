@@ -4,16 +4,19 @@ describe('permission-functions', () => {
   it('getPermissionType', async () => {
     const { getPermissionType } = await import('../common/permission-functions.js')
     expect(await getPermissionType(452120004)).toStrictEqual('Mineral consent')
+    expect(await getPermissionType()).toBeUndefined()
   })
 
   it('getPermissionPlanningType', async () => {
     const { getPermissionPlanningType } = await import('../common/permission-functions.js')
     expect(await getPermissionPlanningType(452120002)).toStrictEqual('Hybrid')
+    expect(await getPermissionPlanningType()).toBeUndefined()
   })
 
   it('getPermissionReason', async () => {
     const { getPermissionReason } = await import('../common/permission-functions.js')
     expect(await getPermissionReason(452120001)).toStrictEqual('Health and safety')
+    expect(await getPermissionReason()).toBeUndefined()
   })
 
   it('getAuthorityName', async () => {
@@ -42,5 +45,33 @@ describe('permission-functions', () => {
 
     const { getAuthorityName } = await import('../common/permission-functions.js')
     expect(await getAuthorityName('5d64da5a-4276-ed11-81ad-0022481b5bf5')).toBe('Bromsgrove District Council')
+  })
+  it('getCheckYourAnswersData', async () => {
+    const { getCheckYourAnswersData } = await import('../common/permission-functions.js')
+    expect(await getCheckYourAnswersData(
+      [
+        {
+          id: '12345',
+          type: 12345,
+          referenceNumber: 'ref-123',
+          planningType: 'planningType',
+          planningTypeOtherDescription: 'planningTypeOtherDescription',
+          authority: '5d64da5a-4276-ed11-81ad-0022481b5bf5'
+        }
+      ]
+    )).toStrictEqual({
+      pageData: [
+        {
+          authority: 'Bromsgrove District Council',
+          changePermissionUrl: '/consent-type',
+          id: '12345',
+          planningType: undefined,
+          planningTypeOtherDescription: 'planningTypeOtherDescription',
+          referenceNumber: 'ref-123',
+          removePermissionUrl: '/consent-remove',
+          type: undefined
+        }
+      ]
+    })
   })
 })

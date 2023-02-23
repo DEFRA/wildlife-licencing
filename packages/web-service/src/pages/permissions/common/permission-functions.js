@@ -1,7 +1,9 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../../services/api-requests.js'
+import { permissionsURIs } from '../../../uris.js'
 
 export const getPermissionType = permissionTypeValue => {
+  let permissionType
   const permissionTypeText = {
     PLANNING_PERMISSION: 'Planning permission',
     DEMOLITION_CONSENT: 'Demolition consent',
@@ -15,12 +17,14 @@ export const getPermissionType = permissionTypeValue => {
 
   for (const [key, value] of Object.entries(PowerPlatformKeys.PERMISSION_TYPE)) {
     if (value === permissionTypeValue) {
-      return permissionTypeText[key]
+      permissionType = permissionTypeText[key]
     }
   }
+  return permissionType
 }
 
 export const getPermissionPlanningType = permissionPlanningTypeValue => {
+  let permissionPlanningType
   const permissionPlanningTypeText = {
     FULL: 'Full',
     OUTLINE: 'Outline',
@@ -30,12 +34,14 @@ export const getPermissionPlanningType = permissionPlanningTypeValue => {
 
   for (const [key, value] of Object.entries(PowerPlatformKeys.PLANNING_PERMISSION_TYPE)) {
     if (value === permissionPlanningTypeValue) {
-      return permissionPlanningTypeText[key]
+      permissionPlanningType = permissionPlanningTypeText[key]
     }
   }
+  return permissionPlanningType
 }
 
 export const getPermissionReason = permissionReasonValue => {
+  let permissionReason
   const permissionReasonText = {
     PERMITTED_DEVELOPMENT: 'Permitted development',
     HEALTH_AND_SAFETY: 'Health and safety'
@@ -43,12 +49,33 @@ export const getPermissionReason = permissionReasonValue => {
 
   for (const [key, value] of Object.entries(PowerPlatformKeys.NO_PERMISSION_REQUIRED)) {
     if (value === permissionReasonValue) {
-      return permissionReasonText[key]
+      permissionReason = permissionReasonText[key]
     }
   }
+  return permissionReason
 }
 
 export const getAuthorityName = async authorityId => {
   const authorities = await APIRequests.OTHER.authorities()
   return authorities.find(a => a.id === authorityId)?.name
+}
+
+export const getCheckYourAnswersData = async permissionData => {
+  const data = {
+    pageData: []
+  }
+  const removePermissionUrl = permissionsURIs.CONSENT_REMOVE.uri
+  const changePermissionUrl = permissionsURIs.CONSENT_TYPE.uri
+
+  for (const permission of permissionData) {
+    const id = permission.id
+    const type = getPermissionType(permission?.type)
+    const planningType = getPermissionPlanningType(permission?.planningType)
+    const referenceNumber = permission?.referenceNumber
+    const planningTypeOtherDescription = permission?.planningTypeOtherDescription
+    const authority = await getAuthorityName(permission?.authority)
+    const permissionInfo = Object.assign(permission, { id, type, planningType, referenceNumber, planningTypeOtherDescription, authority, removePermissionUrl, changePermissionUrl })
+    data.pageData.push(permissionInfo)
+  }
+  return data
 }
