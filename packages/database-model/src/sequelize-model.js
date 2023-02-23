@@ -358,6 +358,27 @@ async function definePreviousLicences (sequelize) {
   })
 }
 
+async function defineApplicationDesignatedSites (sequelize) {
+  models.applicationDesignatedSites = await sequelize.define('application-designated-sites', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    applicationId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.applications,
+        key: 'id'
+      }
+    },
+    designatedSite: { type: DataTypes.JSONB },
+    sddsDesignatedSite: { type: DataTypes.UUID },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['application_id'], name: 'designated_site_application_fk' }
+    ]
+  })
+}
+
 const ReferenceDataType = {
   attributes: {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -519,6 +540,7 @@ const createModels = async () => {
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
   await definePermissions(sequelize)
+  await defineApplicationDesignatedSites(sequelize)
 
   await defineApplicationUsers(sequelize)
 
@@ -583,7 +605,7 @@ const createModels = async () => {
   await models.permissions.sync()
   await models.sites.sync()
   await models.applicationUsers.sync()
-
+  await models.applicationDesignatedSites.sync()
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()

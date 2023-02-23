@@ -747,6 +747,177 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  ################################################################################################
+  # Application designated sites
+  ################################################################################################
+  '/application/{applicationId}/designated-sites':
+    get:
+      description: Get the designated sites for an application
+      summary: Get the designated sites for an application
+      operationId: getApplicationDesignatedSites
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSites'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/designated-site':
+    post:
+      description: Create a designated site for an application
+      summary: Create a designated sites for an application
+      operationId: postApplicationDesignatedSite
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/application/{applicationId}/designated-sites/{designatedSiteId}':
+    get:
+      description: Get an application designated site for an application
+      summary: Get an application designated for an application
+      operationId: getApplicationDesignatedSite
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: designatedSiteId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+        400:
+          description: Bad request. Application-account ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Put an application designated for an application
+      summary: Get the an application designated for a granted application
+      operationId: putApplicationDesignatedSite
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: designatedSiteId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+        400:
+          description: Bad request. Application-account ID must be a uuid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: An application-account with the specified ID was not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an application designated for an application
+      summary:  Delete an application designated for an application
+      operationId: deleteApplicationDesignatedSite
+      parameters:
+        - name: applicationId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: designatedSiteId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The licence has been deleted
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Previous licences
 ################################################################################################
@@ -3081,6 +3252,8 @@ components:
           type: number
         exemptFromPayment:
           type: boolean
+        onOrNextToDesignatedSite:
+          type: boolean
         applicationTypeId:
           $ref: '#/components/schemas/uuid'
         applicationPurposeId:
@@ -3187,6 +3360,32 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    applicationDesignatedSites:
+      type: array
+      items:
+        $ref: '#/components/schemas/applicationDesignatedSite'
+
+    applicationDesignatedSite:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        designatedSiteId:
+          $ref: '#/components/schemas/uuid'
+        permissionFromOwner:
+          type: boolean
+        detailsOfPermission:
+          type: string
+          maxLength: 4000
+        adviceFromNaturalEngland:
+          type: boolean
+        adviceFromWho:
+          type: string
+        adviceDescription:
+          type: string
+        onSiteOrCloseToSite:
+          $ref: '#/components/schemas/option'
 
     applicationFileUploads:
       type: array

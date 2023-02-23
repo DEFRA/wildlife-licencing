@@ -13,6 +13,7 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationcategory', 'applicationCategory'),
   new Column('sdds_licenceexempted', 'exemptFromPayment'),
   new Column('sdds_nsiproject', 'nationallySignificantInfrastructure'),
+  new Column('sdds_designatedsites', 'onOrNextToDesignatedSite'),
 
   // The Eligibility section
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
