@@ -2831,6 +2831,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/designated-sites':
+    get:
+      description: Get the designated sites reference data
+      summary: Get the designated sites reference data
+      operationId: getDesignatedSites
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/designatedSites'
+
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+
   '/application-contacts/contacts':
     get:
       description: Get all the contact/roles for all applications created by a user
@@ -3294,6 +3318,23 @@ components:
         - AUTHORISED-PERSON
         - ADDITIONAL-APPLICANT
         - ADDITIONAL-ECOLOGIST
+
+    designatedSite:
+      type: object
+      properties:
+        siteName:
+          type: string
+        siteCode:
+          type: string
+        siteGridReference:
+          type: string
+        siteType:
+          $ref: '#/components/schemas/option'
+
+    designatedSites:
+      type: array
+      items:
+        $ref: '#/components/schemas/designatedSite'
 
     habitatSite:
       type: object

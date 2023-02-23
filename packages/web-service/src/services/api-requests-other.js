@@ -3,6 +3,8 @@ import { API } from '@defra/wls-connectors-lib'
 
 export const OTHER = {
   authorities: async () => apiRequestsWrapper(async () => API.get('/authorities'), 'Error fetching authorities', 500),
+  designatedSites: async () => apiRequestsWrapper(async () => API.get('/designated-sites'), 'Error fetching designated sites', 500),
+
   /**
    * The hidden reset handler
    * @returns {Promise<*|undefined>}
