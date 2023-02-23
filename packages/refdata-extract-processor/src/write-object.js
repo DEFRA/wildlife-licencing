@@ -132,6 +132,16 @@ export const writeAuthorities = async ({ data, keys }) => {
   return { update: 1 }
 }
 
+export const writeDesignatedSites = async ({ data, keys }) => {
+  const v = Object.values(data)[0]
+  return generalUpsert(models.designatedSites, keys[0].powerAppsKey, {
+    siteName: v?.siteName,
+    siteCode: v?.siteCode,
+    siteGridReference: v?.siteGridReference,
+    siteType: v?.siteType
+  })
+}
+
 export const writeApplicationApplicationPurpose = async ({ keys }) => {
   const applicationTypeId = keys.find(k => k.apiTable === 'applicationTypes').powerAppsKey
   const purposeIds = keys.filter(k => k.apiTable === 'applicationPurposes').map(k => k.powerAppsKey)

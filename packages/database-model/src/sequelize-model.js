@@ -384,6 +384,10 @@ async function defineAuthorities (sequelize) {
   models.authorities = await sequelize.define('authorities', ReferenceDataType.attributes, ReferenceDataType.options)
 }
 
+async function defineDesignatedSites (sequelize) {
+  models.designatedSites = await sequelize.define('designated-sites', ReferenceDataType.attributes, ReferenceDataType.options)
+}
+
 async function defineMethods (sequelize) {
   models.methods = await sequelize.define('methods', Object.assign({
     option: { type: DataTypes.BIGINT }
@@ -531,6 +535,7 @@ const createModels = async () => {
   await defineApplicationPurposes(sequelize)
   await defineActivities(sequelize)
   await defineAuthorities(sequelize)
+  await defineDesignatedSites(sequelize)
   await defineMethods(sequelize)
   await defineSpeciesSubject(sequelize)
   await defineSpecies(sequelize)
@@ -589,6 +594,7 @@ const createModels = async () => {
   await models.applicationPurposes.sync()
   await models.activities.sync()
   await models.authorities.sync()
+  await models.designatedSites.sync()
   await models.methods.sync()
   await models.speciesSubject.sync()
   await models.species.sync()
