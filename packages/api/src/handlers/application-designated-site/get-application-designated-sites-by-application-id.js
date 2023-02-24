@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { prepareResponse } from './application-designated-site-proc.js'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { applicationId } = context.request.params
     const application = await models.applications.findByPk(applicationId)
