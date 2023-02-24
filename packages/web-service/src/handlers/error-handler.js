@@ -10,7 +10,6 @@ export const errorHandler = (request, h) => {
   if (!request.response.isBoom) {
     return h.continue
   }
-  console.log(request?.response?.output)
 
   if (request?.response?.output?.statusCode === 404) {
     /*
