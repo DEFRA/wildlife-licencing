@@ -103,26 +103,6 @@ export const buildApiObject = async applicationId => {
     })
   }
 
-  // Which roles, if any is the user on
-  const contactRolesAreUser = contactRoles.filter(cr => cr.isUser)
-  for (const userContact of contactRolesAreUser) {
-    if (['ADDITIONAL-APPLICANT', 'ADDITIONAL-ECOLOGIST', 'PAYER'].includes(userContact.contactRole)) {
-      // Add only the contact, if the contact is not also the primary
-      if (!contactIds.find(ids => userContact.id === ids)) {
-        contactIds.push(userContact.id)
-        payload.emailLicence.push({
-          data: {
-            sddsApplicationId: applicationResult.sddsApplicationId,
-            sddsContactId: userContact.sddsContactId
-          },
-          keys: {
-            apiKey: applicationResult.id
-          }
-        })
-      }
-    }
-  }
-
   debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
   return payload
 }

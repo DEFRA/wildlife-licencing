@@ -41,32 +41,11 @@ const ECOLOGIST_1 = {
   userId: null
 }
 
-const ECOLOGIST_2 = {
-  id: '8dc10626-c761-440c-b254-b7937d064372',
-  sddsContactId: '74b69e45-07b8-4688-a387-210dd6deff26',
-  userId: 'b879e06b-a0e3-4962-9a4d-4e6010e721f6'
-}
-
 const APPLICATION_ECOLOGIST_1 = {
   id: '412d7297-643d-485b-8745-cc25a0e6ec0a',
   applicationId: APPLICATION.id,
   contactId: ECOLOGIST_1.id,
   contactRole: 'ECOLOGIST'
-}
-
-const APPLICATION_ECOLOGIST_2 = {
-  id: '412d7297-643d-485b-8745-cc25a0e6ec0g',
-  applicationId: APPLICATION.id,
-  contactId: ECOLOGIST_2.id,
-  contactRole: 'ADDITIONAL-ECOLOGIST'
-}
-
-// Shares record of the applicant
-const APPLICATION_ECOLOGIST_2B = {
-  id: '412d7297-643d-485b-8745-cc25a0e6ec0g',
-  applicationId: APPLICATION.id,
-  contactId: APPLICANT_1.id,
-  contactRole: 'ADDITIONAL-ECOLOGIST'
 }
 
 const ECOLOGIST_ORGANISATION_1 = {
@@ -168,86 +147,6 @@ describe('The licence-resend job processor', () => {
           }
         }
       ]))
-    })
-
-    it('result includes the alternate contact if the user is set applicant organisations and ecologist contact', async () => {
-      jest.doMock('@defra/wls-powerapps-lib', () => ({}))
-      jest.doMock('@defra/wls-database-model', () => ({
-        models: {
-          applications: { findByPk: () => APPLICATION },
-          applicationContacts: { findAll: () => [APPLICATION_APPLICANT_1, APPLICATION_ECOLOGIST_1, APPLICATION_ECOLOGIST_2] },
-          contacts: { findAll: () => [APPLICANT_1, ECOLOGIST_1, ECOLOGIST_2] },
-          applicationAccounts: { findAll: () => [APPLICATION_APPLICANT_ORGANISATION_1] },
-          accounts: { findAll: () => [APPLICANT_ORGANISATION_1] }
-        }
-      }))
-
-      const { buildApiObject } = await import('../licence-resend-job-process.js')
-      const result = await buildApiObject('2e6891ce-9f4d-4747-bd59-bb39de6cdaa3')
-      expect(result.emailLicence).toEqual(expect.arrayContaining([
-        {
-          data: {
-            sddsApplicationId: APPLICATION.sddsApplicationId,
-            sddsContactId: ECOLOGIST_1.sddsContactId
-          },
-          keys: {
-            apiKey: APPLICATION.id
-          }
-        },
-        {
-          data: {
-            sddsAccountId: APPLICANT_ORGANISATION_1.sddsAccountId,
-            sddsApplicationId: APPLICATION.sddsApplicationId
-          },
-          keys: {
-            apiKey: APPLICATION.id
-          }
-        },
-        {
-          data: {
-            sddsContactId: ECOLOGIST_2.sddsContactId,
-            sddsApplicationId: APPLICATION.sddsApplicationId
-          },
-          keys: {
-            apiKey: APPLICATION.id
-          }
-        }
-      ]))
-    })
-
-    it('result does not include the alternate contact if the user is set also on the applicant', async () => {
-      jest.doMock('@defra/wls-powerapps-lib', () => ({}))
-      jest.doMock('@defra/wls-database-model', () => ({
-        models: {
-          applications: { findByPk: () => APPLICATION },
-          applicationContacts: { findAll: () => [APPLICATION_APPLICANT_1, APPLICATION_ECOLOGIST_1, APPLICATION_ECOLOGIST_2B] },
-          contacts: { findAll: () => [APPLICANT_1, ECOLOGIST_1] },
-          applicationAccounts: { findAll: () => [] },
-          accounts: { findAll: () => [] }
-        }
-      }))
-
-      const { buildApiObject } = await import('../licence-resend-job-process.js')
-      const result = await buildApiObject('2e6891ce-9f4d-4747-bd59-bb39de6cdaa3')
-      expect(result.emailLicence).toEqual([{
-        data: {
-          sddsApplicationId: APPLICATION.sddsApplicationId,
-          sddsContactId: APPLICANT_1.sddsContactId
-        },
-        keys: {
-          apiKey: APPLICATION.id
-        }
-      },
-      {
-        data: {
-          sddsApplicationId: APPLICATION.sddsApplicationId,
-          sddsContactId: ECOLOGIST_1.sddsContactId
-        },
-        keys: {
-          apiKey: APPLICATION.id
-        }
-      }
-      ])
     })
   })
 
