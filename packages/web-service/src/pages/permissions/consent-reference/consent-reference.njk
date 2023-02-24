@@ -1,0 +1,26 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+  'reference': {
+    'string.empty': {
+      ref: '#reference',
+      text: 'You have not entered a planning permission reference'
+    }
+  }
+} %}
+
+{% set title = 'What is the ' + data.consentType + ' reference?' %}
+
+{% block pageContent %}
+
+  {{ govukInput({
+    id: "reference",
+    name: "reference",
+    errorMessage: { text: "Enter a planning permission reference" } if error['reference'],
+    classes: "govuk-input--width-10",
+    value: data.consentReference if data.consentReference or payload['reference']
+  }) }}
+
+{% endblock %}

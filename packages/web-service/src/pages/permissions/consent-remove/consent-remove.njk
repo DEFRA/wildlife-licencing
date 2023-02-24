@@ -1,0 +1,36 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'consent-remove': {
+          'any.required': { ref: '#consent-remove', text: 'Select yes if you want to delete this permission' }
+        }
+    }
+%}
+
+{% set title = 'Do you want to remove this ' + data.permissionType + '?' %}
+
+{% block pageContent %}
+  <p class="govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+    <span class="govuk-!-font-weight-bold">{{ data.permissionType }}</span><br>
+    Reference: {{ data.consentReference }}
+  </p>
+
+  {{ govukRadios({
+    id: "consent-remove",
+    name: "consent-remove",
+    errorMessage: { text: "Select an option." } if error['consent-remove'],
+    items: [
+      {
+        value: true,
+        text: "Yes"
+      },
+      {
+        value: false,
+        text: "No"
+      }
+    ]
+  }) }}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% set errorMap = {
+    'potential-conflicts': {
+      'any.required': { ref: '#potential-conflicts', text: 'You have not selected an option' }
+    }
+  } %}
+{% set title = 'Are there any potential conflicts between this application and other legal commitments?' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+            id: "potential-conflicts",
+            name: "potential-conflicts",
+            errorMessage: { text: 'Select an option' } if error['potential-conflicts'],
+            hint: { text: 'For example, a Section 106 agreement or an Environmental Statement.' },
+            items: [
+              {
+                value: true,
+                text: "Yes",
+                checked: payload['potential-conflicts'] === true or true if data.potentialConflictsValue === true
+              },
+              {
+                value: false,
+                text: "No",
+                checked: payload['potential-conflicts'] === false or true if  data.potentialConflictsValue === false
+              }
+            ]
+          }) }}
+{% endblock %}

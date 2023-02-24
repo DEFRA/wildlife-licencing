@@ -1,0 +1,60 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% set errorMap = {
+    'planning-type': {
+      'any.required': { ref: '#planning-type', text: 'You have not selected an option' }
+    },
+    'other-description': {
+      'string.empty': { ref: '#other-description', text: 'You have not entered other type of planning permission' }
+    }
+  } %}
+{% set title = 'What permission has the project got?' %}
+{% set planningTypeOtherDescHtml %}
+{{ govukInput({
+  id: "other-description",
+  name: "other-description",
+  errorMessage: { text: 'Enter a reason' } if error['other-description'],
+  value: data.otherDescription if data.otherDescription else payload['other-description'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Enter the other type of planning permission"
+  }
+}) }}
+{% endset -%}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+    id: "planning-type",
+    name: "planning-type",
+    errorMessage: { text: 'Select an option' } if error['planning-type'],
+    hint: { text: 'Check your planning permission documents if you are unsure what permission type you have.' },
+    items: [ 
+    {
+      value: data.FULL,
+      text: "Full",
+      checked: data.planningTypeValue === data.FULL
+    },
+    {
+      value: data.OUTLINE,
+      text: "Outline",
+      checked: data.planningTypeValue === data.OUTLINE
+    },
+    {
+      value: data.HYBRID,
+      text: "Hybrid",
+      checked: data.planningTypeValue === data.HYBRID
+    },
+    {
+      value: data.OTHER,
+      text: "Other",
+      checked: data.planningTypeValue === data.OTHER,
+      conditional: { 
+        html: planningTypeOtherDescHtml
+      }
+    }
+  ]
+}) }}
+{% endblock %}

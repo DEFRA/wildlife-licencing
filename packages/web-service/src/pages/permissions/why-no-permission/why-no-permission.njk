@@ -1,0 +1,54 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% set errorMap = {
+    'no-permission': {
+      'any.required': { ref: '#no-permission', text: 'You have not selected an option' }
+    },
+    'other-reason': {
+      'string.empty': { ref: '#other-reason', text: 'You have not entered other reason' }
+    }
+  } %}
+{% set otherReasonNoPermissionHtml %}
+{{ govukInput({
+  id: "other-reason",
+  name: "other-reason",
+  errorMessage: { text: 'Enter a reason' } if error['other-reason'],
+  value: data.noPermissionRequiredReason if data.noPermissionRequiredReason else payload['other-reason'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Enter the other reason no permission is required"
+  }
+}) }}
+{% endset -%}
+{% set title = 'Why is no permission required?' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+            id: "no-permission",
+            name: "no-permission",
+            errorMessage: { text: 'Select an option' } if error['no-permission'],
+            items: [
+              {
+                value: data.PERMITTED_DEVELOPMENT,
+                text: "Permitted development",
+                checked: data.noPermissionRequired === data.PERMITTED_DEVELOPMENT
+              },
+              {
+                value: data.HEALTH_AND_SAFETY,
+                text: "Health and safety",
+                checked: data.noPermissionRequired === data.HEALTH_AND_SAFETY
+              },
+              {
+                value: data.OTHER,
+                text: "Other",
+                checked: data.noPermissionRequired === data.OTHER,
+                conditional: {
+                  html: otherReasonNoPermissionHtml
+                }
+              }
+            ]
+          }) }}
+{% endblock %}

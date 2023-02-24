@@ -1,0 +1,67 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'add-another-permission': {
+          'any.required': { ref: '#add-another-permission', text: 'Select yes if you want to add another permission' }
+        }
+    }
+%}
+
+{% set title = 'You have added ' + data.pageData.length + ' permission' %}
+
+{% block pageContent %}
+  <dl class="govuk-summary-list">
+    {% for permission in data.pageData %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">{{ permission.type }}</dt>
+                <dd class="govuk-summary-list__value">
+                  <p>Planning authority: {{ permission.authority }}</p>
+                  {% if permission.planningType %}
+                    <p>Planning type: {{ permission.planningType }}</p>
+                  {% endif %}
+                  <p>Reference: {{ permission.referenceNumber }}</p>
+                </dd>
+                <dd class="govuk-summary-list__actions govuk-summary-list__value">
+                  <ul class="govuk-summary-list__actions-list">
+                    <li class="govuk-summary-list__actions-list-item">
+                      <a class="govuk-link" href={{permission.removePermissionUrl + "?id=" + permission.id}}  name: "remove-permission">
+                        Remove<span class="govuk-visually-hidden"> {{ permission.type }}</span>
+                      </a>
+                  </li>
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link" href={{permission.changePermissionUrl + "?id=" + permission.id}}  name: "change-permission">
+                      Change<span class="govuk-visually-hidden"> {{ permission.type }}</span>
+                    </a>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+          {% endfor %}
+  </dl>
+  {{ govukRadios({
+            id: "add-another-permission",
+            name: "add-another-permission",
+            errorMessage: { text: 'Select an option' } if error['add-another-permission'],
+            fieldset: {
+              legend: {
+                text: "Do you want to add another permission?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: [
+              {
+                value: 'yes',
+                text: "Yes",
+                checked: true if payload['add-another-permission'] === 'yes'
+              },
+              {
+                value: 'no',
+                text: "No",
+                checked: payload['add-another-permission'] === 'no'
+              }
+            ]
+          }) }}
+
+{% endblock %}
