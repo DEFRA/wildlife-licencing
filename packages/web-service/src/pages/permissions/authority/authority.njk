@@ -24,6 +24,7 @@
         text: "Choose your planning authority"
       },
       errorMessage: { text: "Enter the authority." } if error['id'],
+      defaultValue: data.selected if data.slected,
       items: items
     }) }}
 </div>
@@ -54,6 +55,7 @@
                 id: 'autocomplete',
                 onConfirm: a => document.querySelector('#autocomplete-input').value = lookup.find(l => l.name === a).id,
                 confirmOnBlur: false,
+                defaultValue: data.selected if data.slected,
                 source: names
             })
 

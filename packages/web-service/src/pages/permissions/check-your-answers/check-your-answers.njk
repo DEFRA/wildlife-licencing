@@ -1,0 +1,123 @@
+{% extends "standard-form.njk" %}
+
+{% set title = 'Check your answers' %}
+
+{% block pageContent %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Does the project need any permissions?</dt>
+       {% if data.eligibility.permissionsRequired %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/permissions">
+          Change<span class="govuk-visually-hidden">Does the project need any permissions?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  <dl class="govuk-summary-list">
+
+    {% for permission in data.pageData %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">{{ permission.type }}</dt>
+      <dd class="govuk-summary-list__value">
+        <p>Planning authority: {{ permission.authority }}</p>
+        {% if permission.planningType %}
+        <p>Planning type: {{ permission.planningType }}</p>
+        {% endif %}
+        <p>Reference: {{ permission.referenceNumber }}</p>
+      </dd>
+      <dd class="govuk-summary-list__actions govuk-summary-list__value">
+        <ul class="govuk-summary-list__actions-list">
+          <li class="govuk-summary-list__actions-list-item">
+            <a class="govuk-link" href={{permission.removePermissionUrl + "?id=" + permission.id}}  name: "remove-permission">
+              Remove<span class="govuk-visually-hidden"> {{ permission.type }}</span>
+            </a>
+          </li>
+          <li class="govuk-summary-list__actions-list-item">
+            <a class="govuk-link" href={{permission.changePermissionUrl + "?id=" + permission.id}}  name: "change-permission">
+              Change<span class="govuk-visually-hidden"> {{ permission.type }}</span>
+            </a>
+          </li>
+        </ul>
+      </dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <dl class="govuk-summary-list">
+    {% if data.permissionDetails.noPermissionReason %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Why is no permission required?</dt>
+      {% if data.permissionDetails.noPermissionDescription %}
+        <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionDescription }}</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionReason }}</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/why-no-permission">
+          Change<span class="govuk-visually-hidden">Why is no permission required?</span>
+        </a>
+      </dd>
+    </div>
+    {% endif %}
+  </dl>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Have all other wildlife or habitat-related conditions been met?</dt>
+       {% if data.permissionDetails.allOtherConditionsMet %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/conditions-reserved-matters">
+          Change<span class="govuk-visually-hidden">Have all other wildlife or habitat-related conditions been met?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  <dl class="govuk-summary-list">
+    {% if data.permissionDetails.conditionsNotMetReason %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Which wildlife or habitat related conditions have not been completed?</dt>
+        <dd class="govuk-summary-list__value">{{ data.permissionDetails.conditionsNotMetReason }}</dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/conditions-not-completed">
+          Change<span class="govuk-visually-hidden">Which wildlife or habitat related conditions have not been completed?</span>
+        </a>
+      </dd>
+    </div>
+    {% endif %}
+  </dl>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Are there any other legal commitments that affect protected species on the site?</dt>
+       {% if data.permissionDetails.potentialConflicts %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/potential-conflicts">
+          Change<span class="govuk-visually-hidden">Are there any other legal commitments that affect protected species on the site?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  <dl class="govuk-summary-list">
+    {% if data.permissionDetails.potentialConflictDescription %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Describe the potential conflicts between this application and other legal commitments</dt>
+        <dd class="govuk-summary-list__value">{{ data.permissionDetails.potentialConflictDescription }}</dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/describe-potential-conflicts">
+          Change<span class="govuk-visually-hidden">Describe the potential conflicts between this application and other legal commitments</span>
+        </a>
+      </dd>
+    </div>
+    {% endif %}
+  </dl>
+{% endblock %}
