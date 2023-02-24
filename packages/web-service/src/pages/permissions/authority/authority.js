@@ -2,6 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import Joi from 'joi'
 import { permissionsURIs } from '../../../uris.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 export const getData = async request => {
   const authorities = await APIRequests.OTHER.authorities()
@@ -43,7 +44,7 @@ export const completion = async request => {
   const { applicationId, permissionData } = journeyData
   const permissionId = permissionData?.sddsPermissionsId
   const permission = await APIRequests.PERMISSION.getPermission(applicationId, permissionId)
-  if (parseInt(permission?.type) === 452120000) {
+  if (parseInt(permission?.type) === PowerPlatformKeys.PERMISSION_TYPE.PLANNING_PERMISSION) {
     return permissionsURIs.PLANNING_TYPE.uri
   }
 

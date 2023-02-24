@@ -44,12 +44,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  const { applicationId } = await request.cache().getData()
   const pageData = request.payload[permissionsRadio]
-  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.PERMISSIONS)
-  if (isCompleteOrConfirmed(tagState)) {
-    return permissionsURIs.CHECK_YOUR_ANSWERS.uri
-  }
   if (pageData === 'no') {
     return permissionsURIs.WHY_NO_PERMISSIONS.uri
   }

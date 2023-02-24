@@ -3,8 +3,6 @@ import pageRoute from '../../../routes/page-route.js'
 import { permissionsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
-import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 
 const wildLifeConditionsRadio = 'conditions-met'
 
@@ -29,11 +27,6 @@ export const setData = async request => {
 
 export const completion = async request => {
   const allOtherConditionsMetValue = request?.payload[wildLifeConditionsRadio]
-  const { applicationId } = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.PERMISSIONS)
-  if (isCompleteOrConfirmed(tagState)) {
-    return permissionsURIs.CHECK_YOUR_ANSWERS.uri
-  }
 
   if (allOtherConditionsMetValue) {
     return permissionsURIs.POTENTIAL_CONFLICTS.uri
