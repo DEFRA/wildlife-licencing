@@ -10,6 +10,7 @@ const initialize = async () => {
   await createModels()
   await REDIS.initialiseConnection()
   await createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.LICENCE_RESEND_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.FILE_QUEUE, { type: 'client' })
 }
 

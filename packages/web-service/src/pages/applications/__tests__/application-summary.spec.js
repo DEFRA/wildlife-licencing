@@ -73,6 +73,46 @@ describe('application-summary page', () => {
     })
   })
 
+  describe('send events', () => {
+    it('findLastSentEvent sorts the send events correctly', async () => {
+      const { findLastSentEvent } = await import('../application-summary.js')
+      const result = findLastSentEvent({
+        annotations: [
+          {
+            filename: '2023-510300-BAD-LIC-licence document.pdf',
+            mimetype: 'application/pdf',
+            modifiedOn: '2023-02-21T09:03:14Z',
+            objectTypeCode: 'sdds_license'
+          },
+          {
+            filename: '2023-510300-BAD-LIC-licence document.pdf',
+            mimetype: 'application/pdf',
+            modifiedOn: '2023-02-20T11:03:14Z',
+            objectTypeCode: 'sdds_license'
+          }
+        ]
+      })
+      expect(result).toEqual({
+        filename: '2023-510300-BAD-LIC-licence document.pdf',
+        mimetype: 'application/pdf',
+        modifiedOn: '2023-02-21T09:03:14Z',
+        objectTypeCode: 'sdds_license'
+      })
+    })
+
+    it('findLastSentEvent returns null with no annotations', async () => {
+      const { findLastSentEvent } = await import('../application-summary.js')
+      const result = findLastSentEvent({ })
+      expect(result).toBeNull()
+    })
+
+    it('findLastSentEvent returns null with no events', async () => {
+      const { findLastSentEvent } = await import('../application-summary.js')
+      const result = findLastSentEvent({ annotations: [] })
+      expect(result).toBeNull()
+    })
+  })
+
   describe('statues', () => {
     it('are as expected', async () => {
       const { statuses } = await import('../application-summary.js')
@@ -83,7 +123,9 @@ describe('application-summary page', () => {
         100000002: 'UNDER_ASSESSMENT',
         100000004: 'GRANTED',
         100000005: 'PAUSED',
-        100000008: 'NOT_GRANTED'
+        100000006: 'WITHDRAWN',
+        100000008: 'NOT_GRANTED',
+        452120001: 'EXPIRED'
       })
     })
   })
@@ -156,7 +198,8 @@ describe('application-summary page', () => {
           endDate: '26 August 2022',
           id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
           licenceNumber: 'LI-0016N0Z4',
-          startDate: '10 August 2022'
+          startDate: '10 August 2022',
+          lastSent: null
         }]
       }))
     })

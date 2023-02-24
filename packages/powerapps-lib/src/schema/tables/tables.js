@@ -9,14 +9,15 @@ import { SddsLicenseActivities } from './sdds-license-activities.js'
 import { SddsLicenseMethods } from './sdds-licensemethods.js'
 import { SddsSpecies } from './sdds-species.js'
 import { SddsSpeciesSubject } from './sdds-species-subject.js'
-import { SddsLicence } from './sdds-licence.js'
+import { SddsLicence, SddsLicenceNotes } from './sdds-licence.js'
 import { SddsEcologistExperience } from './sdds-ecologist-experience.js'
 import { SddsCouncils } from './sdds-council.js'
 import { SddsPlanningConsents } from './sdds_planningconsents.js'
+import { SddsEmailLicence } from './sdds-emaillicence.js'
 
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
-  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsSpeciesSubject, SddsLicence,
-  columnSourceRemote, SddsEcologistExperience, SddsCouncils, SddsPlanningConsents
+  SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsSpeciesSubject, SddsLicence, SddsLicenceNotes,
+  columnSourceRemote, SddsEcologistExperience, SddsCouncils, SddsPlanningConsents, SddsEmailLicence
 }
