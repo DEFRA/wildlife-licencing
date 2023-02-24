@@ -792,6 +792,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationDesignatedSite'
       responses:
         200:
           description: Success
@@ -963,6 +969,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/licence'
       responses:
         200:
           description: Success

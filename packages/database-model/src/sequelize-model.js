@@ -368,13 +368,21 @@ async function defineApplicationDesignatedSites (sequelize) {
         key: 'id'
       }
     },
+    designatedSiteId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.designatedSites,
+        key: 'id'
+      }
+    },
     designatedSite: { type: DataTypes.JSONB },
     sddsDesignatedSite: { type: DataTypes.UUID },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['application_id'], name: 'designated_site_application_fk' }
+      { unique: false, fields: ['application_id'], name: 'application_designated_site_application_fk' },
+      { unique: false, fields: ['designated_site_id'], name: 'application_designated_site_designated_site_fk' }
     ]
   })
 }
@@ -540,6 +548,7 @@ const createModels = async () => {
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
   await definePermissions(sequelize)
+  await defineDesignatedSites(sequelize)
   await defineApplicationDesignatedSites(sequelize)
 
   await defineApplicationUsers(sequelize)
@@ -557,7 +566,6 @@ const createModels = async () => {
   await defineApplicationPurposes(sequelize)
   await defineActivities(sequelize)
   await defineAuthorities(sequelize)
-  await defineDesignatedSites(sequelize)
   await defineMethods(sequelize)
   await defineSpeciesSubject(sequelize)
   await defineSpecies(sequelize)

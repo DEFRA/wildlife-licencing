@@ -126,6 +126,10 @@ import {
 } from './handlers/permission/permission.js'
 
 import {
+  postApplicationDesignatedSite
+} from './handlers/application-designated-site/application-designated-site.js'
+
+import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
@@ -143,7 +147,6 @@ import {
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
 
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
-
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
@@ -263,6 +266,9 @@ const handlers = {
   getEcologistExperience,
   putEcologistExperience,
   deleteEcologistExperience,
+
+  // Application Designated Sites
+  postApplicationDesignatedSite,
 
   // Miscellaneous handlers
   findApplicationTypes,

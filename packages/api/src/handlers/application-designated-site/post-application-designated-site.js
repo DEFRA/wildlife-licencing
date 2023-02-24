@@ -1,14 +1,16 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
-import { prepareResponse, alwaysExclude } from './previous-licence-proc.js'
+import { prepareResponse, alwaysExclude } from './application-designated-site-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
     const { applicationId } = context.request.params
+    const { designatedSiteId } = req.payload
     const application = await models.applications.findByPk(applicationId)
+    const designatedSite = await models.designatedSites.findByPk(designatedSiteId)
 
     // If the application does not exist return a not found and error
     if (!application) {
@@ -17,20 +19,28 @@ export default async (context, req, h) => {
         .code(404)
     }
 
-    const { dataValues } = await models.previousLicences.create({
+    if (!designatedSite) {
+      return h.response({ code: 400, error: { description: `designatedSiteId: ${designatedSiteId} not found` } })
+        .type(APPLICATION_JSON)
+        .code(400)
+    }
+
+    const { dataValues } = await models.applicationDesignatedSites.create({
       id: uuidv4(),
       applicationId: applicationId,
-      licence: alwaysExclude(req.payload),
+      designatedSiteId: designatedSiteId,
+      designatedSite: alwaysExclude(req.payload),
       updateStatus: 'L'
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/application/${applicationId}/previous-licence/${dataValues.id}`, responseBody)
+    await cache.save(`/application/${applicationId}/designated-site/${dataValues.id}`, responseBody)
+
     return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(201)
   } catch (err) {
-    console.error('Error inserting into PREVIOUS-LICENCES table', err)
+    console.error('Error inserting into APPLICATION-DESIGNATED-SITES table', err)
     throw new Error(err.message)
   }
 }
