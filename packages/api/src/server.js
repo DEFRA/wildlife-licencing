@@ -126,7 +126,11 @@ import {
 } from './handlers/permission/permission.js'
 
 import {
-  postApplicationDesignatedSite
+  postApplicationDesignatedSite,
+  putApplicationDesignatedSite,
+  getApplicationDesignatedSite,
+  getApplicationDesignatedSites,
+  deleteApplicationDesignatedSite
 } from './handlers/application-designated-site/application-designated-site.js'
 
 import {
@@ -269,6 +273,10 @@ const handlers = {
 
   // Application Designated Sites
   postApplicationDesignatedSite,
+  putApplicationDesignatedSite,
+  getApplicationDesignatedSite,
+  getApplicationDesignatedSites,
+  deleteApplicationDesignatedSite,
 
   // Miscellaneous handlers
   findApplicationTypes,

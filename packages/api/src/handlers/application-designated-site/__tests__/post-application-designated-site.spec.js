@@ -36,7 +36,7 @@ const context = { request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-5
 
 const applicationJson = 'application/json'
 
-describe('The postPreviousLicence handler', () => {
+describe('The postApplicationDesignatedSite handler', () => {
   beforeEach(() => jest.resetModules())
 
   it('returns a 201 on successful create', async () => {

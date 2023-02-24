@@ -816,7 +816,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/application/{applicationId}/designated-sites/{designatedSiteId}':
+  '/application/{applicationId}/designated-site/{applicationDesignatedSiteId}':
     get:
       description: Get an application designated site for an application
       summary: Get an application designated for an application
@@ -828,7 +828,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: designatedSiteId
+        - name: applicationDesignatedSiteId
           in: path
           description: ID of the application
           required: true
@@ -867,14 +867,26 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: designatedSiteId
+        - name: applicationDesignatedSiteId
           in: path
           description: ID of the application
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationDesignatedSite'
       responses:
         200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+        201:
           description: Success
           content:
             application/json:
@@ -906,7 +918,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: designatedSiteId
+        - name: applicationDesignatedSiteId
           in: path
           description: ID of the application
           required: true
@@ -1052,6 +1064,12 @@ paths:
             $ref: '#/components/schemas/uuid'
       responses:
         200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+        201:
           description: Success
           content:
             application/json:
