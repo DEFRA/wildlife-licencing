@@ -55,7 +55,6 @@ export const buildApiObject = async applicationId => {
   const applicantContact = contactRoles.find(cr => cr.contactRole === 'APPLICANT')
   const ecologistAccount = accountRoles.find(ar => ar.accountRole === 'ECOLOGIST-ORGANISATION')
   const ecologistContact = contactRoles.find(cr => cr.contactRole === 'ECOLOGIST')
-  const contactIds = [] // Track the contact, to make sure only added once
 
   if (applicantAccount) {
     payload.emailLicence.push({
