@@ -46,46 +46,7 @@ describe('conditions-reserved-matters page', () => {
     expect(mockSetData).toHaveBeenCalled()
   })
 
-  it('should redirect user to check your answers page', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => 'complete' }
-          }
-        }
-      }
-    }))
-    const request = {
-      payload: {},
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
-      })
-    }
-    const { completion } = await import('../conditions-reserved-matters/conditions-reserved-matters.js')
-    expect(await completion(request)).toBe('/check-your-answers')
-  })
-
   it('should redirect user to potential conflicts page', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => '' }
-          }
-        }
-      }
-    }))
     const request = {
       payload: {
         'conditions-met': 'conditions-met'
@@ -99,20 +60,8 @@ describe('conditions-reserved-matters page', () => {
     const { completion } = await import('../conditions-reserved-matters/conditions-reserved-matters.js')
     expect(await completion(request)).toBe('/potential-conflicts')
   })
+
   it('should redirect user to conditions not completed page', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => '' }
-          }
-        }
-      }
-    }))
     const request = {
       payload: {},
       cache: () => ({

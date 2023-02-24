@@ -25,7 +25,7 @@ describe('permissions page handler', () => {
           getPermissionDetailsById: () => {
             return {
               id: '12345',
-              noPermissionReason: 'noPermissionReason'
+              noPermissionReason: 452120001
             }
           }
         },
@@ -64,6 +64,9 @@ describe('permissions page handler', () => {
 
     const { getData } = await import('../check-your-answers/check-your-answers.js')
     expect(await getData(request)).toStrictEqual({
+      eligibility: {
+        permissionsRequired: true
+      },
       pageData: [
         {
           authority: 'Bromsgrove District Council',
@@ -75,7 +78,11 @@ describe('permissions page handler', () => {
           removePermissionUrl: '/consent-remove',
           type: undefined
         }
-      ]
+      ],
+      permissionDetails: {
+        id: '12345',
+        noPermissionReason: 'Health and safety'
+      }
     })
   })
 
