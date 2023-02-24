@@ -1,0 +1,22 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% set errorMap = {
+    'describe-potential-conflicts': {
+      'any.required': { ref: '#describe-potential-conflicts', text: 'You have not described the potential conflicts between this application and other legal commitments' }
+    }
+  } %}
+{% set title = 'Describe the potential conflicts between this application and other legal commitments' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukTextarea({
+  name: "describe-potential-conflicts",
+  id: "describe-potential-conflicts",
+  hint: { text: 'You will be able to upload documents showing permission granted.' },
+  value: data.potentialConflictDescriptionValue if data.potentialConflictDescriptionValue else payload['describe-potential-conflicts'],
+  errorMessage: {
+    text: "Describe the potential conflicts"
+  } if error['describe-potential-conflicts']
+}) }}
+{% endblock %}

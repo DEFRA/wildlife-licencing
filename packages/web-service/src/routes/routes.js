@@ -113,6 +113,20 @@ import anyConvictions from '../pages/conviction/any-conviction/any-convictions.j
 import convictionDetails from '../pages/conviction/conviction-details/conviction-details.js'
 import convictionsCheckAnswers from '../pages/conviction/convictions-check-answers/convictions-check-answers.js'
 
+import permissions from '../pages/permissions/permissions/permissions.js'
+import addPermissionStart from '../pages/permissions/add-permission-start/add-permission-start.js'
+import whyNoPermission from '../pages/permissions/why-no-permission/why-no-permission.js'
+import potentialConflicts from '../pages/permissions/potential-conflicts/potential-conflicts.js'
+import permissionConsentType from '../pages/permissions/consent-type/consent-type.js'
+import consentReference from '../pages/permissions/consent-reference/consent-reference.js'
+import planningType from '../pages/permissions/planning-type/planning-type.js'
+import consentRemove from '../pages/permissions/consent-remove/consent-remove.js'
+import checkPermissionsAnswers from '../pages/permissions/check-permissions-answers/check-permissions-answers.js'
+import wildLifeConditionsMet from '../pages/permissions/conditions-reserved-matters/conditions-reserved-matters.js'
+import conditionsNotCompleted from '../pages/permissions/conditions-not-completed/conditions-not-completed.js'
+import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
+import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
@@ -220,6 +234,19 @@ const routes = [
   ...anyConvictions,
   ...convictionsCheckAnswers,
   ...convictionDetails,
+  ...permissions,
+  ...addPermissionStart,
+  ...whyNoPermission,
+  ...potentialConflicts,
+  ...permissionConsentType,
+  ...consentReference,
+  ...planningType,
+  ...checkPermissionsAnswers,
+  ...consentRemove,
+  ...wildLifeConditionsMet,
+  ...conditionsNotCompleted,
+  ...descPotentialConflicts,
+  ...checkConsentAnswers,
 
   signOut,
   ...miscRoutes

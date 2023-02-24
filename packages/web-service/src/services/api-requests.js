@@ -3,6 +3,7 @@ import { APPLICATION } from './api-requests-application.js'
 import { ELIGIBILITY } from './api-requests-eligibility.js'
 import { CONTACT } from './api-requests-contact.js'
 import { ACCOUNT } from './api-requests-account.js'
+import { PERMISSION } from './api-requests-permissions.js'
 import { SITE } from './api-requests-site.js'
 import { HABITAT } from './api-requests-habitat.js'
 import { ECOLOGIST_EXPERIENCE } from './api-requests-ecologist-experience.js'
@@ -32,6 +33,8 @@ export const apiUrls = {
   APPLICATION_ACCOUNTS_ACCOUNTS: 'application-accounts/accounts',
   SITE: '/site',
   SITES: '/sites',
+  PERMISSIONS: '/permissions',
+  PERMISSIONS_SECTION: '/permissions-section',
   APPLICATION_SITE: '/application-site',
   APPLICATION_SITES: '/application-sites',
   APPLICATION_SITES_SITES: '/application-sites/sites',
@@ -62,5 +65,6 @@ export const APIRequests = {
   LICENCES,
   FILE_UPLOAD,
   APPLICATION_TYPES,
-  OTHER
+  OTHER,
+  PERMISSION
 }

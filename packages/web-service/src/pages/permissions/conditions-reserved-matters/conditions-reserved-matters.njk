@@ -1,0 +1,37 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% set errorMap = {
+    'conditions-met': {
+      'any.required': { ref: '#conditions-met', text: 'You have not selected an option' }
+    }
+  } %}
+{% set title = 'Have all other wildlife or habitat-related conditions been met?' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  <p class="govuk-body">These include:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>planning conditions</li>
+    <li>reserved matters</li>
+    <li>Section 106 agreements</li>
+    <li>commitments made at a Public Enquiry or in an Environmental Statement</li>
+  </ul>
+  {{ govukRadios({
+            id: "conditions-met",
+            name: "conditions-met",
+            errorMessage: { text: 'Select an option' } if error['conditions-met'],
+            items: [
+              {
+                value: true,
+                text: "Yes",
+                checked: payload['conditions-met'] === true
+              },
+              {
+                value: false,
+                text: "No",
+                checked: payload['conditions-met'] === false
+              }
+            ]
+          }) }}
+{% endblock %}
