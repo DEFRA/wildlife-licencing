@@ -114,19 +114,6 @@ describe('permissions page handler', () => {
   })
 
   it('should redirect user to add permissions page', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => undefined }
-          }
-        }
-      }
-    }))
     const request = {
       payload: {
         permissionsRequired: 'yes'
@@ -142,19 +129,6 @@ describe('permissions page handler', () => {
   })
 
   it('should redirect user to why no permissions page', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => undefined }
-          }
-        }
-      }
-    }))
     const request = {
       payload: {
         permissionsRequired: 'no'
@@ -167,33 +141,5 @@ describe('permissions page handler', () => {
     }
     const { completion } = await import('../permissions/permissions.js')
     expect(await completion(request)).toBe('/why-no-permission')
-  })
-
-  it('should redirect user to check your answers page when tag state is complete', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      tagStatus: {
-        NOT_STARTED: 'not-started',
-        COMPLETE: 'complete'
-      },
-      APIRequests: {
-        APPLICATION: {
-          tags: () => {
-            return { get: () => 'complete' }
-          }
-        }
-      }
-    }))
-    const request = {
-      payload: {
-        permissionsRequired: false
-      },
-      cache: () => ({
-        getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
-      })
-    }
-    const { completion } = await import('../permissions/permissions.js')
-    expect(await completion(request)).toBe('/check-your-answers')
   })
 })
