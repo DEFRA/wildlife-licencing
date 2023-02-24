@@ -1,6 +1,6 @@
 import Joi from 'joi'
-import { APIRequests } from '../../../services/api-requests.js'
 import pageRoute from '../../../routes/page-route.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { workActivityURIs } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { checkApplication } from '../../common/check-application.js'
@@ -26,10 +26,9 @@ export const checkData = async (request, h) => {
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
-  const pageData = await request.cache().getPageData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
-  const newData = Object.assign(applicationData, { proposalDescription: pageData.payload[workActivityURIs.WORK_PROPOSAL.page] })
+  const newData = Object.assign(applicationData, { proposalDescription: request.payload[workActivityURIs.WORK_PROPOSAL.page] })
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 

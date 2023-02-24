@@ -3,8 +3,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set errorMap = {
-        'habitat-reopen': {
-          'any.required': { ref: '#habitat-reopen', text: 'Enter if the sett will reopen' }
+        'work-category': {
+          'any.required': { ref: '#work-category', text: 'Enter what type of development will happen at the site' }
         }
     }
 %}
@@ -14,77 +14,77 @@
 {% block pageContent %}
 
   {{ govukRadios({
-    id: "habitat-reopen",
-    name: "habitat-reopen",
-    errorMessage: { text: "Select an option." } if error['habitat-reopen'],
+    id: "work-category",
+    name: "work-category",
+    errorMessage: { text: "Select an option." } if error['work-category'],
     items: [
       {
-        checked: data.developmentType === data.BARN_CONVERSION,
+        checked: data.applicationCategory === data.BARN_CONVERSION,
         value: data.BARN_CONVERSION,
         text: "Barn conversion"
       },
       {
-        checked: data.developmentType === data.COMMERCIAL,
+        checked: data.applicationCategory === data.COMMERCIAL,
         value: data.COMMERCIAL,
         text: "Commercial"
       },
       {
-        checked: data.developmentType === data.COMMUNICATIONS,
+        checked: data.applicationCategory === data.COMMUNICATIONS,
         value: data.COMMUNICATIONS,
         text: "Communications"
       },
       {
-        checked: data.developmentType === data.ENERGY_GENERATION__ENERGY_SUPPLY,
+        checked: data.applicationCategory === data.ENERGY_GENERATION__ENERGY_SUPPLY,
         value: data.ENERGY_GENERATION__ENERGY_SUPPLY,
         text: "Energy generation and supply"
       },
       {
-        checked: data.developmentType === data.FLOOD_AND_COASTAL_DEFENCES,
+        checked: data.applicationCategory === data.FLOOD_AND_COASTAL_DEFENCES,
         value: data.FLOOD_AND_COASTAL_DEFENCES,
         text: "Flood and coastal defences"
       },
       {
-        checked: data.developmentType === data.HOUSING__NON_HOUSEHOLDER,
+        checked: data.applicationCategory === data.HOUSING__NON_HOUSEHOLDER,
         value: data.HOUSING__NON_HOUSEHOLDER,
         text: "Residential housing (not householder improvements)"
       },
       {
-        checked: data.developmentType === data.INDUSTRIAL__MANUFACTURING,
+        checked: data.applicationCategory === data.INDUSTRIAL__MANUFACTURING,
         value: data.INDUSTRIAL__MANUFACTURING,
         text: "Industrial or manufacturing"
       },
       {
-        checked: data.developmentType === data.MINERAL_EXTRACTION__QUARRYING,
+        checked: data.applicationCategory === data.MINERAL_EXTRACTION__QUARRYING,
         value: data.MINERAL_EXTRACTION__QUARRYING,
         text: "Quarrying and mining"
       },
       {
-        checked: data.developmentType === data.NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
+        checked: data.applicationCategory === data.NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
         value: data.NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
         text: "Nationally significant infrastructure projects"
       },
       {
-        checked: data.developmentType === data.PUBLIC_BUILDINGS_AND_LAND,
+        checked: data.applicationCategory === data.PUBLIC_BUILDINGS_AND_LAND,
         value: data.PUBLIC_BUILDINGS_AND_LAND,
         text: "Public buildings and public land"
       },
       {
-        checked: data.developmentType === data.TOURISM__LEISURE,
+        checked: data.applicationCategory === data.TOURISM__LEISURE,
         value: data.TOURISM__LEISURE,
         text: "Tourism and leisure"
       },
       {
-        checked: data.developmentType === data.TRANSPORT__HIGHWAYS,
+        checked: data.applicationCategory === data.TRANSPORT__HIGHWAYS,
         value: data.TRANSPORT__HIGHWAYS,
         text: "Transport, including roads"
       },
       {
-        checked: data.developmentType === data.WASTE_MANAGEMENT,
+        checked: data.applicationCategory === data.WASTE_MANAGEMENT,
         value: data.WASTE_MANAGEMENT,
         text: "Waste management"
       },
       {
-        checked: data.developmentType === data.WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
+        checked: data.applicationCategory === data.WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
         value: data.WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
         text: "Water bodies, water supply and treatment"
       }

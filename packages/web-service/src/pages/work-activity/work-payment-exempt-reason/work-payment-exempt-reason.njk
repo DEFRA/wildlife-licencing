@@ -1,27 +1,27 @@
-{% extends "standard-form.njk" %}
+{% extends 'standard-form.njk' %}
 
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from 'govuk/components/radios/macro.njk' import govukRadios %}
+{% from 'govuk/components/textarea/macro.njk' import govukTextarea %}
 
 {% set errorMap = {
-        'habitat-types': {
-          'any.required': { ref: '#habitat-types', text: 'Enter a sett type' }
+        'work-payment-exempt-reason': {
+          'any.required': { ref: '#work-payment-exempt-reason', text: 'You have not selected an option' }
         },
         'exempt-details': {
-          'string.empty': { ref: '#exempt-details', text: 'You have not entered a postcode' },
-          'string.pattern.base': { ref: '#exempt-details', text: 'You have not entered a correct postcode' }
+          'string.empty': { ref: '#exempt-details', text: 'You have not provided more detail on why your development is exempt' }
         }
     }
 %}
 
-{% set title = 'What are the badgers using this sett for?' %}
+{% set title = 'What reason do you think your development is exempt from licence payments?' %}
 
 {% set detailsHTML %}
   {{ govukTextarea({
-    name: "exempt-details",
-    id: "exempt-details",
+    name: 'exempt-details',
+    id: 'exempt-details',
+    errorMessage: { text: 'Provide more detail on why your development is exempt' } if error['exempt-details'],
     hint: {
-      text: "Provide more detail on the reason you think your development is exempt from license payments."
+      text: 'Provide more detail on the reason you think your development is exempt from license payments.'
     }
   }) }}
 {% endset -%}
@@ -29,43 +29,43 @@
 {% block pageContent %}
 
   {{ govukRadios({
-    id: "habitat-types",
-    name: "habitat-types",
+    id: 'work-payment-exempt-reason',
+    name: 'work-payment-exempt-reason',
     hint: {
-      text: "Select one option."
+      text: 'Select one option.'
     },
-    errorMessage: { text: "Select a sett type." } if error['habitat-types'],
+    errorMessage: { text: 'You have not selected an option' } if error['work-payment-exempt-reason'],
     items: [
       {
-        checked: data.exemptReason === data.REGISTERED_PLACES_OF_WORSHIP,
+        checked: payload['work-payment-exempt-reason'] === data.REGISTERED_PLACES_OF_WORSHIP,
         value: data.REGISTERED_PLACES_OF_WORSHIP,
         text: 'Registered places of worship'
       },
       {
-        checked: data.exemptReason === data.SCHEDULED_MONUMENTS,
+        checked: payload['work-payment-exempt-reason'] === data.SCHEDULED_MONUMENTS,
         value: data.SCHEDULED_MONUMENTS,
         text: 'Scheduled monuments'
       },
       {
-        checked: data.exemptReason === data.LISTED_BUILDINGS,
+        checked: payload['work-payment-exempt-reason'] === data.LISTED_BUILDINGS,
         value: data.LISTED_BUILDINGS,
         text: 'Listed buildings'
       },
       {
-        checked: data.exemptReason === data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+        checked: payload['work-payment-exempt-reason'] === data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
         value: data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
         text: 'Traditional farm buildings in a countryside stewardship agreement'
       },
       {
-        checked: data.exemptReason === data.HOUSEHOLDER_HOME_IMPROVEMENTS,
+        checked: payload['work-payment-exempt-reason'] === data.HOUSEHOLDER_HOME_IMPROVEMENTS,
         value: data.HOUSEHOLDER_HOME_IMPROVEMENTS,
         text: 'Homes being improved through householder planning permission or permitted development'
       },
       {
-        divider: "or"
+        divider: 'or'
       },
       {
-        checked: data.exemptReason === data.OTHER,
+        checked: payload['work-payment-exempt-reason'] === data.OTHER or payload['exempt-details'] === '',
         value: data.OTHER,
         text: 'Other',
         conditional: {

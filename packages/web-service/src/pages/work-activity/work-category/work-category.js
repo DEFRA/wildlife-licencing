@@ -1,6 +1,9 @@
+import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { workActivityURIs } from '../../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { APIRequests } from '../../../services/api-requests.js'
+import { checkApplication } from '../../common/check-application.js'
 
 const {
   APPLICATION_CATEGORY: {
@@ -22,8 +25,11 @@ const {
 } = PowerPlatformKeys
 
 export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const applicationCategory = await APIRequests.APPLICATION.getById(applicationId)?.applicationCategory || 0
+
   return {
-    developmentType: '', // todo: whatever the user selects
+    applicationCategory,
     BARN_CONVERSION,
     COMMERCIAL,
     COMMUNICATIONS,
@@ -41,8 +47,22 @@ export const getData = async request => {
   }
 }
 
+export const setData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+
+  const newData = Object.assign(applicationData, { applicationCategory: parseInt(request.payload[workActivityURIs.WORK_CATEGORY.page]) })
+  await APIRequests.APPLICATION.update(applicationId, newData)
+}
+
 export default pageRoute({
   uri: workActivityURIs.WORK_CATEGORY.uri,
   page: workActivityURIs.WORK_CATEGORY.page,
-  completion: workActivityURIs.LICENCE_COST.uri
+  checkData: checkApplication,
+  completion: workActivityURIs.LICENCE_COST.uri,
+  validator: Joi.object({
+    'work-category': Joi.any().required()
+  }).options({ abortEarly: false, allowUnknown: true }),
+  setData,
+  getData
 })

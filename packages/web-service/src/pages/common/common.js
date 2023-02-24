@@ -9,3 +9,11 @@ export const yesNoFromBool = a => {
     return a ? 'yes' : 'no'
   }
 }
+
+export const boolFromYesNo = a => {
+  if (a === 'yes') {
+    return true
+  } else {
+    return false
+  }
+}
