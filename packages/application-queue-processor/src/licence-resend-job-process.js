@@ -67,7 +67,6 @@ export const buildApiObject = async applicationId => {
       }
     })
   } else if (applicantContact) {
-    contactIds.push(applicantContact.id)
     payload.emailLicence.push({
       data: {
         sddsApplicationId: applicationResult.sddsApplicationId,
@@ -90,7 +89,6 @@ export const buildApiObject = async applicationId => {
       }
     })
   } else if (ecologistContact) {
-    contactIds.push(ecologistContact.id)
     payload.emailLicence.push({
       data: {
         sddsApplicationId: applicationResult.sddsApplicationId,
