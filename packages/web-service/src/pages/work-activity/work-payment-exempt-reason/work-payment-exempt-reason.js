@@ -16,7 +16,7 @@ const {
   }
 } = PowerPlatformKeys
 
-export const getData = async request => {
+export const getData = async _request => {
   return {
     REGISTERED_PLACES_OF_WORSHIP,
     SCHEDULED_MONUMENTS,

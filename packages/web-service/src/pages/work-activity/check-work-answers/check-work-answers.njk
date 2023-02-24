@@ -1,28 +1,10 @@
-{% extends "standard-form.njk" %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "error-summary.njk" import errorSummary %}
+{% extends "check-answers.njk" %}
 
-{% set title = 'Check your answers' %} 
+{% set questionMap = {
+    workProposal: { question: 'Proposed work', href: _uri.workProposal },
+    workPayment: { question: 'Will you pay for your licence?', href: _uri.workPayment },
+    workCategory: { question: 'Type of work happening at the site', href: _uri.workCategory },
+    workPaymentExemptReason: { question: 'Exemption reason', href: _uri.workPaymentExemptReason }
+} %}
 
-{% set errorMap = {
-        'additional-sett': {
-          'no-choice-made': { ref: '#additional-sett', text: 'Select yes if you want to add another sett' }
-        }
-    }
-%}
-
-{% block beforeContent %}
-  {{ govukPhaseBanner({
-      tag: {
-        text: "alpha"
-      },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-    }) }}
- {% endblock %}
-
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
-
-{% block pageContent %}
-  <p>check your answers</p>
-{% endblock %}
+{% set checkData = data %}

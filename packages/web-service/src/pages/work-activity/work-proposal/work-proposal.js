@@ -17,7 +17,7 @@ export const checkData = async (request, h) => {
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
 
-  if (isCompleteOrConfirmed(tagState)) {
+  if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri)) {
     return h.redirect(workActivityURIs.CHECK_YOUR_ANSWERS.uri)
   }
 
@@ -32,10 +32,19 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  const tagState = await APIRequests.APPLICATION.tags(journeyData?.applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
+  if (isCompleteOrConfirmed(tagState)) {
+    return workActivityURIs.CHECK_YOUR_ANSWERS.uri
+  } else {
+    return workActivityURIs.PAYING_FOR_LICENCE.uri
+  }
+}
+
 export default pageRoute({
   page: workActivityURIs.WORK_PROPOSAL.page,
   uri: workActivityURIs.WORK_PROPOSAL.uri,
-  completion: workActivityURIs.PAYING_FOR_LICENCE.uri,
   checkData: [checkApplication, checkData],
   validator: Joi.object({
     // JS post message here sends line breaks with \r\n (CRLF) but the Gov.uk prototypes counts newlines as \n
@@ -45,5 +54,6 @@ export default pageRoute({
     'work-proposal': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
+  completion,
   setData
 })
