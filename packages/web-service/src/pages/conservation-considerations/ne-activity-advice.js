@@ -1,9 +1,9 @@
 import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
-import { ConservationConsiderationURIs } from '../../uris.js'
+import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 
-const { ACTIVITY_ADVICE } = ConservationConsiderationURIs
+const { ACTIVITY_ADVICE } = conservationConsiderationURIs
 
 export const checkData = async request => {
   return null
@@ -18,7 +18,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  return ConservationConsiderationURIs.ACTIVITY_ADVICE.uri
+  return conservationConsiderationURIs.ACTIVITY_ADVICE.uri
 }
 
 export default pageRoute({

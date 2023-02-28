@@ -1,9 +1,11 @@
-import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
-import { ConservationConsiderationURIs } from '../../uris.js'
+import { conservationConsiderationURIs, TASKLIST } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { SECTION_TASKS } from '../tasklist/general-sections.js'
+import { tagStatus } from '../../services/status-tags.js'
 
-const { SSSI_CHECK } = ConservationConsiderationURIs
+const { SSSI_CHECK } = conservationConsiderationURIs
 
 export const checkData = async request => {
   return null
@@ -14,12 +16,11 @@ export const getData = async request => {
 }
 
 export const setData = async request => {
-
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
 }
 
-export const completion = async request => {
-  return ConservationConsiderationURIs.SSSI_CHECK.uri
-}
+export const completion = async () => TASKLIST.uri
 
 export default pageRoute({
   page: SSSI_CHECK.page,

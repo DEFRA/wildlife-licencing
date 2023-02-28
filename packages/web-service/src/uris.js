@@ -145,7 +145,7 @@ export const permissionsURIs = {
   CHECK_YOUR_ANSWERS: { uri: '/check-your-answers', page: 'check-your-answers' }
 }
 
-export const ConservationConsiderationURIs = {
+export const conservationConsiderationURIs = {
   SSSI: { uri: '/on-or-next-to-sssi', page: 'on-or-next-to-sssi' },
   SSSI_SITE_NAME: { uri: '/sssi-site-name', page: 'sssi-site-name' },
   OWNER_PERMISSION: { uri: '/sssi-permission', page: 'sssi-permission' },

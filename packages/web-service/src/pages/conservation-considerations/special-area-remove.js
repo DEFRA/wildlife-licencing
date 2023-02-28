@@ -1,8 +1,8 @@
-import { ConservationConsiderationURIs } from '../../uris.js'
+import { conservationConsiderationURIs } from '../../uris.js'
 import { isYes, yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 
-const { SPECIAL_AREA_SITE_REMOVE } = ConservationConsiderationURIs
+const { SPECIAL_AREA_SITE_REMOVE } = conservationConsiderationURIs
 
 export const checkData = async request => {
   return null
@@ -17,7 +17,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  return ConservationConsiderationURIs.SPECIAL_AREA_SITE_REMOVE.uri
+  return conservationConsiderationURIs.SPECIAL_AREA_SITE_REMOVE.uri
 }
 
 export const specialAreaRemove = yesNoPage({
