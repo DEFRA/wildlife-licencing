@@ -41,7 +41,7 @@ export const writeApplicationDesignatedSiteObject = async ({ data, keys }, ts) =
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   try {
     const sddsApplicationDesignatedSiteId = keys.find(k => k.apiTable === 'applicationDesignatedSites').powerAppsKey
-    const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
+    const sddsApplicationId = keys.find(k => k.apiTable === 'applications' && k.powerAppsKey)?.powerAppsKey
     const designatedSiteId = keys.find(k => k.apiTable === 'designatedSites')?.powerAppsKey
 
     // Look for the application, and permission

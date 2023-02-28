@@ -1,11 +1,11 @@
-
 import { Column, OperationType, Relationship, RelationshipType, Table } from '../schema.js'
+import { yesNoNASrc, yesNoNATgt } from './common.js'
 
 export const SddsApplicationDesignatedSite = new Table('sdds_designatedsiteses', [
   new Column('sdds_permissionacquired', 'permissionFromOwner'),
   new Column('sdds_detailsofpermission', 'detailsOfPermission'),
   new Column('sdds_permissionfortheactivityfromne', 'adviceFromNaturalEngland',
-    s => s ? 100000000 : 100000001, t => t === 100000000),
+    s => yesNoNASrc(s), t => yesNoNATgt(t)),
   new Column('sdds_neadvicefrom', 'adviceFromWho'),
   new Column('sdds_outcomeoftheadvisefromne', 'adviceDescription'),
   new Column('sdds_onnexttonear', 'onSiteOrCloseToSite')

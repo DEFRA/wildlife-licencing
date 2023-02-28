@@ -1,11 +1,8 @@
-import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
+import { Column, OperationType, Relationship, RelationshipType, Table } from '../schema.js'
+import { yesNoNASrc, yesNoNATgt } from './common.js'
 
 export const columnSourceRemote = new Column('sdds_sourceremote', null, () => true, null,
   OperationType.INBOUND_AND_OUTBOUND, () => 'sdds_sourceremote eq true')
-
-// Converts booleans to the yes/no/na option set value
-const yesNoNASrc = s => s ? 100000000 : 100000001
-const yesNoNATgt = t => t === 100000000
 
 export const SddsApplication = new Table('sdds_applications', [
   columnSourceRemote,
