@@ -1,0 +1,23 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'sssi-site-name': {
+          'string.empty': { ref: '#sssi-site-name', text: 'MSG HERE' },
+          'string.max': { ref: '#sssi-site-name', text: 'MSG HERE'}
+        }
+    }
+%}
+
+{% set title = "What is the name of the SSSI?" %}
+
+{% block pageContent %}
+    {{ govukInput({
+      id: "sssi-site-name",
+      name: "sssi-site-name",
+      classes: "govuk-!-width-three-quarters",
+      spellcheck: false,
+      value: data.name if data.name else payload['sssi-site-name'],
+      errorMessage: { text: 'MSG HERE' } if error['sssi-site-name']
+    }) }}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "standard-form.njk" %}
+{% from "checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set errorMap = {
+        'special-area-type': {
+          'any.required': { ref: '#special-area-type', text: 'MSG HERE' }
+        }
+    }
+%}
+
+{% set title = "What type of site is undefined?" %}
+
+{% set checkItems = [] %}
+
+{% block pageContent %}
+  {{ govukCheckboxes({
+    id: "special-area-type",
+    name: "special-area-type",
+    errorMessage: { text: "MSG_HERE" } if error['special-area-type'],
+    hint: {
+      text: "HINT HERE"
+    },
+    items: checkItems
+  }) }}
+{% endblock %}
