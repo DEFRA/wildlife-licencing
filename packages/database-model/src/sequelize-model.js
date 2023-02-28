@@ -376,7 +376,7 @@ async function defineApplicationDesignatedSites (sequelize) {
       }
     },
     designatedSite: { type: DataTypes.JSONB },
-    sddsDesignatedSite: { type: DataTypes.UUID },
+    sddsDesignatedSiteId: { type: DataTypes.UUID },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
     timestamps: true,

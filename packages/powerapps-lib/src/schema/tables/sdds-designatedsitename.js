@@ -5,4 +5,4 @@ export const SddsDesignatedSites = new Table('sdds_designatedsitenames', [
   new Column('sdds_sitecodeno', 'siteCode'),
   new Column('sdds_gridreference', 'siteGridReference'),
   new Column('sdds_type', 'siteType')
-], [], null, 'designated-sites', 'sdds_designatedsitenameid')
+], [], null, 'designatedSites', 'sdds_designatedsitenameid')

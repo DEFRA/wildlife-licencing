@@ -16,7 +16,7 @@ import {
   SddsCouncils,
   columnSourceRemote,
   SddsLicenceNotes,
-  SddsDesignatedSites
+  SddsDesignatedSites, SddsApplicationDesignatedSite
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
@@ -127,6 +127,12 @@ const designatedSitesRequestPath = buildRequestPath(SddsDesignatedSites)
 const designatedSitesTableSet = createTableSet(SddsDesignatedSites)
 const designatedSitesObjectTransformer = buildObjectTransformer(SddsDesignatedSites, designatedSitesTableSet)
 export const designatedSitesReadStream = () => powerAppsReadStream(designatedSitesRequestPath, designatedSitesObjectTransformer)
+
+/* Application designated sites (transaction data data) */
+const applicationDesignatedSitesRequestPath = buildRequestPath(SddsApplicationDesignatedSite, [SddsApplicationRelations, SddsDesignatedSites])
+const applicationDesignatedSitesTableSet = createTableSet(SddsApplicationDesignatedSite, [SddsApplicationRelations, SddsDesignatedSites])
+const applicationDesignatedSitesObjectTransformer = buildObjectTransformer(SddsApplicationDesignatedSite, applicationDesignatedSitesTableSet)
+export const applicationDesignatedSitesReadStream = () => powerAppsReadStream(applicationDesignatedSitesRequestPath, applicationDesignatedSitesObjectTransformer)
 
 /* Species */
 const speciesRequestPath = buildRequestPath(SddsSpecies, [SddsSpeciesSubject])

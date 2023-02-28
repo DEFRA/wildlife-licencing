@@ -14,13 +14,13 @@ export default async (context, req, h) => {
 
     // If the application does not exist return a not found and error
     if (!application) {
-      return h.response({ code: 404, error: { description: `applicationId: ${applicationId} not found` } })
+      return h.response({ code: 404, error: { description: `post, applicationId: ${applicationId} not found` } })
         .type(APPLICATION_JSON)
         .code(404)
     }
 
     if (!designatedSite) {
-      return h.response({ code: 400, error: { description: `designatedSiteId: ${designatedSiteId} not found` } })
+      return h.response({ code: 400, error: { description: `post, designatedSiteId: ${designatedSiteId} not found` } })
         .type(APPLICATION_JSON)
         .code(400)
     }

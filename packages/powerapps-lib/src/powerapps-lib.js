@@ -25,7 +25,8 @@ import {
   applicationTypeSpeciesReadStream,
   applicationTypeApplicationPurposesReadStream,
   authoritiesReadStream,
-  designatedSitesReadStream
+  designatedSitesReadStream,
+  applicationDesignatedSitesReadStream
 } from './read-streams/read-streams.js'
 
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
@@ -58,6 +59,7 @@ export {
   applicationTypeApplicationPurposesReadStream,
   authoritiesReadStream,
   designatedSitesReadStream,
+  applicationDesignatedSitesReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,
   BaseKeyMapping

@@ -18,7 +18,8 @@ export const postProcess = async targetKeys => {
     accounts: { sddsKey: 'sddsAccountId' },
     habitatSites: { sddsKey: 'sddsHabitatSiteId' },
     previousLicences: { sddsKey: 'sddsPreviousLicenceId' },
-    permissions: { sddsKey: 'sddsPermissionsId' }
+    permissions: { sddsKey: 'sddsPermissionsId' },
+    applicationDesignatedSites: { sddsKey: 'sddsDesignatedSiteId' }
   }
 
   try {
@@ -185,6 +186,24 @@ const doPermissions = async (applicationId, payload) => {
   }
 }
 
+const doApplicationDesignatedSites = async (applicationId, payload) => {
+  const applicationDesignatedSites = await models.applicationDesignatedSites.findAll({
+    where: { applicationId }
+  })
+
+  if (applicationDesignatedSites.length) {
+    const designatedSites = applicationDesignatedSites.map(ap => ({
+      data: { ...ap.designatedSite, designatedSiteId: ap.designatedSiteId },
+      keys: {
+        apiKey: ap.id,
+        sddsKey: ap.sddsDesignatedSiteId
+      }
+    }))
+
+    Object.assign(payload.application, { designatedSites })
+  }
+}
+
 /**
  * The processor anticipates a structure where associated entities have their own nested structure under applications
  *
@@ -260,6 +279,9 @@ export const buildApiObject = async applicationId => {
 
     // Add in the permissions
     await doPermissions(applicationId, payload)
+
+    // Add the designated sites
+    await doApplicationDesignatedSites(applicationId, payload)
 
     debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
     return payload
