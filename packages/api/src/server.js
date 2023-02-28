@@ -127,6 +127,14 @@ import {
 } from './handlers/permission/permission.js'
 
 import {
+  postApplicationDesignatedSite,
+  putApplicationDesignatedSite,
+  getApplicationDesignatedSite,
+  getApplicationDesignatedSites,
+  deleteApplicationDesignatedSite
+} from './handlers/application-designated-site/application-designated-site.js'
+
+import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
@@ -137,13 +145,13 @@ import {
 import {
   getApplicationTypes,
   getApplicationPurposes,
-  getAuthorities
+  getAuthorities,
+  getDesignatedSites
 } from './handlers/reference-data/reference-data.js'
 
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
 
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
-
 import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
@@ -265,11 +273,19 @@ const handlers = {
   putEcologistExperience,
   deleteEcologistExperience,
 
+  // Application Designated Sites
+  postApplicationDesignatedSite,
+  putApplicationDesignatedSite,
+  getApplicationDesignatedSite,
+  getApplicationDesignatedSites,
+  deleteApplicationDesignatedSite,
+
   // Miscellaneous handlers
   findApplicationTypes,
   getApplicationTypes,
   getApplicationPurposes,
   getAuthorities,
+  getDesignatedSites,
   getOptionSets,
   validationFail,
   notFound,

@@ -14,7 +14,9 @@ import {
   SddsSpeciesSubject,
   SddsLicence,
   SddsCouncils,
-  columnSourceRemote, SddsLicenceNotes
+  columnSourceRemote,
+  SddsLicenceNotes,
+  SddsDesignatedSites, SddsApplicationDesignatedSite
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
@@ -84,6 +86,12 @@ const planningConsentsTableSet = createTableSet(SddsPlanningConsents, [SddsAppli
 const planningConsentsObjectTransformer = buildObjectTransformer(SddsPlanningConsents, planningConsentsTableSet)
 export const planningConsentsReadStream = () => powerAppsReadStream(planningConsentsRequestPath, planningConsentsObjectTransformer)
 
+/* Application designated sites (transaction data data) */
+const applicationDesignatedSitesRequestPath = buildRequestPath(SddsApplicationDesignatedSite, [SddsApplicationRelations, SddsDesignatedSites])
+const applicationDesignatedSitesTableSet = createTableSet(SddsApplicationDesignatedSite, [SddsApplicationRelations, SddsDesignatedSites])
+const applicationDesignatedSitesObjectTransformer = buildObjectTransformer(SddsApplicationDesignatedSite, applicationDesignatedSitesTableSet)
+export const applicationDesignatedSitesReadStream = () => powerAppsReadStream(applicationDesignatedSitesRequestPath, applicationDesignatedSitesObjectTransformer)
+
 /* Previous Licences (part of ecologist experience) */
 const previousLicencesRequestPath = buildRequestPath(SddsEcologistExperience, [SddsApplicationRelations])
 const previousLicencesPathTableSet = createTableSet(SddsEcologistExperience, [SddsApplicationRelations])
@@ -119,6 +127,12 @@ const methodsRequestPath = buildRequestPath(SddsLicenseMethods)
 const methodsTableSet = createTableSet(SddsLicenseMethods)
 const methodsObjectTransformer = buildObjectTransformer(SddsLicenseMethods, methodsTableSet)
 export const methodsReadStream = () => powerAppsReadStream(methodsRequestPath, methodsObjectTransformer)
+
+/* Designated sites (reference data) */
+const designatedSitesRequestPath = buildRequestPath(SddsDesignatedSites)
+const designatedSitesTableSet = createTableSet(SddsDesignatedSites)
+const designatedSitesObjectTransformer = buildObjectTransformer(SddsDesignatedSites, designatedSitesTableSet)
+export const designatedSitesReadStream = () => powerAppsReadStream(designatedSitesRequestPath, designatedSitesObjectTransformer)
 
 /* Species */
 const speciesRequestPath = buildRequestPath(SddsSpecies, [SddsSpeciesSubject])

@@ -354,4 +354,39 @@ describe('The reference data extract processor: write-object', () => {
 
     expect(result).toEqual({ update: 2 })
   })
+
+  it('maintain designated-sites', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockUpsert = jest.fn()
+    models.designatedSites = {
+      upsert: mockUpsert
+    }
+
+    const { writeDesignatedSites } = await import('../write-object.js')
+
+    const result = await writeDesignatedSites({
+      data: {
+        null: {
+          siteName: 'Berkswell Marsh',
+          siteCode: '1006055',
+          siteGridReference: 'SP228797',
+          siteType: 100000001
+        }
+      },
+      keys: [
+        {
+          apiTable: 'designated-sites',
+          powerAppsTable: 'sdds_designatedsitenames',
+          powerAppsKey: '86b171b3-55a9-ed11-aad1-0022481b53bf'
+        }
+      ]
+    })
+
+    expect(mockUpsert).toHaveBeenCalledWith({
+      id: '86b171b3-55a9-ed11-aad1-0022481b53bf',
+      json: { siteCode: '1006055', siteGridReference: 'SP228797', siteName: 'Berkswell Marsh', siteType: 100000001 }
+    })
+
+    expect(result).toEqual({ update: 1 })
+  })
 })
