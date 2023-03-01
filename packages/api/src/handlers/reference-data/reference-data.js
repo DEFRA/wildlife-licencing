@@ -37,3 +37,4 @@ const getReferenceData = async (context, req, h, model) => {
 export const getApplicationTypes = async (context, req, h) => getReferenceData(context, req, h, models.applicationTypes)
 export const getApplicationPurposes = async (context, req, h) => getReferenceData(context, req, h, models.applicationPurposes)
 export const getAuthorities = async (context, req, h) => getReferenceData(context, req, h, models.authorities)
+export const getDesignatedSites = async (context, req, h) => getReferenceData(context, req, h, models.designatedSites)

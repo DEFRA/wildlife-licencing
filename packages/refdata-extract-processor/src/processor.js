@@ -12,7 +12,8 @@ import {
   applicationTypeActivitiesReadStream,
   applicationTypeSpeciesReadStream,
   applicationTypeApplicationPurposesReadStream,
-  authoritiesReadStream
+  authoritiesReadStream,
+  designatedSitesReadStream
 } from '@defra/wls-powerapps-lib'
 import { databaseWriter } from './database-writer.js'
 
@@ -21,7 +22,7 @@ import {
   writeActivities, writeMethods, writeSpecies, writeSpeciesSubject, writeActivityMethods,
   writeApplicationTypeActivities, writeApplicationTypeSpecies,
   writeApplicationApplicationPurpose, writeOptionSets,
-  writeAuthorities
+  writeAuthorities, writeDesignatedSites
 } from './write-object.js'
 import fs from 'fs'
 
@@ -37,8 +38,8 @@ const extracts = async () => {
   await databaseWriter(applicationTypeSpeciesReadStream(), writeApplicationTypeSpecies, 'Application type Species')
   await databaseWriter(applicationTypeApplicationPurposesReadStream(), writeApplicationApplicationPurpose, 'Application type Application Purposes')
   await databaseWriter(authoritiesReadStream(), writeAuthorities, 'Authorities')
-
   await databaseWriter(globalOptionSetReadStream(), writeOptionSets, 'Option sets')
+  await databaseWriter(designatedSitesReadStream(), writeDesignatedSites, 'Designated sites')
 }
 
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))

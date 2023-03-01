@@ -1,4 +1,6 @@
 import { applicationUpdate } from './batch-update/application-update.js'
+import { licenceResend } from './batch-update/licence-resend.js'
+
 import {
   applicationReadStream,
   sitesReadStream,
@@ -22,7 +24,9 @@ import {
   applicationTypeActivitiesReadStream,
   applicationTypeSpeciesReadStream,
   applicationTypeApplicationPurposesReadStream,
-  authoritiesReadStream
+  authoritiesReadStream,
+  designatedSitesReadStream,
+  applicationDesignatedSitesReadStream
 } from './read-streams/read-streams.js'
 
 import { RecoverableBatchError, UnRecoverableBatchError } from './batch-update/batch-errors.js'
@@ -30,6 +34,7 @@ import { BaseKeyMapping } from './schema/key-mappings.js'
 
 export {
   applicationUpdate,
+  licenceResend,
   applicationReadStream,
   sitesReadStream,
   contactsReadStream,
@@ -53,6 +58,8 @@ export {
   applicationTypeSpeciesReadStream,
   applicationTypeApplicationPurposesReadStream,
   authoritiesReadStream,
+  designatedSitesReadStream,
+  applicationDesignatedSitesReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,
   BaseKeyMapping

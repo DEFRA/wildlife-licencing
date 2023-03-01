@@ -66,7 +66,7 @@ describe('The postPreviousLicence handler', () => {
         licenceNumber: '123'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith('/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/previous-licence/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)

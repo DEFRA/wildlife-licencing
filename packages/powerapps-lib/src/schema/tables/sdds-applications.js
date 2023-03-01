@@ -1,4 +1,5 @@
-import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
+import { Column, OperationType, Relationship, RelationshipType, Table } from '../schema.js'
+import { yesNoNASrc, yesNoNATgt } from './common.js'
 
 export const columnSourceRemote = new Column('sdds_sourceremote', null, () => true, null,
   OperationType.INBOUND_AND_OUTBOUND, () => 'sdds_sourceremote eq true')
@@ -14,11 +15,13 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationcategory', 'applicationCategory'),
   new Column('sdds_licenceexempted', 'exemptFromPayment'),
   new Column('sdds_nsiproject', 'nationallySignificantInfrastructure'),
+  new Column('sdds_onnexttodesignatedsite', 'onOrNextToDesignatedSite',
+    s => yesNoNASrc(s), t => yesNoNATgt(t)),
 
   // The Eligibility section
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
   new Column('sdds_ownerpermissionreceived', 'eligibility.hasLandOwnerPermission',
-    s => s ? 100000000 : 100000001, t => t === 100000000),
+    s => yesNoNASrc(s), t => yesNoNATgt(t)),
   new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
   new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
 
@@ -112,6 +115,10 @@ export const SddsApplication = new Table('sdds_applications', [
 
   // Permissions
   new Relationship('sdds_planningconsent_sdds_applicationid_s', 'sdds_planningconsents',
-    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'permissions')
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'permissions'),
+
+  // Designated Sites
+  new Relationship('sdds_designatedsites_sdds_applicationid_s', 'sdds_designatedsiteses',
+    RelationshipType.ONE_TO_MANY, 'sdds_applicationid', 'designatedSites')
 
 ], 'application', 'applications', 'sdds_applicationid')

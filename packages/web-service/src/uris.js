@@ -137,6 +137,23 @@ export const siteURIs = {
   CHECK_SITE_ANSWERS: { uri: '/check-site-answers', page: 'check-site-answers' }
 }
 
+export const permissionsURIs = {
+  PERMISSIONS: { uri: '/permissions', page: 'permissions' },
+  ADD_PERMISSION_START: { uri: '/add-permission-start', page: 'add-permission-start' },
+  WHY_NO_PERMISSIONS: { uri: '/why-no-permission', page: 'why-no-permission' },
+  POTENTIAL_CONFLICTS: { uri: '/potential-conflicts', page: 'potential-conflicts' },
+  DESC_POTENTIAL_CONFLICTS: { uri: '/describe-potential-conflicts', page: 'describe-potential-conflicts' },
+  CONSENT_TYPE: { uri: '/consent-type', page: 'consent-type' },
+  PLANNING_TYPE: { uri: '/planning-type', page: 'planning-type' },
+  PLANNING_AUTHORITY: { uri: '/authority', page: 'authority' },
+  CONSENT_REFERENCE: { uri: '/consent-reference', page: 'consent-reference' },
+  CONSENT_REMOVE: { uri: '/consent-remove', page: 'consent-remove' },
+  CONDITIONS_MET: { uri: '/conditions-reserved-matters', page: 'conditions-reserved-matters' },
+  CONDITIONS_NOT_COMPLETED: { uri: '/conditions-not-completed', page: 'conditions-not-completed' },
+  CHECK_PERMISSIONS_ANSWERS: { uri: '/check-permissions-answers', page: 'check-permissions-answers' },
+  CHECK_YOUR_ANSWERS: { uri: '/check-your-answers', page: 'check-your-answers' }
+}
+
 export const convictionsURIs = {
   ANY_CONVICTIONS: { uri: '/any-convictions', page: 'any-convictions' },
   CONVICTION_DETAILS: { uri: '/conviction-details', page: 'conviction-details' },

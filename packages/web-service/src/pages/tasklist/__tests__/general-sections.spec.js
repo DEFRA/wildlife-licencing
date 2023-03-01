@@ -113,10 +113,14 @@ describe('tasklist general sections', () => {
 
   it('permissions', () => {
     const task = TASKS[SECTION_TASKS.PERMISSIONS]
-    expect(task.uri([])).toEqual('/')
-    expect(task.uri([{ tag: SECTION_TASKS.WORK_ACTIVITY, tagState: tagStatus.COMPLETE }])).toEqual('/')
+    expect(task.uri([])).toEqual('/permissions')
+    expect(task.uri([{ tag: SECTION_TASKS.PERMISSIONS, tagState: tagStatus.COMPLETE }])).toEqual('/check-your-answers')
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(task.enabled([])).toBeFalsy()
+    expect(task.enabled([
+      { tag: SECTION_TASKS.PERMISSIONS, tagState: tagStatus.CANNOT_START },
+      { tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE }
+    ])).toBeTruthy()
   })
 
   it('sites', () => {

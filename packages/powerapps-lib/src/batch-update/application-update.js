@@ -1,4 +1,5 @@
 import { batchUpdate } from './batch-update.js'
+
 import { createTableSet } from '../schema/processors/schema-processes.js'
 import {
   SddsApplication,
@@ -7,7 +8,8 @@ import {
   SddsSite,
   SddsEcologistExperience,
   SddsPlanningConsents,
-  SddsLicensableActions
+  SddsLicensableActions,
+  SddsApplicationDesignatedSite
 } from '../schema/tables/tables.js'
 
 // The set of tables to be included in the application batch update
@@ -18,7 +20,8 @@ const tableSet = createTableSet(SddsApplication, [
   SddsLicensableActions,
   SddsEcologistExperience,
   SddsPlanningConsents,
-  SddsLicensableActions
+  SddsLicensableActions,
+  SddsApplicationDesignatedSite
 ])
 
 /**
