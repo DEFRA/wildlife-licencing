@@ -126,12 +126,4 @@ describe('the SSSI site name functions', () => {
       expect(mockUpdate).not.toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('smokes', async () => {
-      const { completion } = await import('../sssi-site-name.js')
-      const result = await completion()
-      expect(result).toEqual('/sssi-permission')
-    })
-  })
 })

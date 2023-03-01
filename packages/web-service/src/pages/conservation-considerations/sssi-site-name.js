@@ -38,14 +38,12 @@ export const setData = async request => {
   }
 }
 
-export const completion = async () => conservationConsiderationURIs.OWNER_PERMISSION.uri
-
 export default pageRoute({
   page: SSSI_SITE_NAME.page,
   uri: SSSI_SITE_NAME.uri,
   checkData: checkApplication,
   validator: validator,
   getData: getData,
-  completion: completion,
+  completion: conservationConsiderationURIs.OWNER_PERMISSION.uri,
   setData: setData
 })

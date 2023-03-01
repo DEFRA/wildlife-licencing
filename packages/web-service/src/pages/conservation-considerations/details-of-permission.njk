@@ -1,0 +1,25 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% set errorMap = {
+        'permission-details': {
+          'string.empty': { ref: '#enter-experience', text: 'You have not entered the permission details' },
+          'string.max': { ref: '#enter-experience', text: 'You have entered too many characters'}
+        }
+    }
+%}
+
+{% set title = "Do you have permission from the owner or occupier of the SSSI?" %}
+
+{% block pageContent %}
+
+{{ govukCharacterCount({
+  name: "permission-details",
+  id: "permission-details",
+  value: data['permission-details'],
+  maxlength: 4000,
+  errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['enter-experience']
+}) }}
+
+{% endblock %}

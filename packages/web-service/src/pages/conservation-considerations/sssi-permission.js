@@ -4,20 +4,10 @@ import { checkApplication } from '../common/check-application.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
+import { checkSSSIData } from './common.js'
 
 const { SITE_OF_SPECIAL_SCIENTIFIC_INTEREST } = PowerPlatformKeys.SITE_TYPE
-const { OWNER_PERMISSION, SSSI, OWNER_PERMISSION_DETAILS, NE_ADVICE } = conservationConsiderationURIs
-
-export const checkData = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-  const sssiSite = applicationDesignatedSites.find(ads => ads.designatedSiteType === SITE_OF_SPECIAL_SCIENTIFIC_INTEREST)
-  if (!sssiSite) {
-    return h.redirect(SSSI.uri)
-  }
-
-  return null
-}
+const { OWNER_PERMISSION, OWNER_PERMISSION_DETAILS, NE_ADVICE } = conservationConsiderationURIs
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -39,7 +29,7 @@ export const completion = async request => isYes(request) ? OWNER_PERMISSION_DET
 export const sssiPermission = yesNoPage({
   page: OWNER_PERMISSION.page,
   uri: OWNER_PERMISSION.uri,
-  checkData: [checkApplication, checkData],
+  checkData: [checkApplication, checkSSSIData],
   getData: getData,
   completion: completion,
   setData: setData
