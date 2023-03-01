@@ -71,10 +71,10 @@ export default pageRoute({
   uri: workActivityURIs.WORK_CATEGORY.uri,
   page: workActivityURIs.WORK_CATEGORY.page,
   checkData: checkApplication,
-  completion,
   validator: Joi.object({
     'work-category': Joi.any().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
+  completion,
   getData
 })

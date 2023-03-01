@@ -66,6 +66,8 @@ export const checkData = async (request, h) => {
   if (!applicationData?.proposalDescription || !applicationData?.exemptFromPayment || !applicationData?.applicationCategory) {
     return h.redirect(TASKLIST.uri)
   }
+
+  return null
 }
 
 export const getData = async request => {

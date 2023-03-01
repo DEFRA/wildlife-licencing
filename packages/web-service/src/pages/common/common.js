@@ -11,9 +11,5 @@ export const yesNoFromBool = a => {
 }
 
 export const boolFromYesNo = a => {
-  if (a === 'yes') {
-    return true
-  } else {
-    return false
-  }
+  return a === 'yes'
 }
