@@ -2,8 +2,9 @@
 
 {% set questionMap = {
     workProposal: { question: 'Proposed work', href: _uri.workProposal },
-    workPayment: { question: 'Will you pay for your licence?', href: _uri.workPayment },
-    workCategory: { question: 'Type of work happening at the site', href: _uri.workCategory },
+    workPayment: { question: 'Is your licence exempt from payment?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.workPayment },
+    workCategory: { question: 'What kind of development is happening at the site?', href: _uri.workCategory },
+    workPaymentExemptCategory: { question: 'What reason do you think your development is exempt from licence payments?', href: _uri.workPaymentExemptReason },
     workPaymentExemptReason: { question: 'Exemption reason', href: _uri.workPaymentExemptReason }
 } %}
 

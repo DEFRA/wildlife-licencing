@@ -45,6 +45,10 @@ export const setData = async request => {
       {
         applicationCategory: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page])
       })
+
+    // If you've changed an answer, we want to ensure we don't retain the
+    // `paymentExemptReason` from a past answer
+    delete newData.paymentExemptReason
   }
 
   await APIRequests.APPLICATION.update(applicationId, newData)
