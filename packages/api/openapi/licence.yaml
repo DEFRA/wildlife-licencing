@@ -3427,6 +3427,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        onSiteOrCloseToSite:
+          $ref: '#/components/schemas/option'
         designatedSiteId:
           $ref: '#/components/schemas/uuid'
         permissionFromOwner:
@@ -3440,8 +3442,6 @@ components:
           type: string
         adviceDescription:
           type: string
-        onSiteOrCloseToSite:
-          $ref: '#/components/schemas/option'
 
     applicationFileUploads:
       type: array

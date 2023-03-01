@@ -1,0 +1,53 @@
+{% extends "standard-form.njk" %}
+
+{% from "character-count/macro.njk" import govukCharacterCount %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'advice-from-who': {
+          'string.empty': { ref: '#advice-from-who', text: 'You have not entered who the advice was from' },
+          'string.max': { ref: '#advice-from-who', text: 'You have entered too many characters'}
+        },
+        'advice-description': {
+          'string.empty': { ref: '#advice-description', text: 'You have not entered the advice details' },
+          'string.max': { ref: '#advice-description', text: 'You have entered too many characters'}
+        }
+    }
+%}
+
+{% set title = "Advice about the activity" %}
+
+{% block pageContent %}
+
+{{ govukInput({
+  id: "advice-from-who",
+  name: "advice-from-who",
+  value: data['advice-from-who'],
+  errorMessage: { text: "Enter who the advice was from" } if error['advice-from-who'],
+  label: {
+    text: "Who did you receive the advice from?",
+    classes: "govuk-label--m",
+    isPageHeading: false
+  },
+  hint: {
+    text: "Enter the full name"
+  }
+}) }}
+
+{{ govukCharacterCount({
+  name: "advice-description",
+  id: "advice-description",
+  value: data['advice-description'],
+  maxlength: 4000,
+  errorMessage: { text: "Describe the outcome of the advice" } if error['advice-description'],
+  label: {
+    text: "Describe the outcome of the advice",
+    classes: "govuk-label--m",
+    isPageHeading: false
+  },
+  hint: {
+    text: "For example, dates and names. You will be able to upload documents showing the advice."
+  }
+}) }}
+
+{% endblock %}
