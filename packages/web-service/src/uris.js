@@ -154,6 +154,7 @@ export const conservationConsiderationURIs = {
   ACTIVITY_ADVICE: { uri: '/ne-activity-advice', page: 'ne-activity-advice' },
   MANAGING_SPECIAL_AREA: { uri: '/necessary-for-managing-special-area', page: 'necessary-for-managing-special-area' },
   SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA: { uri: '/significant-effects-on-special-area', page: 'significant-effects-on-special-area' },
+  NECESSARY_SITE_NAME: { uri: '/necessary-site-name', page: 'necessary-site-name' },
   SPECIAL_AREA_SITE_NAME: { uri: '/special-area-site-name', page: 'special-area-site-name' },
   SPECIAL_AREA_START: { uri: '/special-area-start', page: 'special-area-start' },
   SPECIAL_AREA_SITE_TYPE: { uri: '/special-area-type', page: 'special-area-type' },

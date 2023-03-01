@@ -95,7 +95,13 @@ export const additionalPageData = (request, h) => {
         experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
         methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
         classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
-        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri,
+
+        magic: {
+          spa: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=spaPIndex,spaIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=-187428:14658:846037:536153&amp;useDefaultbackgroundMapping=false',
+          sac: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=sacPIndex,sacIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=-187428:14658:846037:536153&amp;useDefaultbackgroundMapping=false',
+          ramsar: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=ramPIndex,ramIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=279318:63656:623806:237487&amp;useDefaultbackgroundMapping=false'
+        }
       },
       credentials: request.auth.credentials
     })

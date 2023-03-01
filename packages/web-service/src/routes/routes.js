@@ -104,6 +104,7 @@ import detailsOfPermission from '../pages/conservation-considerations/details-of
 import { adviceFromNaturalEngland } from '../pages/conservation-considerations/advice-from-natural-england.js'
 import neActivityAdvice from '../pages/conservation-considerations/ne-activity-advice.js'
 import { necessaryForManagingSpecialArea } from '../pages/conservation-considerations/necessary-for-managing-special-area.js'
+import necessarySiteName from '../pages/conservation-considerations/necessary-site-name.js'
 import significantEffectsOnSpecialArea from '../pages/conservation-considerations/significant-effects-on-special-area.js'
 import specialAreaSiteName from '../pages/conservation-considerations/special-area-site-name.js'
 import specialAreaStart from '../pages/conservation-considerations/special-area-start.js'
@@ -244,6 +245,7 @@ const routes = [
   ...neActivityAdvice,
   ...necessaryForManagingSpecialArea,
   ...significantEffectsOnSpecialArea,
+  ...necessarySiteName,
   ...specialAreaSiteName,
   ...specialAreaStart,
   ...specialAreaType,

@@ -3310,6 +3310,14 @@ components:
           type: boolean
         onOrNextToDesignatedSite:
           type: boolean
+        necessaryToManageSpecialArea:
+          type: boolean
+        effectsOnSpecialAreas:
+          type: string
+          enum:
+            - YES
+            - NO
+            - NO-ADVICE
         applicationTypeId:
           $ref: '#/components/schemas/uuid'
         applicationPurposeId:

@@ -2,29 +2,30 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
+import { checkSSSIData } from './common.js'
+import { APIRequests } from '../../services/api-requests.js'
 
-const { SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA } = conservationConsiderationURIs
-
-export const checkData = async request => {
-  return null
-}
+const { SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA, SSSI_CHECK, SPECIAL_AREA_SITE_NAME } = conservationConsiderationURIs
 
 export const getData = async request => {
-  return { yesNo: null }
+  const { applicationId } = await request.cache().getData()
+  const { effectsOnSpecialAreas } = await APIRequests.APPLICATION.getById(applicationId)
+  return { effects: effectsOnSpecialAreas }
 }
 
 export const setData = async request => {
-
+  const { applicationId } = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(applicationId)
+  application.effectsOnSpecialAreas = request.payload.effects
+  await APIRequests.APPLICATION.update(applicationId, application)
 }
 
-export const completion = async request => {
-  return conservationConsiderationURIs.SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.uri
-}
+export const completion = async request => ['NO', 'NO-ADVICE'].includes(request.payload.effects) ? SSSI_CHECK.uri : SPECIAL_AREA_SITE_NAME.uri
 
 export default pageRoute({
   page: SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.page,
   uri: SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.uri,
-  checkData: [checkApplication, checkData],
+  checkData: [checkApplication, checkSSSIData],
   getData: getData,
   completion: completion,
   setData: setData
