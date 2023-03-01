@@ -66,7 +66,7 @@ describe('The putApplicationDesignatedSite handler', () => {
           findOrCreate: mockFindOrCreate
         },
         designatedSites: {
-          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f' })
+          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', json: { siteType: 10000001 } })
         }
       }
     }))
@@ -81,6 +81,7 @@ describe('The putApplicationDesignatedSite handler', () => {
       defaults: {
         applicationId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
         designatedSiteId: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+        designatedSiteType: 10000001,
         designatedSite: {
           permissionFromOwner: true
         },
@@ -115,7 +116,7 @@ describe('The putApplicationDesignatedSite handler', () => {
           update: mockUpdate
         },
         designatedSites: {
-          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f' })
+          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', json: { siteType: 10000001 } })
         }
       }
     }))

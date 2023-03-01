@@ -1,10 +1,9 @@
 {% extends "standard-form.njk" %}
-{% from "input/macro.njk" import govukInput %}
+{% from "select/macro.njk" import govukSelect %}
 
 {% set errorMap = {
-        'sssi-site-name': {
-          'string.empty': { ref: '#sssi-site-name', text: 'MSG HERE' },
-          'string.max': { ref: '#sssi-site-name', text: 'MSG HERE'}
+        'id': {
+          'string.empty': { ref: '#sssi-site-name', text: 'Choose a site' }
         }
     }
 %}
@@ -12,12 +11,21 @@
 {% set title = "What is the name of the SSSI?" %}
 
 {% block pageContent %}
-    {{ govukInput({
+    {% set items = [{ value: '', text: '' }] %}
+    <div hidden>
+    {% for rec in data.sites %}
+          {{ items.push({ value: rec.id, text: rec.siteName }) }}
+    {% endfor %}
+    </div>
+
+    {{ govukSelect({
       id: "sssi-site-name",
-      name: "sssi-site-name",
-      classes: "govuk-!-width-three-quarters",
-      spellcheck: false,
-      value: data.name if data.name else payload['sssi-site-name'],
-      errorMessage: { text: 'MSG HERE' } if error['sssi-site-name']
+      name: "id",
+      label: {
+        text: "Choose the site"
+      },
+      errorMessage: { text: "Enter the site." } if error['id'],
+      defaultValue: data.selected if data.selected,
+      items: items
     }) }}
 {% endblock %}
