@@ -10,6 +10,4 @@ export const yesNoFromBool = a => {
   }
 }
 
-export const boolFromYesNo = a => {
-  return a === 'yes'
-}
+export const boolFromYesNo = a => a === 'yes'
