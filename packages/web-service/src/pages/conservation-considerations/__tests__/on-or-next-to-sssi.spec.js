@@ -46,7 +46,7 @@ describe('the On or next to SSSI functions', () => {
         }
       }))
       const request = {
-        payload: { yesNo: 'yes' },
+        payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
@@ -56,7 +56,7 @@ describe('the On or next to SSSI functions', () => {
 
       const { setData } = await import('../on-or-next-to-sssi.js')
       await setData(request)
-      expect(mockUpdate).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { foo: 'bar', onOrNextToDesignatedSite: false })
+      expect(mockUpdate).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { foo: 'bar', onOrNextToDesignatedSite: true })
     })
   })
 
@@ -64,7 +64,7 @@ describe('the On or next to SSSI functions', () => {
     it('redirects to the check answers page if answer is no', async () => {
       const { completion } = await import('../on-or-next-to-sssi.js')
       const request = {
-        payload: { yesNo: 'no' }
+        payload: { 'yes-no': 'no' }
       }
       const result = await completion(request)
       expect(result).toEqual('/sssi-check-answers')
@@ -73,10 +73,10 @@ describe('the On or next to SSSI functions', () => {
     it('redirects to the site-name page if answer is yes', async () => {
       const { completion } = await import('../on-or-next-to-sssi.js')
       const request = {
-        payload: { yesNo: 'yes' }
+        payload: { 'yes-no': 'yes' }
       }
       const result = await completion(request)
-      expect(result).toEqual('/sssi-check-answers')
+      expect(result).toEqual('/sssi-site-name')
     })
   })
 })

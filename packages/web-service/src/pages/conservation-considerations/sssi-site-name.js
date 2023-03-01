@@ -4,15 +4,10 @@ import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { getDesignatedSites } from './common.js'
 
 const { SITE_OF_SPECIAL_SCIENTIFIC_INTEREST } = PowerPlatformKeys.SITE_TYPE
 const { SSSI_SITE_NAME } = conservationConsiderationURIs
-
-const getDesignatedSites = async designatedSiteType => {
-  const designatedSites = await APIRequests.DESIGNATED_SITES.getDesignatedSites()
-  return designatedSites.filter(ds => ds.siteType === designatedSiteType)
-    .map(ds => ({ id: ds.id, siteName: ds.siteName }))
-}
 
 export const getData = async () => {
   return {
