@@ -64,19 +64,32 @@ describe('permissions page handler', () => {
   })
 
   it('should redirect user to consent type when user selects yes option to add another permission', async () => {
+    const mockSetData = jest.fn()
     const request = {
       payload: {
         'add-another-permission': 'yes'
-      }
+      },
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        },
+        setData: mockSetData
+      })
     }
     const { completion } = await import('../check-permissions-answers/check-permissions-answers.js')
     expect(await completion(request)).toBe('/consent-type')
+    expect(mockSetData).toHaveBeenCalled()
   })
   it('should redirect user to the conditions-reserved-matters when the user does not want to add another permission', async () => {
     const request = {
       payload: {
         'add-another-permission': 'no'
-      }
+      },
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
     }
     const { completion } = await import('../check-permissions-answers/check-permissions-answers.js')
     expect(await completion(request)).toBe('/conditions-reserved-matters')

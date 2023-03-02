@@ -1,8 +1,9 @@
 {% extends 'standard-form.njk' %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% set errorMap = {
     'describe-potential-conflicts': {
-      'any.required': { ref: '#describe-potential-conflicts', text: 'You have not described the potential conflicts between this application and other legal commitments' }
+      'string.empty': { ref: '#describe-potential-conflicts', text: 'You have not described the potential conflicts between this application and other legal commitments' },
+      'string.max': { ref: '#describe-potential-conflicts', text: 'You have entered too many characters'}
     }
   } %}
 {% set title = 'Describe the potential conflicts between this application and other legal commitments' %}
@@ -10,13 +11,11 @@
   {{ 'Error: ' + title if error else title }}
 {% endblock %}
 {% block pageContent %}
-  {{ govukTextarea({
+{{ govukCharacterCount({
   name: "describe-potential-conflicts",
   id: "describe-potential-conflicts",
-  hint: { text: 'You will be able to upload documents showing permission granted.' },
   value: data.potentialConflictDescriptionValue if data.potentialConflictDescriptionValue else payload['describe-potential-conflicts'],
-  errorMessage: {
-    text: "Describe the potential conflicts"
-  } if error['describe-potential-conflicts']
+  maxlength: 4000,
+  errorMessage: { text: "Describe the potential conflicts" } if error['describe-potential-conflicts']
 }) }}
 {% endblock %}
