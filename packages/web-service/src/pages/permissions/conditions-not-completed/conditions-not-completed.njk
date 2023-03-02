@@ -1,8 +1,9 @@
 {% extends 'standard-form.njk' %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% set errorMap = {
     'conditions-not-met-reason': {
-      'any.required': { ref: '#conditions-not-met-reason', text: 'You have not entered which conditions have not been completed' }
+      'string.empty': { ref: '#conditions-not-met-reason', text: 'You have not entered which conditions have not been completed' },
+      'string.max': { ref: '#conditions-not-met-reason', text: 'You have entered too many characters'}
     }
   } %}
 {% set title = 'List these conditions and describe why they have not been completed' %}
@@ -15,12 +16,11 @@
     <li>delay a decision</li>
     <li>cause the application to be rejected</li>
   </ul>
-  {{ govukTextarea({
+{{ govukCharacterCount({
   name: "conditions-not-met-reason",
   id: "conditions-not-met-reason",
   value: data.conditionsNotMetReasonValue if data.conditionsNotMetReasonValue else payload['conditions-not-met-reason'],
-  errorMessage: {
-    text: "List the conditions and why they have not been completed"
-  } if error['conditions-not-met-reason']
+  maxlength: 4000,
+  errorMessage: { text: "List the conditions and why they have not been completed" } if error['conditions-not-met-reason']
 }) }}
 {% endblock %}

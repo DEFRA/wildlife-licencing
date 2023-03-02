@@ -14,8 +14,11 @@ export const getData = async request => {
   return getCheckYourAnswersData(permissionData)
 }
 
-export const completion = request => {
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
   if (request?.payload[addPermissionRadio] === 'yes') {
+    delete journeyData.permissionData
+    await request.cache().setData(journeyData)
     return permissionsURIs.CONSENT_TYPE.uri
   }
   return permissionsURIs.CONDITIONS_MET.uri
