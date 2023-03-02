@@ -49,7 +49,7 @@ export const REDIS = {
     save: async (key, body) => {
       const jsonStr = JSON.stringify(body)
       debug(`Redis SAVE: ${key}: ${jsonStr}`)
-      await client.set(key, JSON.stringify(body), {
+      await client.set(key, jsonStr, {
         EX: CACHE_EXPIRE_SECONDS
       })
     },

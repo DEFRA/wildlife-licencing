@@ -30,6 +30,14 @@ describe('the significant effects on special area functions', () => {
   describe('the setData function', () => {
     it('set the effectsOnSpecialAreas flag on the application', async () => {
       const mockUpdate = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        REDIS: {
+          cache: () => ({
+            restore: jest.fn(),
+            save: jest.fn()
+          })
+        }
+      }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
@@ -61,7 +69,7 @@ describe('the significant effects on special area functions', () => {
         payload: { effects: 'YES' }
       }
       const result = await completion(request)
-      expect(result).toEqual('/special-area-site-name')
+      expect(result).toEqual('/special-area-start')
     })
 
     it('if no redirects to the check page', async () => {

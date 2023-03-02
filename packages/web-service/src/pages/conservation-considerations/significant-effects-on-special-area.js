@@ -5,7 +5,7 @@ import { checkApplication } from '../common/check-application.js'
 import { checkSSSIData } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 
-const { SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA, SSSI_CHECK, SPECIAL_AREA_SITE_NAME } = conservationConsiderationURIs
+const { SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA, SSSI_CHECK, SPECIAL_AREA_START } = conservationConsiderationURIs
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -20,7 +20,7 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, application)
 }
 
-export const completion = async request => ['NO', 'NO-ADVICE'].includes(request.payload.effects) ? SSSI_CHECK.uri : SPECIAL_AREA_SITE_NAME.uri
+export const completion = async request => ['NO', 'NO-ADVICE'].includes(request.payload.effects) ? SSSI_CHECK.uri : SPECIAL_AREA_START.uri
 
 export default pageRoute({
   page: SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.page,

@@ -1,23 +1,2 @@
-{% extends "standard-form.njk" %}
-{% from "input/macro.njk" import govukInput %}
-
-{% set errorMap = {
-        'special-area-site-name': {
-          'string.empty': { ref: '#special-area-site-name', text: 'MSG HERE' },
-          'string.max': { ref: '#special-area-site-name', text: 'MSG HERE'}
-        }
-    }
-%}
-
+{% extends "site-name.njk" %}
 {% set title = "What is the name of the site?" %}
-
-{% block pageContent %}
-    {{ govukInput({
-      id: "special-area-site-name",
-      name: "special-area-site-name",
-      classes: "govuk-!-width-three-quarters",
-      spellcheck: false,
-      value: data.name if data.name else payload['special-area-site-name'],
-      errorMessage: { text: 'MSG HERE' } if error['special-area-site-name']
-    }) }}
-{% endblock %}

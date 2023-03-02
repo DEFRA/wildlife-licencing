@@ -1,20 +1,15 @@
-import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 
-const { SPECIAL_AREA_START } = conservationConsiderationURIs
-
-export const checkData = async request => {
-  return null
-}
+const { SPECIAL_AREA_START, SPECIAL_AREA_SITE_NAME } = conservationConsiderationURIs
 
 export const getData = async request => {
   return { yesNo: null }
 }
 
-export const setData = async request => {
-
+// Create a new applicationDesignatedSIte and record the id in the cache
+export const setData = async () => {
 }
 
 export const completion = async request => {
@@ -24,8 +19,7 @@ export const completion = async request => {
 export default pageRoute({
   page: SPECIAL_AREA_START.page,
   uri: SPECIAL_AREA_START.uri,
-  checkData: [checkApplication, checkData],
+  checkData: checkApplication,
   getData: getData,
-  completion: completion,
-  setData: setData
+  completion: SPECIAL_AREA_SITE_NAME.uri
 })

@@ -6,8 +6,9 @@ const { SITE_OF_SPECIAL_SCIENTIFIC_INTEREST } = PowerPlatformKeys.SITE_TYPE
 
 export const getDesignatedSites = async designatedSiteType => {
   const designatedSites = await APIRequests.DESIGNATED_SITES.getDesignatedSites()
-  return designatedSites.filter(ds => ds.siteType === designatedSiteType)
-    .map(ds => ({ id: ds.id, siteName: ds.siteName }))
+  return designatedSiteType
+    ? designatedSites.filter(ds => ds.siteType === designatedSiteType).map(ds => ({ id: ds.id, siteName: ds.siteName }))
+    : designatedSites.map(ds => ({ id: ds.id, siteName: ds.siteName }))
 }
 
 export const checkSSSIData = async (request, h) => {
