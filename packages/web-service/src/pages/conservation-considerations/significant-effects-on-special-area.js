@@ -26,6 +26,9 @@ export default pageRoute({
   page: SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.page,
   uri: SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA.uri,
   checkData: [checkApplication, checkSSSIData],
+  validator: Joi.object({
+    effects: Joi.string().required().valid('YES', 'NO', 'NO-ADVICE')
+  }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: completion,
   setData: setData
