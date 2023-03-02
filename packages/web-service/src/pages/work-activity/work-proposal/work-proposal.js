@@ -17,6 +17,8 @@ export const checkData = async (request, h) => {
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
 
+  // If the user has come back to this page via the CYA page
+  // Don't redirect them - they're just changing an answer
   if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri)) {
     return h.redirect(workActivityURIs.CHECK_YOUR_ANSWERS.uri)
   }

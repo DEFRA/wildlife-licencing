@@ -30,7 +30,7 @@ export const setData = async request => {
   // If the user changes their answer from yes/no on this page
   // We can't take them back to the CYA page
   // There's "new questions" they need to answer
-  if (applicationData?.exemptFromPayment !== userInput.exemptFromPayment) {
+  if (applicationData.exemptFromPayment && applicationData.exemptFromPayment !== boolFromYesNo(userInput.exemptFromPayment)) {
     // Can't call the API here, or
     // it'll immeadiately be reset by the below update() call
     const tag = applicationData.applicationTags.find(t => t.tag === SECTION_TASKS.WORK_ACTIVITY)
