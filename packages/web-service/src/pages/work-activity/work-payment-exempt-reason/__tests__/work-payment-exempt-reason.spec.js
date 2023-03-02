@@ -36,6 +36,12 @@ describe('The work-payment-exempt-reason page', () => {
       }
     })
 
+    it('validator returns undefined on no errors', async () => {
+      const payload = { 'work-payment-exempt-reason': 452120001, 'exempt-details': 'licence is exempt due to government provisions' }
+      const { validator } = await import('../work-payment-exempt-reason.js')
+      expect(await validator(payload)).toBe(undefined)
+    })
+
     it('setData for a radio input works as expected', async () => {
       const mockUpdate = jest.fn()
       const request = {
