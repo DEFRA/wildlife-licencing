@@ -19,6 +19,7 @@
         {% endif %}
     {% endfor %}
     </div>
+
     {{ govukSelect({
       id: "site-name",
       name: "site-name",
@@ -29,4 +30,25 @@
       defaultValue: data.selected if data.selected,
       items: items
     }) }}
+
+    <div id="enhanced" class="govuk-form-group">
+        <div id="autocomplete-container"></div>
+    </div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+    {{ super() }}
+    <script src="/public/javascript/accessible-autocomplete.min.js"></script>
+    <script nonce={{cspNonce}} type="module">
+     (function () {
+        {% if error %}
+            document.querySelector('#enhanced').classList.add("govuk-form-group--error");
+        {% endif %}
+
+        accessibleAutocomplete.enhanceSelectElement({
+          selectElement: document.querySelector('#site-name')
+        })
+     })()
+    </script>
 {% endblock %}
