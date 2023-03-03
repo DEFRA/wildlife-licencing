@@ -3,17 +3,18 @@ import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { allowedTypes } from './common.js'
 
 const { SPECIAL_AREA_SITE_NAME, SPECIAL_AREA_SITE_TYPE, SPECIAL_AREA_EFFECT } = conservationConsiderationURIs
 
 const getSite = async request => {
   const siteName = request.payload['site-name']
-  const nameMap = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap()
+  const nameMap = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap(allowedTypes)
   return nameMap.get(siteName)
 }
 
 export const getData = async () => {
-  const nameMap = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap()
+  const nameMap = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap(allowedTypes)
   return { sites: [...nameMap.keys()].sort().map(s => ({ id: '', siteName: s })) }
 }
 

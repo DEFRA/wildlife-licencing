@@ -4,6 +4,13 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 const { SSSI } = conservationConsiderationURIs
 const { SITE_OF_SPECIAL_SCIENTIFIC_INTEREST } = PowerPlatformKeys.SITE_TYPE
 
+// Allowed special types (in addition to the SSSI
+export const allowedTypes = [
+  PowerPlatformKeys.SITE_TYPE.RAMSAR_SITE,
+  PowerPlatformKeys.SITE_TYPE.SPECIAL_AREA_OF_CONSERVATION,
+  PowerPlatformKeys.SITE_TYPE.SPECIAL_PROTECTION_AREA
+]
+
 export const getDesignatedSites = async designatedSiteType => {
   const designatedSites = await APIRequests.DESIGNATED_SITES.getDesignatedSites()
   return designatedSiteType

@@ -1,6 +1,12 @@
 {% extends "standard-form.njk" %}
 {% from "checkboxes/macro.njk" import govukCheckboxes %}
 
+{% set typeDesc = {
+    SPECIAL_AREA_OF_CONSERVATION: 'Special Area of Conservation',
+    RAMSAR_SITE: 'Ramsar Site',
+    SPECIAL_PROTECTION_AREA: 'Special protected area'
+} %}
+
 {% set errorMap = {
         'special-area-type': {
           'any.required': { ref: '#special-area-type', text: 'MSG HERE' }
@@ -13,13 +19,24 @@
 {% set checkItems = [] %}
 
 {% block pageContent %}
+    <div hidden>
+        {% for rec in data.siteTypes %}
+            {% if rec.selected %}
+              {{ checkItems.push({ value: rec.type, text: typeDesc[rec.type], selected: true }) }}
+            {% else %}
+              {{ checkItems.push({ value: rec.type, text: typeDesc[rec.type] }) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+
   {{ govukCheckboxes({
     id: "special-area-type",
     name: "special-area-type",
     errorMessage: { text: "MSG_HERE" } if error['special-area-type'],
     hint: {
-      text: "HINT HERE"
+      text: "Select all that apply."
     },
     items: checkItems
   }) }}
+
 {% endblock %}
