@@ -33,7 +33,7 @@ const {
   }
 } = PowerPlatformKeys
 
-const workCategoryText = {
+const paymentExemptReason = {
   [REGISTERED_PLACES_OF_WORSHIP]: 'Registered places of worship',
   [SCHEDULED_MONUMENTS]: 'Scheduled monuments',
   [LISTED_BUILDINGS]: 'Listed buildings',
@@ -42,7 +42,7 @@ const workCategoryText = {
   [OTHER]: 'Other'
 }
 
-const paymentExemptReason = {
+const workCategoryText = {
   [BARN_CONVERSION]: 'Barn conversion',
   [COMMERCIAL]: 'Commercial',
   [COMMUNICATIONS]: 'Communications',
