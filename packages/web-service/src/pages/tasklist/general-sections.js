@@ -9,7 +9,8 @@ import {
   eligibilityURIs,
   FILE_UPLOADS,
   siteURIs,
-  permissionsURIs
+  permissionsURIs,
+  workActivityURIs
 } from '../../uris.js'
 import {
   getTaskStatus,
@@ -101,9 +102,11 @@ export const TASKS = {
 
   [SECTION_TASKS.WORK_ACTIVITY]: {
     name: SECTION_TASKS.WORK_ACTIVITY,
-    uri: () => '/',
-    status: () => tagStatus.CANNOT_START,
-    enabled: () => false
+    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.WORK_ACTIVITY, tags)
+      ? workActivityURIs.CHECK_YOUR_ANSWERS.uri
+      : workActivityURIs.WORK_PROPOSAL.uri,
+    status: tags => getTaskStatus(SECTION_TASKS.WORK_ACTIVITY, tags) || eligibilityCheckHelper(tags),
+    enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },
 
   [SECTION_TASKS.PERMISSIONS]: {

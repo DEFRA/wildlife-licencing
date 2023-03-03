@@ -9,3 +9,5 @@ export const yesNoFromBool = a => {
     return a ? 'yes' : 'no'
   }
 }
+
+export const boolFromYesNo = a => a === 'yes'
