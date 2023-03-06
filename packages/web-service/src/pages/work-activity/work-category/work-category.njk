@@ -1,0 +1,94 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'work-category': {
+          'any.required': { ref: '#work-category', text: 'Enter what type of development will happen at the site' }
+        }
+    }
+%}
+
+{% set title = 'What kind of development is happening at the site?' %}
+
+{% block pageContent %}
+
+  {{ govukRadios({
+    id: "work-category",
+    name: "work-category",
+    errorMessage: { text: "Select an option." } if error['work-category'],
+    items: [
+      {
+        checked: data.applicationCategory === data.BARN_CONVERSION,
+        value: data.BARN_CONVERSION,
+        text: "Barn conversion"
+      },
+      {
+        checked: data.applicationCategory === data.COMMERCIAL,
+        value: data.COMMERCIAL,
+        text: "Commercial"
+      },
+      {
+        checked: data.applicationCategory === data.COMMUNICATIONS,
+        value: data.COMMUNICATIONS,
+        text: "Communications"
+      },
+      {
+        checked: data.applicationCategory === data.ENERGY_GENERATION__ENERGY_SUPPLY,
+        value: data.ENERGY_GENERATION__ENERGY_SUPPLY,
+        text: "Energy generation and supply"
+      },
+      {
+        checked: data.applicationCategory === data.FLOOD_AND_COASTAL_DEFENCES,
+        value: data.FLOOD_AND_COASTAL_DEFENCES,
+        text: "Flood and coastal defences"
+      },
+      {
+        checked: data.applicationCategory === data.HOUSING__NON_HOUSEHOLDER,
+        value: data.HOUSING__NON_HOUSEHOLDER,
+        text: "Residential housing (not householder improvements)"
+      },
+      {
+        checked: data.applicationCategory === data.INDUSTRIAL__MANUFACTURING,
+        value: data.INDUSTRIAL__MANUFACTURING,
+        text: "Industrial or manufacturing"
+      },
+      {
+        checked: data.applicationCategory === data.MINERAL_EXTRACTION__QUARRYING,
+        value: data.MINERAL_EXTRACTION__QUARRYING,
+        text: "Quarrying and mining"
+      },
+      {
+        checked: data.applicationCategory === data.NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
+        value: data.NATIONALLY_SIGNIFICANT_INFRASTRUCTURE_PROJECTS,
+        text: "Nationally significant infrastructure projects"
+      },
+      {
+        checked: data.applicationCategory === data.PUBLIC_BUILDINGS_AND_LAND,
+        value: data.PUBLIC_BUILDINGS_AND_LAND,
+        text: "Public buildings and public land"
+      },
+      {
+        checked: data.applicationCategory === data.TOURISM__LEISURE,
+        value: data.TOURISM__LEISURE,
+        text: "Tourism and leisure"
+      },
+      {
+        checked: data.applicationCategory === data.TRANSPORT__HIGHWAYS,
+        value: data.TRANSPORT__HIGHWAYS,
+        text: "Transport, including roads"
+      },
+      {
+        checked: data.applicationCategory === data.WASTE_MANAGEMENT,
+        value: data.WASTE_MANAGEMENT,
+        text: "Waste management"
+      },
+      {
+        checked: data.applicationCategory === data.WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
+        value: data.WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
+        text: "Water bodies, water supply and treatment"
+      }
+    ]
+  }) }}
+
+{% endblock %}

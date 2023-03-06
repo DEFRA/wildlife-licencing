@@ -61,6 +61,13 @@ import { additionalEcologistEmail } from '../pages/contact/additional-contacts/a
 
 import { additionalContactCheckAnswers } from '../pages/contact/additional-contacts/additional-contact-check-answers.js'
 
+import workProposal from '../pages/work-activity/work-proposal/work-proposal.js'
+import workPayment from '../pages/work-activity/work-payment/work-payment.js'
+import workPaymentExemptReason from '../pages/work-activity/work-payment-exempt-reason/work-payment-exempt-reason.js'
+import workCategory from '../pages/work-activity/work-category/work-category.js'
+import workLicenceCost from '../pages/work-activity/work-licence-cost/work-licence-cost.js'
+import checkWorkAnswers from '../pages/work-activity/check-work-answers/check-work-answers.js'
+
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
 import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
@@ -228,6 +235,14 @@ const routes = [
   ...classMitigation,
   ...enterClassMitigationDetails,
   ...checkEcologistAnswers,
+
+  ...workProposal,
+  ...workPayment,
+  ...workPaymentExemptReason,
+  ...workCategory,
+  ...workLicenceCost,
+  ...checkWorkAnswers,
+
   ...licence,
   ...removeLicence,
   ...confirmDelete,

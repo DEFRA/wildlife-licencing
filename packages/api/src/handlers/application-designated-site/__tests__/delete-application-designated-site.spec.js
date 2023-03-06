@@ -19,11 +19,6 @@ const codeFunc = jest.fn()
 const typeFunc = jest.fn(() => ({ code: codeFunc }))
 const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 
-const ts = {
-  createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
-  updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
-}
-
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */

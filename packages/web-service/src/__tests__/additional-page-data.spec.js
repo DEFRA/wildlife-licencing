@@ -81,7 +81,11 @@ describe('additional page data', () => {
         additionalEcologistNames: '/additional-ecologist-names',
         additionalEcologistUser: '/additional-ecologist-user',
         species: '/which-species',
-        taskList: '/tasklist'
+        taskList: '/tasklist',
+        workCategory: '/work-category',
+        workPayment: '/work-payment',
+        workPaymentExemptReason: '/work-payment-exempt-reason',
+        workProposal: '/work-proposal'
       },
       credentials: 'credentials',
       cspNonce: expect.any(String)
