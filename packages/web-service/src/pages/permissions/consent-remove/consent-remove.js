@@ -32,7 +32,7 @@ export const checkData = async (request, h) => {
   const permissions = await APIRequests.PERMISSION.getPermissions(applicationId)
 
   // Need to ensure the user is not coming to this page via clicking browser back or forward buttons, we'll redirect
-  if (!request?.query?.id || !permissions.length > 0) {
+  if (!request?.query?.id || permissions.length === 0) {
     return h.redirect(permissionsURIs.ADD_PERMISSION_START.uri)
   }
 
