@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { workActivityURIs } from '../../../uris.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
@@ -43,10 +43,18 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+
+  return { yesNo: yesNoFromBool(applicationData?.exemptFromPayment) }
+}
+
 export default yesNoPage({
   uri: workActivityURIs.PAYING_FOR_LICENCE.uri,
   page: workActivityURIs.PAYING_FOR_LICENCE.page,
   checkData: checkApplication,
   setData,
+  getData,
   completion
 })

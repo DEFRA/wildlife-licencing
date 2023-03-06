@@ -17,7 +17,7 @@
   {{ govukCharacterCount({
     name: "work-proposal",
     id: "work-proposal",
-    value: payload['work-proposal'] if payload['work-proposal'] else data,
+    value: payload['work-proposal'] if payload['work-proposal'] else data.proposalDescription,
     hint: {
       text: "For example, construction of a new road, maintenance of a bridge, construction of five flats with access road and car parking area."
     },

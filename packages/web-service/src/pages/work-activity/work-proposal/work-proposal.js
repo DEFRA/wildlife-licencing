@@ -9,7 +9,9 @@ import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-funct
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await moveTagInProgress(applicationId, SECTION_TASKS.WORK_ACTIVITY)
-  return null
+
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+  return { proposalDescription: applicationData?.proposalDescription }
 }
 
 export const checkData = async (request, h) => {

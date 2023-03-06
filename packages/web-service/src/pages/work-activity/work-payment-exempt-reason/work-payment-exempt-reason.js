@@ -16,8 +16,13 @@ const {
   }
 } = PowerPlatformKeys
 
-export const getData = async _request => {
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+
   return {
+    radioChecked: applicationData?.applicationCategory,
+    paymentExemptReason: applicationData?.paymentExemptReason,
     REGISTERED_PLACES_OF_WORSHIP,
     SCHEDULED_MONUMENTS,
     LISTED_BUILDINGS,
