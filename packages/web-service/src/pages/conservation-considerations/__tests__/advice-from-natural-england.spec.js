@@ -91,7 +91,7 @@ describe('the advice from natural england function functions', () => {
         payload: { 'yes-no': 'no' }
       }
       const result = await completion(request)
-      expect(result).toEqual('/necessary-for-managing-special-area')
+      expect(result).toEqual('/designated-site-proximity')
     })
   })
 })

@@ -1,30 +1,7 @@
 import { apiRequestsWrapper, apiUrls } from './api-requests.js'
-import { API, REDIS } from '@defra/wls-connectors-lib'
-
-const makeDesignatedSitesMapArr = async allowedTypes => {
-  const designatedSites = await API.get(`${apiUrls.DESIGNATED_SITES}`)
-  const nameSet = new Set(designatedSites
-    .filter(ds => allowedTypes.includes(ds.siteType))
-    .map(ds => ds.siteName))
-  return [...nameSet.values()]
-    .map(n => ([n, {
-      sites: designatedSites.filter(s => s.siteName === n && allowedTypes.includes(s.siteType))
-        .map(fs => ({ id: fs.id, siteType: fs.siteType }))
-    }]))
-}
+import { API } from '@defra/wls-connectors-lib'
 
 export const DESIGNATED_SITES = {
-  getDesignatedSitesNameMap: allowedTypes => apiRequestsWrapper(async () => {
-    const mapArray = await REDIS.cache.restore('designated-site-map')
-    if (mapArray) {
-      return new Map(JSON.parse(mapArray))
-    } else {
-      const refreshedMapArray = await makeDesignatedSitesMapArr(allowedTypes)
-      await REDIS.cache.save('designated-site-map', refreshedMapArray)
-      return new Map(refreshedMapArray)
-    }
-  },
-  'Error fetching designated sites', 500),
   getDesignatedSites: () =>
     apiRequestsWrapper(() => API.get(`${apiUrls.DESIGNATED_SITES}`),
       'Error fetching designated sites', 500),

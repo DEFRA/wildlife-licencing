@@ -3,49 +3,6 @@ jest.spyOn(console, 'error').mockImplementation(code => {})
 describe('The API requests designated sites service', () => {
   beforeEach(() => jest.resetModules())
 
-  it('getDesignatedSitesNameMap calls the API connector correctly', async () => {
-    const mockSave = jest.fn()
-    const mockGet = jest.fn(() => [
-      { id: '9d62e5b8-9c77-ec11-8d21-000d3a87431a', siteName: 'A', siteType: 1 },
-      { id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b', siteName: 'A', siteType: 1 },
-      { id: '9d62e5b8-9c77-ec11-8d21-000d3a87431c', siteName: 'B', siteType: 2 }
-    ])
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      REDIS: {
-        cache: {
-          restore: () => null,
-          save: mockSave
-        }
-      },
-      API: {
-        get: mockGet
-      }
-    }))
-    const { APIRequests } = await import('../api-requests.js')
-    const result = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap()
-    expect(result).not.toBeNull()
-    expect(mockGet).toHaveBeenCalledWith('designated-sites')
-    expect(mockSave).toHaveBeenCalledWith('designated-site-map', [
-      ['A', { sites: [{ id: '9d62e5b8-9c77-ec11-8d21-000d3a87431a', siteType: 1 }, { id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b', siteType: 1 }] }],
-      ['B', { sites: [{ id: '9d62e5b8-9c77-ec11-8d21-000d3a87431c', siteType: 2 }] }]]
-    )
-  })
-
-  it('getDesignatedSitesNameMap restores data from the cache correctly', async () => {
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      REDIS: {
-        cache: {
-          restore: () => JSON.stringify([
-            ['A', { sites: [{ id: '9d62e5b8-9c77-ec11-8d21-000d3a87431a', siteType: 1 }, { id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b', siteType: 1 }] }],
-            ['B', { sites: [{ id: '9d62e5b8-9c77-ec11-8d21-000d3a87431c', siteType: 2 }] }]])
-        }
-      }
-    }))
-    const { APIRequests } = await import('../api-requests.js')
-    const result = await APIRequests.DESIGNATED_SITES.getDesignatedSitesNameMap()
-    expect(result).not.toBeNull()
-  })
-
   it('getDesignatedSites calls the API connector correctly', async () => {
     const mockGet = jest.fn(() => ({ designatedSiteId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
