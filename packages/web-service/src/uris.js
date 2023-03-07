@@ -146,8 +146,9 @@ export const permissionsURIs = {
 }
 
 export const conservationConsiderationURIs = {
-  SSSI: { uri: '/on-or-next-to-sssi', page: 'on-or-next-to-sssi' },
-  SSSI_SITE_NAME: { uri: '/sssi-site-name', page: 'sssi-site-name' },
+  DESIGNATED_SITE: { uri: '/on-or-next-to-designated-site', page: 'on-or-next-to-designated-site' },
+  DESIGNATED_SITE_START: { uri: '/designated-site-start', page: 'designated-site-start' },
+  DESIGNATED_SITE_NAME: { uri: '/designated-site-name', page: 'designated-site-name' },
   OWNER_PERMISSION: { uri: '/sssi-permission', page: 'sssi-permission' },
   OWNER_PERMISSION_DETAILS: { uri: '/details-of-permission', page: 'details-of-permission' },
   NE_ADVICE: { uri: '/advice-from-natural-england', page: 'advice-from-natural-england' },
@@ -156,7 +157,6 @@ export const conservationConsiderationURIs = {
   SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA: { uri: '/significant-effects-on-special-area', page: 'significant-effects-on-special-area' },
   NECESSARY_SITE_NAME: { uri: '/necessary-site-name', page: 'necessary-site-name' },
   SPECIAL_AREA_SITE_NAME: { uri: '/special-area-site-name', page: 'special-area-site-name' },
-  SPECIAL_AREA_START: { uri: '/special-area-start', page: 'special-area-start' },
   SPECIAL_AREA_SITE_TYPE: { uri: '/special-area-type', page: 'special-area-type' },
   SPECIAL_AREA_EFFECT: { uri: '/special-area-effect', page: 'special-area-effect' },
   SPECIAL_AREA_ON_OR_CLOSE: { uri: '/special-area-on-or-close', page: 'special-area-on-or-close' },

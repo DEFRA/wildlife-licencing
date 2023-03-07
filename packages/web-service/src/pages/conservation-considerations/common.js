@@ -1,30 +1,14 @@
 import { APIRequests } from '../../services/api-requests.js'
-import { conservationConsiderationURIs } from '../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-const { SSSI } = conservationConsiderationURIs
-const { SITE_OF_SPECIAL_SCIENTIFIC_INTEREST } = PowerPlatformKeys.SITE_TYPE
 
-// Allowed special types (in addition to the SSSI
-export const allowedTypes = [
-  PowerPlatformKeys.SITE_TYPE.RAMSAR_SITE,
-  PowerPlatformKeys.SITE_TYPE.SPECIAL_AREA_OF_CONSERVATION,
-  PowerPlatformKeys.SITE_TYPE.SPECIAL_PROTECTION_AREA
-]
+const options = Object.values(PowerPlatformKeys.SITE_TYPE).map(v => v.option)
+const abv = Object.values(PowerPlatformKeys.SITE_TYPE).reduce((a, c) => ({ ...a, [c.option]: c.abbr }), {})
 
-export const getDesignatedSites = async designatedSiteType => {
+export const getFilteredDesignatedSites = async () => {
   const designatedSites = await APIRequests.DESIGNATED_SITES.getDesignatedSites()
-  return designatedSiteType
-    ? designatedSites.filter(ds => ds.siteType === designatedSiteType).map(ds => ({ id: ds.id, siteName: ds.siteName }))
-    : designatedSites.map(ds => ({ id: ds.id, siteName: ds.siteName }))
+  return designatedSites.filter(ds => options.includes(ds.siteType))
+    .map(s => ({ id: s.id, siteName: `${s.siteName} ${abv[s.siteType]}` }))
+    .sort((a, b) => (a.siteName).localeCompare(b.siteName))
 }
 
-export const checkSSSIData = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-  const sssiSite = applicationDesignatedSites.find(ads => ads.designatedSiteType === SITE_OF_SPECIAL_SCIENTIFIC_INTEREST)
-  if (!sssiSite) {
-    return h.redirect(SSSI.uri)
-  }
-
-  return null
-}
+export const checkSSSIData = async (request, h) => {}

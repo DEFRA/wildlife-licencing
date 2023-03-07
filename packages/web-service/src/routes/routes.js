@@ -97,8 +97,10 @@ import habitatActivities from '../pages/habitat/a24/activities/habitat-activitie
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
 import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
 
-import { onOrNextToSssi } from '../pages/conservation-considerations/on-or-next-to-sssi.js'
-import sssiSiteName from '../pages/conservation-considerations/sssi-site-name.js'
+import { onOrNextToDesignatedSite } from '../pages/conservation-considerations/on-or-next-to-designated-site.js'
+import designatedSiteStart from '../pages/conservation-considerations/designated-site-start.js'
+import designatedSiteName from '../pages/conservation-considerations/designated-site-name.js'
+
 import { sssiPermission } from '../pages/conservation-considerations/sssi-permission.js'
 import detailsOfPermission from '../pages/conservation-considerations/details-of-permission.js'
 import { adviceFromNaturalEngland } from '../pages/conservation-considerations/advice-from-natural-england.js'
@@ -106,8 +108,6 @@ import neActivityAdvice from '../pages/conservation-considerations/ne-activity-a
 import { necessaryForManagingSpecialArea } from '../pages/conservation-considerations/necessary-for-managing-special-area.js'
 import necessarySiteName from '../pages/conservation-considerations/necessary-site-name.js'
 import significantEffectsOnSpecialArea from '../pages/conservation-considerations/significant-effects-on-special-area.js'
-import specialAreaSiteName from '../pages/conservation-considerations/special-area-site-name.js'
-import specialAreaStart from '../pages/conservation-considerations/special-area-start.js'
 import specialAreaType from '../pages/conservation-considerations/special-area-type.js'
 import specialAreaEffect from '../pages/conservation-considerations/special-area-effect.js'
 import specialAreaOnOrClose from '../pages/conservation-considerations/special-area-on-or-close.js'
@@ -237,8 +237,8 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
-  ...onOrNextToSssi,
-  ...sssiSiteName,
+  ...onOrNextToDesignatedSite,
+  ...designatedSiteName,
   ...sssiPermission,
   ...detailsOfPermission,
   ...adviceFromNaturalEngland,
@@ -246,8 +246,7 @@ const routes = [
   ...necessaryForManagingSpecialArea,
   ...significantEffectsOnSpecialArea,
   ...necessarySiteName,
-  ...specialAreaSiteName,
-  ...specialAreaStart,
+  ...designatedSiteStart,
   ...specialAreaType,
   ...specialAreaEffect,
   ...specialAreaOnOrClose,

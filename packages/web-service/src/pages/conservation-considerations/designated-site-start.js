@@ -2,7 +2,7 @@ import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 
-const { SPECIAL_AREA_START, SPECIAL_AREA_SITE_NAME } = conservationConsiderationURIs
+const { DESIGNATED_SITE_START, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
 export const getData = async request => {
   return { yesNo: null }
@@ -13,13 +13,13 @@ export const setData = async () => {
 }
 
 export const completion = async request => {
-  return conservationConsiderationURIs.SPECIAL_AREA_START.uri
+  return conservationConsiderationURIs.DESIGNATED_SITE_START.uri
 }
 
 export default pageRoute({
-  page: SPECIAL_AREA_START.page,
-  uri: SPECIAL_AREA_START.uri,
+  page: DESIGNATED_SITE_START.page,
+  uri: DESIGNATED_SITE_START.uri,
   checkData: checkApplication,
   getData: getData,
-  completion: SPECIAL_AREA_SITE_NAME.uri
+  completion: DESIGNATED_SITE_NAME.uri
 })

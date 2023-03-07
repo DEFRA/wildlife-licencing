@@ -1,6 +1,6 @@
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
-describe('the On or next to SSSI functions', () => {
+describe('the On or next to designated site start functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
@@ -25,7 +25,7 @@ describe('the On or next to SSSI functions', () => {
         }
       }))
 
-      const { getData } = await import('../on-or-next-to-sssi.js')
+      const { getData } = await import('../on-or-next-to-designated-site.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
     })
@@ -54,7 +54,7 @@ describe('the On or next to SSSI functions', () => {
         })
       }
 
-      const { setData } = await import('../on-or-next-to-sssi.js')
+      const { setData } = await import('../on-or-next-to-designated-site.js')
       await setData(request)
       expect(mockUpdate).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { foo: 'bar', onOrNextToDesignatedSite: true })
     })
@@ -62,7 +62,7 @@ describe('the On or next to SSSI functions', () => {
 
   describe('the completion function', () => {
     it('redirects to the check answers page if answer is no', async () => {
-      const { completion } = await import('../on-or-next-to-sssi.js')
+      const { completion } = await import('../on-or-next-to-designated-site.js')
       const request = {
         payload: { 'yes-no': 'no' }
       }
@@ -71,12 +71,12 @@ describe('the On or next to SSSI functions', () => {
     })
 
     it('redirects to the site-name page if answer is yes', async () => {
-      const { completion } = await import('../on-or-next-to-sssi.js')
+      const { completion } = await import('../on-or-next-to-designated-site.js')
       const request = {
         payload: { 'yes-no': 'yes' }
       }
       const result = await completion(request)
-      expect(result).toEqual('/sssi-site-name')
+      expect(result).toEqual('/designated-site-start')
     })
   })
 })

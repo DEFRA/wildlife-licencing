@@ -6,7 +6,7 @@ import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
 import { yesNoFromBool } from '../common/common.js'
 
-const { SSSI, SSSI_SITE_NAME, SSSI_CHECK } = conservationConsiderationURIs
+const { DESIGNATED_SITE, SSSI_CHECK, DESIGNATED_SITE_START } = conservationConsiderationURIs
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -22,11 +22,11 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, application)
 }
 
-export const completion = async request => isYes(request) ? SSSI_SITE_NAME.uri : SSSI_CHECK.uri
+export const completion = async request => isYes(request) ? DESIGNATED_SITE_START.uri : SSSI_CHECK.uri
 
-export const onOrNextToSssi = yesNoPage({
-  page: SSSI.page,
-  uri: SSSI.uri,
+export const onOrNextToDesignatedSite = yesNoPage({
+  page: DESIGNATED_SITE.page,
+  uri: DESIGNATED_SITE.uri,
   checkData: checkApplication,
   getData: getData,
   completion: completion,
