@@ -101,22 +101,16 @@ import { onOrNextToDesignatedSite } from '../pages/conservation-considerations/o
 import designatedSiteStart from '../pages/conservation-considerations/designated-site-start.js'
 import designatedSiteName from '../pages/conservation-considerations/designated-site-name.js'
 
-import { sssiPermission } from '../pages/conservation-considerations/sssi-permission.js'
+import { designatedSitePermission } from '../pages/conservation-considerations/designated-site-permission.js'
 import detailsOfPermission from '../pages/conservation-considerations/details-of-permission.js'
 import { adviceFromNaturalEngland } from '../pages/conservation-considerations/advice-from-natural-england.js'
 import neActivityAdvice from '../pages/conservation-considerations/ne-activity-advice.js'
-import { necessaryForManagingSpecialArea } from '../pages/conservation-considerations/necessary-for-managing-special-area.js'
-import necessarySiteName from '../pages/conservation-considerations/necessary-site-name.js'
-import significantEffectsOnSpecialArea from '../pages/conservation-considerations/significant-effects-on-special-area.js'
-import specialAreaType from '../pages/conservation-considerations/special-area-type.js'
-import specialAreaEffect from '../pages/conservation-considerations/special-area-effect.js'
-import specialAreaOnOrClose from '../pages/conservation-considerations/special-area-on-or-close.js'
+import designatedSiteProximity from '../pages/conservation-considerations/designated-site-proximity.js'
 import { specialAreaRemove } from '../pages/conservation-considerations/special-area-remove.js'
 import sssiCheckAnswers from '../pages/conservation-considerations/sssi-check-answers.js'
 
-import authority from '../pages/permissions/authority/authority.js'
-
 import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
+
 import enterLicenceDetails from '../pages/ecologist-experience/enter-licence-details/enter-licence-details.js'
 import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
 import enterMethods from '../pages/ecologist-experience/enter-methods/enter-methods.js'
@@ -130,6 +124,7 @@ import anyConvictions from '../pages/conviction/any-conviction/any-convictions.j
 import convictionDetails from '../pages/conviction/conviction-details/conviction-details.js'
 import convictionsCheckAnswers from '../pages/conviction/convictions-check-answers/convictions-check-answers.js'
 
+import authority from '../pages/permissions/authority/authority.js'
 import permissions from '../pages/permissions/permissions/permissions.js'
 import addPermissionStart from '../pages/permissions/add-permission-start/add-permission-start.js'
 import whyNoPermission from '../pages/permissions/why-no-permission/why-no-permission.js'
@@ -239,17 +234,12 @@ const routes = [
   ...checkHabitatAnswers,
   ...onOrNextToDesignatedSite,
   ...designatedSiteName,
-  ...sssiPermission,
+  ...designatedSitePermission,
   ...detailsOfPermission,
   ...adviceFromNaturalEngland,
   ...neActivityAdvice,
-  ...necessaryForManagingSpecialArea,
-  ...significantEffectsOnSpecialArea,
-  ...necessarySiteName,
+  ...designatedSiteProximity,
   ...designatedSiteStart,
-  ...specialAreaType,
-  ...specialAreaEffect,
-  ...specialAreaOnOrClose,
   ...specialAreaRemove,
   ...sssiCheckAnswers,
   ...authority,

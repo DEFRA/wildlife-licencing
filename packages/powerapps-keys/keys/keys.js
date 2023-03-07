@@ -100,7 +100,6 @@ export const PowerPlatformKeys = {
   },
   ON_SITE_OR_CLOSE_TO_SITE: {
     ON: 100000000,
-    NEXT_TO: 100000001,
-    NEAR: 452120001
+    NEXT_TO: 100000001
   }
 }

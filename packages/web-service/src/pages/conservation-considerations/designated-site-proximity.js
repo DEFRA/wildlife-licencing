@@ -4,37 +4,34 @@ import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { checkSiteData, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
-const { ACTIVITY_ADVICE, DESIGNATED_SITE_PROXIMITY } = conservationConsiderationURIs
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+
+const { DESIGNATED_SITE_PROXIMITY } = conservationConsiderationURIs
 
 export const getData = async request => {
   const ads = await getCurrentSite(request)
-  return {
-    'advice-from-who': ads.adviceFromWho,
-    'advice-description': ads.adviceDescription
-  }
+  return { proximity: ads.onSiteOrCloseToSite, values: PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE }
 }
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ads = await getCurrentSite(request)
-  ads.adviceFromWho = request.payload['advice-from-who']
-  ads.adviceDescription = request.payload['advice-description']
+  ads.onSiteOrCloseToSite = parseInt(request.payload.proximity)
   await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, ads)
 }
 
 export const completion = async request => {
-  return conservationConsiderationURIs.ACTIVITY_ADVICE.uri
+  return conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri
 }
 
 export default pageRoute({
-  page: ACTIVITY_ADVICE.page,
-  uri: ACTIVITY_ADVICE.uri,
+  page: DESIGNATED_SITE_PROXIMITY.page,
+  uri: DESIGNATED_SITE_PROXIMITY.uri,
   checkData: [checkApplication, checkSiteData],
   validator: Joi.object({
-    'advice-from-who': Joi.string().required().max(100),
-    'advice-description': Joi.string().required().replace('\r\n', '\n').max(4000)
+    proximity: Joi.string().required().valid(...Object.values(PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE).map(v => v.toString()))
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: DESIGNATED_SITE_PROXIMITY.uri,
+  completion: completion,
   setData: setData
 })

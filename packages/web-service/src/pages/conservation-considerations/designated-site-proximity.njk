@@ -1,0 +1,33 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+
+{% set title = 'Will the activity happen on or next to the site?' %}
+
+{% set errorMap = {
+        'proximity': {
+          'any.required': { ref: '#proximity', text: 'Select on or next to' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      name: "proximity",
+      hint: {
+        text: "Select one."
+      },
+      errorMessage: { text: "Select on or next to" } if error['proximity'],
+      items: [
+        {
+          value: data.values.ON,
+          text: "On",
+          checked: data.proximity === data.values.ON
+        },
+        {
+          value:  data.values.NEXT_TO,
+          text: "Next to",
+          checked: data.proximity === data.values.NEXT_TO
+        }
+      ]
+    }) }}
+{% endblock %}

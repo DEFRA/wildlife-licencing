@@ -3,7 +3,7 @@ import { isYes, yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
-import { checkSSSIData } from './common.js'
+import { checkSiteData } from './common.js'
 
 const { MANAGING_SPECIAL_AREA, NECESSARY_SITE_NAME, SIGNIFICANT_EFFECTS_ON_SPECIAL_AREA } = conservationConsiderationURIs
 
@@ -25,7 +25,7 @@ export const completion = async request => isYes(request) ? NECESSARY_SITE_NAME.
 export const necessaryForManagingSpecialArea = yesNoPage({
   page: MANAGING_SPECIAL_AREA.page,
   uri: MANAGING_SPECIAL_AREA.uri,
-  checkData: [checkApplication, checkSSSIData],
+  checkData: [checkApplication, checkSiteData],
   getData: getData,
   completion: completion,
   setData: setData

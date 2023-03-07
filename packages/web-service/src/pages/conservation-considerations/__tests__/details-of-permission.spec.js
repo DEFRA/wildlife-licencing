@@ -4,7 +4,7 @@ describe('the details of permission functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
-    it('returns the permissions details from the SSSI site', async () => {
+    it('returns the permissions details from the designated site', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           DESIGNATED_SITES: {
@@ -20,7 +20,11 @@ describe('the details of permission functions', () => {
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            designatedSite: {
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }
           })
         })
       }
@@ -31,7 +35,7 @@ describe('the details of permission functions', () => {
   })
 
   describe('the setData function', () => {
-    it('smokes', async () => {
+    it('sets the permissions details', async () => {
       const mockUpdate = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -49,7 +53,11 @@ describe('the details of permission functions', () => {
         payload: { 'permission-details': 'STRING' },
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            designatedSite: {
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }
           })
         })
       }
