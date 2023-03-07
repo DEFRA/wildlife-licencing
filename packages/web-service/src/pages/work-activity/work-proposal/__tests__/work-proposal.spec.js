@@ -16,6 +16,9 @@ describe('The work-proposal page', () => {
         },
         APIRequests: {
           APPLICATION: {
+            getById: () => {
+              return {}
+            },
             tags: () => {
               return { get: () => 'not-started', set: mockSet }
             }
@@ -27,7 +30,7 @@ describe('The work-proposal page', () => {
       expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'in-progress' })
     })
 
-    it('getData returns null', async () => {
+    it('getData returns the proposal description', async () => {
       const request = {
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -40,6 +43,9 @@ describe('The work-proposal page', () => {
         },
         APIRequests: {
           APPLICATION: {
+            getById: () => {
+              return { proposalDescription: 'the proposal of the work' }
+            },
             tags: () => {
               return { get: () => 'not-started', set: jest.fn() }
             }
@@ -47,7 +53,7 @@ describe('The work-proposal page', () => {
         }
       }))
       const { getData } = await import('../work-proposal.js')
-      expect(await getData(request)).toBe(null)
+      expect(await getData(request)).toEqual({ proposalDescription: 'the proposal of the work' })
     })
 
     it('checkData redirects to CYA if the journeys complete', async () => {

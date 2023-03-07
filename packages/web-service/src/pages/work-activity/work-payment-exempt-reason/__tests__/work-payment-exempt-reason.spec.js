@@ -3,9 +3,32 @@ describe('The work-payment-exempt-reason page', () => {
 
   describe('work-payment-exempt-reason page', () => {
     it('getData returns the powerapps keys', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: '123abc' }
+            }
+          }
+        }
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return {
+                applicationCategory: 101,
+                paymentExemptReason: 'I wont be paying because its a bridge I need to get onto my fields'
+              }
+            }
+          }
+        }
+      }))
       const { getData } = await import('../work-payment-exempt-reason.js')
-      expect(await getData()).toEqual(
+      expect(await getData(request)).toEqual(
         {
+          paymentExemptReason: 'I wont be paying because its a bridge I need to get onto my fields',
+          radioChecked: 101,
           HOUSEHOLDER_HOME_IMPROVEMENTS: 100000013,
           LISTED_BUILDINGS: 452120002,
           OTHER: 452120001,

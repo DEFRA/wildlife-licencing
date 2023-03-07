@@ -2,6 +2,44 @@ describe('The work-payment page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('work-payment page', () => {
+    it('getData can return yes from the applicationData', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ applicationId: '123abc' })
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return { exemptFromPayment: true }
+            }
+          }
+        }
+      }))
+      const { getData } = await import('../work-payment.js')
+      expect(await getData(request)).toEqual({ yesNo: 'yes' })
+    })
+
+    it('getData can return no from the applicationData', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ applicationId: '123abc' })
+        })
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return { exemptFromPayment: false }
+            }
+          }
+        }
+      }))
+      const { getData } = await import('../work-payment.js')
+      expect(await getData(request)).toEqual({ yesNo: 'no' })
+    })
+
     it('the completion function returns the user to the CYA page if on the return journey', async () => {
       const request = {
         cache: () => ({

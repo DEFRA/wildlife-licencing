@@ -71,7 +71,7 @@ describe('The work-category page', () => {
           TRANSPORT__HIGHWAYS: 100000012,
           WASTE_MANAGEMENT: 100000014,
           WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT: 100000015,
-          applicationCategory: 0
+          applicationCategory: undefined
         }
       )
     })

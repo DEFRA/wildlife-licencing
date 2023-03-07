@@ -117,7 +117,7 @@ describe('The check-work-answers', () => {
     expect(await getData(request)).toEqual([
       { key: 'workProposal', value: 'proposalDescription' },
       { key: 'workPayment', value: 'yes' },
-      { key: 'workCategory', value: 'Other' },
+      { key: 'workPaymentExemptCategory', value: 'Other' },
       { key: 'workPaymentExemptReason', value: 'I wont be paying because its a place of worship' }
     ])
     expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'complete-not-confirmed' })
