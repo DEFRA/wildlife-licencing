@@ -1,9 +1,8 @@
-import Joi from 'joi'
-import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
+import { isYes, yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 
-const { NECESSARY_SITE_NAME } = conservationConsiderationURIs
+const { DESIGNATED_SITE_REMOVE } = conservationConsiderationURIs
 
 export const checkData = async request => {
   return null
@@ -18,16 +17,13 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  return conservationConsiderationURIs.SPECIAL_AREA_SITE_NAME.uri
+  return conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri
 }
 
-export default pageRoute({
-  page: NECESSARY_SITE_NAME.page,
-  uri: NECESSARY_SITE_NAME.uri,
+export const designatedSiteRemove = yesNoPage({
+  page: DESIGNATED_SITE_REMOVE.page,
+  uri: DESIGNATED_SITE_REMOVE.uri,
   checkData: [checkApplication, checkData],
-  validator: Joi.object({
-    'special-area-site-name': Joi.string()
-  }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: completion,
   setData: setData

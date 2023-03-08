@@ -10,7 +10,7 @@ import {
   SIGN_OUT,
   SPECIES,
   APPLICATION_SUMMARY,
-  TASKLIST
+  TASKLIST, conservationConsiderationURIs
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
@@ -88,6 +88,15 @@ export const additionalPageData = (request, h) => {
         // Conviction
         isAnyConviction: convictionsURIs.ANY_CONVICTIONS.uri,
         convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
+
+        // Conservation considerations
+        designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
+        designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
+        designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
+        designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
+        designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
+        designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
+        designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri,
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,

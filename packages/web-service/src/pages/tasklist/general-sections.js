@@ -119,7 +119,7 @@ export const TASKS = {
   [SECTION_TASKS.CONSERVATION]: {
     name: SECTION_TASKS.CONSERVATION,
     uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.CONSERVATION, tags)
-      ? conservationConsiderationURIs.SSSI_CHECK.uri
+      ? conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
       : conservationConsiderationURIs.DESIGNATED_SITE.uri,
     status: tags => getTaskStatus(SECTION_TASKS.CONSERVATION, tags) || eligibilityCheckHelper(tags),
     enabled: tags => haveTasksCompleted([SECTION_TASKS.ELIGIBILITY_CHECK], tags)

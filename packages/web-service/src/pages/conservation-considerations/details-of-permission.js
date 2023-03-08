@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { checkSiteData, getCurrentSite } from './common.js'
+import { getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 
 const { OWNER_PERMISSION_DETAILS } = conservationConsiderationURIs
@@ -22,7 +22,7 @@ export const setData = async request => {
 export default pageRoute({
   page: OWNER_PERMISSION_DETAILS.page,
   uri: OWNER_PERMISSION_DETAILS.uri,
-  checkData: [checkApplication, checkSiteData],
+  checkData: checkApplication,
   getData: getData,
   validator: Joi.object({
     'permission-details': Joi.string().required().replace('\r\n', '\n').max(4000)

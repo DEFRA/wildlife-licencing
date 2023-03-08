@@ -154,8 +154,8 @@ export const conservationConsiderationURIs = {
   NE_ADVICE: { uri: '/advice-from-natural-england', page: 'advice-from-natural-england' },
   ACTIVITY_ADVICE: { uri: '/ne-activity-advice', page: 'ne-activity-advice' },
   DESIGNATED_SITE_PROXIMITY: { uri: '/designated-site-proximity', page: 'designated-site-proximity' },
-  SPECIAL_AREA_SITE_REMOVE: { uri: '/special-area-remove', page: 'special-area-remove' },
-  SSSI_CHECK: { uri: '/sssi-check-answers', page: 'sssi-check-answers' }
+  DESIGNATED_SITE_CHECK_ANSWERS: { uri: '/designated-site-check-answers', page: 'designated-site-check-answers' },
+  DESIGNATED_SITE_REMOVE: { uri: '/designated-site-remove', page: 'designated-site-remove' }
 }
 
 export const convictionsURIs = {

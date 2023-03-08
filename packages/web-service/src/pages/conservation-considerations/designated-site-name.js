@@ -3,7 +3,7 @@ import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { getCurrentSite, getFilteredDesignatedSites } from './common.js'
+import { completionOrCheck, getCurrentSite, getFilteredDesignatedSites } from './common.js'
 
 const { DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
@@ -47,6 +47,6 @@ export default pageRoute({
     'site-name': Joi.string().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: conservationConsiderationURIs.OWNER_PERMISSION.uri,
+  completion: completionOrCheck(conservationConsiderationURIs.OWNER_PERMISSION),
   setData: setData
 })

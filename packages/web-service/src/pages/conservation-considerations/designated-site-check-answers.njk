@@ -1,0 +1,31 @@
+{% extends "information-page.njk" %}
+
+{% from "answer-summary.njk" import answerSummary %}
+{% from "button/macro.njk" import govukButton %}
+
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Check your answers' %}
+
+
+{% block pageContent %}
+    {% for designatedSite in data.checkData %}
+        {% set questionMap = {
+            siteName: { question: 'Site name', href: _uri.designatedSiteName + '?id=' + designatedSite.id },
+            permissionFromOwner: { question: 'Permission from owner?', href: _uri.designatedSiteOwnerPermission + '?id=' + designatedSite.id },
+            detailsOfPermission: { question: 'Details of permission', href: _uri.designatedSitePermissionDetails + '?id=' + designatedSite.id },
+            adviceFromNaturalEngland: { question: 'Advice from Natural England', href: _uri.designatedSiteNEAdvice + '?id=' + designatedSite.id },
+            adviceFromWho: { question: 'Who is the advice from?', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+            adviceDescription: { question: 'Outcome of the advice', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+            onSiteOrCloseToSite: { question: 'On or next to the site?', answer: { '100000000': 'on', '100000001': 'close' }, href: _uri.designatedSiteProximity + '?id=' + designatedSite.id }
+        } %}
+
+        {{ answerSummary(questionMap, designatedSite.tabData) }}
+    {% endfor %}
+    {{ govukButton({
+        attributes: { id: 'continue' },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Confirm',
+        classes: "govuk-!-margin-top-5"
+    }) }}
+{% endblock %}

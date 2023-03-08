@@ -106,8 +106,8 @@ import detailsOfPermission from '../pages/conservation-considerations/details-of
 import { adviceFromNaturalEngland } from '../pages/conservation-considerations/advice-from-natural-england.js'
 import neActivityAdvice from '../pages/conservation-considerations/ne-activity-advice.js'
 import designatedSiteProximity from '../pages/conservation-considerations/designated-site-proximity.js'
-import { specialAreaRemove } from '../pages/conservation-considerations/special-area-remove.js'
-import sssiCheckAnswers from '../pages/conservation-considerations/sssi-check-answers.js'
+import { designatedSiteRemove } from '../pages/conservation-considerations/designated-site-remove.js'
+import designatedSiteCheckAnswers from '../pages/conservation-considerations/designated-site-check-answers.js'
 
 import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
 
@@ -240,8 +240,8 @@ const routes = [
   ...neActivityAdvice,
   ...designatedSiteProximity,
   ...designatedSiteStart,
-  ...specialAreaRemove,
-  ...sssiCheckAnswers,
+  ...designatedSiteCheckAnswers,
+  ...designatedSiteRemove,
   ...authority,
   ...ecologistPreviousLicence,
   ...enterLicenceDetails,

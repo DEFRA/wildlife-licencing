@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { checkSiteData, getCurrentSite } from './common.js'
+import { getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
@@ -20,18 +20,14 @@ export const setData = async request => {
   await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, ads)
 }
 
-export const completion = async request => {
-  return conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri
-}
-
 export default pageRoute({
   page: DESIGNATED_SITE_PROXIMITY.page,
   uri: DESIGNATED_SITE_PROXIMITY.uri,
-  checkData: [checkApplication, checkSiteData],
+  checkData: checkApplication,
   validator: Joi.object({
     proximity: Joi.string().required().valid(...Object.values(PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE).map(v => v.toString()))
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: completion,
+  completion: conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri,
   setData: setData
 })
