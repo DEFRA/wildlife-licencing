@@ -46,7 +46,8 @@ describe('permission-functions', () => {
     const { getAuthorityName } = await import('../common/permission-functions.js')
     expect(await getAuthorityName('5d64da5a-4276-ed11-81ad-0022481b5bf5')).toBe('Bromsgrove District Council')
   })
-  it('getCheckYourAnswersData', async () => {
+
+  it('getCheckYourAnswersData with complete permission data', async () => {
     const { getCheckYourAnswersData } = await import('../common/permission-functions.js')
     expect(await getCheckYourAnswersData(
       [
@@ -72,6 +73,20 @@ describe('permission-functions', () => {
           type: 'Planning permission'
         }
       ]
+    })
+  })
+
+  it('getCheckYourAnswersData with incomplete permission data', async () => {
+    const { getCheckYourAnswersData } = await import('../common/permission-functions.js')
+    expect(await getCheckYourAnswersData(
+      [
+        {
+          id: '12345',
+          type: 123
+        }
+      ]
+    )).toStrictEqual({
+      pageData: []
     })
   })
 })
