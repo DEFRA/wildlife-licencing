@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { getCurrentSite } from './common.js'
+import { completionOrCheck, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 
 const { OWNER_PERMISSION_DETAILS } = conservationConsiderationURIs
@@ -27,6 +27,6 @@ export default pageRoute({
   validator: Joi.object({
     'permission-details': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
-  completion: conservationConsiderationURIs.NE_ADVICE.uri,
+  completion: completionOrCheck(() => conservationConsiderationURIs.NE_ADVICE.uri),
   setData: setData
 })

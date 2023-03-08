@@ -5,25 +5,25 @@ describe('the sssi check answers functions', () => {
 
   describe('the checkData function', () => {
     it('smokes', async () => {
-      const { checkData } = await import('../sssi-check-answers.js')
+      const { checkData } = await import('../designated-site-check-answers.js')
     })
   })
 
   describe('the getData function', () => {
     it('smokes', async () => {
-      const { getData } = await import('../sssi-check-answers.js')
+      const { getData } = await import('../designated-site-check-answers.js')
     })
   })
 
   describe('the setData function', () => {
     it('smokes', async () => {
-      const { setData } = await import('../sssi-check-answers.js')
+      const { setData } = await import('../designated-site-check-answers.js')
     })
   })
 
   describe('the completion function', () => {
     it('smokes', async () => {
-      const { completion } = await import('../sssi-check-answers.js')
+      const { completion } = await import('../designated-site-check-answers.js')
     })
   })
 })

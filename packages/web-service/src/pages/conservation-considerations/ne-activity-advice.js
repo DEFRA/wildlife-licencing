@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { getCurrentSite } from './common.js'
+import { completionOrCheck, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 const { ACTIVITY_ADVICE, DESIGNATED_SITE_PROXIMITY } = conservationConsiderationURIs
 
@@ -22,10 +22,6 @@ export const setData = async request => {
   await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, ads)
 }
 
-export const completion = async request => {
-  return conservationConsiderationURIs.ACTIVITY_ADVICE.uri
-}
-
 export default pageRoute({
   page: ACTIVITY_ADVICE.page,
   uri: ACTIVITY_ADVICE.uri,
@@ -35,6 +31,6 @@ export default pageRoute({
     'advice-description': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: DESIGNATED_SITE_PROXIMITY.uri,
+  completion: completionOrCheck(() => DESIGNATED_SITE_PROXIMITY.uri),
   setData: setData
 })

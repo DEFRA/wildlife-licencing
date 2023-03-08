@@ -47,6 +47,6 @@ export default pageRoute({
     'site-name': Joi.string().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: completionOrCheck(conservationConsiderationURIs.OWNER_PERMISSION),
+  completion: completionOrCheck(() => conservationConsiderationURIs.OWNER_PERMISSION.uri),
   setData: setData
 })

@@ -1,6 +1,6 @@
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
-describe('the On or next to designated site start functions', () => {
+describe('the on or next to designated site start functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
@@ -67,10 +67,10 @@ describe('the On or next to designated site start functions', () => {
         payload: { 'yes-no': 'no' }
       }
       const result = await completion(request)
-      expect(result).toEqual('/sssi-check-answers')
+      expect(result).toEqual('/designated-site-check-answers')
     })
 
-    it('redirects to the site-name page if answer is yes', async () => {
+    it('redirects to the start page if answer is yes', async () => {
       const { completion } = await import('../on-or-next-to-designated-site.js')
       const request = {
         payload: { 'yes-no': 'yes' }

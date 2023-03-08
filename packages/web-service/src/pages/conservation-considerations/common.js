@@ -38,10 +38,10 @@ export const getCurrentSite = async request => {
   }
 }
 
-export const completionOrCheck = page => async request => {
+export const completionOrCheck = func => async request => {
   const { applicationId } = await request.cache().getData()
   const status = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.CONSERVATION)
   return [tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED].includes(status)
     ? conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
-    : page.uri
+    : func(request)
 }

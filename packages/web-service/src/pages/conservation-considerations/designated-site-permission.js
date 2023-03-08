@@ -19,13 +19,11 @@ export const setData = async request => {
   await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, ads)
 }
 
-export const completion = async request => isYes(request) ? OWNER_PERMISSION_DETAILS.uri : NE_ADVICE.uri
-
 export const designatedSitePermission = yesNoPage({
   page: OWNER_PERMISSION.page,
   uri: OWNER_PERMISSION.uri,
   checkData: checkApplication,
   getData: getData,
-  completion: completionOrCheck(isYes(request) ? OWNER_PERMISSION_DETAILS : NE_ADVICE),
+  completion: completionOrCheck(async request => isYes(request) ? OWNER_PERMISSION_DETAILS.uri : NE_ADVICE.uri),
   setData: setData
 })

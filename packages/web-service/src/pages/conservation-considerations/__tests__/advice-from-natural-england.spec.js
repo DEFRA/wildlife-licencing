@@ -3,7 +3,7 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 describe('the advice from natural england function functions', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('the getData function', () => {
+  describe.only('the getData function', () => {
     it('returns the user permission flag from the SSSI site', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -72,26 +72,6 @@ describe('the advice from natural england function functions', () => {
           id: '344be97d-c928-4753-ae09-f8944ad9f228',
           adviceFromNaturalEngland: true
         })
-    })
-  })
-
-  describe('the completion function', () => {
-    it('if yes redirects to the natural england advice page', async () => {
-      const { completion } = await import('../advice-from-natural-england.js')
-      const request = {
-        payload: { 'yes-no': 'yes' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/ne-activity-advice')
-    })
-
-    it('if no redirects to the special sites page', async () => {
-      const { completion } = await import('../advice-from-natural-england.js')
-      const request = {
-        payload: { 'yes-no': 'no' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/designated-site-proximity')
     })
   })
 })

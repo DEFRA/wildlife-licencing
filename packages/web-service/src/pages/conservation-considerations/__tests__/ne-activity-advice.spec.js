@@ -4,7 +4,7 @@ describe('the natural england activity advice functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
-    it('returns the advice details from the SSSI site', async () => {
+    it('returns the advice details from the designated site', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           DESIGNATED_SITES: {
@@ -39,7 +39,7 @@ describe('the natural england activity advice functions', () => {
   })
 
   describe('the setData function', () => {
-    it('smokes', async () => {
+    it('sets the data in the designated site', async () => {
       const mockUpdate = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {

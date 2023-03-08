@@ -74,24 +74,4 @@ describe('the designated site permission functions', () => {
         })
     })
   })
-
-  describe('the completion function', () => {
-    it('if yes redirects to the owner permission details', async () => {
-      const { completion } = await import('../designated-site-permission.js')
-      const request = {
-        payload: { 'yes-no': 'yes' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/details-of-permission')
-    })
-
-    it('if no redirects to the advice from natural england page', async () => {
-      const { completion } = await import('../designated-site-permission.js')
-      const request = {
-        payload: { 'yes-no': 'no' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/advice-from-natural-england')
-    })
-  })
 })

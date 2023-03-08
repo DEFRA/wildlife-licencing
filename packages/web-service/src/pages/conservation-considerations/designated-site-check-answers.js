@@ -10,7 +10,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
 
-const truncateLongText = lt => lt ? `${lt.substring(0, 100)}${lt > 100 ? '...' : ''}` : ''
+const truncateLongText = lt => lt ? `${lt.substring(0, 100)}${lt.length > 100 ? '...' : ''}` : ''
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
