@@ -14,7 +14,7 @@ describe('permissions page handler', () => {
             return [
               {
                 id: '12345',
-                type: 12345,
+                type: 452120000,
                 referenceNumber: 'ref-123',
                 planningType: 'planningType',
                 planningTypeOtherDescription: 'planningTypeOtherDescription',
@@ -76,7 +76,7 @@ describe('permissions page handler', () => {
           planningTypeOtherDescription: 'planningTypeOtherDescription',
           referenceNumber: 'ref-123',
           removePermissionUrl: '/consent-remove',
-          type: undefined
+          type: 'Planning permission'
         }
       ],
       permissionDetails: {

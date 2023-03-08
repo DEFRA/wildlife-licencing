@@ -66,7 +66,6 @@ export const getCheckYourAnswersData = async permissionData => {
   }
   const removePermissionUrl = permissionsURIs.CONSENT_REMOVE.uri
   const changePermissionUrl = permissionsURIs.CONSENT_TYPE.uri
-
   for (const permission of permissionData) {
     const id = permission.id
     const type = getPermissionType(permission?.type)
@@ -74,8 +73,14 @@ export const getCheckYourAnswersData = async permissionData => {
     const referenceNumber = permission?.referenceNumber
     const planningTypeOtherDescription = permission?.planningTypeOtherDescription
     const authority = await getAuthorityName(permission?.authority)
-    const permissionInfo = Object.assign(permission, { id, type, planningType, referenceNumber, planningTypeOtherDescription, authority, removePermissionUrl, changePermissionUrl })
-    data.pageData.push(permissionInfo)
+    let permissionInfo
+    if (id && type && referenceNumber && authority) {
+      permissionInfo = Object.assign(permission, { id, type, planningType, referenceNumber, planningTypeOtherDescription, authority, removePermissionUrl, changePermissionUrl })
+    }
+
+    if (permissionInfo) {
+      data.pageData.push(permissionInfo)
+    }
   }
   return data
 }
