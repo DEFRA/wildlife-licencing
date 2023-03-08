@@ -35,7 +35,7 @@ export const setData = async request => {
   const { applicationId } = journeyData
   const type = parseInt(request.payload[permissionConsentRadio])
   if (request?.query?.id) {
-    const permissionId = request.query.id
+    const permissionId = request.query.id ? request.query.id : journeyData?.permissionData?.sddsPermissionsId
     const permission = await APIRequests.PERMISSION.getPermission(journeyData?.applicationId, permissionId)
     const payload = { ...permission, type }
     await APIRequests.PERMISSION.updatePermission(applicationId, permissionId, payload)
