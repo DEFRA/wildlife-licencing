@@ -29,6 +29,7 @@ export default async (context, req, h) => {
       id: uuidv4(),
       applicationId: applicationId,
       designatedSiteId: designatedSiteId,
+      designatedSiteType: designatedSite.json.siteType,
       designatedSite: alwaysExclude(req.payload),
       updateStatus: 'L'
     })

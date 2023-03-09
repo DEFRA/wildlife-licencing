@@ -10,6 +10,7 @@ import { ECOLOGIST_EXPERIENCE } from './api-requests-ecologist-experience.js'
 import { LICENCES } from './api-requests-licences.js'
 import { FILE_UPLOAD } from './api-requests-file-upload.js'
 import { APPLICATION_TYPES } from './api-requests-application-types.js'
+import { DESIGNATED_SITES } from './api-requests-designated-sites.js'
 
 import { boomify } from '@hapi/boom'
 import { OTHER } from './api-requests-other.js'
@@ -38,7 +39,8 @@ export const apiUrls = {
   APPLICATION_SITE: '/application-site',
   APPLICATION_SITES: '/application-sites',
   APPLICATION_SITES_SITES: '/application-sites/sites',
-  APPLICATION_TYPES: '/application-types'
+  APPLICATION_TYPES: '/application-types',
+  DESIGNATED_SITES: 'designated-sites'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {
@@ -66,5 +68,6 @@ export const APIRequests = {
   FILE_UPLOAD,
   APPLICATION_TYPES,
   OTHER,
-  PERMISSION
+  PERMISSION,
+  DESIGNATED_SITES
 }

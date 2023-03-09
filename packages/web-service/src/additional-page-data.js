@@ -11,7 +11,7 @@ import {
   SIGN_OUT,
   SPECIES,
   APPLICATION_SUMMARY,
-  TASKLIST
+  TASKLIST, conservationConsiderationURIs
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
@@ -96,13 +96,27 @@ export const additionalPageData = (request, h) => {
         isAnyConviction: convictionsURIs.ANY_CONVICTIONS.uri,
         convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
 
+        // Conservation considerations
+        onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
+        designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
+        designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
+        designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
+        designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
+        designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
+        designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
+        designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri,
+
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
         licenceDetails: ecologistExperienceURIs.LICENCE.uri,
         experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
         methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
         classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,
-        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+        classMitigationDetails: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri,
+
+        magic: {
+          ds: 'https://magic.defra.gov.uk/MagicMap.aspx?chosenLayers=sssiPIndex,sssiIndex,backdropDIndex,backdropIndex,europeIndex,vmlBWIndex,25kBWIndex,50kBWIndex,250kBWIndex,miniscaleBWIndex,baseIndex&box=-187122:5095:1034155:705095&useDefaultbackgroundMapping=false'
+        }
       },
       credentials: request.auth.credentials
     })

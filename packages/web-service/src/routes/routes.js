@@ -104,9 +104,20 @@ import habitatActivities from '../pages/habitat/a24/activities/habitat-activitie
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
 import checkHabitatAnswers from '../pages/habitat/a24/check-habitat-answers/check-habitat-answers.js'
 
-import authority from '../pages/permissions/authority/authority.js'
+import { onOrNextToDesignatedSite } from '../pages/conservation-considerations/on-or-next-to-designated-site.js'
+import designatedSiteStart from '../pages/conservation-considerations/designated-site-start.js'
+import designatedSiteName from '../pages/conservation-considerations/designated-site-name.js'
+
+import { designatedSitePermission } from '../pages/conservation-considerations/designated-site-permission.js'
+import detailsOfPermission from '../pages/conservation-considerations/details-of-permission.js'
+import { adviceFromNaturalEngland } from '../pages/conservation-considerations/advice-from-natural-england.js'
+import neActivityAdvice from '../pages/conservation-considerations/ne-activity-advice.js'
+import designatedSiteProximity from '../pages/conservation-considerations/designated-site-proximity.js'
+import { designatedSiteRemove } from '../pages/conservation-considerations/designated-site-remove.js'
+import designatedSiteCheckAnswers from '../pages/conservation-considerations/designated-site-check-answers.js'
 
 import ecologistPreviousLicence from '../pages/ecologist-experience/previous-licence/previous-licence.js'
+
 import enterLicenceDetails from '../pages/ecologist-experience/enter-licence-details/enter-licence-details.js'
 import enterExperience from '../pages/ecologist-experience/enter-experience/enter-experience.js'
 import enterMethods from '../pages/ecologist-experience/enter-methods/enter-methods.js'
@@ -120,6 +131,7 @@ import anyConvictions from '../pages/conviction/any-conviction/any-convictions.j
 import convictionDetails from '../pages/conviction/conviction-details/conviction-details.js'
 import convictionsCheckAnswers from '../pages/conviction/convictions-check-answers/convictions-check-answers.js'
 
+import authority from '../pages/permissions/authority/authority.js'
 import permissions from '../pages/permissions/permissions/permissions.js'
 import addPermissionStart from '../pages/permissions/add-permission-start/add-permission-start.js'
 import whyNoPermission from '../pages/permissions/why-no-permission/why-no-permission.js'
@@ -227,6 +239,16 @@ const routes = [
   ...habitatEntrances,
   ...habitatActivities,
   ...checkHabitatAnswers,
+  ...onOrNextToDesignatedSite,
+  ...designatedSiteName,
+  ...designatedSitePermission,
+  ...detailsOfPermission,
+  ...adviceFromNaturalEngland,
+  ...neActivityAdvice,
+  ...designatedSiteProximity,
+  ...designatedSiteStart,
+  ...designatedSiteCheckAnswers,
+  ...designatedSiteRemove,
   ...authority,
   ...ecologistPreviousLicence,
   ...enterLicenceDetails,

@@ -10,6 +10,7 @@ import {
   FILE_UPLOADS,
   siteURIs,
   permissionsURIs,
+  conservationConsiderationURIs,
   workActivityURIs
 } from '../../uris.js'
 import {
@@ -36,6 +37,7 @@ export const SECTION_TASKS = {
   INVOICE_PAYER: 'invoice-payer',
   WORK_ACTIVITY: 'work-activity',
   PERMISSIONS: 'permissions',
+  CONSERVATION: 'conservation',
   SITES: 'sites',
   ECOLOGIST_EXPERIENCE: 'ecologist-experience',
   SUPPORTING_INFORMATION: 'supporting-information',
@@ -115,6 +117,15 @@ export const TASKS = {
       ? permissionsURIs.CHECK_YOUR_ANSWERS.uri
       : permissionsURIs.PERMISSIONS.uri,
     status: tags => getTaskStatus(SECTION_TASKS.PERMISSIONS, tags) || eligibilityCheckHelper(tags),
+    enabled: tags => haveTasksCompleted([SECTION_TASKS.ELIGIBILITY_CHECK], tags)
+  },
+
+  [SECTION_TASKS.CONSERVATION]: {
+    name: SECTION_TASKS.CONSERVATION,
+    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.CONSERVATION, tags)
+      ? conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
+      : conservationConsiderationURIs.DESIGNATED_SITE.uri,
+    status: tags => getTaskStatus(SECTION_TASKS.CONSERVATION, tags) || eligibilityCheckHelper(tags),
     enabled: tags => haveTasksCompleted([SECTION_TASKS.ELIGIBILITY_CHECK], tags)
   },
 

@@ -1,0 +1,9 @@
+{% extends "yes-no.njk" %}
+{% set title = 'Will the development take place on or next to any designated site?' %}
+{% set noneSelected = 'Choose yes or no' %}
+{% block pageContent %}
+<p class="govuk-body">
+    <a href="{{_uri.magic.ds}}" class="govuk-link" rel="noreferrer noopener" target="_blank">Check the location of designated sites</a>
+</p>
+{{ super() }}
+{% endblock %}
