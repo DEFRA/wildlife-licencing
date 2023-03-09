@@ -33,6 +33,8 @@ export const getData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
+  delete journeyData.permissionData
+  await request.cache().setData(journeyData)
   // Mark the convections journey tag as complete
   await APIRequests.APPLICATION.tags(journeyData?.applicationId).set({ tag: SECTION_TASKS.PERMISSIONS, tagState: tagStatus.COMPLETE })
 

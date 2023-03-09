@@ -13,9 +13,7 @@ const {
     LISTED_BUILDING_CONSENT,
     HIGHWAYS_ACT_CONSENT,
     MINERAL_CONSENT,
-    CONSERVATION_AREA_CONSENT,
-    TREE_PRESERVATION_ORDER,
-    UTILITIES_CONSENT
+    TREE_PRESERVATION_ORDER
   }
 } = PowerPlatformKeys
 
@@ -27,9 +25,7 @@ export const getData = async request => {
     LISTED_BUILDING_CONSENT,
     HIGHWAYS_ACT_CONSENT,
     MINERAL_CONSENT,
-    CONSERVATION_AREA_CONSENT,
     TREE_PRESERVATION_ORDER,
-    UTILITIES_CONSENT,
     consentType: journeyData?.permissionData?.type
   }
 }

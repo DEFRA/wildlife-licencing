@@ -14,7 +14,7 @@ describe('permissions page handler', () => {
             return [
               {
                 id: '12345',
-                type: 12345,
+                type: 452120000,
                 referenceNumber: 'ref-123',
                 planningType: 'planningType',
                 planningTypeOtherDescription: 'planningTypeOtherDescription',
@@ -76,7 +76,7 @@ describe('permissions page handler', () => {
           planningTypeOtherDescription: 'planningTypeOtherDescription',
           referenceNumber: 'ref-123',
           removePermissionUrl: '/consent-remove',
-          type: undefined
+          type: 'Planning permission'
         }
       ],
       permissionDetails: {
@@ -87,6 +87,7 @@ describe('permissions page handler', () => {
   })
 
   it('should redirect user to the task list page when tag state is complete', async () => {
+    const mockSetData = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       tagStatus: {
         NOT_STARTED: 'not-started',
@@ -103,11 +104,18 @@ describe('permissions page handler', () => {
     const request = {
       cache: () => ({
         getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
-        })
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+          permissionData: {
+            type: 123456,
+            referenceNumber: 'reference 123',
+            authority: 'e73b5c1d-7cac-ed11-83ff-0022481b53bf'
+          }
+        }),
+        setData: mockSetData
       })
     }
     const { completion } = await import('../check-your-answers/check-your-answers.js')
     expect(await completion(request)).toBe('/tasklist')
+    expect(mockSetData).toHaveBeenCalledWith({ applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' })
   })
 })
