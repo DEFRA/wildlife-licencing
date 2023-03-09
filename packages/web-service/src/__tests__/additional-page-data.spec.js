@@ -75,6 +75,7 @@ describe('additional page data', () => {
         siteName: '/site-name',
         siteAddress: '/site-got-postcode',
         convictionDetails: '/conviction-details',
+        onOrNextToDesignatedSite: '/on-or-next-to-designated-site',
         designatedSiteActivityAdvice: '/ne-activity-advice',
         designatedSiteNEAdvice: '/advice-from-natural-england',
         designatedSiteName: '/designated-site-name',

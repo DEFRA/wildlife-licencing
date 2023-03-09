@@ -90,6 +90,7 @@ export const additionalPageData = (request, h) => {
         convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
 
         // Conservation considerations
+        onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
         designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
         designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
         designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,

@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { getCurrentSite } from './common.js'
+import { allCompletion, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
@@ -28,6 +28,6 @@ export default pageRoute({
     proximity: Joi.string().required().valid(...Object.values(PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE).map(v => v.toString()))
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri,
+  completion: allCompletion,
   setData: setData
 })

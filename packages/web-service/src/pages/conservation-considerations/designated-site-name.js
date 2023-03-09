@@ -3,7 +3,7 @@ import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { completionOrCheck, getCurrentSite, getFilteredDesignatedSites } from './common.js'
+import { allCompletion, getCurrentSite, getFilteredDesignatedSites } from './common.js'
 
 const { DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
@@ -15,7 +15,10 @@ export const getData = async request => {
       sites: sites.map(s => ({ ...s, selected: s.id === ads.designatedSiteId }))
     }
   } else {
-    return { sites }
+    // Creating a new ads, so remove sites that already that exist from the list
+    const { applicationId } = await request.cache().getData()
+    const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+    return { sites: sites.filter(s => !applicationDesignatedSites.map(ads => ads.designatedSiteId).includes(s.id)) }
   }
 }
 
@@ -47,6 +50,6 @@ export default pageRoute({
     'site-name': Joi.string().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
-  completion: completionOrCheck(() => conservationConsiderationURIs.OWNER_PERMISSION.uri),
+  completion: allCompletion,
   setData: setData
 })

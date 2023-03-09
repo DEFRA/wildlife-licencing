@@ -1,4 +1,3 @@
-import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs, TASKLIST } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -7,8 +6,9 @@ import { tagStatus } from '../../services/status-tags.js'
 import { getFilteredDesignatedSites } from './common.js'
 import { yesNoFromBool } from '../common/common.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { isYes, yesNoPage } from '../common/yes-no.js'
 
-const { DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
+const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
 const truncateLongText = lt => lt ? `${lt.substring(0, 100)}${lt.length > 100 ? '...' : ''}` : ''
 
@@ -22,7 +22,7 @@ export const getData = async request => {
     tabData: [
       { key: 'siteName', value: sites.find(s => s.id === ads.designatedSiteId).siteName },
       { key: 'permissionFromOwner', value: yesNoFromBool(ads.permissionFromOwner) },
-      { key: 'detailsOfPermission', value: truncateLongText(ads.detailsOfPermission) },
+      (ads.permissionFromOwner && { key: 'detailsOfPermission', value: truncateLongText(ads.detailsOfPermission) }),
       { key: 'adviceFromNaturalEngland', value: yesNoFromBool(ads.adviceFromNaturalEngland) },
       (ads.adviceFromNaturalEngland && { key: 'adviceFromWho', value: ads.adviceFromWho }),
       (ads.adviceFromNaturalEngland && { key: 'adviceDescription', value: truncateLongText(ads.adviceDescription) }),
@@ -37,12 +37,16 @@ export const getData = async request => {
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
+  if (isYes(request)) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
+  } else {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
+  }
 }
 
-export const completion = async () => TASKLIST.uri
+export const completion = async request => isYes(request) ? `${DESIGNATED_SITE_NAME.uri}?id=new` : TASKLIST.uri
 
-export default pageRoute({
+export default yesNoPage({
   page: DESIGNATED_SITE_CHECK_ANSWERS.page,
   uri: DESIGNATED_SITE_CHECK_ANSWERS.uri,
   checkData: checkApplication,

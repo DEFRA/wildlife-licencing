@@ -21,7 +21,11 @@ export const getCurrentSite = async request => {
   const params = new URLSearchParams(request.query)
   const id = params.get('id')
 
-  if (id) {
+  if (id === 'new') {
+    // Creating a new designated site, do nothing
+    delete journeyData.designatedSite
+    await request.cache().setData(journeyData)
+  } else if (id) {
     // Reseat the cache on the site specified
     const applicationDesignatedSite = applicationDesignatedSites.find(ads => ads.id === id)
     journeyData.designatedSite = { id: applicationDesignatedSite.id, designatedSiteId: applicationDesignatedSite.designatedSiteId }
@@ -44,4 +48,33 @@ export const completionOrCheck = func => async request => {
   return [tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED].includes(status)
     ? conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
     : func(request)
+}
+
+export const allCompletion = async request => {
+  const journeyData = await request.cache().getData()
+  const { applicationId, designatedSite } = journeyData
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+  const applicationDesignatedSite = applicationDesignatedSites.find(ads => ads.id === designatedSite?.id)
+
+  if (applicationDesignatedSite.permissionFromOwner === undefined) {
+    return conservationConsiderationURIs.OWNER_PERMISSION.uri
+  }
+
+  if (applicationDesignatedSite.permissionFromOwner && !applicationDesignatedSite.detailsOfPermission) {
+    return conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri
+  }
+
+  if (applicationDesignatedSite.adviceFromNaturalEngland === undefined) {
+    return conservationConsiderationURIs.NE_ADVICE.uri
+  }
+
+  if (applicationDesignatedSite.adviceFromNaturalEngland && !applicationDesignatedSite.adviceFromWho) {
+    return conservationConsiderationURIs.ACTIVITY_ADVICE.uri
+  }
+
+  if (applicationDesignatedSite.onSiteOrCloseToSite === undefined) {
+    return conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri
+  }
+
+  return conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
 }
