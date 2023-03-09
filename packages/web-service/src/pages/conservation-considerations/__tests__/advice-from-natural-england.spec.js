@@ -3,7 +3,7 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 describe('the advice from natural england function functions', () => {
   beforeEach(() => jest.resetModules())
 
-  describe.only('the getData function', () => {
+  describe('the getData function', () => {
     it('returns the user permission flag from the SSSI site', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {

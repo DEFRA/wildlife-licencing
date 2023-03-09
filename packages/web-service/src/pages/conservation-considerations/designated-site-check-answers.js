@@ -10,7 +10,12 @@ import { isYes, yesNoPage } from '../common/yes-no.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
-const truncateLongText = lt => lt ? `${lt.substring(0, 100)}${lt.length > 100 ? '...' : ''}` : ''
+const truncateLongText = lt => {
+  if (lt) {
+    return `${lt.substring(0, 100)}${lt.length > 100 ? '...' : ''}`
+  }
+  return ''
+}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()

@@ -1,8 +1,6 @@
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { conservationConsiderationURIs } from '../../uris.js'
-import { SECTION_TASKS } from '../tasklist/general-sections.js'
-import { tagStatus } from '../../services/status-tags.js'
 
 const options = Object.values(PowerPlatformKeys.SITE_TYPE).map(v => v.option)
 const abv = Object.values(PowerPlatformKeys.SITE_TYPE).reduce((a, c) => ({ ...a, [c.option]: c.abbr }), {})
@@ -40,14 +38,8 @@ export const getCurrentSite = async request => {
     await request.cache().setData(journeyData)
     return applicationDesignatedSites[0]
   }
-}
 
-export const completionOrCheck = func => async request => {
-  const { applicationId } = await request.cache().getData()
-  const status = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.CONSERVATION)
-  return [tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED].includes(status)
-    ? conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
-    : func(request)
+  return null
 }
 
 export const allCompletion = async request => {

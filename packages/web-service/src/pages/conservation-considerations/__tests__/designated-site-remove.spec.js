@@ -61,5 +61,29 @@ describe('the special area remove functions', () => {
       await setData(request)
       expect(mockDestroy).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
     })
+
+    it('if \'no\' does nothing', async () => {
+      const mockDestroy = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            destroy: mockDestroy
+          }
+        }
+      }))
+      const request = {
+        payload: { 'yes-no': 'no' },
+        cache: () => ({
+          setData: jest.fn(),
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            designatedSite: { id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' }
+          })
+        })
+      }
+      const { setData } = await import('../designated-site-remove.js')
+      await setData(request)
+      expect(mockDestroy).not.toHaveBeenCalled()
+    })
   })
 })

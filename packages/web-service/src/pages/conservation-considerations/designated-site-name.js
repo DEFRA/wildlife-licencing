@@ -18,7 +18,7 @@ export const getData = async request => {
     // Creating a new ads, so remove sites that already that exist from the list
     const { applicationId } = await request.cache().getData()
     const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-    return { sites: sites.filter(s => !applicationDesignatedSites.map(ads => ads.designatedSiteId).includes(s.id)) }
+    return { sites: sites.filter(s => !applicationDesignatedSites.map(a => a.designatedSiteId).includes(s.id)) }
   }
 }
 

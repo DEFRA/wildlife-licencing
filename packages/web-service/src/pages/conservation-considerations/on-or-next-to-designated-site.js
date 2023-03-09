@@ -11,8 +11,8 @@ const { DESIGNATED_SITE, DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_START } 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
-  const { onOrNextToDesignatedSite } = await APIRequests.APPLICATION.getById(applicationId)
-  return { yesNo: yesNoFromBool(onOrNextToDesignatedSite) }
+  const { onOrNextToDesignatedSite: onOrNext } = await APIRequests.APPLICATION.getById(applicationId)
+  return { yesNo: yesNoFromBool(onOrNext) }
 }
 
 export const setData = async request => {

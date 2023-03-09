@@ -62,9 +62,7 @@ describe('additional page data', () => {
         licenceDetails: '/licence',
         login: '/login',
         magic: {
-          ramsar: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=ramPIndex,ramIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=279318:63656:623806:237487&amp;useDefaultbackgroundMapping=false',
-          sac: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=sacPIndex,sacIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=-187428:14658:846037:536153&amp;useDefaultbackgroundMapping=false',
-          spa: 'https://magic.defra.gov.uk/MagicMap.aspx?&amp;startTopic=GreyRasters&amp;chosenLayers=spaPIndex,spaIndex,backdropDIndex,backdropIndex,europeIndex,baseIndex&amp;box=-187428:14658:846037:536153&amp;useDefaultbackgroundMapping=false'
+          ds: 'https://magic.defra.gov.uk/MagicMap.aspx?chosenLayers=sssiPIndex,sssiIndex,backdropDIndex,backdropIndex,europeIndex,vmlBWIndex,25kBWIndex,50kBWIndex,250kBWIndex,miniscaleBWIndex,baseIndex&box=-187122:5095:1034155:705095&useDefaultbackgroundMapping=false'
         },
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
