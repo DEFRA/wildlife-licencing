@@ -34,18 +34,20 @@ describe('The permissions authority page', () => {
       authorities: [
         {
           id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 1'
+          name: 'Auth 1',
+          selected: false
         },
         {
           id: '7829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 3'
+          name: 'Auth 3',
+          selected: true
         },
         {
           id: '8829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 2'
+          name: 'Auth 2',
+          selected: false
         }
-      ],
-      selected: 'Auth 3'
+      ]
     })
   })
 
@@ -94,25 +96,6 @@ describe('The permissions authority page', () => {
         }
       ]
     })
-  })
-
-  it('validator', async () => {
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        OTHER: {
-          authorities: () => [
-            { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 1' },
-            { id: '7829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 3' },
-            { id: '8829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 2' }
-          ]
-        }
-      }
-    }))
-    const { validator } = await import('../authority/authority.js')
-    await expect(() => validator({ payload: { authorityId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' } })).resolves
-    await expect(() => validator({ payload: { fbAuthorityId: '6829ad54-bab7-4a78-8ca9-dcf722117a45' } })).resolves
-    await expect(() => validator({ payload: { authorityId: '' } })).rejects.toThrow()
-    await expect(() => validator({ payload: { fbAuthorityId: '' } })).rejects.toThrow()
   })
 
   it('setData', async () => {

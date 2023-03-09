@@ -1,0 +1,28 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% set errorMap = {
+        'work-proposal': {
+          'string.empty': { ref: '#work-proposal', text: 'You have not entered the activity or development work you plan to do' },
+          'string.max': { ref: '#work-proposal', text: 'You have entered too many characters'}
+        }
+    }
+%}
+
+{% set title = "What activity or development work do you plan to do?" %}
+
+{% block pageContent %}
+
+  {{ govukCharacterCount({
+    name: "work-proposal",
+    id: "work-proposal",
+    value: payload['work-proposal'] if payload['work-proposal'] else data.proposalDescription,
+    hint: {
+      text: "For example, construction of a new road, maintenance of a bridge, construction of five flats with access road and car parking area."
+    },
+    maxlength: 4000,
+    errorMessage: { text: "Enter the activity or development work you plan to do" } if error['work-proposal']
+  }) }}
+
+{% endblock %}

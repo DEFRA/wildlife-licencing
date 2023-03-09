@@ -17,7 +17,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, permissionData } = journeyData
   const permissionDetails = await APIRequests.PERMISSION.getPermissionDetailsById(applicationId)
-  const conditionsNotMetReason = request.payload[conditionsNotMet]
+  const conditionsNotMetReason = request.payload[conditionsNotMet].replaceAll('\r\n', '\n')
   await APIRequests.PERMISSION.updatePermissionsSection(applicationId, { ...permissionDetails, conditionsNotMetReason })
   journeyData.permissionData = { ...permissionData, conditionsNotMetReason }
   await request.cache().setData(journeyData)
@@ -38,7 +38,7 @@ export default pageRoute({
   uri: permissionsURIs.CONDITIONS_NOT_COMPLETED.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'conditions-not-met-reason': Joi.any().required()
+    'conditions-not-met-reason': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,

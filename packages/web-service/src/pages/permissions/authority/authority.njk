@@ -1,39 +1,41 @@
 {% extends "standard-form.njk" %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "select/macro.njk" import govukSelect %}
 {% set title = 'Which planning authority granted the planning permission for this development?' %}
 
 {% set errorMap = {
-        'id': {
-          'string.empty': { ref: '#autocomplete', text: 'Enter the authority' }
+        'authority-name': {
+          'string.empty': { ref: '#authority-name', text: 'You have not selected a planning authority' }
         }
     }
 %}
 
 {% block pageContent %}
-<div id="fallback">
     {% set items = [{ value: '', text: '' }] %}
     <div hidden>
     {% for rec in data.authorities %}
+        {% if rec.selected %}
+          {{ items.push({ value: rec.id, text: rec.name, selected: true }) }}
+        {% else %}
           {{ items.push({ value: rec.id, text: rec.name }) }}
+        {% endif %}
     {% endfor %}
     </div>
+
     {{ govukSelect({
-      id: "authority-select",
-      name: "fbAuthorityId",
+      id: "authority-name",
+      name: "authority-name",
       label: {
         text: "Choose your planning authority"
       },
-      errorMessage: { text: "Enter the authority." } if error['id'],
-      defaultValue: data.selected if data.slected,
+      errorMessage: { text: "Select a planning authority" } if error['authority-name'],
+      defaultValue: data.selected if data.selected,
       items: items
     }) }}
-</div>
 
-<div id="enhanced" class="govuk-form-group" hidden>
-    <label class="govuk-label" for="autocomplete">Choose your planning authority</label>
-    <div id="autocomplete-container"></div>
-    <input hidden id="autocomplete-input" name="authorityId">
-</div>
+    <div id="enhanced" class="govuk-form-group">
+        <div id="autocomplete-container"></div>
+    </div>
+
 {% endblock %}
 
 {% block bodyEnd %}
@@ -41,32 +43,12 @@
     <script src="/public/javascript/accessible-autocomplete.min.js"></script>
     <script nonce={{cspNonce}} type="module">
      (function () {
-       try {
-            {% if error %}
+        {% if error %}
             document.querySelector('#enhanced').classList.add("govuk-form-group--error");
-            {% endif %}
-            let lookup = []
-            {% for rec in data.authorities %}
-                 lookup.push({ id: '{{rec.id}}', name: '{{rec.name}}' })
-            {% endfor %}
-            let names = lookup.map(m => m.name)
-            accessibleAutocomplete({
-                element: document.querySelector('#autocomplete-container'),
-                id: 'autocomplete',
-                onConfirm: a => document.querySelector('#autocomplete-input').value = lookup.find(l => l.name === a).id,
-                confirmOnBlur: false,
-                defaultValue: data.selected if data.slected,
-                source: names
-            })
-
-            // Use the autocomplete
-            document.querySelector('#fallback').hidden = true
-            document.querySelector('#enhanced').hidden = false
-        } catch (err) {
-            // Fallback on error
-            document.querySelector('#fallback').hidden = false
-            document.querySelector('#enhanced').hidden = true
-        }
+        {% endif %}
+        accessibleAutocomplete.enhanceSelectElement({
+          selectElement: document.querySelector('#authority-name')
+        })
      })()
     </script>
 {% endblock %}

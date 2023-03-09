@@ -3292,6 +3292,10 @@ components:
           type: string
           minLength: 1
           maxLength: 4000
+        paymentExemptReason:
+          type: string
+          minLength: 1
+          maxLength: 4000
         isRelatedConviction:
           type: boolean
         detailsOfConvictions:

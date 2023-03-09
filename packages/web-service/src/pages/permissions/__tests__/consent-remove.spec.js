@@ -31,6 +31,63 @@ describe('consent-remove page', () => {
     expect(await getData(request)).toStrictEqual({ permissionType: 'Planning permission', consentReference: 'reference-98765' })
   })
 
+  it('checkData', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        PERMISSION: {
+          getPermissions: () => {
+            return [
+              {
+                id: 123,
+                type: 452120000,
+                referenceNumber: 'reference-98765'
+              }
+            ]
+          }
+        }
+      }
+    }))
+    const request = {
+      query: {
+        id: '123'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+        })
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../consent-remove/consent-remove.js')
+    expect(await checkData(request, h)).toBeNull()
+  })
+
+  it('should redirect user to the add permissions start page when there is no permissions or permission id param', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        PERMISSION: {
+          getPermissions: () => {
+            return []
+          }
+        }
+      }
+    }))
+    const request = {
+      query: {},
+      cache: () => ({
+        getData: () => ({
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+        })
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../consent-remove/consent-remove.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/add-permission-start')
+  })
+
   it('setData', async () => {
     const mockRemovePermission = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
@@ -52,8 +109,8 @@ describe('consent-remove page', () => {
     }
     const { setData } = await import('../consent-remove/consent-remove.js')
     await setData(request)
-    expect(mockRemovePermission).toHaveBeenCalled()
     expect(await setData(request)).toBeNull()
+    expect(mockRemovePermission).toHaveBeenCalled()
   })
 
   it('should redirect user to check your answers page', async () => {

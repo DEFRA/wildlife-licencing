@@ -6,6 +6,7 @@ import {
   eligibilityURIs,
   convictionsURIs,
   siteURIs,
+  workActivityURIs,
   LOGIN,
   SIGN_OUT,
   SPECIES,
@@ -84,6 +85,12 @@ export const additionalPageData = (request, h) => {
         siteMap: siteURIs.UPLOAD_MAP.uri,
         siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
         siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
+
+        // Work activity
+        workProposal: workActivityURIs.WORK_PROPOSAL.uri,
+        workPayment: workActivityURIs.PAYING_FOR_LICENCE.uri,
+        workPaymentExemptReason: workActivityURIs.PAYMENT_EXEMPT_REASON.uri,
+        workCategory: workActivityURIs.WORK_CATEGORY.uri,
 
         // Conviction
         isAnyConviction: convictionsURIs.ANY_CONVICTIONS.uri,

@@ -50,6 +50,15 @@ export const habitatURIs = {
   CONFIRM_DELETE: { uri: '/confirm-delete', page: 'confirm-delete' }
 }
 
+export const workActivityURIs = {
+  WORK_PROPOSAL: { uri: '/work-proposal', page: 'work-proposal' },
+  PAYING_FOR_LICENCE: { uri: '/work-payment', page: 'work-payment' },
+  PAYMENT_EXEMPT_REASON: { uri: '/work-payment-exempt-reason', page: 'work-payment-exempt-reason' },
+  WORK_CATEGORY: { uri: '/work-category', page: 'work-category' },
+  LICENCE_COST: { uri: '/work-licence-cost', page: 'work-licence-cost' },
+  CHECK_YOUR_ANSWERS: { uri: '/check-work-answers', page: 'check-work-answers' }
+}
+
 export const contactURIs = {
   ECOLOGIST: {
     USER: { uri: '/ecologist-user', page: 'ecologist-user' },

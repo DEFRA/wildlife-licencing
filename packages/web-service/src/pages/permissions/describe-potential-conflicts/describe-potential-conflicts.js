@@ -15,7 +15,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, permissionData } = journeyData
   const permissionDetails = await APIRequests.PERMISSION.getPermissionDetailsById(applicationId)
-  const potentialConflictDescription = request.payload[descPotentialConflictsInput]
+  const potentialConflictDescription = request.payload[descPotentialConflictsInput].replaceAll('\r\n', '\n')
   await APIRequests.PERMISSION.updatePermissionsSection(applicationId, { ...permissionDetails, potentialConflictDescription })
   journeyData.permissionData = { ...permissionData, potentialConflictDescription }
   await request.cache().setData(journeyData)
@@ -28,7 +28,7 @@ export default pageRoute({
   uri: permissionsURIs.DESC_POTENTIAL_CONFLICTS.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'describe-potential-conflicts': Joi.any().required()
+    'describe-potential-conflicts': Joi.string().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,
