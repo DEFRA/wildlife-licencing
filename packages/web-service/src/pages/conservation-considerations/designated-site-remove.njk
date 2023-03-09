@@ -1,3 +1,3 @@
 {% extends "yes-no.njk" %}
-{% set title = 'Do you want to remove this site?' %}
-{% set noneSelected = 'INSERT MSG HERE' %}
+{% set title = 'Do you want to remove ' + data.name + '?' %}
+{% set noneSelected = 'Choose if you want to remove the site ' + data.name %}

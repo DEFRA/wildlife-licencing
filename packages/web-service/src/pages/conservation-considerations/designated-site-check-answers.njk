@@ -13,7 +13,7 @@
         <input id="on-or-near" name="yes-no" type="hidden" value="no"/>
     {% else %}
         {% for designatedSite in data.checkData %}
-
+            <p class="govuk-body"><a href="{{_uri.designatedSiteRemove}}?id={{designatedSite.id}}" class="govuk-link">Remove site</a></p>
             {% set questionMap = {
                 siteName: { question: 'Site name', href: _uri.designatedSiteName + '?id=' + designatedSite.id },
                 permissionFromOwner: { question: 'Permission from owner?', href: _uri.designatedSiteOwnerPermission + '?id=' + designatedSite.id },
