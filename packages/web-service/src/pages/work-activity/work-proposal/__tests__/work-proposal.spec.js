@@ -63,7 +63,8 @@ describe('The work-proposal page', () => {
           referrer: 'https://www.defra.com/tasklist'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ })
         })
       }
       const h = {
@@ -93,7 +94,8 @@ describe('The work-proposal page', () => {
           referrer: 'https://www.defra.com/tasklist'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ error: 'this is a problemo' })
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -120,7 +122,40 @@ describe('The work-proposal page', () => {
           referrer: 'https://www.defra.com/check-work-answers'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ })
+        })
+      }
+      const h = {
+        redirect: mockRedirect
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { get: () => 'complete', set: jest.fn() }
+            }
+          }
+        }
+      }))
+      const { checkData } = await import('../work-proposal.js')
+      expect(await checkData(request, h)).toEqual(null)
+      expect(mockRedirect).not.toHaveBeenCalled()
+    })
+
+    it('checkData doesnt redirect to CYA if the user has an error on the page', async () => {
+      const mockRedirect = jest.fn()
+      const request = {
+        info: {
+          referrer: 'https://www.defra.com/work-proposal'
+        },
+        cache: () => ({
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ error: 'this is a problemo' })
         })
       }
       const h = {
