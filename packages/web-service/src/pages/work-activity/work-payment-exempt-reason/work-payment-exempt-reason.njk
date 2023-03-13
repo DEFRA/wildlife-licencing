@@ -19,7 +19,7 @@
   {{ govukTextarea({
     name: 'exempt-details',
     id: 'exempt-details',
-    value: payload['work-payment-exempt-reason'] if payload['work-payment-exempt-reason'] else data.paymentExemptReason,
+    value: data.paymentExemptReason if data.paymentExemptReason else '',
     errorMessage: { text: 'Provide more detail on why your development is exempt' } if error['exempt-details'],
     hint: {
       text: 'Provide more detail on the reason you think your development is exempt from license payments.'
