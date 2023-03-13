@@ -1,5 +1,5 @@
 {% extends 'standard-form.njk' %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "textarea/macro.njk" import govukTextarea %}
 {% set errorMap = {
     'describe-potential-conflicts': {
       'string.empty': { ref: '#describe-potential-conflicts', text: 'You have not described the potential conflicts between this application and other legal commitments' },
@@ -11,7 +11,7 @@
   {{ 'Error: ' + title if error else title }}
 {% endblock %}
 {% block pageContent %}
-{{ govukCharacterCount({
+{{ govukTextarea({
   name: "describe-potential-conflicts",
   id: "describe-potential-conflicts",
   value: data.potentialConflictDescriptionValue if data.potentialConflictDescriptionValue else payload['describe-potential-conflicts'],

@@ -1,6 +1,6 @@
 {% extends "standard-form.njk" %}
 
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% set errorMap = {
         'permission-details': {
@@ -14,7 +14,7 @@
 
 {% block pageContent %}
 
-{{ govukCharacterCount({
+{{ govukTextarea({
   name: "permission-details",
   id: "permission-details",
   value: data['permission-details'],
