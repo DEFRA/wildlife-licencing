@@ -10,7 +10,7 @@ export const DESIGNATED_SITES = {
       'Error fetching application-designated sites', 500),
   create: async (applicationId, payload) =>
     apiRequestsWrapper(() => API.post(`${apiUrls.APPLICATION}/${applicationId}/designated-site`, payload),
-      'Error fetching application-designated sites', 500),
+      'Error creating application-designated sites', 500),
   update: async (applicationId, applicationDesignatedSiteId, payload) =>
     apiRequestsWrapper(() => API.put(`${apiUrls.APPLICATION}/${applicationId}/designated-site/${applicationDesignatedSiteId}`, payload),
       'Error updating application-designated sites', 500),
