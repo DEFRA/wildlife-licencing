@@ -1,5 +1,5 @@
 {% extends 'standard-form.njk' %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "textarea/macro.njk" import govukTextarea %}
 {% set errorMap = {
     'conditions-not-met-reason': {
       'string.empty': { ref: '#conditions-not-met-reason', text: 'You have not entered which conditions have not been completed' },
@@ -16,7 +16,7 @@
     <li>delay a decision</li>
     <li>cause the application to be rejected</li>
   </ul>
-{{ govukCharacterCount({
+{{ govukTextarea({
   name: "conditions-not-met-reason",
   id: "conditions-not-met-reason",
   value: data.conditionsNotMetReasonValue if data.conditionsNotMetReasonValue else payload['conditions-not-met-reason'],

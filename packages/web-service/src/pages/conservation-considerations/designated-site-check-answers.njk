@@ -13,15 +13,16 @@
         <input id="on-or-near" name="yes-no" type="hidden" value="no"/>
     {% else %}
         {% for designatedSite in data.checkData %}
+            <h2 class="govuk-heading-m">Site: {{ designatedSite.tabData[0].value }}</h2>
             <p class="govuk-body"><a href="{{_uri.designatedSiteRemove}}?id={{designatedSite.id}}" class="govuk-link">Remove site</a></p>
             {% set questionMap = {
                 siteName: { question: 'Site name', href: _uri.designatedSiteName + '?id=' + designatedSite.id },
-                permissionFromOwner: { question: 'Permission from owner?', href: _uri.designatedSiteOwnerPermission + '?id=' + designatedSite.id },
-                detailsOfPermission: { question: 'Details of permission', href: _uri.designatedSitePermissionDetails + '?id=' + designatedSite.id },
-                adviceFromNaturalEngland: { question: 'Advice from Natural England', href: _uri.designatedSiteNEAdvice + '?id=' + designatedSite.id },
-                adviceFromWho: { question: 'Who is the advice from?', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
-                adviceDescription: { question: 'Outcome of the advice', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
-                onSiteOrCloseToSite: { question: 'On or next to the site?', answer: { '100000000': 'on', '100000001': 'close' }, href: _uri.designatedSiteProximity + '?id=' + designatedSite.id }
+                permissionFromOwner: { question: 'Do you have permission from the owner or occupier of the designated site?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.designatedSiteOwnerPermission + '?id=' + designatedSite.id },
+                detailsOfPermission: { question: 'Give details of the permission', href: _uri.designatedSitePermissionDetails + '?id=' + designatedSite.id },
+                adviceFromNaturalEngland: { question: 'Have you had advice or permission for the activity from Natural England?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.designatedSiteNEAdvice + '?id=' + designatedSite.id },
+                adviceFromWho: { question: 'Who did you receive the advice from?', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+                adviceDescription: { question: 'Describe the outcome of the advice', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+                onSiteOrCloseToSite: { question: 'On or next to the site?', answer: { '100000000': 'On', '100000001': 'Close' }, href: _uri.designatedSiteProximity + '?id=' + designatedSite.id }
             } %}
             {{ answerSummary(questionMap, designatedSite.tabData) }}
         {% endfor %}

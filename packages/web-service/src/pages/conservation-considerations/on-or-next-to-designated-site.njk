@@ -1,9 +1,17 @@
 {% extends "yes-no.njk" %}
-{% set title = 'Will the development take place on or next to any designated site?' %}
+{% set title = 'Designated sites' %}
 {% set noneSelected = 'Choose yes or no' %}
 {% block pageContent %}
-<p class="govuk-body">
+<p class="govuk-body-m">You must tell us if the proposed activities you need the licence for could affect any of these designated sites:</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>Site of Special Scientific Interest (SSSI)</li>
+    <li>Special Protection Area (SPA)</li>
+    <li>Special Area of Conservation (SAC)</li>
+    <li>Ramsar Site</li>
+</ul>
+<p class="govuk-body-m">
     <a href="{{_uri.magic.ds}}" class="govuk-link" rel="noreferrer noopener" target="_blank">Check the location of designated sites</a>
 </p>
+<h2 class="govuk-heading-m">Will the activity take place on or next to any designated sites?</h2>
 {{ super() }}
 {% endblock %}

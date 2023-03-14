@@ -95,7 +95,7 @@ describe('The work-proposal page', () => {
         },
         cache: () => ({
           getData: () => ({ applicationId: '123abc' }),
-          getPageData: () => ({ })
+          getPageData: () => ({ error: 'this is a problemo' })
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
