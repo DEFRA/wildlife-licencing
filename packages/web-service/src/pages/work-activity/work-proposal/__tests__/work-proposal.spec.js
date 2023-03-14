@@ -56,7 +56,7 @@ describe('The work-proposal page', () => {
       expect(await getData(request)).toEqual({ proposalDescription: 'the proposal of the work' })
     })
 
-    it('checkData redirects to CYA if the journeys complete', async () => {
+    it('checkData redirects to CYA page if the journeys complete, theres no page error and the user didnt come from the CYA page', async () => {
       const mockRedirect = jest.fn()
       const request = {
         info: {
@@ -115,7 +115,7 @@ describe('The work-proposal page', () => {
       expect(await checkData(request)).toEqual(null)
     })
 
-    it('checkData doesnt redirect to CYA if the user came from the CYA page', async () => {
+    it('checkData returns null if the user came from the CYA page', async () => {
       const mockRedirect = jest.fn()
       const request = {
         info: {
@@ -147,15 +147,15 @@ describe('The work-proposal page', () => {
       expect(mockRedirect).not.toHaveBeenCalled()
     })
 
-    it('checkData doesnt redirect to CYA if the user has an error on the page', async () => {
+    it('checkData returns null if the user caused an error on the page', async () => {
       const mockRedirect = jest.fn()
       const request = {
         info: {
-          referrer: 'https://www.defra.com/work-proposal'
+          referrer: 'https://www.defra.com/tasklist'
         },
         cache: () => ({
           getData: () => ({ applicationId: '123abc' }),
-          getPageData: () => ({ error: 'this is a problemo' })
+          getPageData: () => ({ error: true })
         })
       }
       const h = {
