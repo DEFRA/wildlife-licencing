@@ -16,12 +16,14 @@ export const getData = async request => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
+  const pageData = await request.cache().getPageData()
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
 
   // If the user has come back to this page via the CYA page
   // Don't redirect them - they're just changing an answer
-  if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri)) {
+  // Same if they have an error. Don't redirect back to CYA page
+  if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri) && !pageData.error) {
     return h.redirect(workActivityURIs.CHECK_YOUR_ANSWERS.uri)
   }
 

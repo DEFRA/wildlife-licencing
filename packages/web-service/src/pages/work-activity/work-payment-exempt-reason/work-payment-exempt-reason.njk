@@ -8,7 +8,8 @@
           'any.required': { ref: '#work-payment-exempt-reason', text: 'You have not selected an option' }
         },
         'exempt-details': {
-          'string.empty': { ref: '#exempt-details', text: 'You have not provided more detail on why your development is exempt' }
+          'string.empty': { ref: '#exempt-details', text: 'You have not provided more detail on why your development is exempt' },
+          'string.max': { ref: '#exempt-details', text: 'You have entered too many characters' }
         }
     }
 %}
@@ -19,7 +20,7 @@
   {{ govukTextarea({
     name: 'exempt-details',
     id: 'exempt-details',
-    value: payload['work-payment-exempt-reason'] if payload['work-payment-exempt-reason'] else data.paymentExemptReason,
+    value: data.paymentExemptReason if data.paymentExemptReason else '',
     errorMessage: { text: 'Provide more detail on why your development is exempt' } if error['exempt-details'],
     hint: {
       text: 'Provide more detail on the reason you think your development is exempt from license payments.'
@@ -66,7 +67,7 @@
         divider: 'or'
       },
       {
-        checked: data.radioChecked === data.OTHER or payload['exempt-details'] === '',
+        checked: data.radioChecked === data.OTHER or payload['exempt-details'] === '' or payload['exempt-details'].length > 4000,
         value: data.OTHER,
         text: 'Other',
         conditional: {
