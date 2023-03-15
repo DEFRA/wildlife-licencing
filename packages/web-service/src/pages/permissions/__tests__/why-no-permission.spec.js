@@ -79,7 +79,7 @@ describe('why-no-permission page', () => {
         }
       }
     }))
-    const request = {
+    const request1 = {
       payload: {
         'no-permission': '452120002',
         'other-reason': 'other-reason'
@@ -92,7 +92,22 @@ describe('why-no-permission page', () => {
       })
     }
     const { setData } = await import('../why-no-permission/why-no-permission.js')
-    await setData(request)
+    await setData(request1)
+    expect(mockUpdatePermissionsSection).toHaveBeenCalled()
+    expect(mockSet).toHaveBeenCalled()
+
+    const request2 = {
+      payload: {
+        'no-permission': '452120003'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+        }),
+        setData: mockSet
+      })
+    }
+    await setData(request2)
     expect(mockUpdatePermissionsSection).toHaveBeenCalled()
     expect(mockSet).toHaveBeenCalled()
   })
