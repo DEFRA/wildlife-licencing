@@ -84,3 +84,9 @@ export const getCheckYourAnswersData = async permissionData => {
   }
   return data
 }
+
+export const validateConditionalInput = (powerPlatformKeyValue, enteredValue, radioType) => {
+  return (parseInt(radioType) === powerPlatformKeyValue && !enteredValue) ||
+  (parseInt(radioType) === powerPlatformKeyValue && enteredValue?.trim() === '') ||
+  (parseInt(radioType) === powerPlatformKeyValue && enteredValue?.trim() !== '')
+}

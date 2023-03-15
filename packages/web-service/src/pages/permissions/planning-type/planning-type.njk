@@ -6,7 +6,8 @@
       'any.required': { ref: '#planning-type', text: 'You have not selected an option' }
     },
     'other-description': {
-      'string.empty': { ref: '#other-description', text: 'You have not entered other type of planning permission' }
+      'string.empty': { ref: '#other-description', text: 'You have not entered other type of planning permission' },
+      'string.max': { ref: '#other-description', text: 'You have entered too many characters'}
     }
   } %}
 {% set title = 'What permission has the project got?' %}
@@ -50,7 +51,7 @@
     {
       value: data.OTHER,
       text: "Other",
-      checked: data.planningTypeValue === data.OTHER,
+      checked: payload['planning-type'].includes(data.OTHER) if payload['planning-type'] or data.planningTypeValue === data.OTHER,
       conditional: { 
         html: planningTypeOtherDescHtml
       }

@@ -6,7 +6,8 @@
       'any.required': { ref: '#no-permission', text: 'You have not selected an option' }
     },
     'other-reason': {
-      'string.empty': { ref: '#other-reason', text: 'You have not entered other reason' }
+      'string.empty': { ref: '#other-reason', text: 'You have not entered other reason' },
+      'string.max': { ref: '#other-reason', text: 'You have entered too many characters'}
     }
   } %}
 {% set otherReasonNoPermissionHtml %}
@@ -44,7 +45,7 @@
               {
                 value: data.OTHER,
                 text: "Other",
-                checked: data.noPermissionRequired === data.OTHER,
+                checked: payload['no-permission'].includes(data.OTHER) if payload['no-permission'] or data.noPermissionRequired === data.OTHER,
                 conditional: {
                   html: otherReasonNoPermissionHtml
                 }

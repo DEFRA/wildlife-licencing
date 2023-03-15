@@ -89,4 +89,12 @@ describe('permission-functions', () => {
       pageData: []
     })
   })
+
+  it('validateConditionalInput', async () => {
+    const { validateConditionalInput } = await import('../common/permission-functions.js')
+    expect(await validateConditionalInput(452120003, '', '452120003')).toBeTruthy()
+    expect(await validateConditionalInput(452120003, 'description', '452120002')).toBeFalsy()
+    expect(await validateConditionalInput(452120002, '', '452120003')).toBeFalsy()
+    expect(await validateConditionalInput(452120003, 'description', '452120003')).toBeTruthy()
+  })
 })
