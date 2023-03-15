@@ -138,6 +138,7 @@ import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
+  getHabitatSitesByLicenceId,
   putHabitatSite,
   deleteHabitatSite
 } from './handlers/habitat-site/habitat-site.js'
@@ -258,6 +259,7 @@ const handlers = {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
+  getHabitatSitesByLicenceId,
   putHabitatSite,
   deleteHabitatSite,
 
