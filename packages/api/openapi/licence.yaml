@@ -2374,6 +2374,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/licence/{licenceId}/habitat-sites':
+    get:
+      description: lists the habitat sites for a licence
+      summary: lists the habitat sites for a licence
+      operationId: getHabitatSitesByLicenceId
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSetts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not found.
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # permission
 ################################################################################################
