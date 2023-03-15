@@ -38,6 +38,14 @@ const keys = [
     powerAppsTable: 'sdds_species',
     contentId: null,
     powerAppsKey: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+  },
+  {
+    apiTable: 'speciesSubject',
+    apiKey: null,
+    apiBasePath: 'habitatSite.speciesSubjectId',
+    powerAppsTable: 'sdds_speciesubjects',
+    contentId: null,
+    powerAppsKey: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
   }
 ]
 
@@ -50,20 +58,23 @@ describe('The application extract processor: write-habitat-site-object', () => {
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
-  it('does nothing if the application is not found in the database', async () => {
+  it('does nothing if the application or licence is not found in the database', async () => {
     const { models } = await import('@defra/wls-database-model')
     models.applications = {
       findOne: jest.fn(() => null)
     }
+    models.licences = {
+      findByPk: jest.fn(() => null)
+    }
     const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
     const result = await writeHabitatSiteObject({
-      data: {},
+      data: { habitatSite: {} },
       keys: keys
     }, null)
     expect(result).toEqual({ error: 0, insert: 0, pending: 0, update: 0 })
   })
 
-  it('creates a new habitat-site', async () => {
+  it('creates a new habitat-site with an applicationId', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockCreate = jest.fn()
     models.applications = {
@@ -82,7 +93,49 @@ describe('The application extract processor: write-habitat-site-object', () => {
         name: 'Destructive',
         startDate: '2022-01-29',
         activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
-        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85'
+        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+      },
+      id: expect.any(String),
+      sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',
+      updateStatus: 'U'
+    })
+    expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
+  })
+
+  it.only('creates a new habitat-site with an licenceId', async () => {
+    const { models } = await import('@defra/wls-database-model')
+    const mockCreate = jest.fn()
+    models.applications = {
+      findOne: () => null
+    }
+    models.licences = {
+      findByPk: jest.fn(() => ({ id: 'fedb14b6-53a8-ec11-9840-0022481aca85' }))
+    }
+    models.habitatSites = {
+      findOne: jest.fn(() => null),
+      create: mockCreate
+    }
+    const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
+    const newKeys = Object.assign(keys)
+    newKeys[1] = {
+      apiTable: 'licences',
+      apiKey: null,
+      apiBasePath: 'habitatSite.licenceId',
+      powerAppsTable: 'sdds_licences',
+      contentId: null,
+      powerAppsKey: 'fc1a9675-db01-ed11-82e5-002248c5c45b'
+    }
+    const result = await writeHabitatSiteObject({ data, keys: newKeys }, null)
+    expect(mockCreate).toHaveBeenCalledWith({
+      licenceId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+      habitatSite: {
+        endDate: '2022-02-03',
+        name: 'Destructive',
+        startDate: '2022-01-29',
+        activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+        speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
       },
       id: expect.any(String),
       sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',

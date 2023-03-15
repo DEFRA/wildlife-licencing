@@ -111,6 +111,13 @@ async function defineHabitatSites (sequelize) {
         key: 'id'
       }
     },
+    licenceId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.licences,
+        key: 'id'
+      }
+    },
     habitatSite: { type: DataTypes.JSONB },
     sddsHabitatSiteId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
@@ -118,7 +125,8 @@ async function defineHabitatSites (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' }
+      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' },
+      { unique: false, fields: ['licence_id'], name: 'habitat_site_licence_fk' }
     ]
   })
 }
@@ -546,20 +554,20 @@ const createModels = async () => {
 
   // Define the applications, licences and sites etc.
   await defineApplications(sequelize)
+  await defineLicences(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
   await definePermissions(sequelize)
   await defineDesignatedSites(sequelize)
+
   await defineApplicationDesignatedSites(sequelize)
 
   await defineApplicationUsers(sequelize)
-
   await defineApplicationSites(sequelize)
   await defineApplicationContacts(sequelize)
   await defineApplicationAccounts(sequelize)
-  await defineApplicationUploads(sequelize)
 
-  await defineLicences(sequelize)
+  await defineApplicationUploads(sequelize)
   await definePreviousLicences(sequelize)
 
   // Define other things
@@ -610,6 +618,7 @@ const createModels = async () => {
 
   await models.applications.sync()
   await models.applicationUploads.sync()
+  await models.licences.sync()
   await models.habitatSites.sync()
   await models.permissions.sync()
   await models.sites.sync()
@@ -619,7 +628,6 @@ const createModels = async () => {
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()
-  await models.licences.sync()
 
   await models.previousLicences.sync()
   await models.applicationTypes.sync()
