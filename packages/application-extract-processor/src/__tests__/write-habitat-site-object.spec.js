@@ -103,7 +103,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
     expect(result).toEqual({ error: 0, insert: 1, pending: 0, update: 0 })
   })
 
-  it.only('creates a new habitat-site with an licenceId', async () => {
+  it('creates a new habitat-site with an licenceId', async () => {
     const { models } = await import('@defra/wls-database-model')
     const mockCreate = jest.fn()
     models.applications = {
@@ -117,7 +117,7 @@ describe('The application extract processor: write-habitat-site-object', () => {
       create: mockCreate
     }
     const { writeHabitatSiteObject } = await import('../write-habitat-site-object.js')
-    const newKeys = Object.assign(keys)
+    const newKeys = Array.from(keys)
     newKeys[1] = {
       apiTable: 'licences',
       apiKey: null,
