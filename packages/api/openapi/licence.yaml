@@ -646,9 +646,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Permissions section
-  ################################################################################################
+################################################################################################
+# Permissions section
+################################################################################################
   '/application/{applicationId}/permissions-section':
     put:
       description: Update the application permissions details
@@ -773,9 +773,196 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Application designated sites
-  ################################################################################################
+################################################################################################
+# Returns
+################################################################################################
+  '/licence/{licenceId}/returns':
+    get:
+      description: Get returns for a licence
+      summary: Get returns for a licence
+      operationId: getReturnsByLicenceId
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/a24Return'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/licence/{licenceId}/return':
+    post:
+      description: Create a return for a licence
+      summary: Create a return for a licence
+      operationId: postReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/a24Return'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/a24Return'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/licence/{licenceId}/return/{returnId}':
+    get:
+      description: Get a return
+      summary: Get a return
+      operationId: getReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: returnId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    put:
+      description: Create or update a return
+      summary: Create or update a return
+      operationId: putReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: returnId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/a24Return'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete a return
+      summary: Delete a return
+      operationId: deleteReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: returnId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+################################################################################################
+# Application designated sites
+################################################################################################
   '/application/{applicationId}/designated-sites':
     get:
       description: Get the designated sites for an application
@@ -3692,6 +3879,46 @@ components:
               type: number
               minimum: 1
               maximum: 100
+
+    return:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        nilReturn:
+          type: boolean
+        whyNil:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        completedWithinLicenceDates:
+          type: boolean
+        whyNotCompletedWithinLicenceDates:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        startDate:
+          $ref: '#/components/schemas/timestamp'
+        endDate:
+          $ref: '#/components/schemas/timestamp'
+        outcome:
+          type: boolean
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        userSubmission:
+          $ref: '#/components/schemas/timestamp'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    a24Return:
+      allOf:
+        - $ref: '#/components/schemas/return'
+        - type: object
+          properties:
+            destroyVacantSettByMechanicalMeans:
+              type: boolean
 
     ecologistExperience:
       type: object

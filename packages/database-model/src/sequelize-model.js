@@ -345,6 +345,29 @@ async function defineLicences (sequelize) {
   })
 }
 
+async function defineReturns (sequelize) {
+  models.returns = await sequelize.define('returns', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    licenceId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.licences,
+        key: 'id'
+      }
+    },
+    returnData: { type: DataTypes.JSONB },
+    sddsReturnId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    userSubmission: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['licence_id'], name: 'returns_licence_fk' }
+    ]
+  })
+}
+
 async function definePreviousLicences (sequelize) {
   models.previousLicences = await sequelize.define('previous-licences', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -555,6 +578,7 @@ const createModels = async () => {
   // Define the applications, licences and sites etc.
   await defineApplications(sequelize)
   await defineLicences(sequelize)
+  await defineReturns(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
   await definePermissions(sequelize)
@@ -619,6 +643,8 @@ const createModels = async () => {
   await models.applications.sync()
   await models.applicationUploads.sync()
   await models.licences.sync()
+  await models.returns.sync()
+
   await models.habitatSites.sync()
   await models.permissions.sync()
   await models.sites.sync()
