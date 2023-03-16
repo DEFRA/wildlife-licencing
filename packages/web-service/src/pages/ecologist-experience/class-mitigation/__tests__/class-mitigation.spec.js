@@ -1,51 +1,51 @@
-
 describe('The class mitigation page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
-    it('returns the enter class mitigation uri if the user answers yes', async () => {
+    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {}
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'yes'
-            }
-          })
-        })
-      }
-      const { completion } = await import('../class-mitigation.js')
-      expect(await completion(request)).toBe('/enter-class-mitigation-details')
-    })
-    it('returns the check ecologist answers uri if the user answers no', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          COMPLETE: 'complete',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return {
-                set: jest.fn()
-              }
+              return { get: () => 'in-progress' }
             }
           }
         }
       }))
       const request = {
         cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'no'
-            }
-          }),
           getData: () => {
-            return { applicationId: 'abe123' }
+            return { applicationId: 'abc123' }
+          }
+        })
+      }
+      const { completion } = await import('../class-mitigation.js')
+      expect(await completion(request)).toBe('/enter-class-mitigation-details')
+    })
+    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE: 'complete',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { get: () => 'complete' }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return { applicationId: 'abc123' }
           }
         })
       }
@@ -134,7 +134,7 @@ describe('The class mitigation page', () => {
         },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            getExperienceById: jest.fn(() => ({ classMitigationDetails: 'details' })),
+            getExperienceById: jest.fn(() => ({ classMitigation: true, classMitigationDetails: 'details' })),
             putExperienceById: mockPut
           },
           APPLICATION: {
@@ -157,6 +157,40 @@ describe('The class mitigation page', () => {
       const { setData } = await import('../class-mitigation.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: false })
+    })
+
+    it('will set the tag status to in-progress if the user goes from yes on the primary journey to no on the return journey', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          IN_PROGRESS: 'in-progress'
+        },
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ classMitigation: false })),
+            putExperienceById: jest.fn()
+          },
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet
+            })
+          }
+        }
+      }))
+      const request = {
+        payload: {
+          'yes-no': 'yes'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { setData } = await import('../class-mitigation.js')
+      await setData(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'in-progress' })
     })
 
     it('write the data to the database if \'yes\'', async () => {
