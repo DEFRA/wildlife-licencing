@@ -843,6 +843,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/licence/{licenceId}/return/{returnId}':
+    get:
+      description: Get a return
+      summary: Get a return
+      operationId: getReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: returnId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Application designated sites
 ################################################################################################

@@ -3,7 +3,7 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/application/uuid/designated-site'
+const path = '/licence/uuid/returns'
 const req = {
   path,
   payload: {
