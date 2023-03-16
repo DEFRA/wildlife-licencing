@@ -6,6 +6,7 @@ import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { Backlink } from '../../../handlers/backlink.js'
 
 const {
   APPLICATION_CATEGORY: {
@@ -103,6 +104,7 @@ export const completion = async request => {
 export default pageRoute({
   uri: workActivityURIs.CHECK_YOUR_ANSWERS.uri,
   page: workActivityURIs.CHECK_YOUR_ANSWERS.page,
+  backlink: Backlink.NO_BACKLINK,
   checkData: checkApplication,
   completion,
   getData
