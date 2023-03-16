@@ -42,11 +42,34 @@ const applicationJson = 'application/json'
 describe('The getReturn handler', () => {
   beforeEach(() => jest.resetModules())
 
+  it('returns a 200 on successful fetch from the cache', async () => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: () => JSON.stringify({
+            id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+            completedWithinLicenceDates: true
+          })
+        }
+      }
+    }))
+    jest.doMock('@defra/wls-database-model', () => ({}))
+    const getReturn = (await import('../get-return.js')).default
+    await getReturn(context, req, h)
+    expect(h.response).toHaveBeenCalledWith({
+      id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+      completedWithinLicenceDates: true
+    })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
   it('returns a 200 on successful fetch', async () => {
     const mockSave = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
+          restore: () => null,
           save: mockSave
         }
       }
@@ -90,6 +113,13 @@ describe('The getReturn handler', () => {
   })
 
   it('returns a 404 on return not found (no return)', async () => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      REDIS: {
+        cache: {
+          restore: () => null
+        }
+      }
+    }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
@@ -123,7 +153,7 @@ describe('The getReturn handler', () => {
   it('throws with an insert error', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        applications: {
+        returns: {
           findByPk: () => { throw new Error() }
         }
       }
