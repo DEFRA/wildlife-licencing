@@ -927,6 +927,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+    delete:
+      description: Delete a return
+      summary: Delete a return
+      operationId: deleteReturn
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: returnId
+          in: path
+          description: ID of the application
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Application designated sites
 ################################################################################################
