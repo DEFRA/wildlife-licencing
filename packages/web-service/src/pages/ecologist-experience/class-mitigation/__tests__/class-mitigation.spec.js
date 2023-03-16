@@ -1,51 +1,51 @@
-
 describe('The class mitigation page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
-    it('returns the enter class mitigation uri if the user answers yes', async () => {
+    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {}
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'yes'
-            }
-          })
-        })
-      }
-      const { completion } = await import('../class-mitigation.js')
-      expect(await completion(request)).toBe('/enter-class-mitigation-details')
-    })
-    it('returns the check ecologist answers uri if the user answers no', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
+          NOT_STARTED: 'not-started',
+          COMPLETE: 'complete',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
         },
         APIRequests: {
           APPLICATION: {
             tags: () => {
-              return {
-                set: jest.fn()
-              }
+              return { get: () => 'in-progress' }
             }
           }
         }
       }))
       const request = {
         cache: () => ({
-          getPageData: () => ({
-            payload: {
-              'yes-no': 'no'
-            }
-          }),
           getData: () => {
-            return { applicationId: 'abe123' }
+            return { applicationId: 'abc123' }
+          }
+        })
+      }
+      const { completion } = await import('../class-mitigation.js')
+      expect(await completion(request)).toBe('/enter-class-mitigation-details')
+    })
+    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          COMPLETE: 'complete',
+          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { get: () => 'complete' }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => {
+            return { applicationId: 'abc123' }
           }
         })
       }
@@ -134,7 +134,7 @@ describe('The class mitigation page', () => {
         },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            getExperienceById: jest.fn(() => ({ classMitigationDetails: 'details' })),
+            getExperienceById: jest.fn(() => ({ classMitigation: true, classMitigationDetails: 'details' })),
             putExperienceById: mockPut
           },
           APPLICATION: {
