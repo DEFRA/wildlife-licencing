@@ -4,7 +4,6 @@ import { permissionsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { validateConditionalInput } from '../common/permission-functions.js'
 
 const planningTypeRadio = 'planning-type'
 const planningTypeDesc = 'other-description'
@@ -38,7 +37,7 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (validateConditionalInput(OTHER, payload[planningTypeDesc], payload[planningTypeRadio])) {
+  if (OTHER === parseInt(payload[planningTypeRadio])) {
     Joi.assert(payload, Joi.object({
       'other-description': Joi.string().required().trim().max(100)
     }).options({ abortEarly: false, allowUnknown: true }))

@@ -7,13 +7,13 @@ describe('conditions-reserved-matters page', () => {
         getData: () => ({
           applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
           permissionData: {
-            potentialConflicts: 'potentialConflicts'
+            allOtherConditionsMet: true
           }
         })
       })
     }
     const { getData } = await import('../conditions-reserved-matters/conditions-reserved-matters.js')
-    expect(await getData(request)).toStrictEqual({ potentialConflictsValue: 'potentialConflicts' })
+    expect(await getData(request)).toStrictEqual({ allOtherConditionsMetValue: true })
   })
 
   it('setData', async () => {
