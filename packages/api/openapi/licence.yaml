@@ -646,9 +646,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  ################################################################################################
-  # Permissions section
-  ################################################################################################
+################################################################################################
+# Permissions section
+################################################################################################
   '/application/{applicationId}/permissions-section':
     put:
       description: Update the application permissions details
@@ -776,6 +776,35 @@ paths:
 ################################################################################################
 # Returns
 ################################################################################################
+  '/licence/{licenceId}/returns':
+    get:
+      description: Get returns for a licence
+      summary: Get returns for a licence
+      operationId: getReturnsByLicenceId
+      parameters:
+        - name: licenceId
+          in: path
+          description: ID of the licence
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/a24Return'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/licence/{licenceId}/return':
     post:
       description: Create a return for a licence
