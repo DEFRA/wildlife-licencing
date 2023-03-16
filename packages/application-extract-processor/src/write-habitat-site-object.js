@@ -3,7 +3,7 @@ import { models } from '@defra/wls-database-model'
 import * as pkg from 'object-hash'
 const hash = pkg.default
 
-const doHabitatSite = async (sddsHabitatSiteId, ts, data, counter, application) => {
+const doHabitatSite = async (sddsHabitatSiteId, ts, data, counter, application, licence) => {
   const habitatSite = await models.habitatSites.findOne({
     where: { sdds_habitat_site_id: sddsHabitatSiteId }
   })
@@ -25,7 +25,8 @@ const doHabitatSite = async (sddsHabitatSiteId, ts, data, counter, application) 
     // Create
     await models.habitatSites.create({
       id: uuidv4(),
-      applicationId: application.id,
+      applicationId: application?.id,
+      licenceId: licence?.id,
       updateStatus: 'U',
       habitatSite: data.habitatSite,
       sddsHabitatSiteId: sddsHabitatSiteId
@@ -39,20 +40,31 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
   try {
     const sddsHabitatSiteId = keys.find(k => k.apiTable === 'habitatSites').powerAppsKey
     const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
+    const sddsLicenceId = keys.find(k => k.apiTable === 'licences')?.powerAppsKey
     const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
     const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
     const speciesSubjectId = keys.find(k => k.apiTable === 'speciesSubject')?.powerAppsKey
 
-    // Look for the application, activity and method - if it does not have all 3 then ignore it
-    if (sddsApplicationId && activityId && speciesId) {
-      const application = await models.applications.findOne({
-        where: { sdds_application_id: sddsApplicationId }
-      })
+    // Look for the activity and method - if it does not have it then ignore it
+    if (activityId && speciesId) {
+      Object.assign(data.habitatSite, { activityId, speciesId, speciesSubjectId })
 
-      if (application) {
-        Object.assign(data.habitatSite, { activityId, speciesId, speciesSubjectId })
-        // Create or update the habitable sites
-        await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
+      // The habitat-site is either attached to an application of a licence, not both
+      if (sddsApplicationId) {
+        const application = await models.applications.findOne({
+          where: { sdds_application_id: sddsApplicationId }
+        })
+
+        if (application) {
+          // Create or update the habitable sites
+          await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
+        }
+      } else if (sddsLicenceId) {
+        const licence = await models.licences.findByPk(sddsLicenceId)
+        if (licence) {
+          // Create or update the habitable sites
+          await doHabitatSite(sddsHabitatSiteId, ts, data, counter, null, licence)
+        }
       }
     }
 
