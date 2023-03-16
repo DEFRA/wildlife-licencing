@@ -52,6 +52,10 @@ import {
 } from './handlers/licence/licence.js'
 
 import {
+  postReturn
+} from './handlers/return/return.js'
+
+import {
   getPreviousLicences,
   postPreviousLicence,
   getPreviousLicence,
@@ -234,6 +238,9 @@ const handlers = {
   getPreviousLicence,
   putPreviousLicence,
   deletePreviousLicence,
+
+  // Returns
+  postReturn,
 
   // Application-user handlers
   getPreviousLicences,
