@@ -80,7 +80,7 @@
     </div>
   </dl>
   <dl class="govuk-summary-list">
-    {% if data.permissionDetails.conditionsNotMetReason %}
+    {% if not data.permissionDetails.allOtherConditionsMet and data.permissionDetails.conditionsNotMetReason %}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">Which wildlife or habitat related conditions have not been completed?</dt>
         <dd class="govuk-summary-list__value">{{ data.permissionDetails.conditionsNotMetReason }}</dd>
@@ -108,7 +108,7 @@
     </div>
   </dl>
   <dl class="govuk-summary-list">
-    {% if data.permissionDetails.potentialConflictDescription %}
+    {% if  data.permissionDetails.potentialConflicts and data.permissionDetails.potentialConflictDescription %}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">Describe the potential conflicts between this application and other legal commitments</dt>
         <dd class="govuk-summary-list__value">{{ data.permissionDetails.potentialConflictDescription }}</dd>

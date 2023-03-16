@@ -1,4 +1,5 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { Backlink } from '../../../handlers/backlink.js'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { tagStatus } from '../../../services/status-tags.js'
@@ -44,6 +45,7 @@ export const completion = async request => {
 export default pageRoute({
   page: permissionsURIs.CHECK_YOUR_ANSWERS.page,
   uri: permissionsURIs.CHECK_YOUR_ANSWERS.uri,
+  backlink: Backlink.NO_BACKLINK,
   checkData: checkApplication,
   getData,
   completion

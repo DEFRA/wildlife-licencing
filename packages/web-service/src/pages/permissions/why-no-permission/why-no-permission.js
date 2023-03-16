@@ -6,7 +6,6 @@ import { checkApplication } from '../../common/check-application.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
-import { validateConditionalInput } from '../common/permission-functions.js'
 
 const noPermissionRadio = 'no-permission'
 const otherPermissionRadio = 'other-reason'
@@ -27,7 +26,7 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (validateConditionalInput(PowerPlatformKeys.NO_PERMISSION_REQUIRED.OTHER, payload[otherPermissionRadio], payload[noPermissionRadio])) {
+  if (OTHER === parseInt(payload[noPermissionRadio])) {
     Joi.assert(payload, Joi.object({
       'other-reason': Joi.string().trim().required().max(100)
     }).options({ abortEarly: false, allowUnknown: true }))
