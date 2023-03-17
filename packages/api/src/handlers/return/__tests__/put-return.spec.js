@@ -94,7 +94,7 @@ describe('The putReturn handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns a 200 on successful update', async () => {
+  it('returns a 200 on successful update', async () => {
     const mockSave = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
