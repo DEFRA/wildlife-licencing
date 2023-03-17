@@ -693,7 +693,7 @@ describe('The application job processor', () => {
         }
       }))
 
-      const { postProcess } = await import('../application-job-process.js')
+      const { postProcess } = await import('../common.js')
       await postProcess([{
         apiTableName: 'contacts',
         keys: {
@@ -721,7 +721,7 @@ describe('The application job processor', () => {
 
     it('throws an error on bad data', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => null)
-      const { postProcess } = await import('../application-job-process.js')
+      const { postProcess } = await import('../common.js')
       await expect(postProcess(0)).rejects.toThrow()
     })
   })

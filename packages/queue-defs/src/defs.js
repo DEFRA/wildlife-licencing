@@ -33,6 +33,26 @@ export const queueDefinitions = {
       }
     }
   },
+  RETURN_QUEUE: {
+    name: 'return-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
+  },
   LICENCE_RESEND_QUEUE: {
     name: 'licence-resend-queue',
     options: {

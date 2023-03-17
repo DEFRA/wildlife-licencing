@@ -56,7 +56,8 @@ import {
   getReturnsByLicenceId,
   getReturn,
   putReturn,
-  deleteReturn
+  deleteReturn,
+  postReturnSubmit
 } from './handlers/return/return.js'
 
 import {
@@ -249,6 +250,7 @@ const handlers = {
   getReturn,
   putReturn,
   deleteReturn,
+  postReturnSubmit,
 
   // Application-user handlers
   getPreviousLicences,
