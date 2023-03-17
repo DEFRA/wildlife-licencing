@@ -16,11 +16,12 @@ import { SddsPlanningConsents } from './sdds-planningconsents.js'
 import { SddsEmailLicence } from './sdds-emaillicence.js'
 import { SddsDesignatedSites } from './sdds-designatedsitename.js'
 import { SddsApplicationDesignatedSite } from './sdds-designatedsites.js'
+import { SddsReturn } from './sdds-return-of-actions.js'
 
 export {
   SddsApplication, SddsSite, SddsLicensableActions,
   Contact, Account, SddsApplicationPurpose, SddsApplicationType,
   SddsLicenseActivities, SddsLicenseMethods, SddsSpecies, SddsSpeciesSubject, SddsLicence, SddsLicenceNotes,
   columnSourceRemote, SddsEcologistExperience, SddsCouncils, SddsPlanningConsents, SddsEmailLicence, SddsDesignatedSites,
-  SddsApplicationDesignatedSite
+  SddsApplicationDesignatedSite, SddsReturn
 }
