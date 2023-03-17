@@ -15,13 +15,11 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_applicationcategory', 'applicationCategory'),
   new Column('sdds_licenceexempted', 'exemptFromPayment'),
   new Column('sdds_nsiproject', 'nationallySignificantInfrastructure'),
-  new Column('sdds_onnexttodesignatedsite', 'onOrNextToDesignatedSite',
-    s => yesNoNASrc(s), t => yesNoNATgt(t)),
+  new Column('sdds_onnexttodesignatedsite', 'onOrNextToDesignatedSite', yesNoNASrc, yesNoNATgt),
 
   // The Eligibility section
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
-  new Column('sdds_ownerpermissionreceived', 'eligibility.hasLandOwnerPermission',
-    s => yesNoNASrc(s), t => yesNoNATgt(t)),
+  new Column('sdds_ownerpermissionreceived', 'eligibility.hasLandOwnerPermission', yesNoNASrc, yesNoNATgt),
   new Column('sdds_doestheprojectneedanypermissions', 'eligibility.permissionsRequired'),
   new Column('sdds_projectpermissionsgranted', 'eligibility.permissionsGranted'),
 

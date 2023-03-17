@@ -1,4 +1,5 @@
 import { applicationUpdate } from './batch-update/application-update.js'
+import { returnUpdate } from './batch-update/return-update.js'
 import { licenceResend } from './batch-update/licence-resend.js'
 
 import {
@@ -34,6 +35,7 @@ import { BaseKeyMapping } from './schema/key-mappings.js'
 
 export {
   applicationUpdate,
+  returnUpdate,
   licenceResend,
   applicationReadStream,
   sitesReadStream,
