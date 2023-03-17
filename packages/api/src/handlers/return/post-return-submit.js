@@ -5,7 +5,7 @@ import db from 'debug'
 import { APPLICATION_JSON } from '../../constants.js'
 const debug = db('api:submission')
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { returnId, licenceId } = context.request.params
     const rec = await models.returns.findByPk(returnId)
