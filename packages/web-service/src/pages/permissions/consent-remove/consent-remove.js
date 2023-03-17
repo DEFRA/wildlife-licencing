@@ -27,6 +27,18 @@ export const getData = async request => {
   return { permissionType: getPermissionType(permission?.type), consentReference: permission?.referenceNumber }
 }
 
+export const checkData = async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const permissions = await APIRequests.PERMISSION.getPermissions(applicationId)
+
+  // Need to ensure the user is not coming to this page via clicking browser back or forward buttons, we'll redirect
+  if (!request?.query?.id || permissions.length === 0) {
+    return h.redirect(permissionsURIs.ADD_PERMISSION_START.uri)
+  }
+
+  return null
+}
+
 export const completion = async request => {
   const { applicationId } = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.PERMISSIONS)
@@ -47,7 +59,7 @@ export default pageRoute({
   validator: Joi.object({
     'consent-remove': Joi.boolean().required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   completion,
   getData,
   setData

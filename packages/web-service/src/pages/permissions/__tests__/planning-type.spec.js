@@ -72,7 +72,7 @@ describe('planning-type page', () => {
         }
       }
     }))
-    const request = {
+    const request1 = {
       payload: {
         'planning-type': '452120003',
         'other-description': 'other-description'
@@ -85,7 +85,22 @@ describe('planning-type page', () => {
       })
     }
     const { setData } = await import('../planning-type/planning-type.js')
-    await setData(request)
+    await setData(request1)
+    expect(mockUpdatePermission).toHaveBeenCalled()
+    expect(mockSet).toHaveBeenCalled()
+
+    const request2 = {
+      payload: {
+        'planning-type': '452120002'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+        }),
+        setData: mockSet
+      })
+    }
+    await setData(request2)
     expect(mockUpdatePermission).toHaveBeenCalled()
     expect(mockSet).toHaveBeenCalled()
   })

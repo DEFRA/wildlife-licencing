@@ -9,17 +9,20 @@ import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-funct
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await moveTagInProgress(applicationId, SECTION_TASKS.WORK_ACTIVITY)
-  return null
+
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+  return { proposalDescription: applicationData?.proposalDescription }
 }
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
+  const pageData = await request.cache().getPageData()
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
 
   // If the user has come back to this page via the CYA page
   // Don't redirect them - they're just changing an answer
-  if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri)) {
+  if (isCompleteOrConfirmed(tagState) && !request.info.referrer.includes(workActivityURIs.CHECK_YOUR_ANSWERS.uri) && !pageData.error) {
     return h.redirect(workActivityURIs.CHECK_YOUR_ANSWERS.uri)
   }
 
@@ -53,7 +56,7 @@ export default pageRoute({
     // Which leads to a mismatch on the character count as
     // '\r\n'.length == 2
     // '\n'.length   == 1
-    'work-proposal': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'work-proposal': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   completion,

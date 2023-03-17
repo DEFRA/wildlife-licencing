@@ -52,6 +52,14 @@ import {
 } from './handlers/licence/licence.js'
 
 import {
+  postReturn,
+  getReturnsByLicenceId,
+  getReturn,
+  putReturn,
+  deleteReturn
+} from './handlers/return/return.js'
+
+import {
   getPreviousLicences,
   postPreviousLicence,
   getPreviousLicence,
@@ -138,6 +146,7 @@ import {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
+  getHabitatSitesByLicenceId,
   putHabitatSite,
   deleteHabitatSite
 } from './handlers/habitat-site/habitat-site.js'
@@ -234,6 +243,13 @@ const handlers = {
   putPreviousLicence,
   deletePreviousLicence,
 
+  // Returns
+  postReturn,
+  getReturnsByLicenceId,
+  getReturn,
+  putReturn,
+  deleteReturn,
+
   // Application-user handlers
   getPreviousLicences,
   getApplicationUsers,
@@ -258,6 +274,7 @@ const handlers = {
   postHabitatSite,
   getHabitatSiteByHabitatSiteId,
   getHabitatSitesByApplicationId,
+  getHabitatSitesByLicenceId,
   putHabitatSite,
   deleteHabitatSite,
 

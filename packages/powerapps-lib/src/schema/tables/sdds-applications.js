@@ -8,7 +8,7 @@ export const SddsApplication = new Table('sdds_applications', [
   columnSourceRemote,
   new Column('sdds_applicationnumber', 'applicationReferenceNumber'),
   new Column('sdds_descriptionofproposal', 'proposalDescription'),
-  new Column('sdds_paymentexemptreason', 'paymentExemptReason'),
+  new Column('sdds_othercategory', 'paymentExemptReason'),
   new Column('sdds_wildliferelatedconviction', 'isRelatedConviction'),
   new Column('sdds_detailsofconvictions', 'detailsOfConvictions'),
   new Column('sdds_whydoyouneedalicence', 'licenceReason'),

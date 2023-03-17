@@ -1,0 +1,26 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'permission-details': {
+          'string.empty': { ref: '#enter-experience', text: 'You have not entered the permission details' },
+          'string.max': { ref: '#enter-experience', text: 'You have entered too many characters'}
+        }
+    }
+%}
+
+{% set title = "Give details of the permission" %}
+
+{% block pageContent %}
+
+{{ govukTextarea({
+  name: "permission-details",
+  id: "permission-details",
+  value: data['permission-details'],
+  hint: { text: 'For example, dates and names. You will be able to upload documents showing permission granted.' },
+  maxlength: 4000,
+  errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['enter-experience']
+}) }}
+
+{% endblock %}

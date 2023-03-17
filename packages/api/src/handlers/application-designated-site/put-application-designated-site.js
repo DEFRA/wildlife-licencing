@@ -30,6 +30,7 @@ export default async (context, req, h) => {
         id: applicationDesignatedSiteId,
         applicationId: applicationId,
         designatedSiteId: designatedSiteId,
+        designatedSiteType: designatedSite.json.siteType,
         designatedSite: alwaysExclude(req.payload),
         updateStatus: 'L'
       }
@@ -43,7 +44,9 @@ export default async (context, req, h) => {
         .code(201)
     } else {
       const [, updatedApplicationDesignatedSite] = await models.applicationDesignatedSites.update({
-        licence: alwaysExclude(req.payload),
+        designatedSiteId: designatedSiteId,
+        designatedSiteType: designatedSite.json.siteType,
+        designatedSite: alwaysExclude(req.payload),
         updateStatus: 'L'
       }, {
         where: {

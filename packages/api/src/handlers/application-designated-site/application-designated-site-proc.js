@@ -3,7 +3,7 @@ export const prepareResponse = a => Object.assign((({
   updatedAt,
   applicationId,
   submitted,
-  sddsApplicationDesignatedSiteId,
+  sddsDesignatedSiteId,
   designatedSite,
   updateStatus,
   ...l
@@ -18,7 +18,7 @@ export const alwaysExclude = payload => {
   delete result.id
   delete result.applicationId
   delete result.designatedSiteId
-  delete result.sddsApplicationDesignatedSiteId
+  delete result.sddsDesignatedSiteId
   delete result.createdAt
   delete result.updatedAt
   return result

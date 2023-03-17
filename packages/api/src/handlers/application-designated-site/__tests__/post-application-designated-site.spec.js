@@ -59,7 +59,7 @@ describe('The postApplicationDesignatedSite handler', () => {
           create: mockCreate
         },
         designatedSites: {
-          findByPk: () => ({ id: '2342fce0-3067-4ca5-ae7a-23cae648e45c' })
+          findByPk: () => ({ id: '2342fce0-3067-4ca5-ae7a-23cae648e45c', json: { siteType: 10000001 } })
         }
       }
     }))
@@ -71,6 +71,7 @@ describe('The postApplicationDesignatedSite handler', () => {
       id: expect.any(String),
       designatedSiteId: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
       applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
+      designatedSiteType: 10000001,
       updateStatus: 'L',
       designatedSite: {
         permissionFromOwner: true

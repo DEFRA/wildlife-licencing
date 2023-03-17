@@ -16,6 +16,9 @@ describe('The work-proposal page', () => {
         },
         APIRequests: {
           APPLICATION: {
+            getById: () => {
+              return {}
+            },
             tags: () => {
               return { get: () => 'not-started', set: mockSet }
             }
@@ -27,7 +30,7 @@ describe('The work-proposal page', () => {
       expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'in-progress' })
     })
 
-    it('getData returns null', async () => {
+    it('getData returns the proposal description', async () => {
       const request = {
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -40,6 +43,9 @@ describe('The work-proposal page', () => {
         },
         APIRequests: {
           APPLICATION: {
+            getById: () => {
+              return { proposalDescription: 'the proposal of the work' }
+            },
             tags: () => {
               return { get: () => 'not-started', set: jest.fn() }
             }
@@ -47,17 +53,18 @@ describe('The work-proposal page', () => {
         }
       }))
       const { getData } = await import('../work-proposal.js')
-      expect(await getData(request)).toBe(null)
+      expect(await getData(request)).toEqual({ proposalDescription: 'the proposal of the work' })
     })
 
-    it('checkData redirects to CYA if the journeys complete', async () => {
+    it('checkData redirects to CYA page if the journeys complete, theres no page error and the user didnt come from the CYA page', async () => {
       const mockRedirect = jest.fn()
       const request = {
         info: {
           referrer: 'https://www.defra.com/tasklist'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ })
         })
       }
       const h = {
@@ -87,7 +94,8 @@ describe('The work-proposal page', () => {
           referrer: 'https://www.defra.com/tasklist'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ error: 'this is a problemo' })
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -107,14 +115,47 @@ describe('The work-proposal page', () => {
       expect(await checkData(request)).toEqual(null)
     })
 
-    it('checkData doesnt redirect to CYA if the user came from the CYA page', async () => {
+    it('checkData returns null if the user came from the CYA page', async () => {
       const mockRedirect = jest.fn()
       const request = {
         info: {
           referrer: 'https://www.defra.com/check-work-answers'
         },
         cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ })
+        })
+      }
+      const h = {
+        redirect: mockRedirect
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          IN_PROGRESS: 'in-progress',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return { get: () => 'complete', set: jest.fn() }
+            }
+          }
+        }
+      }))
+      const { checkData } = await import('../work-proposal.js')
+      expect(await checkData(request, h)).toEqual(null)
+      expect(mockRedirect).not.toHaveBeenCalled()
+    })
+
+    it('checkData returns null if the user caused an error on the page', async () => {
+      const mockRedirect = jest.fn()
+      const request = {
+        info: {
+          referrer: 'https://www.defra.com/tasklist'
+        },
+        cache: () => ({
+          getData: () => ({ applicationId: '123abc' }),
+          getPageData: () => ({ error: true })
         })
       }
       const h = {

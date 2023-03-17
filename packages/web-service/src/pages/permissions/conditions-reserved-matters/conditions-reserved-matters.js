@@ -8,7 +8,7 @@ const wildLifeConditionsRadio = 'conditions-met'
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  return { potentialConflictsValue: journeyData?.permissionData?.potentialConflicts }
+  return { allOtherConditionsMetValue: journeyData?.permissionData?.allOtherConditionsMet }
 }
 
 export const setData = async request => {

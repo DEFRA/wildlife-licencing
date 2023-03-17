@@ -2,6 +2,7 @@ import { models } from '@defra/wls-database-model'
 import * as pkg from 'object-hash'
 const hash = pkg.default
 
+// Licences, being generated on sdds simply use the sdds key as the primary (api) key
 async function doLicence (licenceId, applicationId, data, counter) {
   if (applicationId) {
     const licence = await models.licences.findOne({

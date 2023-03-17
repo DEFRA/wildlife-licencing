@@ -37,9 +37,9 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (payload[planningTypeRadio] === '452120003' && (!payload[planningTypeDesc] || payload[planningTypeDesc]?.trim() === '')) {
+  if (OTHER === parseInt(payload[planningTypeRadio])) {
     Joi.assert(payload, Joi.object({
-      'other-description': Joi.string().trim().required()
+      'other-description': Joi.string().required().trim().max(100)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }
@@ -52,7 +52,7 @@ export const setData = async request => {
   const planningTypeOtherDescription = request.payload[planningTypeDesc]
   const permission = await APIRequests.PERMISSION.getPermission(applicationId, permissionId)
   let payload = { ...permission, planningType }
-  if (planningTypeOtherDescription) {
+  if (planningType === OTHER) {
     payload = { ...payload, planningTypeOtherDescription }
   }
   await APIRequests.PERMISSION.updatePermission(applicationId, permissionId, payload)

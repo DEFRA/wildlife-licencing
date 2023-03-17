@@ -154,6 +154,19 @@ export const permissionsURIs = {
   CHECK_YOUR_ANSWERS: { uri: '/check-your-answers', page: 'check-your-answers' }
 }
 
+export const conservationConsiderationURIs = {
+  DESIGNATED_SITE: { uri: '/on-or-next-to-designated-site', page: 'on-or-next-to-designated-site' },
+  DESIGNATED_SITE_START: { uri: '/designated-site-start', page: 'designated-site-start' },
+  DESIGNATED_SITE_NAME: { uri: '/designated-site-name', page: 'designated-site-name' },
+  OWNER_PERMISSION: { uri: '/designated-site-permission', page: 'designated-site-permission' },
+  OWNER_PERMISSION_DETAILS: { uri: '/details-of-permission', page: 'details-of-permission' },
+  NE_ADVICE: { uri: '/advice-from-natural-england', page: 'advice-from-natural-england' },
+  ACTIVITY_ADVICE: { uri: '/ne-activity-advice', page: 'ne-activity-advice' },
+  DESIGNATED_SITE_PROXIMITY: { uri: '/designated-site-proximity', page: 'designated-site-proximity' },
+  DESIGNATED_SITE_CHECK_ANSWERS: { uri: '/designated-site-check-answers', page: 'designated-site-check-answers' },
+  DESIGNATED_SITE_REMOVE: { uri: '/designated-site-remove', page: 'designated-site-remove' }
+}
+
 export const convictionsURIs = {
   ANY_CONVICTIONS: { uri: '/any-convictions', page: 'any-convictions' },
   CONVICTION_DETAILS: { uri: '/conviction-details', page: 'conviction-details' },

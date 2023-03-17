@@ -26,9 +26,9 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (payload[noPermissionRadio] === '452120002' && (!payload[otherPermissionRadio] || payload[otherPermissionRadio]?.trim() === '')) {
+  if (OTHER === parseInt(payload[noPermissionRadio])) {
     Joi.assert(payload, Joi.object({
-      'other-reason': Joi.string().trim().required()
+      'other-reason': Joi.string().trim().required().max(100)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }

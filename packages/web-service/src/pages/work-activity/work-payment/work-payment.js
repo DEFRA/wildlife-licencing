@@ -1,6 +1,6 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { workActivityURIs } from '../../../uris.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
@@ -30,7 +30,7 @@ export const setData = async request => {
   // If the user changes their answer from yes/no on this page
   // We can't take them back to the CYA page
   // There's "new questions" they need to answer
-  if (applicationData.exemptFromPayment && applicationData.exemptFromPayment !== boolFromYesNo(userInput.exemptFromPayment)) {
+  if (applicationData.exemptFromPayment !== undefined && applicationData.exemptFromPayment !== userInput.exemptFromPayment) {
     // Can't call the API here, or
     // it'll immeadiately be reset by the below update() call
     const tag = applicationData.applicationTags.find(t => t.tag === SECTION_TASKS.WORK_ACTIVITY)
@@ -43,10 +43,18 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 
+export const getData = async request => {
+  const { applicationId } = await request.cache().getData()
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+
+  return { yesNo: yesNoFromBool(applicationData?.exemptFromPayment) }
+}
+
 export default yesNoPage({
   uri: workActivityURIs.PAYING_FOR_LICENCE.uri,
   page: workActivityURIs.PAYING_FOR_LICENCE.page,
   checkData: checkApplication,
   setData,
+  getData,
   completion
 })

@@ -28,10 +28,10 @@ const {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  const applicationCategory = await APIRequests.APPLICATION.getById(applicationId)?.applicationCategory || 0
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   return {
-    applicationCategory,
+    applicationCategory: applicationData?.applicationCategory,
     BARN_CONVERSION,
     COMMERCIAL,
     COMMUNICATIONS,

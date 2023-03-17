@@ -111,6 +111,13 @@ async function defineHabitatSites (sequelize) {
         key: 'id'
       }
     },
+    licenceId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.licences,
+        key: 'id'
+      }
+    },
     habitatSite: { type: DataTypes.JSONB },
     sddsHabitatSiteId: { type: DataTypes.UUID },
     submitted: { type: DataTypes.DATE },
@@ -118,7 +125,8 @@ async function defineHabitatSites (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' }
+      { unique: false, fields: ['application_id'], name: 'habitat_site_application_fk' },
+      { unique: false, fields: ['licence_id'], name: 'habitat_site_licence_fk' }
     ]
   })
 }
@@ -337,6 +345,29 @@ async function defineLicences (sequelize) {
   })
 }
 
+async function defineReturns (sequelize) {
+  models.returns = await sequelize.define('returns', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    licenceId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.licences,
+        key: 'id'
+      }
+    },
+    returnData: { type: DataTypes.JSONB },
+    sddsReturnId: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE },
+    userSubmission: { type: DataTypes.DATE },
+    updateStatus: { type: DataTypes.STRING(1), allowNull: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['licence_id'], name: 'returns_licence_fk' }
+    ]
+  })
+}
+
 async function definePreviousLicences (sequelize) {
   models.previousLicences = await sequelize.define('previous-licences', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -376,6 +407,7 @@ async function defineApplicationDesignatedSites (sequelize) {
       }
     },
     designatedSite: { type: DataTypes.JSONB },
+    designatedSiteType: { type: DataTypes.INTEGER },
     sddsDesignatedSiteId: { type: DataTypes.UUID },
     updateStatus: { type: DataTypes.STRING(1), allowNull: false }
   }, {
@@ -545,20 +577,21 @@ const createModels = async () => {
 
   // Define the applications, licences and sites etc.
   await defineApplications(sequelize)
+  await defineLicences(sequelize)
+  await defineReturns(sequelize)
   await defineSites(sequelize)
   await defineHabitatSites(sequelize)
   await definePermissions(sequelize)
   await defineDesignatedSites(sequelize)
+
   await defineApplicationDesignatedSites(sequelize)
 
   await defineApplicationUsers(sequelize)
-
   await defineApplicationSites(sequelize)
   await defineApplicationContacts(sequelize)
   await defineApplicationAccounts(sequelize)
-  await defineApplicationUploads(sequelize)
 
-  await defineLicences(sequelize)
+  await defineApplicationUploads(sequelize)
   await definePreviousLicences(sequelize)
 
   // Define other things
@@ -609,6 +642,9 @@ const createModels = async () => {
 
   await models.applications.sync()
   await models.applicationUploads.sync()
+  await models.licences.sync()
+  await models.returns.sync()
+
   await models.habitatSites.sync()
   await models.permissions.sync()
   await models.sites.sync()
@@ -618,7 +654,6 @@ const createModels = async () => {
   await models.applicationSites.sync()
   await models.applicationContacts.sync()
   await models.applicationAccounts.sync()
-  await models.licences.sync()
 
   await models.previousLicences.sync()
   await models.applicationTypes.sync()

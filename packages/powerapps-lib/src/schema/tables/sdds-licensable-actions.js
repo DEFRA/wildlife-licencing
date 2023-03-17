@@ -18,6 +18,10 @@ export const SddsLicensableActions = new Table('sdds_licensableactions', [
     RelationshipType.MANY_TO_ONE, 'sdds_applicationid',
     'applicationId', null, null, OperationType.INBOUND, true),
 
+  new Relationship('sdds_licensableaction_sdds_license_sdds_l', 'sdds_licenses',
+    RelationshipType.MANY_TO_ONE, 'sdds_license',
+    'licenceId', null, null, OperationType.INBOUND, true),
+
   new Relationship('sdds_licenseActivity_sdds_licenseactivity', 'sdds_licenseactivities',
     RelationshipType.MANY_TO_ONE, 'sdds_licenseactivityid',
     'activityId', null, null, OperationType.INBOUND_AND_OUTBOUND, true),

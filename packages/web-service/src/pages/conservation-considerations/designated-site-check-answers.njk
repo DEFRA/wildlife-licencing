@@ -1,0 +1,32 @@
+{% extends "yes-no.njk" %}
+
+{% from "answer-summary.njk" import answerSummary %}
+{% from "button/macro.njk" import govukButton %}
+
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Check your answers' %}
+{% set noneSelected = 'Choose whether you want to add another designated site' %}
+{% block pageContent %}
+    {% if data.checkData.length === 0 %}
+        {% set questionMap = { onOrNear: { question: 'Will the development take place on or next to a designated site?', href: _uri.onOrNextToDesignatedSite } } %}
+        {{ answerSummary(questionMap, [{ key: 'onOrNear', value: 'No' }]) }}
+        <input id="on-or-near" name="yes-no" type="hidden" value="no"/>
+    {% else %}
+        {% for designatedSite in data.checkData %}
+            <h2 class="govuk-heading-m">Site: {{ designatedSite.tabData[0].value }}</h2>
+            <p class="govuk-body"><a href="{{_uri.designatedSiteRemove}}?id={{designatedSite.id}}" class="govuk-link">Remove site</a></p>
+            {% set questionMap = {
+                siteName: { question: 'Site name', href: _uri.designatedSiteName + '?id=' + designatedSite.id },
+                permissionFromOwner: { question: 'Do you have permission from the owner or occupier of the designated site?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.designatedSiteOwnerPermission + '?id=' + designatedSite.id },
+                detailsOfPermission: { question: 'Give details of the permission', href: _uri.designatedSitePermissionDetails + '?id=' + designatedSite.id },
+                adviceFromNaturalEngland: { question: 'Have you had advice or permission for the activity from Natural England?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.designatedSiteNEAdvice + '?id=' + designatedSite.id },
+                adviceFromWho: { question: 'Who did you receive the advice from?', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+                adviceDescription: { question: 'Describe the outcome of the advice', href: _uri.designatedSiteActivityAdvice + '?id=' + designatedSite.id },
+                onSiteOrCloseToSite: { question: 'On or next to the site?', answer: { '100000000': 'On', '100000001': 'Close' }, href: _uri.designatedSiteProximity + '?id=' + designatedSite.id }
+            } %}
+            {{ answerSummary(questionMap, designatedSite.tabData) }}
+        {% endfor %}
+        <h1 class="govuk-heading-m">Do you want to add another site?</h1>
+        {{ super() }}
+    {% endif %}
+{% endblock %}
