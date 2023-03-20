@@ -7,7 +7,7 @@ export const SddsReturn = new Table('sdds_returnofactions', [
   new Column('sdds_whendidyoustartwork', 'startDate'),
   new Column('sdds_whendidyoucompletethework', 'endDate'),
   new Column('sdds_whywasworknotcompletebetweenlicenseddates', 'whyNotCompletedWithinLicenceDates'),
-  new Column('outcome', 'sdds_developmentcouldstart', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_developmentcouldstart', 'outcome', yesNoNASrc, yesNoNATgt),
   new Column('sdds_damagesettbyhandsmechanicalmeans', 'destroyVacantSettByMechanicalMeans', yesNoNASrc, yesNoNATgt)
 ], [
   new Relationship('sdds_returnofaction_sdds_licenceid_sdds_l', 'sdds_licenses',
