@@ -16,7 +16,9 @@ import {
   SddsCouncils,
   columnSourceRemote,
   SddsLicenceNotes,
-  SddsDesignatedSites, SddsApplicationDesignatedSite
+  SddsDesignatedSites,
+  SddsApplicationDesignatedSite,
+  SddsReturn
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
@@ -31,6 +33,12 @@ const licenceRequestPath = buildRequestPath(SddsLicence, [SddsApplicationRelatio
 const licenceTableSet = createTableSet(SddsLicence, [SddsApplicationRelations, SddsLicenceNotes])
 const licenceObjectTransformer = buildObjectTransformer(SddsLicence, licenceTableSet)
 export const licenceReadStream = () => powerAppsReadStream(licenceRequestPath, licenceObjectTransformer)
+
+/* Returns */
+const returnRequestPath = buildRequestPath(SddsReturn, [SddsLicence])
+const returnTableSet = createTableSet(SddsReturn, [SddsLicence])
+const returnObjectTransformer = buildObjectTransformer(SddsReturn, returnTableSet)
+export const returnReadStream = () => powerAppsReadStream(returnRequestPath, returnObjectTransformer)
 
 /* Applications */
 const applicationRequestPath = buildRequestPath(SddsApplication, [SddsApplicationType, SddsApplicationPurpose])
