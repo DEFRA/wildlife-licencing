@@ -17,8 +17,8 @@ describe('The work-payment-exempt-reason page', () => {
           APPLICATION: {
             getById: () => {
               return {
-                applicationCategory: 101,
-                paymentExemptReason: 'I wont be paying because its a bridge I need to get onto my fields'
+                paymentExemptReason: 101,
+                paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields'
               }
             }
           }
@@ -27,14 +27,16 @@ describe('The work-payment-exempt-reason page', () => {
       const { getData } = await import('../work-payment-exempt-reason.js')
       expect(await getData(request)).toEqual(
         {
-          paymentExemptReason: 'I wont be paying because its a bridge I need to get onto my fields',
-          radioChecked: 101,
-          HOUSEHOLDER_HOME_IMPROVEMENTS: 100000013,
-          LISTED_BUILDINGS: 452120002,
-          OTHER: 452120001,
-          SCHEDULED_MONUMENTS: 452120004,
-          REGISTERED_PLACES_OF_WORSHIP: 100000006,
-          TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT: 452120003
+          CONSERVATION_OF_A_MONUMENT_OR_BUILDING: 452120006,
+          CONSERVATION_OF_PROTECTED_SPECIES: 452120005,
+          HOUSEHOLDER_HOME_IMPROVEMENTS: 452120001,
+          OTHER: 452120007,
+          PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
+          PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
+          PREVENT_DISEASE_SPREAD: 452120003,
+          SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
+          paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields',
+          radioChecked: 101
         }
       )
     })
@@ -94,7 +96,7 @@ describe('The work-payment-exempt-reason page', () => {
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',
         {
-          applicationCategory: 100000013,
+          paymentExemptReason: 100000013,
           example: 'just ensuring what we pull from the api is preserved'
         }
       )
@@ -102,9 +104,10 @@ describe('The work-payment-exempt-reason page', () => {
 
     it('setData for a radio input, and a text input works as expected', async () => {
       const mockUpdate = jest.fn()
+      const OTHER = 452120007
       const request = {
         payload: {
-          'work-payment-exempt-reason': '452120001',
+          'work-payment-exempt-reason': `${OTHER}`,
           'exempt-details': 'we move this into the api now'
         },
         cache: () => ({
@@ -130,9 +133,9 @@ describe('The work-payment-exempt-reason page', () => {
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',
         {
-          applicationCategory: 452120001,
           example: 'just ensuring what we pull from the api is preserved',
-          paymentExemptReason: 'we move this into the api now'
+          paymentExemptReason: OTHER,
+          paymentExemptReasonExplanation: 'we move this into the api now'
         }
       )
     })

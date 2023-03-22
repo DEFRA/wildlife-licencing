@@ -3547,6 +3547,8 @@ components:
           minLength: 1
           maxLength: 4000
         paymentExemptReason:
+          type: number
+        paymentExemptReasonExplanation:
           type: string
           minLength: 1
           maxLength: 4000

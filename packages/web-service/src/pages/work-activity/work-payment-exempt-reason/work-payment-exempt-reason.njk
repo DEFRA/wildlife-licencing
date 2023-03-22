@@ -14,13 +14,13 @@
     }
 %}
 
-{% set title = 'What reason do you think your development is exempt from licence payments?' %}
+{% set title = 'Why do you think your project is exempt from payment?' %}
 
 {% set detailsHTML %}
   {{ govukTextarea({
     name: 'exempt-details',
     id: 'exempt-details',
-    value: data.paymentExemptReason if data.paymentExemptReason else '',
+    value: data.paymentExemptReasonExplanation if data.paymentExemptReasonExplanation else '',
     errorMessage: { text: 'Provide more detail on why your development is exempt' } if error['exempt-details'],
     hint: {
       text: 'Provide more detail on the reason you think your development is exempt from license payments.'
@@ -39,29 +39,39 @@
     errorMessage: { text: 'You have not selected an option' } if error['work-payment-exempt-reason'],
     items: [
       {
-        checked: data.radioChecked === data.REGISTERED_PLACES_OF_WORSHIP,
-        value: data.REGISTERED_PLACES_OF_WORSHIP,
-        text: 'Registered places of worship'
+        checked: data.radioChecked === data.PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
+        value: data.PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
+        text: 'Preserving public health and safety'
       },
       {
-        checked: data.radioChecked === data.SCHEDULED_MONUMENTS,
-        value: data.SCHEDULED_MONUMENTS,
-        text: 'Scheduled monuments'
+        checked: data.radioChecked === data.PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
+        value: data.PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
+        text: 'Preventing damage to livestock, crops, timber or property'
       },
       {
-        checked: data.radioChecked === data.LISTED_BUILDINGS,
-        value: data.LISTED_BUILDINGS,
-        text: 'Listed buildings'
-      },
-      {
-        checked: data.radioChecked === data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
-        value: data.TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
-        text: 'Traditional farm buildings in a countryside stewardship agreement'
+        checked: data.radioChecked === data.PREVENT_DISEASE_SPREAD,
+        value: data.PREVENT_DISEASE_SPREAD,
+        text: 'Preventing disease spreading'
       },
       {
         checked: data.radioChecked === data.HOUSEHOLDER_HOME_IMPROVEMENTS,
         value: data.HOUSEHOLDER_HOME_IMPROVEMENTS,
-        text: 'Homes being improved through householder planning permission or permitted development'
+        text: 'Home improvement through householder planning permission or permitted development'
+      },
+      {
+        checked: data.radioChecked === data.SCIENTIFIC_RESEARCH_OR_EDUCATION,
+        value: data.SCIENTIFIC_RESEARCH_OR_EDUCATION,
+        text: 'Scientific, research or educational purposes'
+      },
+      {
+        checked: data.radioChecked === data.CONSERVATION_OF_PROTECTED_SPECIES,
+        value: data.CONSERVATION_OF_PROTECTED_SPECIES,
+        text: 'Conservation of protected species, including protection of bat roosts'
+      },
+      {
+        checked: data.radioChecked === data.CONSERVATION_OF_A_MONUMENT_OR_BUILDING,
+        value: data.CONSERVATION_OF_A_MONUMENT_OR_BUILDING,
+        text: 'Conserve scheduled monuments, listed buildings, places of worship, or traditional farm buildings'
       },
       {
         divider: 'or'
