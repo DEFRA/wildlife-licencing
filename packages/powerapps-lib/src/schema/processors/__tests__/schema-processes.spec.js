@@ -2,7 +2,11 @@ import {
   SddsApplication,
   SddsSite,
   Contact,
-  Account, SddsApplicationType, SddsApplicationPurpose
+  Account,
+  SddsApplicationType,
+  SddsApplicationPurpose,
+  SddsLicensableActions,
+  SddsLicenseMethods
 } from '../../tables/tables.js'
 
 import {
@@ -99,6 +103,58 @@ describe('the schema processes', () => {
           'sdds_billingorganisationid@odata.bind': 'sdds_application_billingorganisationid_ac',
           'sdds_alternativeapplicantcontactid@odata.bind': 'sdds_application_alternativeapplicantcont',
           'sdds_alternativeecologistcontactid@odata.bind': 'sdds_application_alternativeecologistcont'
+        }
+      })
+    })
+
+    it('can create single-ended relations', async () => {
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
+
+      const applicationPayload = await createTablePayload(SddsLicensableActions, {
+        habitatSite: {
+          methods: [
+            {
+              keys: {
+                sddsKey: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+              }
+            }
+          ],
+          data: {
+            name: 'Sett 2',
+            active: true,
+            settType: 100000002,
+            speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+            activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+            speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+          },
+          keys: {
+            apiKey: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+            sddsKey: '8c229893-9fc8-ed11-b596-6045bd0b98a9'
+          }
+        }
+      }, tableSet)
+      expect(applicationPayload).toEqual({
+        id: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+        columnPayload: {
+          sdds_activebadgersett: true,
+          sdds_setttype: 100000002,
+          sdds_species: 'Sett 2'
+        },
+        keyOnlyRelations: [
+          {
+            name: 'sdds_licensableaction_sdds_licensemethod_',
+            relatedTable: 'sdds_licensemethods',
+            sddsKeys: [
+              'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+            ],
+            table: 'sdds_licensableactions'
+          }
+        ],
+        relationshipsPayload: {
+          'sdds_licenseactivityid@odata.bind': '/sdds_licenseactivities(68855554-59ed-ec11-bb3c-000d3a0cee24)',
+          'sdds_specieid@odata.bind': '/sdds_species(fedb14b6-53a8-ec11-9840-0022481aca85)',
+          'sdds_speciesubjectid@odata.bind': '/sdds_speciesubjects(60ce79d8-87fb-ec11-82e5-002248c5c45b)'
         }
       })
     })
@@ -229,7 +285,7 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createMultiRelations(SddsApplication, [updateObjects])
+      const result = createMultiRelations(SddsApplication, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })
