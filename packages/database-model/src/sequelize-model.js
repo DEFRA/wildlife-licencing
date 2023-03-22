@@ -450,9 +450,7 @@ async function defineDesignatedSites (sequelize) {
 }
 
 async function defineMethods (sequelize) {
-  models.methods = await sequelize.define('methods', Object.assign({
-    option: { type: DataTypes.BIGINT }
-  }, ReferenceDataType.attributes), ReferenceDataType.options)
+  models.methods = await sequelize.define('methods', ReferenceDataType.attributes, ReferenceDataType.options)
 }
 
 async function defineSpeciesSubject (sequelize) {

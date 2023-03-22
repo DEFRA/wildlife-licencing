@@ -130,7 +130,6 @@ describe('The reference data extract processor: write-object', () => {
     const result = await writeMethods({
       data: {
         null: {
-          option: 123,
           name: 'method name',
           description: 'method-desc'
         }
@@ -143,7 +142,6 @@ describe('The reference data extract processor: write-object', () => {
 
     expect(mockUpsert).toHaveBeenCalledWith({
       id: '9add5ba9-3f60-42cb-aaf9-0999923a5e2a',
-      option: 123,
       json: {
         name: 'method name'
       }
