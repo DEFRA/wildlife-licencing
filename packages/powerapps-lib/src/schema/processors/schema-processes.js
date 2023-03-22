@@ -322,7 +322,6 @@ export const fetchTableRelationshipsSingleEnded = (table, tableColumnsPayload) =
 
 /**
  * Appends to the update object the result of fetchTableRelationshipsSingleEnded and increments the contentId
- * @param payload
  * @param tableColumnsPayload
  * @param contentId
  * @param table
@@ -330,7 +329,7 @@ export const fetchTableRelationshipsSingleEnded = (table, tableColumnsPayload) =
  * @param refContentId
  * @returns {*}
  */
-const assignSingleEndedRelations = (payload, tableColumnsPayload, contentId, table, updateObjects, refContentId) => {
+const assignSingleEndedRelations = (tableColumnsPayload, contentId, table, updateObjects, refContentId) => {
   const tableRelationshipsForKeyOnly = fetchTableRelationshipsSingleEnded(table, tableColumnsPayload)
   if (tableRelationshipsForKeyOnly && tableRelationshipsForKeyOnly.length) {
     for (const mko of tableRelationshipsForKeyOnly) {
@@ -400,7 +399,7 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
         for (const tableColumnsPayload of tablePayload) {
           const refContentId = contentId
           contentId = assignColumns(payload, tableColumnsPayload, contentId, table, updateObjects)
-          contentId = assignSingleEndedRelations(payload, tableColumnsPayload, contentId, table, updateObjects, refContentId)
+          contentId = assignSingleEndedRelations(tableColumnsPayload, contentId, table, updateObjects, refContentId)
         }
       } else {
         contentId = assignColumns(payload, tablePayload, contentId, table, updateObjects)
