@@ -56,12 +56,12 @@ describe('the schema processes', () => {
     })
   })
 
-  describe('the createTableColumnsPayload function', () => {
+  describe('the createTablePayload function', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [Contact, Account])
       const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
-      const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
+      const { columnPayload } = await createTablePayload(applicant, srcObj, tableSet)
       expect(columnPayload).toEqual({
         address1_city: 'briztol',
         address1_county: 'bristol',
@@ -73,9 +73,9 @@ describe('the schema processes', () => {
     })
 
     it('can create the batch update columns object for complex table; the applications table', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
-      const applicationPayload = await createTableColumnsPayload(SddsApplication, srcObj, tableSet)
+      const applicationPayload = await createTablePayload(SddsApplication, srcObj, tableSet)
       expect(applicationPayload).toEqual({
         columnPayload: {
           sdds_applicationcategory: 100000001,
@@ -104,10 +104,10 @@ describe('the schema processes', () => {
     })
 
     it('can create the batch update columns for sites; an array of items', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
-      const sitesPayloads = await createTableColumnsPayload(site, srcObj, tableSet)
+      const sitesPayloads = await createTablePayload(site, srcObj, tableSet)
       expect(sitesPayloads).toEqual([
         {
           id: '842fc15b-2858-4349-86ea-b33a0629a30b',
@@ -153,8 +153,8 @@ describe('the schema processes', () => {
     })
 
     it('omits the payload if the base path is not set', async () => {
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload({ basePath: 'not-correct' }, srcObj)
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload({ basePath: 'not-correct' }, srcObj)
       expect(result).toBeNull()
     })
 
@@ -163,8 +163,8 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', null, mockFunction)], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: 'data' }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: 'data' }, [])
       expect(mockFunction).toHaveBeenCalled()
       expect(result).toEqual({
         columnPayload: {},
@@ -180,8 +180,8 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', null, mockFunction)], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: 'data' }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: 'data' }, [])
       expect(result).toEqual({
         columnPayload: {},
         relationshipsPayload: {},
@@ -193,8 +193,8 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', 'rel')], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: { } }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
         relationshipsPayload: {},
@@ -206,8 +206,8 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', 'rel', () => 'a')], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: { } }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
         relationshipsPayload: {},
@@ -216,9 +216,9 @@ describe('the schema processes', () => {
     })
   })
 
-  describe('the createTableRelationshipsPayloads function', () => {
+  describe('the createMultiRelations function', () => {
     it('creates a correct many-to-many post statement object', async () => {
-      const { createTableRelationshipsPayloads } = await import('../schema-processes.js')
+      const { createMultiRelations } = await import('../schema-processes.js')
       const updateObjects = {
         table: 'sdds_licensableactions',
         relationshipName: 'sdds_licensableaction_applicationid_sdds_',
@@ -229,7 +229,7 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTableRelationshipsPayloads(SddsApplication, [updateObjects])
+      const result = await createMultiRelations(SddsApplication, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })

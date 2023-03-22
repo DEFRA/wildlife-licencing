@@ -71,7 +71,7 @@ export const createTableSet = (table, include = [], path = table.basePath, relat
  * @param tableSet
  * @returns {Promise<{relationshipsPayload: null|{}, id: *, keyOnlyRelations: null|*[], columnPayload: {}}|null|*[]>}
  **/
-export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
+export const createTablePayload = async (table, srcObj, tableSet) => {
   const result = []
 
   // Omit the payload if the base path is not set
@@ -85,18 +85,18 @@ export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
     for (const item of base) {
       const tempObj = {}
       set(tempObj, table.basePath, item)
-      const c = await createTableColumnsPayloadInner(table, tempObj, tableSet)
+      const c = await createTablePayloadInner(table, tempObj, tableSet)
       if (c) {
         result.push(c)
       }
     }
     return result
   } else {
-    return createTableColumnsPayloadInner(table, srcObj, tableSet)
+    return createTablePayloadInner(table, srcObj, tableSet)
   }
 }
 
-const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
+const createTablePayloadInner = async (table, srcObj, tableSet) => {
   const columnPayload = { }
 
   // Look for the API id in the payload to associate with the contentId
@@ -116,11 +116,11 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   }
 
   const relationshipsPayload = await createTableRelationshipsPayload(table, srcObj, tableSet)
-  const keyOnlyRelations = createTableRelationsForKeyOnly(table, srcObj, tableSet)
+  const keyOnlyRelations = createTableRelationsForSingleEnded(table, srcObj, tableSet)
   return { id, columnPayload, relationshipsPayload, keyOnlyRelations }
 }
 
-const createTableRelationsForKeyOnly = (table, srcObj, tableSet) => {
+const createTableRelationsForSingleEnded = (table, srcObj) => {
   const result = []
 
   if (!table.relationships) {
@@ -171,11 +171,6 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
           // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
           await createTableRelationsPayloadRefRelationships(srcObj, table, relationship, result)
         }
-      } else {
-        // These are used to create 1:M and M:M relationships-only where the keys are from the payload. i.e.
-        if (relationshipSet.includes(relationship.name) && relationship.keyOnly) {
-          createTableRelationsForKeyOnly(srcObj, table, relationship, result)
-        }
       }
     }
   }
@@ -208,7 +203,7 @@ const createTableRelationsPayloadRefRelationships = async (srcObj, table, relati
  * @param updateObjects - The set of update objects being built
  * @returns <null|*[]>
  */
-export const createTableRelationshipsPayloads = (table, updateObjects) => {
+export const createMultiRelations = (table, updateObjects) => {
   const result = []
 
   if (!table.relationships) {
@@ -218,6 +213,7 @@ export const createTableRelationshipsPayloads = (table, updateObjects) => {
   const relationships = table.relationships
     .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
     .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => !r.singleEnded)
 
   if (!relationships.length) {
     return null
@@ -296,7 +292,7 @@ const assignColumns = (payload, tableColumnsPayload, contentId, table, updateObj
   return contentId
 }
 
-export const createTableRelationshipsSingleEnded = (table, tableColumnsPayload) => {
+export const fetchTableRelationshipsSingleEnded = (table, tableColumnsPayload) => {
   const result = []
   if (!table.relationships) {
     return null
@@ -328,7 +324,7 @@ export const createTableRelationshipsSingleEnded = (table, tableColumnsPayload) 
 }
 
 /**
- * Appends to the update object the result of createTableRelationshipsSingleEnded and increments the contentId
+ * Appends to the update object the result of fetchTableRelationshipsSingleEnded and increments the contentId
  * @param payload
  * @param tableColumnsPayload
  * @param contentId
@@ -338,7 +334,7 @@ export const createTableRelationshipsSingleEnded = (table, tableColumnsPayload) 
  * @returns {*}
  */
 const assignSingleEndedRelations = (payload, tableColumnsPayload, contentId, table, updateObjects, refContentId) => {
-  const tableRelationshipsForKeyOnly = createTableRelationshipsSingleEnded(table, tableColumnsPayload)
+  const tableRelationshipsForKeyOnly = fetchTableRelationshipsSingleEnded(table, tableColumnsPayload)
   if (tableRelationshipsForKeyOnly && tableRelationshipsForKeyOnly.length) {
     for (const mko of tableRelationshipsForKeyOnly) {
       updateObjects.push({
@@ -354,8 +350,8 @@ const assignSingleEndedRelations = (payload, tableColumnsPayload, contentId, tab
   return contentId
 }
 
-const assignTableRelationshipPayloads = (table, updateObjects, currentContentId, contentId) => {
-  const tableRelationshipsPayloads = createTableRelationshipsPayloads(table, updateObjects)
+const assignMultiRelations = (table, updateObjects, currentContentId, contentId) => {
+  const tableRelationshipsPayloads = createMultiRelations(table, updateObjects)
   if (tableRelationshipsPayloads && tableRelationshipsPayloads.length) {
     for (const m of tableRelationshipsPayloads) {
       updateObjects.push({
@@ -391,24 +387,24 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
   for (const table of tableSet) {
     const currentContentId = contentId
     // Gathers the table columns, assignments and relationship bindings
-    const tableColumnsPayloads = await createTableColumnsPayload(table, payload, tableSet)
+    const tablePayload = await createTablePayload(table, payload, tableSet)
     // If required fields are not set then will have a null here and this table is omitted from the update
-    if (tableColumnsPayloads) {
+    if (tablePayload) {
       // In the case where a relationship is m2m this will be an array. e.g. sites
-      if (Array.isArray(tableColumnsPayloads)) {
-        for (const tableColumnsPayload of tableColumnsPayloads) {
+      if (Array.isArray(tablePayload)) {
+        for (const tableColumnsPayload of tablePayload) {
           const refContentId = contentId
           contentId = assignColumns(payload, tableColumnsPayload, contentId, table, updateObjects)
           contentId = assignSingleEndedRelations(payload, tableColumnsPayload, contentId, table, updateObjects, refContentId)
         }
       } else {
-        contentId = assignColumns(payload, tableColumnsPayloads, contentId, table, updateObjects)
+        contentId = assignColumns(payload, tablePayload, contentId, table, updateObjects)
       }
     }
 
     // Handle 1:M amd M:M relationships. These are a separate requests occurring after the containing
     // (driving) table request
-    contentId = assignTableRelationshipPayloads(table, updateObjects, currentContentId, contentId)
+    contentId = assignMultiRelations(table, updateObjects, currentContentId, contentId)
   }
 
   return updateObjects
