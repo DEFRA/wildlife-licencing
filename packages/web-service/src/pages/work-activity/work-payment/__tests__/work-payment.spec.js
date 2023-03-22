@@ -173,8 +173,8 @@ describe('The work-payment page', () => {
                 exemptFromPayment: true,
                 applicationTags: [workTag],
                 example: 'just ensuring what we pull from the api is preserved',
-                applicationCategory: 100000001,
-                paymentExemptReason: 'I wont be paying because its a place of worship'
+                paymentExemptReason: 100000001,
+                paymentExemptReasonExplanation: 'I wont be paying because its a place of worship'
               }
             },
             update: mockUpdate

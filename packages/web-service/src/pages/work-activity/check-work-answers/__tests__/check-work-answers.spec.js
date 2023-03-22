@@ -1,3 +1,6 @@
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+const { APPLICATION_CATEGORY: { BARN_CONVERSION }, PAYMENT_EXEMPT_REASON: { PRESERVING_PUBLIC_HEALTH_AND_SAFETY } } = PowerPlatformKeys
+
 describe('The check-work-answers', () => {
   beforeEach(() => jest.resetModules())
 
@@ -80,9 +83,10 @@ describe('The check-work-answers', () => {
     expect(await checkData(request, h)).toBeNull()
   })
 
-  it('getData with work category text', async () => {
+  it('getData returns correctly when the `OTHER` option is selected', async () => {
     const mockSet = jest.fn()
     const workTag = { tag: 'work-activity', tagState: 'complete-not-confirmed' }
+    const OTHER = 452120007
     const request = {
       payload: {
         'yes-no': 'no'
@@ -106,8 +110,9 @@ describe('The check-work-answers', () => {
               exemptFromPayment: true,
               applicationTags: [workTag],
               proposalDescription: 'proposalDescription',
-              applicationCategory: 452120001,
-              paymentExemptReason: 'I wont be paying because its a place of worship'
+              applicationCategory: BARN_CONVERSION,
+              paymentExemptReason: OTHER,
+              paymentExemptReasonExplanation: 'I wont be paying because its a place of worship'
             }
           }
         }
@@ -117,13 +122,13 @@ describe('The check-work-answers', () => {
     expect(await getData(request)).toEqual([
       { key: 'workProposal', value: 'proposalDescription' },
       { key: 'workPayment', value: 'yes' },
-      { key: 'workPaymentExemptCategory', value: 'Other' },
-      { key: 'workPaymentExemptReason', value: 'I wont be paying because its a place of worship' }
+      { key: 'workPaymentExemptCategory', value: 'I wont be paying because its a place of worship' },
+      { key: 'workCategory', value: 'Barn conversion' }
     ])
     expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'complete-not-confirmed' })
   })
 
-  it('getData with out work category text', async () => {
+  it('getData returns correctly when any radio except `OTHER` is selected', async () => {
     const mockSet = jest.fn()
     const workTag = { tag: 'work-activity', tagState: 'complete-not-confirmed' }
     const request = {
@@ -149,8 +154,8 @@ describe('The check-work-answers', () => {
               exemptFromPayment: true,
               applicationTags: [workTag],
               proposalDescription: 'proposalDescription',
-              applicationCategory: 'applicationCategory',
-              paymentExemptReason: 'I wont be paying because its a place of worship'
+              applicationCategory: BARN_CONVERSION,
+              paymentExemptReason: PRESERVING_PUBLIC_HEALTH_AND_SAFETY
             }
           }
         }
@@ -160,7 +165,8 @@ describe('The check-work-answers', () => {
     expect(await getData(request)).toEqual([
       { key: 'workProposal', value: 'proposalDescription' },
       { key: 'workPayment', value: 'yes' },
-      { key: 'workPaymentExemptCategory', value: undefined }
+      { key: 'workPaymentExemptCategory', value: 'Preserving public health and safety' },
+      { key: 'workCategory', value: 'Barn conversion' }
     ])
     expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'complete-not-confirmed' })
   })

@@ -23,23 +23,28 @@ const {
     TOURISM__LEISURE,
     TRANSPORT__HIGHWAYS,
     WASTE_MANAGEMENT,
-    WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT,
-
-    REGISTERED_PLACES_OF_WORSHIP,
-    SCHEDULED_MONUMENTS,
-    LISTED_BUILDINGS,
-    TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+    WATER_SUPPLY_AND_TREATMENT__WATER_ENVIRONMENT
+  },
+  PAYMENT_EXEMPT_REASON: {
+    PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
+    PREVENT_DISEASE_SPREAD,
+    PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
     HOUSEHOLDER_HOME_IMPROVEMENTS,
+    SCIENTIFIC_RESEARCH_OR_EDUCATION,
+    CONSERVATION_OF_PROTECTED_SPECIES,
+    CONSERVATION_OF_A_MONUMENT_OR_BUILDING,
     OTHER
   }
 } = PowerPlatformKeys
 
 const paymentExemptReason = {
-  [REGISTERED_PLACES_OF_WORSHIP]: 'Registered places of worship',
-  [SCHEDULED_MONUMENTS]: 'Scheduled monuments',
-  [LISTED_BUILDINGS]: 'Listed buildings',
-  [TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT]: 'Traditional farm buildings in a countryside stewardship agreement',
-  [HOUSEHOLDER_HOME_IMPROVEMENTS]: 'Homes being improved through householder planning permission or permitted development',
+  [PRESERVING_PUBLIC_HEALTH_AND_SAFETY]: 'Preserving public health and safety',
+  [PREVENT_DISEASE_SPREAD]: 'Preventing disease spreading',
+  [PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY]: 'Preventing damage to livestock, crops, timber or property',
+  [HOUSEHOLDER_HOME_IMPROVEMENTS]: 'Home improvement through householder planning permission or permitted development',
+  [SCIENTIFIC_RESEARCH_OR_EDUCATION]: 'Scientific, research or educational purposes',
+  [CONSERVATION_OF_PROTECTED_SPECIES]: 'Conservation of protected species, including protection of bat roosts',
+  [CONSERVATION_OF_A_MONUMENT_OR_BUILDING]: 'Conserve scheduled monuments, listed buildings, places of worship, or traditional farm buildings',
   [OTHER]: 'Other'
 }
 
@@ -81,16 +86,13 @@ export const getData = async request => {
   result.push({ key: 'workProposal', value: applicationData.proposalDescription })
   result.push({ key: 'workPayment', value: yesNoFromBool(applicationData?.exemptFromPayment) })
 
-  const applicationText = workCategoryText[applicationData?.applicationCategory]
-  if (applicationText !== undefined) {
-    result.push({ key: 'workCategory', value: applicationText })
+  if (applicationData?.exemptFromPayment && applicationData?.paymentExemptReason === OTHER) {
+    result.push({ key: 'workPaymentExemptCategory', value: applicationData?.paymentExemptReasonExplanation })
   } else {
-    result.push({ key: 'workPaymentExemptCategory', value: paymentExemptReason[applicationData?.applicationCategory] })
+    result.push({ key: 'workPaymentExemptCategory', value: paymentExemptReason[applicationData?.paymentExemptReason] })
   }
 
-  if (applicationData?.exemptFromPayment && applicationData?.applicationCategory === OTHER) {
-    result.push({ key: 'workPaymentExemptReason', value: applicationData?.paymentExemptReason })
-  }
+  result.push({ key: 'workCategory', value: workCategoryText[applicationData?.applicationCategory] })
 
   return result
 }
