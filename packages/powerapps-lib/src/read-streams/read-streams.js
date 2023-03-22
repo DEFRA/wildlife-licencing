@@ -83,8 +83,8 @@ const applicationSiteObjectTransformer = buildObjectTransformer(SddsApplicationR
 export const applicationSitesReadStream = () => powerAppsReadStream(applicationSiteRequestPath, applicationSiteObjectTransformer)
 
 /* Licensable actions */
-const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplicationRelations, SddsLicence, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
-const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicence, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
+const licensableActionsRequestPath = buildRequestPath(SddsLicensableActions, [SddsApplicationRelations, SddsLicence, SddsLicenseMethods, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
+const licensableActionsTableSet = createTableSet(SddsLicensableActions, [SddsApplicationRelations, SddsLicence, SddsLicenseMethods, SddsLicenseActivities, SddsSpecies, SddsSpeciesSubject])
 const licensableActionsObjectTransformer = buildObjectTransformer(SddsLicensableActions, licensableActionsTableSet)
 export const licensableActionsReadStream = () => powerAppsReadStream(licensableActionsRequestPath, licensableActionsObjectTransformer)
 
