@@ -87,6 +87,7 @@ describe('the schema processes', () => {
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
         id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
+        keyOnlyRelations: [],
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
           'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(256f23ef-9775-ec11-8943-0022481aacb0)',
@@ -118,7 +119,8 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS21 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         },
         {
           id: '15385397-6df3-45f8-9c98-4551815bbfa0',
@@ -131,7 +133,8 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS22 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         },
         {
           id: '27e20450-f414-445e-995b-8d7caf53ab2c',
@@ -143,7 +146,8 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS23 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         }
       ])
     })
@@ -166,7 +170,8 @@ describe('the schema processes', () => {
         columnPayload: {},
         relationshipsPayload: {
           'testid@odata.bind': '/child(foo)'
-        }
+        },
+        keyOnlyRelations: []
       })
     })
 
@@ -179,7 +184,8 @@ describe('the schema processes', () => {
       const result = await createTableColumnsPayload(Parent, { path: 'data' }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
 
@@ -191,7 +197,8 @@ describe('the schema processes', () => {
       const result = await createTableColumnsPayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
 
@@ -203,7 +210,8 @@ describe('the schema processes', () => {
       const result = await createTableColumnsPayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
   })

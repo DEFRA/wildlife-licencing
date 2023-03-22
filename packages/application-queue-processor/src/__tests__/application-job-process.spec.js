@@ -463,7 +463,12 @@ describe('The application job processor', () => {
               applicationId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
               habitatSiteId: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
               sddsHabitatSiteId: 'b1847e67-07fa-4c51-af03-cb51f5126939',
-              habitatSite: { name: 'Site 1' }
+              habitatSite: {
+                name: 'Site 1',
+                methodIds: [
+                  'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24'
+                ]
+              }
             }])
           },
           previousLicences: { findAll: jest.fn(() => []) },
@@ -491,7 +496,14 @@ describe('The application job processor', () => {
               keys: {
                 apiKey: '79015868-4149-420c-90f5-356dc2d06184',
                 sddsKey: 'b1847e67-07fa-4c51-af03-cb51f5126939'
-              }
+              },
+              methods: [
+                {
+                  keys: {
+                    sddsKey: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24'
+                  }
+                }
+              ]
             }
           ],
           keys: {

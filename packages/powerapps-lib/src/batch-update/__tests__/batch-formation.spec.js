@@ -37,9 +37,9 @@ describe('Batch query formation', () => {
     jest.doMock('../../schema/processors/schema-processes.js', () => ({
       Methods: Methods,
       createBatchRequestObjects: () => ([
-        { contentId: 1, apiTable: 'tab1', apiKey: '123' },
-        { contentId: 2, apiTable: 'tab2', apiKey: '456' },
-        { contentId: 3, apiTable: 'tab3', apiKey: '789' }
+        { contentId: 1, apiTable: 'tab1', apiKey: '123', assignments: { foo: 'bar1' } },
+        { contentId: 2, apiTable: 'tab2', apiKey: '456', assignments: { foo: '__URL__/bar2' } },
+        { contentId: 3, apiTable: 'tab3', apiKey: '789', assignments: { foo: 'bar3' } }
       ])
     }))
     const { openBatchRequest, createKeyObject, createBatchRequest } = await import('../batch-formation.js')
