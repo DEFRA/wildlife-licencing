@@ -52,12 +52,19 @@ export const createBatchRequest = async (requestHandle, payload) => {
   // Build the batch update request body
   const changeId = uuidv4()
   let body = batchStart(requestHandle.batchId, changeId)
-
+  // __URL__
   for (const b of requestHandle.batchRequestObjects) {
+    const assignments = Object.entries(b.assignments)
+      .reduce((a, [key, value]) => ({
+        ...a,
+        [key]: value.toString().includes('__URL__')
+          ? value.replace('__URL__', requestHandle.clientUrl)
+          : value
+      }), {})
     body += changeSetStart(changeId)
     body += headerBuilder(requestHandle, b.contentId, b.table, b.method, b.powerAppsId)
     body += '\n'
-    body += JSON.stringify(b.assignments, null, 2)
+    body += JSON.stringify(assignments, null, 2)
     body += '\n\n'
   }
 

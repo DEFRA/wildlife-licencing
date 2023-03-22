@@ -1,7 +1,6 @@
 import { Column, OperationType, Relationship, RelationshipType, Table } from '../schema.js'
 
 export const SddsLicensableActions = new Table('sdds_licensableactions', [
-  new Column('sdds_method', 'methodIds', m => m.join(','), m => m && m.split(',').map(m2 => parseInt(m2))),
   new Column('sdds_species', 'name'), // Note: error in the data-verse
   new Column('sdds_osgridref', 'gridReference'),
   new Column('sdds_setttype', 'settType'),
@@ -32,6 +31,10 @@ export const SddsLicensableActions = new Table('sdds_licensableactions', [
 
   new Relationship('sdds_licensableaction_sdds_speciesubjecti', 'sdds_speciesubjects',
     RelationshipType.MANY_TO_ONE, 'sdds_speciesubjectid',
-    'speciesSubjectId', null, null, OperationType.INBOUND_AND_OUTBOUND, true)
+    'speciesSubjectId', null, null, OperationType.INBOUND_AND_OUTBOUND, true),
+
+  new Relationship('sdds_licensableaction_sdds_licensemethod_', 'sdds_licensemethods',
+    RelationshipType.MANY_TO_MANY, null, 'methods', null, null,
+    OperationType.INBOUND_AND_OUTBOUND, true, true)
 
 ], 'habitatSite', 'habitatSites', 'sdds_licensableactionid')

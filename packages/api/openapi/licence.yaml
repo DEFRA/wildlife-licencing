@@ -3879,7 +3879,7 @@ components:
         methodIds:
           type: array
           items:
-            $ref: '#/components/schemas/option'
+            $ref: '#/components/schemas/uuid'
         startDate:
           $ref: '#/components/schemas/timestamp'
         endDate:

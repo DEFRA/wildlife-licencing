@@ -40,7 +40,9 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_otherprotectedspeciecommitment', 'permissionsSection.allOtherConditionsMet'),
   new Column('sdds_yesotherprotectedspeciecommitment', 'permissionsSection.conditionsNotMetReason'),
 
-  new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND)
+  new Column('statuscode', 'statusCode', null, null, OperationType.INBOUND),
+
+  new Column('sdds_badgerreasonforexemption', 
 
 ], [
   // Application Type
