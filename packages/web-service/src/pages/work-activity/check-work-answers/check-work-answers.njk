@@ -1,11 +1,10 @@
 {% extends "check-answers.njk" %}
 
 {% set questionMap = {
-    workProposal: { question: 'Proposed work', href: _uri.workProposal },
-    workPayment: { question: 'Is your licence exempt from payment?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.workPayment },
+    workProposal: { question: 'What activity or development work do you plan to do?', href: _uri.workProposal },
+    workPayment: { question: 'Do you think the purpose of your project is exempt from payment?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.workPayment },
     workCategory: { question: 'What kind of development is happening at the site?', href: _uri.workCategory },
-    workPaymentExemptCategory: { question: 'What reason do you think your development is exempt from licence payments?', href: _uri.workPaymentExemptReason },
-    workPaymentExemptReason: { question: 'Exemption reason', href: _uri.workPaymentExemptReason }
+    workPaymentExemptCategory: { question: 'Why do you think your project is exempt from payment?', href: _uri.workPaymentExemptReason }
 } %}
 
 {% set checkData = data %}
