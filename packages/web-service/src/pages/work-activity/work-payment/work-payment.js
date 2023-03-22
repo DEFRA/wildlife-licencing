@@ -35,8 +35,8 @@ export const setData = async request => {
     // it'll immeadiately be reset by the below update() call
     const tag = applicationData.applicationTags.find(t => t.tag === SECTION_TASKS.WORK_ACTIVITY)
     tag.tagState = tagStatus.IN_PROGRESS
-    delete applicationData.applicationCategory
     delete applicationData.paymentExemptReason
+    delete applicationData.paymentExemptReasonExplanation
   }
 
   const newData = Object.assign(applicationData, userInput)

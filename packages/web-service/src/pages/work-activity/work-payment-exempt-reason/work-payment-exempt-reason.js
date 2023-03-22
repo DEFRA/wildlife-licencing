@@ -6,12 +6,14 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../common/check-application.js'
 
 const {
-  APPLICATION_CATEGORY: {
-    REGISTERED_PLACES_OF_WORSHIP,
-    SCHEDULED_MONUMENTS,
-    LISTED_BUILDINGS,
-    TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+  PAYMENT_EXEMPT_REASON: {
+    PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
+    PREVENT_DISEASE_SPREAD,
+    PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
     HOUSEHOLDER_HOME_IMPROVEMENTS,
+    SCIENTIFIC_RESEARCH_OR_EDUCATION,
+    CONSERVATION_OF_PROTECTED_SPECIES,
+    CONSERVATION_OF_A_MONUMENT_OR_BUILDING,
     OTHER
   }
 } = PowerPlatformKeys
@@ -21,13 +23,15 @@ export const getData = async request => {
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   return {
-    radioChecked: applicationData?.applicationCategory,
-    paymentExemptReason: applicationData?.paymentExemptReason,
-    REGISTERED_PLACES_OF_WORSHIP,
-    SCHEDULED_MONUMENTS,
-    LISTED_BUILDINGS,
-    TRADITIONAL_FARM_BUILDINGS_IN_A_COUNTRYSIDE_STEWARDSHIP_AGREEMENT,
+    radioChecked: applicationData?.paymentExemptReason,
+    paymentExemptReasonExplanation: applicationData?.paymentExemptReasonExplanation,
+    PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
+    PREVENT_DISEASE_SPREAD,
+    PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
     HOUSEHOLDER_HOME_IMPROVEMENTS,
+    SCIENTIFIC_RESEARCH_OR_EDUCATION,
+    CONSERVATION_OF_PROTECTED_SPECIES,
+    CONSERVATION_OF_A_MONUMENT_OR_BUILDING,
     OTHER
   }
 }
@@ -41,19 +45,19 @@ export const setData = async request => {
     newData = Object.assign(
       applicationData,
       {
-        applicationCategory: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]),
-        paymentExemptReason: request.payload['exempt-details']
+        paymentExemptReason: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]),
+        paymentExemptReasonExplanation: request.payload['exempt-details']
       })
   } else {
     newData = Object.assign(
       applicationData,
       {
-        applicationCategory: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page])
+        paymentExemptReason: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page])
       })
 
     // If you've changed an answer, we want to ensure we don't retain the
-    // `paymentExemptReason` from a past answer
-    delete newData.paymentExemptReason
+    // `paymentExemptReasonExplanation` from a past answer
+    delete newData.paymentExemptReasonExplanation
   }
 
   await APIRequests.APPLICATION.update(applicationId, newData)
@@ -80,7 +84,7 @@ export const validator = async payload => {
 export default pageRoute({
   uri: workActivityURIs.PAYMENT_EXEMPT_REASON.uri,
   page: workActivityURIs.PAYMENT_EXEMPT_REASON.page,
-  completion: workActivityURIs.CHECK_YOUR_ANSWERS.uri,
+  completion: workActivityURIs.WORK_CATEGORY.uri,
   checkData: checkApplication,
   getData,
   validator,
