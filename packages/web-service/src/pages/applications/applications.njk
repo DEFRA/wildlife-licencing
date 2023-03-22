@@ -56,10 +56,14 @@
     {% endif %}
 {% endmacro -%}
 
-{% macro returnReference(application) %}
-    <p>
-      {{ application.applicationReferenceNumber}}
-    </p>
+{% macro getReferenceNumber(application) %}
+{% if data.statuses[application.statusCode] === 'GRANTED' %}
+  {% for licence in application.licences %}
+    <p>{{ licence.licenceNumber }}</p>
+  {% endfor %}
+{% else %}
+  <p>{{ application.applicationReferenceNumber }}</p>
+{% endif %}
 {% endmacro -%}
 
 
@@ -71,7 +75,7 @@
         {{ tableRows.push([
             { html: applicationReferenceHtml(application) },
             { html: getSiteName(application) },
-            { html: returnReference(application) },
+            { html: getReferenceNumber(application) },
             { html: statusHtml(application) }])
          }}
      </div>

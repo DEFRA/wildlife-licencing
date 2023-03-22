@@ -182,7 +182,7 @@ describe('application-summary page', () => {
 
       const { getData } = await import('../application-summary.js')
       const result = await getData(request)
-      expect(result).toEqual(expect.objectContaining({
+      expect(result).toStrictEqual({
         applicant: {
           fullName: 'Joe Blogs'
         },
@@ -190,18 +190,29 @@ describe('application-summary page', () => {
           applicationType: 'A24',
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          userSubmission: '10 August 2022',
-          name: 'Site 1'
+          siteAddress: '',
+          userSubmission: '10 August 2022'
         },
         licences: [{
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
           endDate: '26 August 2022',
           id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+          lastSent: null,
           licenceNumber: 'LI-0016N0Z4',
-          startDate: '10 August 2022',
-          lastSent: null
-        }]
-      }))
+          startDate: '10 August 2022'
+        }],
+        statuses: {
+          1: 'RECEIVED',
+          100000000: 'AWAITING_ALLOCATION',
+          100000001: 'ALLOCATED_FOR_ASSESSMENT',
+          100000002: 'UNDER_ASSESSMENT',
+          100000004: 'GRANTED',
+          100000005: 'PAUSED',
+          100000006: 'WITHDRAWN',
+          100000008: 'NOT_GRANTED',
+          452120001: 'EXPIRED'
+        }
+      })
     })
   })
 })

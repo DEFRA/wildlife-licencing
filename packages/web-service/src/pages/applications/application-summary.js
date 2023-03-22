@@ -5,6 +5,7 @@ import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
+import { addressLine } from '../service/address.js'
 
 const { BACKEND_STATUS, APPLICATION_TYPES } = PowerPlatformKeys
 
@@ -44,8 +45,8 @@ export const getData = async request => {
   const application = await APIRequests.APPLICATION.getById(applicationId)
   const applicationType = findApplicationType(application)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
-  const name = sites.length ? sites[0].name : ''
-  Object.assign(application, { applicationType, name })
+  const siteAddress = sites.length ? addressLine(sites[0]) : ''
+  Object.assign(application, { applicationType, siteAddress })
   Object.assign(application, { userSubmission: timestampFormatter(application?.userSubmission) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
   const licences = await APIRequests.LICENCES.findByApplicationId(application.id)

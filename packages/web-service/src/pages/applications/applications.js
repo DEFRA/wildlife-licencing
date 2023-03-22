@@ -49,6 +49,11 @@ export const getData = async request => {
     completed: a?.applicationTags?.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
   })).sort(sorter)
 
+  applications.forEach(async application => {
+    const licences = await APIRequests.LICENCES.findByApplicationId(application?.id)
+    application.licences = licences
+  })
+
   return {
     totalSections,
     statuses,
