@@ -116,7 +116,7 @@ const createTablePayloadInner = async (table, srcObj, tableSet) => {
   }
 
   const relationshipsPayload = await createTableRelationshipsPayload(table, srcObj, tableSet)
-  const keyOnlyRelations = createTableRelationsForSingleEnded(table, srcObj, tableSet)
+  const keyOnlyRelations = createTableRelationsForSingleEnded(table, srcObj)
   return { id, columnPayload, relationshipsPayload, keyOnlyRelations }
 }
 
@@ -153,32 +153,29 @@ const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
     return null
   }
 
-  // The set of relationships in the target table set which relates to another table in the table set
+  // Get the set of M:1 outbound relationships for the current table
   const relationshipSet = table.relationships
-    .filter(r => tableSet.map(t2 => t2.name).includes(r.relatedTable))
-    .map(r => r.name)
+    .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => r.type === RelationshipType.MANY_TO_ONE)
 
-  for (const relationship of table.relationships) {
-    if (OperationType.outbound(relationship.operationType)) {
-      if (relationship.type === RelationshipType.MANY_TO_ONE) {
-        // If the relationship is found in our table set, attempt to bind the value
-        if (relationshipSet.includes(relationship.name)) {
-          // The value will be replaced by the content index in the final parse
-          // e.g. "sdds_applicantid@odata.bind": "sdds_application_applicantid_Contact", --> "sdds_applicantid@odata.bind": "$1",
-          Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: relationship.name })
-        } else {
-          // This is data not included in the batch update (reference data) apply the function and bind
-          // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
-          await createTableRelationsPayloadRefRelationships(srcObj, table, relationship, result)
-        }
-      }
+  // Iterate the relationships
+  for (const relationship of relationshipSet) {
+    // If the related table is found in the table set, attempt to bind the value
+    if (tableSet.map(t => t.name).includes(relationship.relatedTable)) {
+      // The value will be replaced by the content index in the final parse
+      // e.g. "sdds_applicantid@odata.bind": "sdds_application_applicantid_Contact", --> "sdds_applicantid@odata.bind": "$1",
+      Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: relationship.name })
+    } else {
+      // This is data not included in the batch update (reference data) apply the function and bind
+      // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
+      await createTableReferenceRelations(srcObj, table, relationship, result)
     }
   }
 
   return result
 }
 
-const createTableRelationsPayloadRefRelationships = async (srcObj, table, relationship, result) => {
+const createTableReferenceRelations = async (srcObj, table, relationship, result) => {
   let value
   const param = get(srcObj, `${table.basePath}.data.${relationship.srcPath}`)
   if (relationship.srcFunc) {
@@ -374,6 +371,14 @@ const assignMultiRelations = (table, updateObjects, currentContentId, contentId)
  * This enables the subsequent generation of
  * the batch update payload text. Wraps and processes the results of a number of
  * nested operations which are applied in a specific sequence
+ *
+ * The relations are handled as follows:
+ * Cardinality  Included (Bound)                  Not Included (Reference)
+ * -----------  ----------------                  ------------------------
+ * M:1          createTableRelationshipsPayload   createTableReferenceRelations
+ * 1:M          createMultiRelations              createTableRelationsForSingleEnded
+ * M:M          createMultiRelations              createTableRelationsForSingleEnded
+ *
  * @param payload - The source data object
  * @param tableSet - The set of tables involved the update
  * @returns {Promise<*[]>} - the built update object
