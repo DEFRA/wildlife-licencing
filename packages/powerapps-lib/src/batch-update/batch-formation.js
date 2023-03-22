@@ -77,7 +77,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
 const preComplied = (n =>
-  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(200)
 
 /**
  * Create a key array from the response body text and the batch request object
