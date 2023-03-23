@@ -3190,7 +3190,7 @@ paths:
             species: [], -- uuid
             speciesSubjects: [], -- uuid
             activities: [], -- uuid
-            methods: [] -- options
+            methods: [] -- uuid
           }
           This is encoded with JSON.stringify
         "
@@ -3234,7 +3234,7 @@ paths:
                   methods:
                     type: array
                     items:
-                      type: string
+                      $ref: '#/components/schemas/uuid'
 
         404:
           description: Not found

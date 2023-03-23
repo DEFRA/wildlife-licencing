@@ -6,7 +6,7 @@ const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
   '       s.id as "speciesIds",\n' +
   '       s.species_subject_id as "speciesSubjectIds",\n' +
   '       a.id as "activityIds",\n' +
-  '       m.option as "methods"\n' +
+  '       m.id as "methods"\n' +
   'from "application-types"  "a-t"\n' +
   '         join "application-type-application-purposes" "a-t-a-p" on "a-t".id = "a-t-a-p".application_type_id\n' +
   '         join "application-type-species" "a-t-s" on "a-t".id = "a-t-s".application_type_id\n' +
@@ -78,7 +78,7 @@ export const findApplicationTypes = async (_context, req, h) => {
     }
 
     if (methods) {
-      filters.push(`m.option in ${ils(methods)}`)
+      filters.push(`m.id in ${ils(methods)}`)
     }
 
     const whereClause = filters.length ? 'where ' + filters.join(' and ') : ''
