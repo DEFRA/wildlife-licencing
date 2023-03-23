@@ -16,7 +16,8 @@ import {
   applicationResponseObject,
   applicationResponseTransformedDataObject,
   applicationResponseTransformedKeys,
-  applicationSiteResponseObject
+  applicationSiteResponseObject,
+  singleEndedSrcExample
 } from './example-src-object.js'
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
@@ -111,29 +112,7 @@ describe('the schema processes', () => {
       const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
 
-      const applicationPayload = await createTablePayload(SddsLicensableActions, {
-        habitatSite: {
-          methods: [
-            {
-              keys: {
-                sddsKey: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
-              }
-            }
-          ],
-          data: {
-            name: 'Sett 2',
-            active: true,
-            settType: 100000002,
-            speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
-            activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
-            speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
-          },
-          keys: {
-            apiKey: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
-            sddsKey: '8c229893-9fc8-ed11-b596-6045bd0b98a9'
-          }
-        }
-      }, tableSet)
+      const applicationPayload = await createTablePayload(SddsLicensableActions, singleEndedSrcExample, tableSet)
       expect(applicationPayload).toEqual({
         id: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
         columnPayload: {
@@ -296,6 +275,30 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
       const results = await createBatchRequestObjects(srcObj, tableSet)
       expect(results).toEqual(initialGeneratedAssignmentsObject)
+    })
+
+    it('can produce a set of insert and objects with the single-ended relation', async () => {
+      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
+      const results = await createBatchRequestObjects(singleEndedSrcExample, tableSet)
+      expect(results).toEqual([
+        {
+          contentId: 1,
+          apiKey: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+          apiTable: 'habitatSites',
+          assignments: {
+            sdds_activebadgersett: true,
+            'sdds_licenseactivityid@odata.bind': '/sdds_licenseactivities(68855554-59ed-ec11-bb3c-000d3a0cee24)',
+            sdds_setttype: 100000002,
+            'sdds_specieid@odata.bind': '/sdds_species(fedb14b6-53a8-ec11-9840-0022481aca85)',
+            sdds_species: 'Sett 2',
+            'sdds_speciesubjectid@odata.bind': '/sdds_speciesubjects(60ce79d8-87fb-ec11-82e5-002248c5c45b)'
+          },
+          method: 'PATCH',
+          powerAppsId: '8c229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: null,
+          table: 'sdds_licensableactions'
+        }])
     })
   })
 

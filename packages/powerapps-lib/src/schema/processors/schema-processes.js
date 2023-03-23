@@ -272,20 +272,22 @@ const getKeys = (payload, tableColumnsPayloads, table) => {
 }
 
 const assignColumns = (payload, tableColumnsPayload, contentId, table, updateObjects) => {
-  // Decorate the target keys object with the contentId
-  const keys = getKeys(payload, tableColumnsPayload, table)
-  updateObjects.push({
-    table: table.name,
-    apiTable: table.apiTable,
-    apiKey: keys.apiKey,
-    relationshipName: table.relationshipName,
-    contentId: contentId,
-    assignments: Object.assign(tableColumnsPayload.columnPayload,
-      substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-    powerAppsId: keys?.sddsKey,
-    method: keys?.sddsKey ? Methods.PATCH : Methods.POST
-  })
-  contentId++
+  if (Object.keys(tableColumnsPayload.columnPayload).length) {
+    // Decorate the target keys object with the contentId
+    const keys = getKeys(payload, tableColumnsPayload, table)
+    updateObjects.push({
+      table: table.name,
+      apiTable: table.apiTable,
+      apiKey: keys.apiKey,
+      relationshipName: table.relationshipName,
+      contentId: contentId,
+      assignments: Object.assign(tableColumnsPayload.columnPayload,
+        substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
+      powerAppsId: keys?.sddsKey,
+      method: keys?.sddsKey ? Methods.PATCH : Methods.POST
+    })
+    contentId++
+  }
   return contentId
 }
 

@@ -90,6 +90,30 @@ export const srcObj = {
   }
 }
 
+export const singleEndedSrcExample = {
+  habitatSite: {
+    methods: [
+      {
+        keys: {
+          sddsKey: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+        }
+      }
+    ],
+    data: {
+      name: 'Sett 2',
+      active: true,
+      settType: 100000002,
+      speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
+      activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
+      speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+    },
+    keys: {
+      apiKey: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+      sddsKey: '8c229893-9fc8-ed11-b596-6045bd0b98a9'
+    }
+  }
+}
+
 export const initialGeneratedAssignmentsObject = [
   expect.objectContaining({
     assignments: expect.objectContaining({
