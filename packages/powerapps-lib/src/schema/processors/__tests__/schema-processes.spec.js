@@ -17,7 +17,8 @@ import {
   applicationResponseTransformedDataObject,
   applicationResponseTransformedKeys,
   applicationSiteResponseObject,
-  singleEndedSrcExample
+  singleEndedSrcExample,
+  singleEndedSrcExample2
 } from './example-src-object.js'
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
@@ -277,7 +278,7 @@ describe('the schema processes', () => {
       expect(results).toEqual(initialGeneratedAssignmentsObject)
     })
 
-    it('can produce a set of insert and objects with the single-ended relation', async () => {
+    it('can produce a set of insert and objects with the single-ended relation (singleton context)', async () => {
       const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
       const results = await createBatchRequestObjects(singleEndedSrcExample, tableSet)
@@ -298,7 +299,90 @@ describe('the schema processes', () => {
           powerAppsId: '8c229893-9fc8-ed11-b596-6045bd0b98a9',
           relationshipName: null,
           table: 'sdds_licensableactions'
-        }])
+        },
+        {
+          assignments: {
+            '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)'
+          },
+          contentId: 2,
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        }
+      ])
+    })
+
+    it('can produce a set of insert and objects with the single-ended relation (array context)', async () => {
+      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsApplication, [SddsLicensableActions, SddsLicenseMethods])
+      const results = await createBatchRequestObjects(singleEndedSrcExample2, tableSet)
+      expect(results).toEqual([
+        {
+          contentId: 1,
+          apiKey: 'ecdc977e-e75f-4ee6-bf47-fcd98cae1167',
+          apiTable: 'habitatSites',
+          assignments: { sdds_species: 'Sett 1' },
+          method: 'PATCH',
+          powerAppsId: '92229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: 'sdds_licensableaction_applicationid_sdds_',
+          table: 'sdds_licensableactions'
+        },
+        {
+          contentId: 2,
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)' },
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          contentId: 3,
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(315af0cf-58ed-ec11-bb3c-000d3a0cee24)' },
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24)' },
+          contentId: 4,
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          apiKey: '1e2fdd44-f642-40bc-b7bf-c97fb766479b',
+          apiTable: 'habitatSites',
+          assignments: { sdds_species: 'Sett 2' },
+          contentId: 5,
+          method: 'PATCH',
+          powerAppsId: '8c229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: 'sdds_licensableaction_applicationid_sdds_',
+          table: 'sdds_licensableactions'
+        }, {
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)' },
+          contentId: 6,
+          method: 'POST',
+          table: '$5/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          apiKey: 'ec4521f1-8a46-471d-bef0-702d73ba654e',
+          apiTable: 'applications',
+          assignments: { sdds_sourceremote: true },
+          contentId: 7,
+          method: 'PATCH',
+          powerAppsId: 'c88c9799-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: null,
+          table: 'sdds_applications'
+        }, {
+          assignments: { '@odata.id': '$1' },
+          contentId: 8,
+          method: 'POST',
+          relationshipName: null,
+          table: '$7/sdds_licensableaction_applicationid_sdds_/$ref'
+        }, {
+          assignments: { '@odata.id': '$5' },
+          contentId: 9,
+          method: 'POST',
+          relationshipName:
+            null,
+          table: '$7/sdds_licensableaction_applicationid_sdds_/$ref'
+        }]
+      )
     })
   })
 

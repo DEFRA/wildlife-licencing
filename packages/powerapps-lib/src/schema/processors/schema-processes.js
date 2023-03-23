@@ -404,7 +404,9 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
           contentId = assignSingleEndedRelations(tableColumnsPayload, contentId, table, updateObjects, refContentId)
         }
       } else {
+        const refContentId = contentId
         contentId = assignColumns(payload, tablePayload, contentId, table, updateObjects)
+        contentId = assignSingleEndedRelations(tablePayload, contentId, table, updateObjects, refContentId)
       }
     }
 

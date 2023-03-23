@@ -114,6 +114,61 @@ export const singleEndedSrcExample = {
   }
 }
 
+export const singleEndedSrcExample2 = {
+  application: {
+    data: {
+    },
+    keys: {
+      apiKey: 'ec4521f1-8a46-471d-bef0-702d73ba654e',
+      sddsKey: 'c88c9799-9fc8-ed11-b596-6045bd0b98a9'
+    },
+    habitatSites: [
+      {
+        methods: [
+          {
+            keys: {
+              sddsKey: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+            }
+          },
+          {
+            keys: {
+              sddsKey: '315af0cf-58ed-ec11-bb3c-000d3a0cee24'
+            }
+          },
+          {
+            keys: {
+              sddsKey: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'
+            }
+          }
+        ],
+        data: {
+          name: 'Sett 1'
+        },
+        keys: {
+          apiKey: 'ecdc977e-e75f-4ee6-bf47-fcd98cae1167',
+          sddsKey: '92229893-9fc8-ed11-b596-6045bd0b98a9'
+        }
+      },
+      {
+        methods: [
+          {
+            keys: {
+              sddsKey: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+            }
+          }
+        ],
+        data: {
+          name: 'Sett 2'
+        },
+        keys: {
+          apiKey: '1e2fdd44-f642-40bc-b7bf-c97fb766479b',
+          sddsKey: '8c229893-9fc8-ed11-b596-6045bd0b98a9'
+        }
+      }
+    ]
+  }
+}
+
 export const initialGeneratedAssignmentsObject = [
   expect.objectContaining({
     assignments: expect.objectContaining({
