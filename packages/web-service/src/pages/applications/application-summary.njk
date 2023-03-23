@@ -1,10 +1,8 @@
 {% extends "information-page.njk" %}
 {% import "common-text.njk" as descriptions %}
 {% import "applications-text.njk" as text %}
-{% from "radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "summary-list/macro.njk" import govukSummaryList %}
-{% from "radios/macro.njk" import govukRadios %}
 {% from "table/macro.njk" import govukTable %}
 
 {% set widthClass = 'govuk-grid-column-two-thirds' %}
@@ -22,57 +20,6 @@
   {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.userSubmission } }) }}
 {% endif %}
 
-{% if data.statuses[data.application.statusCode] === 'GRANTED' %}
-  {% set tableRows = [
-      { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
-      { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
-      { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
-      { key: { text: "Site address" }, value: { text: data.application.siteAddress } }
-    ]%}
-
-  {% for licence in data.licences %}
-    {{ tableRows.push([
-          { key: { text: "Licence reference" }, value: { text: icence.licenceNumber  } },
-          { key: { text: "Valid from" }, value: { text: licence.startDate } },
-          { key: { text: "Expires" }, value: { text: licence.endDate } }
-        ]) }}
-  {% endfor %}
-{% endif %}
-
 {% block pageContent %}
-  {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
-
-  {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: tableRows }) }}
-
-  {{ govukRadios({
-      name: "proximity",
-      hint: {
-        text: "Select an option"
-      },
-      errorMessage: { text: "Select on or next to" } if error['proximity'],
-      items: [
-        {
-          value: 'email',
-          text: "Email a copy of the licence"
-        },
-        {
-          value:  'return',
-          text: "Submit a return"
-        }
-      ]
-    }) }}
-
-  {{ govukButton({
-  text: "Continue",
-  href: "#"
-  }) }}
-
-  {% else %} 
   {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
-  
-  {{ govukButton({
-  text: "View application",
-  href: "#"
-}) }}
-{% endif %}
 {% endblock %}

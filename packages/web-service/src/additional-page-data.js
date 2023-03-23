@@ -11,7 +11,7 @@ import {
   SIGN_OUT,
   SPECIES,
   APPLICATION_SUMMARY,
-  TASKLIST, conservationConsiderationURIs
+  TASKLIST, conservationConsiderationURIs, APPLICATION_LICENCE
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
@@ -24,6 +24,7 @@ export const additionalPageData = (request, h) => {
         login: LOGIN.uri,
         signOut: SIGN_OUT.uri,
         applicationSummary: APPLICATION_SUMMARY.uri,
+        applicationLicence: APPLICATION_LICENCE.uri,
         taskList: TASKLIST.uri,
 
         // Species

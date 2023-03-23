@@ -6,6 +6,7 @@ import { APPLICATIONS, SPECIES } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
+import { findLastSentEvent } from './application-licence.js'
 
 // Values to keys and keys to values
 const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
@@ -52,6 +53,7 @@ export const getData = async request => {
   applications.forEach(async application => {
     const licences = await APIRequests.LICENCES.findByApplicationId(application?.id)
     application.licences = licences
+    application.lastSentEventFlag = licences.length ? findLastSentEvent(licences[0]) : null
   })
 
   return {

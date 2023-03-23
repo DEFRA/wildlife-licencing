@@ -13,5 +13,13 @@ export const LICENCES = {
     },
     `Error getting licences for ${applicationId}`,
     500
+  ),
+  queueTheLicenceEmailResend: async applicationId => apiRequestsWrapper(
+    async () => {
+      await API.post(`${apiUrls.APPLICATION}/licence/resend/${applicationId}/submit`)
+      debug(`Queued the request of the licence email resend for ${JSON.stringify(applicationId)}`)
+    },
+    `Error queuing the request of the licence email resend for ${applicationId}`,
+    500
   )
 }

@@ -1,13 +1,18 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATION_SUMMARY, APPLICATIONS } from '../../uris.js'
+import { APPLICATION_LICENCE, APPLICATIONS, TASKLIST } from '../../uris.js'
 import { DEFAULT_ROLE } from '../../constants.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
 import { addressLine } from '../service/address.js'
+import Joi from 'joi'
 
 const { BACKEND_STATUS, APPLICATION_TYPES } = PowerPlatformKeys
+
+export const findLastSentEvent = licence => (licence.annotations &&
+  licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf')
+    .sort((a, b) => Date(a.modifiedOn) > Date(b.modifiedOn))[0]) || null
 
 export const checkData = async (request, h) => {
   const params = new URLSearchParams(request.query)
@@ -43,15 +48,40 @@ export const getData = async request => {
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
-  Object.assign(application, { userSubmission: timestampFormatter(application?.userSubmission) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
+  const licences = await APIRequests.LICENCES.findByApplicationId(application.id)
+  licences.forEach(licence => {
+    Object.assign(licence, { lastSent: timestampFormatter(findLastSentEvent(licence)?.modifiedOn) })
+    Object.assign(licence, { startDate: timestampFormatter(licence.startDate) })
+    Object.assign(licence, { endDate: timestampFormatter(licence.endDate) })
+  })
+  return {
+    application,
+    applicant,
+    statuses,
+    licences,
+    lastSentEventFlag: licences.length ? findLastSentEvent(licences[0]) : null
+  }
+}
 
-  return { application, applicant, statuses }
+export const completion = async request => {
+  const { applicationId } = await request.cache().getData()
+  const pageData = request.payload['email-or-return']
+  // when a return journey is created we have to visit this section to redirect the user to a return journey
+  if (pageData === 'email') {
+    await APIRequests.LICENCES.queueTheLicenceEmailResend(applicationId)
+  }
+
+  return TASKLIST.uri
 }
 
 export default pageRoute({
-  page: APPLICATION_SUMMARY.page,
-  uri: APPLICATION_SUMMARY.uri,
+  page: APPLICATION_LICENCE.page,
+  uri: APPLICATION_LICENCE.uri,
+  validator: Joi.object({
+    'email-or-return': Joi.any().required()
+  }).options({ abortEarly: false, allowUnknown: true }),
+  completion,
   checkData,
   getData
 })
