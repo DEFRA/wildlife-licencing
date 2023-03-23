@@ -46,7 +46,24 @@ const keys = [
     powerAppsTable: 'sdds_speciesubjects',
     contentId: null,
     powerAppsKey: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'methods',
+    apiKey: null,
+    apiBasePath: 'habitatSite.methods',
+    powerAppsTable: 'sdds_licensemethods',
+    contentId: null,
+    powerAppsKey: '70ce79d8-87fb-ec11-82e5-002248c5c45b'
+  },
+  {
+    apiTable: 'methods',
+    apiKey: null,
+    apiBasePath: 'habitatSite.methods',
+    powerAppsTable: 'sdds_licensemethods',
+    contentId: null,
+    powerAppsKey: '80ce79d8-87fb-ec11-82e5-002248c5c45b'
   }
+
 ]
 
 describe('The application extract processor: write-habitat-site-object', () => {
@@ -94,7 +111,11 @@ describe('The application extract processor: write-habitat-site-object', () => {
         startDate: '2022-01-29',
         activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
         speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
-        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b',
+        methodIds: [
+          '70ce79d8-87fb-ec11-82e5-002248c5c45b',
+          '80ce79d8-87fb-ec11-82e5-002248c5c45b'
+        ]
       },
       id: expect.any(String),
       sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',
@@ -135,7 +156,11 @@ describe('The application extract processor: write-habitat-site-object', () => {
         startDate: '2022-01-29',
         activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24',
         speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
-        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b'
+        speciesSubjectId: '60ce79d8-87fb-ec11-82e5-002248c5c45b',
+        methodIds: [
+          '70ce79d8-87fb-ec11-82e5-002248c5c45b',
+          '80ce79d8-87fb-ec11-82e5-002248c5c45b'
+        ]
       },
       id: expect.any(String),
       sddsHabitatSiteId: '858b9fad-7106-ed11-82e4-002248c5c45b',

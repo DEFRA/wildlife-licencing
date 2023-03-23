@@ -20,7 +20,7 @@ export const validateRelations = async (applicationType, activityId, speciesId, 
   const species = await models.species.findByPk(speciesId)
   const methods = await models.methods.findAll({
     where: {
-      option: {
+      id: {
         [Op.in]: methodIds
       }
     }

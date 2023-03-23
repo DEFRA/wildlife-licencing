@@ -44,10 +44,15 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
     const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
     const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
     const speciesSubjectId = keys.find(k => k.apiTable === 'speciesSubject')?.powerAppsKey
+    const methodIds = keys.filter(k => k.apiTable === 'methods')?.map(k => k.powerAppsKey)
 
     // Look for the activity and method - if it does not have it then ignore it
-    if (activityId && speciesId) {
-      Object.assign(data.habitatSite, { activityId, speciesId, speciesSubjectId })
+    if (activityId && speciesId && methodIds && methodIds.length) {
+      Object.assign(data.habitatSite, { activityId, speciesId, speciesSubjectId, methodIds })
+      // Kludge here, the method M:M is mapped into the payload in an array in this case
+      // This is because the relationship was changed so there is no join table in the API database
+      // The relationship creates { data.methods: [] } which needs to be removed
+      delete data.habitatSite.methods
 
       // The habitat-site is either attached to an application of a licence, not both
       if (sddsApplicationId) {

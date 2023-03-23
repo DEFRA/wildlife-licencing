@@ -95,19 +95,27 @@ const doAuthorisedPeople = async (applicationId, payload) => {
   }
 }
 
+// Get teh set of method uuids
+const doMethods = ids => ids.map(id => ({
+  keys: { sddsKey: id }
+}))
+
 const doHabitatSites = async (applicationId, payload) => {
   const habitatSites = await models.habitatSites.findAll({
     where: { applicationId }
   })
 
   if (habitatSites.length) {
-    const sites = habitatSites.map(s => ({
-      data: s.habitatSite,
-      keys: {
-        apiKey: s.id,
-        sddsKey: s.sddsHabitatSiteId
+    const sites = habitatSites.map(s => {
+      return {
+        methods: doMethods(s.habitatSite.methodIds),
+        data: (({ methodIds, ...l }) => (l))(s.habitatSite),
+        keys: {
+          apiKey: s.id,
+          sddsKey: s.sddsHabitatSiteId
+        }
       }
-    }))
+    })
 
     Object.assign(payload.application, { habitatSites: sites })
   }
@@ -277,9 +285,9 @@ export const applicationJobProcess = async job => {
     }
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {
-      console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
+      console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error)
     } else {
-      console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error.message)
+      console.log(`Recoverable error for job: ${JSON.stringify(job.data)}`, error)
       throw new Error(`Application job fail for ${applicationId}`)
     }
   }

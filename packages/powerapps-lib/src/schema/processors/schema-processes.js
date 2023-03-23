@@ -50,14 +50,28 @@ export const createTableSet = (table, include = [], path = table.basePath, relat
   return sequence
 }
 
+/******************************************************************************************
+ * The following methods are concerned with INBOUND data
+ ******************************************************************************************/
+
 /**
- * For a given table and API src data generate the set of objects which will later be rendered to
- * the update text. * @param table
+ * For a given table and API src data, generate the set of objects which will later be rendered to
+ * the update text.
+ * This iterates through the sequence of tables, in the calculated update order and in turn calls
+ * the following outputs
+ * { id, columnPayload, relationshipsPayload, keyOnlyRelations }
+ * (1) id - the primary (API) key of the record
+ * (2) columnPayload - the column values
+ * (3) relationshipsPayload - the M:1 relationships either included in the update and referenced by the contentId
+ * or using a bind relationship, in a single-ended update i.e. to reference-data
+ * (4) keyOnlyRelations - 1:M and M:M relations which are bound (i.e. single-ended, i.e. bound to reference data and not included
+ * in the update)
+ * @param table
  * @param srcObj
  * @param tableSet
- * @returns {Promise<null|*[]|{relationshipsPayload: null|{}, id: *, columnPayload: {}}>}
- */
-export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
+ * @returns {Promise<{relationshipsPayload: null|{}, id: *, keyOnlyRelations: null|*[], columnPayload: {}}|null|*[]>}
+ **/
+export const createTablePayload = async (table, srcObj, tableSet) => {
   const result = []
 
   // Omit the payload if the base path is not set
@@ -71,18 +85,18 @@ export const createTableColumnsPayload = async (table, srcObj, tableSet) => {
     for (const item of base) {
       const tempObj = {}
       set(tempObj, table.basePath, item)
-      const c = await createTableColumnsPayloadInner(table, tempObj, tableSet)
+      const c = await createTablePayloadInner(table, tempObj, tableSet)
       if (c) {
         result.push(c)
       }
     }
     return result
   } else {
-    return createTableColumnsPayloadInner(table, srcObj, tableSet)
+    return createTablePayloadInner(table, srcObj, tableSet)
   }
 }
 
-const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
+const createTablePayloadInner = async (table, srcObj, tableSet) => {
   const columnPayload = { }
 
   // Look for the API id in the payload to associate with the contentId
@@ -102,10 +116,66 @@ const createTableColumnsPayloadInner = async (table, srcObj, tableSet) => {
   }
 
   const relationshipsPayload = await createTableRelationshipsPayload(table, srcObj, tableSet)
-  return { id, columnPayload, relationshipsPayload }
+  const keyOnlyRelations = createTableRelationsForSingleEnded(table, srcObj)
+  return { id, columnPayload, relationshipsPayload, keyOnlyRelations }
 }
 
-const createTableRelationsPayloadRefRelationships = async (srcObj, table, relationship, result) => {
+const createTableRelationsForSingleEnded = (table, srcObj) => {
+  const result = []
+
+  if (!table.relationships) {
+    return null
+  }
+
+  const relationshipSet = table.relationships
+    .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
+    .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => r.singleEnded)
+
+  for (const relationship of relationshipSet) {
+    // These are used to create 1:M and M:M relationships-only where the keys are from the payload. i.e.
+    const param = get(srcObj, `${table.basePath}.${relationship.srcPath}`)
+    result.push({
+      name: relationship.name,
+      table: table.name,
+      relatedTable: relationship.relatedTable,
+      sddsKeys: param.map(p => p.keys.sddsKey)
+    })
+  }
+
+  return result
+}
+
+const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
+  const result = {}
+
+  if (!table.relationships) {
+    return null
+  }
+
+  // Get the set of M:1 outbound relationships for the current table
+  const relationshipSet = table.relationships
+    .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => r.type === RelationshipType.MANY_TO_ONE)
+
+  // Iterate the relationships
+  for (const relationship of relationshipSet) {
+    // If the related table is found in the table set, attempt to bind the value
+    if (tableSet.map(t => t.name).includes(relationship.relatedTable)) {
+      // The value will be replaced by the content index in the final parse
+      // e.g. "sdds_applicantid@odata.bind": "sdds_application_applicantid_Contact", --> "sdds_applicantid@odata.bind": "$1",
+      Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: relationship.name })
+    } else {
+      // This is data not included in the batch update (reference data) apply the function and bind
+      // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
+      await createTableReferenceRelations(srcObj, table, relationship, result)
+    }
+  }
+
+  return result
+}
+
+const createTableReferenceRelations = async (srcObj, table, relationship, result) => {
   let value
   const param = get(srcObj, `${table.basePath}.data.${relationship.srcPath}`)
   if (relationship.srcFunc) {
@@ -123,44 +193,14 @@ const createTableRelationsPayloadRefRelationships = async (srcObj, table, relati
   }
 }
 
-const createTableRelationshipsPayload = async (table, srcObj, tableSet) => {
-  const result = { }
-
-  if (!table.relationships) {
-    return null
-  }
-
-  // The set of relationships in the target table set which relates to another table in the table set
-  const relationshipSet = table.relationships
-    .filter(r => tableSet.map(t2 => t2.name).includes(r.relatedTable))
-    .map(r => r.name)
-
-  for (const relationship of table.relationships) {
-    if (relationship.type === RelationshipType.MANY_TO_ONE && OperationType.outbound(relationship.operationType)) {
-      // If the relationship is found in our table set, attempt to bind the value
-      if (relationshipSet.includes(relationship.name)) {
-        // The value will be replaced by the content index in the final parse
-        // e.g. "sdds_applicantid@odata.bind": "sdds_application_applicantid_Contact", --> "sdds_applicantid@odata.bind": "$1",
-        Object.assign(result, { [`${relationship.lookupColumnName}@odata.bind`]: relationship.name })
-      } else {
-        // This is data not included in the batch update (reference data) apply the function and bind
-        // e.g. "sdds_applicationtypesid@odata.bind": "/sdds_applicationtypeses(a76057b1-027a-ec11-8d21-000d3a8748ed)",
-        await createTableRelationsPayloadRefRelationships(srcObj, table, relationship, result)
-      }
-    }
-  }
-
-  return result
-}
-
 /**
  * Generate the update objects for the one-to-many and the many-to-many relationships on any
  * given table in the set
  * @param table - The table
  * @param updateObjects - The set of update objects being built
- * @returns {Promise<null|*[]>}
+ * @returns <null|*[]>
  */
-export const createTableRelationshipsPayloads = async (table, updateObjects) => {
+export const createMultiRelations = (table, updateObjects) => {
   const result = []
 
   if (!table.relationships) {
@@ -170,6 +210,7 @@ export const createTableRelationshipsPayloads = async (table, updateObjects) => 
   const relationships = table.relationships
     .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
     .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => !r.singleEnded)
 
   if (!relationships.length) {
     return null
@@ -222,7 +263,7 @@ const substitutePlaceholders = (tableRelationshipsPayload, updateObjects, tableR
  * @param table
  * @returns {null|string|*}
  */
-function getKeys (payload, tableColumnsPayloads, table) {
+const getKeys = (payload, tableColumnsPayloads, table) => {
   const item = get(payload, table.basePath)
   if (item) {
     return Array.isArray(item) ? item.find(i => i.keys.apiKey === tableColumnsPayloads.id).keys : item.keys
@@ -230,31 +271,118 @@ function getKeys (payload, tableColumnsPayloads, table) {
   return null
 }
 
-function assignColumns (payload, tableColumnsPayload, contentId, table, updateObjects) {
-  // Decorate the target keys object with the contentId
-  const keys = getKeys(payload, tableColumnsPayload, table)
-  updateObjects.push({
-    table: table.name,
-    apiTable: table.apiTable,
-    apiKey: keys.apiKey,
-    relationshipName: table.relationshipName,
-    contentId: contentId,
-    assignments: Object.assign(tableColumnsPayload.columnPayload,
-      substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
-    powerAppsId: keys?.sddsKey,
-    method: keys?.sddsKey ? Methods.PATCH : Methods.POST
-  })
-  contentId++
+const assignColumns = (payload, tableColumnsPayload, contentId, table, updateObjects) => {
+  if (Object.keys(tableColumnsPayload.columnPayload).length) {
+    // Decorate the target keys object with the contentId
+    const keys = getKeys(payload, tableColumnsPayload, table)
+    updateObjects.push({
+      table: table.name,
+      apiTable: table.apiTable,
+      apiKey: keys.apiKey,
+      relationshipName: table.relationshipName,
+      contentId: contentId,
+      assignments: Object.assign(tableColumnsPayload.columnPayload,
+        substitutePlaceholders(tableColumnsPayload.relationshipsPayload, updateObjects, table.relationships)),
+      powerAppsId: keys?.sddsKey,
+      method: keys?.sddsKey ? Methods.PATCH : Methods.POST
+    })
+    contentId++
+  }
+  return contentId
+}
+
+export const fetchTableRelationshipsSingleEnded = (table, tableColumnsPayload) => {
+  const result = []
+  if (!table.relationships) {
+    return null
+  }
+
+  const relationships = table.relationships
+    .filter(r => r.type === RelationshipType.MANY_TO_MANY || r.type === RelationshipType.ONE_TO_MANY)
+    .filter(r => OperationType.outbound(r.operationType))
+    .filter(r => r.singleEnded)
+
+  if (!relationships.length) {
+    return null
+  }
+
+  if (tableColumnsPayload && tableColumnsPayload.keyOnlyRelations.length) {
+    tableColumnsPayload.keyOnlyRelations.forEach(keyOnlyRelation => {
+      for (const sddsKey of keyOnlyRelation.sddsKeys) {
+        result.push({
+          name: keyOnlyRelation.name,
+          assignments: {
+            '@odata.id': `__URL__/${keyOnlyRelation.relatedTable}(${sddsKey})`
+          }
+        })
+      }
+    })
+  }
+
+  return result
+}
+
+/**
+ * Appends to the update object the result of fetchTableRelationshipsSingleEnded and increments the contentId
+ * @param tableColumnsPayload
+ * @param contentId
+ * @param table
+ * @param updateObjects
+ * @param refContentId
+ * @returns {*}
+ */
+const assignSingleEndedRelations = (tableColumnsPayload, contentId, table, updateObjects, refContentId) => {
+  const tableRelationshipsForKeyOnly = fetchTableRelationshipsSingleEnded(table, tableColumnsPayload)
+  if (tableRelationshipsForKeyOnly && tableRelationshipsForKeyOnly.length) {
+    for (const mko of tableRelationshipsForKeyOnly) {
+      updateObjects.push({
+        table: `$${refContentId}/${mko.name}/$ref`,
+        contentId: contentId,
+        assignments: mko.assignments,
+        method: Methods.POST
+      })
+      contentId++
+    }
+  }
+
+  return contentId
+}
+
+const assignMultiRelations = (table, updateObjects, currentContentId, contentId) => {
+  const tableRelationshipsPayloads = createMultiRelations(table, updateObjects)
+  if (tableRelationshipsPayloads && tableRelationshipsPayloads.length) {
+    for (const m of tableRelationshipsPayloads) {
+      updateObjects.push({
+        table: `$${currentContentId}/${m.name}/$ref`,
+        relationshipName: table.relationshipName,
+        contentId: contentId,
+        assignments: m.assignments,
+        method: Methods.POST
+      })
+      contentId++
+    }
+  }
   return contentId
 }
 
 /**
- * Generates a set of objects to enable the subsequent generation of
- * the batch update payload text. Wraps and processes the results of the
- * createTableColumnsPayload and createTableRelationshipsPayload process
+ * The main entrypoint to generate the updateObjects array which holds the set of
+ * operations that make up the sequential batch operation. The update object
+ * contentId is the operation number.
+ * This enables the subsequent generation of
+ * the batch update payload text. Wraps and processes the results of a number of
+ * nested operations which are applied in a specific sequence
+ *
+ * The relations are handled as follows:
+ * Cardinality  Included (Bound)                  Not Included (Reference)
+ * -----------  ----------------                  ------------------------
+ * M:1          createTableRelationshipsPayload   createTableReferenceRelations
+ * 1:M          createMultiRelations              createTableRelationsForSingleEnded
+ * M:M          createMultiRelations              createTableRelationsForSingleEnded
+ *
  * @param payload - The source data object
  * @param tableSet - The set of tables involved the update
- * @returns {Promise<void>} - the built update object
+ * @returns {Promise<*[]>} - the built update object
  */
 export const createBatchRequestObjects = async (payload, tableSet) => {
   // Built as each table in the set is processed, contains all the field assignments
@@ -265,39 +393,37 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
   for (const table of tableSet) {
     const currentContentId = contentId
     // Gathers the table columns, assignments and relationship bindings
-    const tableColumnsPayloads = await createTableColumnsPayload(table, payload, tableSet)
+    const tablePayload = await createTablePayload(table, payload, tableSet)
     // If required fields are not set then will have a null here and this table is omitted from the update
-    if (tableColumnsPayloads) {
+    if (tablePayload) {
       // In the case where a relationship is m2m this will be an array. e.g. sites
-      if (Array.isArray(tableColumnsPayloads)) {
-        for (const tableColumnsPayload of tableColumnsPayloads) {
+      if (Array.isArray(tablePayload)) {
+        for (const tableColumnsPayload of tablePayload) {
+          const refContentId = contentId
           contentId = assignColumns(payload, tableColumnsPayload, contentId, table, updateObjects)
+          contentId = assignSingleEndedRelations(tableColumnsPayload, contentId, table, updateObjects, refContentId)
         }
       } else {
-        contentId = assignColumns(payload, tableColumnsPayloads, contentId, table, updateObjects)
+        const refContentId = contentId
+        contentId = assignColumns(payload, tablePayload, contentId, table, updateObjects)
+        contentId = assignSingleEndedRelations(tablePayload, contentId, table, updateObjects, refContentId)
       }
     }
 
     // Handle 1:M amd M:M relationships. These are a separate requests occurring after the containing
     // (driving) table request
-    const tableRelationshipsPayloads = await createTableRelationshipsPayloads(table, updateObjects)
-    if (tableRelationshipsPayloads && tableRelationshipsPayloads.length) {
-      for (const m of tableRelationshipsPayloads) {
-        updateObjects.push({
-          table: `$${currentContentId}/${m.name}/$ref`,
-          relationshipName: table.relationshipName,
-          contentId: contentId,
-          assignments: m.assignments,
-          method: Methods.POST
-        })
-        contentId++
-      }
-    }
+    contentId = assignMultiRelations(table, updateObjects, currentContentId, contentId)
   }
 
   return updateObjects
 }
 
+/******************************************************************************************
+ * The following methods are concerned with OUTBOUND data
+ ******************************************************************************************/
+/*
+ * The following methods are concerned with INBOUND
+ */
 export const buildRequestPathRelationships = (table, include, path, delim) => {
   if (table.relationships && table.relationships.length) {
     for (const relationship of table.relationships) {
@@ -323,7 +449,7 @@ export const buildRequestPathRelationships = (table, include, path, delim) => {
 
 /**
  * Generate a multi-level request path based on a given table and set of included tables
- * with a atomic GET request to the ODATA interface
+ * with an atomic GET request to the ODATA interface
  * Write-only fields are ignored
  * TableName?$select=SelectList
  *   &$expand=Relationship.LookupColumnName($Select=SelectList;$expand...),
@@ -341,10 +467,7 @@ export const buildRequestPath = (table, include = [], isFirst = true, delim = '&
   }
 
   /**
-   * Function to determine the filter delimiter - which if in a nested table is delimited by ;
-   * @param cols
-   * @param isFirst
-   * @returns {string}
+   * Function to determine the filter delimiter - which if in a nested table is delimited by ';'
    */
   const fDelim = (c, f) => {
     if (c.length === 0) {

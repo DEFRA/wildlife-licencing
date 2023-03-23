@@ -2,7 +2,11 @@ import {
   SddsApplication,
   SddsSite,
   Contact,
-  Account, SddsApplicationType, SddsApplicationPurpose
+  Account,
+  SddsApplicationType,
+  SddsApplicationPurpose,
+  SddsLicensableActions,
+  SddsLicenseMethods
 } from '../../tables/tables.js'
 
 import {
@@ -12,7 +16,9 @@ import {
   applicationResponseObject,
   applicationResponseTransformedDataObject,
   applicationResponseTransformedKeys,
-  applicationSiteResponseObject
+  applicationSiteResponseObject,
+  singleEndedSrcExample,
+  singleEndedSrcExample2
 } from './example-src-object.js'
 
 import { Relationship, RelationshipType, Table } from '../../schema.js'
@@ -56,12 +62,12 @@ describe('the schema processes', () => {
     })
   })
 
-  describe('the createTableColumnsPayload function', () => {
+  describe('the createTablePayload function', () => {
     it('can create the batch update columns object for a simple table; the contact table', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [Contact, Account])
       const applicant = tableSet.find(ts => ts.basePath === 'application.applicant')
-      const { columnPayload } = await createTableColumnsPayload(applicant, srcObj, tableSet)
+      const { columnPayload } = await createTablePayload(applicant, srcObj, tableSet)
       expect(columnPayload).toEqual({
         address1_city: 'briztol',
         address1_county: 'bristol',
@@ -73,9 +79,9 @@ describe('the schema processes', () => {
     })
 
     it('can create the batch update columns object for complex table; the applications table', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [Contact, Account, SddsSite])
-      const applicationPayload = await createTableColumnsPayload(SddsApplication, srcObj, tableSet)
+      const applicationPayload = await createTablePayload(SddsApplication, srcObj, tableSet)
       expect(applicationPayload).toEqual({
         columnPayload: {
           sdds_applicationcategory: 100000001,
@@ -87,6 +93,7 @@ describe('the schema processes', () => {
           sdds_whydoyouneedalicence: 'need to move some badgers'
         },
         id: 'c4d14353-028d-45d1-adcd-576a2386b3d1',
+        keyOnlyRelations: [],
         relationshipsPayload: {
           'sdds_applicantid@odata.bind': 'sdds_application_applicantid_Contact',
           'sdds_applicationpurpose@odata.bind': '/sdds_applicationpurposes(256f23ef-9775-ec11-8943-0022481aacb0)',
@@ -102,11 +109,41 @@ describe('the schema processes', () => {
       })
     })
 
+    it('can create single-ended relations', async () => {
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
+
+      const applicationPayload = await createTablePayload(SddsLicensableActions, singleEndedSrcExample, tableSet)
+      expect(applicationPayload).toEqual({
+        id: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+        columnPayload: {
+          sdds_activebadgersett: true,
+          sdds_setttype: 100000002,
+          sdds_species: 'Sett 2'
+        },
+        keyOnlyRelations: [
+          {
+            name: 'sdds_licensableaction_sdds_licensemethod_',
+            relatedTable: 'sdds_licensemethods',
+            sddsKeys: [
+              'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+            ],
+            table: 'sdds_licensableactions'
+          }
+        ],
+        relationshipsPayload: {
+          'sdds_licenseactivityid@odata.bind': '/sdds_licenseactivities(68855554-59ed-ec11-bb3c-000d3a0cee24)',
+          'sdds_specieid@odata.bind': '/sdds_species(fedb14b6-53a8-ec11-9840-0022481aca85)',
+          'sdds_speciesubjectid@odata.bind': '/sdds_speciesubjects(60ce79d8-87fb-ec11-82e5-002248c5c45b)'
+        }
+      })
+    })
+
     it('can create the batch update columns for sites; an array of items', async () => {
-      const { createTableSet, createTableColumnsPayload } = await import('../schema-processes.js')
+      const { createTableSet, createTablePayload } = await import('../schema-processes.js')
       const tableSet = createTableSet(SddsApplication, [SddsSite])
       const site = tableSet.find(ts => ts.name === 'sdds_sites')
-      const sitesPayloads = await createTableColumnsPayload(site, srcObj, tableSet)
+      const sitesPayloads = await createTablePayload(site, srcObj, tableSet)
       expect(sitesPayloads).toEqual([
         {
           id: '842fc15b-2858-4349-86ea-b33a0629a30b',
@@ -118,7 +155,8 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS21 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         },
         {
           id: '15385397-6df3-45f8-9c98-4551815bbfa0',
@@ -131,7 +169,8 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS22 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         },
         {
           id: '27e20450-f414-445e-995b-8d7caf53ab2c',
@@ -143,14 +182,15 @@ describe('the schema processes', () => {
             sdds_postcode: 'BS23 2XX',
             sdds_sourceremote: true
           },
-          relationshipsPayload: {}
+          relationshipsPayload: {},
+          keyOnlyRelations: []
         }
       ])
     })
 
     it('omits the payload if the base path is not set', async () => {
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload({ basePath: 'not-correct' }, srcObj)
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload({ basePath: 'not-correct' }, srcObj)
       expect(result).toBeNull()
     })
 
@@ -159,14 +199,15 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', null, mockFunction)], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: 'data' }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: 'data' }, [])
       expect(mockFunction).toHaveBeenCalled()
       expect(result).toEqual({
         columnPayload: {},
         relationshipsPayload: {
           'testid@odata.bind': '/child(foo)'
-        }
+        },
+        keyOnlyRelations: []
       })
     })
 
@@ -175,11 +216,12 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', null, mockFunction)], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: 'data' }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: 'data' }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
 
@@ -187,11 +229,12 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', 'rel')], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: { } }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
 
@@ -199,18 +242,19 @@ describe('the schema processes', () => {
       const Parent = new Table('parent', [],
         [new Relationship('test-relationship', 'child',
           RelationshipType.MANY_TO_ONE, 'testid', 'rel', () => 'a')], 'path')
-      const { createTableColumnsPayload } = await import('../schema-processes.js')
-      const result = await createTableColumnsPayload(Parent, { path: { } }, [])
+      const { createTablePayload } = await import('../schema-processes.js')
+      const result = await createTablePayload(Parent, { path: { } }, [])
       expect(result).toEqual({
         columnPayload: {},
-        relationshipsPayload: {}
+        relationshipsPayload: {},
+        keyOnlyRelations: []
       })
     })
   })
 
-  describe('the createTableRelationshipsPayloads function', () => {
+  describe('the createMultiRelations function', () => {
     it('creates a correct many-to-many post statement object', async () => {
-      const { createTableRelationshipsPayloads } = await import('../schema-processes.js')
+      const { createMultiRelations } = await import('../schema-processes.js')
       const updateObjects = {
         table: 'sdds_licensableactions',
         relationshipName: 'sdds_licensableaction_applicationid_sdds_',
@@ -221,7 +265,7 @@ describe('the schema processes', () => {
         powerAppsId: 'ad748889-0390-ec11-b400-000d3a8728b2',
         method: 'PATCH'
       }
-      const result = await createTableRelationshipsPayloads(SddsApplication, [updateObjects])
+      const result = createMultiRelations(SddsApplication, [updateObjects])
       expect(result).toEqual([{ assignments: { '@odata.id': '$1' }, name: 'sdds_licensableaction_applicationid_sdds_' }])
     })
   })
@@ -232,6 +276,113 @@ describe('the schema processes', () => {
       const tableSet = createTableSet(SddsApplication, [SddsSite, Contact, Account])
       const results = await createBatchRequestObjects(srcObj, tableSet)
       expect(results).toEqual(initialGeneratedAssignmentsObject)
+    })
+
+    it('can produce a set of insert and objects with the single-ended relation (singleton context)', async () => {
+      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsLicensableActions, [SddsLicenseMethods])
+      const results = await createBatchRequestObjects(singleEndedSrcExample, tableSet)
+      expect(results).toEqual([
+        {
+          contentId: 1,
+          apiKey: 'a14aad7f-26e5-491c-bdf8-969d255be0ef',
+          apiTable: 'habitatSites',
+          assignments: {
+            sdds_activebadgersett: true,
+            'sdds_licenseactivityid@odata.bind': '/sdds_licenseactivities(68855554-59ed-ec11-bb3c-000d3a0cee24)',
+            sdds_setttype: 100000002,
+            'sdds_specieid@odata.bind': '/sdds_species(fedb14b6-53a8-ec11-9840-0022481aca85)',
+            sdds_species: 'Sett 2',
+            'sdds_speciesubjectid@odata.bind': '/sdds_speciesubjects(60ce79d8-87fb-ec11-82e5-002248c5c45b)'
+          },
+          method: 'PATCH',
+          powerAppsId: '8c229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: null,
+          table: 'sdds_licensableactions'
+        },
+        {
+          assignments: {
+            '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)'
+          },
+          contentId: 2,
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        }
+      ])
+    })
+
+    it('can produce a set of insert and objects with the single-ended relation (array context)', async () => {
+      const { createTableSet, createBatchRequestObjects } = await import('../schema-processes.js')
+      const tableSet = createTableSet(SddsApplication, [SddsLicensableActions, SddsLicenseMethods])
+      const results = await createBatchRequestObjects(singleEndedSrcExample2, tableSet)
+      expect(results).toEqual([
+        {
+          contentId: 1,
+          apiKey: 'ecdc977e-e75f-4ee6-bf47-fcd98cae1167',
+          apiTable: 'habitatSites',
+          assignments: { sdds_species: 'Sett 1' },
+          method: 'PATCH',
+          powerAppsId: '92229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: 'sdds_licensableaction_applicationid_sdds_',
+          table: 'sdds_licensableactions'
+        },
+        {
+          contentId: 2,
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)' },
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          contentId: 3,
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(315af0cf-58ed-ec11-bb3c-000d3a0cee24)' },
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24)' },
+          contentId: 4,
+          method: 'POST',
+          table: '$1/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          apiKey: '1e2fdd44-f642-40bc-b7bf-c97fb766479b',
+          apiTable: 'habitatSites',
+          assignments: { sdds_species: 'Sett 2' },
+          contentId: 5,
+          method: 'PATCH',
+          powerAppsId: '8c229893-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: 'sdds_licensableaction_applicationid_sdds_',
+          table: 'sdds_licensableactions'
+        }, {
+          assignments: { '@odata.id': '__URL__/sdds_licensemethods(f8a385c9-58ed-ec11-bb3c-000d3a0cee24)' },
+          contentId: 6,
+          method: 'POST',
+          table: '$5/sdds_licensableaction_sdds_licensemethod_/$ref'
+        },
+        {
+          apiKey: 'ec4521f1-8a46-471d-bef0-702d73ba654e',
+          apiTable: 'applications',
+          assignments: { sdds_sourceremote: true },
+          contentId: 7,
+          method: 'PATCH',
+          powerAppsId: 'c88c9799-9fc8-ed11-b596-6045bd0b98a9',
+          relationshipName: null,
+          table: 'sdds_applications'
+        }, {
+          assignments: { '@odata.id': '$1' },
+          contentId: 8,
+          method: 'POST',
+          relationshipName: null,
+          table: '$7/sdds_licensableaction_applicationid_sdds_/$ref'
+        }, {
+          assignments: { '@odata.id': '$5' },
+          contentId: 9,
+          method: 'POST',
+          relationshipName:
+            null,
+          table: '$7/sdds_licensableaction_applicationid_sdds_/$ref'
+        }]
+      )
     })
   })
 

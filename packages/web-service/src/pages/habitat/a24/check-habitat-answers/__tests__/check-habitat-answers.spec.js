@@ -66,7 +66,7 @@ describe('The check habitat answers page', () => {
                 gridReference: 'NY574735',
                 startDate: '11-03-2222',
                 endDate: '11-30-3001',
-                methodIds: [100000010, 100000011],
+                methodIds: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24', '290461e0-58ed-ec11-bb3c-000d3a0cee24'],
                 speciesId: 'fedb14b6-53a8-ec11-9840-0022481aca85',
                 activityId: '68855554-59ed-ec11-bb3c-000d3a0cee24'
               }
@@ -168,7 +168,7 @@ describe('The check habitat answers page', () => {
       const mockHabitats = jest.fn(() => [
         {
           settType: 100000000,
-          methodIds: [100000011],
+          methodIds: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'],
           startDate: '07-25-2023',
           endDate: '07-28-2023',
           willReopen: true
@@ -198,15 +198,15 @@ describe('The check habitat answers page', () => {
           [
             {
               activityTypes: {
-                DAMAGE_A_SETT: 100000012,
-                DESTROY_A_SETT: 100000013,
-                DISTURB_A_SETT: 100000014,
-                OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: 100000011,
-                OBSTRUCT_SETT_WITH_GATES: 100000010
+                DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
+                DESTROY_A_SETT: '290461e0-58ed-ec11-bb3c-000d3a0cee24',
+                DISTURB_A_SETT: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24',
+                OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: '315af0cf-58ed-ec11-bb3c-000d3a0cee24',
+                OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
               },
               habitatType: 100000000,
-              methodIds: [100000011],
-              methodTypes: [100000011],
+              methodIds: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'],
+              methodTypes: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'],
               reopen: 'Yes',
               settType: 100000000,
               settTypes: {
@@ -237,7 +237,7 @@ describe('The check habitat answers page', () => {
       const mockHabitats = jest.fn(() => [
         {
           settType: 100000000,
-          methodIds: [100000011],
+          methodIds: ['290461e0-58ed-ec11-bb3c-000d3a0cee24'],
           startDate: '07-25-2023',
           endDate: '07-28-2023',
           willReopen: true
@@ -279,7 +279,7 @@ describe('The check habitat answers page', () => {
       const mockHabitats = jest.fn(() => [
         {
           settType: 100000000,
-          methodIds: [100000011],
+          methodIds: ['290461e0-58ed-ec11-bb3c-000d3a0cee24'],
           startDate: '07-25-2023',
           endDate: '07-28-2023',
           willReopen: false
@@ -312,11 +312,11 @@ describe('The check habitat answers page', () => {
           {
             settType: 100000000,
             activityTypes: {
-              DAMAGE_A_SETT: 100000012,
-              DESTROY_A_SETT: 100000013,
-              DISTURB_A_SETT: 100000014,
-              OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: 100000011,
-              OBSTRUCT_SETT_WITH_GATES: 100000010
+              DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
+              DESTROY_A_SETT: '290461e0-58ed-ec11-bb3c-000d3a0cee24',
+              DISTURB_A_SETT: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24',
+              OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: '315af0cf-58ed-ec11-bb3c-000d3a0cee24',
+              OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
             },
             settTypes: {
               ANNEXE: 100000002,
@@ -325,8 +325,8 @@ describe('The check habitat answers page', () => {
               SUBSIDIARY: 100000006
             },
             habitatType: 100000000,
-            methodIds: [100000011],
-            methodTypes: [100000011],
+            methodIds: ['290461e0-58ed-ec11-bb3c-000d3a0cee24'],
+            methodTypes: ['290461e0-58ed-ec11-bb3c-000d3a0cee24'],
             startDate: '25 July 2023',
             endDate: '28 July 2023',
             willReopen: false,
