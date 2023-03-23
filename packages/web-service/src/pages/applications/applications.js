@@ -6,7 +6,7 @@ import { APPLICATIONS, SPECIES } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
-import { findLastSentEvent } from './application-licence.js'
+import { findLastSentEvent } from './application-common-functions.js'
 
 // Values to keys and keys to values
 const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
