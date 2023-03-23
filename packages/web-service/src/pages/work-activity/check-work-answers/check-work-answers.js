@@ -7,6 +7,7 @@ import { tagStatus } from '../../../services/status-tags.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { Backlink } from '../../../handlers/backlink.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
 const {
   APPLICATION_CATEGORY: {
@@ -67,10 +68,10 @@ const workCategoryText = {
 
 export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
-  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.WORK_ACTIVITY)
 
-  if (!applicationData?.proposalDescription || !applicationData?.exemptFromPayment || !applicationData?.applicationCategory) {
-    return h.redirect(TASKLIST.uri)
+  if (!isCompleteOrConfirmed(tagState)) {
+    return h.redirect(workActivityURIs.WORK_PROPOSAL.uri)
   }
 
   return null
@@ -78,7 +79,6 @@ export const checkData = async (request, h) => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.WORK_ACTIVITY, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   const result = []
@@ -88,7 +88,7 @@ export const getData = async request => {
 
   if (applicationData?.exemptFromPayment && applicationData?.paymentExemptReason === OTHER) {
     result.push({ key: 'workPaymentExemptCategory', value: applicationData?.paymentExemptReasonExplanation })
-  } else {
+  } else if (applicationData?.exemptFromPayment) {
     result.push({ key: 'workPaymentExemptCategory', value: paymentExemptReason[applicationData?.paymentExemptReason] })
   }
 
@@ -107,7 +107,7 @@ export default pageRoute({
   uri: workActivityURIs.CHECK_YOUR_ANSWERS.uri,
   page: workActivityURIs.CHECK_YOUR_ANSWERS.page,
   backlink: Backlink.NO_BACKLINK,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   completion,
   getData
 })
