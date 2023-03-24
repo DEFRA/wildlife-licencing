@@ -39,9 +39,7 @@ const getApplicationLicence = async app => {
   return app
 }
 const getApplicationsWithLicences = async applications => {
-  return Promise.all(applications.map(async application => {
-    return await getApplicationLicence(application)
-  }))
+  return Promise.all(applications.map(application => getApplicationLicence(application)))
 }
 
 export const getData = async request => {
