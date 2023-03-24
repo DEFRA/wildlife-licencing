@@ -38,9 +38,7 @@ const getApplicationLicence = async app => {
   Object.assign(app, { licences, lastSentEventFlag })
   return app
 }
-const getApplicationsWithLicences = async applications => {
-  return Promise.all(applications.map(application => getApplicationLicence(application)))
-}
+const getApplicationsWithLicences = async applications => Promise.all(applications.map(application => getApplicationLicence(application)))
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
