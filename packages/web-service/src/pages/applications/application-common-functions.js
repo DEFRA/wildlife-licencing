@@ -1,7 +1,7 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { DEFAULT_ROLE } from '../../constants'
-import { APIRequests } from '../../services/api-requests'
-import { APPLICATIONS } from '../../uris'
+import { DEFAULT_ROLE } from '../../constants.js'
+import { APIRequests } from '../../services/api-requests.js'
+import { APPLICATIONS } from '../../uris.js'
 
 const { BACKEND_STATUS, APPLICATION_TYPES } = PowerPlatformKeys
 
