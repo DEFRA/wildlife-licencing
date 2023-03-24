@@ -32,6 +32,17 @@ export const checkData = async (request, h) => {
   }
   return null
 }
+const getApplicationLicence = async app => {
+  const licences = await APIRequests.LICENCES.findByApplicationId(app?.id)
+  const lastSentEventFlag = licences.length > 0 ? findLastSentEvent(licences[0]) : null
+  Object.assign(app, { licences, lastSentEventFlag })
+  return app
+}
+const getApplicationsWithLicences = async applications => {
+  return Promise.all(applications.map(async application => {
+    return await getApplicationLicence(application)
+  }))
+}
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -50,16 +61,11 @@ export const getData = async request => {
     completed: a?.applicationTags?.filter(tag => tag.tagState === tagStatus.COMPLETE).length || 0
   })).sort(sorter)
 
-  applications.forEach(async application => {
-    const licences = await APIRequests.LICENCES.findByApplicationId(application?.id)
-    application.licences = licences
-    application.lastSentEventFlag = licences.length > 0 ? findLastSentEvent(licences[0]) : null
-  })
-
+  const applicationsWithLicences = await getApplicationsWithLicences(applications)
   return {
     totalSections,
     statuses,
-    applications
+    applications: applicationsWithLicences
   }
 }
 

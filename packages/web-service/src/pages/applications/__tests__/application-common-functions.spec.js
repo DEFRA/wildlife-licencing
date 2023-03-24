@@ -58,7 +58,7 @@ describe('application-common-functions', () => {
       expect(h.redirect).toHaveBeenCalledWith('/applications')
     })
 
-    it('returns a redirect to the applications page if no applicationId is provided', async () => {
+    it('returns a redirect to the applications page if no applicationId and licenceId is provided', async () => {
       const request = {
         query: {}
       }

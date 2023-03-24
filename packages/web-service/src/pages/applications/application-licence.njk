@@ -20,17 +20,13 @@
     { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
     { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
     { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
-    { key: { text: "Site address" }, value: { text: data.application.siteAddress } }
+    { key: { text: "Site address" }, value: { text: data.application.siteAddress } },
+    { key: { text: "Licence reference" }, value: { text: data.licences[0].licenceNumber  } },
+    { key: { text: "Valid from" }, value: { text: data.licences[0].startDate } },
+    { key: { text: "Expires" }, value: { text: data.licences[0].endDate } }
   ]
 %}
 
-{% for licence in data.licences %}
-  {{ tableRows.push([
-        { key: { text: "Licence reference" }, value: { text: icence.licenceNumber  } },
-        { key: { text: "Valid from" }, value: { text: licence.startDate } },
-        { key: { text: "Expires" }, value: { text: licence.endDate } }
-      ]) }}
-{% endfor %}
 
 {% block pageContent %}
 

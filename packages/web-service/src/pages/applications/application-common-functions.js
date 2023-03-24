@@ -15,6 +15,10 @@ export const checkData = async (request, h) => {
     return h.redirect(APPLICATIONS.uri)
   }
 
+  if (!params.get('licenceId') && !params.get('applicationId')) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
   const applicationId = params.get('applicationId')
   const { userId } = await request.cache().getData()
   const roles = await APIRequests.APPLICATION.findRoles(userId, applicationId)
