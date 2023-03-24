@@ -9,7 +9,7 @@ import { statuses, checkData, getApplicationData } from './application-common-fu
 export const getData = async request => {
   const { application, applicationType, applicationId } = await getApplicationData(request)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
-  const siteAddress = sites.length ? addressLine(sites[0]) : ''
+  const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
   Object.assign(application, { userSubmission: timestampFormatter(application?.userSubmission) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)

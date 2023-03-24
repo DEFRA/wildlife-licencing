@@ -10,7 +10,7 @@ import { getApplicationData, statuses, checkData, findLastSentEvent } from './ap
 export const getData = async request => {
   const { application, applicationType, applicationId } = await getApplicationData(request)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
-  const siteAddress = sites.length ? addressLine(sites[0]) : ''
+  const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
   const licences = await APIRequests.LICENCES.findByApplicationId(application.id)
@@ -24,7 +24,7 @@ export const getData = async request => {
     applicant,
     statuses,
     licences,
-    lastSentEventFlag: licences.length ? findLastSentEvent(licences[0]) : null
+    lastSentEventFlag: licences.length > 0 ? findLastSentEvent(licences[0]) : null
   }
 }
 

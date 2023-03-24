@@ -22,7 +22,18 @@ describe('application-licence page', () => {
           SITE: {
             findByApplicationId: jest.fn(() => [{
               id: '11de2969-91d4-48d6-a5fe-d828a244aa18',
-              name: 'Site 1'
+              name: 'Site 1',
+              address: {
+                subBuildingName: 'site street',
+                buildingName: 'jubilee',
+                buildingNumber: '123',
+                street: 'site street',
+                town: 'Peckham',
+                county: 'kent',
+                postcode: 'SW1W 0NY',
+                xCoordinate: '123567',
+                yCoordinate: '145345'
+              }
             }])
           },
           APPLICATION: {
@@ -60,7 +71,7 @@ describe('application-licence page', () => {
           applicationType: 'A24',
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          siteAddress: ''
+          siteAddress: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY'
         },
         licences: [{
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',

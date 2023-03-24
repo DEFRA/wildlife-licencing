@@ -53,7 +53,7 @@ export const getData = async request => {
   applications.forEach(async application => {
     const licences = await APIRequests.LICENCES.findByApplicationId(application?.id)
     application.licences = licences
-    application.lastSentEventFlag = licences.length ? findLastSentEvent(licences[0]) : null
+    application.lastSentEventFlag = licences.length > 0 ? findLastSentEvent(licences[0]) : null
   })
 
   return {
