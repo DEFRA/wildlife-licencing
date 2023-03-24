@@ -52,12 +52,19 @@ export const createBatchRequest = async (requestHandle, payload) => {
   // Build the batch update request body
   const changeId = uuidv4()
   let body = batchStart(requestHandle.batchId, changeId)
-
+  // __URL__
   for (const b of requestHandle.batchRequestObjects) {
+    const assignments = Object.entries(b.assignments)
+      .reduce((a, [key, value]) => ({
+        ...a,
+        [key]: value.toString().includes('__URL__')
+          ? value.replace('__URL__', requestHandle.clientUrl)
+          : value
+      }), {})
     body += changeSetStart(changeId)
     body += headerBuilder(requestHandle, b.contentId, b.table, b.method, b.powerAppsId)
     body += '\n'
-    body += JSON.stringify(b.assignments, null, 2)
+    body += JSON.stringify(assignments, null, 2)
     body += '\n\n'
   }
 
@@ -70,7 +77,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
 const preComplied = (n =>
-  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(20)
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(200)
 
 /**
  * Create a key array from the response body text and the batch request object

@@ -44,11 +44,9 @@ export const writeActivities = async obj => {
 export const writeMethods = async obj => {
   const { data, keys } = obj
   const v = Object.values(data)[0]
-  const json = {
+  return generalUpsert(models.methods, keys[0].powerAppsKey, {
     name: v?.name
-  }
-  await models.methods.upsert({ option: v?.option, id: keys[0].powerAppsKey, json })
-  return { update: 1 }
+  })
 }
 
 export const writeSpecies = async obj => {

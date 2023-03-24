@@ -43,11 +43,15 @@ export class Relationship {
    * @param tgtFunc - A function operating on the data at source path (INBOUND)
    * @param operationType - dictate if the relation expanded on INBOUND, OUTBOUND or both operations
    * @param keyOnly - If the relation is expanded on the INBOUND operation then expand only the keys -
-   * do not traverse. Ignored for the outbound operation. This data is augmented on to the keys object and
-   * does not appear in the transformed JSON payload
+   * do not traverse. This data is augmented on to the keys object and
+   * does not appear in the transformed JSON payload.
+   * @param singeEnded - For the OUTBOUND operation singeEnded is treated
+   * as a data relation for many-to-many AND one-to-many relationships and is typically used for reference data.
+   * The referenced table is not included in the update
    */
   constructor (name, relatedTable, type, lookupColumnName, srcPath, srcFunc,
-    tgtFunc, operationType = OperationType.INBOUND_AND_OUTBOUND, keyOnly = false) {
+    tgtFunc, operationType = OperationType.INBOUND_AND_OUTBOUND,
+    keyOnly = false, singeEnded = false) {
     this.name = name
     this.relatedTable = relatedTable
     this.type = type
@@ -57,6 +61,7 @@ export class Relationship {
     this.tgtFunc = tgtFunc
     this.operationType = operationType
     this.keyOnly = keyOnly
+    this.singleEnded = singeEnded
   }
 }
 

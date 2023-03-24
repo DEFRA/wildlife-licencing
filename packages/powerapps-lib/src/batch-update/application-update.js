@@ -9,6 +9,7 @@ import {
   SddsEcologistExperience,
   SddsPlanningConsents,
   SddsLicensableActions,
+  SddsLicenseMethods,
   SddsApplicationDesignatedSite
 } from '../schema/tables/tables.js'
 
@@ -17,10 +18,10 @@ const tableSet = createTableSet(SddsApplication, [
   Contact,
   Account,
   SddsSite,
-  SddsLicensableActions,
   SddsEcologistExperience,
   SddsPlanningConsents,
   SddsLicensableActions,
+  SddsLicenseMethods,
   SddsApplicationDesignatedSite
 ])
 

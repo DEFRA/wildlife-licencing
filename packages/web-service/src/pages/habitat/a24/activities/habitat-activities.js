@@ -29,9 +29,7 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
-
-  const activities = [].concat(pageData.payload[habitatURIs.ACTIVITIES.page])
-  const methodIds = activities.map(method => parseInt(method))
+  const methodIds = [].concat(pageData.payload[habitatURIs.ACTIVITIES.page])
 
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
