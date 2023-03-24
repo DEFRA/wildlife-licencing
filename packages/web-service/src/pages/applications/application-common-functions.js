@@ -6,7 +6,7 @@ import { APPLICATIONS } from '../../uris.js'
 const { BACKEND_STATUS, APPLICATION_TYPES } = PowerPlatformKeys
 
 export const findLastSentEvent = licence => (licence.annotations &&
-  licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf')
+  licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf' && a.filename.includes('pdf'))
     .sort((a, b) => Date(a.modifiedOn) > Date(b.modifiedOn))[0]) || null
 
 export const checkData = async (request, h) => {
