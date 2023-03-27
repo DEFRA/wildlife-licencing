@@ -1,0 +1,58 @@
+{% extends "information-page.njk" %}
+{% import "common-text.njk" as descriptions %}
+{% import "applications-text.njk" as text %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "table/macro.njk" import govukTable %}
+
+{% set errorMap = {
+    'email-or-return': {
+      'any.required': { ref: '#email-or-return', text: 'You have not selected an option' }
+    }
+  }
+%}
+
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Licence details' %}
+
+{% set tableRows = [
+    { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
+    { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
+    { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
+    { key: { text: "Site address" }, value: { text: data.application.siteAddress } },
+    { key: { text: "Licence reference" }, value: { text: data.licences[0].licenceNumber  } },
+    { key: { text: "Valid from" }, value: { text: data.licences[0].startDate } },
+    { key: { text: "Expires" }, value: { text: data.licences[0].endDate } }
+  ]
+%}
+
+
+{% block pageContent %}
+
+  {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: tableRows }) }}
+  {% if data.lastSentEventFlag %}
+    {{ govukRadios({
+        name: "email-or-return",
+        hint: {
+          text: "Select an option"
+        },
+        errorMessage: { text: "Select an option" } if error['email-or-return'],
+        items: [
+          {
+            value: 'email',
+            text: "Email a copy of the licence"
+          },
+          {
+            value:  'return',
+            text: "Submit a return"
+          }
+        ]
+      }) }}
+  {% endif %}
+
+  {{ govukButton({
+  text: "Continue",
+  href: "#"
+  }) }}
+{% endblock %}

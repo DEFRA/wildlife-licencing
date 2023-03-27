@@ -31,43 +31,44 @@
 }) }}
 
 {% macro applicationReferenceHtml(application) %}
-    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-2">
-        {% if application.userSubmission %}
+    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4">
+        {% if application.licences.length and data.statuses[application.statusCode] === 'GRANTED' %}
+            <a href="{{_uri.applicationLicence}}?licenceId={{application.licences[0].id}}&&applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+        {% elif application.userSubmission %}
             <a href="{{_uri.applicationSummary}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% else %}
             <a href="{{_uri.taskList}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% endif %}
     </p>
-    <p class="govuk-body govuk-!-margin-bottom-2">
-    <!-- <span class="visually-hidden-desktop">Reference:<br></span> -->
-    {{ application.applicationReferenceNumber}}
-    </p>
-    {% if not application.userSubmission %}
-        <p class="govuk-body govuk-!-margin-bottom-2 govuk-!-margin-top-4">{{ application.completed }} of {{ data.totalSections }} sections completed</p>
-    {% endif %}
 {% endmacro -%}
 
-{% macro lastSavedHtml(application) %}
-    {% if application.submitted %}
-        <p class="govuk-body govuk-!-margin-bottom-2">
-            Submitted:<br>
-            {{ application.submitted }}
-        </p>
-     {% else %}
-       <p class="govuk-body govuk-!-margin-bottom-2">
-            Last saved:<br>
-            {{ application.lastSaved }}
-        </p>
-    {% endif %}
+{% macro getSiteName(application) %}
+  {% if application.site %}
+    <p>{{ application.site.name }} </p>
+  {% else %}
+    <p></p>
+  {% endif %}
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
     {% if application.userSubmission %}
         {{ text.govukTaskList(application, data.statuses) }}
     {% else %}
-        <strong class="govuk-tag govuk-tag--blue govuk-!-margin-bottom-4">IN PROGRESS</strong>
+        <strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-4">IN PROGRESS</strong>
     {% endif %}
 {% endmacro -%}
+
+{% macro getReferenceNumber(application) %}
+{% if data.statuses[application.statusCode] === 'GRANTED' %}
+  {% for licence in application.licences %}
+    <p>{{ licence.licenceNumber }}</p>
+  {% endfor %}
+{% else %}
+  <p>{{ application.applicationReferenceNumber }}</p>
+{% endif %}
+{% endmacro -%}
+
+
 
 {% set tableRows = [] %}
 
@@ -75,9 +76,9 @@
     <div hidden>
         {{ tableRows.push([
             { html: applicationReferenceHtml(application) },
-            { html: '<p>' + application.site.name if application.site.name else '&nbsp' + '<p/>' },
-            { html: lastSavedHtml(application) },
-            { html: statusHtml(application), classes: "govuk-!-text-align-right" }])
+            { html: getSiteName(application) },
+            { html: getReferenceNumber(application) },
+            { html: statusHtml(application) }])
          }}
      </div>
 {% endfor %}
@@ -88,11 +89,20 @@
       firstCellIsHeader: true,
       head: [
         {
-          text: "Application"
+          text: "Application",
+          colspan: 1
         },
         {
           text: "Site",
-          colspan: 3
+          colspan: 1
+        },
+        {
+          text: "Reference",
+          colspan: 1
+        },
+        {
+          text: "Status",
+          colspan: 1
         }
       ],
       rows: tableRows

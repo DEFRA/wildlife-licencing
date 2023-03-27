@@ -1,47 +1,25 @@
 {% extends "information-page.njk" %}
 {% import "common-text.njk" as descriptions %}
 {% import "applications-text.njk" as text %}
-{% from "radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "summary-list/macro.njk" import govukSummaryList %}
 {% from "table/macro.njk" import govukTable %}
 
 {% set widthClass = 'govuk-grid-column-two-thirds' %}
-{% set title = 'Licence application' %}
+{% set title = 'Application details' %}
 
 {% set rows = [
-        { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
-        { key: { text: "Type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
-        { key: { text: "Reference" }, value: { text: data.application.applicationReferenceNumber } },
-        { key: { text: "Site" }, value: { text: data.application.name } },
-        { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } }
-    ]
-%}
+  { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
+  {  key: { text: "Application type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
+  { key: { text: "Application reference" }, value: { text: data.application.applicationReferenceNumber } },
+  { key: { text: "Applicant" },value: { text: data.applicant.fullName } },
+  { key: { text: "Site" }, value: { text: data.application.siteAddress } }
+] %}
 
 {% if data.application.userSubmission %}
-    {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.userSubmission } }) }}
-{% endif %}
-
-{% if data.statuses[data.application.statusCode] === 'GRANTED' %}
-    {% set tableRows = [] %}
-    {% for licence in data.licences %}
-        {{ tableRows.push([  { text: licence.licenceNumber },  { text: licence.startDate }, { text: licence.endDate }, { text: licence.lastSent } ]) }}
-    {% endfor %}
+  {{ rows.push( { key: { text: "Submitted" }, value: { text: data.application.userSubmission } }) }}
 {% endif %}
 
 {% block pageContent %}
-    {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
-    {% if data.statuses[data.application.statusCode] === 'GRANTED' %}
-        {{ govukTable({
-          caption: "Granted Licences",
-          captionClasses: "govuk-table__caption--m",
-          firstCellIsHeader: true,
-          head: [
-            { text: "Licence number" },
-            { text: "Valid from" },
-            { text: "Expires" },
-            { text: "Emailed on" }
-          ],
-          rows: tableRows
-        }) }}
-    {% endif %}
+  {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}
 {% endblock %}
