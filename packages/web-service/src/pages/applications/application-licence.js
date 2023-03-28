@@ -1,9 +1,10 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATION_LICENCE, TASKLIST } from '../../uris.js'
+import { APPLICATION_LICENCE, APPLICATIONS } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
 import { addressLine } from '../service/address.js'
+import { cacheDirect } from '../../session-cache/cache-decorator.js'
 import Joi from 'joi'
 import { getApplicationData, statuses, checkData, findLastSentEvent } from './application-common-functions.js'
 
@@ -36,15 +37,26 @@ export const completion = async request => {
     await APIRequests.LICENCES.queueTheLicenceEmailResend(applicationId)
   }
 
-  return TASKLIST.uri
+  return APPLICATIONS.uri
+}
+
+export const validator = async (payload, context) => {
+  const { applicationId } = await cacheDirect(context).getData()
+  const licences = await APIRequests.LICENCES.findByApplicationId(applicationId)
+  if (licences.length > 0 && findLastSentEvent(licences[0])) {
+    Joi.assert(
+      payload,
+      Joi.object({
+        'email-or-return': Joi.any().required()
+      }).options({ abortEarly: false, allowUnknown: true })
+    )
+  }
 }
 
 export default pageRoute({
   page: APPLICATION_LICENCE.page,
   uri: APPLICATION_LICENCE.uri,
-  validator: Joi.object({
-    'email-or-return': Joi.any().required()
-  }).options({ abortEarly: false, allowUnknown: true }),
+  validator,
   completion,
   checkData,
   getData

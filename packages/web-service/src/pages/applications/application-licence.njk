@@ -1,4 +1,4 @@
-{% extends "information-page.njk" %}
+{% extends 'standard-form.njk' %}
 {% import "common-text.njk" as descriptions %}
 {% import "applications-text.njk" as text %}
 {% from "radios/macro.njk" import govukRadios %}
@@ -27,6 +27,9 @@
   ]
 %}
 
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 
 {% block pageContent %}
 
@@ -50,9 +53,4 @@
         ]
       }) }}
   {% endif %}
-
-  {{ govukButton({
-  text: "Continue",
-  href: "#"
-  }) }}
 {% endblock %}

@@ -120,7 +120,7 @@ describe('application-licence page', () => {
       expect(mockQueueTheLicenceEmailResend).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18')
     })
 
-    it('should redirect to task list page', async () => {
+    it('should redirect to the applications page', async () => {
       const mockQueueTheLicenceEmailResend = jest.fn()
       const request = {
         cache: () => ({
@@ -138,7 +138,105 @@ describe('application-licence page', () => {
       }))
 
       const { completion } = await import('../application-licence.js')
-      expect(await completion(request)).toBe('/tasklist')
+      expect(await completion(request)).toBe('/applications')
+    })
+  })
+
+  describe('validator', () => {
+    it('should return an error you have not selected an option', async () => {
+      try {
+        const payload = { 'email-or-return': '' }
+        const context = {
+          context: {
+            query: {
+            }
+          }
+        }
+        jest.doMock('../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => {
+              return {
+                getData: () => ({
+                  applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+                })
+              }
+            }
+          }
+        })
+
+        jest.doMock('../../../services/api-requests.js', () => ({
+          APIRequests: {
+            LICENCES: {
+              findByApplicationId: jest.fn(() => [{
+                id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+                applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+                endDate: '2022-08-26',
+                startDate: '2022-08-10',
+                licenceNumber: 'LI-0016N0Z4',
+                annotations: [
+                  {
+                    objectTypeCode: 'sdds_license',
+                    mimetype: 'application/pdf',
+                    filename: 'LI-0016N0Z4 document.pdf',
+                    endDate: '2022-08-26',
+                    startDate: '2022-08-10'
+                  }
+                ]
+              }])
+            }
+          }
+        }))
+        const { validator } = await import('../application-licence.js')
+        expect(await validator(payload, context))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error')
+      }
+    })
+
+    it('should return null when there is no error', async () => {
+      const payload = { 'email-or-return': 'email' }
+      const context = {
+        context: {
+          query: {
+          }
+        }
+      }
+      jest.doMock('../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => {
+            return {
+              getData: () => ({
+                applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+              })
+            }
+          }
+        }
+      })
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          LICENCES: {
+            findByApplicationId: jest.fn(() => [{
+              id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+              applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+              endDate: '2022-08-26',
+              startDate: '2022-08-10',
+              licenceNumber: 'LI-0016N0Z4',
+              annotations: [
+                {
+                  objectTypeCode: 'sdds_license',
+                  mimetype: 'application/pdf',
+                  filename: 'LI-0016N0Z4 document.pdf',
+                  endDate: '2022-08-26',
+                  startDate: '2022-08-10'
+                }
+              ]
+            }])
+          }
+        }
+      }))
+      const { validator } = await import('../application-licence.js')
+      expect(await validator(payload, context)).toBeUndefined()
     })
   })
 })
