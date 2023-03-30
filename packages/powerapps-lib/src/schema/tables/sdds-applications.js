@@ -17,6 +17,7 @@ export const SddsApplication = new Table('sdds_applications', [
   new Column('sdds_licenceexempted', 'exemptFromPayment'),
   new Column('sdds_nsiproject', 'nationallySignificantInfrastructure'),
   new Column('sdds_onnexttodesignatedsite', 'onOrNextToDesignatedSite', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_referenceorpurchaseordernumber', 'referenceOrPurchaseOrderNumber'),
 
   // The Eligibility section
   new Column('sdds_isapplicantonwnerofland', 'eligibility.isOwnerOfLand'), // sic
