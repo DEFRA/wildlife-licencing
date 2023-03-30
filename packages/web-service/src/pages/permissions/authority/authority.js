@@ -6,15 +6,16 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 export const getData = async request => {
   const authorities = await APIRequests.OTHER.authorities()
+  const filteredAuthorities = authorities.sort((a, b) => (a.name).localeCompare(b.name))
   const journeyData = await request.cache().getData()
   const permissionId = journeyData?.permissionData?.sddsPermissionsId
   const permission = await APIRequests.PERMISSION.getPermission(journeyData?.applicationId, permissionId)
   if (permission?.authority) {
     return {
-      authorities: authorities.map(authority => ({ ...authority, selected: authority.id === permission.authority }))
+      authorities: filteredAuthorities.map(authority => ({ ...authority, selected: authority.id === permission.authority }))
     }
   } else {
-    return { authorities }
+    return { authorities: filteredAuthorities }
   }
 }
 
