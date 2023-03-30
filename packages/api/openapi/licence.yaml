@@ -3546,6 +3546,10 @@ components:
           type: string
           minLength: 1
           maxLength: 4000
+        referenceOrPurchaseOrderNumber:
+          type: string
+          minLength: 1
+          maxLength: 300
         paymentExemptReason:
           type: number
         paymentExemptReasonExplanation:
