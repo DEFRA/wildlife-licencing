@@ -9,9 +9,9 @@ describe('The permissions authority page', () => {
         },
         OTHER: {
           authorities: () => [
-            { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 1' },
-            { id: '7829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 3' },
-            { id: '8829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 2' }
+            { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'West Devon LPA' },
+            { id: '7829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Isle of Wight LPA' },
+            { id: '8829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Borough of Broxbournew' }
           ]
         }
       }
@@ -33,18 +33,18 @@ describe('The permissions authority page', () => {
     expect(result).toEqual({
       authorities: [
         {
-          id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 1',
+          id: '8829ad54-bab7-4a78-8ca9-dcf722117a45',
+          name: 'Borough of Broxbournew',
           selected: false
         },
         {
           id: '7829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 3',
+          name: 'Isle of Wight LPA',
           selected: true
         },
         {
-          id: '8829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 2',
+          id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+          name: 'West Devon LPA',
           selected: false
         }
       ]
@@ -59,9 +59,9 @@ describe('The permissions authority page', () => {
         },
         OTHER: {
           authorities: () => [
-            { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 1' },
-            { id: '7829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 3' },
-            { id: '8829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Auth 2' }
+            { id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Aberdeen City Council' },
+            { id: '7829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Manchester City Council' },
+            { id: '8829ad54-bab7-4a78-8ca9-dcf722117a45', name: 'Birmingham City Council' }
           ]
         }
       }
@@ -84,15 +84,15 @@ describe('The permissions authority page', () => {
       authorities: [
         {
           id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 1'
-        },
-        {
-          id: '7829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 3'
+          name: 'Aberdeen City Council'
         },
         {
           id: '8829ad54-bab7-4a78-8ca9-dcf722117a45',
-          name: 'Auth 2'
+          name: 'Birmingham City Council'
+        },
+        {
+          id: '7829ad54-bab7-4a78-8ca9-dcf722117a45',
+          name: 'Manchester City Council'
         }
       ]
     })
