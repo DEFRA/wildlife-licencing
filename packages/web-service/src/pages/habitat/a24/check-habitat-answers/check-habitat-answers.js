@@ -87,9 +87,17 @@ export const validator = async payload => {
   }
 }
 
+export const checkSettDropout = habitatSites => {
+  if (habitatSites.length > 0) {
+    return habitatSites.every(habitatSite => parseInt(habitatSite.numberOfActiveEntrances) === 0)
+  }
+  return false
+}
+
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
+  const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
   if (pageData.payload[addSett] === 'yes') {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
@@ -98,6 +106,12 @@ export const completion = async request => {
 
     return habitatURIs.NAME.uri
   } else if (pageData.payload[addSett] === 'no') {
+    // Redirect user to active sett dropout page when a single badger sett  or all badger setts has 0 active (inactive) entrance holes
+    const flagDropOut = checkSettDropout(habitatSites)
+    if (flagDropOut) {
+      return habitatURIs.ACTIVE_SETT_DROPOUT.uri
+    }
+
     // Mark the journey as complete if the user clicks "No" to adding any final setts
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.COMPLETE })
     return TASKLIST.uri

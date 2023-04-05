@@ -14,6 +14,9 @@ describe('The check habitat answers page', () => {
             tags: () => {
               return { get: () => 'in-progress', set: setTagsMock }
             }
+          },
+          HABITAT: {
+            getHabitatsById: () => []
           }
         })
       }))
@@ -35,6 +38,51 @@ describe('The check habitat answers page', () => {
       expect(setTagsMock).toHaveBeenCalledTimes(1)
     })
 
+    it('the check-habitat-answers page forwards onto dropout active page if no additional setts required and all setts have inactive entrance holes', async () => {
+      const setTagsMock = jest.fn()
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete',
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return { get: () => 'in-progress', set: setTagsMock }
+            }
+          },
+          HABITAT: {
+            getHabitatsById: () => [
+              {
+                numberOfActiveEntrances: 0
+              },
+              {
+                gridReference: 'NY574735',
+                startDate: '11-03-2222',
+                endDate: '11-30-3001',
+                numberOfActiveEntrances: 0
+              }
+            ]
+          }
+        })
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => ({ applicationId: '123abc' }),
+            getPageData: () => ({
+              payload: {
+                'additional-sett': 'no'
+              }
+            }),
+            setData: () => ({})
+          }
+        }
+      }
+      const { completion } = await import('../check-habitat-answers.js')
+      expect(await completion(request)).toBe('/active-sett-dropout')
+    })
+
     it('if the user clicks "yes" to add a new sett, we should clear the journeyData for the new sett addition', async () => {
       const setData = jest.fn()
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -47,6 +95,13 @@ describe('The check habitat answers page', () => {
             tags: () => {
               return { set: jest.fn() }
             }
+          },
+          HABITAT: {
+            getHabitatsById: () => [
+              {
+                numberOfActiveEntrances: 23
+              }
+            ]
           }
         })
       }))
@@ -99,6 +154,13 @@ describe('The check habitat answers page', () => {
             tags: () => {
               return { set: () => jest.fn() }
             }
+          },
+          HABITAT: {
+            getHabitatsById: () => [
+              {
+                numberOfActiveEntrances: 23
+              }
+            ]
           }
         }
       }))
@@ -129,6 +191,13 @@ describe('The check habitat answers page', () => {
             tags: () => {
               return { set: () => jest.fn() }
             }
+          },
+          HABITAT: {
+            getHabitatsById: () => [
+              {
+                numberOfActiveEntrances: 23
+              }
+            ]
           }
         }
       }))

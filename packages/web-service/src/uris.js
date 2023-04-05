@@ -47,6 +47,7 @@ export const habitatURIs = {
   WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
   WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
   ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
+  ACTIVE_SETT_DROPOUT: { uri: '/active-sett-dropout', page: 'active-sett-dropout' },
   CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' },
   CONFIRM_DELETE: { uri: '/confirm-delete', page: 'confirm-delete' }
 }
