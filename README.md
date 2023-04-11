@@ -164,17 +164,18 @@ Alternatively set the environment variables in the running shell or your IDE
 
 ## Packages
 
-| Package | Description | Runnable | Docker Image |
-| ----------- | ----------- | ----------- | ----------- |
-| [api](packages/api) | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
-| [application-queue-processor](packages/application-queue-processor) | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates. | Y | wildlife-licencing/aqp | 
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
-| [refdata-extract-processor](packages/refdata-extract-processor) | Extracts reference data from Power Platform and updates the postgres database | Y | wildlife-licencing/ep | 
-| [web-service](packages/eps/web-service) | Public facing web server | Y | wildlife-licencing/web-service |
-| [connectors-lib](packages/connectors-lib) | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue | N | 
-| [database-model](packages/database-model) | Extracts the sequelize database model in order to share it between multiple processes | N | 
-| [powerapps-lib](packages/powerapps-lib) | Supports operations against the Power Platform ODATA interface, including transformation | N | 
-| [queue-defs](packages/queue-defs) | Extracts the bull-queue queue definitions | N | 
+| Package                                                                 | Description                                                                                                         | Runnable | Docker Image |
+|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------| ----------- | ----------- |
+| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
+| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y | wildlife-licencing/aqp | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y | wildlife-licencing/ep | 
+| [web-service](packages/eps/web-service)                                 | Public facing web server                                                                                            | Y | wildlife-licencing/web-service |
+| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N | 
+| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N | 
+| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N |
+| [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N |
+| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N | 
 
 ## Application Architecture 
 
