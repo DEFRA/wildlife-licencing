@@ -1,6 +1,6 @@
 {% extends "standard-form.njk" %}
 
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "input/macro.njk" import govukInput %}
 
 {% set errorMap = {
@@ -37,7 +37,7 @@
   }
 }) }}
 
-{{ govukCharacterCount({
+{{ govukTextarea({
   name: "advice-description",
   id: "advice-description",
   value: data['advice-description'] if data['advice-description'] else payload['advice-description'],
