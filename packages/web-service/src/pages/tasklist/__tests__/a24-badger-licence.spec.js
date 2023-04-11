@@ -22,7 +22,7 @@ describe('The licence type class', () => {
     const csr = await A24.canShowReference(request)
     expect(csr).toBeTruthy()
     const prg = await A24.getProgress(request)
-    expect(prg).toEqual({ complete: 1, from: 12 })
+    expect(prg).toEqual({ complete: 1, from: 15 })
     const cs = await A24.canSubmit(request)
     expect(cs).toBeFalsy()
   })
