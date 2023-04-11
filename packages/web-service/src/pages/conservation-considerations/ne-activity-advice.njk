@@ -1,6 +1,6 @@
 {% extends "standard-form.njk" %}
 
-{% from "textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "input/macro.njk" import govukInput %}
 
 {% set errorMap = {
@@ -16,13 +16,16 @@
 %}
 
 {% set title = "Advice about the activity" %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 
 {% block pageContent %}
 
 {{ govukInput({
   id: "advice-from-who",
   name: "advice-from-who",
-  value: data['advice-from-who'],
+  value: data['advice-from-who'] if data['advice-from-who'] else payload['advice-from-who'],
   errorMessage: { text: "Enter who the advice was from" } if error['advice-from-who'],
   label: {
     text: "Who did you receive the advice from?",
@@ -34,10 +37,10 @@
   }
 }) }}
 
-{{ govukTextarea({
+{{ govukCharacterCount({
   name: "advice-description",
   id: "advice-description",
-  value: data['advice-description'],
+  value: data['advice-description'] if data['advice-description'] else payload['advice-description'],
   maxlength: 4000,
   errorMessage: { text: "Describe the outcome of the advice" } if error['advice-description'],
   label: {
