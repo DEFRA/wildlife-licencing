@@ -24,6 +24,11 @@ describe('invoice check answers page', () => {
             })
           },
           APPLICATION: {
+            getById: () => {
+              return {
+                referenceOrPurchaseOrderNumber: '123abc'
+              }
+            },
             tags: () => {
               return {
                 set: tagSet
@@ -52,14 +57,20 @@ describe('invoice check answers page', () => {
             value: 'Keith'
           },
           {
-            key: 'contactOrganisations'
+            key: 'email',
+            value: undefined
+          },
+          {
+            key: 'contactOrganisations',
+            value: undefined
           },
           {
             key: 'address',
             value: '123'
           },
           {
-            key: 'email'
+            key: 'purchaseOrderRef',
+            value: '123abc'
           }
         ],
         responsibility: {
@@ -99,6 +110,11 @@ describe('invoice check answers page', () => {
             })
           },
           APPLICATION: {
+            getById: () => {
+              return {
+                referenceOrPurchaseOrderNumber: '123abc'
+              }
+            },
             tags: () => {
               return {
                 set: tagSet
@@ -127,14 +143,20 @@ describe('invoice check answers page', () => {
             value: 'Keith'
           },
           {
-            key: 'contactOrganisations'
+            key: 'email',
+            value: undefined
+          },
+          {
+            key: 'contactOrganisations',
+            value: undefined
           },
           {
             key: 'address',
             value: '123'
           },
           {
-            key: 'email'
+            key: 'purchaseOrderRef',
+            value: '123abc'
           }
         ],
         responsibility: {
@@ -182,6 +204,11 @@ describe('invoice check answers page', () => {
             })
           },
           APPLICATION: {
+            getById: () => {
+              return {
+                referenceOrPurchaseOrderNumber: '123abc'
+              }
+            },
             tags: () => {
               return {
                 set: tagSet
@@ -206,8 +233,16 @@ describe('invoice check answers page', () => {
       expect(result).toEqual({
         checkYourAnswers: [
           {
+            key: 'someoneElse',
+            value: 'Somebody else'
+          },
+          {
             key: 'whoIsResponsible',
             value: 'Keith'
+          },
+          {
+            key: 'email',
+            value: undefined
           },
           {
             key: 'contactIsUser',
@@ -218,14 +253,16 @@ describe('invoice check answers page', () => {
             value: 'yes'
           },
           {
-            key: 'contactOrganisations'
+            key: 'contactOrganisations',
+            value: undefined
           },
           {
             key: 'address',
             value: '123'
           },
           {
-            key: 'email'
+            key: 'purchaseOrderRef',
+            value: '123abc'
           }
         ],
         responsibility: {
@@ -327,6 +364,11 @@ describe('invoice check answers page', () => {
       },
       APIRequests: {
         APPLICATION: {
+          getById: () => {
+            return {
+              referenceOrPurchaseOrderNumber: '123abc'
+            }
+          },
           tags: () => {
             return {
               set: jest.fn()

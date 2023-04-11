@@ -1,19 +1,16 @@
-import { contactURIs, TASKLIST } from '../../../uris.js'
+import { contactURIs } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { yesNoFromBool } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
-import { canBeUser, checkAccountComplete, checkHasContact } from '../common/common-handler.js'
+import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
-import { tagStatus } from '../../../services/status-tags.js'
 
-const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+const { CONTACT_DETAILS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
   const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
@@ -30,41 +27,38 @@ export const getData = async request => {
       return { responsible: 'other', name: p.fullName, contact: payer, account }
     }
   })(payer)
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return {
     responsibility,
     checkYourAnswers: [
-      (responsibility.responsible === 'other' &&
-        { key: 'someoneElse', value: 'Somebody else' }
-      ),
       { key: 'whoIsResponsible', value: responsibility.name },
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email },
       (responsibility.responsible === 'other' &&
-        await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
-        { key: 'contactIsUser', value: yesNoFromBool(!!responsibility.contact.userId) }),
-      (responsibility.responsible === 'other' &&
         { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
       (responsibility.account && { key: 'contactOrganisations', value: responsibility.account.name }),
-      { key: 'address', value: addressLine(responsibility.account || responsibility.contact) },
-      { key: 'purchaseOrderRef', value: applicationData.referenceOrPurchaseOrderNumber || '' }
+      { key: 'address', value: addressLine(responsibility.account || responsibility.contact) }
     ].filter(a => a)
   }
 }
 
 export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE })
-  return TASKLIST.uri
+  const pageData = await request.cache().getPageData()
+  const detailsCorrect = boolFromYesNo(pageData.payload['yes-no'])
+
+  if (detailsCorrect) {
+    return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+  } else {
+    return contactURIs.INVOICE_PAYER.NAME.uri
+  }
 }
 
-export const invoiceCheckAnswers = checkAnswersPage({
+export const invoiceContactDetails = checkAnswersPage({
   checkData: [
     checkApplication,
     checkHasContact(ContactRoles.PAYER, RESPONSIBLE),
     checkAccountComplete(AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
   ],
-  page: CHECK_ANSWERS.page,
-  uri: CHECK_ANSWERS.uri,
+  page: CONTACT_DETAILS.page,
+  uri: CONTACT_DETAILS.uri,
   getData,
   completion
 })

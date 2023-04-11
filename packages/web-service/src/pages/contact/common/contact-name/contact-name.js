@@ -1,4 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { contactURIs } from '../../../../uris.js'
 import { hasAccountCandidates } from '../common.js'
 import { contactOperations } from '../operations.js'
 
@@ -28,14 +29,24 @@ export const contactNameCompletion = (_contactRole, accountRole, otherAccountRol
   if (account) {
     // Immutable
     if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-      return urlBase.CHECK_ANSWERS.uri
+      const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+      if (!applicationData.referenceOrPurchaseOrderNumber) {
+        return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.page
+      } else {
+        return urlBase.CHECK_ANSWERS.uri
+      }
     } else {
       if (!account.contactDetails) {
         return urlBase.EMAIL.uri
       } else if (!account.address) {
         return urlBase.POSTCODE.uri
       } else {
-        return urlBase.CHECK_ANSWERS.uri
+        const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+        if (!applicationData.referenceOrPurchaseOrderNumber) {
+          return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.page
+        } else {
+          return urlBase.CHECK_ANSWERS.uri
+        }
       }
     }
   }
