@@ -34,6 +34,7 @@ describe('additional page data', () => {
         applicantOrganisations: '/applicant-organisations',
         applicantPostcode: '/applicant-postcode',
         applicationSummary: '/application-summary',
+        applications: '/applications',
         applicationLicence: '/application-licence',
         applicantUser: '/applicant-user',
         classMitigation: '/class-mitigation',

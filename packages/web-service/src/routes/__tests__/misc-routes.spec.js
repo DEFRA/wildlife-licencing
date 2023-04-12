@@ -8,7 +8,7 @@ describe('The miscellaneous route handlers', () => {
       redirect: mockRedirect
     }
     await route.handler(null, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/which-species')
+    expect(mockRedirect).toHaveBeenCalledWith('/applications')
   })
 
   it('The health route returns a status of 200', async () => {

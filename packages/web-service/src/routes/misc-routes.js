@@ -1,4 +1,4 @@
-import { HEALTH, REMOVE_FILE_UPLOAD, SPECIES } from '../uris.js'
+import { HEALTH, REMOVE_FILE_UPLOAD, APPLICATIONS } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
 import removeUpload from '../handlers/remove-uploaded-file.js'
 import { setGlobalDate, unsetGlobalDate } from '../common/fake-date.js'
@@ -19,7 +19,7 @@ const miscRoutes = [
   {
     method: 'GET',
     path: '/',
-    handler: async (_request, h) => h.redirect(SPECIES.uri),
+    handler: async (_request, h) => h.redirect(APPLICATIONS.uri),
     options: { auth: false }
   },
   {
