@@ -21,6 +21,14 @@ export const USER = {
     `Error finding user with userId ${userId}`,
     500
   ),
+  update: async (userId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Updating user for userId: ${userId}`)
+      return API.put(`/user/${userId}`, payload)
+    },
+    `Error Updating user with userId ${userId}`,
+    500
+  ),
   findByName: async username => apiRequestsWrapper(
     async () => {
       debug(`Finding user by username: ${username}`)

@@ -6,6 +6,12 @@
 {% from "header/macro.njk" import govukHeader %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "govuk/components/cookie-banner/macro.njk" import govukCookieBanner %}
+
+{% set html %}
+  <p class="govuk-body">We use some essential cookies to make this service work.</p>
+  <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+{% endset %}
 
 {% block head %}
     {% if gtm %}
@@ -85,6 +91,36 @@
 {% endblock %}
 
 {% block bodyStart %}
+    {{ govukCookieBanner({
+      ariaLabel: "Cookies on the wildlife licencing service",
+      messages: [
+        {
+          headingText: "Cookies on the wildlife licencing service",
+          html: html,
+          actions: [
+            {
+              text: "Accept analytics cookies",
+              type: "button",
+              name: "cookies",
+              value: "accept",
+              href: "/set-cookie-prefs?analytics=yes"
+            },
+            {
+              text: "Reject analytics cookies",
+              type: "button",
+              name: "cookies",
+              value: "reject",
+              href: "/set-cookie-prefs?analytics=no"
+            },
+            {
+              text: "View cookies",
+              href: "#"
+            }
+          ]
+        }
+      ]
+    }) }}
+
 {% if gtm %}
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{gtm}}"

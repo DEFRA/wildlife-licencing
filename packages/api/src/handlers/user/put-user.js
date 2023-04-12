@@ -4,20 +4,20 @@ import { prepareResponse } from './user-proc.js'
 import { toHash } from './password.js'
 
 /*
- * Updates the user object and return 200. Updates password only at this time
+ * Updates the user object and return 200.
  */
 export default async (context, req, h) => {
   try {
     const { userId } = context.request.params
 
-    // This does nothing if a password (change) is not supplied at this point,
-    // but it will probably be changed when the IDM is introduced
-    if (!req.payload.password) {
-      return h.response().code(200)
+    // This does nothing if a password (change) or cookie preferences is not supplied at this point,
+    if (!req.payload.password && !req.payload.cookiePrefs) {
+      return h.response().code(204)
     }
 
     const [found, updatedUser] = await models.users.update({
-      password: await toHash(req.payload.password)
+      ...(req.payload.cookiePrefs && { cookiePrefs: req.payload.cookiePrefs }),
+      ...(req.payload.password && { password: await toHash(req.payload.password) })
     }, {
       where: {
         id: userId
