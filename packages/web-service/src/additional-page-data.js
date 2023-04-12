@@ -18,6 +18,23 @@ import {
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
+import { APIRequests } from './services/api-requests.js'
+
+export const addCookiePrefs = async (request, h) => {
+  const response = request.response
+  if (request.method === 'get' && response.variety === 'view') {
+    // If signed in get the cookie preferences from the user
+    const journeyData = await request.cache().getData() || {}
+    if (journeyData.userId) {
+      const user = await APIRequests.USER.getById(journeyData.userId)
+      Object.assign(response.source.context, { cookiePrefs: user.cookiePrefs })
+    } else if (journeyData.cookies) {
+      Object.assign(response.source.context, { cookiePrefs: journeyData.cookies })
+    }
+  }
+
+  return h.continue
+}
 
 export const additionalPageData = (request, h) => {
   const response = request.response

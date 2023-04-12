@@ -91,6 +91,7 @@
 {% endblock %}
 
 {% block bodyStart %}
+{% if not cookiePrefs %}
     {{ govukCookieBanner({
       ariaLabel: "Cookies on the wildlife licencing service",
       messages: [
@@ -120,6 +121,7 @@
         }
       ]
     }) }}
+{% endif %}
 
 {% if gtm %}
     <!-- Google Tag Manager (noscript) -->
