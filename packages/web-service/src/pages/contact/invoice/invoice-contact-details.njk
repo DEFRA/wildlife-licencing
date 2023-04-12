@@ -1,0 +1,31 @@
+{% extends "yes-no.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% from "answer-summary.njk" import answerSummary %}
+
+{% set widthClass = 'govuk-grid-column-two-thirds' %}
+{% set title = 'Individual responsible for paying the invoice' %}
+
+{% block pageContent %}
+    {% if data.responsibility.responsible === 'applicant' %}
+        {% set questionMap = {
+                whoIsResponsible: { question: 'Name', value: data.responsibility.name, href: _uri.invoiceResponsible },
+                email: { question: 'Email address' if data.responsibility.account else 'Contact email' },
+                contactOrganisations: { question: 'Organisation' },
+                address: { question: 'Contact address' if data.responsibility.account else 'Contact address' }
+            } %}
+    {% elseif data.responsibility.responsible === 'ecologist' %}
+        {% set questionMap = {
+                whoIsResponsible: { question: 'Name', value: data.responsibility.name, href: _uri.invoiceResponsible },
+                email: { question: 'Email address' if data.responsibility.account else 'Contact email' },
+                contactOrganisations: { question: 'Organisation' },
+                address: { question: 'Contact address' if data.responsibility.account else 'Contact address' }
+         } %}
+    {% endif %}
+
+    {{ answerSummary(questionMap, data.checkYourAnswers) }}
+
+    <h2 class="govuk-heading-m">Are these the contact details to be used for the invoice?</h2>
+    <h2 class="govuk-hint">You will have to pay a £101 administration charge if you want to change this after the application is submitted.</h2>
+    {{ super() }}
+
+{% endblock %}

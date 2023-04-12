@@ -1,0 +1,27 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'purchase-order': {
+          'string.empty': { ref: '#purchase-order', text: 'You have not entered a reference or purchase order number' }
+        }
+    }
+%}
+
+{% set title = 'Enter a reference or purchase order number' %}
+
+{% block pageContent %}
+
+  {{ govukInput({
+    id: 'purchase-order',
+    name: 'purchase-order',
+    errorMessage: { text: 'Enter a reference or purchase order number' } if error['purchase-order'],
+    attributes: { maxlength: 100 },
+    value: data.purchaseOrder,
+    hint: {
+      text: 'You will have to pay a £101 administration charge if you want to change this after the application is submitted.'
+    }
+  }) }}
+
+{% endblock %}

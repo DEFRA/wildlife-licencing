@@ -58,6 +58,11 @@ describe('contact-name page', () => {
     it('if an immutable account is associated return to the check your answers page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return { referenceOrPurchaseOrderNumber: '123abc' }
+            }
+          },
           ACCOUNT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({ id: 'e8387a83-1165-42e6-afab-add01e77bc4c' }))
@@ -142,6 +147,11 @@ describe('contact-name page', () => {
     it('if a mutable account is associated and an address is present, return to the check page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return { referenceOrPurchaseOrderNumber: '123abc' }
+            }
+          },
           ACCOUNT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({
