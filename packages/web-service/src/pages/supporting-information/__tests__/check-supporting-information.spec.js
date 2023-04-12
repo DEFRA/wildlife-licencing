@@ -148,7 +148,7 @@ describe('the check-supporting-information page handler', () => {
           },
           FILE_UPLOAD: {
             getUploadedFiles: () => {
-              return {}
+              return [{}]
             }
           }
         })
@@ -187,6 +187,11 @@ describe('the check-supporting-information page handler', () => {
                 set: mockSet
               }
             }
+          },
+          FILE_UPLOAD: {
+            getUploadedFiles: () => {
+              return [{}]
+            }
           }
         })
       }))
@@ -196,7 +201,7 @@ describe('the check-supporting-information page handler', () => {
       expect(result).toEqual('/upload-supporting-information')
     })
 
-    it('should returns to the task list page and add completed tag', async () => {
+    it('should returns to the task list page and add in-progress tag if a single file is not uploaded', async () => {
       const mockSet = jest.fn()
       const request = {
         cache: () => ({
@@ -213,6 +218,8 @@ describe('the check-supporting-information page handler', () => {
 
       jest.doMock('../../../services/api-requests.js', () => ({
         tagStatus: {
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress',
           COMPLETE: 'complete'
         },
         APIRequests: ({
@@ -225,13 +232,50 @@ describe('the check-supporting-information page handler', () => {
           },
           FILE_UPLOAD: {
             getUploadedFiles: () => {
-              return [{
-                applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
-                id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
-                updatedAt: '2022-03-25T14:10:14.861Z',
-                createdAt: '2022-03-25T14:10:14.861Z'
-              }]
+              return [{}]
             }
+          }
+        })
+      }))
+
+      const { completion } = await import('../check-supporting-information.js')
+      const result = await completion(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'in-progress' })
+      expect(result).toEqual('/tasklist')
+    })
+
+    it('should returns to the task list page and add complete tag if a single file is uploaded', async () => {
+      const mockGetUploadedFiles = jest.fn(() => ([{ id: '6504d6a1e798', createdAt: '2022-03-25', updatedAt: '2022-03-25', filetype: 'METHOD-STATEMENT', applicationId: '19e6641c4a6e' }]))
+      const mockSet = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 123
+          }),
+          getPageData: () => ({
+            payload: {
+              'another-file-check': 'no'
+            }
+          })
+        })
+      }
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started',
+          IN_PROGRESS: 'in-progress',
+          COMPLETE: 'complete'
+        },
+        APIRequests: ({
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
+          FILE_UPLOAD: {
+            getUploadedFiles: mockGetUploadedFiles
           }
         })
       }))
@@ -241,7 +285,9 @@ describe('the check-supporting-information page handler', () => {
       expect(mockSet).toHaveBeenCalledWith({ tag: 'supporting-information', tagState: 'complete' })
       expect(result).toEqual('/tasklist')
     })
+  })
 
+  describe('the completion function', () => {
     it('should display a validation error if the user does not input a choice for another file upload', async () => {
       try {
         const payload = {}
