@@ -7,7 +7,7 @@ export const generateOutput = async request => {
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
   const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
 
-  return await (async p => {
+  return (async p => {
     if (p.id === applicant.id) {
       const account = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId(applicationId)
       return { responsible: 'applicant', name: applicant.fullName, contact: applicant, account }
