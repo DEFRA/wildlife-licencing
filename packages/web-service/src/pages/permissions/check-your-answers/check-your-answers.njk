@@ -25,7 +25,7 @@
       <dt class="govuk-summary-list__key">{{ permission.type }}</dt>
       <dd class="govuk-summary-list__value">
         <p>Planning authority: {{ permission.authority }}</p>
-        {% if permission.planningType %}
+        {% if permission.planningType and permission.type === 'Planning permission' %}
         <p>Planning type: {{ permission.planningType }}</p>
         {% endif %}
         <p>Reference: {{ permission.referenceNumber }}</p>
