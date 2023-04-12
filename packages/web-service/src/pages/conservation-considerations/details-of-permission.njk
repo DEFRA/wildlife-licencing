@@ -11,16 +11,19 @@
 %}
 
 {% set title = "Give details of the permission" %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 
 {% block pageContent %}
 
 {{ govukTextarea({
   name: "permission-details",
   id: "permission-details",
-  value: data['permission-details'],
+  value: data['permission-details'] if data['permission-details'] else payload['permission-details'],
   hint: { text: 'For example, dates and names. You will be able to upload documents showing permission granted.' },
   maxlength: 4000,
-  errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['enter-experience']
+  errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['permission-details']
 }) }}
 
 {% endblock %}

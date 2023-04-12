@@ -8,7 +8,7 @@ describe('The miscellaneous route handlers', () => {
       redirect: mockRedirect
     }
     await route.handler(null, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/which-species')
+    expect(mockRedirect).toHaveBeenCalledWith('/applications')
   })
 
   it('The health route returns a status of 200', async () => {
@@ -17,6 +17,24 @@ describe('The miscellaneous route handlers', () => {
     const mockCode = jest.fn()
     await route.handler(null, { response: () => ({ code: mockCode }) })
     expect(mockCode).toHaveBeenCalledWith(200)
+  })
+
+  it('The cookie-prefs route returns a status of 200', async () => {
+    const misc = (await import('../misc-routes.js')).default
+    const route = misc.find(r => r.method === 'GET' && r.path === '/set-cookie-prefs')
+    const mockRedirect = jest.fn()
+    const h = {
+      redirect: mockRedirect
+    }
+    await route.handler({
+      query: { analytics: 'yes' },
+      info: { referrer: 'http://0.0.0.0/foo' },
+      cache: () => ({
+        getData: jest.fn(),
+        setData: jest.fn()
+      })
+    }, h)
+    expect(mockRedirect).toHaveBeenCalled()
   })
 
   it('The reset route returns a status of 200', async () => {

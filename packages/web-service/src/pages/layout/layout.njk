@@ -47,7 +47,7 @@
       </div>
       
       <div class="govuk-header__content">
-        <a href="/" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
+        <a href="{{ _uri.applications }}" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
         {% if credentials %}
           <a class="govuk-header__link signout-link" href="{{ _uri.signOut }}">
             Sign out
@@ -66,9 +66,9 @@
 {% block beforeContent %}
   {{ govukPhaseBanner({
       tag: {
-        text: "alpha"
+        text: "beta"
       },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+      html: 'This is a new service – your <a class="govuk-link" href="mailto:sdds.support@naturalengland.org.uk">feedback</a> will help us to improve it.'
     }) }}
 
   <div class="govuk-grid-row">
