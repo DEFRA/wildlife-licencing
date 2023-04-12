@@ -4,7 +4,7 @@
 
 {% set errorMap = {
         'responsible': {
-            'any.required': { ref: '#responsible', text: 'Choose who is responsible for paying the invoice' }
+            'any.required': { ref: '#responsible', text: 'You have not selected an option' }
         }
     }
 %}
@@ -14,7 +14,7 @@
       idPrefix: "responsible",
       name: "responsible",
       errorMessage: {
-        text: noneSelected
+        text: 'Select an option'
       } if error['responsible'] === 'any.required',
       items: [
         {

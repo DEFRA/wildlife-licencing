@@ -1,32 +1,17 @@
 import { contactURIs } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { APIRequests } from '../../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
 import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+import { generateOutput } from './common.js'
 
 const { CONTACT_DETAILS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
-  const { applicationId } = await request.cache().getData()
-  const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
-  const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
-  const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
+  const responsibility = await generateOutput(request)
 
-  const responsibility = await (async p => {
-    if (p.id === applicant.id) {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'applicant', name: applicant.fullName, contact: applicant, account }
-    } else if (p.id === ecologist.id) {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.ECOLOGIST_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'ecologist', name: ecologist.fullName, contact: ecologist, account }
-    } else {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'other', name: p.fullName, contact: payer, account }
-    }
-  })(payer)
   return {
     responsibility,
     checkYourAnswers: [

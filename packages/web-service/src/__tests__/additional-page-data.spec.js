@@ -83,6 +83,7 @@ describe('additional page data', () => {
         designatedSiteProximity: '/designated-site-proximity',
         designatedSiteRemove: '/designated-site-remove',
         isAnyConviction: '/any-convictions',
+        purchaseOrderReference: '/invoice-purchase-order',
         signOut: '/sign-out',
         additionalApplicantAdd: '/add-additional-applicant',
         additionalApplicantEmail: '/additional-applicant-email',

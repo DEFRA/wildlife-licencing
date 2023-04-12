@@ -8,28 +8,16 @@ import { addressLine } from '../../service/address.js'
 import { canBeUser, checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
+import { generateOutput } from './common.js'
 
 const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
-  const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
-  const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
-  const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
 
-  const responsibility = await (async p => {
-    if (p.id === applicant.id) {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'applicant', name: applicant.fullName, contact: applicant, account }
-    } else if (p.id === ecologist.id) {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.ECOLOGIST_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'ecologist', name: ecologist.fullName, contact: ecologist, account }
-    } else {
-      const account = await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).getByApplicationId(applicationId)
-      return { responsible: 'other', name: p.fullName, contact: payer, account }
-    }
-  })(payer)
+  const responsibility = await generateOutput(request)
+
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return {
     responsibility,
