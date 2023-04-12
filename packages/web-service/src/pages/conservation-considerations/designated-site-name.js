@@ -27,17 +27,19 @@ export const setData = async request => {
   const { applicationId } = journeyData
   const ads = await getCurrentSite(request)
   const sites = await getFilteredDesignatedSites()
-  const siteId = sites.find(s => s.siteName === request.payload['site-name']).id
-  if (!ads) {
-    const newSite = await APIRequests.DESIGNATED_SITES.create(applicationId, { designatedSiteId: siteId })
-    journeyData.designatedSite = { id: newSite.id, designatedSiteId: siteId }
-    await request.cache().setData(journeyData)
-  } else {
-    // If the site is changing then update
-    if (siteId !== ads.designatedSiteId) {
-      await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, { designatedSiteId: siteId })
-      journeyData.designatedSite = { id: ads.id, designatedSiteId: siteId }
+  const siteId = sites.find(s => s.siteName === request.payload['site-name'])?.id
+  if (siteId) {
+    if (!ads) {
+      const newSite = await APIRequests.DESIGNATED_SITES.create(applicationId, { designatedSiteId: siteId })
+      journeyData.designatedSite = { id: newSite.id, designatedSiteId: siteId }
       await request.cache().setData(journeyData)
+    } else {
+      // If the site is changing then update
+      if (siteId !== ads.designatedSiteId) {
+        await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, { designatedSiteId: siteId })
+        journeyData.designatedSite = { id: ads.id, designatedSiteId: siteId }
+        await request.cache().setData(journeyData)
+      }
     }
   }
 }
