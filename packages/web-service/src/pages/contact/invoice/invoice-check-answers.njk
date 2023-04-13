@@ -5,30 +5,28 @@
 {% from "answer-summary.njk" import answerSummary %}
 
 {% block pageContent %}
-    {% if data.responsibility.responsible === 'applicant' %}
-        {% set questionMap = {
-                whoIsResponsible: { question: 'Who responsible for paying the invoice?', value: data.responsibility.name + ', the applicant', href: _uri.invoiceResponsible },
-                contactOrganisations: { question: 'Name of organisation' },
-                email: { question: 'Organisation email' if data.responsibility.account else 'Contact email' },
-                address: { question: 'Organisation address' if data.responsibility.account else 'Contact address' }
-            } %}
-    {% elseif data.responsibility.responsible === 'ecologist' %}
-        {% set questionMap = {
-                whoIsResponsible: { question: 'Who responsible for paying the invoice?', value: data.responsibility.name + ', the ecologist', href: _uri.invoiceResponsible },
-                contactOrganisations: { question: 'Name of organisation' },
-                email: { question: 'Organisation email' if data.responsibility.account else 'Contact email' },
-                address: { question: 'Organisation address' if data.responsibility.account else 'Contact address' }
-         } %}
+    {% if data.responsibility.responsible === 'applicant' or data.responsibility.responsible === 'ecologist' %}
+      {% set questionMap = {
+          whoIsResponsible: { question: 'Name of individual responsible for paying the invoice', value: data.responsibility.name, href: _uri.invoiceResponsible },
+          contactOrganisations: { question: 'Organisation' },
+          email: { question: 'Email address' },
+          address: { question: 'Contact address' },
+          purchaseOrderRef: { question: 'Reference / purchase order' }
+      } %}
     {% else %}
-        {% set questionMap = {
-            contactIsUser: { question: 'Is the signed-in user responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
-            whoIsResponsible: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceResponsible },
-            contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation  },
-            contactOrganisations: { question: 'Name of organisation', href: _uri.invoiceOrganisations },
-            email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.invoiceEmail },
-            address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.invoicePostcode }
-        } %}
+      {% set questionMap = {
+          contactIsUser: { question: 'Is the signed-in user responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
+          someoneElse: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceResponsible },
+          whoIsResponsible: { question: 'Individual responsible for paying the invoice', href: _uri.invoiceName },
+          contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation  },
+          contactOrganisations: { question: 'Organisation', href: _uri.invoiceOrganisations },
+          email: { question: 'Email address', href: _uri.invoiceEmail },
+          address: { question: 'Contact address',  href: _uri.invoicePostcode },
+          purchaseOrderRef: { question: 'Reference / purchase order', href: _uri.purchaseOrderReference }
+      } %}
     {% endif %}
+
+    <h2 class="govuk-heading-m">Invoice contact details</h2>
 
     {{ answerSummary(questionMap, data.checkYourAnswers) }}
     {{ govukButton({

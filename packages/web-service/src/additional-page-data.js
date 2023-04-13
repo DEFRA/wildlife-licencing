@@ -40,6 +40,7 @@ export const additionalPageData = (request, h) => {
         consent: eligibilityURIs.CONSENT.uri,
         consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
         invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+        purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
 
         // Applicant
         applicantUser: contactURIs.APPLICANT.USER.uri,

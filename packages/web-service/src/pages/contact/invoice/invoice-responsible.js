@@ -10,7 +10,7 @@ import { canBeUser } from '../common/common-handler.js'
 import { hasContactCandidates } from '../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 
-const { RESPONSIBLE, USER, CHECK_ANSWERS, NAMES, NAME } = contactURIs.INVOICE_PAYER
+const { RESPONSIBLE, USER, CONTACT_DETAILS, NAMES, NAME } = contactURIs.INVOICE_PAYER
 
 export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
@@ -102,7 +102,7 @@ export const completion = async request => {
     }
   }
 
-  return CHECK_ANSWERS.uri
+  return CONTACT_DETAILS.uri
 }
 
 export const invoiceResponsible = pageRoute({
