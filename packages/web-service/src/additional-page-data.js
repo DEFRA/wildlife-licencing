@@ -14,7 +14,8 @@ import {
   TASKLIST,
   conservationConsiderationURIs,
   APPLICATION_LICENCE,
-  APPLICATIONS
+  APPLICATIONS,
+  COOKIE_INFO
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
@@ -47,6 +48,9 @@ export const additionalPageData = (request, h) => {
         applicationLicence: APPLICATION_LICENCE.uri,
         taskList: TASKLIST.uri,
         applications: APPLICATIONS.uri,
+
+        // Cookie info
+        cookieInfo: COOKIE_INFO.uri,
 
         // Species
         species: SPECIES.uri,

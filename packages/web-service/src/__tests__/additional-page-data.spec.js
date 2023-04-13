@@ -40,6 +40,7 @@ describe('additional page data', () => {
         classMitigation: '/class-mitigation',
         classMitigationDetails: '/enter-class-mitigation-details',
         consent: '/consent',
+        cookieInfo: '/cookie-info',
         consentGranted: '/consent-granted',
         ecologistAddress: '/ecologist-address',
         ecologistEmail: '/ecologist-email',

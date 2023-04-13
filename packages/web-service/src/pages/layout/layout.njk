@@ -115,7 +115,7 @@
             },
             {
               text: "View cookies",
-              href: "#"
+              href: _uri.cookieInfo
             }
           ]
         }
@@ -142,7 +142,15 @@
       </div>
     {% endif %}
     {{ govukFooter({
-       classes: "no-print"
+       classes: "no-print",
+       meta: {
+         items: [
+           {
+             href: _uri.cookieInfo,
+             text: "Cookies"
+           }
+         ]
+       }
     }) }}
 {% endblock %}
 
