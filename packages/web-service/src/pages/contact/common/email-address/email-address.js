@@ -27,13 +27,13 @@ export const setEmailAddressData = (contactRole, accountRole) => async request =
   }
 }
 
-export const emailAddressCompletion = (contactRole, accountRole, urlBase) => async request => {
+export const emailAddressCompletion = (contactRole, accountRole, urlBase, redirectJourney) => async request => {
   // If an address is already present then go to the check page, otherwise go to the postcode page
   const { applicationId } = await request.cache().getData()
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   if (account) {
     if (account.address) {
-      return urlBase.CHECK_ANSWERS.uri
+      return redirectJourney(applicationId, urlBase)
     } else {
       return urlBase.POSTCODE.uri
     }

@@ -4,6 +4,7 @@ import { getEmailAddressData, setEmailAddressData, emailAddressCompletion }
 import { emailAddressPage } from '../common/email-address/email-address-page.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkApplication } from '../../common/check-application.js'
+import { redirectJourney } from '../common/common.js'
 
 const { EMAIL } = contactURIs.APPLICANT
 
@@ -11,7 +12,7 @@ export const applicantEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
   checkData: checkApplication,
-  completion: emailAddressCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
+  completion: emailAddressCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT, redirectJourney),
   getData: getEmailAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION),
   setData: setEmailAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION)
 }, ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION)
