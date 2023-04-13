@@ -1,6 +1,8 @@
-{% extends "contact-name.njk" %}
-{% set title = 'What is your name?' if data.userId else 'Who is responsible for paying the invoice?' %}
-{% set hintText = 'The name of the user signed in as ' + data.contactDetails.email if data.userId %}
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set title = 'Who is responsible for paying the invoice?' %}
+{% set hintText = 'Enter the full name' %}
 
 {% set errorMap = {
         'name': {
@@ -10,3 +12,20 @@
         }
     }
 %}
+
+{% block pageContent %}
+    {{ govukInput({
+      label: {
+        text: '',
+        classes: "govuk-!-margin-top-7"
+      },
+      id: "name",
+      name: "name",
+      spellcheck: false,
+      hint: { text: hintText } if hintText else '',
+      value: data.fullName if data.fullName else payload['name'],
+      classes: "govuk-!-width-three-quarters",
+      attributes: { maxlength: 160 },
+      errorMessage: { text: 'Enter the full name' } if error['name']
+    }) }}
+{% endblock %}

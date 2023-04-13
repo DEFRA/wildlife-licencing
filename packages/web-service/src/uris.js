@@ -106,6 +106,8 @@ export const contactURIs = {
     ORGANISATIONS: { uri: '/invoice-organisations', page: 'invoice-organisations' },
     EMAIL: { uri: '/invoice-email', page: 'invoice-email' },
     CHECK_ANSWERS: { uri: '/invoice-check-answers', page: 'invoice-check-answers' },
+    CONTACT_DETAILS: { uri: '/invoice-contact-details', page: 'invoice-contact-details' },
+    PURCHASE_ORDER: { uri: '/invoice-purchase-order', page: 'invoice-purchase-order' },
     POSTCODE: { uri: '/invoice-postcode', page: 'invoice-postcode' },
     ADDRESS: { uri: '/invoice-address', page: 'invoice-address' },
     ADDRESS_FORM: { uri: '/invoice-address-form', page: 'invoice-address-form' }

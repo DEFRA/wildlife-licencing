@@ -88,6 +88,7 @@ describe('the sssi check answers functions', () => {
   describe('the setData function', () => {
     it('if \'yes\' sets the tag to IN-PROGRESS', async () => {
       const mockSet = jest.fn()
+      const mockSetData = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
@@ -99,13 +100,19 @@ describe('the sssi check answers functions', () => {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          })
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            designatedSite: {
+              designatedSiteId: '93b171b3-55a9-ed11-aad1-0022481b53bf',
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }
+          }),
+          setData: mockSetData
         })
       }
       const { setData } = await import('../designated-site-check-answers.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'conservation', tagState: 'in-progress' })
+      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
     })
 
     it('if \'no\' sets the tag to COMPLETE', async () => {
@@ -122,7 +129,8 @@ describe('the sssi check answers functions', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          })
+          }),
+          setData: jest.fn()
         })
       }
       const { setData } = await import('../designated-site-check-answers.js')
@@ -138,7 +146,7 @@ describe('the sssi check answers functions', () => {
       }
       const { completion } = await import('../designated-site-check-answers.js')
       const result = await completion(request)
-      expect(result).toEqual('/designated-site-name?id=new')
+      expect(result).toEqual('/designated-site-name')
     })
 
     it('if \'no\' redirects to the tasklist', async () => {

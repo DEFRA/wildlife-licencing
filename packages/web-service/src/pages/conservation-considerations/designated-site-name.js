@@ -8,17 +8,24 @@ import { allCompletion, getCurrentSite, getFilteredDesignatedSites } from './com
 const { DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
 export const getData = async request => {
-  const sites = await getFilteredDesignatedSites()
+  const designatedSites = await getFilteredDesignatedSites()
   const ads = await getCurrentSite(request)
+  const { applicationId } = await request.cache().getData()
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+  // Remove sites that already that exist from the list
+
   if (ads) {
+    // When modifying remove the existing sites except the currently selected on
+    const sites = designatedSites.filter(s => !applicationDesignatedSites
+      .filter(a => a.designatedSiteId !== ads.designatedSiteId)
+      .map(a => a.designatedSiteId).includes(s.id))
+      .map(s => ({ ...s, selected: s.id === ads.designatedSiteId }))
     return {
       sites: sites.map(s => ({ ...s, selected: s.id === ads.designatedSiteId }))
     }
   } else {
-    // Creating a new ads, so remove sites that already that exist from the list
-    const { applicationId } = await request.cache().getData()
-    const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-    return { sites: sites.filter(s => !applicationDesignatedSites.map(a => a.designatedSiteId).includes(s.id)) }
+    // When adding remove all existing designated sites from the list
+    return { sites: designatedSites.filter(s => !applicationDesignatedSites.map(a => a.designatedSiteId).includes(s.id)) }
   }
 }
 
@@ -27,7 +34,7 @@ export const setData = async request => {
   const { applicationId } = journeyData
   const ads = await getCurrentSite(request)
   const sites = await getFilteredDesignatedSites()
-  const siteId = sites.find(s => s.siteName === request.payload['site-name']).id
+  const siteId = sites.find(s => s.id === request.payload['site-id']).id
   if (!ads) {
     const newSite = await APIRequests.DESIGNATED_SITES.create(applicationId, { designatedSiteId: siteId })
     journeyData.designatedSite = { id: newSite.id, designatedSiteId: siteId }
@@ -35,7 +42,8 @@ export const setData = async request => {
   } else {
     // If the site is changing then update
     if (siteId !== ads.designatedSiteId) {
-      await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, { designatedSiteId: siteId })
+      ads.designatedSiteId = siteId
+      await APIRequests.DESIGNATED_SITES.update(applicationId, ads.id, ads)
       journeyData.designatedSite = { id: ads.id, designatedSiteId: siteId }
       await request.cache().setData(journeyData)
     }
@@ -47,7 +55,7 @@ export default pageRoute({
   uri: DESIGNATED_SITE_NAME.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'site-name': Joi.string().required()
+    'site-id': Joi.string().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: allCompletion,

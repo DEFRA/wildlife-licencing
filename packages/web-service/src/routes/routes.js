@@ -81,6 +81,8 @@ import { invoiceOrganisations } from '../pages/contact/invoice/invoice-organisat
 import { invoicePostcode } from '../pages/contact/invoice/invoice-postcode.js'
 import { invoiceAddress } from '../pages/contact/invoice/invoice-address.js'
 import { invoiceAddressForm } from '../pages/contact/invoice/invoice-address-form.js'
+import { invoiceContactDetails } from '../pages/contact/invoice/invoice-contact-details.js'
+import { invoicePurchaseOrder } from '../pages/contact/invoice/invoice-purchase-order.js'
 
 import siteName from '../pages/site/site-name/site-name.js'
 import siteGotPostcode from '../pages/site/site-got-postcode/site-got-postcode.js'
@@ -223,6 +225,8 @@ const routes = [
   ...invoiceAddress,
   ...invoiceAddressForm,
   ...invoiceCheckAnswers,
+  ...invoiceContactDetails,
+  ...invoicePurchaseOrder,
   ...siteName,
   ...siteGotPostcode,
   ...siteSelectAddress,

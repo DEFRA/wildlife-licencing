@@ -19,9 +19,9 @@
 {% set tableRows = [
     { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
     { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
+    { key: { text: "Licence reference" }, value: { text: data.licences[0].licenceNumber  } },
     { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
     { key: { text: "Site address" }, value: { text: data.application.siteAddress } },
-    { key: { text: "Licence reference" }, value: { text: data.licences[0].licenceNumber  } },
     { key: { text: "Valid from" }, value: { text: data.licences[0].startDate } },
     { key: { text: "Expires" }, value: { text: data.licences[0].endDate } }
   ]
@@ -37,10 +37,11 @@
   {% if data.lastSentEventFlag %}
     {{ govukRadios({
         name: "email-or-return",
-        hint: {
-          text: "Select an option"
-        },
         errorMessage: { text: "Select an option" } if error['email-or-return'],
+        hint: {
+          text: "Select an option",
+          classes: "govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24"
+        },
         items: [
           {
             value: 'email',
@@ -48,7 +49,7 @@
           },
           {
             value:  'return',
-            text: "Submit a return"
+            text: "Submit a report of action"
           }
         ]
       }) }}

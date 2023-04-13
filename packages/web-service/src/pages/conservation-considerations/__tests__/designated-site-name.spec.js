@@ -142,7 +142,7 @@ describe('the SSSI site name functions', () => {
       }))
 
       const request = {
-        payload: { 'site-name': 'South London Downs SSSI' },
+        payload: { 'site-id': '93b171b3-55a9-ed11-aad1-0022481b53bf' },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
@@ -197,7 +197,7 @@ describe('the SSSI site name functions', () => {
       }))
 
       const request = {
-        payload: { 'site-name': 'South London Downs SSSI' },
+        payload: { 'site-id': '93b171b3-55a9-ed11-aad1-0022481b53bf' },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
@@ -211,7 +211,7 @@ describe('the SSSI site name functions', () => {
       }
       const { setData } = await import('../designated-site-name.js')
       await setData(request)
-      expect(mockUpdate).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', '344be97d-c928-4753-ae09-f8944ad9f228', { designatedSiteId: '93b171b3-55a9-ed11-aad1-0022481b53bf' })
+      expect(mockUpdate).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', '344be97d-c928-4753-ae09-f8944ad9f228', expect.objectContaining({ designatedSiteId: '93b171b3-55a9-ed11-aad1-0022481b53bf' }))
       expect(mockSetData).toHaveBeenCalledWith({
         applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
         designatedSite: {
@@ -221,7 +221,7 @@ describe('the SSSI site name functions', () => {
       })
     })
 
-    it('does nothing if an application-site with teh current designated site', async () => {
+    it('does nothing if an application-site with the current designated site', async () => {
       const mockSetData = jest.fn()
       const mockUpdate = jest.fn()
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -255,7 +255,7 @@ describe('the SSSI site name functions', () => {
       }))
 
       const request = {
-        payload: { 'site-name': 'South London Downs SSSI' },
+        payload: { 'site-id': '93b171b3-55a9-ed11-aad1-0022481b53bf' },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',

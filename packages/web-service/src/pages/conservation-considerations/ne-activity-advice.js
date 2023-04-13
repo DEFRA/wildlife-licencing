@@ -27,8 +27,8 @@ export default pageRoute({
   uri: ACTIVITY_ADVICE.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'advice-from-who': Joi.string().required().max(100),
-    'advice-description': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'advice-from-who': Joi.string().trim().required().max(100),
+    'advice-description': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: allCompletion,

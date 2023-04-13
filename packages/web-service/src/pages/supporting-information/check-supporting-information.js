@@ -26,12 +26,10 @@ export const validator = async payload => {
 }
 
 export const getData = async request => {
-  const journeyData = await request.cache().getData()
-
   const { applicationId } = await request.cache().getData()
   const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
 
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
 
   return data?.filter(upload => (upload.filetype === 'METHOD-STATEMENT')).map(upload => ({
     ...upload,
@@ -43,13 +41,14 @@ export const getData = async request => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const { applicationId } = await request.cache().getData()
+  const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
+  const uploadedMethodStatements = uploadedFiles?.find(uploadedFile => uploadedFile.filetype === 'METHOD-STATEMENT')
 
   if (pageData?.payload[anotherFileUpload] === 'yes') {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   } else {
-    const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
-    if (uploadedFiles?.length) {
+    if (uploadedMethodStatements) {
       await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE })
     } else {
       await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.IN_PROGRESS })

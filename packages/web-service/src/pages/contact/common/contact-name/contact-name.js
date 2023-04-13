@@ -1,4 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { contactURIs } from '../../../../uris.js'
 import { hasAccountCandidates } from '../common.js'
 import { contactOperations } from '../operations.js'
 
@@ -21,6 +22,15 @@ export const setContactData = contactRole => async request => {
   await contactOps.setName(request.payload.name)
 }
 
+export const purchaseOrderURI = async (applicationId, urlBase) => {
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+  if (!applicationData.referenceOrPurchaseOrderNumber) {
+    return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+  } else {
+    return urlBase.CHECK_ANSWERS.uri
+  }
+}
+
 export const contactNameCompletion = (_contactRole, accountRole, otherAccountRoles, urlBase) => async request => {
   const { userId, applicationId } = await request.cache().getData()
   // If an organisation is already assigned,
@@ -28,14 +38,14 @@ export const contactNameCompletion = (_contactRole, accountRole, otherAccountRol
   if (account) {
     // Immutable
     if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-      return urlBase.CHECK_ANSWERS.uri
+      return purchaseOrderURI(applicationId, urlBase)
     } else {
       if (!account.contactDetails) {
         return urlBase.EMAIL.uri
       } else if (!account.address) {
         return urlBase.POSTCODE.uri
       } else {
-        return urlBase.CHECK_ANSWERS.uri
+        return purchaseOrderURI(applicationId, urlBase)
       }
     }
   }
