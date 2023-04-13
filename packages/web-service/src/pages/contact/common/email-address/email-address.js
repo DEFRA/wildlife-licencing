@@ -1,4 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { contactURIs } from '../../../../uris.js'
 import { contactAccountOperations } from '../operations.js'
 
 export const getEmailAddressData = (contactRole, accountRole) => async request => {
@@ -33,7 +34,12 @@ export const emailAddressCompletion = (contactRole, accountRole, urlBase) => asy
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   if (account) {
     if (account.address) {
-      return urlBase.CHECK_ANSWERS.uri
+      const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+      if (!applicationData.referenceOrPurchaseOrderNumber) {
+        return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+      } else {
+        return urlBase.CHECK_ANSWERS.uri
+      }
     } else {
       return urlBase.POSTCODE.uri
     }

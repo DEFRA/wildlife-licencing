@@ -195,9 +195,16 @@ describe('the email-address page', () => {
       expect(result).toEqual('/applicant-postcode')
     })
 
-    it('if an account is assigned and has an address, redirect to the check page', async () => {
+    it('if an account is assigned and has an address, and has submitted a reference purhcase order number, redirect to the check page', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return {
+                referenceOrPurchaseOrderNumber: '123abc'
+              }
+            }
+          },
           ACCOUNT: {
             role: () => ({
               getByApplicationId: jest.fn(() => ({
@@ -223,6 +230,43 @@ describe('the email-address page', () => {
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
       expect(result).toEqual('/applicant-check-answers')
+    })
+
+    it('if an account is assigned and has an address, but hasnt submitted a reference purhcase order number, redirect to the invoice-purchase-order uri', async () => {
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return {
+                referenceOrPurchaseOrderNumber: undefined
+              }
+            }
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => ({
+                id: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+                address: 'Address'
+              }))
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7'
+          })),
+          getPageData: jest.fn(() => ({
+            payload: {
+              'email-address': 'Keith@therollingstones.com'
+            }
+          }))
+        })
+      }
+      const { emailAddressCompletion } = await import('../email-address.js')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      expect(result).toEqual('/invoice-purchase-order')
     })
 
     it('if no account is assigned redirect to the postcode page', async () => {
