@@ -24,6 +24,7 @@ describe('the special area remove functions', () => {
         }
       }))
       const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'

@@ -19,11 +19,7 @@ export const getCurrentSite = async request => {
   const params = new URLSearchParams(request.query)
   const id = params.get('id')
 
-  if (id === 'new') {
-    // Creating a new designated site, do nothing
-    delete journeyData.designatedSite
-    await request.cache().setData(journeyData)
-  } else if (id) {
+  if (id) {
     // Reseat the cache on the site specified
     const applicationDesignatedSite = applicationDesignatedSites.find(ads => ads.id === id)
     journeyData.designatedSite = { id: applicationDesignatedSite.id, designatedSiteId: applicationDesignatedSite.designatedSiteId }
@@ -32,11 +28,6 @@ export const getCurrentSite = async request => {
   } else if (designatedSite) {
     // Return the currently selected application-designated-site
     return applicationDesignatedSites.find(ads => ads.id === designatedSite?.id)
-  } else if (applicationDesignatedSites.length) {
-    // Mop-up in case the cache gets zapped
-    journeyData.designatedSite = { id: applicationDesignatedSites[0].id, designatedSiteId: applicationDesignatedSites[0]?.designatedSiteId }
-    await request.cache().setData(journeyData)
-    return applicationDesignatedSites[0]
   }
 
   return null

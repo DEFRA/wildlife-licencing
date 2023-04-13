@@ -3,7 +3,7 @@
 {% set title = "What is the name of the designated site?" %}
 
 {% set errorMap = {
-        'site-name': {
+        'site-id': {
           'string.empty': { ref: '#site-name', text: 'Choose a site' }
         }
     }
@@ -14,16 +14,16 @@
     <div hidden>
     {% for rec in data.sites %}
         {% if rec.selected %}
-          {{ items.push({ value: rec.siteName, text: rec.siteName, selected: true }) }}
+          {{ items.push({ value: rec.id, text: rec.siteName, selected: true }) }}
         {% else %}
-          {{ items.push({ value: rec.siteName, text: rec.siteName }) }}
+          {{ items.push({ value: rec.id, text: rec.siteName }) }}
         {% endif %}
     {% endfor %}
     </div>
 
     {{ govukSelect({
       id: "site-name",
-      name: "site-name",
+      name: "site-id",
       errorMessage: { text: "Enter the site." } if error['id'],
       defaultValue: data.selected if data.selected,
       items: items
@@ -50,4 +50,3 @@
      })()
     </script>
 {% endblock %}
-

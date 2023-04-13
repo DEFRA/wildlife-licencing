@@ -56,7 +56,7 @@ describe('the checkData function', () => {
         }
       }))
       const request = {
-        params: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
         cache: () => ({
           setData: mockSetData,
           getData: () => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
@@ -107,41 +107,6 @@ describe('the checkData function', () => {
         id: '344be97d-c928-4753-ae09-f8944ad9f228',
         designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
         designatedSiteType: 100000001
-      })
-    })
-
-    it('creates the cache data if no parameter id is specified', async () => {
-      const mockSetData = jest.fn()
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          DESIGNATED_SITES: {
-            get: jest.fn(() => [{
-              id: '344be97d-c928-4753-ae09-f8944ad9f228',
-              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
-              designatedSiteType: 100000001
-            }])
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          setData: mockSetData,
-          getData: () => ({ applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7' })
-        })
-      }
-      const { getCurrentSite } = await import('../common.js')
-      const result = await getCurrentSite(request)
-      expect(result).toEqual({
-        id: '344be97d-c928-4753-ae09-f8944ad9f228',
-        designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
-        designatedSiteType: 100000001
-      })
-      expect(mockSetData).toHaveBeenCalledWith({
-        applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
-        designatedSite: {
-          designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
-          id: '344be97d-c928-4753-ae09-f8944ad9f228'
-        }
       })
     })
   })
