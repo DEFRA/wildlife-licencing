@@ -41,15 +41,17 @@ export const getData = async request => {
 }
 
 export const setData = async request => {
-  const { applicationId } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
+  delete journeyData.designatedSite
+  await request.cache().setData(journeyData)
   if (isYes(request)) {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
   } else {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
+    await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
   }
 }
 
-export const completion = async request => isYes(request) ? `${DESIGNATED_SITE_NAME.uri}?id=new` : TASKLIST.uri
+export const completion = async request => isYes(request) ? DESIGNATED_SITE_NAME.uri : TASKLIST.uri
 
 export default yesNoPage({
   page: DESIGNATED_SITE_CHECK_ANSWERS.page,
