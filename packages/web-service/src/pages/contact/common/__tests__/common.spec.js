@@ -237,4 +237,22 @@ describe('contact common', () => {
       expect(result).toBeTruthy()
     })
   })
+
+  describe('the redirectJournery', () => {
+    it('can send the applicant back to CYA', async () => {
+      const { redirectJourney } = await import('../common.js')
+
+      const applicationId = '123abc'
+      const urlBase = { CHECK_ANSWERS: { uri: 'applicant-check-answer' } }
+      expect(redirectJourney(applicationId, urlBase)).toEqual('applicant-check-answer')
+    })
+
+    it('can send the ecologist back to CYA', async () => {
+      const { redirectJourney } = await import('../common.js')
+
+      const applicationId = '123abc'
+      const urlBase = { CHECK_ANSWERS: { uri: 'ecologist-check-answer' } }
+      expect(redirectJourney(applicationId, urlBase)).toEqual('ecologist-check-answer')
+    })
+  })
 })
