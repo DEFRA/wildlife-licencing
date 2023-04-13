@@ -25,7 +25,7 @@ export default pageRoute({
   checkData: checkApplication,
   getData: getData,
   validator: Joi.object({
-    'permission-details': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'permission-details': Joi.string().replace('\r\n', '\n').trim().required().max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion: allCompletion,
   setData: setData
