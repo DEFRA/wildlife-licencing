@@ -191,7 +191,7 @@ describe('the email-address page', () => {
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
-      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return '/applicant-check-answers' })(request)
       expect(result).toEqual('/applicant-postcode')
     })
 
@@ -228,7 +228,7 @@ describe('the email-address page', () => {
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
-      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return '/applicant-check-answers' })(request)
       expect(result).toEqual('/applicant-check-answers')
     })
 
@@ -265,7 +265,7 @@ describe('the email-address page', () => {
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
-      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return '/invoice-purchase-order' })(request)
       expect(result).toEqual('/invoice-purchase-order')
     })
 

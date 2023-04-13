@@ -11,7 +11,9 @@ export const applicantEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
   checkData: checkApplication,
-  completion: emailAddressCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT),
+  completion: emailAddressCompletion(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT, async (_applicationId, urlBase) => {
+    return urlBase.CHECK_ANSWERS.uri
+  }),
   getData: getEmailAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION),
   setData: setEmailAddressData(ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION)
 }, ContactRoles.APPLICANT, AccountRoles.APPLICANT_ORGANISATION)
