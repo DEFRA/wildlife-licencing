@@ -38,9 +38,9 @@
     {{ govukRadios({
         name: "email-or-return",
         errorMessage: { text: "Select an option" } if error['email-or-return'],
-        label: {
+        hint: {
           text: "Select an option",
-          classes: "govuk-label govuk-!-font-weight-bold"
+          classes: "govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24"
         },
         items: [
           {
