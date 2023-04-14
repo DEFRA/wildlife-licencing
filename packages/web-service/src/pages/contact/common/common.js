@@ -201,3 +201,5 @@ const duDuplicate = candidates => {
     return rc.id
   })
 }
+
+export const redirectJourney = (_applicationId, urlBase) => urlBase.CHECK_ANSWERS.uri
