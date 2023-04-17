@@ -21,9 +21,9 @@
     name: 'exempt-details',
     id: 'exempt-details',
     value: data.paymentExemptReasonExplanation if data.paymentExemptReasonExplanation else '',
-    errorMessage: { text: 'Describe why your project is exempt from licence payments' } if error['exempt-details'],
+    errorMessage: { text: 'Provide more detail on why your development is exempt'],
     hint: {
-      text: 'Describe why your project is exempt from license payments.'
+      text: 'Provide more detail on the reason you think your development is exempt from license payments.'
     }
   }) }}
 {% endset -%}
