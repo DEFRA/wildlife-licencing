@@ -155,7 +155,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/public/javascript/all-min.js"></script>
+  <script nonce={{cspNonce}} src="/public/javascript/all-min.js"></script>
   <script nonce={{cspNonce}}>
     window.GOVUKFrontend.initAll()
   </script>
