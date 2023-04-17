@@ -53,6 +53,13 @@ export const setData = async request => {
   const journeyData = await request.cache().getData() || {}
   Object.assign(journeyData, { userId: result.id })
   await request.cache().setData(journeyData)
+
+  // if the cookies preferences are set in the session then write it into the user
+  if (journeyData.cookies) {
+    const user = await APIRequests.USER.getById(journeyData.userId)
+    Object.assign(user, { cookiePrefs: journeyData.cookies })
+    await APIRequests.USER.update(journeyData.userId, user)
+  }
 }
 
 // Do not allow the login page if the user is logged in

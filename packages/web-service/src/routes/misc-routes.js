@@ -1,5 +1,6 @@
-import { HEALTH, REMOVE_FILE_UPLOAD, APPLICATIONS } from '../uris.js'
+import { HEALTH, REMOVE_FILE_UPLOAD, APPLICATIONS, COOKIE_PREFS } from '../uris.js'
 import createApplication from '../handlers/create-application.js'
+import cookiePrefs from '../handlers/cookie-prefs.js'
 import removeUpload from '../handlers/remove-uploaded-file.js'
 import { setGlobalDate, unsetGlobalDate } from '../common/fake-date.js'
 
@@ -41,6 +42,12 @@ const miscRoutes = [
     method: 'GET',
     path: REMOVE_FILE_UPLOAD.uri,
     handler: removeUpload
+  },
+  {
+    method: 'GET',
+    path: COOKIE_PREFS.uri,
+    options: { auth: false },
+    handler: cookiePrefs
   }
 ]
 
