@@ -3,15 +3,39 @@ describe('login page', () => {
 
   describe('the setData', () => {
     it('submits the user to the authorization cache', async () => {
-      const mockFindUser = jest.fn(() => ({ username: 'flintstone' }))
+      const mockFindUser = jest.fn(() => ({
+        id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+        username: 'flintstone'
+      }))
       const mockSetAuthData = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({ APIRequests: { USER: { findByName: mockFindUser } } }))
+      const mockUpdate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            findByName: mockFindUser,
+            getById: () => ({
+              id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+              username: 'flintstone'
+            }),
+            update: mockUpdate
+          }
+        }
+      }))
       const { setData } = await import('../login.js')
       await setData({
-        cache: () => ({ setAuthData: mockSetAuthData, setData: jest.fn(), getData: jest.fn() }),
+        cache: () => ({
+          setAuthData: mockSetAuthData,
+          setData: jest.fn(),
+          getData: jest.fn(() => ({ cookies: { analytics: true } }))
+        }),
         payload: { username: 'a.b@email.com' }
       })
-      expect(mockSetAuthData).toHaveBeenCalledWith({ username: 'flintstone' })
+      expect(mockSetAuthData).toHaveBeenCalledWith({ id: '6829ad54-bab7-4a78-8ca9-dcf722117a45', username: 'flintstone' })
+      expect(mockUpdate).toHaveBeenCalledWith('6829ad54-bab7-4a78-8ca9-dcf722117a45', {
+        cookiePrefs: { analytics: true },
+        id: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+        username: 'flintstone'
+      })
     })
   })
 
