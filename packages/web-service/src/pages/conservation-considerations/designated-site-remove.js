@@ -11,6 +11,7 @@ export const checkDesignatedSite = async (request, h) => {
   if (!ads) {
     return h.redirect(DESIGNATED_SITE_CHECK_ANSWERS.uri)
   }
+  return null
 }
 
 export const getData = async request => {
