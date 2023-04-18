@@ -6,6 +6,13 @@ import { APIRequests } from '../../services/api-requests.js'
 
 const { DESIGNATED_SITE_REMOVE, DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
 
+export const checkDesignatedSite = async (request, h) => {
+  const ads = await getCurrentSite(request)
+  if (!ads) {
+    return h.redirect(DESIGNATED_SITE_CHECK_ANSWERS.uri)
+  }
+}
+
 export const getData = async request => {
   const sites = await getFilteredDesignatedSites()
   const ads = await getCurrentSite(request)
@@ -25,7 +32,7 @@ export const setData = async request => {
 export const designatedSiteRemove = yesNoPage({
   page: DESIGNATED_SITE_REMOVE.page,
   uri: DESIGNATED_SITE_REMOVE.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkDesignatedSite],
   getData: getData,
   completion: DESIGNATED_SITE_CHECK_ANSWERS.uri,
   setData: setData
