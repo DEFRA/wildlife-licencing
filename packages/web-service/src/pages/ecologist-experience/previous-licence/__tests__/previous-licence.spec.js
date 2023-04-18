@@ -10,7 +10,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'complete'
+              get: () => 'in-progress'
             })
           }
         }
@@ -177,6 +177,11 @@ describe('The previous licence page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              get: () => 'in-progress'
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
             getExperienceById: jest.fn(() => ({}))
@@ -205,6 +210,11 @@ describe('The previous licence page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              get: () => 'in-progress'
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
             removePreviousLicences: jest.fn(),
