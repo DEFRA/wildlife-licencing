@@ -22,11 +22,12 @@ const {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
+  const pageData = await request.cache().getPageData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   return {
     radioChecked: applicationData?.paymentExemptReason,
-    paymentExemptReasonExplanation: applicationData?.paymentExemptReasonExplanation,
+    paymentExemptReasonExplanation: pageData.payload['exempt-details'] || applicationData?.paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
     PREVENT_DISEASE_SPREAD,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
