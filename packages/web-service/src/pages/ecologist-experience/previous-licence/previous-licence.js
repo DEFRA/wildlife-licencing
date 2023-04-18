@@ -53,10 +53,8 @@ export const setData = async request => {
 
   const answer = request.payload[yesNo]
   const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (isCompleteOrConfirmed(tagState)) {
-    if (boolFromYesNo(answer) !== ecologistExperience.previousLicence) {
-      await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
-    }
+  if (isCompleteOrConfirmed(tagState) && boolFromYesNo(answer) !== ecologistExperience.previousLicence) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
   }
 
   ecologistExperience.previousLicence = answer === 'yes'
