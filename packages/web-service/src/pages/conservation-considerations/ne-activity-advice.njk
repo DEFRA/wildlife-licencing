@@ -5,11 +5,11 @@
 
 {% set errorMap = {
         'advice-from-who': {
-          'string.empty': { ref: '#advice-from-who', text: 'You have not entered who the advice was from' },
+          'string.empty': { ref: '#advice-from-who', text: 'You have not entered who gave you the advice' },
           'string.max': { ref: '#advice-from-who', text: 'You have entered too many characters'}
         },
         'advice-description': {
-          'string.empty': { ref: '#advice-description', text: 'You have not entered the advice details' },
+          'string.empty': { ref: '#advice-description', text: 'You have not entered a description of the advice' },
           'string.max': { ref: '#advice-description', text: 'You have entered too many characters'}
         }
     }
@@ -26,7 +26,7 @@
   id: "advice-from-who",
   name: "advice-from-who",
   value: data['advice-from-who'] if data['advice-from-who'] else payload['advice-from-who'],
-  errorMessage: { text: "Enter who the advice was from" } if error['advice-from-who'],
+  errorMessage: { text: "Enter the name of who gave you the advice" } if error['advice-from-who'],
   label: {
     text: "Who did you receive the advice from?",
     classes: "govuk-label--m",
@@ -42,7 +42,7 @@
   id: "advice-description",
   value: data['advice-description'] if data['advice-description'] else payload['advice-description'],
   maxlength: 4000,
-  errorMessage: { text: "Describe the outcome of the advice" } if error['advice-description'],
+  errorMessage: { text: "Enter a description of the advice given" } if error['advice-description'],
   label: {
     text: "Describe the outcome of the advice",
     classes: "govuk-label--m",

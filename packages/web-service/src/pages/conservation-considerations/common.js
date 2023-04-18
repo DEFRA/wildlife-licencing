@@ -22,9 +22,14 @@ export const getCurrentSite = async request => {
   if (id) {
     // Reseat the cache on the site specified
     const applicationDesignatedSite = applicationDesignatedSites.find(ads => ads.id === id)
-    journeyData.designatedSite = { id: applicationDesignatedSite.id, designatedSiteId: applicationDesignatedSite.designatedSiteId }
-    await request.cache().setData(journeyData)
-    return applicationDesignatedSite
+    if (applicationDesignatedSite) {
+      journeyData.designatedSite = {
+        id: applicationDesignatedSite.id,
+        designatedSiteId: applicationDesignatedSite.designatedSiteId
+      }
+      await request.cache().setData(journeyData)
+      return applicationDesignatedSite
+    }
   } else if (designatedSite) {
     // Return the currently selected application-designated-site
     return applicationDesignatedSites.find(ads => ads.id === designatedSite?.id)
