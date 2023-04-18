@@ -94,10 +94,20 @@ describe('The licence-resend job processor', () => {
       expect(result.emailLicence).toEqual(expect.arrayContaining([
         {
           data: {
-            sddsApplicationId: '510db545-4136-48c4-9680-98d89d3962e7'
+            sddsApplicationId: APPLICATION.sddsApplicationId,
+            sddsContactId: APPLICANT_1.sddsContactId
           },
           keys: {
-            apiKey: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+            apiKey: APPLICATION.id
+          }
+        },
+        {
+          data: {
+            sddsAccountId: ECOLOGIST_ORGANISATION_1.sddsAccountId,
+            sddsApplicationId: APPLICATION.sddsApplicationId
+          },
+          keys: {
+            apiKey: APPLICATION.id
           }
         }
       ]))
@@ -120,10 +130,20 @@ describe('The licence-resend job processor', () => {
       expect(result.emailLicence).toEqual(expect.arrayContaining([
         {
           data: {
-            sddsApplicationId: '510db545-4136-48c4-9680-98d89d3962e7'
+            sddsApplicationId: APPLICATION.sddsApplicationId,
+            sddsContactId: ECOLOGIST_1.sddsContactId
           },
           keys: {
-            apiKey: '35acb529-70bb-4b8d-8688-ccdec837e5d4'
+            apiKey: APPLICATION.id
+          }
+        },
+        {
+          data: {
+            sddsAccountId: APPLICANT_ORGANISATION_1.sddsAccountId,
+            sddsApplicationId: APPLICATION.sddsApplicationId
+          },
+          keys: {
+            apiKey: APPLICATION.id
           }
         }
       ]))

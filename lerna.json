@@ -11,8 +11,7 @@
     "version": {
       "allowBranch": [
         "master",
-        "develop",
-        "test"
+        "develop"
       ],
       "message": "chore(release): publish %s"
     },

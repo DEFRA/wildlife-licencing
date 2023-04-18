@@ -1,6 +1,10 @@
 import { UnRecoverableBatchError, licenceResend } from '@defra/wls-powerapps-lib'
 import db from 'debug'
 import { models } from '@defra/wls-database-model'
+import pkg from 'sequelize'
+
+const { Sequelize } = pkg
+const Op = Sequelize.Op
 
 /**
  * For the applicant, if there exists an applicant organisation, send that, else send the applicant
@@ -16,18 +20,85 @@ export const buildApiObject = async applicationId => {
     return null
   }
 
+  const applicationContacts = await models.applicationContacts.findAll({
+    where: { applicationId }
+  })
+
+  const applicationAccounts = await models.applicationAccounts.findAll({
+    where: { applicationId }
+  })
+
+  const contacts = await models.contacts.findAll({
+    where: {
+      id: {
+        [Op.in]: applicationContacts.map(c => c.contactId)
+      }
+    }
+  })
+
+  const accounts = await models.accounts.findAll({
+    where: {
+      id: {
+        [Op.in]: applicationAccounts.map(c => c.accountId)
+      }
+    }
+  })
+
+  const contactRoles = contacts.map(c => ({ ...c, contactRole: applicationContacts.find(ac => ac.contactId === c.id).contactRole, isUser: c.userId !== null }))
+  const accountRoles = accounts.map(a => ({ ...a, accountRole: applicationAccounts.find(aa => aa.accountId === a.id).accountRole }))
+
   const payload = {
     emailLicence: []
   }
 
-  payload.emailLicence.push({
-    data: {
-      sddsApplicationId: applicationResult.sddsApplicationId
-    },
-    keys: {
-      apiKey: applicationResult.id
-    }
-  })
+  const applicantAccount = accountRoles.find(ar => ar.accountRole === 'APPLICANT-ORGANISATION')
+  const applicantContact = contactRoles.find(cr => cr.contactRole === 'APPLICANT')
+  const ecologistAccount = accountRoles.find(ar => ar.accountRole === 'ECOLOGIST-ORGANISATION')
+  const ecologistContact = contactRoles.find(cr => cr.contactRole === 'ECOLOGIST')
+
+  if (applicantAccount) {
+    payload.emailLicence.push({
+      data: {
+        sddsApplicationId: applicationResult.sddsApplicationId,
+        sddsAccountId: applicantAccount.sddsAccountId
+      },
+      keys: {
+        apiKey: applicationResult.id
+      }
+    })
+  } else if (applicantContact) {
+    payload.emailLicence.push({
+      data: {
+        sddsApplicationId: applicationResult.sddsApplicationId,
+        sddsContactId: applicantContact.sddsContactId
+      },
+      keys: {
+        apiKey: applicationResult.id
+      }
+    })
+  }
+
+  if (ecologistAccount) {
+    payload.emailLicence.push({
+      data: {
+        sddsApplicationId: applicationResult.sddsApplicationId,
+        sddsAccountId: ecologistAccount.sddsAccountId
+      },
+      keys: {
+        apiKey: applicationResult.id
+      }
+    })
+  } else if (ecologistContact) {
+    payload.emailLicence.push({
+      data: {
+        sddsApplicationId: applicationResult.sddsApplicationId,
+        sddsContactId: ecologistContact.sddsContactId
+      },
+      keys: {
+        apiKey: applicationResult.id
+      }
+    })
+  }
 
   debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
   return payload
