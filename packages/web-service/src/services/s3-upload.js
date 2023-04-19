@@ -6,9 +6,8 @@ import db from 'debug'
 import { APIRequests } from './api-requests.js'
 const debug = db('web-service:s3')
 
-const { S3Client, PutObjectCommand, bucket } = AWS()
-
 export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
+  const { S3Client, PutObjectCommand, bucket } = AWS()
   const fileReadStream = fs.createReadStream(filepath)
 
   // The filename will be recorded by the API
@@ -34,5 +33,7 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
     console.error(`Cannot write data with key: ${objectKey} to bucket: ${bucket}`, err)
     boomify(err, { statusCode: 500 })
     throw err
+  } finally {
+    S3Client.destroy()
   }
 }
