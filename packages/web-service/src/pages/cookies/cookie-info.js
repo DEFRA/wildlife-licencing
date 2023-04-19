@@ -39,5 +39,5 @@ export default yesNoPage({
   getData: getData,
   setData: setData,
   completion: completion,
-  options: { auth: false }
+  options: { auth: { mode: 'optional' } }
 })
