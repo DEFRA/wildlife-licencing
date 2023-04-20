@@ -5,8 +5,9 @@ import { getAddressData, setAddressData } from '../common/address/address.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkHasAddress, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
+import { purchaseOrderCompletion } from './common.js'
 
-const { ADDRESS, CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+const { ADDRESS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
 export const invoiceAddress = addressPage({
   page: ADDRESS.page,
@@ -14,5 +15,5 @@ export const invoiceAddress = addressPage({
   checkData: [checkApplication, checkHasContact(ContactRoles.PAYER, RESPONSIBLE), checkHasAddress(contactURIs.INVOICE_PAYER)],
   getData: getAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
   setData: setAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
-  completion: CHECK_ANSWERS.uri
+  completion: purchaseOrderCompletion
 })

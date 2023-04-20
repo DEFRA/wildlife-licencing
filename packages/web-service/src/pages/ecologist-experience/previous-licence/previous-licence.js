@@ -4,17 +4,21 @@ import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
+import { tagStatus } from '../../../services/status-tags.js'
+import { boolFromYesNo } from '../../common/common.js'
 const yesNo = 'yes-no'
 
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (pageData.payload[yesNo] === 'yes') {
-    return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
-  }
+
   if (isCompleteOrConfirmed(tagState)) {
     return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+  }
+
+  if (pageData.payload[yesNo] === 'yes') {
+    return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
 
   return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
@@ -46,10 +50,18 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  ecologistExperience.previousLicence = request.payload[yesNo] === 'yes'
+
+  const answer = request.payload[yesNo]
+  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+  if (isCompleteOrConfirmed(tagState) && boolFromYesNo(answer) !== ecologistExperience.previousLicence) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
+  }
+
+  ecologistExperience.previousLicence = answer === 'yes'
   if (!ecologistExperience.previousLicence) {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences(applicationId)
   }
+
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }
 
