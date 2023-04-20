@@ -3926,19 +3926,23 @@ components:
         nilReturn:
           type: boolean
         whyNil:
+          $ref: '#/components/schemas/option'
+        whyNilOther:
           type: string
           minLength: 1
           maxLength: 4000
+        needAnotherLicence:
+          type: boolean
         completedWithinLicenceDates:
           type: boolean
-        whyNotCompletedWithinLicenceDates:
-          type: string
-          minLength: 1
-          maxLength: 4000
         startDate:
           $ref: '#/components/schemas/timestamp'
         endDate:
           $ref: '#/components/schemas/timestamp'
+        whyNotCompletedWithinLicenceDates:
+          type: string
+          minLength: 1
+          maxLength: 4000
         outcome:
           type: boolean
         submitted:
