@@ -8,6 +8,19 @@ import { checkApplication } from '../../common/check-application.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { getCheckYourAnswersData, getPermissionReason } from '../common/permission-functions.js'
 
+export const checkData = async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const permissionData = await APIRequests.PERMISSION.getPermissions(applicationId)
+  const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
+
+  // When the last permission is removed, redirect to add permission page
+  if (eligibility.permissionsRequired && permissionData.length === 0) {
+    return h.redirect(permissionsURIs.ADD_PERMISSION_START.uri)
+  }
+
+  return null
+}
+
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const permissionData = await APIRequests.PERMISSION.getPermissions(applicationId)
@@ -46,7 +59,7 @@ export default pageRoute({
   page: permissionsURIs.CHECK_YOUR_ANSWERS.page,
   uri: permissionsURIs.CHECK_YOUR_ANSWERS.uri,
   backlink: Backlink.NO_BACKLINK,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   getData,
   completion
 })
