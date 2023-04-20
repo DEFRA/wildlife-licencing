@@ -62,9 +62,9 @@ export const PERMISSION = {
     `Error removing a permission with applicationId ${applicationId}`,
     500
   ),
-  removePermissionDetails: async (applicationId) => apiRequestsWrapper(
+  removePermissionDetails: async applicationId => apiRequestsWrapper(
     async () => {
-      debug(`Delete a permission details with applicationId: ${applicationId}`)
+      debug(`Delete permission details with applicationId: ${applicationId}`)
       return API.delete(`${apiUrls.APPLICATION}/${applicationId}${apiUrls.PERMISSIONS_SECTION}`)
     },
     `Error removing permission details with applicationId ${applicationId}`,
