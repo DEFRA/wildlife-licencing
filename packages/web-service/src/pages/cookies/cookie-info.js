@@ -1,10 +1,13 @@
-import { COOKIE_INFO, APPLICATIONS } from '../../uris.js'
+import { COOKIE_INFO } from '../../uris.js'
 import { isYes, yesNoPage } from '../common/yes-no.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { yesNoFromBool } from '../common/common.js'
 
 export const getData = async request => {
   const journeyData = await request.cache().getData() || {}
+  const referrer = new URL(request.info.referrer)
+  journeyData.cookiesReferrer = referrer.pathname
+  await request.cache().setData(journeyData)
   if (journeyData.userId) {
     const user = await APIRequests.USER.getById(journeyData.userId)
     return { yesNo: yesNoFromBool(user?.cookiePrefs?.analytics) }
@@ -16,8 +19,8 @@ export const getData = async request => {
 
 export const completion = async request => {
   // Return to the calling page
-  const referrer = new URL(request.info.referrer)
-  return referrer.pathname !== COOKIE_INFO.uri ? referrer.pathname : APPLICATIONS.uri
+  const journeyData = await request.cache().getData()
+  return journeyData.cookiesReferrer
 }
 
 export const setData = async request => {

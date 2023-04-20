@@ -3,19 +3,25 @@ describe('cookie-info page', () => {
 
   describe('the getData', () => {
     it('returns null if cookie preference not set', async () => {
+      const mockSetData = jest.fn()
       const request = {
+        info: { referrer: 'http://0.0.0.0/xyz' },
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({}),
+          setData: mockSetData
         })
       }
       const { getData } = await import('../cookie-info.js')
       const result = await getData(request)
       expect(result).toBeNull()
+      expect(mockSetData).toHaveBeenCalledWith({ cookiesReferrer: '/xyz' })
     })
 
     it('returns the cookie preference from the cache', async () => {
       const request = {
+        info: { referrer: 'http://0.0.0.0/xyz' },
         cache: () => ({
+          setData: jest.fn(),
           getData: () => ({
             cookies: { analytics: false }
           })
@@ -28,7 +34,9 @@ describe('cookie-info page', () => {
 
     it('returns the cookie preference from the database', async () => {
       const request = {
+        info: { referrer: 'http://0.0.0.0/xyz' },
         cache: () => ({
+          setData: jest.fn(),
           getData: () => ({
             userId: 'e8387a83-1165-42e6-afab-add01e77bc4c'
           })
@@ -91,16 +99,15 @@ describe('cookie-info page', () => {
   })
 
   describe('the completion', () => {
-    it('returns the referrer if not the cookie-info page', async () => {
+    it('redirects to the captured referrer', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ cookiesReferrer: '/xyz' })
+        })
+      }
       const { completion } = await import('../cookie-info.js')
-      const result = await completion({ info: { referrer: 'http://0.0.0.0/xyz' } })
+      const result = await completion(request)
       expect(result).toEqual('/xyz')
-    })
-
-    it('returns the applications if the referrer is the cookie-info page', async () => {
-      const { completion } = await import('../cookie-info.js')
-      const result = await completion({ info: { referrer: 'http://0.0.0.0/cookie-info' } })
-      expect(result).toEqual('/applications')
     })
   })
 })
