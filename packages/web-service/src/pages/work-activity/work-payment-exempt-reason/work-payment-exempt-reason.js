@@ -34,7 +34,7 @@ export const getData = async request => {
 
   return {
     radioChecked: applicationData?.paymentExemptReason,
-    paymentExemptReasonExplanation: paymentExemptReasonExplanation,
+    paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
     PREVENT_DISEASE_SPREAD,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
