@@ -25,9 +25,16 @@ export const getData = async request => {
   const pageData = await request.cache().getPageData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
+  let paymentExemptReasonExplanation = ''
+  if (pageData?.payload['exempt-details']) {
+    paymentExemptReasonExplanation = pageData?.payload['exempt-details']
+  } else if (applicationData?.paymentExemptReasonExplanation) {
+    paymentExemptReasonExplanation = applicationData?.paymentExemptReasonExplanation
+  }
+
   return {
     radioChecked: applicationData?.paymentExemptReason,
-    paymentExemptReasonExplanation: pageData.payload['exempt-details'] || applicationData?.paymentExemptReasonExplanation,
+    paymentExemptReasonExplanation: paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
     PREVENT_DISEASE_SPREAD,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
