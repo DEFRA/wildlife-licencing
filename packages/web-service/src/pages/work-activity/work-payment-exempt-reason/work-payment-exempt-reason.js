@@ -29,9 +29,9 @@ export const getData = async request => {
 
   let paymentExemptReasonExplanation = ''
   if (pageData?.payload[exemptDetails]) {
-    paymentExemptReasonExplanation = pageData?.payload[exemptDetails]
+    paymentExemptReasonExplanation = pageData.payload[exemptDetails]
   } else if (applicationData?.paymentExemptReasonExplanation) {
-    paymentExemptReasonExplanation = applicationData?.paymentExemptReasonExplanation
+    paymentExemptReasonExplanation = applicationData.paymentExemptReasonExplanation
   }
 
   return {
