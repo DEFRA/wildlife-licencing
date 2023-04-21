@@ -44,7 +44,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
 
-  const numberOfActiveEntrances = pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page]
+  const numberOfActiveEntrances = parseInt(pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page])
   const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page] > 0
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)

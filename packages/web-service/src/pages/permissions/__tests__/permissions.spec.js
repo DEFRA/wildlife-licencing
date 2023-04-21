@@ -81,9 +81,11 @@ describe('permissions page handler', () => {
     expect(await checkData(request, h)).toBeNull()
   })
 
-  it('setData', async () => {
+  it('setData with removing permissions', async () => {
     const mockPutByIdn = jest.fn()
-    const mockSet = jest.fn()
+    const mockSetData = jest.fn()
+    const mockRemovePermissionDetails = jest.fn()
+    const mockRemovePermission = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         ELIGIBILITY: {
@@ -93,6 +95,16 @@ describe('permissions page handler', () => {
             }
           },
           putById: mockPutByIdn
+        },
+        PERMISSION: {
+          getPermissionDetailsById: () => ({ planningType: 12345 }),
+          removePermissionDetails: mockRemovePermissionDetails,
+          removePermission: mockRemovePermission
+        },
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
+          }
         }
       }
     }))
@@ -102,15 +114,67 @@ describe('permissions page handler', () => {
       },
       cache: () => ({
         getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+          permissionData: {
+            sddsPermissionsId: '12345'
+          }
         }),
-        setData: mockSet
+        setData: mockSetData
       })
     }
     const { setData } = await import('../permissions/permissions.js')
     await setData(request)
     expect(mockPutByIdn).toHaveBeenCalled()
-    expect(mockSet).toHaveBeenCalled()
+    expect(mockSetData).toHaveBeenCalled()
+    expect(mockRemovePermission).toHaveBeenCalled()
+    expect(mockRemovePermissionDetails).toHaveBeenCalled()
+  })
+
+  it('setData', async () => {
+    const mockPutByIdn = jest.fn()
+    const mockSetData = jest.fn()
+    const mockRemovePermissionDetails = jest.fn()
+    const mockRemovePermission = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: () => {
+            return {
+              permissionsRequired: false
+            }
+          },
+          putById: mockPutByIdn
+        },
+        PERMISSION: {
+          getPermissionDetailsById: () => undefined,
+          removePermissionDetails: mockRemovePermissionDetails,
+          removePermission: mockRemovePermission
+        },
+        APPLICATION: {
+          tags: () => {
+            return { set: jest.fn() }
+          }
+        }
+      }
+    }))
+    const request = {
+      payload: {
+        permissionsRequired: 'yes'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+          permissionData: {}
+        }),
+        setData: mockSetData
+      })
+    }
+    const { setData } = await import('../permissions/permissions.js')
+    await setData(request)
+    expect(mockPutByIdn).toHaveBeenCalled()
+    expect(mockSetData).toHaveBeenCalled()
+    expect(mockRemovePermission).not.toHaveBeenCalled()
+    expect(mockRemovePermissionDetails).not.toHaveBeenCalled()
   })
 
   it('should redirect user to add permissions page', async () => {
