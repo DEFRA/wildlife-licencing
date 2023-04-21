@@ -3959,8 +3959,62 @@ components:
         - $ref: '#/components/schemas/return'
         - type: object
           properties:
-            destroyVacantSettByMechanicalMeans:
+            obstructionByOneWayGates:
               type: boolean
+            obstructionByOneWayGatesDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            obstructionBlockingOrProofing:
+              type: boolean
+            obstructionBlockingOrProofingDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            damageByHandOrMechanicalMeans:
+              type: boolean
+            damageByHandOrMechanicalMeansDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            destroyVacantSettByHandOrMechanicalMeans:
+              type: boolean
+            destroyVacantSettByHandOrMechanicalMeansDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            disturbBadgers:
+              type: boolean
+            disturbBadgersDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            artificialSett:
+              type: boolean
+            noArtificialSettReason:
+              $ref: '#/components/schemas/option'
+            noArtificialSettReasonDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            artificialSettDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            artificialSettFoundEvidence:
+              type: string
+              minLength: 1
+              maxLength: 4000
+            artificialSettCreatedBeforeClosure:
+              type: boolean
+            artificialSettFoundGridReference:
+              $ref: '#/components/schemas/gridReference'
+            welfareConcerns:
+              type: boolean
+            welfareConcernsDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
 
     ecologistExperience:
       type: object

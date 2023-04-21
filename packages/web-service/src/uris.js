@@ -177,6 +177,37 @@ export const convictionsURIs = {
   CHECK_CONVICTIONS_ANSWERS: { uri: '/convictions-check-answers', page: 'convictions-check-answers' }
 }
 
+export const ReturnsURIs = {
+  NIL_RETURN: { uri: '/licensed-actions', page: 'licensed-actions' },
+  OUTCOME: { uri: '/outcome', page: 'outcome' },
+  WHY_NIL: { uri: '/why-nil', page: 'why-nil' },
+  ANOTHER_LICENCE: { uri: '/another-licence', page: 'another-licence' },
+  COMPLETE_WITHIN_DATES: { uri: '/complete-within-dates', page: 'complete-within-dates' },
+  WORK_START: { uri: '/work-start', page: 'work-start' },
+  WORK_END: { uri: '/work-finish', page: 'work-finish' },
+  LICENCE_CONDITIONS: { uri: '/licence-conditions', page: 'licence-conditions' },
+  CHECK_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
+  DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },
+  CONFIRMATION: { uri: '/returns-confirmation', page: 'returns-confirmation' },
+
+  A24: {
+    DISTURB_BADGERS: { uri: '/a24/disturb-badgers', page: 'disturb-badgers' },
+    ONE_WAY_GATES: { uri: '/a24/one-way-gates', page: 'one-way-gates' },
+    BLOCKING_OR_PROOFING: { uri: '/a24/blocking-or-proofing', page: 'blocking-or-proofing' },
+    DAMAGE_BY_HAND_OR_MECHANICAL_MEANS: { uri: '/a24/damage-by-hand-or-mechanical-means', page: 'damage-by-hand-or-mechanical-means' },
+    DESTROY_VACANT_SETT: { uri: '/a24/destroy-vacant-sett', page: 'destroy-vacant-sett' },
+    DESTROY_DATE: { uri: '/a24/destroy-date', page: 'destroy-date' },
+    ARTIFICIAL_SETT: { uri: '/a24/artificial-sett', page: 'artificial-sett' },
+    WHY_NO_ARTIFICIAL_SETT: { uri: '/a24/why-no-artificial-sett', page: 'why-no-artificial-sett' },
+    ARTIFICIAL_SETT_DETAILS: { uri: '/a24/artificial-sett-details', page: 'artificial-sett-details' },
+    ARTIFICIAL_SETT_EVIDENCE_FOUND: { uri: '/a24/artificial-sett-evidence-found', page: 'artificial-sett-evidence-found' },
+    ARTIFICIAL_SETT_GRID_REFERENCE: { uri: '/a24/artificial-sett-grid-reference', page: 'artificial-sett-grid-reference' },
+    ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE: { uri: '/a24/artificial-sett-created-before-closure', page: 'artificial-sett-created-before-closure' },
+    WHY_NOT_COMPLETE_WITHIN_DATES: { uri: '/why-not-completes-within-dates', page: 'why-not-completes-within-dates' },
+    WELFARE_CONCERNS: { uri: '/welfare-concerns', page: 'welfare-concerns' }
+  }
+}
+
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {

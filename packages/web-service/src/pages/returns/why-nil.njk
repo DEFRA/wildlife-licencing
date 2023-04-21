@@ -1,0 +1,27 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'why-nil': {
+          'any.required': { ref: '#why-nil', text: 'MSG HERE' }
+        }
+    }
+%}
+
+{% set title = 'Which species will the work affect?' %}
+
+{% set title = "Why didn't you carry out these actions?" %}
+
+{% set radioItems = [] %}
+
+{% block pageContent %}
+  {{ govukRadios({
+    id: "why-nil",
+    name: "why-nil",
+    hint: {
+      text: "Select one."
+    },
+    errorMessage: { text: "MSG HERE" } if error['why-nil'],
+    items: radioItems
+  }) }}
+{% endblock %}

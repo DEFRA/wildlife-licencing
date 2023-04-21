@@ -1,0 +1,23 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'artificial-sett-grid-reference': {
+          'string.empty': { ref: '#artificial-sett-grid-reference', text: 'MSG HERE' },
+          'string.max': { ref: '#artificial-sett-grid-reference', text: 'MSG HERE'}
+        }
+    }
+%}
+
+{% set title = "What evidence do you have that badgers found the artificial sett?" %}
+
+{% block pageContent %}
+    {{ govukInput({
+      id: "artificial-sett-grid-reference",
+      name: "artificial-sett-grid-reference",
+      classes: "govuk-!-width-three-quarters",
+      spellcheck: false,
+      value: data.name if data.name else payload['artificial-sett-grid-reference'],
+      errorMessage: { text: 'MSG HERE' } if error['artificial-sett-grid-reference']
+    }) }}
+{% endblock %}
