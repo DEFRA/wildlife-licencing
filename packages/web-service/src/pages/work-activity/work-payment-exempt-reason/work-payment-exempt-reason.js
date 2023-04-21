@@ -7,6 +7,8 @@ import { checkApplication } from '../../common/check-application.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
+const exemptDetails = 'exempt-details'
+
 const {
   PAYMENT_EXEMPT_REASON: {
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
@@ -26,8 +28,8 @@ export const getData = async request => {
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   let paymentExemptReasonExplanation = ''
-  if (pageData?.payload['exempt-details']) {
-    paymentExemptReasonExplanation = pageData?.payload['exempt-details']
+  if (pageData?.payload[exemptDetails]) {
+    paymentExemptReasonExplanation = pageData?.payload[exemptDetails]
   } else if (applicationData?.paymentExemptReasonExplanation) {
     paymentExemptReasonExplanation = applicationData?.paymentExemptReasonExplanation
   }
@@ -56,7 +58,7 @@ export const setData = async request => {
       applicationData,
       {
         paymentExemptReason: parseInt(request.payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]),
-        paymentExemptReasonExplanation: request.payload['exempt-details']
+        paymentExemptReasonExplanation: request.payload[exemptDetails]
       })
   } else {
     newData = Object.assign(
@@ -92,7 +94,7 @@ export const validator = async payload => {
       // Which leads to a mismatch on the character count as
       // '\r\n'.length == 2
       // '\n'.length   == 1
-      'exempt-details': Joi.string().required().replace('\r\n', '\n').max(4000)
+      exemptDetails: Joi.string().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }
