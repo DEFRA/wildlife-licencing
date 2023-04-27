@@ -29,6 +29,19 @@ describe('The API requests user service', () => {
       expect(result).toEqual({ username: 'Keith Moon' })
     })
 
+    it('update calls the API connector correctly', async () => {
+      const mockPut = jest.fn(() => ({ username: 'Keith Moon' }))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.USER.update('56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { foo: 'bar' })
+      expect(mockPut).toHaveBeenCalledWith('/user/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { foo: 'bar' })
+      expect(result).toEqual({ username: 'Keith Moon' })
+    })
+
     it('findByName calls the API connector correctly', async () => {
       const mockGet = jest.fn(() => [{ user: 123 }])
       jest.doMock('@defra/wls-connectors-lib', () => ({

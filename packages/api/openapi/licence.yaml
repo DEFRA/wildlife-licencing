@@ -3099,6 +3099,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
+        204:
+          description: No operation
         400:
           description: Bad request. User ID must be a uuid.
           content:
@@ -4092,10 +4094,19 @@ components:
           $ref: '#/components/schemas/email'
         password:
           $ref: '#/components/schemas/password'
+        cookiePrefs:
+          $ref: '#/components/schemas/cookiePrefs'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    cookiePrefs:
+      type: object
+      nullable: true
+      properties:
+        analytics:
+          type: boolean
 
     userContactsHelper:
       type: array

@@ -26,4 +26,10 @@
             <column  name="created_at" valueComputed="now()"/>
         </insert>
     </changeSet>
+
+    <changeSet  id="3"  author="sdds">
+        <addColumn  tableName="users">
+            <column  name="cookie_prefs"  type="jsonb"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

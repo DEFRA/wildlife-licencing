@@ -10,7 +10,7 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'complete'
+              get: () => 'in-progress'
             })
           }
         }
@@ -177,6 +177,11 @@ describe('The previous licence page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              get: () => 'in-progress'
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
             getExperienceById: jest.fn(() => ({}))
@@ -205,6 +210,11 @@ describe('The previous licence page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              get: () => 'in-progress'
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
             removePreviousLicences: jest.fn(),
@@ -226,6 +236,45 @@ describe('The previous licence page', () => {
       await setData(request)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { previousLicence: false })
     })
+  })
+
+  it('setData resets the journey if the user changes their answer for the previous answer question', async () => {
+    const mockSet = jest.fn()
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started',
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => ({
+            get: () => 'complete',
+            set: mockSet
+          })
+        },
+        ECOLOGIST_EXPERIENCE: {
+          putExperienceById: mockSet,
+          getExperienceById: () => {
+            return {
+              previousLicence: false
+            }
+          }
+        }
+      }
+    }))
+    const request = {
+      payload: {
+        'yes-no': 'yes'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+        })
+      })
+    }
+    const { setData } = await import('../previous-licence.js')
+    await setData(request)
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'in-progress' })
   })
 
   describe('the get data function', () => {

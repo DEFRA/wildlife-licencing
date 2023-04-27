@@ -7,8 +7,9 @@ import { checkApplication } from '../../common/check-application.js'
 const descPotentialConflictsInput = 'describe-potential-conflicts'
 
 export const getData = async request => {
-  const journeyData = await request.cache().getData()
-  return { potentialConflictDescriptionValue: journeyData?.permissionData?.potentialConflictDescription }
+  const { applicationId } = await request.cache().getData()
+  const permissionDetails = await APIRequests.PERMISSION.getPermissionDetailsById(applicationId)
+  return { potentialConflictDescriptionValue: permissionDetails?.potentialConflictDescription }
 }
 
 export const setData = async request => {
@@ -28,7 +29,7 @@ export default pageRoute({
   uri: permissionsURIs.DESC_POTENTIAL_CONFLICTS.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'describe-potential-conflicts': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'describe-potential-conflicts': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,

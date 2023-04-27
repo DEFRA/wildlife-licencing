@@ -2,12 +2,15 @@ describe('The work-payment-exempt-reason page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('work-payment-exempt-reason page', () => {
-    it('getData returns the powerapps keys', async () => {
+    it('getData returns the powerapps keys, and data from the APPLICATION api endpoint', async () => {
       const request = {
         cache: () => {
           return {
             getData: () => {
               return { applicationId: '123abc' }
+            },
+            getPageData: () => {
+              return { payload: { } }
             }
           }
         }
@@ -36,6 +39,48 @@ describe('The work-payment-exempt-reason page', () => {
           PREVENT_DISEASE_SPREAD: 452120003,
           SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
           paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields',
+          radioChecked: 101
+        }
+      )
+    })
+
+    it('getData returns the powerapps keys, and data from the payload and the APPLICATION api endpoint', async () => {
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: '123abc' }
+            },
+            getPageData: () => {
+              return { payload: { 'exempt-details': 'the reason is because i dont want to pay today' } }
+            }
+          }
+        }
+      }
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => {
+              return {
+                paymentExemptReason: 101,
+                paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields'
+              }
+            }
+          }
+        }
+      }))
+      const { getData } = await import('../work-payment-exempt-reason.js')
+      expect(await getData(request)).toEqual(
+        {
+          CONSERVATION_OF_A_MONUMENT_OR_BUILDING: 452120006,
+          CONSERVATION_OF_PROTECTED_SPECIES: 452120005,
+          HOUSEHOLDER_HOME_IMPROVEMENTS: 452120001,
+          OTHER: 452120007,
+          PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
+          PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
+          PREVENT_DISEASE_SPREAD: 452120003,
+          SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
+          paymentExemptReasonExplanation: 'the reason is because i dont want to pay today',
           radioChecked: 101
         }
       )

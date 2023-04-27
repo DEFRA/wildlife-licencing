@@ -5,7 +5,7 @@
 
 {% set errorMap = {
         'proximity': {
-          'any.required': { ref: '#proximity', text: 'Select on or next to' }
+          'any.required': { ref: '#proximity', text: 'You have not selected an option' }
         }
     }
 %}
@@ -16,7 +16,7 @@
       hint: {
         text: "Select one."
       },
-      errorMessage: { text: "Select on or next to" } if error['proximity'],
+      errorMessage: { text: "Select an option" } if error['proximity'],
       items: [
         {
           value: data.values.ON,

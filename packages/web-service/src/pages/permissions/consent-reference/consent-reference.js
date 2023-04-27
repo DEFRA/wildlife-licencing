@@ -43,7 +43,7 @@ export default pageRoute({
   page: permissionsURIs.CONSENT_REFERENCE.page,
   uri: permissionsURIs.CONSENT_REFERENCE.uri,
   validator: Joi.object({
-    reference: Joi.string().trim().required()
+    reference: Joi.string().trim().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkApplication,
   getData,
