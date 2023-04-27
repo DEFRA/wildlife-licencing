@@ -10,7 +10,8 @@ describe('The task-list handler', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            findRoles: () => [DEFAULT_ROLE]
+            findRoles: () => [DEFAULT_ROLE],
+            getById: () => ({ userSubmission: null })
           }
         }
       }))
@@ -23,6 +24,27 @@ describe('The task-list handler', () => {
       const { checkData } = await import('../tasklist.js')
       const result = await checkData(request)
       expect(result).toBeNull()
+    })
+
+    it('causes redirect to the applications page if the application has been submitted', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            findRoles: () => [DEFAULT_ROLE],
+            getById: () => ({ userSubmission: '2023-04-26T13:19:32Z' })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({ userId: '510db545-4136-48c4-9680-98d89d3962e7' })
+        }),
+        query: { applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' }
+      }
+      const h = { redirect: jest.fn() }
+      const { checkData } = await import('../tasklist.js')
+      await checkData(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/applications')
     })
 
     it('causes redirect to the applications page if applicationId parameter is an application not owned by the user', async () => {
