@@ -26,6 +26,7 @@ const SddsReturnA24Columns = [
 
 export const SddsReturn = new Table('sdds_returnofactions', [
   // General Returns fields
+  new Column('sdds_roasource', null, () => true, null, OperationType.OUTBOUND, () => 'sdds_roasource eq true'),
   new Column('sdds_nilroa', 'nilReturn'),
   new Column('sdds_whydidntyoucarryouttheseactions1', 'whyNil'), // Option WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS
   new Column('sdds_whydidntyoucarryouttheseactions', 'whyNilOther'),
