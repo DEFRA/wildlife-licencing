@@ -2,7 +2,7 @@ import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './return-upload-proc.js'
 import { APPLICATION_JSON } from '../../constants.js'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const { returnId, uploadId } = context.request.params
 

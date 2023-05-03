@@ -1,6 +1,6 @@
 import { models } from '@defra/wls-database-model'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   const { uploadId } = context.request.params
 
   const count = await models.returnUploads.destroy({
