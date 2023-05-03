@@ -40,7 +40,8 @@ export const apiUrls = {
   APPLICATION_SITES: '/application-sites',
   APPLICATION_SITES_SITES: '/application-sites/sites',
   APPLICATION_TYPES: '/application-types',
-  DESIGNATED_SITES: 'designated-sites'
+  DESIGNATED_SITES: 'designated-sites',
+  RETURN: '/return'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {

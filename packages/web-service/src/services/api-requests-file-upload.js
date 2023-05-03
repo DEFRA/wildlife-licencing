@@ -28,15 +28,15 @@ export const FILE_UPLOAD = {
           })
         } else {
           const uploads = await API.get(`${apiUrls.APPLICATION}/${applicationId}/file-uploads`, `filetype=${filetype.filetype}`)
-          const unsubmitted = uploads.find(u => !u.submitted)
-          if (!unsubmitted) {
+          const unSubmitted = uploads.find(u => !u.submitted)
+          if (!unSubmitted) {
             debug(`Create new upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
             await API.post(`${apiUrls.APPLICATION}/${applicationId}/file-upload`, {
               filetype: filetype.filetype, filename, objectKey
             })
           } else {
             debug(`Update upload for applicationId: ${applicationId} and filetype ${JSON.stringify(filetype)}`)
-            await API.put(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${unsubmitted.id}`, {
+            await API.put(`${apiUrls.APPLICATION}/${applicationId}/file-upload/${unSubmitted.id}`, {
               filetype: filetype.filetype, filename, objectKey
             })
           }
@@ -51,9 +51,48 @@ export const FILE_UPLOAD = {
       500
     ),
     getUploadedFiles: async applicationId => apiRequestsWrapper(
-      async () => API.get(`/application/${applicationId}/file-uploads`),
+      async () => API.get(`${apiUrls.APPLICATION}/${applicationId}/file-uploads`),
       `Error getting to file uploads for ${applicationId}`,
       500
+    )
+  },
+  RETURN: {
+    record: async (returnId, filename, filetype, objectKey) => apiRequestsWrapper(
+      async () => {
+        debug(`Get uploads for returnId: ${returnId} and filetype ${JSON.stringify(filetype)}`)
+        if (filetype.multiple) {
+          debug(`Create new upload for returnId: ${returnId} and filetype ${JSON.stringify(filetype)}`)
+          await API.post(`${apiUrls.RETURN}/${returnId}/file-upload`, {
+            filetype: filetype.filetype, filename, objectKey
+          })
+        } else {
+          const uploads = await API.get(`${apiUrls.RETURN}/${returnId}/file-uploads`, `filetype=${filetype.filetype}`)
+          const unSubmitted = uploads.find(u => !u.submitted)
+          if (!unSubmitted) {
+            debug(`Create new upload for returnId: ${returnId} and filetype ${JSON.stringify(filetype)}`)
+            await API.post(`${apiUrls.RETURN}/${returnId}/file-upload`, {
+              filetype: filetype.filetype, filename, objectKey
+            })
+          } else {
+            debug(`Update upload for returnId: ${returnId} and filetype ${JSON.stringify(filetype)}`)
+            await API.put(`${apiUrls.RETURN}/${returnId}/file-upload/${unSubmitted.id}`, {
+              filetype: filetype.filetype, filename, objectKey
+            })
+          }
+        }
+      },
+    `Error setting uploads for returnId: ${returnId} and filetype ${filetype}`,
+    500
+    ),
+    removeUploadedFile: async (returnId, uploadId) => apiRequestsWrapper(
+      async () => API.delete(`${apiUrls.RETURN}/${returnId}/file-upload/${uploadId}`),
+    `Error deleting file upload id ${uploadId} on return ${returnId}`,
+    500
+    ),
+    getUploadedFiles: async returnId => apiRequestsWrapper(
+      async () => API.get(`${apiUrls.RETURN}/${returnId}/file-uploads`),
+    `Error getting to file uploads for ${returnId}`,
+    500
     )
   }
 }
