@@ -12,7 +12,7 @@ describe('The API requests file-upload service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.FILE_UPLOAD.record(
+      await APIRequests.FILE_UPLOAD.APPLICATION.record(
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: true },
@@ -38,7 +38,7 @@ describe('The API requests file-upload service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.FILE_UPLOAD.record(
+      await APIRequests.FILE_UPLOAD.APPLICATION.record(
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: false },
@@ -66,7 +66,7 @@ describe('The API requests file-upload service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.FILE_UPLOAD.record(
+      await APIRequests.FILE_UPLOAD.APPLICATION.record(
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
         'hello.txt',
         { filetype: 'greetings', multiple: false },
@@ -89,7 +89,7 @@ describe('The API requests file-upload service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.FILE_UPLOAD.removeUploadedFile('6eec5687-d874-49db-b611-822cbb0068d8', 'a7b72637-8816-495a-8a6b-ebed2c182665')
+      await APIRequests.FILE_UPLOAD.APPLICATION.removeUploadedFile('6eec5687-d874-49db-b611-822cbb0068d8', 'a7b72637-8816-495a-8a6b-ebed2c182665')
       expect(mockDelete).toHaveBeenCalledWith('/application/6eec5687-d874-49db-b611-822cbb0068d8/file-upload/a7b72637-8816-495a-8a6b-ebed2c182665')
     })
 
@@ -101,7 +101,7 @@ describe('The API requests file-upload service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.FILE_UPLOAD.getUploadedFiles('6eec5687-d874-49db-b611-822cbb0068d8')
+      await APIRequests.FILE_UPLOAD.APPLICATION.getUploadedFiles('6eec5687-d874-49db-b611-822cbb0068d8')
       expect(mockGet).toHaveBeenCalledWith('/application/6eec5687-d874-49db-b611-822cbb0068d8/file-uploads')
     })
   })

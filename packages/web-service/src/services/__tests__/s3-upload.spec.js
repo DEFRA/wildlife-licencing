@@ -21,7 +21,9 @@ describe('the S3 file upload service', () => {
       jest.doMock('../api-requests.js', () => ({
         APIRequests: {
           FILE_UPLOAD: {
-            record: jest.fn()
+            APPLICATION: {
+              record: jest.fn()
+            }
           }
         }
       }))

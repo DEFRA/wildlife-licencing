@@ -25,7 +25,7 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
     debug(`Wrote file ${filename} with key: ${objectKey}`)
 
     // Record the file upload on the API
-    await APIRequests.FILE_UPLOAD.record(applicationId, filename, filetype, objectKey)
+    await APIRequests.FILE_UPLOAD.APPLICATION.record(applicationId, filename, filetype, objectKey)
 
     // Remove the temporary file
     fs.unlinkSync(filepath)
