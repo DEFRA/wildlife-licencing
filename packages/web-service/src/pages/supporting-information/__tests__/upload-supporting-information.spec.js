@@ -14,13 +14,15 @@ describe('the upload-supporting-information page handler', () => {
     }
 
     const mockS3FileUpload = jest.fn()
+    const mockS3FileUploadWrapper = jest.fn().mockImplementation(() => mockS3FileUpload)
     jest.doMock('../../../services/s3-upload.js', () => ({
-      s3FileUpload: mockS3FileUpload
+      s3FileUpload: mockS3FileUploadWrapper
     }))
     const { completion } = await import('../upload-supporting-information.js')
     const result = await completion(request)
     expect(result).toEqual('/check-supporting-information')
-    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'hello.txt', '/tmp/path',
+    expect(mockS3FileUpload).toHaveBeenCalledWith(123)
+    expect(mockS3FileUploadWrapper).toHaveBeenCalledWith('APPLICATION', 'hello.txt', '/tmp/path',
       {
         filetype: 'METHOD-STATEMENT',
         multiple: true,

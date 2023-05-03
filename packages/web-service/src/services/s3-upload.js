@@ -8,7 +8,15 @@ const debug = db('web-service:s3')
 
 const { S3Client, PutObjectCommand, bucket } = AWS()
 
-export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
+/**
+ * Returns async file upload function
+ * @param context
+ * @param filename
+ * @param filepath
+ * @param filetype
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export const s3FileUpload = (context, filename, filepath, filetype) => async id => {
   const fileReadStream = fs.createReadStream(filepath)
 
   // The filename will be recorded by the API
@@ -25,7 +33,7 @@ export const s3FileUpload = async (applicationId, filename, filepath, filetype) 
     debug(`Wrote file ${filename} with key: ${objectKey}`)
 
     // Record the file upload on the API
-    await APIRequests.FILE_UPLOAD.APPLICATION.record(applicationId, filename, filetype, objectKey)
+    await APIRequests.FILE_UPLOAD[context].record(id, filename, filetype, objectKey)
 
     // Remove the temporary file
     fs.unlinkSync(filepath)
