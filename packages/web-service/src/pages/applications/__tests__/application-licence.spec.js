@@ -90,7 +90,9 @@ describe('application-licence page', () => {
           100000005: 'PAUSED',
           100000006: 'WITHDRAWN',
           100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED'
+          452120001: 'EXPIRED_ROA_DUE',
+          452120003: 'EXPIRED_ROA_RECEIVED',
+          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
         },
         lastSentEventFlag: null
       })
@@ -188,7 +190,9 @@ describe('application-licence page', () => {
           100000005: 'PAUSED',
           100000006: 'WITHDRAWN',
           100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED'
+          452120001: 'EXPIRED_ROA_DUE',
+          452120003: 'EXPIRED_ROA_RECEIVED',
+          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
         },
         lastSentEventFlag: {
           objectTypeCode: 'sdds_license',
