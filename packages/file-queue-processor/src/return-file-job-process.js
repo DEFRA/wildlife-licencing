@@ -11,7 +11,6 @@ const getDataFromDatabase = async id => {
     const applicationRec = await models.applications.findByPk(licenceRec.applicationId)
     return {
       returnReferenceNumber: returnRec.returnData.returnReferenceNumber,
-      licenceNumber: licenceRec.licence.licenceNumber,
       applicationReferenceNumber: applicationRec.application.applicationReferenceNumber,
       objectKey,
       filename
@@ -29,13 +28,14 @@ const getDataFromDatabase = async id => {
 export const returnFileJobProcess = async job => {
   const { id, returnId } = job.data
   try {
-    const { returnReferenceNumber, licenceNumber, applicationReferenceNumber, objectKey, filename } = await getDataFromDatabase(id)
+    const { returnReferenceNumber, applicationReferenceNumber, objectKey, filename } = await getDataFromDatabase(id)
     console.log(`Consume file - queue item ${JSON.stringify({ objectKey, filename })} for return: ${returnReferenceNumber}`)
     const { stream, bytes } = await getReadStream(objectKey)
     console.log(`Read file bytes: ${bytes}`)
     // The file location is a folder within the 'Application' drive with the same name as the application reference number
-    await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', `/${applicationReferenceNumber}/${licenceNumber}/${returnReferenceNumber}`)
-    console.log(`Completed uploading ${filename} for ${returnReferenceNumber}`)
+    const path = `/${applicationReferenceNumber}/${returnReferenceNumber}`
+    await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', path)
+    console.log(`Completed uploading ${filename} to ${path}`)
     await models.returnUploads.update({ submitted: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id } })
   } catch (error) {
     if (error instanceof UnRecoverableUploadError) {
