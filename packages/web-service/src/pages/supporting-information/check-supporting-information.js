@@ -27,7 +27,7 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  const data = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
+  const data = await APIRequests.FILE_UPLOAD.APPLICATION.getUploadedFiles(applicationId)
 
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
 
@@ -41,7 +41,7 @@ export const getData = async request => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   const { applicationId } = await request.cache().getData()
-  const uploadedFiles = await APIRequests.FILE_UPLOAD.getUploadedFiles(applicationId)
+  const uploadedFiles = await APIRequests.FILE_UPLOAD.APPLICATION.getUploadedFiles(applicationId)
   const uploadedMethodStatements = uploadedFiles?.find(uploadedFile => uploadedFile.filetype === 'METHOD-STATEMENT')
 
   if (pageData?.payload[anotherFileUpload] === 'yes') {

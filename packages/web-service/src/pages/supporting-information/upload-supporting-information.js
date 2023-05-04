@@ -7,7 +7,7 @@ import { moveTagInProgress } from '../common/tag-functions.js'
 export const completion = async request => {
   const { applicationId, fileUpload } = await request.cache().getData()
   if (applicationId && fileUpload) {
-    await s3FileUpload(applicationId, fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)
+    await s3FileUpload('APPLICATION', fileUpload.filename, fileUpload.path, FILETYPES.SUPPORTING_INFORMATION)(applicationId)
   }
 
   return FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri

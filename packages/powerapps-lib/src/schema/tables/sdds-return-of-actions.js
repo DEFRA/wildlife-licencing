@@ -1,5 +1,5 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import { dateConvSrc, dateConvTgt, yesNoNASrc, yesNoNATgt } from './common.js'
+import { dateConvSrc, yesNoNASrc, yesNoNATgt } from './common.js'
 
 const SddsReturnA24Columns = [
   new Column('sdds_obstructsettentrancesbymeansofonewaygates', 'obstructionByOneWayGates', yesNoNASrc, yesNoNATgt),
@@ -26,6 +26,7 @@ const SddsReturnA24Columns = [
 
 export const SddsReturn = new Table('sdds_returnofactions', [
   // General Returns fields
+  new Column('sdds_name', 'returnReferenceNumber'),
   new Column('sdds_roasource', null, () => true, null, OperationType.OUTBOUND, () => 'sdds_roasource eq true'),
   new Column('sdds_nilroa', 'nilReturn'),
   new Column('sdds_whydidntyoucarryouttheseactions1', 'whyNil'), // Option WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS
@@ -34,8 +35,8 @@ export const SddsReturn = new Table('sdds_returnofactions', [
   new Column('sdds_developmentcouldstart', 'outcome', yesNoNASrc, yesNoNATgt),
   new Column('sdds_developmentcouldstartdescription', 'outcomeReason'),
   new Column('sdds_didyoucompleteworkbetweenlicenseddates', 'completedWithinLicenceDates', yesNoNASrc, yesNoNATgt),
-  new Column('sdds_whendidyoustartwork', 'startDate', dateConvSrc, dateConvTgt),
-  new Column('sdds_whendidyoucompletethework', 'endDate', dateConvSrc, dateConvTgt),
+  new Column('sdds_whendidyoustartwork', 'startDate', dateConvSrc),
+  new Column('sdds_whendidyoucompletethework', 'endDate', dateConvSrc),
   new Column('sdds_whywasworknotcompletebetweenlicenseddates', 'whyNotCompletedWithinLicenceDates'),
   new Column('sdds_didyoucomplywithconditionsofthelicence', 'licenceConditions', yesNoNASrc, yesNoNATgt),
   new Column('sdds_ifnolicenceconditiondescription', 'licenceConditionsDetails'),

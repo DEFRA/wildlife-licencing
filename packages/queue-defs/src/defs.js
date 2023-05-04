@@ -73,8 +73,28 @@ export const queueDefinitions = {
       }
     }
   },
-  FILE_QUEUE: {
-    name: 'file-queue',
+  APPLICATION_FILE_QUEUE: {
+    name: 'application-file-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
+  },
+  RETURN_FILE_QUEUE: {
+    name: 'return-file-queue',
     options: {
       defaultJobOptions: {
         removeOnComplete: true,
