@@ -1926,6 +1926,196 @@ paths:
                 $ref: '#/components/schemas/error'
 
 ################################################################################################
+# Returns File-Uploads
+################################################################################################
+  '/return/{returnId}/file-uploads':
+    get:
+      description: Get a list of the file-uploads detail for an return
+      summary: Create or update the return file-upload details
+      operationId: getReturnFileUploads
+      parameters:
+        - name: returnId
+          in: path
+          description: ID of the return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: filetype
+          in: query
+          description: The filetype
+          required: false
+          schema:
+            $ref: '#/components/schemas/filetype'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnFileUploads'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/return/{returnId}/file-upload':
+    post:
+      description: Create the return file-upload details
+      summary: Create the return file-upload details
+      operationId: postReturnFileUpload
+      parameters:
+        - name: returnId
+          in: path
+          description: ID of the return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/returnFileUpload'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/return/{returnId}/file-upload/{uploadId}':
+    put:
+      description: Update the return file-upload details
+      summary: Create or update the return file-upload details
+      operationId: putReturnFileUpload
+      parameters:
+        - name: returnId
+          in: path
+          description: ID of the return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: uploadId
+          in: path
+          description: ID of the upload
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/returnFileUpload'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnFileUpload'
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    get:
+      description: Get the return file-upload details
+      summary: Get the eligibility details for an return file-upload
+      operationId: getReturnFileUpload
+      parameters:
+        - name: returnId
+          in: path
+          description: ID of the return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: uploadId
+          in: path
+          description: ID of the upload
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnFileUpload'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+    delete:
+      description: Delete an return-file-upload by id
+      summary:  Delete an return-file-upload by id
+      operationId: deleteReturnFileUploadByUploadId
+      parameters:
+        - name: returnId
+          in: path
+          description: ID of the return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: uploadId
+          in: path
+          description: ID of the return-file-upload
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: The return-file-upload has been deleted
+        400:
+          description: Bad request
+        404:
+          description: The return-file-upload is not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+################################################################################################
 # Application Sites
 ################################################################################################
   '/application-sites':
@@ -3746,6 +3936,37 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
 
+    returnFileUploads:
+      type: array
+      items:
+        $ref: '#/components/schemas/returnFileUpload'
+
+    returnFileUpload:
+      type: object
+      additionalProperties: false
+      required:
+        - filetype
+        - filename
+        - objectKey
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        returnId:
+          $ref: '#/components/schemas/uuid'
+        filetype:
+          $ref: '#/components/schemas/filetype'
+        filename:
+          type: string
+          maximum: 255
+        objectKey:
+          $ref: '#/components/schemas/uuid'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
     filetype:
       type: string
       enum:
@@ -3920,9 +4141,15 @@ components:
 
     return:
       type: object
+      required:
+        - returnReferenceNumber
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        returnReferenceNumber:
+          type: string
+          minLength: 1
+          maxLength: 30
         nilReturn:
           type: boolean
         whyNil:

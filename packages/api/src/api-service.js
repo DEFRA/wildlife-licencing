@@ -12,7 +12,8 @@ const initialize = async () => {
   await createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.RETURN_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.LICENCE_RESEND_QUEUE, { type: 'client' })
-  await createQueue(queueDefinitions.FILE_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.APPLICATION_FILE_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.RETURN_FILE_QUEUE, { type: 'client' })
 }
 
 const debug = db('api:env')
