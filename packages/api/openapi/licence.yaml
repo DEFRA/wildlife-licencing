@@ -4141,12 +4141,14 @@ components:
 
     return:
       type: object
+      required:
+        - returnReferenceNumber
       properties:
         id:
           $ref: '#/components/schemas/uuid'
         returnReferenceNumber:
           type: string
-          minLength: 13
+          minLength: 1
           maxLength: 30
         nilReturn:
           type: boolean
