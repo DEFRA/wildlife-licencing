@@ -4,7 +4,7 @@ import db from 'debug'
 const debug = db('web-service:api-requests')
 
 export const RETURNS = {
-  getLicenceReturns: async (licenceId) => apiRequestsWrapper(
+  getLicenceReturns: async licenceId => apiRequestsWrapper(
     async () => {
       const licenceReturns = API.get(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURNS}`)
       debug(`Getting licence returns with licenceId ${licenceId}`)
@@ -22,7 +22,7 @@ export const RETURNS = {
     `Error getting licence return with returnId ${returnId}`,
     500
   ),
-  createLicenceReturn: async (licenceId) => apiRequestsWrapper(
+  createLicenceReturn: async licenceId => apiRequestsWrapper(
     async () => {
       const newLicenceReturn = API.post(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURN}`)
       debug(`Creating return details with licenceId ${licenceId}`)
