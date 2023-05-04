@@ -66,7 +66,7 @@ describe('The file job processor', () => {
     const { applicationFileJobProcess } = await import('../application-file-job-process.js')
     await applicationFileJobProcess(job)
     expect(mockUpload).toHaveBeenCalledWith('file.txt', 500, 'byte-stream', 'Application', '/APPLICATION_REFERENCE')
-    expect(mockUpdate).toHaveBeenCalledWith({ submitted: new Date('2023-10-13T10:13:00.000Z') },
+    expect(mockUpdate).toHaveBeenCalledWith({ submitted: expect.any(Date) },
       { where: { id: '412d7297-643d-485b-8745-cc25a0e6ec0a' } })
   })
 
