@@ -1,9 +1,22 @@
-<!--
-This is a generic returns page but in the context of A24 it displays specific messaging
-Include the A24 specifics from the A24 directory
--->
-
 {% extends "yes-no.njk" %}
 {% set title = 'Your licensed actions' %}
 {% set noneSelected = 'You have not selected an option' %}
 {% set noneSelectedButton = 'Select an option' %}
+
+{% block pageContent %}
+  <p class="govuk-body">You were licensed to:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Obstruct sett entrances by means of one-way badger gates</li>
+    <li>Obstruct access to sett entrances by blocking or proofing</li>
+    <li>Damage a sett by hand and mechanical means</li>
+    <li>Destruct a vacant sett by hand and mechanical means</li>
+    <li>Disturb badgers</li>
+  </ul>
+
+  <h1 class="govuk-heading-m">
+    Did you carry out any of these actions?
+  </h1>
+
+  {{ super() }}
+{% endblock %}

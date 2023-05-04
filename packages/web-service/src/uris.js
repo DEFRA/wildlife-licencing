@@ -11,6 +11,7 @@ export const LOGIN = { uri: '/login', page: 'login' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
+export const EMAIL_CONFIRMATION = { uri: '/email-confirmation', page: 'email-confirmation' }
 export const REMOVE_FILE_UPLOAD = { uri: '/remove/upload', page: 'check-supporting-information' }
 
 export const eligibilityURIs = {

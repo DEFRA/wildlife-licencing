@@ -1,27 +1,49 @@
-{% extends "standard-form.njk" %}
-{% from "radios/macro.njk" import govukRadios %}
-
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% set errorMap = {
-        'why-nil': {
-          'any.required': { ref: '#why-nil', text: 'MSG HERE' }
-        }
+    'why-nil': {
+      'any.required': { ref: '#why-nil', text: 'You have not selected an option' }
+    },
+    'other-details': {
+      'string.empty': { ref: '#other-details', text: "You have not provided more detail about why you didn't carry out these actions" },
+      'string.max': { ref: '#other-details', text: 'You have entered too many characters'}
     }
-%}
-
-{% set title = 'Which species will the work affect?' %}
-
+  } %}
+{% set otherDetailsWhyActions %}
+{{ govukInput({
+  id: "other-details",
+  name: "other-details",
+  errorMessage: { text: "Provide more detail about why you didn't carry out these actions" } if error['other-details'],
+  value: payload['other-details'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Provide more detail why you didn't carry out these actions"
+  }
+}) }}
+{% endset -%}
 {% set title = "Why didn't you carry out these actions?" %}
-
-{% set radioItems = [] %}
-
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 {% block pageContent %}
   {{ govukRadios({
-    id: "why-nil",
-    name: "why-nil",
-    hint: {
-      text: "Select one."
-    },
-    errorMessage: { text: "MSG HERE" } if error['why-nil'],
-    items: radioItems
-  }) }}
+            id: "why-nil",
+            name: "why-nil",
+            errorMessage: { text: 'Select an option' } if error['why-nil'],
+            items: [
+              {
+                text: "The development work did not happen",
+              },
+              {
+                text: "The sett was not in active use by badgers",
+              },
+              {
+                text: "Other",
+                conditional: {
+                  html: otherDetailsWhyActions
+                }
+              }
+            ]
+          }) }}
 {% endblock %}

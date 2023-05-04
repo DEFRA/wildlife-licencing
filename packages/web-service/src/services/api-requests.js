@@ -11,6 +11,7 @@ import { LICENCES } from './api-requests-licences.js'
 import { FILE_UPLOAD } from './api-requests-file-upload.js'
 import { APPLICATION_TYPES } from './api-requests-application-types.js'
 import { DESIGNATED_SITES } from './api-requests-designated-sites.js'
+import { RETURNS } from './api-requests-return.js'
 
 import { boomify } from '@hapi/boom'
 import { OTHER } from './api-requests-other.js'
@@ -40,6 +41,9 @@ export const apiUrls = {
   APPLICATION_SITES: '/application-sites',
   APPLICATION_SITES_SITES: '/application-sites/sites',
   APPLICATION_TYPES: '/application-types',
+  LICENCE: '/licence',
+  RETURN: '/return',
+  RETURNS: '/returns',
   DESIGNATED_SITES: 'designated-sites'
 }
 
@@ -69,5 +73,6 @@ export const APIRequests = {
   APPLICATION_TYPES,
   OTHER,
   PERMISSION,
-  DESIGNATED_SITES
+  DESIGNATED_SITES,
+  RETURNS
 }
