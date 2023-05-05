@@ -3,13 +3,11 @@ import { ecologistExperienceURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
-import { tagStatus } from '../../../services/status-tags.js'
+import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo } from '../../common/common.js'
-const yesNo = 'yes-no'
 
 export const completion = async request => {
-  if (request.payload[yesNo] === 'yes') {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
 
@@ -45,14 +43,7 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-
-  const answer = request.payload[yesNo]
-  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (isCompleteOrConfirmed(tagState) && boolFromYesNo(answer) !== ecologistExperience.previousLicence) {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
-  }
-
-  ecologistExperience.previousLicence = answer === 'yes'
+  ecologistExperience.previousLicence = boolFromYesNo(request.payload['yes-no'])
   if (!ecologistExperience.previousLicence) {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences(applicationId)
   }
