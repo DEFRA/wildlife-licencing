@@ -11,6 +11,7 @@ export const getData = async request => {
   const returnId = journeyData?.returns?.returnId
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   journeyData.licenceId = licences[0].id
+  await request.cache().setData(journeyData)
   if (returnId) {
     const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licences[0].id, returnId)
     return { yesNo: yesNoFromBool(nilReturn) }

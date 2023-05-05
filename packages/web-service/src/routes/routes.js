@@ -152,7 +152,7 @@ import descPotentialConflicts from '../pages/permissions/describe-potential-conf
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
 import { licensedActions } from '../pages/returns/licensed-actions.js'
-import { outcome } from '../pages/returns/outcome.js'
+import outcome from '../pages/returns/outcome.js'
 import whyNil from '../pages/returns/why-nil.js'
 import { anotherLicence } from '../pages/returns/another-licence.js'
 import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
