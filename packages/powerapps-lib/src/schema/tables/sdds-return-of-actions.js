@@ -1,5 +1,5 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import { dateConvSrc, dateConvTgt, yesNoNASrc, yesNoNATgt } from './common.js'
+import { dateConvSrc, yesNoNASrc, yesNoNATgt } from './common.js'
 
 const SddsReturnA24Columns = [
   new Column('sdds_obstructsettentrancesbymeansofonewaygates', 'obstructionByOneWayGates', yesNoNASrc, yesNoNATgt),

@@ -9,6 +9,7 @@ import login from '../pages/auth/login/login.js'
 import miscRoutes from './misc-routes.js'
 import declaration from '../pages/declaration/declaration.js'
 import submission from '../pages/submission/submission.js'
+import emailConfirmation from '../pages/applications/email-confirmation.js'
 import {
   consent, consentGranted, eligibilityCheck, eligible, landOwner,
   landOwnerPermission, notEligibleLandowner, notEligibleProject
@@ -189,6 +190,7 @@ const routes = [
   ...login,
   ...declaration,
   ...submission,
+  ...emailConfirmation,
   ...uploadSupportingInformation,
   ...checkSupportingInformation,
   ...landOwner,
