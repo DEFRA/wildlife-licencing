@@ -11,7 +11,7 @@ export const validator = async (payload, context) => {
   const { applicationId } = await cacheDirect(context).getData()
   const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
   const found = previousLicences.find(previousLicence => previousLicence.trim() === payload[licenceDetailsInput].trim())
-  if (!payload[licenceDetailsInput]) {
+  if (!payload[licenceDetailsInput]?.trim()) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: You have not entered a licence number',
       path: [licenceDetailsInput],
@@ -40,6 +40,9 @@ export const validator = async (payload, context) => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.ECOLOGIST_EXPERIENCE.addPreviousLicence(applicationId, request.payload[licenceDetailsInput])
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  delete ecologistExperience.previousLicencesAllRemoved
+  await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }
 
 export default pageRoute({
