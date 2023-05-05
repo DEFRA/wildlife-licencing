@@ -4,14 +4,14 @@ describe('the Licensed Actions functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
-    it('returns the nilReturn', async () => {
+    it('returns the nilReturn as true', async () => {
       const request = {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789',
-              licenceId: ''
+              returnId: '123456789'
             }
           })
         })
@@ -20,7 +20,7 @@ describe('the Licensed Actions functions', () => {
         APIRequests: {
           LICENCES: {
             findByApplicationId: jest.fn(() => ([{
-              id: '123456-AbdEF-4567'
+              id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
           RETURNS: {
@@ -35,6 +35,30 @@ describe('the Licensed Actions functions', () => {
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
     })
+
+    it('returns the nilReturn as undefined', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f',
+            licenceId: '2280-4ea5-ad72'
+          })
+        })
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          LICENCES: {
+            findByApplicationId: jest.fn(() => ([{
+              id: '123-AbEF-67'
+            }]))
+          }
+        }
+      }))
+
+      const { getData } = await import('../licensed-actions.js')
+      const result = await getData(request)
+      expect(result).toEqual({ yesNo: undefined })
+    })
   })
 
   describe('the setData function', () => {
@@ -47,9 +71,9 @@ describe('the Licensed Actions functions', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
             returns: {
-              returnId: '123456789',
-              licenceId: 'ABC-567-GHU'
+              returnId: '123456789'
             }
           }),
           setData: mockSetData
@@ -86,9 +110,7 @@ describe('the Licensed Actions functions', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            returns: {
-              licenceId: 'DEF-7420-NGVR'
-            }
+            licenceId: 'DEF-7420-NGVR'
           }),
           setData: mockSetData
         })

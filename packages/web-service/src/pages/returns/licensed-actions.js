@@ -8,18 +8,22 @@ const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.returnId
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
-  journeyData.returns.licenceId = licences[0].id
-  const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licences[0].id)
-
-  return { yesNo: yesNoFromBool(nilReturn) }
+  journeyData.licenceId = licences[0].id
+  if (returnId) {
+    const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licences[0].id, returnId)
+    return { yesNo: yesNoFromBool(nilReturn) }
+  } else {
+    return { yesNo: undefined }
+  }
 }
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const nilReturn = isYes(request)
   const returnId = journeyData?.returns?.returnId
-  const licenceId = journeyData?.returns?.licenceId
+  const licenceId = journeyData?.licenceId
   if (returnId && licenceId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
     const payload = { ...licenceReturn, nilReturn }
