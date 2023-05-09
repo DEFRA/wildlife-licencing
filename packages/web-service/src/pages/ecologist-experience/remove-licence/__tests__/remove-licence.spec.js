@@ -92,7 +92,7 @@ describe('The remove licence page', () => {
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({ applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc' })
       expect(mockRemove).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AZ1234')
-      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { previousLicence: false })
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { previousLicence: false, previousLicencesAllRemoved: true })
     })
 
     it('does deletes a licence if the user selects \'yes\' - licences remaining', async () => {

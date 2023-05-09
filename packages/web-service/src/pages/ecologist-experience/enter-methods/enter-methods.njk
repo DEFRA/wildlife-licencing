@@ -4,7 +4,7 @@
 
 {% set errorMap = {
         'enter-methods': {
-          'string.empty': { ref: '#enter-methods', text: 'You have not entered the ecologist`s experience of using the methods to be licensed' },
+          'string.empty': { ref: '#enter-methods', text: 'You have not entered the ecologist\'s experience of using the methods to be licensed' },
           'string.max': { ref: '#enter-methods', text: 'You have entered too many characters' }
         }
     }
@@ -12,14 +12,24 @@
 
 {% set title = "Enter the ecologist's experience of using the methods to be licensed" %}
 
+{% set  errMsg = null %}
+
+{% if error['enter-methods'] === "string.empty" %}
+     {% set errMsg = "Enter details of the ecologist's experience of using the methods to be licensed" %}
+{% elseif error['enter-methods'] === "string.max" %}
+    {% set errMsg = "This must be 4,000 characters or less" %}
+{% endif %}
+
+
 {% block pageContent %}
 
 {{ govukCharacterCount({
   name: "enter-methods",
   id: "enter-methods",
   maxlength: 4000,
+  rows: 10,
   value: payload['enter-methods'] if payload['enter-methods'] else data,
-  errorMessage: { text: "Enter details of the ecologist's experience of using the methods to be licensed" } if error['enter-methods']
+  errorMessage: { text: errMsg } if errMsg
 }) }}
 
 {% endblock %}
