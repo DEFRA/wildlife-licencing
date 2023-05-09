@@ -3,37 +3,30 @@ import { ecologistExperienceURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
-import { tagStatus } from '../../../services/status-tags.js'
+import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo } from '../../common/common.js'
-const yesNo = 'yes-no'
 
 export const completion = async request => {
-  const pageData = await request.cache().getPageData()
-  const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-
-  if (isCompleteOrConfirmed(tagState)) {
-    return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
-  }
-
-  if (pageData.payload[yesNo] === 'yes') {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
 
-  return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
-}
+  const { applicationId } = await request.cache().getData()
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
 
-export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (request.query?.change !== 'true') {
-    const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-    if (isCompleteOrConfirmed(tagState)) {
-      return h.redirect(ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri)
-    }
+  if (!ecologistExperience.experienceDetails) {
+    return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
   }
 
-  return undefined
+  if (!ecologistExperience.methodExperience) {
+    return ecologistExperienceURIs.ENTER_METHODS.uri
+  }
+
+  if (ecologistExperience.classMitigation === undefined) {
+    return ecologistExperienceURIs.CLASS_MITIGATION.uri
+  }
+
+  return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
 export const getData = async request => {
@@ -50,14 +43,7 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-
-  const answer = request.payload[yesNo]
-  const tagState = await APIRequests.APPLICATION.tags(applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (isCompleteOrConfirmed(tagState) && boolFromYesNo(answer) !== ecologistExperience.previousLicence) {
-    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
-  }
-
-  ecologistExperience.previousLicence = answer === 'yes'
+  ecologistExperience.previousLicence = boolFromYesNo(request.payload['yes-no'])
   if (!ecologistExperience.previousLicence) {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences(applicationId)
   }
@@ -68,7 +54,7 @@ export const setData = async request => {
 export default yesNoPage({
   page: ecologistExperienceURIs.PREVIOUS_LICENCE.page,
   uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
-  checkData: [checkApplication, checkData],
+  checkData: checkApplication,
   completion,
   getData,
   setData

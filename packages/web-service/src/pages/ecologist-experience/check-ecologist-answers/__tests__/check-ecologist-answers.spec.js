@@ -1,62 +1,6 @@
 describe('The check ecologist answers page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('check data function', () => {
-    it('redirects to the previous licence if the tag is not set', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'in-progress'
-            })
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          })
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkData } = await import('../check-ecologist-answers.js')
-      await checkData(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/previous-licence')
-    })
-
-    it('returns null if tag is et', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'complete'
-            })
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          })
-        })
-      }
-      const h = { }
-      const { checkData } = await import('../check-ecologist-answers.js')
-      const result = await checkData(request, h)
-      expect(result).toBeNull()
-    })
-  })
-
   describe('get data function', () => {
     it('gets the experience data from the database', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
