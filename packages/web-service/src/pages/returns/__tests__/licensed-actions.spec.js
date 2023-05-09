@@ -4,6 +4,7 @@ describe('the Licensed Actions functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
+    const mockSetData = jest.fn()
     it('returns the nilReturn as true', async () => {
       const request = {
         cache: () => ({
@@ -13,7 +14,8 @@ describe('the Licensed Actions functions', () => {
             returns: {
               returnId: '123456789'
             }
-          })
+          }),
+          setData: mockSetData
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -34,6 +36,7 @@ describe('the Licensed Actions functions', () => {
       const { getData } = await import('../licensed-actions.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
+      expect(mockSetData).toHaveBeenCalled()
     })
 
     it('returns the nilReturn as undefined', async () => {
@@ -42,7 +45,8 @@ describe('the Licensed Actions functions', () => {
           getData: () => ({
             applicationId: '26a3e94f',
             licenceId: '2280-4ea5-ad72'
-          })
+          }),
+          setData: mockSetData
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -58,6 +62,7 @@ describe('the Licensed Actions functions', () => {
       const { getData } = await import('../licensed-actions.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: undefined })
+      expect(mockSetData).toHaveBeenCalled()
     })
   })
 
