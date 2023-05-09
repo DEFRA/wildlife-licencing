@@ -3,57 +3,32 @@ describe('The licence page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
-    it('returns the enter licence details uri if user selects yes', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'in-progress'
-            })
-          }
-        }
-      }))
+    it('returns the enter licence details page if user selects yes', async () => {
       const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          }),
-          getPageData: () => ({
-            payload: {
-              licence: 'yes'
-            }
-          })
-        })
+        payload: {
+          licence: 'yes'
+        }
       }
       const { completion } = await import('../licence.js')
       expect(await completion(request)).toBe('/enter-licence-details')
     })
 
-    it('returns the enter experience uri on primary journey if user selects no', async () => {
+    it('returns the experience details page if user selects no and details are required', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'in-progress'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
             })
           }
         }
       }))
       const request = {
+        payload: {
+          licence: 'no'
+        },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          }),
-          getPageData: () => ({
-            payload: {
-              licence: 'no'
-            }
           })
         })
       }
@@ -61,28 +36,74 @@ describe('The licence page', () => {
       expect(await completion(request)).toBe('/enter-experience')
     })
 
-    it('returns the check ecologist answers uri on return journey if user selects no', async () => {
+    it('returns the methods page if user selects no and methods are required', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'complete'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              experienceDetails: 'details'
             })
           }
         }
       }))
       const request = {
+        payload: {
+          licence: 'no'
+        },
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-          }),
-          getPageData: () => ({
-            payload: {
-              licence: 'no'
-            }
+          })
+        })
+      }
+      const { completion } = await import('../licence.js')
+      expect(await completion(request)).toBe('/enter-methods')
+    })
+
+    it('returns the mitigation page if user selects no and class mitigation is not set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              experienceDetails: 'details',
+              methodExperience: 'method'
+            })
+          }
+        }
+      }))
+      const request = {
+        payload: {
+          licence: 'no'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { completion } = await import('../licence.js')
+      expect(await completion(request)).toBe('/class-mitigation')
+    })
+
+    it('returns the check page if user selects no and class mitigation is set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              experienceDetails: 'details',
+              methodExperience: 'method',
+              classMitigation: false
+            })
+          }
+        }
+      }))
+      const request = {
+        payload: {
+          licence: 'no'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
           })
         })
       }
@@ -92,14 +113,14 @@ describe('The licence page', () => {
   })
 
   describe('the get data function', () => {
-    it('returns licence details if they exists', async () => {
+    it('returns licence details and removed flag if they exists', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           ECOLOGIST_EXPERIENCE: {
-            getPreviousLicences: jest.fn(() => (['A1234']))
+            getPreviousLicences: jest.fn(() => (['A1234'])),
+            getExperienceById: () => ({
+              previousLicencesAllRemoved: false
+            })
           }
         }
       }))
@@ -111,7 +132,7 @@ describe('The licence page', () => {
         })
       }
       const { getData } = await import('../licence.js')
-      expect(await getData(request)).toStrictEqual(['A1234'])
+      expect(await getData(request)).toStrictEqual({ allRemoved: false, previousLicences: ['A1234'] })
     })
   })
 })
