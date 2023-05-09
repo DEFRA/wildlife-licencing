@@ -1,6 +1,5 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
-import { contactURIs } from '../../../uris.js'
 
 export const generateOutput = async request => {
   const { applicationId } = await request.cache().getData()
@@ -20,16 +19,4 @@ export const generateOutput = async request => {
       return { responsible: 'other', name: p.fullName, contact: payer, account }
     }
   })(payer)
-}
-
-export const purchaseOrderCompletion = async request => {
-  const { CHECK_ANSWERS, PURCHASE_ORDER } = contactURIs.INVOICE_PAYER
-
-  const { applicationId } = await request.cache().getData()
-  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
-  if (!applicationData.referenceOrPurchaseOrderNumber) {
-    return PURCHASE_ORDER.uri
-  } else {
-    return CHECK_ANSWERS.uri
-  }
 }
