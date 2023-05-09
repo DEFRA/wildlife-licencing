@@ -8,7 +8,7 @@ import { checkAccountComplete, checkHasContact } from '../common/common-handler.
 import { checkApplication } from '../../common/check-application.js'
 import { generateOutput } from './common.js'
 
-const { CONTACT_DETAILS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+const { CONTACT_DETAILS, RESPONSIBLE, CHECK_ANSWERS } = contactURIs.INVOICE_PAYER
 
 export const getData = async request => {
   const responsibility = await generateOutput(request)
@@ -31,9 +31,9 @@ export const completion = async request => {
   const detailsCorrect = boolFromYesNo(pageData.payload['yes-no'])
 
   if (detailsCorrect) {
-    return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+    return CHECK_ANSWERS.uri
   } else {
-    return contactURIs.INVOICE_PAYER.NAME.uri
+    return RESPONSIBLE.uri
   }
 }
 

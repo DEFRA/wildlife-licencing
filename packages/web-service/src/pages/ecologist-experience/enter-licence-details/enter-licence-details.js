@@ -42,6 +42,7 @@ export const setData = async request => {
   await APIRequests.ECOLOGIST_EXPERIENCE.addPreviousLicence(applicationId, request.payload[licenceDetailsInput])
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
   delete ecologistExperience.previousLicencesAllRemoved
+  ecologistExperience.previousLicence = true
   await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
 }
 

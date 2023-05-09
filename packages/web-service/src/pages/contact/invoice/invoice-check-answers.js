@@ -10,7 +10,16 @@ import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 import { generateOutput } from './common.js'
 
-const { CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+const { CHECK_ANSWERS, RESPONSIBLE, PURCHASE_ORDER } = contactURIs.INVOICE_PAYER
+
+export const checkHasPurchaseOrderNumber = async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const applicationData = await APIRequests.APPLICATION.getById(applicationId)
+  if (!applicationData.referenceOrPurchaseOrderNumber) {
+    return h.redirect(PURCHASE_ORDER.uri)
+  }
+  return null
+}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -34,7 +43,7 @@ export const getData = async request => {
         { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
       (responsibility.account && { key: 'contactOrganisations', value: responsibility.account.name }),
       { key: 'address', value: addressLine(responsibility.account || responsibility.contact) },
-      { key: 'purchaseOrderRef', value: applicationData.referenceOrPurchaseOrderNumber || '' }
+      { key: 'purchaseOrderRef', value: applicationData.referenceOrPurchaseOrderNumber }
     ].filter(a => a)
   }
 }
@@ -49,7 +58,8 @@ export const invoiceCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
     checkHasContact(ContactRoles.PAYER, RESPONSIBLE),
-    checkAccountComplete(AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
+    checkAccountComplete(AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
+    checkHasPurchaseOrderNumber
   ],
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,

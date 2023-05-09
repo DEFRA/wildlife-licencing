@@ -87,6 +87,6 @@ describe('The enter licence details page', () => {
     const { setData } = await import('../enter-licence-details.js')
     await setData(request)
     expect(mockAdd).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AB1234')
-    expect(mockPutExperienceById).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: true })
+    expect(mockPutExperienceById).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: true, previousLicence: true })
   })
 })
