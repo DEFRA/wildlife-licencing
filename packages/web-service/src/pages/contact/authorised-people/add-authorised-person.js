@@ -58,8 +58,8 @@ export const getData = async request => {
       },
       details: [
         { key: 'name', value: c.fullName },
-        { key: 'address', value: addressLine(c) },
-        { key: 'email', value: c.contactDetails.email }
+        { key: 'email', value: c.contactDetails.email },
+        { key: 'address', value: addressLine(c) }
       ]
     }))
   }
