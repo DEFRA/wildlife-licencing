@@ -15,6 +15,14 @@ export const SEQUELIZE = {
       Config.pg.pw,
       {
         dialect: 'postgres',
+        ...(process.env?.POSTGRES_NOSSL !== 'true' && {
+          dialectOptions: {
+            ssl: {
+              require: true,
+              rejectUnauthorized: false
+            }
+          }
+        }),
         host: Config.pg.host,
         port: Config.pg.port,
         logging: Config.pg.logging === 'true' ? console.log : false,

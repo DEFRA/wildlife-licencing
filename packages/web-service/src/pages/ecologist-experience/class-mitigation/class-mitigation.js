@@ -2,23 +2,14 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
-import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
-const yesNo = 'yes-no'
-
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-
-  if (isCompleteOrConfirmed(tagState)) {
-    return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
-  }
-
-  return ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
-}
+export const completion = async request =>
+  boolFromYesNo(request.payload['yes-no'])
+    ? ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+    : ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -26,13 +17,13 @@ export const getData = async request => {
   if (Object.keys(ecologistExperience).length === 0) {
     return null
   }
-  return { yesNo: ecologistExperience.classMitigation ? 'yes' : 'no' }
+  return { yesNo: yesNoFromBool(ecologistExperience.classMitigation) }
 }
 
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
-  const hasAClassMitigationLicence = boolFromYesNo(request.payload[yesNo])
+  const hasAClassMitigationLicence = boolFromYesNo(request.payload['yes-no'])
 
   // If the user answers 'Yes' on this page
   if (hasAClassMitigationLicence) {
@@ -55,6 +46,7 @@ export default yesNoPage({
   checkData: checkApplication,
   page: ecologistExperienceURIs.CLASS_MITIGATION.page,
   uri: ecologistExperienceURIs.CLASS_MITIGATION.uri,
+  getData,
   completion,
   setData
 })

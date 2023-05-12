@@ -158,7 +158,7 @@ describe('invoice contact details page', () => {
   })
 
   describe('the completion function', () => {
-    it('returns PURCHASE_ORDER.uri if input it yes', async () => {
+    it('returns purchase order page if input it yes', async () => {
       const request = {
         cache: () => {
           return {
@@ -173,9 +173,9 @@ describe('invoice contact details page', () => {
         }
       }
       const { completion } = await import('../invoice-contact-details.js')
-      expect(await completion(request)).toBe('/invoice-purchase-order')
+      expect(await completion(request)).toBe('/invoice-check-answers')
     })
-    it('returns NAME.uri if input is no', async () => {
+    it('returns the invoice responsible page if input is no', async () => {
       const request = {
         cache: () => {
           return {
@@ -190,7 +190,7 @@ describe('invoice contact details page', () => {
         }
       }
       const { completion } = await import('../invoice-contact-details.js')
-      expect(await completion(request)).toBe('/invoice-name')
+      expect(await completion(request)).toBe('/invoice-responsible')
     })
   })
 

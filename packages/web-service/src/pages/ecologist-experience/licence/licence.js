@@ -2,26 +2,36 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { checkApplication } from '../../common/check-application.js'
-import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
-  return APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+  const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
+  return { previousLicences, allRemoved: !!ecologistExperience?.previousLicencesAllRemoved }
 }
 
 export const completion = async request => {
-  const pageData = await request.cache().getPageData()
-  const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (pageData.payload.licence === 'yes') {
+  if (request.payload.licence === 'yes') {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
-  if (isCompleteOrConfirmed(tagState)) {
-    return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+
+  const { applicationId } = await request.cache().getData()
+  const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+
+  if (!ecologistExperience.experienceDetails) {
+    return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
   }
-  return ecologistExperienceURIs.ENTER_EXPERIENCE.uri
+
+  if (!ecologistExperience.methodExperience) {
+    return ecologistExperienceURIs.ENTER_METHODS.uri
+  }
+
+  if (ecologistExperience.classMitigation === undefined) {
+    return ecologistExperienceURIs.CLASS_MITIGATION.uri
+  }
+
+  return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
 export default pageRoute({

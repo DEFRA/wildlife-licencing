@@ -53,14 +53,16 @@ describe('The reset handler', () => {
     const mockDestroyHabitatSites = jest.fn()
     const mockDestroyPreviousLicences = jest.fn()
     const mockDestroyApplicationUploads = jest.fn()
+    const mockDestroyPermissions = jest.fn()
     const mockDestroyApplications = jest.fn()
+
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: { cache: { keys: () => [], delete: () => null } }
     }))
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        users: { findAll: jest.fn(() => [{ id: '98296f05-5b7c-4fd9-bfed-859d882be805' }]) },
+        users: { findAll: jest.fn(() => [{ id: '98296f05-5b7c-4fd9-bfed-859d882be805' }]), update: jest.fn() },
         applicationUsers: { findAll: jest.fn(() => [{ applicationId: '4649e882-5840-4515-8c72-16d252b446bb' }]), destroy: mockDestroyApplicationUsers },
         applicationContacts: { findAll: jest.fn(() => [{ contactId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }]), destroy: mockDestroyApplicationContacts },
         applicationAccounts: { findAll: jest.fn(() => [{ accountId: '0d8cb076-efff-4406-9209-4caeb56d613f' }]), destroy: mockDestroyApplicationAccounts },
@@ -71,6 +73,7 @@ describe('The reset handler', () => {
         habitatSites: { destroy: mockDestroyHabitatSites },
         previousLicences: { destroy: mockDestroyPreviousLicences },
         applicationUploads: { destroy: mockDestroyApplicationUploads },
+        permissions: { destroy: mockDestroyPermissions },
         applications: { destroy: mockDestroyApplications }
       }
     }))
@@ -87,6 +90,7 @@ describe('The reset handler', () => {
     expect(mockDestroyHabitatSites).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
     expect(mockDestroyPreviousLicences).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
     expect(mockDestroyApplicationUploads).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
+    expect(mockDestroyPermissions).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
     expect(mockDestroyApplications).toBeCalledWith({ where: { id: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
   })
 })

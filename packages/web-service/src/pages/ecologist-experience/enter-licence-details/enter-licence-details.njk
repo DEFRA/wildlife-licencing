@@ -12,8 +12,16 @@
 
 {% set title = "Enter the previous badger mitigation licence details" %}
 
-{% block pageContent %}
+{% set  errMsg = null %}
 
+{% if error['enter-licence-details'] === "emptyLicenceDetails" %}
+     {% set errMsg = "Enter the reference number of your previously held badger mitigation licence." %}
+{% elseif error['enter-licence-details'] === "existingLicenceDetails" %}
+    {% set errMsg = "Enter the reference number of a different previously held licence" %}
+{% endif %}
+
+
+{% block pageContent %}
   {{ govukInput({
     id: "enter-licence-details",
     name: "enter-licence-details",
@@ -21,8 +29,8 @@
     hint: {
       text: "Enter the reference number of any previously held badger mitigation licence."
     },
-    errorMessage: { text: "Enter the reference number of your previously held licence" } if error['enter-licence-details'],
-    classes: "govuk-input--width-10",
+    errorMessage: { text: errMsg } if errMsg,
+    classes: "govuk-input--width-20",
     spellcheck: false
   }) }}
 
