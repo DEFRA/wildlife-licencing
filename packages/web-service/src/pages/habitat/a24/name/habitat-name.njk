@@ -13,6 +13,8 @@
 
 {% block pageContent %}
 
+  <p class="govuk-body">Enter a name for the sett to identify and distinguish it from other setts. You should use the name it has on your maps or within your method statement. You can enter up to 100 characters.</p>
+
   {{ govukInput({
     id: "habitat-name",
     name: "habitat-name",
@@ -20,7 +22,7 @@
     attributes: { maxlength: 100 },
     value: data.name,
     hint: {
-      text: "Enter a name for the sett to identify and distinguish it from other setts. You should use the name it has on your maps or within your method statement. You can enter up to 100 characters."
+      text: 'Enter a sett name'
     }
   }) }}
 
