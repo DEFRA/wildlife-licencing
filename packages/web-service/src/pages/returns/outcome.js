@@ -61,8 +61,8 @@ export default pageRoute({
   page: OUTCOME.page,
   uri: OUTCOME.uri,
   checkData: checkApplication,
+  completion: COMPLETE_WITHIN_DATES.uri,
   validator,
   getData,
-  setData,
-  completion: COMPLETE_WITHIN_DATES.uri
+  setData
 })
