@@ -26,6 +26,6 @@ export default pageRoute({
   page: DECLARATION.page,
   uri: DECLARATION.uri,
   completion: SUBMISSION.uri,
-  checkData: [checkApplication],
+  checkData: [checkApplication, checkData],
   setData
 })
