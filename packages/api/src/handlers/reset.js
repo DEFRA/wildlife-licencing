@@ -3,6 +3,7 @@ import pkg from 'sequelize'
 import { APPLICATION_JSON } from '../constants.js'
 import { clearApplicationCaches } from './application/application-cache.js'
 import { REDIS } from '@defra/wls-connectors-lib'
+import { clearCaches } from './user/users-cache.js'
 const { cache } = REDIS
 const { Sequelize } = pkg
 const Op = Sequelize.Op
@@ -44,6 +45,8 @@ export default async (_context, req, h) => {
         }
       })
     }
+
+    await clearCaches(user.id)
 
     // Gather the necessary
     const applicationUsers = await models.applicationUsers.findAll({ where: { userId: user.id } })
