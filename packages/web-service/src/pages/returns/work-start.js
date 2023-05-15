@@ -1,31 +1,63 @@
-import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
+import { isDateInFuture } from '../habitat/a24/common/date-validator.js'
+import { extractDateFromPageDate, validatePageDate } from '../../common/date-utils.js'
+import { APIRequests } from '../../services/api-requests.js'
 
-const { WORK_START } = ReturnsURIs
+const { WORK_START, WORK_END } = ReturnsURIs
 
-export const checkData = async request => {
+export const validator = payload => {
+  const startDate = validatePageDate(payload, WORK_START.page)
+
+  isDateInFuture(startDate, WORK_START.page)
+
   return null
 }
 
 export const getData = async request => {
-  return { yesNo: null }
+  const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.returnId
+  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  if (returnId) {
+    const { startDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
+    if (startDate) {
+      const licenceReturnStartDate = new Date(startDate)
+      return {
+        year: licenceReturnStartDate.getFullYear(),
+        month: licenceReturnStartDate.getMonth() + 1,
+        day: licenceReturnStartDate.getDate()
+      }
+    }
+
+    return {
+      year: undefined,
+      month: undefined,
+      day: undefined
+    }
+  }
+
+  return null
 }
 
 export const setData = async request => {
-
-}
-
-export const completion = async request => {
-  return ReturnsURIs.WORK_START.uri
+  const journeyData = await request.cache().getData()
+  const startDate = extractDateFromPageDate(request?.payload, WORK_START.page)
+  const returnId = journeyData?.returns?.returnId
+  const licenceId = journeyData?.licenceId
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const payload = { ...licenceReturn, startDate }
+  await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+  journeyData.returns = { ...licenceReturn, startDate }
+  await request.cache().setData(journeyData)
 }
 
 export default pageRoute({
   page: WORK_START.page,
   uri: WORK_START.uri,
-  checkData: [checkApplication, checkData],
+  completion: WORK_END.uri,
+  checkData: checkApplication,
+  validator: validator,
   getData: getData,
-  completion: completion,
   setData: setData
 })
