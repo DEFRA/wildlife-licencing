@@ -1,7 +1,7 @@
 import { ReturnsURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
 import { isDateInFuture } from '../habitat/a24/common/date-validator.js'
-import { validatePageDate } from '../../common/date-utils.js'
+import { extractDateFromPageDate, validatePageDate } from '../../common/date-utils.js'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
 
@@ -22,11 +22,18 @@ export const getData = async request => {
   if (returnId) {
     const { endDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
     if (endDate) {
+      const licenceReturnEndDate = new Date(endDate)
       return {
-        year: endDate.getFullYear(),
-        month: endDate.getMonth() + 1,
-        day: endDate.getDate()
+        year: licenceReturnEndDate.getFullYear(),
+        month: licenceReturnEndDate.getMonth() + 1,
+        day: licenceReturnEndDate.getDate()
       }
+    }
+
+    return {
+      year: undefined,
+      month: undefined,
+      day: undefined
     }
   }
   return null
@@ -34,7 +41,7 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const endDate = request?.payload['work-end']
+  const endDate = extractDateFromPageDate(request?.payload, WORK_END.page)
   const returnId = journeyData?.returns?.returnId
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
