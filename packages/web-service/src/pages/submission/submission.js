@@ -14,13 +14,11 @@ export const checkData = async (request, h) => {
 }
 
 export const getData = async request => {
-  const { userId, applicationId } = await request.cache().getData()
-
-  const allApplications = await APIRequests.APPLICATION.findByUser(userId)
-  const currentApplication = allApplications.filter(applic => applic.id === applicationId)
+  const { applicationId } = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(applicationId)
 
   return {
-    currentApplication: currentApplication[0]
+    currentApplication: application
   }
 }
 

@@ -45,15 +45,14 @@ describe('submission spec', () => {
     const request = {
       cache: () => ({
         getData: () => ({
-          applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
-          userId: '123abc-userid'
+          applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
         })
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          findByUser: () => [{ id: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', applicationReferenceNumber: '123abc' }]
+          getById: () => ({ id: '35a6c59e-0faf-438b-b4d5-6967d8d075cb', applicationReferenceNumber: '123abc' })
         }
       }
     }))
@@ -67,7 +66,7 @@ describe('submission spec', () => {
     })
   })
 
-  it('the getData function calls findByUser', async () => {
+  it('the getData function calls getById', async () => {
     const mockCall = jest.fn().mockImplementation(() => {
       return [
         {
@@ -84,21 +83,20 @@ describe('submission spec', () => {
     const request = {
       cache: () => ({
         getData: () => ({
-          applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
-          userId: '123abc-userid'
+          applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
         })
       })
     }
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
         APPLICATION: {
-          findByUser: mockCall
+          getById: mockCall
         }
       }
     }))
 
     const { getData } = await import('../submission.js')
     await getData(request)
-    expect(mockCall).toHaveBeenCalledWith('123abc-userid')
+    expect(mockCall).toHaveBeenCalledWith('35a6c59e-0faf-438b-b4d5-6967d8d075cb')
   })
 })
