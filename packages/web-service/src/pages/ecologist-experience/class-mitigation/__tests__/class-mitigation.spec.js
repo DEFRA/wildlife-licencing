@@ -1,59 +1,6 @@
 describe('The class mitigation page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('completion function', () => {
-    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started',
-          COMPLETE: 'complete',
-          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { get: () => 'in-progress' }
-            }
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: () => {
-            return { applicationId: 'abc123' }
-          }
-        })
-      }
-      const { completion } = await import('../class-mitigation.js')
-      expect(await completion(request)).toBe('/enter-class-mitigation-details')
-    })
-    it('returns the enter-class-mitigation-details uri if the journey isnt complete', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started',
-          COMPLETE: 'complete',
-          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { get: () => 'complete' }
-            }
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: () => {
-            return { applicationId: 'abc123' }
-          }
-        })
-      }
-      const { completion } = await import('../class-mitigation.js')
-      expect(await completion(request)).toBe('/check-ecologist-answers')
-    })
-  })
-
   describe('the get data function', () => {
     it('returns the value of classMitigation when false', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -224,6 +171,28 @@ describe('The class mitigation page', () => {
       const { setData } = await import('../class-mitigation.js')
       await setData(request)
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: true })
+    })
+  })
+
+  describe('completion function', () => {
+    it('returns the check page if the user answers no', async () => {
+      const request = {
+        payload: {
+          'yes-no': 'no'
+        }
+      }
+      const { completion } = await import('../class-mitigation.js')
+      expect(await completion(request)).toBe('/check-ecologist-answers')
+    })
+
+    it('returns the class mitigation details page if the user answers yes', async () => {
+      const request = {
+        payload: {
+          'yes-no': 'yes'
+        }
+      }
+      const { completion } = await import('../class-mitigation.js')
+      expect(await completion(request)).toBe('/enter-class-mitigation-details')
     })
   })
 })

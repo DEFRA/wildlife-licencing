@@ -10,65 +10,65 @@
     }
 %}
 
-{}
-
 {% set title = "Previous badger mitigation licences" %}
 
 {% block pageContent %}
 {% set legendText = "Do you want to add another previous badger mitigation licence?" %}
-{% if not data %}
+
+{% if data.allRemoved %}
 
 {{ govukSummaryList({
-  rows: [
-    {
-      key: {
-        text: "Badger mitigiation licence"
-      },
-      value: {
-        text: "No licence added"
-      },
-      actions: {
-      }
-    }
-  ]
-}) }}
-{% endif %}
-
-{% for licence in data %}
-
-{{ govukSummaryList({
-  rows: [
-    {
-      key: {
-        text: "Badger mitigiation licence"
-      },
-      value: {
-        text: licence
-      },
-      actions: {
-        items: [
-          {
-            href: "/remove-licence?licence=" + licence,
-            text: "Remove"
+      rows: [
+        {
+          key: {
+            text: "Badger mitigation licence"
+          },
+          value: {
+            text: "No licence added"
+          },
+          actions: {
           }
-        ]
-      }
-    }
-  ]
-}) }}
-
-{% endfor %}
+        }
+      ]
+    }) }}
+{% else %}
+    {% for licence in data.previousLicences %}
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Badger mitigation licence"
+              },
+              value: {
+                text: licence
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/remove-licence?licence=" + licence,
+                    text: "Remove"
+                  }
+                ]
+              }
+            }
+          ]
+        }) }}
+    {% endfor %}
+{% endif %}
 
 {{ govukRadios({
   idPrefix: "licence",
   name: "licence",
   fieldset: {
     legend: {
-      text: "Do you want to add another previous badger mitigation licence?" if data else "Do you want to add a previous badger mitigation licence?",
+      text: "Do you want to add a previous badger mitigation licence?" if data.allRemoved else "Do you want to add another previous badger mitigation licence?",
       isPageHeading: false,
       classes: "govuk-fieldset__legend--m"
     }
   },
+  errorMessage: {
+    text: "Select an option"
+  } if error['licence'] === 'any.required',
   items: [
     {
       value: "yes",

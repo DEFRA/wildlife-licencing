@@ -42,5 +42,7 @@ export const s3FileUpload = (context, filename, filepath, filetype) => async id 
     console.error(`Cannot write data with key: ${objectKey} to bucket: ${bucket}`, err)
     boomify(err, { statusCode: 500 })
     throw err
+  } finally {
+    S3Client.destroy()
   }
 }

@@ -11,7 +11,7 @@ import sessionManager, { isStaticResource } from './session-cache/session-manage
 import cacheDecorator from './session-cache/cache-decorator.js'
 import scheme from './services/authorization.js'
 import { errorHandler } from './handlers/error-handler.js'
-import { additionalPageData } from './additional-page-data.js'
+import { additionalPageData, addCookiePrefs } from './additional-page-data.js'
 import db from 'debug'
 import { plugins } from './plugins.js'
 const debug = db('web-service:server')
@@ -116,6 +116,7 @@ const init = async server => {
   // Add additional data used by all pages
   server.ext('onPreResponse', additionalPageData)
   server.ext('onPreResponse', addDefaultHeaders)
+  server.ext('onPreResponse', addCookiePrefs)
 
   // Register the dynamic routes
   await server.route(routes)

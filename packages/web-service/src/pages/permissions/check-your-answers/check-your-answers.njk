@@ -47,38 +47,40 @@
     </div>
     {% endfor %}
   </dl>
-  <dl class="govuk-summary-list">
-    {% if data.permissionDetails.noPermissionReason %}
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Why is no permission required?</dt>
-      {% if data.permissionDetails.noPermissionDescription %}
-        <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionDescription }}</dd>
-      {% else %}
-        <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionReason }}</dd>
-      {% endif %}
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/why-no-permission">
-          Change<span class="govuk-visually-hidden">Why is no permission required?</span>
-        </a>
-      </dd>
-    </div>
-    {% endif %}
-  </dl>
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Have all other wildlife or habitat-related conditions been met?</dt>
-       {% if data.permissionDetails.allOtherConditionsMet %}
-        <dd class="govuk-summary-list__value">Yes</dd>
-      {% else %}
-        <dd class="govuk-summary-list__value">No</dd>
-      {% endif %}
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/conditions-reserved-matters">
-          Change<span class="govuk-visually-hidden">Have all other wildlife or habitat-related conditions been met?</span>
-        </a>
-      </dd>
-    </div>
-  </dl>
+  {% if not data.eligibility.permissionsRequired and data.permissionDetails.noPermissionReason %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Why is no permission required?</dt>
+        {% if data.permissionDetails.noPermissionDescription %}
+          <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionDescription }}</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">{{ data.permissionDetails.noPermissionReason }}</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/why-no-permission">
+            Change<span class="govuk-visually-hidden">Why is no permission required?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+  {% if data.eligibility.permissionsRequired %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Have all other wildlife or habitat-related conditions been met?</dt>
+        {% if data.permissionDetails.allOtherConditionsMet %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/conditions-reserved-matters">
+            Change<span class="govuk-visually-hidden">Have all other wildlife or habitat-related conditions been met?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
   <dl class="govuk-summary-list">
     {% if not data.permissionDetails.allOtherConditionsMet and data.permissionDetails.conditionsNotMetReason %}
     <div class="govuk-summary-list__row">

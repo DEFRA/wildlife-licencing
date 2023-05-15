@@ -1,0 +1,53 @@
+{% extends "yes-no.njk" %}
+{% from "table/macro.njk" import govukTable %}
+{% set title = "Cookies" %}
+{% set noneSelected = 'Select yes if you want to accept analytics cookies' %}
+
+{% block pageContent %}
+<p class="govuk-body">Cookies are small files saved on your phone, tablet or computer when you visit a website. We use cookies to make this site work and to collect data about how the site is used.</p>
+<h1 class="govuk-heading-m">Essential cookies</h1>
+<p class="govuk-body">Essential cookies keep your information secure while you use this service. We do not need to ask permission to use them.</p>
+{{ govukTable({
+  firstCellIsHeader: true,
+  head: [
+    {
+      text: "Name"
+    },
+    {
+      text: "Purpose"
+    },
+    {
+       text: "Expires"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "sid"
+      },
+      {
+        text: "Identification"
+      },
+      {
+        text: "After one hour "
+      }
+    ],
+    [
+      {
+        text: "crumb"
+      },
+      {
+        text: "Security"
+      },
+      {
+        text: "When you close your browser"
+      }
+    ]
+  ]
+}) }}
+<h1 class="govuk-heading-m">Analytics cookies (optional)</h1>
+<p class="govuk-body">With your permission, we use Google Analytics to collect information about how you use the service. This information helps us improve the service.</p>
+<p class="govuk-body">Google is not allowed to use or share our analytics data with anyone else. Analytics data is anonymous. Analytics cookies are named _ga* and persist for two years. </p>
+<h1 class="govuk-heading-m">Do you want to accept analytics cookies?</h1>
+{{ super() }}
+{% endblock %}

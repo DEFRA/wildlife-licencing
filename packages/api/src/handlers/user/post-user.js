@@ -28,7 +28,8 @@ export default async (context, req, h) => {
     const user = await models.users.create({
       id: uuidv4(),
       username,
-      ...(req.payload.password && { password: await toHash(req.payload.password) })
+      ...(req.payload.password && { password: await toHash(req.payload.password) }),
+      cookiePrefs: req.payload?.cookiePrefs
     })
 
     const response = prepareResponse(user.dataValues)

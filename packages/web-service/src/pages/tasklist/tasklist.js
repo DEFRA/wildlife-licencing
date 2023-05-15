@@ -58,6 +58,10 @@ export const checkData = async (request, h) => {
     if (!roles.includes(DEFAULT_ROLE)) {
       return h.redirect(APPLICATIONS.uri)
     }
+    const application = await APIRequests.APPLICATION.getById(id)
+    if (application?.userSubmission) {
+      return h.redirect(APPLICATIONS.uri)
+    }
   } else {
     if (!journeyData.applicationId) {
       return h.redirect(APPLICATIONS.uri)

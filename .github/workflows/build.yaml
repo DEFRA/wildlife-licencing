@@ -1,6 +1,6 @@
 # See https://github.com/SonarSource/sonarcloud-github-action
 on:
-  # Trigger analysis when pushing in master or pull requests, and when creating
+  # Trigger the analysis when pushing in master or pull requests, and when creating
   # a pull request.
   push:
     branches:

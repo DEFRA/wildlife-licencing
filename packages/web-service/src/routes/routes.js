@@ -15,6 +15,7 @@ import {
   landOwnerPermission, notEligibleLandowner, notEligibleProject
 } from '../pages/eligibility/eligibility.js'
 
+import cookieInfo from '../pages/cookies/cookie-info.js'
 import { tasklist } from '../pages/tasklist/tasklist.js'
 import { uploadSupportingInformation } from '../pages/supporting-information/upload-supporting-information.js'
 import { checkSupportingInformation } from '../pages/supporting-information/check-supporting-information.js'
@@ -180,6 +181,7 @@ import confirmationOfReturns from '../pages/returns/confirmation.js'
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
+  ...cookieInfo,
   ...species,
   ...otherSpecies,
   ...nsip,

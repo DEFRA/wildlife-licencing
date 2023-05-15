@@ -5,6 +5,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 const permissionsRadio = 'permissionsRequired'
 
@@ -30,9 +31,22 @@ export const checkData = async (request, h) => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
+  const { applicationId, permissionData } = journeyData
   const pageData = request.payload[permissionsRadio]
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
+  const permissionDetails = await APIRequests.PERMISSION.getPermissionDetailsById(applicationId)
+  const permissionId = permissionData?.sddsPermissionsId
+
+  if (permissionDetails) {
+    delete journeyData.permissionData
+    await APIRequests.PERMISSION.removePermissionDetails(applicationId)
+  }
+
+  if (permissionId) {
+    delete journeyData.permissionData
+    await APIRequests.PERMISSION.removePermission(applicationId, permissionId)
+  }
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.PERMISSIONS, tagState: tagStatus.IN_PROGRESS })
   let permissionsRequired = false
   if (pageData === 'yes') {
     permissionsRequired = true

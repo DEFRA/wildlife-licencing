@@ -5,6 +5,7 @@ describe('the S3 file upload service', () => {
     it('sends the put command and unlinks the file', async () => {
       const mockSend = jest.fn()
       const mockPut = jest.fn()
+      const mockDestroy = jest.fn()
       jest.doMock('fs', () => ({
         createReadStream: jest.fn(() => 'rs'),
         unlinkSync: jest.fn()
@@ -12,7 +13,8 @@ describe('the S3 file upload service', () => {
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: () => ({
           S3Client: {
-            send: mockSend
+            send: mockSend,
+            destroy: mockDestroy
           },
           PutObjectCommand: mockPut,
           bucket: 'bucket'
@@ -38,11 +40,13 @@ describe('the S3 file upload service', () => {
         Bucket: 'bucket',
         Key: expect.any(String)
       })
+      expect(mockDestroy).toHaveBeenCalled()
     })
 
     it('throws an error if unable to write', async () => {
       const mockSend = jest.fn()
       const mockPut = jest.fn(() => { throw new Error() })
+      const mockDestroy = jest.fn()
       jest.doMock('fs', () => ({
         createReadStream: jest.fn(() => 'rs'),
         unlinkSync: jest.fn()
@@ -50,7 +54,8 @@ describe('the S3 file upload service', () => {
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: () => ({
           S3Client: {
-            send: mockSend
+            send: mockSend,
+            destroy: mockDestroy
           },
           PutObjectCommand: mockPut,
           bucket: 'bucket'
@@ -64,6 +69,7 @@ describe('the S3 file upload service', () => {
           { filetype: 'method', multiple: false })('fedb14b6-53a8-ec11-9840-0022481aca85')
       } catch (err) {
         expect(err.output.statusCode).toEqual(500)
+        expect(mockDestroy).toHaveBeenCalled()
       }
     })
   })

@@ -38,7 +38,7 @@ export default pageRoute({
   uri: permissionsURIs.CONDITIONS_NOT_COMPLETED.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'conditions-not-met-reason': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'conditions-not-met-reason': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,
