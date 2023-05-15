@@ -22,13 +22,21 @@ export const getData = async request => {
   if (returnId) {
     const { startDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
     if (startDate) {
+      const licenceReturnStartDate = new Date(startDate)
       return {
-        year: startDate.getFullYear(),
-        month: startDate.getMonth() + 1,
-        day: startDate.getDate()
+        year: licenceReturnStartDate.getFullYear(),
+        month: licenceReturnStartDate.getMonth() + 1,
+        day: licenceReturnStartDate.getDate()
       }
     }
+
+    return {
+      year: undefined,
+      month: undefined,
+      day: undefined
+    }
   }
+
   return null
 }
 
