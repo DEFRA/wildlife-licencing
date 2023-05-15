@@ -1,5 +1,7 @@
-describe('the getData function', () => {
-  it('calls the APIs', async () => {
+describe('the common functions', () => {
+  beforeEach(() => jest.resetModules())
+
+  it('getData calls the APIs', async () => {
     const mockFn = jest.fn()
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {

@@ -1,6 +1,71 @@
-
 describe('additional page data', () => {
   beforeEach(() => jest.resetModules())
+
+  it('add cookie preferences - returns preferences for signed in user from database', async () => {
+    const mockHeaders = jest.fn()
+    jest.doMock('../services/api-requests.js', () => ({
+      APIRequests: {
+        USER: {
+          getById: () => ({ cookiePrefs: { analytics: true } })
+        }
+      }
+    }))
+    const request = {
+      method: 'get',
+      auth: {
+        credentials: 'credentials'
+      },
+      response: {
+        variety: 'view',
+        source: {
+          context: {}
+        },
+        header: mockHeaders
+      },
+      cache: () => ({
+        getData: () => ({
+          userId: 'e8387a83-1165-42e6-afab-add01e77bc4c'
+        })
+      })
+    }
+    const { addCookiePrefs } = await import('../additional-page-data.js')
+    await addCookiePrefs(request, { })
+    expect(request.response.source.context).toEqual({
+      cookiePrefs: {
+        analytics: true
+      }
+    })
+  })
+
+  it('add cookie preferences - returns preferences for not-signed in user from cache', async () => {
+    const mockHeaders = jest.fn()
+    const request = {
+      method: 'get',
+      auth: {
+        credentials: 'credentials'
+      },
+      response: {
+        variety: 'view',
+        source: {
+          context: {}
+        },
+        header: mockHeaders
+      },
+      cache: () => ({
+        getData: () => ({
+          cookies: { analytics: false }
+        })
+      })
+    }
+    const { addCookiePrefs } = await import('../additional-page-data.js')
+    await addCookiePrefs(request, { })
+    expect(request.response.source.context).toEqual({
+      cookiePrefs: {
+        analytics: false
+      }
+    })
+  })
+
   it('return response-toolkit continue', async () => {
     const mockHeaders = jest.fn()
     const request = {
@@ -40,6 +105,7 @@ describe('additional page data', () => {
         classMitigation: '/class-mitigation',
         classMitigationDetails: '/enter-class-mitigation-details',
         consent: '/consent',
+        cookieInfo: '/cookie-info',
         consentGranted: '/consent-granted',
         ecologistAddress: '/ecologist-address',
         ecologistEmail: '/ecologist-email',

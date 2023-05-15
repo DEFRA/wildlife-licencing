@@ -6,7 +6,7 @@ import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkHasAddress, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
 
-const { ADDRESS, CHECK_ANSWERS, RESPONSIBLE } = contactURIs.INVOICE_PAYER
+const { ADDRESS, RESPONSIBLE, CHECK_ANSWERS } = contactURIs.INVOICE_PAYER
 
 export const invoiceAddress = addressPage({
   page: ADDRESS.page,

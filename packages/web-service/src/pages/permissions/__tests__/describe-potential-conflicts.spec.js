@@ -2,13 +2,21 @@ describe('describe-potential-conflicts page', () => {
   beforeEach(() => jest.resetModules())
 
   it('getData', async () => {
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        PERMISSION: {
+          getPermissionDetailsById: () => {
+            return {
+              potentialConflictDescription: 'potentialConflictDescription'
+            }
+          }
+        }
+      }
+    }))
     const request = {
       cache: () => ({
         getData: () => ({
-          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
-          permissionData: {
-            potentialConflictDescription: 'potentialConflictDescription'
-          }
+          applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c'
         })
       })
     }

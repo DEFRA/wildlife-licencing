@@ -132,7 +132,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
         failAction: handler().error
       },
       plugins: {
-        disinfect: false
+        disinfect: true
       },
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)

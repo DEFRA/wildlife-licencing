@@ -86,6 +86,63 @@ describe('permissions page handler', () => {
     })
   })
 
+  it('should redirect to add permission page when the last permission is removed', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: () => {
+            return { permissionsRequired: true }
+          }
+        },
+        PERMISSION: {
+          getPermissions: () => {
+            return []
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../check-your-answers/check-your-answers.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/add-permission-start')
+  })
+
+  it('checkData', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: () => {
+            return { permissionsRequired: false }
+          }
+        },
+        PERMISSION: {
+          getPermissions: () => {
+            return []
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../check-your-answers/check-your-answers.js')
+    expect(await checkData(request, h)).toBeNull()
+  })
+
   it('should redirect user to the task list page when tag state is complete', async () => {
     const mockSetData = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({

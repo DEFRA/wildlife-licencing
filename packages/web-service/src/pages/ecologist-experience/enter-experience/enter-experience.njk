@@ -12,6 +12,14 @@
 
 {% set title = "Enter the ecologist's experience of badger ecology and surveying" %}
 
+{% set  errMsg = null %}
+
+{% if error['enter-experience'] === "string.empty" %}
+     {% set errMsg = "Enter details of the ecologist's experience of badger ecology and surveying" %}
+{% elseif error['enter-experience'] === "string.max" %}
+    {% set errMsg = "This must be 4,000 characters or less" %}
+{% endif %}
+
 {% block pageContent %}
 
 {{ govukCharacterCount({
@@ -19,7 +27,8 @@
   id: "enter-experience",
   value: payload['enter-experience'] if payload['enter-experience'] else data,
   maxlength: 4000,
-  errorMessage: { text: "Enter the ecologist's experience of badger ecology and surveying" } if error['enter-experience']
+  rows: 10,
+  errorMessage: { text: errMsg } if errMsg
 }) }}
 
 {% endblock %}

@@ -1,12 +1,27 @@
-{% extends "check-answers.njk" %}
+{% extends "information-page.njk" %}
+{% from "button/macro.njk" import govukButton %}
+{% set widthClass = 'govuk-grid-column-full' %}
+{% set title = 'Check your answers' %}
+{% from "answer-summary.njk" import answerSummary %}
 
 {% set questionMap = {
-    previousLicence: { question: 'Previously held badger mitigation licence?', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.previousLicence + '?change=true' },
-    licenceDetails: { question: 'Previous badger mitigation licences', href: _uri.licenceDetails },
-    experienceDetails: { question: 'Experience of badger ecology and surveying?', href: _uri.experienceDetails },
-    methodExperience: { question: 'Experience of the methods to be licensed', href: _uri.methodExperience },
-    classMitigation: { question: 'Previously held badger mitigation class licence', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.classMitigation },
-    classMitigationDetails: { question: 'Class licence reference number', href: _uri.classMitigationDetails }
+    previousLicence: { question: 'Previous mitigation licence', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.previousLicence + '?change=true' },
+    licenceDetails: { question: 'Previous licence number', href: _uri.licenceDetails },
+    experienceDetails: { question: 'Previous experience of badger ecology and surveying', href: _uri.experienceDetails },
+    methodExperience: { question: 'Previous experience of methods to be licensed', href: _uri.methodExperience },
+    classMitigation: { question: 'Class licence held', answer: { 'yes': 'Yes', 'no': 'No' }, href: _uri.classMitigation },
+    classMitigationDetails: { question: 'Class licence number', href: _uri.classMitigationDetails }
 } %}
 
 {% set checkData = data %}
+
+{% block pageContent %}
+    {{ answerSummary(questionMap, checkData) }}
+    {{ govukButton({
+        attributes: { id: 'continue' },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: buttonText if buttonText else 'Confirm',
+        classes: "govuk-!-margin-top-5"
+    }) }}
+{% endblock %}

@@ -2,16 +2,12 @@ describe('The enter methods page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
-    it('returns the class mitigation uri on primary journey', async () => {
+    it('returns the class mitigation page if the class licence has not been set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'in-progress'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              methodExperience: 'methods'
             })
           }
         }
@@ -19,7 +15,7 @@ describe('The enter methods page', () => {
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+            applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
           })
         })
       }
@@ -27,15 +23,12 @@ describe('The enter methods page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check ecologist answers uri on return journey', async () => {
+    it('returns the check page if the class licence has been set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'complete'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              classMitigation: true
             })
           }
         }
@@ -43,7 +36,7 @@ describe('The enter methods page', () => {
       const request = {
         cache: () => ({
           getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+            applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
           })
         })
       }
