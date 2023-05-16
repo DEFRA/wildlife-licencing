@@ -41,19 +41,13 @@ export const getData = async request => {
 }
 
 export const setData = async request => {
-  const pageData = await request.cache().getPageData()
-
-  console.log('hi 9 ==>>  ', pageData)
-  const startDate = extractDateFromPageDate(request.orig.payload, WORK_START.page)
   const journeyData = await request.cache().getData()
-  console.log('hi 10')
+  const startDate = extractDateFromPageDate(request?.payload, WORK_START.page)
   const returnId = journeyData?.returns?.returnId
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, startDate }
-  console.log('hi 11')
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  console.log('hi 12')
   journeyData.returns = { ...licenceReturn, startDate }
   await request.cache().setData(journeyData)
 }
