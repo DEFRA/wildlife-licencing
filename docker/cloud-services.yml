@@ -81,6 +81,23 @@ services:
       restart_policy:
         condition: on-failure
 
+  #######################################################
+  # nginx
+  #######################################################
+  nginx:
+    image: nginx:alpine
+    environment:
+      - LISTEN_PORT=443
+      - UPSTREAM_PORT=4000
+    volumes:
+      - ./resources/nginx/templates:/etc/nginx/templates
+      - ./resources/nginx/ssl:/etc/nginx/ssl
+    ports:
+      - "443:443"
+    deploy:
+      restart_policy:
+        condition: on-failure
+
 volumes:
   virus-db:
   postgres:
