@@ -33,18 +33,14 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
-  return ONE_WAY_GATES.uri
-}
-
 export default pageRoute({
   page: WHY_NOT_COMPLETE_WITHIN_DATES.page,
   uri: WHY_NOT_COMPLETE_WITHIN_DATES.uri,
   validator: Joi.object({
     'work-not-completed': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
+  completion: ONE_WAY_GATES.uri,
   checkData: checkApplication,
   getData: getData,
-  completion: completion,
   setData: setData
 })

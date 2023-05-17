@@ -110,11 +110,4 @@ describe('the Why not Completes within dates functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('redirects to the work start page if the answer is no', async () => {
-      const { completion } = await import('../a24/why-not-completes-within-dates.js')
-      expect(await completion()).toEqual('/a24/one-way-gates')
-    })
-  })
 })
