@@ -5,11 +5,11 @@ import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { timestampFormatter } from '../../common/common.js'
 
-const { WHY_NOT_COMPLETE_WITHIN_DATES } = ReturnsURIs.A24
+const { WHY_NOT_COMPLETE_WITHIN_DATES, ONE_WAY_GATES } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   const startDate = timestampFormatter(licences[0]?.startDate)
   const endDate = timestampFormatter(licences[0]?.endDate)
@@ -24,7 +24,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const whyNotCompletedWithinLicenceDates = request?.payload['work-not-completed']
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, whyNotCompletedWithinLicenceDates }
@@ -34,7 +34,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  return WHY_NOT_COMPLETE_WITHIN_DATES.uri
+  return ONE_WAY_GATES.uri
 }
 
 export default pageRoute({

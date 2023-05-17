@@ -8,7 +8,7 @@ const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   journeyData.licenceId = licences[0].id
   await request.cache().setData(journeyData)
@@ -23,15 +23,19 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const nilReturn = isYes(request)
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   if (returnId && licenceId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
     const payload = { ...licenceReturn, nilReturn }
     await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+    journeyData.returns = { ...journeyData.returns, nilReturn }
   } else {
-    const licenceReturn = await APIRequests.RETURNS.createLicenceReturn(licenceId, { nilReturn })
-    journeyData.returns = { ...journeyData.returns || {}, nilReturn, returnId: licenceReturn?.id }
+    const allLicenceReturns = await APIRequests.RETURNS.getLicenceReturns(licenceId)
+    const incrementedLicenceReturns = allLicenceReturns.length + 1
+    const returnReferenceNumber = `${licenceId}-ROA${incrementedLicenceReturns}`
+    const licenceReturn = await APIRequests.RETURNS.createLicenceReturn(licenceId, { returnReferenceNumber, nilReturn })
+    journeyData.returns = { ...journeyData.returns || {}, returnReferenceNumber, nilReturn, id: licenceReturn?.id }
   }
   await request.cache().setData(journeyData)
 }

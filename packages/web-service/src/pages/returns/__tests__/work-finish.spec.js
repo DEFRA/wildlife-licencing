@@ -41,7 +41,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -73,7 +73,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -143,7 +143,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: 'ABC-567-GHU',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           }),
           setData: mockSetData

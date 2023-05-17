@@ -12,7 +12,7 @@ describe('the Licensed Actions functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           }),
           setData: mockSetData
@@ -78,7 +78,7 @@ describe('the Licensed Actions functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: 'ABC-567-GHU',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           }),
           setData: mockSetData
@@ -95,6 +95,7 @@ describe('the Licensed Actions functions', () => {
               whyNotCompletedWithinLicenceDates: 'delay',
               nilReturn: true
             })),
+            getLicenceReturns: jest.fn(() => []),
             updateLicenceReturn: mockUpdateLicenceReturn
           }
         }
@@ -125,6 +126,7 @@ describe('the Licensed Actions functions', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           RETURNS: {
+            getLicenceReturns: jest.fn(() => []),
             createLicenceReturn: mockCreateLicenceReturn
           }
         }
@@ -132,7 +134,7 @@ describe('the Licensed Actions functions', () => {
 
       const { setData } = await import('../licensed-actions.js')
       await setData(request)
-      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { nilReturn: false })
+      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: 'DEF-7420-NGVR-ROA1', nilReturn: false })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

@@ -7,7 +7,7 @@ import pageRoute from '../../routes/page-route.js'
 
 const { WORK_END, A24 } = ReturnsURIs
 
-export const validator = payload => {
+export const validator = async payload => {
   const endDate = validatePageDate(payload, WORK_END.page)
 
   isDateInFuture(endDate, WORK_END.page)
@@ -17,7 +17,7 @@ export const validator = payload => {
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   if (returnId) {
     const { endDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
@@ -42,7 +42,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const endDate = extractDateFromPageDate(request?.payload, WORK_END.page)
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, endDate }

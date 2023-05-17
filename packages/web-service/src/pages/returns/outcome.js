@@ -25,7 +25,7 @@ export const validator = async payload => {
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const noOutcome = journeyData?.returns?.noOutcome
   if (returnId) {
@@ -48,12 +48,12 @@ export const setData = async request => {
     outcome = false
     noOutcome = request.payload[noOutcomeInput]
   }
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, outcome }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...journeyData.returns, outcome, noOutcome }
+  journeyData.returns = { ...licenceReturn, outcome, noOutcome }
   await request.cache().setData(journeyData)
 }
 
