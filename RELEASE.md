@@ -1,3 +1,12 @@
+## Build v11.12.2   Wednesday 17th May
+PRIVATE-BETA
+
+- Changes to indicative cost guidance 
+- Cosmetic changes to the tasklist page
+- Improvement of the ecologist experience section
+- Fix bug in ecologist experience class licence section
+- Fix bug on purchase order number page
+
 ## Build v11.10.0   Thursday 27 April 
 PRIVATE-BETA
 
