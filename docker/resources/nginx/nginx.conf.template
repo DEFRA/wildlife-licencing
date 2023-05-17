@@ -1,5 +1,5 @@
 server {
-    listen                              ${LISTEN_PORT} ssl;
+    listen                              443 ssl;
     ssl_certificate                     /etc/nginx/ssl/certificate.pem;
     ssl_certificate_key                 /etc/nginx/ssl/private.key;
     proxy_ssl_protocols                 TLSv1 TLSv1.1 TLSv1.2;
@@ -7,9 +7,9 @@ server {
     server_name                         localhost;
 
     location / {
-        proxy_pass                      http://host.docker.internal:${UPSTREAM_PORT};
+        proxy_pass                      http://localhost:4000;
         proxy_ssl_session_reuse         on;
-        proxy_set_header                Host $host:${LISTEN_PORT};
+        proxy_set_header                Host $host:443;
         proxy_set_header                X-Forwarded-Proto https;
     }
 }

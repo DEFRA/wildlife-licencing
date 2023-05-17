@@ -85,15 +85,14 @@ services:
   # nginx
   #######################################################
   nginx:
-    image: nginx:alpine
-    environment:
-      - LISTEN_PORT=443
-      - UPSTREAM_PORT=4000
+    image: nginx:stable
     volumes:
-      - ./resources/nginx/templates:/etc/nginx/templates
-      - ./resources/nginx/ssl:/etc/nginx/ssl
+      - ./resources/nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
+      - ./resources/nginx/ssl:/etc/nginx/ssl:ro
     ports:
+      - "80:80"
       - "443:443"
+    command: ["tail", "-f", "/dev/null"]
     deploy:
       restart_policy:
         condition: on-failure
