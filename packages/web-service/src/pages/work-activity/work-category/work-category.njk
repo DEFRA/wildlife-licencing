@@ -4,7 +4,7 @@
 
 {% set errorMap = {
         'work-category': {
-          'any.required': { ref: '#work-category', text: 'Select an option to continue' }
+          'any.required': { ref: '#work-category', text: 'You have not selected an option' }
         }
     }
 %}
@@ -16,7 +16,7 @@
   {{ govukRadios({
     id: "work-category",
     name: "work-category",
-    errorMessage: { text: "Select an option." } if error['work-category'],
+    errorMessage: { text: "Select an option" } if error['work-category'],
     items: [
       {
         checked: data.applicationCategory === data.BARN_CONVERSION,

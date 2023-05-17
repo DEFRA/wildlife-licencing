@@ -3,15 +3,12 @@ describe('The enter experience page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion function', () => {
-    it('returns the enter methods uri on primary journey', async () => {
+    it('returns the enter methods page if required', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'in-progress'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+
             })
           }
         }
@@ -27,16 +24,34 @@ describe('The enter experience page', () => {
       expect(await completion(request)).toBe('/enter-methods')
     })
 
-    it('returns the check ecologist answers uri on return journey', async () => {
+    it('returns the class mitigation page if class mitigation is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE: 'complete',
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              get: () => 'complete'
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              methodExperience: 'method'
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { completion } = await import('../enter-experience.js')
+      expect(await completion(request)).toBe('/class-mitigation')
+    })
+
+    it('returns the check page if class mitigation is set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: () => ({
+              methodExperience: 'method',
+              classMitigation: true
             })
           }
         }

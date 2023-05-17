@@ -3,6 +3,7 @@ import pkg from 'sequelize'
 import { APPLICATION_JSON } from '../constants.js'
 import { clearApplicationCaches } from './application/application-cache.js'
 import { REDIS } from '@defra/wls-connectors-lib'
+import { clearCaches } from './user/users-cache.js'
 const { cache } = REDIS
 const { Sequelize } = pkg
 const Op = Sequelize.Op
@@ -35,7 +36,17 @@ export default async (_context, req, h) => {
     if (!user) {
       return h.response({ code: 400, error: { description: `username: ${username} not found` } })
         .type(APPLICATION_JSON).code(400)
+    } else {
+      await models.users.update({
+        cookiePrefs: null
+      }, {
+        where: {
+          id: user.id
+        }
+      })
     }
+
+    await clearCaches(user.id)
 
     // Gather the necessary
     const applicationUsers = await models.applicationUsers.findAll({ where: { userId: user.id } })
@@ -52,6 +63,7 @@ export default async (_context, req, h) => {
     response.applicationContacts = await models.applicationContacts.destroy(inApplicationIds(applicationIds))
     response.applicationAccounts = await models.applicationAccounts.destroy(inApplicationIds(applicationIds))
     response.applicationSites = await models.applicationSites.destroy(inApplicationIds(applicationIds))
+    response.permissions = await models.permissions.destroy(inApplicationIds(applicationIds))
     response.contacts = await models.contacts.destroy(inIds(contactIds))
     response.accounts = await models.accounts.destroy(inIds(accountIds))
     response.sites = await models.sites.destroy(inIds(siteIds))

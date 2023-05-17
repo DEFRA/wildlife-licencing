@@ -1,6 +1,54 @@
 describe('invoice check answers page', () => {
   beforeEach(() => jest.resetModules())
 
+  describe('the checkHasPurchaseOrderNumber function', () => {
+    it('returns a redirect to the purchase order page if the invoice number has not been captured', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => ({})
+          }
+        }
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 'f789913d-a095-4150-8aaf-7addd38d3092'
+          })
+        })
+      }
+
+      const { checkHasPurchaseOrderNumber } = await import('../invoice-check-answers.js')
+      const h = { redirect: jest.fn() }
+      await checkHasPurchaseOrderNumber(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/invoice-purchase-order')
+    })
+
+    it('returns null if the invoice number has been captured', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            getById: () => ({ referenceOrPurchaseOrderNumber: '123' })
+          }
+        }
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: 'f789913d-a095-4150-8aaf-7addd38d3092'
+          })
+        })
+      }
+
+      const { checkHasPurchaseOrderNumber } = await import('../invoice-check-answers.js')
+      const h = { redirect: jest.fn() }
+      const result = await checkHasPurchaseOrderNumber(request, h)
+      expect(result).toBeNull()
+    })
+  })
+
   describe('the getData function', () => {
     it('creates the correct output for the payer is applicant', async () => {
       const tagSet = jest.fn()

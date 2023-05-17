@@ -4,20 +4,8 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
-import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
-
-export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
-
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
-  if (!isCompleteOrConfirmed(tagState)) {
-    return h.redirect(ecologistExperienceURIs.PREVIOUS_LICENCE.uri)
-  }
-
-  return null
-}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -28,10 +16,8 @@ export const getData = async request => {
   if (ecologistExperience.previousLicence) {
     result.push({ key: 'licenceDetails', value: previousLicences.join(', ') })
   }
-  const experienceDetails = `${ecologistExperience.experienceDetails.substring(0, 100)}${ecologistExperience.experienceDetails.length > 100 ? '...' : ''}`
-  const methodExperience = `${ecologistExperience.methodExperience.substring(0, 100)}${ecologistExperience.methodExperience.length > 100 ? '...' : ''}`
-  result.push({ key: 'experienceDetails', value: experienceDetails })
-  result.push({ key: 'methodExperience', value: methodExperience })
+  result.push({ key: 'experienceDetails', value: ecologistExperience.experienceDetails })
+  result.push({ key: 'methodExperience', value: ecologistExperience.methodExperience })
   result.push({ key: 'classMitigation', value: yesNoFromBool(ecologistExperience.classMitigation) })
   if (ecologistExperience.classMitigation) {
     result.push({ key: 'classMitigationDetails', value: ecologistExperience.classMitigationDetails })
@@ -49,7 +35,7 @@ export const completion = async request => {
 export default pageRoute({
   page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page,
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
-  checkData: [checkApplication, checkData],
+  checkData: checkApplication,
   backlink: Backlink.NO_BACKLINK,
   getData,
   completion

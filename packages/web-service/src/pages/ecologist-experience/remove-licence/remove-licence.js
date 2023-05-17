@@ -25,6 +25,7 @@ export const setData = async request => {
     if (!licences.length) {
       const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
       ecologistExperience.previousLicence = false
+      ecologistExperience.previousLicencesAllRemoved = true
       await APIRequests.ECOLOGIST_EXPERIENCE.putExperienceById(applicationId, ecologistExperience)
     }
   }
