@@ -12,7 +12,7 @@ export const validator = async payload => {
 
   isDateInFuture(endDate, WORK_END.page)
 
-  return null
+  return payload
 }
 
 export const getData = async request => {

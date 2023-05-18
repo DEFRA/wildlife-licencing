@@ -28,8 +28,8 @@ describe('the Work finish functions', () => {
 
     it('should not throw an error if the end date is valid and in the past', async () => {
       const { validator } = await import('../work-finish.js')
-      const payload = { 'work-finish-day': '2', 'work-finish-month': '5', 'work-finish-year': '2020' }
-      expect(await validator(payload)).toBeNull()
+      const payload = { 'work-finish-day': '20', 'work-finish-month': '11', 'work-finish-year': '2021' }
+      expect(await validator(payload)).toEqual({ 'work-finish-day': '20', 'work-finish-month': '11', 'work-finish-year': '2021' })
     })
   })
 

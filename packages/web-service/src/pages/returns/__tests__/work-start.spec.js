@@ -125,7 +125,7 @@ describe('the Work start functions', () => {
     it('should not throw an error if the date is valid and in the past', async () => {
       const { validator } = await import('../work-start.js')
       const payload = { 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' }
-      expect(await validator(payload)).toBeNull()
+      expect(await validator(payload)).toEqual({ 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' })
     })
   })
 
