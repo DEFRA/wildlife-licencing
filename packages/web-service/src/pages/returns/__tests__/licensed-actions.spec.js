@@ -116,7 +116,8 @@ describe('the Licensed Actions functions', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'DEF-7420-NGVR'
+            licenceId: 'DEF-7420-NGVR',
+            licenceNumber: '26a3e94f-7420-NGVR'
           }),
           setData: mockSetData
         })
@@ -134,7 +135,7 @@ describe('the Licensed Actions functions', () => {
 
       const { setData } = await import('../licensed-actions.js')
       await setData(request)
-      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: 'DEF-7420-NGVR-ROA1', nilReturn: false })
+      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: '26a3e94f-7420-NGVR-ROA1', nilReturn: false })
       expect(mockSetData).toHaveBeenCalled()
     })
   })
