@@ -4,13 +4,35 @@ import { isDateInFuture } from '../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../common/date-utils.js'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
+import { cacheDirect } from '../../session-cache/cache-decorator.js'
+import Joi from 'joi'
 
 const { WORK_END, A24 } = ReturnsURIs
 
-export const validator = async payload => {
+export const validator = async (payload, context) => {
   const endDate = validatePageDate(payload, WORK_END.page)
 
   isDateInFuture(endDate, WORK_END.page)
+
+  // Validate the end date should be after the start date
+  const journeyData = await cacheDirect(context).getData()
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  const returnData = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const startDate = new Date(Date.parse(returnData?.startDate))
+
+  if (endDate < startDate) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: The end date must be after the start date',
+      path: ['work-end'],
+      type: 'endDateBeforeStart',
+      context: {
+        label: 'work-end',
+        value: 'Error',
+        key: 'work-end'
+      }
+    }], null)
+  }
 
   return payload
 }
