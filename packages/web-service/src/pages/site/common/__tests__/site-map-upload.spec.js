@@ -155,12 +155,12 @@ describe('the map of the site showing the mitigations after development page pag
       },
       siteMapFiles: {
         activity: 'site-after-development.shape',
-        mitigationsDuringDevelopment: 'site-after-development.shape',
-        mitigationsAfterDevelopment: 'site-after-development.shape'
+        mitigationsDuringDevelopment: 'site-after-development.shp',
+        mitigationsAfterDevelopment: 'site-after-development.shx'
       }
     })
     expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shape', '/tmp/path',
-      { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF'] })
+      { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'ZIP', 'PDF', 'CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX'] })
     expect(mockSetData).toHaveBeenCalled()
   })
 
