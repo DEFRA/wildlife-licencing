@@ -5,16 +5,18 @@ import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
 
+export const SHAPE_FILES = ['CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']
+
 export const FILETYPES = {
   SUPPORTING_INFORMATION: {
     filetype: 'METHOD-STATEMENT',
     multiple: true,
-    supportedFileTypes: ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
+    supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS', ...SHAPE_FILES]
   },
   SITE_MAP_FILES: {
     filetype: 'MAP',
     multiple: true,
-    supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF']
+    supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'GEOJSON', 'KML', 'PDF', ...SHAPE_FILES]
   }
 }
 
@@ -29,12 +31,10 @@ export const setData = async request => {
 }
 
 export const getFileExtension = (file, fileType) => {
-  const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
-
   if (fileType === FILETYPES.SUPPORTING_INFORMATION.filetype) {
-    return FILETYPES.SUPPORTING_INFORMATION.supportedFileTypes.indexOf(fileExtension) >= 0
+    return !!FILETYPES.SUPPORTING_INFORMATION.supportedFileTypes.find(t => file.filename.toUpperCase().endsWith(t))
   } else if (fileType === FILETYPES.SITE_MAP_FILES.filetype) {
-    return FILETYPES.SITE_MAP_FILES.supportedFileTypes.indexOf(fileExtension) >= 0
+    return !!FILETYPES.SITE_MAP_FILES.supportedFileTypes.find(t => file.filename.toUpperCase().endsWith(t))
   }
   return false
 }

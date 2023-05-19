@@ -73,7 +73,7 @@ describe('the map of the site showing the mitigations after development page pag
     const request = {
       cache: () => ({
         getData: () => ({
-          fileUpload: { filename: 'site-after-development.shape', path: '/tmp/path' },
+          fileUpload: { filename: 'site-after-development.shp', path: '/tmp/path' },
           applicationId: 123,
           siteData: { id: 45678, name: 'site-name', address: '123 site street, Birmingham, B1 4HY', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg' } }
         }),
@@ -105,7 +105,7 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shape'
+        activity: 'site-after-development.shp'
       }
     })
     expect(mockS3FileUpload).toHaveBeenCalled()
@@ -129,8 +129,8 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shape',
-        mitigationsDuringDevelopment: 'site-after-development.shape'
+        activity: 'site-after-development.shp',
+        mitigationsDuringDevelopment: 'site-after-development.shp'
       }
     })
     expect(mockS3FileUpload).toHaveBeenCalled()
@@ -154,13 +154,13 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shape',
-        mitigationsDuringDevelopment: 'site-after-development.shape',
-        mitigationsAfterDevelopment: 'site-after-development.shape'
+        activity: 'site-after-development.shp',
+        mitigationsDuringDevelopment: 'site-after-development.shp',
+        mitigationsAfterDevelopment: 'site-after-development.shp'
       }
     })
-    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shape', '/tmp/path',
-      { filetype: 'MAP', multiple: true, supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF'] })
+    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shp', '/tmp/path',
+      { filetype: 'MAP', multiple: true, supportedFileTypes: expect.arrayContaining(['JPG', 'PNG', 'GEOJSON', 'KML', 'ZIP', 'PDF', 'CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']) })
     expect(mockSetData).toHaveBeenCalled()
   })
 

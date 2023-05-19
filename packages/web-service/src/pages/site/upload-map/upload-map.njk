@@ -10,7 +10,7 @@
           'no-file-chosen' : { ref: '#scan-file', text: 'You must choose a file to upload.' },
           'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
           'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' },
-          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON or PDF.' }
+          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON, PDF or ZIP.' }
         }
     }
 %}
@@ -39,8 +39,9 @@
         <ul class="govuk-list govuk-list--bullet">
             <li>GeoJSON files</li>
             <li>KML files</li>
-            <li>Shape files</li>
+            <li>common Shape files</li>
             <li>PDF, jpg or PNG files (if these are used, your application may take longer to process)</li>
+            <li>ZIP files</li>
         </ul>
         <p class="govuk-body">The file must be smaller than 30MB.</p>
 
