@@ -103,7 +103,7 @@ describe('the Licensed Actions functions', () => {
 
       const { setData } = await import('../licensed-actions.js')
       await setData(request)
-      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { whyNil: 'development issues', nilReturn: false, completedWithinLicenceDates: true, whyNotCompletedWithinLicenceDates: 'delay' })
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { whyNil: 'development issues', nilReturn: true, completedWithinLicenceDates: true, whyNotCompletedWithinLicenceDates: 'delay' })
       expect(mockSetData).toHaveBeenCalled()
     })
 
@@ -135,7 +135,7 @@ describe('the Licensed Actions functions', () => {
 
       const { setData } = await import('../licensed-actions.js')
       await setData(request)
-      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: '26a3e94f-7420-NGVR-ROA1', nilReturn: false })
+      expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: '26a3e94f-7420-NGVR-ROA1', nilReturn: true })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

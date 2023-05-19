@@ -23,7 +23,7 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const nilReturn = isYes(request)
+  const nilReturn = !isYes(request)
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceNumber = journeyData?.licenceNumber
