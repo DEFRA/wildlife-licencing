@@ -19,6 +19,22 @@ describe('the generic file-upload page handler', () => {
     }
   })
 
+  it('if the user selects an empty file - then it causes a joi error', async () => {
+    jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
+
+    const payload = { 'scan-file': { bytes: 0, filename: '/somefile', path: '/tmp/123' } }
+    try {
+      jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
+        return ({ init: () => Promise.resolve() })
+      }))
+      const { validator } = await import('../file-upload.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: empty file has been uploaded')
+    }
+  })
+
   it('a file that contains a virus causes a joi error', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 

@@ -41,7 +41,7 @@ export const getFileExtension = (file, fileType) => {
 
 export const validator = async (payload, fileType) => {
   // The user hasn't attached a file in their request
-  if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
+  if (payload['scan-file'].filename === '') {
     // Hapi generates a has for a filename, and still attempts to store what the user has sent (an empty file)
     // In this instance, we need to wipe the temporary file and throw a joi error
     fs.unlinkSync(payload['scan-file'].path)
@@ -57,7 +57,21 @@ export const validator = async (payload, fileType) => {
     }], null)
   }
 
-  if (payload['scan-file'].bytes >= MAX_FILE_UPLOAD_SIZE_MB) {
+  if (parseInt(payload['scan-file'].bytes) === 0) {
+    fs.unlinkSync(payload['scan-file'].path)
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: empty file has been uploaded',
+      path: ['scan-file'],
+      type: 'empty-file-chosen',
+      context: {
+        label: 'scan-file',
+        value: 'Error',
+        key: 'scan-file'
+      }
+    }], null)
+  }
+
+  if (parseInt(payload['scan-file'].bytes) >= MAX_FILE_UPLOAD_SIZE_MB) {
     fs.unlinkSync(payload['scan-file'].path)
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the file was too large',
