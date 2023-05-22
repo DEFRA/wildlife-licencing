@@ -125,6 +125,10 @@ export const validator = async (payload, fileType) => {
  * @param request
  * @param h
  * @returns {Promise<null|*>}
+ * Note on the timeouts. The payload timeout does not work, it is always 10 secs.
+ * It can be set to false in which case the default is 10s suspended. If applied to the server then
+ * it gives a service unavailable response, but this bypasses
+ * (breaks) the error handling. For now set to false and rely on the filesize limit to prevent process hogging
  */
 export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion, fileType }) => [
   {
