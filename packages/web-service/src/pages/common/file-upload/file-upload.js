@@ -152,6 +152,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
       plugins: {
         disinfect: true
       },
+      timeout: { server: TIMEOUT_MS },
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
@@ -161,8 +162,7 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
         multipart: {
           output: 'file'
         },
-        parse: true,
-        timeout: TIMEOUT_MS
+        parse: true
       }
     }
   }
