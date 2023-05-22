@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { MAX_FILE_UPLOAD_SIZE_MB } from '../../../../constants.js'
+import { MAX_FILE_UPLOAD_SIZE_BYTES } from '../../../../constants.js'
 
 describe('the generic file-upload page handler', () => {
   beforeEach(() => jest.resetModules())
@@ -38,7 +38,7 @@ describe('the generic file-upload page handler', () => {
   it('a file that contains a virus causes a joi error', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.JPG', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_BYTES - 100, filename: 'ok.JPG', path: '/tmp/123' } }
     try {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
@@ -97,7 +97,7 @@ describe('the generic file-upload page handler', () => {
   it('should throw a joi error, when the file size is too large', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB + 100, filename: 'ok.doc', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_BYTES + 100, filename: 'ok.doc', path: '/tmp/123' } }
     try {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
@@ -113,7 +113,7 @@ describe('the generic file-upload page handler', () => {
   it('should throw a joi error, when the file extension is not from the supporting information accepted type', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.txt', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_BYTES - 100, filename: 'ok.txt', path: '/tmp/123' } }
     try {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
@@ -129,7 +129,7 @@ describe('the generic file-upload page handler', () => {
   it('should throw a joi error, when the file extension is not from the site map accepted type', async () => {
     jest.spyOn(fs, 'unlinkSync').mockImplementation(() => jest.fn())
 
-    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_MB - 100, filename: 'ok.txt', path: '/tmp/123' } }
+    const payload = { 'scan-file': { bytes: MAX_FILE_UPLOAD_SIZE_BYTES - 100, filename: 'ok.txt', path: '/tmp/123' } }
     try {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })

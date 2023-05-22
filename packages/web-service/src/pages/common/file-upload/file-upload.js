@@ -1,11 +1,14 @@
 import Joi from 'joi'
 import fs from 'fs'
 import handler from '../../../handlers/page-handler.js'
-import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
+import { MAX_FILE_UPLOAD_SIZE_BYTES, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
 
 export const SHAPE_FILES = ['CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']
+
+console.log(`File upload timeout ${TIMEOUT_MS}ms`)
+console.log(`File upload maxsize ${MAX_FILE_UPLOAD_SIZE_BYTES} bytes`)
 
 export const FILETYPES = {
   SUPPORTING_INFORMATION: {
@@ -71,7 +74,7 @@ export const validator = async (payload, fileType) => {
     }], null)
   }
 
-  if (parseInt(payload['scan-file'].bytes) >= MAX_FILE_UPLOAD_SIZE_MB) {
+  if (parseInt(payload['scan-file'].bytes) >= MAX_FILE_UPLOAD_SIZE_BYTES) {
     fs.unlinkSync(payload['scan-file'].path)
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the file was too large',
@@ -151,8 +154,8 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
-        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_MB + 1Mb
-        maxBytes: (MAX_FILE_UPLOAD_SIZE_MB + 1) * 1024 * 1024,
+        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_BYTES
+        maxBytes: MAX_FILE_UPLOAD_SIZE_BYTES,
         uploads: process.env.SCANDIR,
         multipart: {
           output: 'file'
