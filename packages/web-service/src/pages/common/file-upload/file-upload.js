@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import fs from 'fs'
 import handler from '../../../handlers/page-handler.js'
-import { MAX_FILE_UPLOAD_SIZE_BYTES, TIMEOUT_MS } from '../../../constants.js'
+import { FILE_UPLOAD_HEADROOM_BYTES, MAX_FILE_UPLOAD_SIZE_BYTES, TIMEOUT_MS } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
 
@@ -9,6 +9,7 @@ export const SHAPE_FILES = ['CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML',
 
 console.log(`File upload timeout ${TIMEOUT_MS}ms`)
 console.log(`File upload maxsize ${MAX_FILE_UPLOAD_SIZE_BYTES} bytes`)
+console.log(`File upload headroom ${FILE_UPLOAD_HEADROOM_BYTES} bytes`)
 
 export const FILETYPES = {
   SUPPORTING_INFORMATION: {
@@ -154,8 +155,8 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
-        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_BYTES
-        maxBytes: MAX_FILE_UPLOAD_SIZE_BYTES,
+        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_BYTES + FILE_UPLOAD_HEADROOM_BYTES
+        maxBytes: MAX_FILE_UPLOAD_SIZE_BYTES + FILE_UPLOAD_HEADROOM_BYTES,
         uploads: process.env.SCANDIR,
         multipart: {
           output: 'file'
