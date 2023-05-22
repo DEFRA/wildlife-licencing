@@ -160,7 +160,8 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
         multipart: {
           output: 'file'
         },
-        parse: true
+        parse: true,
+        timeout: false
       }
     }
   }
