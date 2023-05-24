@@ -24,12 +24,12 @@ export const validator = async (payload, context) => {
   if (endDate < startDate) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: The end date must be after the start date',
-      path: ['work-end'],
+      path: ['work-finish'],
       type: 'endDateBeforeStart',
       context: {
-        label: 'work-end',
+        label: 'work-finish',
         value: 'Error',
-        key: 'work-end'
+        key: 'work-finish'
       }
     }], null)
   }
