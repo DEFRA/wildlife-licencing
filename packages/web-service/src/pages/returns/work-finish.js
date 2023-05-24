@@ -8,7 +8,7 @@ import { cacheDirect } from '../../session-cache/cache-decorator.js'
 import Joi from 'joi'
 
 const { WORK_END, A24 } = ReturnsURIs
-
+const workEndText = 'work-finish'
 export const validator = async (payload, context) => {
   const endDate = validatePageDate(payload, WORK_END.page)
 
@@ -24,12 +24,12 @@ export const validator = async (payload, context) => {
   if (endDate < startDate) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: The end date must be after the start date',
-      path: ['work-finish'],
+      path: [workEndText],
       type: 'endDateBeforeStart',
       context: {
-        label: 'work-finish',
+        label: workEndText,
         value: 'Error',
-        key: 'work-finish'
+        key: workEndText
       }
     }], null)
   }
