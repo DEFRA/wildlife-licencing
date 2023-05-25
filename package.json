@@ -34,6 +34,7 @@
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
+    "docker:start-ssl": "docker stack deploy -c docker/nginx/nginx-service.yml wls_nginx",
     "docker:stop": "docker stack rm wls"
   },
   "standard": {

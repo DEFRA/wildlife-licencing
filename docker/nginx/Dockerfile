@@ -1,6 +1,6 @@
 ####################################################################################################################################
-# Nginx Image
+# Make nginx Image
 ##############################################################################################
-FROM nginx:stable
-COPY ../resources/nginx/ssl/* /etc/nginx/ssl
-COPY ../resources/nginx/nginx.conf.template /etc/nginx/templates/nginx.conf.template
+FROM nginx:mainline-alpine3.17
+COPY ssl/* /etc/nginx/ssl
+COPY nginx.conf /etc/nginx/conf.d/default.conf
