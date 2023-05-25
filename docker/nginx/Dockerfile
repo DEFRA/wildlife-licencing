@@ -2,5 +2,5 @@
 # Make nginx Image
 ##############################################################################################
 FROM nginx:mainline-alpine3.17
-COPY ssl/* /etc/nginx/ssl
+ADD ssl /etc/nginx/ssl/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
