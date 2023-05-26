@@ -19,3 +19,6 @@ This can be simulated on the local machine by building and running an nginx cont
 
 The reverse proxy will pass redirects and requests from localhost:443 (ssl) to localhost:4000. 
 Simply open https://localhost/ in your browser. You may see some browser warning as the certificate is self-signed.
+
+The certificate can be created using the following command
+```sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout private.key -out certificate.crt```
