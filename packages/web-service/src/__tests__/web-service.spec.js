@@ -1,9 +1,12 @@
+jest.spyOn(console, 'error').mockImplementation(() => null)
+
 describe('The wrapper: web-service', () => {
   it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
         jest.mock('../services/virus-scan.js')
+        jest.mock('../services/clean-up.js')
         const { REDIS } = require('@defra/wls-connectors-lib')
         REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
@@ -30,6 +33,7 @@ describe('The wrapper: web-service', () => {
       try {
         jest.mock('../server.js')
         jest.mock('../services/virus-scan.js')
+        jest.mock('../services/clean-up.js')
         const { REDIS } = require('@defra/wls-connectors-lib')
         REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
