@@ -6,6 +6,7 @@ import { checkApplication } from '../../common/check-application.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { tagStatus } from '../../../services/status-tags.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const permissionsRadio = 'permissionsRequired'
 
@@ -48,7 +49,7 @@ export const setData = async request => {
   }
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.PERMISSIONS, tagState: tagStatus.IN_PROGRESS })
   let permissionsRequired = false
-  if (pageData === 'yes') {
+  if (boolFromYesNo(pageData)) {
     permissionsRequired = true
   }
   const payload = { ...eligibility, permissionsRequired }

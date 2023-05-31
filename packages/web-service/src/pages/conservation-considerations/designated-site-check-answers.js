@@ -4,9 +4,9 @@ import { APIRequests } from '../../services/api-requests.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
 import { getFilteredDesignatedSites } from './common.js'
-import { yesNoFromBool } from '../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { isYes, yesNoPage } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
@@ -44,14 +44,14 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   delete journeyData.designatedSite
   await request.cache().setData(journeyData)
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
   } else {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE })
   }
 }
 
-export const completion = async request => isYes(request) ? DESIGNATED_SITE_NAME.uri : TASKLIST.uri
+export const completion = async request => boolFromYesNo(request.payload['yes-no']) ? DESIGNATED_SITE_NAME.uri : TASKLIST.uri
 
 export default yesNoPage({
   page: DESIGNATED_SITE_CHECK_ANSWERS.page,
