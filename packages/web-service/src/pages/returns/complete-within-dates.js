@@ -8,7 +8,7 @@ const { COMPLETE_WITHIN_DATES, WORK_START, ANOTHER_LICENCE } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   const startDate = timestampFormatter(licences[0]?.startDate)
   const endDate = timestampFormatter(licences[0]?.endDate)
@@ -23,7 +23,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const completedWithinLicenceDates = isYes(request)
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, completedWithinLicenceDates }

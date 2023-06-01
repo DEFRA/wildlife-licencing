@@ -13,7 +13,7 @@ describe('The API requests return service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       await APIRequests.RETURNS.createLicenceReturn('668ee1f0-073d-480c-a802-59db362897e6', { nilReturn: true })
-      expect(mockPost).toHaveBeenCalledWith('/licence/668ee1f0-073d-480c-a802-59db362897e6/return')
+      expect(mockPost).toHaveBeenCalledWith('/licence/668ee1f0-073d-480c-a802-59db362897e6/return', { nilReturn: true })
     })
 
     it('updateLicenceReturn calls the API correctly', async () => {

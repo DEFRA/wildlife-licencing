@@ -22,9 +22,9 @@ export const RETURNS = {
     `Error getting licence return with returnId ${returnId}`,
     500
   ),
-  createLicenceReturn: async licenceId => apiRequestsWrapper(
+  createLicenceReturn: async (licenceId, payload) => apiRequestsWrapper(
     async () => {
-      const newLicenceReturn = API.post(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURN}`)
+      const newLicenceReturn = API.post(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURN}`, payload)
       debug(`Creating return details with licenceId ${licenceId}`)
       return newLicenceReturn
     },

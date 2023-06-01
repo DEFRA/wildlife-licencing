@@ -11,7 +11,7 @@ describe('the Work start functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -43,7 +43,7 @@ describe('the Work start functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -125,7 +125,7 @@ describe('the Work start functions', () => {
     it('should not throw an error if the date is valid and in the past', async () => {
       const { validator } = await import('../work-start.js')
       const payload = { 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' }
-      expect(await validator(payload)).toBeNull()
+      expect(await validator(payload)).toEqual({ 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' })
     })
   })
 
@@ -143,7 +143,7 @@ describe('the Work start functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: 'ABC-567-GHU',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           }),
           setData: mockSetData

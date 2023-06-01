@@ -7,17 +7,17 @@ import { APIRequests } from '../../services/api-requests.js'
 
 const { WORK_START, WORK_END } = ReturnsURIs
 
-export const validator = payload => {
+export const validator = async payload => {
   const startDate = validatePageDate(payload, WORK_START.page)
 
   isDateInFuture(startDate, WORK_START.page)
 
-  return null
+  return payload
 }
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
-  const returnId = journeyData?.returns?.returnId
+  const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
   if (returnId) {
     const { startDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
@@ -42,8 +42,8 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const startDate = extractDateFromPageDate(request?.payload, WORK_START.page)
-  const returnId = journeyData?.returns?.returnId
+  const startDate = extractDateFromPageDate(request.payload, WORK_START.page)
+  const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, startDate }
@@ -55,9 +55,9 @@ export const setData = async request => {
 export default pageRoute({
   page: WORK_START.page,
   uri: WORK_START.uri,
-  completion: WORK_END.uri,
   checkData: checkApplication,
-  validator: validator,
-  getData: getData,
-  setData: setData
+  completion: WORK_END.uri,
+  validator,
+  getData,
+  setData
 })

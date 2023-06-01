@@ -26,10 +26,63 @@ describe('the Work finish functions', () => {
       }
     })
 
+    it('should throw an error if the end date is before the start date', async () => {
+      try {
+        const payload = { 'work-finish-day': '12', 'work-finish-month': '9', 'work-finish-year': '2011' }
+        jest.doMock('../../../services/api-requests.js', () => ({
+          APIRequests: {
+            RETURNS: {
+              getLicenceReturn: jest.fn(() => ({
+                startDate: '2011-08-10'
+              }))
+            }
+          }
+        }))
+        jest.doMock('../../../session-cache/cache-decorator.js', () => {
+          return {
+            cacheDirect: () => ({
+              getData: () => ({
+                licenceId: '920d53c110fc',
+                returns: {
+                  id: '123456789'
+                }
+              })
+            })
+          }
+        })
+        const { validator } = await import('../work-finish.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: The end date must be after the start date')
+      }
+    })
+
     it('should not throw an error if the end date is valid and in the past', async () => {
       const { validator } = await import('../work-finish.js')
-      const payload = { 'work-finish-day': '2', 'work-finish-month': '5', 'work-finish-year': '2020' }
-      expect(await validator(payload)).toBeNull()
+      const payload = { 'work-finish-day': '20', 'work-finish-month': '11', 'work-finish-year': '2011' }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              startDate: '2011-08-10'
+            }))
+          }
+        }
+      }))
+      jest.doMock('../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => ({
+            getData: () => ({
+              licenceId: '920d53c110fc',
+              returns: {
+                id: '123456789'
+              }
+            })
+          })
+        }
+      })
+      expect(await validator(payload)).toEqual({ 'work-finish-day': '20', 'work-finish-month': '11', 'work-finish-year': '2011' })
     })
   })
 
@@ -41,7 +94,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -73,7 +126,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: '920d53c110fc',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           })
         })
@@ -143,7 +196,7 @@ describe('the Work finish functions', () => {
             applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
             licenceId: 'ABC-567-GHU',
             returns: {
-              returnId: '123456789'
+              id: '123456789'
             }
           }),
           setData: mockSetData
