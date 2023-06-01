@@ -1,4 +1,4 @@
-## Build v11.12.2   Wednesday 17th May
+## Build v11.12.15   Thursday 1st June
 PRIVATE-BETA
 
 - Changes to indicative cost guidance 
@@ -6,6 +6,9 @@ PRIVATE-BETA
 - Improvement of the ecologist experience section
 - Fix bug in ecologist experience class licence section
 - Fix bug on purchase order number page
+- Add new file extension allowed for shape files
+- Improvements to zero-size and no file selected validators
+- Added scheduled cleanup of the scan directory
 
 ## Build v11.10.0   Thursday 27 April 
 PRIVATE-BETA
