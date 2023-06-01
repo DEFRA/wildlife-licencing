@@ -16,5 +16,3 @@ export const yesNoPage = ({ page, uri, checkData, getData, completion, setData, 
   }).options({ abortEarly: false, allowUnknown: true }),
   backlink
 })
-
-export const isYes = request => request.payload['yes-no'] === 'yes'

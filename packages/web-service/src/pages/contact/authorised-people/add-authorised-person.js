@@ -8,6 +8,7 @@ import { addressLine } from '../../service/address.js'
 import { checkApplication } from '../../common/check-application.js'
 import { Backlink } from '../../../handlers/backlink.js'
 import { tagStatus } from '../../../services/status-tags.js'
+import { boolFromYesNo } from '../../common/common.js'
 const { ADD, NAME, POSTCODE, EMAIL, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const checkData = async (request, h) => {
@@ -68,7 +69,7 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  if (request.payload['yes-no'] === 'yes') {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.IN_PROGRESS })
   } else {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.AUTHORISED_PEOPLE, tagState: tagStatus.COMPLETE })
@@ -79,7 +80,7 @@ export const setData = async request => {
 
 export const completion = async request => {
   const { payload: { 'yes-no': yesNo } } = await request.cache().getPageData()
-  return yesNo === 'yes' ? NAME.uri : TASKLIST.uri
+  return boolFromYesNo(yesNo) ? NAME.uri : TASKLIST.uri
 }
 
 export const addAuthorisedPerson = yesNoPage({

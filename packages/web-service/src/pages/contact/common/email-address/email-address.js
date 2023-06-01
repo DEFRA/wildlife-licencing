@@ -1,4 +1,5 @@
 import { APIRequests } from '../../../../services/api-requests.js'
+import { boolFromYesNo } from '../../../common/common.js'
 import { contactAccountOperations } from '../operations.js'
 
 export const getEmailAddressData = (contactRole, accountRole) => async request => {
@@ -18,7 +19,7 @@ export const setEmailAddressData = (contactRole, accountRole) => async request =
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   const needAccountEmail = account && !account?.contactDetails?.email
-  if (request.payload['change-email'] === 'yes') {
+  if (boolFromYesNo(request.payload['change-email'])) {
     const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setEmailAddress(request.payload['email-address'])
   } else if (needAccountEmail) {

@@ -1,6 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
 import { tagStatus } from '../../../../services/status-tags.js'
+import { boolFromYesNo } from '../../../common/common.js'
 
 export const getIsOrganization = async (applicationId, accountRole, account) => {
   if (account) {
@@ -31,7 +32,7 @@ export const setContactAccountData = (contactRole, accountRole) => async request
   // Set tag to indicate that the organisation question has been answered, once at least
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: accountRole, tagState: tagStatus.COMPLETE })
 
-  if (request.payload['is-organisation'] === 'yes') {
+  if (boolFromYesNo(request.payload['is-organisation'])) {
     // Assign a new organisation
     const contactAccountOps = contactAccountOperations(contactRole, accountRole, applicationId, userId)
     await contactAccountOps.setOrganisation(true, request.payload['organisation-name'])
@@ -50,7 +51,7 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
   const { applicationId } = journeyData
   const pageData = await request.cache().getPageData()
 
-  if (pageData.payload['is-organisation'] === 'yes') {
+  if (boolFromYesNo(pageData.payload['is-organisation'])) {
     // New organisation - collect details
     const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
     // Immutable

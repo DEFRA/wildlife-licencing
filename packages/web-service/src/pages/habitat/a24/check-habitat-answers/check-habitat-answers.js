@@ -6,6 +6,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../../common/check-application.js'
 import { tagStatus } from '../../../../services/status-tags.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
+import { boolFromYesNo } from '../../../common/common.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
@@ -99,7 +100,7 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
-  if (pageData.payload[addSett] === 'yes') {
+  if (boolFromYesNo(pageData.payload[addSett])) {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
     delete journeyData.habitatData
     await request.cache().setData(journeyData)

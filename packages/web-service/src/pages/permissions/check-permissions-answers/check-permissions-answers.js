@@ -4,6 +4,7 @@ import { permissionsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import pageRoute from '../../../routes/page-route.js'
 import { getCheckYourAnswersData } from '../common/permission-functions.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const addPermissionRadio = 'add-another-permission'
 
@@ -16,7 +17,7 @@ export const getData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  if (request?.payload[addPermissionRadio] === 'yes') {
+  if (boolFromYesNo(request?.payload[addPermissionRadio])) {
     delete journeyData.permissionData
     await request.cache().setData(journeyData)
     return permissionsURIs.CONSENT_TYPE.uri
