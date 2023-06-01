@@ -16,15 +16,12 @@
 
 {% set emailAddress %}
    {{ govukInput({
-      label: {
-        text: 'Email address'
-      },
       id: "email-address",
       name: "email-address",
       type: "email",
       autocomplete: "email",
       spellcheck: false,
-      classes: "govuk-input--width-20",
+      classes: "govuk-input--width-50",
       attributes: { maxlength: 50 },
       errorMessage: { text: 'Enter the email address' } if error['email-address']
     }) }}
@@ -38,6 +35,7 @@
         {{ govukRadios({
           idPrefix: "change-email",
           name: "change-email",
+          hint: { text: hintText } if hintText else '',
           errorMessage: {
             text: noneSelected
           } if error['change-email'] === 'any.required',
@@ -48,8 +46,11 @@
                 checked: true
             },
             {
+              divider: "or"
+            },
+            {
               value: "yes",
-              text: "Other",
+              text: "Add a new email address",
               conditional: {
                 html: emailAddress
               }

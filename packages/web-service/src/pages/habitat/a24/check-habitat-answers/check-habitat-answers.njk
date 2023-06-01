@@ -28,7 +28,7 @@
 {% block pageContent %}
 {% for habitat in data.pageData %}
 
-  <h1 class="govuk-heading-m">Sett {{habitat.name}}</h1>
+  <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
     
   <div class="govuk-body">
     <a class="govuk-link govuk-link--no-visited-state" href={{data.confirmDelete + "?id=" + habitat.id}}>
@@ -170,7 +170,7 @@
     legend: {
       text: "Do you want to add another badger sett?",
       isPageHeading: true,
-      classes: "govuk-fieldset__legend--l"
+      classes: "govuk-fieldset__legend--m"
     }
   },
   items: [
