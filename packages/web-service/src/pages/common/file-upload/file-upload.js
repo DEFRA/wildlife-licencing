@@ -1,20 +1,25 @@
 import Joi from 'joi'
 import fs from 'fs'
 import handler from '../../../handlers/page-handler.js'
-import { MAX_FILE_UPLOAD_SIZE_MB, TIMEOUT_MS } from '../../../constants.js'
+import { FILE_UPLOAD_HEADROOM_BYTES, MAX_FILE_UPLOAD_SIZE_BYTES } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
 import { checkApplication } from '../check-application.js'
+
+export const SHAPE_FILES = ['CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']
+
+console.log(`File upload maxsize ${MAX_FILE_UPLOAD_SIZE_BYTES} bytes`)
+console.log(`File upload headroom ${FILE_UPLOAD_HEADROOM_BYTES} bytes`)
 
 export const FILETYPES = {
   SUPPORTING_INFORMATION: {
     filetype: 'METHOD-STATEMENT',
     multiple: true,
-    supportedFileTypes: ['JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'SHAPE', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS']
+    supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS', ...SHAPE_FILES]
   },
   SITE_MAP_FILES: {
     filetype: 'MAP',
     multiple: true,
-    supportedFileTypes: ['JPG', 'PNG', 'GEOJSON', 'KML', 'SHAPE', 'PDF']
+    supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'GEOJSON', 'KML', 'PDF', ...SHAPE_FILES]
   }
 }
 
@@ -29,19 +34,17 @@ export const setData = async request => {
 }
 
 export const getFileExtension = (file, fileType) => {
-  const fileExtension = file.filename.split('.').reverse()[0]?.toUpperCase()
-
   if (fileType === FILETYPES.SUPPORTING_INFORMATION.filetype) {
-    return FILETYPES.SUPPORTING_INFORMATION.supportedFileTypes.indexOf(fileExtension) >= 0
+    return !!FILETYPES.SUPPORTING_INFORMATION.supportedFileTypes.find(t => file.filename.toUpperCase().endsWith(t))
   } else if (fileType === FILETYPES.SITE_MAP_FILES.filetype) {
-    return FILETYPES.SITE_MAP_FILES.supportedFileTypes.indexOf(fileExtension) >= 0
+    return !!FILETYPES.SITE_MAP_FILES.supportedFileTypes.find(t => file.filename.toUpperCase().endsWith(t))
   }
   return false
 }
 
 export const validator = async (payload, fileType) => {
   // The user hasn't attached a file in their request
-  if (payload['scan-file'].bytes === 0 && payload['scan-file'].filename === '') {
+  if (payload['scan-file'].filename === '') {
     // Hapi generates a has for a filename, and still attempts to store what the user has sent (an empty file)
     // In this instance, we need to wipe the temporary file and throw a joi error
     fs.unlinkSync(payload['scan-file'].path)
@@ -57,7 +60,21 @@ export const validator = async (payload, fileType) => {
     }], null)
   }
 
-  if (payload['scan-file'].bytes >= MAX_FILE_UPLOAD_SIZE_MB) {
+  if (parseInt(payload['scan-file'].bytes) === 0) {
+    fs.unlinkSync(payload['scan-file'].path)
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: empty file has been uploaded',
+      path: ['scan-file'],
+      type: 'empty-file-chosen',
+      context: {
+        label: 'scan-file',
+        value: 'Error',
+        key: 'scan-file'
+      }
+    }], null)
+  }
+
+  if (parseInt(payload['scan-file'].bytes) >= MAX_FILE_UPLOAD_SIZE_BYTES) {
     fs.unlinkSync(payload['scan-file'].path)
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: the file was too large',
@@ -108,6 +125,10 @@ export const validator = async (payload, fileType) => {
  * @param request
  * @param h
  * @returns {Promise<null|*>}
+ * Note on the timeouts. The payload timeout does not work, it is always 10 secs.
+ * It can be set to false in which case the default is 10s suspended. If applied to the server then
+ * it gives a service unavailable response, but this bypasses
+ * (breaks) the error handling. For now set to false and rely on the filesize limit to prevent process hogging
  */
 export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion, fileType }) => [
   {
@@ -137,14 +158,14 @@ export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCo
       payload: {
         // maxBytes defaults to one megabyte (which we need to be bigger)
         // But we also need to catch the error and raise a joi error (rather than let hapi catch it)
-        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_MB + 1Mb
-        maxBytes: (MAX_FILE_UPLOAD_SIZE_MB + 1) * 1024 * 1024,
+        // Allow hapi to load MAX_FILE_UPLOAD_SIZE_BYTES + FILE_UPLOAD_HEADROOM_BYTES
+        maxBytes: MAX_FILE_UPLOAD_SIZE_BYTES + FILE_UPLOAD_HEADROOM_BYTES,
         uploads: process.env.SCANDIR,
         multipart: {
           output: 'file'
         },
         parse: true,
-        timeout: TIMEOUT_MS
+        timeout: false
       }
     }
   }
