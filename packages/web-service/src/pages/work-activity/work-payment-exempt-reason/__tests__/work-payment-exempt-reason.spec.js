@@ -36,7 +36,6 @@ describe('The work-payment-exempt-reason page', () => {
           OTHER: 452120007,
           PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
           PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
-          PREVENT_DISEASE_SPREAD: 452120003,
           SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
           paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields',
           radioChecked: 101
@@ -78,7 +77,6 @@ describe('The work-payment-exempt-reason page', () => {
           OTHER: 452120007,
           PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
           PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
-          PREVENT_DISEASE_SPREAD: 452120003,
           SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
           paymentExemptReasonExplanation: 'the reason is because i dont want to pay today',
           radioChecked: 101
