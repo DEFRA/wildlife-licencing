@@ -4,6 +4,7 @@ import { initializeClamScan } from './services/virus-scan.js'
 import fs from 'fs'
 
 import { REDIS } from '@defra/wls-connectors-lib'
+import { cleanUpScanDir } from './services/clean-up.js'
 
 const debug = db('web-service:env')
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
@@ -11,6 +12,9 @@ console.log(`Starting ${json.name}:${json.version}`)
 
 // Warning -- may print sensitive info. Ensure disabled in production
 debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
+
+// Initialize the cleanup process
+cleanUpScanDir()
 
 REDIS.initialiseConnection()
   .then(() => initializeClamScan()

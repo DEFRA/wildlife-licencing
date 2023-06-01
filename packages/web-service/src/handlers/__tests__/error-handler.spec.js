@@ -31,7 +31,7 @@ describe('the error-page handler function', () => {
       view: mockView
     }
     await errorHandler(request, h)
-    expect(mockView).toHaveBeenCalledWith('service-error', expect.any(Object))
+    expect(mockView).toHaveBeenCalledWith('service-error')
     expect(mockCode).toHaveBeenCalledWith(200)
   })
 
@@ -57,7 +57,7 @@ describe('the error-page handler function', () => {
       view: mockView
     }
     await errorHandler(request, h)
-    expect(mockView).toHaveBeenCalledWith('service-error', expect.any(Object))
+    expect(mockView).toHaveBeenCalledWith('service-error')
     expect(mockCode).toHaveBeenCalledWith(200)
   })
 
@@ -76,6 +76,6 @@ describe('the error-page handler function', () => {
     }
     await errorHandler(request, h)
     expect(mockCode).toHaveBeenCalledWith(200)
-    expect(mockView).toHaveBeenCalledWith('not-found', expect.any(Object))
+    expect(mockView).toHaveBeenCalledWith('not-found')
   })
 })

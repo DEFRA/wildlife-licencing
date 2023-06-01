@@ -98,6 +98,7 @@ describe('permissions page handler', () => {
         },
         PERMISSION: {
           getPermissionDetailsById: () => ({ planningType: 12345 }),
+          getPermissions: () => ([{ id: '123-GFD-432' }]),
           removePermissionDetails: mockRemovePermissionDetails,
           removePermission: mockRemovePermission
         },
@@ -147,6 +148,7 @@ describe('permissions page handler', () => {
         },
         PERMISSION: {
           getPermissionDetailsById: () => undefined,
+          getPermissions: () => ([]),
           removePermissionDetails: mockRemovePermissionDetails,
           removePermission: mockRemovePermission
         },

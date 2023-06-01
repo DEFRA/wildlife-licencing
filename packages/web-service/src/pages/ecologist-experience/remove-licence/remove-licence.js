@@ -3,6 +3,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 export const getData = async request => {
   const { licence } = request.query
@@ -18,7 +19,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, ecologistExperienceTemp } = journeyData
   const { licence } = ecologistExperienceTemp
-  if (request.payload['remove-licence'] === 'yes') {
+  if (boolFromYesNo(request.payload['remove-licence'])) {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicence(applicationId, licence)
     const licences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(applicationId)
     // If no more licences set previous licence to false

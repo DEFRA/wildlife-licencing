@@ -16,9 +16,7 @@ export const errorHandler = (request, h) => {
      * 404 page not found errors
      */
     return h
-      .view(ERRORS.NOT_FOUND.page, {
-        notFoundError: request.response.output.payload
-      })
+      .view(ERRORS.NOT_FOUND.page)
       .code(200)
   } else {
     // other 4xx or 5xx errors
@@ -30,14 +28,11 @@ export const errorHandler = (request, h) => {
       payload: request.payload,
       headers: request.headers,
       state: request.state,
-      method: request.method
+      method: request.method,
+      output: request?.response?.output?.payload
     }
 
     console.error('Error processing request. Request: %j', requestDetail)
-    return h
-      .view(ERRORS.SERVICE_ERROR.page, {
-        serviceError: request.response.output.payload
-      })
-      .code(200)
+    return h.view(ERRORS.SERVICE_ERROR.page).code(200)
   }
 }

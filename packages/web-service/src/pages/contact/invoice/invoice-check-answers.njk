@@ -11,7 +11,7 @@
           contactOrganisations: { question: 'Organisation' },
           email: { question: 'Email address' },
           address: { question: 'Contact address' },
-          purchaseOrderRef: { question: 'Reference / purchase order' }
+          purchaseOrderRef: { question: 'Reference / purchase order', href: _uri.purchaseOrderReference }
       } %}
     {% else %}
       {% set questionMap = {
@@ -33,7 +33,7 @@
         attributes: { id: 'continue' },
         preventDoubleClick: true,
         name: 'continue',
-        text: buttonText if buttonText else 'Confirm',
+        text: buttonText if buttonText else 'Continue',
         classes: "govuk-!-margin-top-5"
     }) }}
 {% endblock %}
