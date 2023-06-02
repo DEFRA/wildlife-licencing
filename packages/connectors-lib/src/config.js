@@ -50,6 +50,14 @@ export default {
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
   },
+  defraId: {
+    serviceId: process.env.DEFRA_ID_SERVICE_ID,
+    configUri: process.env.DEFRA_ID_OPENID_CONFIG_URL,
+    secret: process.env.DEFRA_ID_SECRET,
+    clientId: process.env.DEFRA_ID_CLIENT_ID,
+    redirectBase: process.env.DEFRA_ID_REDIRECT_BASE,
+    policy: process.env.DEFRA_ID_POLICY
+  },
   graph: {
     base: process.env.GRAPH_BASE,
     tenant: process.env.OAUTH_TENANT

@@ -153,6 +153,9 @@ import checkConsentAnswers from '../pages/permissions/check-your-answers/check-y
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 
+import { signIn } from '../handlers/defra-idm.js'
+import { defraIdmCallback } from '../handlers/defra-idm-callback.js'
+
 const routes = [
   ...cookieInfo,
   ...species,
@@ -295,7 +298,10 @@ const routes = [
   ...descPotentialConflicts,
   ...checkConsentAnswers,
 
+  signIn,
   signOut,
+  defraIdmCallback,
+
   ...miscRoutes
 ]
 
