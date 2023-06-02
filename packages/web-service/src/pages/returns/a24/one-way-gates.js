@@ -1,31 +1,48 @@
-import Joi from 'joi'
-import pageRoute from '../../../routes/page-route.js'
+import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
+import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
+import { isYes } from '../../common/yes-no.js'
+import { licenceActionsCompletion } from '../common-return-functions.js'
 
 const { ONE_WAY_GATES } = ReturnsURIs.A24
 
-export const checkData = async request => {
-  return null
-}
-
 export const getData = async request => {
-  return { yesNo: null }
+  const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.id
+  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  let oneWayGatesYesOrNo, oneWayGatesDetails
+  if (returnId) {
+    const { obstructionByOneWayGates, obstructionByOneWayGatesDetails } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
+    oneWayGatesYesOrNo = obstructionByOneWayGates
+    oneWayGatesDetails = obstructionByOneWayGatesDetails
+  }
+  return { oneWayGatesYesOrNo, oneWayGatesDetails }
 }
 
 export const setData = async request => {
-
+  const journeyData = await request.cache().getData()
+  const obstructionByOneWayGates = isYes(request)
+  let obstructionByOneWayGatesDetails
+  if (isYes(request)) {
+    obstructionByOneWayGatesDetails = request.payload['yes-conditional-input']
+  } else {
+    obstructionByOneWayGatesDetails = request.payload['no-conditional-input']
+  }
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const payload = { ...licenceReturn, obstructionByOneWayGates, obstructionByOneWayGatesDetails }
+  await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+  journeyData.returns = { ...journeyData.returns, obstructionByOneWayGates, obstructionByOneWayGatesDetails }
+  await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
-  return ONE_WAY_GATES.uri
-}
-
-export default pageRoute({
+export const oneWayGates = yesNoConditionalPage({
   page: ONE_WAY_GATES.page,
   uri: ONE_WAY_GATES.uri,
-  checkData: [checkApplication, checkData],
+  checkData: checkApplication,
   getData: getData,
-  completion: completion,
+  completion: licenceActionsCompletion,
   setData: setData
 })

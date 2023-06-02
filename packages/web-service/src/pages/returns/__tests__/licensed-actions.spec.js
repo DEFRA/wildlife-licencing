@@ -28,14 +28,30 @@ describe('the Licensed Actions functions', () => {
           RETURNS: {
             getLicenceReturn: jest.fn(() => ({
               nilReturn: true
-            }))
+            })),
+            getLicenceActions: jest.fn(() => ([{
+              methodIds: ['12345678', '987654321']
+            }]))
           }
         }
       }))
 
       const { getData } = await import('../licensed-actions.js')
       const result = await getData(request)
-      expect(result).toEqual({ yesNo: 'yes' })
+      expect(result).toEqual({
+        yesNo: 'yes',
+        methodTypes: [
+          '12345678',
+          '987654321'
+        ],
+        activityTypes: {
+          DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
+          DESTROY_A_SETT: '290461e0-58ed-ec11-bb3c-000d3a0cee24',
+          DISTURB_A_SETT: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24',
+          OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: '315af0cf-58ed-ec11-bb3c-000d3a0cee24',
+          OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+        }
+      })
       expect(mockSetData).toHaveBeenCalled()
     })
 
@@ -55,13 +71,31 @@ describe('the Licensed Actions functions', () => {
             findByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
+          },
+          RETURNS: {
+            getLicenceActions: jest.fn(() => ([{
+              methodIds: ['12345678', '987654321']
+            }]))
           }
         }
       }))
 
       const { getData } = await import('../licensed-actions.js')
       const result = await getData(request)
-      expect(result).toEqual({ yesNo: undefined })
+      expect(result).toEqual({
+        yesNo: undefined,
+        methodTypes: [
+          '12345678',
+          '987654321'
+        ],
+        activityTypes: {
+          DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
+          DESTROY_A_SETT: '290461e0-58ed-ec11-bb3c-000d3a0cee24',
+          DISTURB_A_SETT: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24',
+          OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: '315af0cf-58ed-ec11-bb3c-000d3a0cee24',
+          OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+        }
+      })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

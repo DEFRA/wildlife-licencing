@@ -48,7 +48,7 @@ export const setData = async request => {
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, startDate }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...licenceReturn, startDate }
+  journeyData.returns = { ...journeyData.returns, startDate }
   await request.cache().setData(journeyData)
 }
 

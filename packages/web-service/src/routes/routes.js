@@ -152,7 +152,7 @@ import conditionsNotCompleted from '../pages/permissions/conditions-not-complete
 import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
-import { licensedActions } from '../pages/returns/licensed-actions.js'
+import licensedActions from '../pages/returns/licensed-actions.js'
 import outcome from '../pages/returns/outcome.js'
 import whyNil from '../pages/returns/why-nil.js'
 import { anotherLicence } from '../pages/returns/another-licence.js'
@@ -160,13 +160,13 @@ import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
 import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
 import workStart from '../pages/returns/work-start.js'
 import workFinish from '../pages/returns/work-finish.js'
-import oneWayGates from '../pages/returns/a24/one-way-gates.js'
-import blockingOrProofing from '../pages/returns/a24/blocking-or-proofing.js'
-import damageByHandOrMechanicalMeans from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
-import destroyVacantSett from '../pages/returns/a24/destroy-vacant-sett.js'
+import { oneWayGates } from '../pages/returns/a24/one-way-gates.js'
+import { blockingOrProofing } from '../pages/returns/a24/blocking-or-proofing.js'
+import { damageByHandOrMechanicalMeans } from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
+import { destroyVacantSettPage } from '../pages/returns/a24/destroy-vacant-sett.js'
 import destroyDate from '../pages/returns/a24/destroy-date.js'
-import disturbBadgers from '../pages/returns/a24/disturb-badgers.js'
-import { artificialSett } from '../pages/returns/a24/artificial-sett.js'
+import { disturbBadgers } from '../pages/returns/a24/disturb-badgers.js'
+import artificialSett from '../pages/returns/a24/artificial-sett.js'
 import whyNoArtificialSett from '../pages/returns/a24/why-no-artificial-sett.js'
 import artificialSettDetails from '../pages/returns/a24/artificial-sett-details.js'
 import artificialSettEvidenceFound from '../pages/returns/a24/artificial-sett-evidence-found.js'
@@ -334,7 +334,7 @@ const routes = [
   ...oneWayGates,
   ...blockingOrProofing,
   ...damageByHandOrMechanicalMeans,
-  ...destroyVacantSett,
+  ...destroyVacantSettPage,
   ...destroyDate,
   ...disturbBadgers,
   ...artificialSett,

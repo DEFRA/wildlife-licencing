@@ -1,4 +1,35 @@
-{% extends "yes-no.njk" %}
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+    'create-artificial-sett-check': {
+      'any.required': { ref: '#create-artificial-sett-check', text: 'You have not selected an option' }
+    }
+  } %}
+
 {% set title = 'Did you create an artificial sett?' %}
-{% set noneSelected = 'You have not selected an option' %}
-{% set noneSelectedButton = 'Select an option' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+  {{ govukRadios({
+            id: "create-artificial-sett-check",
+            name: "create-artificial-sett-check",
+            errorMessage: { text: 'Select an option' } if error['create-artificial-sett-check'],
+            hint: {
+              text: "This includes any man-made sett or alternative shelter created for badgers."
+              },
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['create-artificial-sett-check'] === 'yes'
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['create-artificial-sett-check'] === 'no',
+              }
+            ]
+          }) }}
+{% endblock %}

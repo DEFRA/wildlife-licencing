@@ -39,5 +39,14 @@ export const RETURNS = {
     },
     `Error updating return details with licenceId ${licenceId}`,
     500
+  ),
+  getLicenceActions: async licenceId => apiRequestsWrapper(
+    async () => {
+      const licences = await API.get(`${apiUrls.LICENCE}/${licenceId}/habitat-sites`)
+      debug(`Found licence actions for ${JSON.stringify(licenceId)}`)
+      return licences
+    },
+    `Error getting licence actions for ${licenceId}`,
+    500
   )
 }

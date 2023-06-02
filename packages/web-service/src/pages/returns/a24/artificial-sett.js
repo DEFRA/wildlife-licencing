@@ -1,6 +1,6 @@
 import { ReturnsURIs } from '../../../uris.js'
-import { isYes, yesNoPage } from '../../common/yes-no.js'
 import { checkApplication } from '../../common/check-application.js'
+import pageRoute from '../../../routes/page-route.js'
 
 const { ARTIFICIAL_SETT } = ReturnsURIs.A24
 
@@ -20,7 +20,7 @@ export const completion = async request => {
   return ARTIFICIAL_SETT.uri
 }
 
-export const artificialSett = yesNoPage({
+export default pageRoute({
   page: ARTIFICIAL_SETT.page,
   uri: ARTIFICIAL_SETT.uri,
   checkData: [checkApplication, checkData],
