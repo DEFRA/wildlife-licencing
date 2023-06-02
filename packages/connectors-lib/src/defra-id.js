@@ -14,7 +14,7 @@ export const DEFRA_ID = {
    * @param callbackUri
    * @returns {Promise<void>}
    */
-  initialise: async (callbackUri) => {
+  initialise: async callbackUri => {
     const cb = new URL(callbackUri, Config.defraId.redirectBase)
     defraIdInfo.redirectUri = cb.href
     const issuer = await Issuer.discover(Config.defraId.configUri)
