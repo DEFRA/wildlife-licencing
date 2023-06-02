@@ -83,6 +83,7 @@ services:
       - "4000:4000"
     env_file:
       - ./env/web.env
+      - ./env/web-secrets.env
     volumes:
       - scandir:/scandir
       - certs:/certs
