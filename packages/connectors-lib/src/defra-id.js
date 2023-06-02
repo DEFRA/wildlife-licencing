@@ -65,7 +65,7 @@ export const DEFRA_ID = {
       }),
       checkResponseOkElseThrow,
       Config.api.timeout)
-    console.log(tokenResponse)
+
     return tokenResponse.id_token
   },
   /**
