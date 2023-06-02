@@ -7,14 +7,15 @@ describe('The wrapper: web-service', () => {
         jest.mock('../server.js')
         jest.mock('../services/virus-scan.js')
         jest.mock('../services/clean-up.js')
-        const { REDIS } = require('@defra/wls-connectors-lib')
+
+        const { REDIS, DEFRA_ID } = require('@defra/wls-connectors-lib')
         REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.resolve())
         const { initializeClamScan } = require('../services/virus-scan.js')
         initializeClamScan.mockImplementation(() => Promise.resolve())
-
+        DEFRA_ID.initialise = jest.fn(() => Promise.resolve())
         require('../web-service')
         setImmediate(() => {
           expect(initializeClamScan).toHaveBeenCalled()
@@ -34,13 +35,14 @@ describe('The wrapper: web-service', () => {
         jest.mock('../server.js')
         jest.mock('../services/virus-scan.js')
         jest.mock('../services/clean-up.js')
-        const { REDIS } = require('@defra/wls-connectors-lib')
+        const { REDIS, DEFRA_ID } = require('@defra/wls-connectors-lib')
         REDIS.initialiseConnection = jest.fn(() => Promise.resolve())
         const { createServer, init } = require('../server.js')
         createServer.mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.reject(new Error()))
         const { initializeClamScan } = require('../services/virus-scan.js')
         initializeClamScan.mockImplementation(() => Promise.resolve())
+        DEFRA_ID.initialise = jest.fn(() => Promise.resolve())
 
         const processExitSpy = jest
           .spyOn(process, 'exit')

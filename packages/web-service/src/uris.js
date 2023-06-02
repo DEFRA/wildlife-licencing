@@ -6,6 +6,10 @@ export const WINDOW_NOT_OPEN = { uri: '/window-not-open', page: 'window-not-open
 export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
+export const SIGN_IN = { uri: '/sign-in' }
+export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
+export const DEFRA_IDM_CALLBACK = { uri: '/auth-complete' }
+
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
 export const APPLICATION_LICENCE = { uri: '/application-licence', page: 'application-licence' }
@@ -178,8 +182,6 @@ export const convictionsURIs = {
   CONVICTION_DETAILS: { uri: '/conviction-details', page: 'conviction-details' },
   CHECK_CONVICTIONS_ANSWERS: { uri: '/convictions-check-answers', page: 'convictions-check-answers' }
 }
-
-export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
   NOT_FOUND: { page: 'not-found' },

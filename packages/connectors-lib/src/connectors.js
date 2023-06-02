@@ -6,5 +6,5 @@ import { POWERAPPS } from './power-apps.js'
 import { API } from './api.js'
 import { GRAPH } from './graph.js'
 import { ADDRESS } from './address-lookup.js'
-
-export { AWS, REDIS, SEQUELIZE, QUEUE, POWERAPPS, API, GRAPH, ADDRESS }
+import { DEFRA_ID } from './defra-id.js'
+export { AWS, REDIS, SEQUELIZE, QUEUE, POWERAPPS, API, GRAPH, ADDRESS, DEFRA_ID }
