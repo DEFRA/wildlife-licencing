@@ -24,7 +24,7 @@
     name: "reference",
     errorMessage: { text: "Enter a planning permission reference" } if error['reference'],
     classes: "govuk-input--width-10",
-    value: data.consentReference if data.consentReference or payload['reference']
+    value: payload['reference'] if payload['reference'] else data.consentReference
   }) }}
 
 {% endblock %}
