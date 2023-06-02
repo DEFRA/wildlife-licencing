@@ -37,7 +37,7 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const destroyVacantSett = yesNoConditionalPage({
+export const destroyVacantSettPage = yesNoConditionalPage({
   page: DESTROY_VACANT_SETT.page,
   uri: DESTROY_VACANT_SETT.uri,
   checkData: checkApplication,

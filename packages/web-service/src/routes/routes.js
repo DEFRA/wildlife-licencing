@@ -163,7 +163,7 @@ import workFinish from '../pages/returns/work-finish.js'
 import { oneWayGates } from '../pages/returns/a24/one-way-gates.js'
 import { blockingOrProofing } from '../pages/returns/a24/blocking-or-proofing.js'
 import { damageByHandOrMechanicalMeans } from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
-import { destroyVacantSett } from '../pages/returns/a24/destroy-vacant-sett.js'
+import { destroyVacantSettPage } from '../pages/returns/a24/destroy-vacant-sett.js'
 import destroyDate from '../pages/returns/a24/destroy-date.js'
 import { disturbBadgers } from '../pages/returns/a24/disturb-badgers.js'
 import artificialSett from '../pages/returns/a24/artificial-sett.js'
@@ -334,7 +334,7 @@ const routes = [
   ...oneWayGates,
   ...blockingOrProofing,
   ...damageByHandOrMechanicalMeans,
-  ...destroyVacantSett,
+  ...destroyVacantSettPage,
   ...destroyDate,
   ...disturbBadgers,
   ...artificialSett,
