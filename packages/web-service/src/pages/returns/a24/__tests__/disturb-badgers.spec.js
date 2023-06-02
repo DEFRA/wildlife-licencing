@@ -36,7 +36,7 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgers: true,
+        disturbBadgersYesOrNo: true,
         disturbBadgersDetails: 'development issues'
       })
     })
@@ -66,7 +66,7 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgers: undefined,
+        disturbBadgersYesOrNo: undefined,
         disturbBadgersDetails: undefined
       })
     })
@@ -109,51 +109,6 @@ describe('the disturb badgers functions', () => {
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
-    })
-  })
-
-  describe('the completion function', () => {
-    it('redirects to the another licence actions page', async () => {
-      const request = {
-        payload: { 'yes-no': 'yes' },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789',
-              methodTypes: ['12345678', '987654321'],
-              methodTypesLength: 2,
-              methodTypesNavigated: 1
-            }
-          }),
-          setData: mockSetData
-        })
-      }
-      const { completion } = await import('../disturb-badgers.js')
-      await completion(request)
-      expect(mockSetData).toHaveBeenCalled()
-    })
-
-    it('redirects to the artificial sett page', async () => {
-      const request = {
-        payload: { 'yes-no': 'yes' },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789',
-              methodTypes: ['12345678', '987654321'],
-              methodTypesLength: 2,
-              methodTypesNavigated: 0
-            }
-          }),
-          setData: mockSetData
-        })
-      }
-      const { completion } = await import('../disturb-badgers.js')
-      expect(await completion(request)).toEqual('/a24/artificial-sett')
     })
   })
 })

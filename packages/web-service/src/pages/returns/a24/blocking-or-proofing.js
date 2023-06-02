@@ -3,9 +3,9 @@ import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { isYes } from '../../common/yes-no.js'
-import { getNextPage } from '../common-return-functions.js'
+import { licenceActionsCompletion } from '../common-return-functions.js'
 
-const { BLOCKING_OR_PROOFING, ARTIFICIAL_SETT } = ReturnsURIs.A24
+const { BLOCKING_OR_PROOFING } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -38,26 +38,11 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  const { methodTypes, methodTypesLength, methodTypesNavigated } = journeyData?.returns
-  if (methodTypesNavigated <= 0) {
-    return ARTIFICIAL_SETT.uri
-  } else {
-    journeyData.returns = {
-      ...journeyData.returns,
-      methodTypesNavigated: methodTypesNavigated - 1
-    }
-    await request.cache().setData(journeyData)
-  }
-  return getNextPage(methodTypes[methodTypesLength - methodTypesNavigated])
-}
-
 export const blockingOrProofing = yesNoConditionalPage({
   page: BLOCKING_OR_PROOFING.page,
   uri: BLOCKING_OR_PROOFING.uri,
   checkData: checkApplication,
   getData: getData,
-  completion: completion,
+  completion: licenceActionsCompletion,
   setData: setData
 })

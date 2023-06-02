@@ -31,3 +31,18 @@ export const getNextPage = licenceMethodType => {
 
   return nextJourney
 }
+
+export const licenceActionsCompletion = async request => {
+  const journeyData = await request.cache().getData()
+  const { methodTypes, methodTypesLength, methodTypesNavigated } = journeyData?.returns
+  if (methodTypesNavigated <= 0) {
+    return ReturnsURIs.A24.ARTIFICIAL_SETT.uri
+  } else {
+    journeyData.returns = {
+      ...journeyData.returns,
+      methodTypesNavigated: methodTypesNavigated - 1
+    }
+    await request.cache().setData(journeyData)
+  }
+  return getNextPage(methodTypes[methodTypesLength - methodTypesNavigated])
+}

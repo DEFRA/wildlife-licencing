@@ -111,49 +111,4 @@ describe('the damage by hand or mechanical means functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('redirects to the another licence actions page', async () => {
-      const request = {
-        payload: { 'yes-no': 'yes' },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789',
-              methodTypes: ['12345678', '987654321'],
-              methodTypesLength: 2,
-              methodTypesNavigated: 1
-            }
-          }),
-          setData: mockSetData
-        })
-      }
-      const { completion } = await import('../damage-by-hand-or-mechanical-means.js')
-      await completion(request)
-      expect(mockSetData).toHaveBeenCalled()
-    })
-
-    it('redirects to the artificial sett page', async () => {
-      const request = {
-        payload: { 'yes-no': 'yes' },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789',
-              methodTypes: ['12345678', '987654321'],
-              methodTypesLength: 2,
-              methodTypesNavigated: 0
-            }
-          }),
-          setData: mockSetData
-        })
-      }
-      const { completion } = await import('../damage-by-hand-or-mechanical-means.js')
-      expect(await completion(request)).toEqual('/a24/artificial-sett')
-    })
-  })
 })

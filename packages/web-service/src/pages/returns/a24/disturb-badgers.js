@@ -3,26 +3,26 @@ import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { isYes } from '../../common/yes-no.js'
-import { getNextPage } from '../common-return-functions.js'
+import { licenceActionsCompletion } from '../common-return-functions.js'
 
-const { DISTURB_BADGERS, ARTIFICIAL_SETT } = ReturnsURIs.A24
+const { DISTURB_BADGERS } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
   const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
-  let disturbBadgers, disturbBadgersDetails
+  let disturbBadgersYesOrNo, disturbBadgersDetails
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
-    disturbBadgers = licenceReturn?.disturbBadgers
+    disturbBadgersYesOrNo = licenceReturn?.disturbBadgers
     disturbBadgersDetails = licenceReturn?.disturbBadgersDetails
   }
-  return { disturbBadgers, disturbBadgersDetails }
+  return { disturbBadgersYesOrNo, disturbBadgersDetails }
 }
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const disturbBadgers = isYes(request)
+  const disturbBadgersBoolean = isYes(request)
   let disturbBadgersDetails
   if (isYes(request)) {
     disturbBadgersDetails = request.payload['yes-conditional-input']
@@ -32,25 +32,10 @@ export const setData = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-  const payload = { ...licenceReturn, disturbBadgers, disturbBadgersDetails }
+  const payload = { ...licenceReturn, disturbBadgers: disturbBadgersBoolean, disturbBadgersDetails }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...journeyData.returns, disturbBadgers, disturbBadgersDetails }
+  journeyData.returns = { ...journeyData.returns, disturbBadgers: disturbBadgersBoolean, disturbBadgersDetails }
   await request.cache().setData(journeyData)
-}
-
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  const { methodTypes, methodTypesLength, methodTypesNavigated } = journeyData?.returns
-  if (methodTypesNavigated <= 0) {
-    return ARTIFICIAL_SETT.uri
-  } else {
-    journeyData.returns = {
-      ...journeyData.returns,
-      methodTypesNavigated: methodTypesNavigated - 1
-    }
-    await request.cache().setData(journeyData)
-  }
-  return getNextPage(methodTypes[methodTypesLength - methodTypesNavigated])
 }
 
 export const disturbBadgers = yesNoConditionalPage({
@@ -58,6 +43,6 @@ export const disturbBadgers = yesNoConditionalPage({
   uri: DISTURB_BADGERS.uri,
   checkData: checkApplication,
   getData: getData,
-  completion: completion,
+  completion: licenceActionsCompletion,
   setData: setData
 })

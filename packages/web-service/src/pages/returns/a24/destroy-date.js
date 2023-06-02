@@ -3,9 +3,9 @@ import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { isDateInFuture } from '../../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../common/date-utils.js'
-import { getNextPage } from '../common-return-functions.js'
+import { licenceActionsCompletion } from '../common-return-functions.js'
 
-const { DESTROY_DATE, ARTIFICIAL_SETT } = ReturnsURIs.A24
+const { DESTROY_DATE } = ReturnsURIs.A24
 
 export const validator = async payload => {
   const startDate = validatePageDate(payload, DESTROY_DATE.page)
@@ -41,27 +41,12 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  const { methodTypes, methodTypesLength, methodTypesNavigated } = journeyData?.returns
-  if (methodTypesNavigated <= 0) {
-    return ARTIFICIAL_SETT.uri
-  } else {
-    journeyData.returns = {
-      ...journeyData.returns,
-      methodTypesNavigated: methodTypesNavigated - 1
-    }
-    await request.cache().setData(journeyData)
-  }
-  return getNextPage(methodTypes[methodTypesLength - methodTypesNavigated])
-}
-
 export default pageRoute({
   page: DESTROY_DATE.page,
   uri: DESTROY_DATE.uri,
+  completion: licenceActionsCompletion,
   checkData: checkApplication,
   validator,
   getData,
-  setData,
-  completion
+  setData
 })
