@@ -10,13 +10,6 @@ import { yesNoPage } from '../common/yes-no.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
-const truncateLongText = lt => {
-  if (lt) {
-    return `${lt.substring(0, 100)}${lt.length > 100 ? '...' : ''}`
-  }
-  return ''
-}
-
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
@@ -27,10 +20,10 @@ export const getData = async request => {
     tabData: [
       { key: 'siteName', value: sites.find(s => s.id === ads.designatedSiteId).siteName },
       { key: 'permissionFromOwner', value: yesNoFromBool(ads.permissionFromOwner) },
-      (ads.permissionFromOwner && { key: 'detailsOfPermission', value: truncateLongText(ads.detailsOfPermission) }),
+      (ads.permissionFromOwner && { key: 'detailsOfPermission', value: ads.detailsOfPermission }),
       { key: 'adviceFromNaturalEngland', value: yesNoFromBool(ads.adviceFromNaturalEngland) },
       (ads.adviceFromNaturalEngland && { key: 'adviceFromWho', value: ads.adviceFromWho }),
-      (ads.adviceFromNaturalEngland && { key: 'adviceDescription', value: truncateLongText(ads.adviceDescription) }),
+      (ads.adviceFromNaturalEngland && { key: 'adviceDescription', value: ads.adviceDescription }),
       { key: 'onSiteOrCloseToSite', value: ads.onSiteOrCloseToSite }
     ].filter(a => a)
   }))
