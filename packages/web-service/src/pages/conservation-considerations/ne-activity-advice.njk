@@ -9,7 +9,7 @@
           'string.max': { ref: '#advice-from-who', text: 'You have entered too many characters'}
         },
         'advice-description': {
-          'string.empty': { ref: '#advice-description', text: 'You have not entered a description of the advice' },
+          'string.empty': { ref: '#advice-description', text: 'You have not entered a description of the outcome' },
           'string.max': { ref: '#advice-description', text: 'You have entered too many characters'}
         }
     }
@@ -42,7 +42,7 @@
   id: "advice-description",
   value: data['advice-description'] if data['advice-description'] else payload['advice-description'],
   maxlength: 4000,
-  errorMessage: { text: "Enter a description of the advice given" } if error['advice-description'],
+  errorMessage: { text: "Enter a description of the outcome" } if error['advice-description'],
   label: {
     text: "Describe the outcome of the advice",
     classes: "govuk-label--m",
