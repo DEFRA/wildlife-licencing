@@ -3,9 +3,9 @@
 {% from "answer-summary.njk" import answerSummary %}
 {% from "button/macro.njk" import govukButton %}
 
-{% set widthClass = 'govuk-grid-column-two-thirds' %}
 {% set title = 'Check your answers' %}
-{% set noneSelected = 'Choose whether you want to add another designated site' %}
+{% set noneSelected = 'You have not selected an option' %}
+
 {% block pageContent %}
     {% if data.checkData.length === 0 %}
         {% set questionMap = { onOrNear: { question: 'Will the development take place on or next to a designated site?', href: _uri.onOrNextToDesignatedSite } } %}
