@@ -32,16 +32,14 @@ export const DEFRA_ID = {
    * Returns the url used for the user authorization redirect (
    * @returns {string}
    */
-  getAuthorizationUrl: () => {
-    return defraIdInfo.client.authorizationUrl({
-      client_id: Config.defraId.clientId,
-      scope: 'openid',
-      response_type: 'code',
-      serviceId: Config.defraId.serviceId,
-      policyName: Config.defraId.policy,
-      redirect_uri: defraIdInfo.redirectUri
-    })
-  },
+  getAuthorizationUrl: () => defraIdInfo.client.authorizationUrl({
+    client_id: Config.defraId.clientId,
+    scope: 'openid',
+    response_type: 'code',
+    serviceId: Config.defraId.serviceId,
+    policyName: Config.defraId.policy,
+    redirect_uri: defraIdInfo.redirectUri
+  }),
   /**
    * Fetch the OAuth token given the supplied authorization code
    * @param code
@@ -60,9 +58,7 @@ export const DEFRA_ID = {
     const tokenResponse = await httpFetch(url.href,
       'POST',
       bodyParameters.toString(),
-      () => ({
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }),
+      () => ({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }),
       checkResponseOkElseThrow,
       Config.api.timeout)
 
