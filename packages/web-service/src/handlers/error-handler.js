@@ -29,7 +29,8 @@ export const errorHandler = (request, h) => {
       headers: request.headers,
       state: request.state,
       method: request.method,
-      output: request?.response?.output?.payload
+      output: request?.response?.output?.payload,
+      stack: request?.response?.stack
     }
 
     console.error('Error processing request. Request: %j', requestDetail)
