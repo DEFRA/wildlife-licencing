@@ -3094,21 +3094,29 @@ paths:
               $ref: '#/components/schemas/user'
       responses:
         200:
-          description: Success
+          description: Success - updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
-        204:
-          description: No operation
+        201:
+          description: Success - created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        202:
+          description: Success - nothing updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
         400:
           description: Bad request. User ID must be a uuid.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-        404:
-          description: An user with the specified ID was not found.
         500:
           description: Unexpected error on server
           content:
@@ -4096,6 +4104,12 @@ components:
           $ref: '#/components/schemas/password'
         cookiePrefs:
           $ref: '#/components/schemas/cookiePrefs'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          $ref: '#/components/schemas/email'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

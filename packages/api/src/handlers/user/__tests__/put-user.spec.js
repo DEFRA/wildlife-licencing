@@ -15,7 +15,7 @@ const ts = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { userId: 'uid' } } }
+const context = { request: { params: { userId: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' } } }
 
 jest.mock('@defra/wls-database-model')
 
@@ -33,14 +33,47 @@ describe('The putUser handler', () => {
     cache.save = jest.fn()
   })
 
-  it('returns status 200 on a successful update', async () => {
+  it('returns status 201 on a successful create', async () => {
     models.users = {
-      update: jest.fn(() => [1, [{ dataValues: { id: 'bar', ...ts } }]])
+      findOrCreate: jest.fn(() => [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }, true])
     }
-    await putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)
-    expect(models.users.update).toHaveBeenCalledWith({
-      password: expect.any(String)
-    }, { returning: true, where: { id: 'uid' } })
+    await putUser(context, { payload: { username: 'BA202321-H2-4706-N6-0607', email: 'a.b@c' } }, h)
+    expect(models.users.findOrCreate).toHaveBeenCalledWith({
+      defaults: {
+        id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb',
+        user: {
+          email: 'a.b@c'
+        },
+        username: 'BA202321-H2-4706-N6-0607'
+      },
+      where: {
+        id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'
+      }
+    })
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(201)
+  })
+
+  it.only('returns status 200 on a successful update', async () => {
+    models.users = {
+      findOrCreate: jest.fn(() => [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }, false]),
+      update: jest.fn(() => [1, [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }]])
+    }
+    await putUser(context, { payload: { username: 'BA202321-H2-4706-N6-0607', email: 'a.b@c' } }, h)
+    expect(models.users.findOrCreate).toHaveBeenCalledWith({
+      defaults: {
+        id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb',
+        user: {
+          email: 'a.b@c'
+        },
+        username: 'BA202321-H2-4706-N6-0607'
+      },
+      where: {
+        id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb'
+      }
+    })
+    expect(models.users.update).toHaveBeenCalledWith({ user: { email: 'a.b@c' } },
+      { returning: true, where: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' } })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })

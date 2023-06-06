@@ -44,6 +44,7 @@ async function defineUsers (sequelize) {
     id: { type: DataTypes.UUID, primaryKey: true },
     username: { type: DataTypes.STRING(50), allowNull: false },
     password: { type: DataTypes.STRING(127) },
+    user: { type: DataTypes.JSONB },
     cookiePrefs: { type: DataTypes.JSONB }
   }, {
     timestamps: true,

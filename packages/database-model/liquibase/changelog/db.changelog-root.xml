@@ -32,4 +32,10 @@
             <column  name="cookie_prefs"  type="jsonb"/>
         </addColumn>
     </changeSet>
+
+    <changeSet  id="4"  author="sdds">
+        <addColumn  tableName="users">
+            <column  name="user"  type="jsonb"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

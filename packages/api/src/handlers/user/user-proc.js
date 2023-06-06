@@ -7,8 +7,20 @@ export const prepareResponse = u => Object.assign((({
   password,
   createdAt,
   updatedAt,
+  user,
   ...l
 }) => l)(u), {
   createdAt: u.createdAt.toISOString(),
-  updatedAt: u.updatedAt.toISOString()
+  updatedAt: u.updatedAt.toISOString(),
+  ...u.user
 })
+
+export const alwaysExclude = payload => {
+  delete payload.id
+  delete payload.username
+  delete payload.password
+  delete payload.createdAt
+  delete payload.updatedAt
+  delete payload.cookiePrefs
+  return payload
+}
