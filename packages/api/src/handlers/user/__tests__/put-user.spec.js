@@ -54,7 +54,7 @@ describe('The putUser handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns status 200 on a successful update', async () => {
+  it('returns status 200 on a successful update', async () => {
     models.users = {
       findOrCreate: jest.fn(() => [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }, false]),
       update: jest.fn(() => [1, [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }]])
@@ -78,21 +78,18 @@ describe('The putUser handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
-  it('returns status 404 on a not found', async () => {
-    models.users = { update: jest.fn(() => [0, []]) }
-    await putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)
+  it('returns status 202 on a no-op', async () => {
+    models.users = {
+      findOrCreate: jest.fn(() => [{ dataValues: { id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', ...ts } }, false])
+    }
+    await putUser(context, { payload: { username: 'BA202321-H2-4706-N6-0607' } }, h)
+    expect(models.users.findOrCreate).toHaveBeenCalled()
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(404)
-  })
-
-  it('returns status 200 with no password given', async () => {
-    await putUser(context, { payload: { } }, h)
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(200)
+    expect(codeFunc).toHaveBeenCalledWith(202)
   })
 
   it('throws with a create update error', async () => {
-    models.users = { update: jest.fn(async () => { throw Error() }) }
-    await expect(() => putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)).rejects.toThrow()
+    models.users = { findOrCreate: jest.fn(async () => { throw Error() }) }
+    await expect(() => putUser(context, { payload: { username: 'BA202321-H2-4706-N6-0607' } }, h)).rejects.toThrow()
   })
 })
