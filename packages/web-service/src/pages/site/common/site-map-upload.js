@@ -7,7 +7,7 @@ import { siteURIs } from '../../../uris.js'
 
 export const uploadAndUpdateSiteMap = async (request, siteMapFile) => {
   const journeyData = await request.cache().getData()
-  const { siteData, applicationId, fileUpload } = journeyData
+  const { siteData = {}, applicationId, fileUpload } = journeyData
   if (applicationId && fileUpload) {
     const site = await APIRequests.SITE.findByApplicationId(applicationId)
     let siteInfo = {
