@@ -1,6 +1,6 @@
 {% extends 'standard-form.njk' %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "textarea/macro.njk" import govukTextarea %}
 {% set errorMap = {
     'why-nil': {
       'any.required': { ref: '#why-nil', text: 'You have not selected an option' }
@@ -11,11 +11,11 @@
     }
   } %}
 {% set otherDetailsWhyActions %}
-{{ govukInput({
+{{ govukTextarea({
   id: "other-details",
   name: "other-details",
   errorMessage: { text: "Provide more detail about why you didn't carry out these actions" } if error['other-details'],
-  value: payload['other-details'],
+  value: data.whyNilOther if data.whyNilOther else payload['other-reason'],
   classes: "govuk-!-width-full",
   label: {
     text: "Provide more detail why you didn't carry out these actions"
@@ -33,13 +33,19 @@
             errorMessage: { text: 'Select an option' } if error['why-nil'],
             items: [
               {
+                value: data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN,
                 text: "The development work did not happen",
+                checked: data.whyNil === data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN
               },
               {
+                value: data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS,
                 text: "The sett was not in active use by badgers",
+                checked: data.whyNil === data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS
               },
               {
+                value: data.OTHER,
                 text: "Other",
+                checked: payload['why-nil'] === '452120002' or data.whyNil === data.OTHER,
                 conditional: {
                   html: otherDetailsWhyActions
                 }
