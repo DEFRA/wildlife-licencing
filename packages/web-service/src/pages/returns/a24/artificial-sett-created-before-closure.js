@@ -30,7 +30,7 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const artificialSettCreatedBeforeClosure = yesNoPage({
+export const artificialSettCreatedBeforeClosurePage = yesNoPage({
   page: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.page,
   uri: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri,
   completion: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,

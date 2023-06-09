@@ -45,7 +45,7 @@
               {
                 value: data.OTHER,
                 text: "Other",
-                checked: payload['why-nil'] === '452120002' or data.whyNil === data.OTHER,
+                checked: payload['why-nil'] === data.OTHER if payload['why-nil'] or data.whyNil === data.OTHER,
                 conditional: {
                   html: otherDetailsWhyActions
                 }
