@@ -6,7 +6,6 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../common/check-application.js'
 
 const exemptDetails = 'exempt-details'
-const exemptReason = 'work-payment-exempt-reason'
 
 const {
   PAYMENT_EXEMPT_REASON: {
@@ -23,7 +22,6 @@ const {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
-  const payload = pageData?.payload || {}
 
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
@@ -35,7 +33,7 @@ export const getData = async request => {
   }
 
   return {
-    radioChecked: +(payload[exemptReason]) || applicationData?.paymentExemptReason,
+    radioChecked: applicationData?.paymentExemptReason,
     paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
@@ -77,7 +75,7 @@ export const setData = async request => {
 export const validator = async payload => {
   if (!payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]) {
     Joi.assert(payload, Joi.object({
-      [exemptReason]: Joi.any().required()
+      'work-payment-exempt-reason': Joi.any().required()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
