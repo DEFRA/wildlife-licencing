@@ -4,10 +4,9 @@ import { workActivityURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../common/check-application.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { tagStatus } from '../../../services/status-tags.js'
 
 const exemptDetails = 'exempt-details'
+const exemptReason = 'work-payment-exempt-reason'
 
 const {
   PAYMENT_EXEMPT_REASON: {
@@ -24,6 +23,8 @@ const {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
+  const payload = pageData?.payload || {}
+
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   let paymentExemptReasonExplanation = ''
@@ -34,7 +35,7 @@ export const getData = async request => {
   }
 
   return {
-    radioChecked: applicationData?.paymentExemptReason,
+    radioChecked: +(payload[exemptReason]) || applicationData?.paymentExemptReason,
     paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
@@ -73,16 +74,10 @@ export const setData = async request => {
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.WORK_ACTIVITY, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  return workActivityURIs.CHECK_YOUR_ANSWERS.uri
-}
-
 export const validator = async payload => {
   if (!payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]) {
     Joi.assert(payload, Joi.object({
-      'work-payment-exempt-reason': Joi.any().required()
+      [exemptReason]: Joi.any().required()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
