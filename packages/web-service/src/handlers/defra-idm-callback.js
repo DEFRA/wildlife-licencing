@@ -1,6 +1,8 @@
 import { DEFRA_ID } from '@defra/wls-connectors-lib'
-import { DEFRA_IDM_CALLBACK } from '../uris.js'
+import { APPLICATIONS, DEFRA_IDM_CALLBACK, TASKLIST } from '../uris.js'
 import { APIRequests } from '../services/api-requests.js'
+import db from 'debug'
+const debug = db('web-service:authenticate')
 
 /**
  * Search the database for a user with the id of the contact
@@ -9,21 +11,59 @@ import { APIRequests } from '../services/api-requests.js'
  * @returns {Promise<void>}
  */
 export const consumeTokenPayload = async (request, tokenPayload) => {
-  // const user = await APIRequests.USER.getById(tokenPayload.contactId)
-  // const username = request.payload.username.toLowerCase()
-  // const result = await APIRequests.USER.findByName(username)
-  // debug(`Logging in user: ${username}`)
-  // await request.cache().setAuthData(result)
-  // const journeyData = await request.cache().getData() || {}
-  // Object.assign(journeyData, { userId: result.id })
-  // await request.cache().setData(journeyData)
-  //
-  // // if the cookies preferences are set in the session then write it into the user
-  // if (journeyData.cookies) {
-  //   const user = await APIRequests.USER.getById(journeyData.userId)
-  //   Object.assign(user, { cookiePrefs: journeyData.cookies })
-  //   await APIRequests.USER.update(journeyData.userId, user)
-  // }
+  const journeyData = await request.cache().getData() || {}
+  const user = await APIRequests.USER.getById(tokenPayload.contactId)
+  if (!user) {
+    const payload = {
+      username: tokenPayload.uniqueReference,
+      email: tokenPayload.email,
+      firstName: tokenPayload.firstName,
+      lastName: tokenPayload.lastName
+    }
+    if (journeyData?.cookies) {
+      Object.assign(payload, { cookiePrefs: journeyData.cookies })
+    }
+    debug(`Create user: ${JSON.stringify(payload, null, 4)}`)
+    await APIRequests.USER.createIDM(tokenPayload.contactId, payload)
+  } else {
+    debug(`Found user user: ${JSON.stringify(user, null, 4)}`)
+    if (journeyData?.cookies) {
+      Object.assign(user, { cookiePrefs: journeyData?.cookies })
+      await APIRequests.USER.update(tokenPayload.contactId, user)
+    }
+  }
+
+  debug(`Set auth: ${JSON.stringify(tokenPayload, null, 4)}`)
+  await request.cache().setAuthData(tokenPayload)
+  Object.assign(journeyData, { userId: tokenPayload.contactId })
+  await request.cache().setData(journeyData)
+}
+
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  if (journeyData?.navigation?.requestedPage) {
+    return journeyData.navigation.requestedPage
+  } else if (!request.auth.isAuthenticated) {
+    return TASKLIST.uri
+  } else {
+    if (journeyData.applicationId) {
+      return TASKLIST.uri
+    } else {
+      return APPLICATIONS.uri
+    }
+  }
+}
+
+export const defraIdmCallbackPreAuth = async (request, h) => {
+  if (request.path === DEFRA_IDM_CALLBACK.uri) {
+    const params = new URLSearchParams(request.query)
+    const code = params.get('code')
+    debug(`Got code: ${code.substring(0, 10)}...`)
+    const token = await DEFRA_ID.fetchToken(code)
+    const tokenPayload = await DEFRA_ID.verifyToken(token)
+    await consumeTokenPayload(request, tokenPayload)
+  }
+  return h.continue
 }
 
 export const defraIdmCallback = {
@@ -35,14 +75,5 @@ export const defraIdmCallback = {
    * @param h
    * @returns {Promise<*>}
    */
-  handler: async (request, h) => {
-    const params = new URLSearchParams(request.query)
-    const code = params.get('code')
-    const token = await DEFRA_ID.fetchToken(code)
-    const tokenPayload = await DEFRA_ID.verifyToken(token)
-    await consumeTokenPayload(request, tokenPayload)
-    console.log(tokenPayload)
-    return h.redirect('/which-species')
-  },
-  options: { auth: false }
+  handler: async (request, h) => h.redirect(await completion(request))
 }

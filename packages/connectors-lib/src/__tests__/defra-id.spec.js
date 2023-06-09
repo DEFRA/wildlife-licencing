@@ -5,7 +5,8 @@ describe('Defra ID', () => {
     jest.doMock('../config.js', () => ({
       defraId: {
         serviceId: 'service-id',
-        configUri: 'https://discovery',
+        baseUrl: 'https://discovery',
+        configPath: 'path',
         secret: 'secret',
         clientId: 'client-id',
         redirectBase: 'https://0.0.0.0',

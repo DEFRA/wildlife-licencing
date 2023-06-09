@@ -4099,7 +4099,7 @@ components:
         id:
           $ref: '#/components/schemas/uuid'
         username:
-          $ref: '#/components/schemas/email'
+          type: string
         password:
           $ref: '#/components/schemas/password'
         cookiePrefs:

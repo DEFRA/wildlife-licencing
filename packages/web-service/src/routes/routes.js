@@ -5,7 +5,6 @@ import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
 import applications from '../pages/applications/applications.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import applicationLicence from '../pages/applications/application-licence.js'
-import login from '../pages/auth/login/login.js'
 import miscRoutes from './misc-routes.js'
 import declaration from '../pages/declaration/declaration.js'
 import submission from '../pages/submission/submission.js'
@@ -151,7 +150,7 @@ import conditionsNotCompleted from '../pages/permissions/conditions-not-complete
 import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
-import { signOut } from '../pages/sign-out/sign-out.js'
+import { signOut } from '../handlers/sign-out.js'
 
 import { signIn } from '../handlers/defra-idm.js'
 import { defraIdmCallback } from '../handlers/defra-idm-callback.js'
@@ -165,7 +164,6 @@ const routes = [
   ...applications,
   ...applicationSummary,
   ...applicationLicence,
-  ...login,
   ...declaration,
   ...submission,
   ...uploadSupportingInformation,

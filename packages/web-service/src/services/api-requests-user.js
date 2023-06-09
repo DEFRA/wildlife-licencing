@@ -45,5 +45,12 @@ export const USER = {
     },
     `Error creating user ${username}`,
     500
-  )
+  ),
+  createIDM: async (userId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Creating new user: ${userId}`)
+      await API.put(`/user/${userId}`, payload)
+    },
+    `Error creating user ${userId}`,
+    500)
 }

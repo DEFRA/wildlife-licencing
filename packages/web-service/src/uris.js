@@ -13,7 +13,6 @@ export const DEFRA_IDM_CALLBACK = { uri: '/auth-complete' }
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
 export const APPLICATION_LICENCE = { uri: '/application-licence', page: 'application-licence' }
-export const LOGIN = { uri: '/login', page: 'login' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }

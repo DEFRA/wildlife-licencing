@@ -19,7 +19,7 @@ describe('The authorization scheme', () => {
       redirect: mockRedirect
     }
     const result = await authenticate(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/login')
+    expect(mockRedirect).toHaveBeenCalledWith('/sign-in')
     expect(mockSetData).toHaveBeenCalledWith({ navigation: { requestedPage: '/some-path' } })
     expect(result).toBe('takeover')
   })
@@ -43,7 +43,7 @@ describe('The authorization scheme', () => {
     const { authenticate } = authorization.default()
     const request = {
       cache: () => ({
-        getAuthData: () => ({ id: 'd1887515-b803-48ad-9493-775fd184ce89' })
+        getAuthData: () => ({ contactId: 'd1887515-b803-48ad-9493-775fd184ce89' })
       })
     }
     const mockAuthenticated = jest.fn()
@@ -51,6 +51,6 @@ describe('The authorization scheme', () => {
       authenticated: mockAuthenticated
     }
     await authenticate(request, h)
-    expect(mockAuthenticated).toHaveBeenCalledWith({ credentials: { user: 'd1887515-b803-48ad-9493-775fd184ce89' } })
+    expect(mockAuthenticated).toHaveBeenCalledWith({ credentials: { userId: 'd1887515-b803-48ad-9493-775fd184ce89' } })
   })
 })

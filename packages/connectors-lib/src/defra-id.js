@@ -17,10 +17,11 @@ export const DEFRA_ID = {
   initialise: async callbackUri => {
     const cb = new URL(callbackUri, Config.defraId.redirectBase)
     defraIdInfo.redirectUri = cb.href
-    const issuer = await Issuer.discover(Config.defraId.configUri)
+    const issuer = await Issuer.discover((new URL(Config.defraId.configPath, Config.defraId.baseUrl)).href)
     debug('Discovered issuer %s %O', issuer.issuer, issuer.metadata)
     defraIdInfo.JWKS = jose.createRemoteJWKSet(new URL(issuer.metadata.jwks_uri))
     defraIdInfo.tokenEndpoint = issuer.token_endpoint
+    defraIdInfo.endSessionEndpoint = issuer.end_session_endpoint
     defraIdInfo.client = new issuer.Client({
       client_id: Config.defraId.clientId,
       client_secret: Config.defraId.secret,
@@ -77,5 +78,10 @@ export const DEFRA_ID = {
       console.error(error)
       throw new Error('Token decoding failure')
     }
-  }
+  },
+  /**
+   * Return the end session endpoint
+   */
+  getEndSession: () => defraIdInfo.endSessionEndpoint,
+  getManagement: () => (new URL(Config.defraId.managementPath, Config.defraId.baseUrl)).href
 }
