@@ -23,12 +23,12 @@
               {
                 value: "yes",
                 text: "Yes",
-                checked: payload['create-artificial-sett-check'] === 'yes'
+                checked:  data.yesNo === 'yes' or payload['create-artificial-sett-check'] === 'yes'
               },
               {
                 value: "no",
                 text: "No",
-                checked: payload['create-artificial-sett-check'] === 'no',
+                checked: data.yesNo === 'no' or payload['create-artificial-sett-check'] === 'no'
               }
             ]
           }) }}
