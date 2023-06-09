@@ -1,30 +1,40 @@
 import { ReturnsURIs } from '../../../uris.js'
 import { isYes, yesNoPage } from '../../common/yes-no.js'
 import { checkApplication } from '../../common/check-application.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { yesNoFromBool } from '../../common/common.js'
 
-const { ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE } = ReturnsURIs.A24
-
-export const checkData = async request => {
-  return null
-}
+const { ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE, ARTIFICIAL_SETT_EVIDENCE_FOUND } = ReturnsURIs.A24
 
 export const getData = async request => {
-  return { yesNo: null }
+  const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  if (returnId) {
+    const { artificialSettCreatedBeforeClosure } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+    return { yesNo: yesNoFromBool(artificialSettCreatedBeforeClosure) }
+  } else {
+    return { yesNo: undefined }
+  }
 }
 
 export const setData = async request => {
-
-}
-
-export const completion = async request => {
-  return ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri
+  const journeyData = await request.cache().getData()
+  const artificialSettCreatedBeforeClosure = isYes(request)
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const payload = { ...licenceReturn, artificialSettCreatedBeforeClosure }
+  await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+  journeyData.returns = { ...journeyData.returns, artificialSettCreatedBeforeClosure }
+  await request.cache().setData(journeyData)
 }
 
 export const artificialSettCreatedBeforeClosure = yesNoPage({
   page: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.page,
   uri: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri,
-  checkData: [checkApplication, checkData],
+  completion: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,
+  checkData: checkApplication,
   getData: getData,
-  completion: completion,
   setData: setData
 })
