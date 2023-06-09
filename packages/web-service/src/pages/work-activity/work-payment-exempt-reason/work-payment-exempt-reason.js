@@ -22,7 +22,6 @@ const {
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const pageData = await request.cache().getPageData()
-
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
   let paymentExemptReasonExplanation = ''
