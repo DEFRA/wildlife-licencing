@@ -171,7 +171,7 @@ import whyNoArtificialSett from '../pages/returns/a24/why-no-artificial-sett.js'
 import artificialSettDetails from '../pages/returns/a24/artificial-sett-details.js'
 import artificialSettEvidenceFound from '../pages/returns/a24/artificial-sett-evidence-found.js'
 import artificialSettGridReference from '../pages/returns/a24/artificial-sett-grid-reference.js'
-import { artificialSettCreatedBeforeClosure } from '../pages/returns/a24/artificial-sett-created-before-closure.js'
+import { artificialSettCreatedBeforeClosurePage } from '../pages/returns/a24/artificial-sett-created-before-closure.js'
 import licenceConditions from '../pages/returns/licence-conditions.js'
 import welfareConcerns from '../pages/returns/a24/welfare-concerns.js'
 import returnsCheck from '../pages/returns/check-your-answers.js'
@@ -342,7 +342,7 @@ const routes = [
   ...artificialSettDetails,
   ...artificialSettEvidenceFound,
   ...artificialSettGridReference,
-  ...artificialSettCreatedBeforeClosure,
+  ...artificialSettCreatedBeforeClosurePage,
   ...licenceConditions,
   ...welfareConcerns,
   ...returnsCheck,

@@ -1,0 +1,26 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+    'located-artificial-sett': {
+      'string.empty': { ref: '#located-artificial-sett', text: 'You have not entered evidence that badgers found the artificial sett' },
+      'string.max': { ref: '#located-artificial-sett', text: 'You have entered too many characters' }
+    }
+  } %}
+{% set title = 'What evidence do you have that badgers found the artificial sett?' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}
+{% endblock %}
+
+{% block pageContent %}
+  {{ govukTextarea({
+  id: "located-artificial-sett",
+  name: "located-artificial-sett",
+  errorMessage: { text: 'Enter evidence that badgers found the artificial sett' } if error['located-artificial-sett'],
+  value: data.noOutcome if data.NoOutcome else payload['located-artificial-sett'],
+  maxlength: 4000,
+  hint: {
+    text: "You will be able to upload documents showing that badgers found the artificial sett."
+  }
+}) }}
+{% endblock %}
