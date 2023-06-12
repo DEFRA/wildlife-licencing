@@ -49,17 +49,11 @@
       <div class="govuk-header__content">
         <a href="{{ _uri.applications }}" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
         {% if credentials %}
-          <a class="govuk-header__link signout-link" href="{{ _uri.idm.management }}">
-            {{ user.name }}
-          </a>
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signOut }}">Sign out</a>
           <span class="signout-link">&nbsp;|&nbsp;</span>
-          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signOut }}">
-            Sign out
-          </a>
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.management }}">{{ user.name }}</a>
         {% else %}
-          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signIn }}">
-            Sign in
-          </a>
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signIn }}">Sign in</a>
         {% endif %}
       </div>
     </div>
