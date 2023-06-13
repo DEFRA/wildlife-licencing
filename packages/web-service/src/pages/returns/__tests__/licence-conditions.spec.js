@@ -4,7 +4,7 @@ describe('the licence conditions functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
-    it('getData', async () => {
+    it('getData with return id', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
@@ -37,6 +37,34 @@ describe('the licence conditions functions', () => {
       expect(await getData(request)).toStrictEqual({
         licenceConditions: true,
         licenceConditionsDetails: 'some conditions are not met'
+      })
+    })
+
+    it('getData with out return id', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          LICENCES: {
+            findByApplicationId: () => {
+              return {
+                id: '123456'
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: '920d53c110fc',
+            returns: {}
+          })
+        })
+      }
+      const { getData } = await import('../licence-conditions.js')
+      expect(await getData(request)).toStrictEqual({
+        licenceConditions: undefined,
+        licenceConditionsDetails: undefined
       })
     })
   })

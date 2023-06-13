@@ -1,9 +1,9 @@
-import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { isYes } from '../../common/yes-no.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { commonValidator } from '../common-return-functions.js'
 
 const { WELFARE_CONCERNS } = ReturnsURIs.A24
 
@@ -20,25 +20,13 @@ export const getData = async request => {
   return { welfareConcerns, welfareConcernsDetails }
 }
 
-export const validator = async payload => {
-  if (!payload['yes-no']) {
-    Joi.assert(payload, Joi.object({
-      'yes-no': Joi.any().required()
-    }).options({ abortEarly: false, allowUnknown: true }))
-  }
-
-  if (payload['yes-no'] === 'yes') {
-    Joi.assert(payload, Joi.object({
-      'yes-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
-    }).options({ abortEarly: false, allowUnknown: true }))
-  }
-}
+export const validator = payload => commonValidator(payload, WELFARE_CONCERNS.page)
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const welfareConcerns = isYes(request)
   let welfareConcernsDetails
-  if (!isYes(request)) {
+  if (isYes(request)) {
     welfareConcernsDetails = request.payload['yes-conditional-input']
   }
   const returnId = journeyData?.returns?.id
