@@ -45,5 +45,12 @@ export const getApplicationData = async request => {
   const application = await APIRequests.APPLICATION.getById(applicationId)
   const applicationType = findApplicationType(application)
 
-  return { application, applicationType, applicationId }
+  const licenceId = params.get('licenceId')
+  let licences
+  if (licenceId) {
+    const applicationLicences = await APIRequests.LICENCES.findByApplicationId(applicationId)
+    licences = applicationLicences.filter(l => l.id === licenceId)
+  }
+
+  return { application, applicationType, applicationId, licences }
 }
