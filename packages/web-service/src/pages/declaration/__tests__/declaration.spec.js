@@ -101,10 +101,11 @@ describe('the declaration-application handler function', () => {
         userId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
         applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
       }))
-
+      const mockSetData = jest.fn()
       const request = {
         cache: () => ({
-          getData: mockGetData
+          getData: mockGetData,
+          setData: mockSetData
         })
       }
       const mockSubmit = jest.fn()
@@ -119,7 +120,11 @@ describe('the declaration-application handler function', () => {
       const { setData } = await import('../declaration.js')
       await setData(request)
 
-      expect(mockGetData).toHaveBeenCalledTimes(1)
+      expect(mockGetData).toHaveBeenCalledTimes(2)
+      expect(mockSetData).toHaveBeenCalledWith({
+        submittedApplicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb',
+        userId: 'afda812d-c4df-4182-9978-19e6641c4a6e'
+      })
       expect(mockSubmit).toHaveBeenCalledWith('35a6c59e-0faf-438b-b4d5-6967d8d075cb')
     })
   })

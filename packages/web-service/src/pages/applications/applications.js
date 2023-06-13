@@ -34,8 +34,10 @@ export const checkData = async (request, h) => {
 }
 const getApplicationLicence = async app => {
   const licences = await APIRequests.LICENCES.findByApplicationId(app?.id)
-  const lastSentEventFlag = licences.length > 0 ? findLastSentEvent(licences[0]) : null
-  Object.assign(app, { licences, lastSentEventFlag })
+  // Need to do something smarter here when we get to multiple licence per application
+  const licencesSingleton = licences?.sort(sorter).splice(0, 1)
+  const lastSentEventFlag = licences.length > 0 ? findLastSentEvent(licencesSingleton[0]) : null
+  Object.assign(app, { licences: licencesSingleton, lastSentEventFlag })
   return app
 }
 const getApplicationsWithLicences = async applications => Promise.all(applications.map(application => getApplicationLicence(application)))

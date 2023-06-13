@@ -21,7 +21,15 @@ export const checkData = async (request, h) => {
   return null
 }
 
-export const setData = async request => ApplicationService.submitApplication(request)
+export const setData = async request => {
+  await ApplicationService.submitApplication(request)
+  // Remove the applicationId from the cache to prevent accidental updates
+  const journeyData = await request.cache().getData()
+  journeyData.submittedApplicationId = journeyData.applicationId
+  delete journeyData.applicationId
+  await request.cache().setData(journeyData)
+}
+
 export default pageRoute({
   page: DECLARATION.page,
   uri: DECLARATION.uri,
