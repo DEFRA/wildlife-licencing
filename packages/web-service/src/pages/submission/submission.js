@@ -1,20 +1,21 @@
 import pageRoute from '../../routes/page-route.js'
-import { SUBMISSION, APPLICATIONS } from '../../uris.js'
+import { SUBMISSION, APPLICATIONS, TASKLIST } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
+import { isAppSubmittable } from '../tasklist/licence-type.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { checkApplication } from '../common/check-application.js'
 
 export const checkData = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  if (!journeyData.submittedApplicationId) {
-    return h.redirect(APPLICATIONS.uri)
+  if (!await isAppSubmittable(request)) {
+    return h.redirect(TASKLIST.uri)
   }
 
   return null
 }
 
 export const getData = async request => {
-  const { submittedApplicationId } = await request.cache().getData()
-  const application = await APIRequests.APPLICATION.getById(submittedApplicationId)
+  const { applicationId } = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(applicationId)
 
   return {
     currentApplication: application
@@ -26,6 +27,6 @@ export default pageRoute({
   uri: SUBMISSION.uri,
   completion: APPLICATIONS.uri,
   backlink: Backlink.NO_BACKLINK,
-  checkData: [checkData],
+  checkData: [checkData, checkApplication],
   getData
 })
