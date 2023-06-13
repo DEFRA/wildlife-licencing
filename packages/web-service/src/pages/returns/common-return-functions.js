@@ -56,17 +56,15 @@ export const commonValidator = async (payload, page) => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (page === WELFARE_CONCERNS.page) {
-    if (payload['yes-no'] === 'yes') {
-      Joi.assert(payload, Joi.object({
-        'yes-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
-      }).options({ abortEarly: false, allowUnknown: true }))
-    }
-  } else if (page === LICENCE_CONDITIONS.page) {
-    if (payload['yes-no'] === 'no') {
-      Joi.assert(payload, Joi.object({
-        'no-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
-      }).options({ abortEarly: false, allowUnknown: true }))
-    }
+  if (page === WELFARE_CONCERNS.page && payload['yes-no'] === 'yes') {
+    Joi.assert(payload, Joi.object({
+      'yes-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
+
+  if (page === LICENCE_CONDITIONS.page && payload['yes-no'] === 'no') {
+    Joi.assert(payload, Joi.object({
+      'no-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+    }).options({ abortEarly: false, allowUnknown: true }))
   }
 }
