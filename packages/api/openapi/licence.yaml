@@ -4238,6 +4238,12 @@ components:
               type: boolean
             artificialSettFoundGridReference:
               $ref: '#/components/schemas/gridReference'
+            licenceConditions:
+              type: boolean
+            licenceConditionsDetails:
+              type: string
+              minLength: 1
+              maxLength: 4000
             welfareConcerns:
               type: boolean
             welfareConcernsDetails:

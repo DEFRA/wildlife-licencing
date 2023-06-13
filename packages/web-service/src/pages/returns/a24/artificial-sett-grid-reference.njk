@@ -1,23 +1,28 @@
 {% extends "standard-form.njk" %}
-{% from "input/macro.njk" import govukInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set errorMap = {
-        'artificial-sett-grid-reference': {
-          'string.empty': { ref: '#artificial-sett-grid-reference', text: 'MSG HERE' },
-          'string.max': { ref: '#artificial-sett-grid-reference', text: 'MSG HERE'}
-        }
-    }
-%}
+  'artificial-sett-grid-reference': {
+    'no-grid-reference': { ref: '#habitat-grid-ref', text: 'You have not entered a grid reference' },
+    'grid-reference-wrong-format': { ref: '#habitat-grid-ref', text: 'The grid reference you have entered is not in the right format' },
+    'grid-reference-do-not-exist': { ref: '#habitat-grid-ref', text: 'The reference you have entered is not an existing grid reference' }
+  }
+} %}
 
-{% set title = "What evidence do you have that badgers found the artificial sett?" %}
+{% set title = "What was the artificial sett's grid reference?" %}
 
 {% block pageContent %}
-    {{ govukInput({
-      id: "artificial-sett-grid-reference",
-      name: "artificial-sett-grid-reference",
-      classes: "govuk-!-width-three-quarters",
-      spellcheck: false,
-      value: data.name if data.name else payload['artificial-sett-grid-reference'],
-      errorMessage: { text: 'MSG HERE' } if error['artificial-sett-grid-reference']
-    }) }}
+
+  {{ govukInput({
+    id: "artificial-sett-grid-reference",
+    name: "artificial-sett-grid-reference",
+    errorMessage: { text: "Enter a national grid reference that is 2 letters and 6 digits" } if error['artificial-sett-grid-reference'],
+    classes: "govuk-input--width-10",
+    spellcheck: false,
+    value: data.artificialSettFoundGridReference if data.artificialSettFoundGridReference else payload['artificial-sett-grid-reference'],
+    hint: {
+      text: 'For example, NY395557. Use the grid reference for the central point of the artificial sett if it had more than one entrance.'
+    }
+  }) }}
+
 {% endblock %}

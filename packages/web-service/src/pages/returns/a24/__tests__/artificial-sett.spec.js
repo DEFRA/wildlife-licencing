@@ -74,7 +74,7 @@ describe('the Artificial sett functions', () => {
       const mockSetData = jest.fn()
       const request = {
         payload: {
-          'yes-no': 'yes'
+          'create-artificial-sett-check': 'yes'
         },
         cache: () => ({
           getData: () => ({
@@ -111,7 +111,7 @@ describe('the Artificial sett functions', () => {
     it('redirects to the artificial sett details page if the answer is yes', async () => {
       const { completion } = await import('../artificial-sett.js')
       const request = {
-        payload: { 'yes-no': 'yes' }
+        payload: { 'create-artificial-sett-check': 'yes' }
       }
       const result = await completion(request)
       expect(result).toEqual('/a24/artificial-sett-details')
@@ -120,7 +120,7 @@ describe('the Artificial sett functions', () => {
     it('redirects to why not artificial sett page if the answer is no', async () => {
       const { completion } = await import('../artificial-sett.js')
       const request = {
-        payload: { 'yes-no': 'no' }
+        payload: { 'create-artificial-sett-check': 'no' }
       }
       const result = await completion(request)
       expect(result).toEqual('/a24/why-no-artificial-sett')
