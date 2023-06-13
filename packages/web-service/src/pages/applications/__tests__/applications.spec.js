@@ -23,13 +23,13 @@ describe('applications page', () => {
             getApplicationSitesByUserId: jest.fn(() => [])
           },
           LICENCES: {
-            findByApplicationId: jest.fn(() => [{
+            findByApplicationId: jest.fn().mockReturnValueOnce([{
               id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
               applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
               endDate: '2022-08-26',
               startDate: '2022-08-10',
               licenceNumber: 'LI-0016N0Z4'
-            }])
+            }]).mockReturnValue([])
           },
           APPLICATION: {
             tags: () => {
@@ -78,13 +78,7 @@ describe('applications page', () => {
         site: undefined,
         submitted: null,
         updatedAt: '2022-04-25T14:10:14.861Z',
-        licences: [{
-          id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-          applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-          endDate: '2022-08-26',
-          startDate: '2022-08-10',
-          licenceNumber: 'LI-0016N0Z4'
-        }]
+        licences: []
       }
     ])
   })
