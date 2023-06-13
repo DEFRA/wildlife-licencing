@@ -56,7 +56,6 @@ describe('applications page', () => {
       {
         id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
         lastSaved: '25 March 2022',
-        lastSentEventFlag: null,
         completed: 1,
         updatedAt: '2022-03-25T14:10:14.861Z',
         site: undefined,
@@ -74,7 +73,6 @@ describe('applications page', () => {
         completed: 0,
         id: '9179c2f2-6eec-43d6-899b-6504d6a1e798',
         lastSaved: '25 April 2022',
-        lastSentEventFlag: null,
         site: undefined,
         submitted: null,
         updatedAt: '2022-04-25T14:10:14.861Z',
