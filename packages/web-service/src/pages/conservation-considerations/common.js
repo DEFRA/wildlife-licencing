@@ -13,12 +13,18 @@ export const getFilteredDesignatedSites = async () => {
 }
 
 export const checkDesignatedSite = async (request, h) => {
-  const { designatedSite } = await request.cache().getData()
-  if (!designatedSite) {
+  const { applicationId, designatedSite } = await request.cache().getData()
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+  const params = new URLSearchParams(request.query)
+  const id = params.get('id')
+  // There must be application designated sites in the database AND
+  // There must be an id in either the cache or the parameter to proceed
+  // If there is an id it must be one of the designated sites
+  if (applicationDesignatedSites.length && ((id && applicationDesignatedSites.find(ads => ads.id === id)) || designatedSite)) {
+    return null
+  } else {
     return h.redirect(TASKLIST.uri)
   }
-
-  return null
 }
 
 export const getCurrentSite = async request => {

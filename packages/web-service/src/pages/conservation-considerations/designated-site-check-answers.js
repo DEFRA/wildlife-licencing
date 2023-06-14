@@ -10,6 +10,41 @@ import { yesNoPage } from '../common/yes-no.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
 
+/**
+ * Check for any unfinished and redirect back to the appropriate question
+ * @param request
+ * @param h
+ * @returns {Promise<null>}
+ */
+const checkCompleted = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+  let result = null
+
+  for (const ads of applicationDesignatedSites) {
+    if (ads.permissionFromOwner === undefined) {
+      result = h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
+    } else if (ads.permissionFromOwner && !ads.detailsOfPermission) {
+      result = h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
+    } else if (ads.adviceFromNaturalEngland === undefined) {
+      result = h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
+    } else if (ads.adviceFromNaturalEngland && !ads.adviceFromWho) {
+      result = h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
+    } else if (ads.onSiteOrCloseToSite === undefined) {
+      result = h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
+    }
+
+    if (result) {
+      journeyData.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
+      await request.cache().setData(journeyData)
+      return result
+    }
+  }
+
+  return result
+}
+
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
@@ -49,7 +84,7 @@ export const completion = async request => boolFromYesNo(request.payload['yes-no
 export default yesNoPage({
   page: DESIGNATED_SITE_CHECK_ANSWERS.page,
   uri: DESIGNATED_SITE_CHECK_ANSWERS.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkCompleted],
   getData: getData,
   completion: completion,
   setData: setData
