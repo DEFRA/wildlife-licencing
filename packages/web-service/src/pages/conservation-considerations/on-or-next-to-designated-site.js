@@ -8,21 +8,6 @@ import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { DESIGNATED_SITE, DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_START } = conservationConsiderationURIs
 
-/**
- * If one is in already in progress at this point go to the check page
- * @param request
- * @param h
- * @returns {Promise<null|*>}
- */
-export const checkData = async (request, h) => {
-  const { applicationId } = await request.cache().getData()
-  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-  if (applicationDesignatedSites.length) {
-    return h.redirect(DESIGNATED_SITE_CHECK_ANSWERS.uri)
-  }
-  return null
-}
-
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.CONSERVATION, tagState: tagStatus.IN_PROGRESS })
@@ -42,7 +27,7 @@ export const completion = async request => boolFromYesNo(request.payload['yes-no
 export const onOrNextToDesignatedSite = yesNoPage({
   page: DESIGNATED_SITE.page,
   uri: DESIGNATED_SITE.uri,
-  checkData: [checkApplication, checkData],
+  checkData: checkApplication,
   getData: getData,
   completion: completion,
   setData: setData

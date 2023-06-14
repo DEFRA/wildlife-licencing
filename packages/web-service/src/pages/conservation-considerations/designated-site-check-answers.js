@@ -22,12 +22,12 @@ export const checkCompleted = async (request, h) => {
   const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
 
   if (!applicationDesignatedSites.length) {
-    return h.redirect(TASKLIST.uri)
+    return null
   }
 
-  const setCache = async (journeyData, ads) => {
-    journeyData.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
-    await request.cache().setData(journeyData)
+  const setCache = async (jd, ads) => {
+    jd.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
+    await request.cache().setData(jd)
   }
 
   for (const ads of applicationDesignatedSites) {

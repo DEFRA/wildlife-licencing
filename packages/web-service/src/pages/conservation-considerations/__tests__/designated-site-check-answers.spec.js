@@ -4,7 +4,7 @@ describe('the sssi check answers functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the checkCompleted function', () => {
-    it('returns a redirect to the tasklist if there are no designated sites', async () => {
+    it('returns a null if there are no designated sites', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           DESIGNATED_SITES: {
@@ -21,8 +21,8 @@ describe('the sssi check answers functions', () => {
       }
       const h = { redirect: jest.fn() }
       const { checkCompleted } = await import('../designated-site-check-answers.js')
-      await checkCompleted(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+      const result = await checkCompleted(request, h)
+      expect(result).toBeNull()
     })
 
     it('returns a redirect to the permission page if there are is no permission set', async () => {
