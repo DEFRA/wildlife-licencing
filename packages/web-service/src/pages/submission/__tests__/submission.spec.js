@@ -99,4 +99,27 @@ describe('submission spec', () => {
     await getData(request)
     expect(mockCall).toHaveBeenCalledWith('35a6c59e-0faf-438b-b4d5-6967d8d075cb')
   })
+
+  it('checks that an applicationId is set in the cache and returns a redirect if not', async () => {
+    const request = {
+      cache: () => ({
+        getData: jest.fn(() => ({}))
+      })
+    }
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        APPLICATION: {
+          getById: () => {}
+        }
+      }
+    }))
+    const mockRedirect = jest.fn(() => 'redirect')
+    const h = {
+      redirect: mockRedirect
+    }
+    const { checkApplication } = await import('../submission.js')
+    const result = await checkApplication(request, h)
+    expect(result).toEqual('redirect')
+    expect(mockRedirect).toHaveBeenCalledWith('/applications')
+  })
 })
