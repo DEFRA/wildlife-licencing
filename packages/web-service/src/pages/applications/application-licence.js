@@ -9,23 +9,31 @@ import Joi from 'joi'
 import { getApplicationData, statuses, checkData, findLastSentEvent } from './application-common-functions.js'
 
 export const getData = async request => {
-  const { application, applicationType, applicationId } = await getApplicationData(request)
+  const { application, applicationType, applicationId, licences } = await getApplicationData(request)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
-  const licences = await APIRequests.LICENCES.findByApplicationId(application.id)
+
   licences.forEach(licence => {
     Object.assign(licence, { lastSent: timestampFormatter(findLastSentEvent(licence)?.modifiedOn) })
     Object.assign(licence, { startDate: timestampFormatter(licence.startDate) })
     Object.assign(licence, { endDate: timestampFormatter(licence.endDate) })
   })
+
+  const lastSentEventFlag = licences.length > 0 && !!findLastSentEvent(licences[0])
+
+  // Needed in the validator
+  const journeyData = await request.cache().getData()
+  journeyData.lastSentEventFlag = lastSentEventFlag
+  await request.cache().setData(journeyData)
+
   return {
     application,
     applicant,
     statuses,
     licences,
-    lastSentEventFlag: licences.length > 0 ? findLastSentEvent(licences[0]) : null
+    lastSentEventFlag
   }
 }
 
@@ -42,9 +50,8 @@ export const completion = async request => {
 }
 
 export const validator = async (payload, context) => {
-  const { applicationId } = await cacheDirect(context).getData()
-  const licences = await APIRequests.LICENCES.findByApplicationId(applicationId)
-  if (licences.length > 0 && findLastSentEvent(licences[0])) {
+  const { lastSentEventFlag } = await cacheDirect(context).getData()
+  if (lastSentEventFlag) {
     Joi.assert(
       payload,
       Joi.object({
