@@ -2,30 +2,64 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
+import { APIRequests } from '../../../services/api-requests.js'
+import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
 const { WHY_NO_ARTIFICIAL_SETT } = ReturnsURIs.A24
+const { LICENCE_CONDITIONS } = ReturnsURIs
+const { WHY_DIDNT_YOU_CREATE_AN_ARTIFICIAL_SETT: { IT_WAS_NOT_REQUIRED_BY_THE_LICENCE, IT_COULD_NOT_BE_MADE } } = PowerPlatformKeys
 
-export const checkData = async request => {
-  return null
-}
+const whyNoArtificialSettRadio = 'why-no-artificial-sett-check'
+const whySettNotMadeText = 'why-sett-not-made'
 
 export const getData = async request => {
-  return { yesNo: null }
+  const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.id
+  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  let noArtificialSettReason, noArtificialSettReasonDetails
+  if (returnId) {
+    const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
+    noArtificialSettReason = licenceReturn?.noArtificialSettReason
+    noArtificialSettReasonDetails = licenceReturn?.noArtificialSettReasonDetails
+  }
+  return { noArtificialSettReason, noArtificialSettReasonDetails, IT_WAS_NOT_REQUIRED_BY_THE_LICENCE, IT_COULD_NOT_BE_MADE }
+}
+
+export const validator = async payload => {
+  if (!payload[whyNoArtificialSettRadio]) {
+    Joi.assert(payload, Joi.object({
+      'why-no-artificial-sett-check': Joi.any().required()
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
+
+  if (IT_COULD_NOT_BE_MADE === parseInt(payload[whyNoArtificialSettRadio])) {
+    Joi.assert(payload, Joi.object({
+      'why-sett-not-made': Joi.string().required().replace('\r\n', '\n').max(4000)
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
 }
 
 export const setData = async request => {
-
-}
-
-export const completion = async request => {
-  return WHY_NO_ARTIFICIAL_SETT.uri
+  const journeyData = await request.cache().getData()
+  const noArtificialSettReason = request.payload[whyNoArtificialSettRadio]
+  const noArtificialSettReasonDetails = request.payload[whySettNotMadeText]
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  let payload = { ...licenceReturn, noArtificialSettReason }
+  if (parseInt(noArtificialSettReason) === IT_COULD_NOT_BE_MADE) {
+    payload = { ...payload, noArtificialSettReasonDetails }
+  }
+  await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+  journeyData.returns = { ...journeyData.returns, noArtificialSettReason, noArtificialSettReasonDetails }
+  await request.cache().setData(journeyData)
 }
 
 export default pageRoute({
   page: WHY_NO_ARTIFICIAL_SETT.page,
   uri: WHY_NO_ARTIFICIAL_SETT.uri,
-  checkData: [checkApplication, checkData],
+  completion: LICENCE_CONDITIONS.uri,
+  checkData: checkApplication,
   getData: getData,
-  completion: completion,
   setData: setData
 })

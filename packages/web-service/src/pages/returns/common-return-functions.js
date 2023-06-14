@@ -1,8 +1,10 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { ReturnsURIs } from '../../uris.js'
+import Joi from 'joi'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
-const { ONE_WAY_GATES, BLOCKING_OR_PROOFING, DAMAGE_BY_HAND_OR_MECHANICAL_MEANS, DESTROY_VACANT_SETT, DISTURB_BADGERS } = ReturnsURIs.A24
+const { ONE_WAY_GATES, BLOCKING_OR_PROOFING, DAMAGE_BY_HAND_OR_MECHANICAL_MEANS, DESTROY_VACANT_SETT, DISTURB_BADGERS, WELFARE_CONCERNS } = ReturnsURIs.A24
+const { LICENCE_CONDITIONS } = ReturnsURIs
 
 export const activityTypes = {
   OBSTRUCT_SETT_WITH_GATES,
@@ -45,4 +47,24 @@ export const licenceActionsCompletion = async request => {
     await request.cache().setData(journeyData)
   }
   return getNextPage(methodTypes[methodTypesLength - methodTypesNavigated])
+}
+
+export const commonValidator = async (payload, page) => {
+  if (!payload['yes-no']) {
+    Joi.assert(payload, Joi.object({
+      'yes-no': Joi.any().required()
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
+
+  if (page === WELFARE_CONCERNS.page && payload['yes-no'] === 'yes') {
+    Joi.assert(payload, Joi.object({
+      'yes-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
+
+  if (page === LICENCE_CONDITIONS.page && payload['yes-no'] === 'no') {
+    Joi.assert(payload, Joi.object({
+      'no-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+    }).options({ abortEarly: false, allowUnknown: true }))
+  }
 }
