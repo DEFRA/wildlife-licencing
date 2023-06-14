@@ -298,8 +298,90 @@ describe('the checkData function', () => {
     })
   })
 
-  describe('the checkData function', () => {
-    it('returns the tasklist of the designated site is not set', async () => {
+  describe('the checkDesignatedSite function', () => {
+    it('returns null if the parameter id is found in the set of designated sites', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }])
+          }
+        }
+      }))
+      const { checkDesignatedSite } = await import('../common.js')
+      const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const result = await checkDesignatedSite(request, h)
+      expect(result).toBeNull()
+    })
+
+    it('returns null if the cache id is found in the set of designated sites', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }])
+          }
+        }
+      }))
+      const { checkDesignatedSite } = await import('../common.js')
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            designatedSite: { id: '344be97d-c928-4753-ae09-f8944ad9f228' }
+          })
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const result = await checkDesignatedSite(request, h)
+      expect(result).toBeNull()
+    })
+
+    it('returns a redirect to the tasklist if the parameter id is not found in the set of designated sites', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }])
+          }
+        }
+      }))
+      const { checkDesignatedSite } = await import('../common.js')
+      const request = {
+        query: { id: '644be97d-c928-4753-ae09-f8944ad9f228' },
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      await checkDesignatedSite(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('returns a redirect to the tasklist if there are is no id in the parameter or the cache', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228'
+            }])
+          }
+        }
+      }))
       const { checkDesignatedSite } = await import('../common.js')
       const request = {
         cache: () => ({
@@ -313,19 +395,25 @@ describe('the checkData function', () => {
       expect(h.redirect).toHaveBeenCalledWith('/tasklist')
     })
 
-    it('returns null designated site is set', async () => {
+    it('returns a redirect to the tasklist if there are no application designated sites', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [])
+          }
+        }
+      }))
       const { checkDesignatedSite } = await import('../common.js')
       const request = {
         cache: () => ({
-          getData: () => ({ designatedSite: {} })
+          getData: () => ({})
         })
       }
       const h = {
         redirect: jest.fn()
       }
-      const result = await checkDesignatedSite(request, h)
-      expect(h.redirect).not.toHaveBeenCalled()
-      expect(result).toBeNull()
+      await checkDesignatedSite(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
     })
   })
 })

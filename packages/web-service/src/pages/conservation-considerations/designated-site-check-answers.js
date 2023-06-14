@@ -16,33 +16,40 @@ const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationCons
  * @param h
  * @returns {Promise<null>}
  */
-const checkCompleted = async (request, h) => {
+export const checkCompleted = async (request, h) => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-  let result = null
+
+  if (!applicationDesignatedSites.length) {
+    return h.redirect(TASKLIST.uri)
+  }
+
+  const setCache = async (journeyData, ads) => {
+    journeyData.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
+    await request.cache().setData(journeyData)
+  }
 
   for (const ads of applicationDesignatedSites) {
     if (ads.permissionFromOwner === undefined) {
-      result = h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
     } else if (ads.permissionFromOwner && !ads.detailsOfPermission) {
-      result = h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
     } else if (ads.adviceFromNaturalEngland === undefined) {
-      result = h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
     } else if (ads.adviceFromNaturalEngland && !ads.adviceFromWho) {
-      result = h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
     } else if (ads.onSiteOrCloseToSite === undefined) {
-      result = h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
-    }
-
-    if (result) {
-      journeyData.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
-      await request.cache().setData(journeyData)
-      return result
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
     }
   }
 
-  return result
+  return null
 }
 
 export const getData = async request => {
