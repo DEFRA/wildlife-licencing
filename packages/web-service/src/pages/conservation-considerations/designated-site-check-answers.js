@@ -3,54 +3,12 @@ import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
-import { getFilteredDesignatedSites } from './common.js'
+import { checkAll, getFilteredDesignatedSites } from './common.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { yesNoPage } from '../common/yes-no.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_NAME } = conservationConsiderationURIs
-
-/**
- * Check for any unfinished and redirect back to the appropriate question
- * @param request
- * @param h
- * @returns {Promise<null>}
- */
-export const checkCompleted = async (request, h) => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
-  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
-
-  if (!applicationDesignatedSites.length) {
-    return null
-  }
-
-  const setCache = async (jd, ads) => {
-    jd.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
-    await request.cache().setData(jd)
-  }
-
-  for (const ads of applicationDesignatedSites) {
-    if (ads.permissionFromOwner === undefined) {
-      await setCache(journeyData, ads)
-      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
-    } else if (ads.permissionFromOwner && !ads.detailsOfPermission) {
-      await setCache(journeyData, ads)
-      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
-    } else if (ads.adviceFromNaturalEngland === undefined) {
-      await setCache(journeyData, ads)
-      return h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
-    } else if (ads.adviceFromNaturalEngland && !ads.adviceFromWho) {
-      await setCache(journeyData, ads)
-      return h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
-    } else if (ads.onSiteOrCloseToSite === undefined) {
-      await setCache(journeyData, ads)
-      return h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
-    }
-  }
-
-  return null
-}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -91,7 +49,7 @@ export const completion = async request => boolFromYesNo(request.payload['yes-no
 export default yesNoPage({
   page: DESIGNATED_SITE_CHECK_ANSWERS.page,
   uri: DESIGNATED_SITE_CHECK_ANSWERS.uri,
-  checkData: [checkApplication, checkCompleted],
+  checkData: [checkApplication, checkAll],
   getData: getData,
   completion: completion,
   setData: setData
