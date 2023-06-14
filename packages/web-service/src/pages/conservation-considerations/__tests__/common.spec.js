@@ -297,4 +297,35 @@ describe('the checkData function', () => {
       expect(result).toEqual('/designated-site-check-answers')
     })
   })
+
+  describe('the checkData function', () => {
+    it('returns the tasklist of the designated site is not set', async () => {
+      const { checkDesignatedSite } = await import('../common.js')
+      const request = {
+        cache: () => ({
+          getData: () => ({})
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      await checkDesignatedSite(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+    })
+
+    it('returns null designated site is set', async () => {
+      const { checkDesignatedSite } = await import('../common.js')
+      const request = {
+        cache: () => ({
+          getData: () => ({ designatedSite: {} })
+        })
+      }
+      const h = {
+        redirect: jest.fn()
+      }
+      const result = await checkDesignatedSite(request, h)
+      expect(h.redirect).not.toHaveBeenCalled()
+      expect(result).toBeNull()
+    })
+  })
 })

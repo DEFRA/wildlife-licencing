@@ -1,6 +1,6 @@
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { conservationConsiderationURIs } from '../../uris.js'
+import { conservationConsiderationURIs, TASKLIST } from '../../uris.js'
 
 const options = Object.values(PowerPlatformKeys.SITE_TYPE).map(v => v.option)
 const abv = Object.values(PowerPlatformKeys.SITE_TYPE).reduce((a, c) => ({ ...a, [c.option]: c.abbr }), {})
@@ -10,6 +10,15 @@ export const getFilteredDesignatedSites = async () => {
   return designatedSites.filter(ds => options.includes(ds.siteType))
     .map(s => ({ id: s.id, siteName: `${s.siteName} ${abv[s.siteType]}` }))
     .sort((a, b) => (a.siteName).localeCompare(b.siteName))
+}
+
+export const checkDesignatedSite = async (request, h) => {
+  const { designatedSite } = await request.cache().getData()
+  if (!designatedSite) {
+    return h.redirect(TASKLIST.uri)
+  }
+
+  return null
 }
 
 export const getCurrentSite = async request => {
