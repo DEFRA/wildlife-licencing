@@ -5,7 +5,7 @@ import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
 import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
-import { yesNoFromBool } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { canBeUser, contactsRoute } from '../common/common-handler.js'
 
 // a contact cannot be the applicant and the additional applicant etc.
@@ -30,7 +30,7 @@ export const setAdditionalContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
   const additionalContact = journeyData?.additionalContact || {}
-  Object.assign(additionalContact, { [contactRole]: request.payload['yes-no'] === 'yes' })
+  Object.assign(additionalContact, { [contactRole]: boolFromYesNo(request.payload['yes-no']) })
   Object.assign(journeyData, { additionalContact })
   await request.cache().setData(journeyData)
   if (request.payload['yes-no'] === 'no') {
@@ -42,7 +42,7 @@ export const setAdditionalContactData = contactRole => async request => {
 export const addAdditionalContactCompletion = (contactRole, uriBase) => async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
-  if (pageData.payload['yes-no'] === 'yes') {
+  if (boolFromYesNo(pageData.payload['yes-no'])) {
     if (await canBeUser(request, conflictingRoles(contactRole))) {
       return uriBase.USER.uri
     } else {
@@ -82,7 +82,7 @@ const nextUri = async (contactRole, request) => {
 export const additionalContactUserCompletion = (contactRole, additionalContactRoles, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
   const { userId, applicationId } = await request.cache().getData()
-  if (pageData.payload['yes-no'] === 'yes') {
+  if (boolFromYesNo(pageData.payload['yes-no'])) {
     const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {
@@ -139,7 +139,7 @@ export const getAdditionalContactEmailAddressData = contactRole => async request
 }
 
 export const setAdditionalContactEmailAddressData = contactRole => async request => {
-  if (request.payload['change-email'] === 'yes') {
+  if (boolFromYesNo(request.payload['change-email'])) {
     const { userId, applicationId } = await request.cache().getData()
     const contactAccountOps = contactAccountOperations(contactRole, null, applicationId, userId)
     await contactAccountOps.setEmailAddress(request.payload['email-address'])

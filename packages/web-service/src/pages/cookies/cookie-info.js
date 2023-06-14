@@ -1,7 +1,7 @@
 import { COOKIE_INFO } from '../../uris.js'
-import { isYes, yesNoPage } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { yesNoFromBool } from '../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 export const getData = async request => {
   const journeyData = await request.cache().getData() || {}
@@ -25,7 +25,7 @@ export const completion = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData() || {}
-  journeyData.cookies = { analytics: isYes(request) }
+  journeyData.cookies = { analytics: boolFromYesNo(request.payload['yes-no']) }
   await request.cache().setData(journeyData)
 
   // If signed save the cookie preferences

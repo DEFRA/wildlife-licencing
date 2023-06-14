@@ -1,13 +1,13 @@
 /**
  * Route handlers for the eligibility check flow
  */
-import { yesNoPage, isYes } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
 import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { yesNoFromBool } from '../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 import { moveTagInProgress } from '../common/tag-functions.js'
 import { checkApplication } from '../common/check-application.js'
 import { tagStatus } from '../../services/status-tags.js'
@@ -101,7 +101,7 @@ export const landOwnerGetData = async request => {
 export const setData = question => async request => {
   const { applicationId } = await request.cache().getData()
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
-  Object.assign(eligibility, { [question]: isYes(request) })
+  Object.assign(eligibility, { [question]: boolFromYesNo(request.payload['yes-no']) })
   await consolidateAnswers(eligibility)
   await APIRequests.ELIGIBILITY.putById(applicationId, eligibility)
   await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.IN_PROGRESS })

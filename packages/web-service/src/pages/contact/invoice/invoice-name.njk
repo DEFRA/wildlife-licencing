@@ -24,7 +24,7 @@
       spellcheck: false,
       hint: { text: hintText } if hintText else '',
       value: data.fullName if data.fullName else payload['name'],
-      classes: "govuk-!-width-three-quarters",
+      classes: "govuk-grid-column-full",
       attributes: { maxlength: 160 },
       errorMessage: { text: 'Enter the full name' } if error['name']
     }) }}

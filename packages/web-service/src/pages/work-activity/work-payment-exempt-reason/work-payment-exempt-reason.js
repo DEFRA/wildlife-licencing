@@ -12,7 +12,6 @@ const exemptDetails = 'exempt-details'
 const {
   PAYMENT_EXEMPT_REASON: {
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
-    PREVENT_DISEASE_SPREAD,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
     HOUSEHOLDER_HOME_IMPROVEMENTS,
     SCIENTIFIC_RESEARCH_OR_EDUCATION,
@@ -38,7 +37,6 @@ export const getData = async request => {
     radioChecked: applicationData?.paymentExemptReason,
     paymentExemptReasonExplanation,
     PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
-    PREVENT_DISEASE_SPREAD,
     PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY,
     HOUSEHOLDER_HOME_IMPROVEMENTS,
     SCIENTIFIC_RESEARCH_OR_EDUCATION,
@@ -94,7 +92,7 @@ export const validator = async payload => {
       // Which leads to a mismatch on the character count as
       // '\r\n'.length == 2
       // '\n'.length   == 1
-      [exemptDetails]: Joi.string().required().replace('\r\n', '\n').max(4000)
+      [exemptDetails]: Joi.string().required().trim().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }

@@ -3,7 +3,7 @@ import pageRoute from '../../routes/page-route.js'
 import Joi from 'joi'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { timestampFormatter } from '../common/common.js'
+import { boolFromYesNo, timestampFormatter } from '../common/common.js'
 import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { tagStatus } from '../../services/status-tags.js'
@@ -44,7 +44,7 @@ export const completion = async request => {
   const uploadedFiles = await APIRequests.FILE_UPLOAD.APPLICATION.getUploadedFiles(applicationId)
   const uploadedMethodStatements = uploadedFiles?.find(uploadedFile => uploadedFile.filetype === 'METHOD-STATEMENT')
 
-  if (pageData?.payload[anotherFileUpload] === 'yes') {
+  if (boolFromYesNo(pageData?.payload[anotherFileUpload])) {
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.SUPPORTING_INFORMATION, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
     return FILE_UPLOADS.SUPPORTING_INFORMATION.FILE_UPLOAD.uri
   } else {

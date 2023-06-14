@@ -8,9 +8,10 @@
 {% set errorMap = {
         'scan-file': {
           'no-file-chosen' : { ref: '#scan-file', text: 'You must choose a file to upload.' },
+          'empty-file-chosen' : { ref: '#scan-file', text: 'The selected file is empty.' },
           'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
           'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' },
-          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON or PDF.' }
+          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON, PDF or ZIP.' }
         }
     }
 %}
@@ -22,7 +23,11 @@
 
 {{ errorSummary(error, errorMap, 'There is a problem') }}
 
-<h1 class="govuk-heading-xl">Map of your activity at the development site</h1>
+<div class="govuk-grid-row">
+    <div class='govuk-grid-column-two-thirds'>
+      <h1 class="govuk-heading-l">Map of your activity at the development site</h1>
+    </div>
+</div>
 
 <div class="govuk-grid-row">
     <div class="{{ widthClass if widthClass else 'govuk-grid-column-two-thirds' }}">
@@ -39,8 +44,9 @@
         <ul class="govuk-list govuk-list--bullet">
             <li>GeoJSON files</li>
             <li>KML files</li>
-            <li>Shape files</li>
+            <li>common Shape files</li>
             <li>PDF, jpg or PNG files (if these are used, your application may take longer to process)</li>
+            <li>ZIP files</li>
         </ul>
         <p class="govuk-body">The file must be smaller than 30MB.</p>
 

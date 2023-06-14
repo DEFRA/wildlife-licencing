@@ -1,9 +1,9 @@
 import { ReturnsURIs } from '../../uris.js'
-import { isYes, yesNoPage } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { timestampFormatter, yesNoFromBool } from '../common/common.js'
 import { getNextPage } from './common-return-functions.js'
+import { boolFromYesNo, yesNoFromBool, timestampFormatter } from '../common/common.js'
 
 const { COMPLETE_WITHIN_DATES, WORK_START } = ReturnsURIs
 
@@ -23,7 +23,7 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const completedWithinLicenceDates = isYes(request)
+  const completedWithinLicenceDates = boolFromYesNo(request.payload['yes-no'])
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
@@ -34,7 +34,7 @@ export const setData = async request => {
 }
 
 export const completion = async request => {
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     const journeyData = await request.cache().getData()
     const licenceActions = await APIRequests.RETURNS.getLicenceActions(journeyData?.licenceId)
     const methodTypes = licenceActions[0]?.methodIds

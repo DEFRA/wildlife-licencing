@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactOperations } from '../operations.js'
 import { accountsRoute, contactsRoute } from '../common-handler.js'
-import { yesNoFromBool } from '../../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../../common/common.js'
 
 export const getUserData = contactRole => async request => {
   const journeyData = await request.cache().getData()
@@ -16,7 +16,7 @@ const mostRecent = (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
 export const setUserData = contactRole => async request => {
   const { userId, applicationId } = await request.cache().getData()
   const contactOps = contactOperations(contactRole, applicationId, userId)
-  if (request.payload['yes-no'] === 'yes') {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     const contacts = await APIRequests.CONTACT.findAllByUser(userId)
     const [userContact] = contacts.filter(c => c.userId === userId).sort(mostRecent)
     if (userContact) {
@@ -43,7 +43,7 @@ export const setUserData = contactRole => async request => {
 export const userCompletion = (contactRole, additionalContactRoles, accountRole, urlBase) => async request => {
   const pageData = await request.cache().getPageData()
   const { userId, applicationId } = await request.cache().getData()
-  if (pageData.payload['yes-no'] === 'yes') {
+  if (boolFromYesNo(pageData.payload['yes-no'])) {
     const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
     const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
     if (immutable) {

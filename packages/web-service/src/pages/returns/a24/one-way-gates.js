@@ -2,7 +2,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { isYes } from '../../common/yes-no.js'
+import { boolFromYesNo } from '../../common/common.js'
 import { licenceActionsCompletion } from '../common-return-functions.js'
 
 const { ONE_WAY_GATES } = ReturnsURIs.A24
@@ -22,9 +22,9 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const obstructionByOneWayGates = isYes(request)
+  const obstructionByOneWayGates = boolFromYesNo(request.payload['yes-no'])
   let obstructionByOneWayGatesDetails
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     obstructionByOneWayGatesDetails = request.payload['yes-conditional-input']
   } else {
     obstructionByOneWayGatesDetails = request.payload['no-conditional-input']

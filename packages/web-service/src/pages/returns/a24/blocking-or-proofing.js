@@ -2,8 +2,8 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { isYes } from '../../common/yes-no.js'
 import { licenceActionsCompletion } from '../common-return-functions.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const { BLOCKING_OR_PROOFING } = ReturnsURIs.A24
 
@@ -22,9 +22,9 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const obstructionBlockingOrProofing = isYes(request)
+  const obstructionBlockingOrProofing = boolFromYesNo(request.payload['yes-no'])
   let obstructionBlockingOrProofingDetails
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     obstructionBlockingOrProofingDetails = request.payload['yes-conditional-input']
   } else {
     obstructionBlockingOrProofingDetails = request.payload['no-conditional-input']

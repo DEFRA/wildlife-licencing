@@ -2,7 +2,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { isYes } from '../../common/yes-no.js'
+import { boolFromYesNo } from '../../common/common.js'
 import { licenceActionsCompletion } from '../common-return-functions.js'
 
 const { DISTURB_BADGERS } = ReturnsURIs.A24
@@ -22,9 +22,9 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const disturbBadgersBoolean = isYes(request)
+  const disturbBadgersBoolean = boolFromYesNo(request.payload['yes-no'])
   let disturbBadgersDetails
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     disturbBadgersDetails = request.payload['yes-conditional-input']
   } else {
     disturbBadgersDetails = 'there was no evidence that badgers were disturbed'

@@ -2,8 +2,8 @@ import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { licenceActionsCompletion } from '../common-return-functions.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { isYes } from '../../common/yes-no.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const { DAMAGE_BY_HAND_OR_MECHANICAL_MEANS } = ReturnsURIs.A24
 
@@ -22,9 +22,9 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const damageByHandValue = isYes(request)
+  const damageByHandValue = boolFromYesNo(request.payload['yes-no'])
   let damageByHandOrMechanicalMeansDetails
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     damageByHandOrMechanicalMeansDetails = request.payload['yes-conditional-input']
   } else {
     damageByHandOrMechanicalMeansDetails = request.payload['no-conditional-input']

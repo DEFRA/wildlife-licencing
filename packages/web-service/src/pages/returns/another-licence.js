@@ -1,8 +1,8 @@
 import { ReturnsURIs } from '../../uris.js'
-import { isYes, yesNoPage } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
-import { yesNoFromBool } from '../common/common.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { ANOTHER_LICENCE, CHECK_ANSWERS } = ReturnsURIs
 
@@ -20,7 +20,7 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const needAnotherLicence = isYes(request)
+  const needAnotherLicence = boolFromYesNo(request.payload['yes-no'])
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)

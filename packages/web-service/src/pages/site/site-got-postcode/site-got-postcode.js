@@ -3,6 +3,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { siteURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
+import { boolFromYesNo } from '../../common/common.js'
 import { ukPostcodeRegex } from '../../contact/common/postcode/postcode-page.js'
 import { addressLookupForPostcode } from '../../contact/common/postcode/postcode.js'
 
@@ -16,7 +17,7 @@ export const validator = async payload => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if ((!payload[postcodeInput] || payload[postcodeInput]) && payload[postcodeRadio] === 'yes') {
+  if ((!payload[postcodeInput] || payload[postcodeInput]) && boolFromYesNo(payload[postcodeRadio])) {
     Joi.assert(payload, Joi.object({
       'site-postcode': Joi.string().trim().required().pattern(ukPostcodeRegex).replace(ukPostcodeRegex, '$1 $2').uppercase()
     }).options({ abortEarly: false, allowUnknown: true }))

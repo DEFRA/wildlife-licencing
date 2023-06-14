@@ -26,22 +26,7 @@ describe('the upload-supporting-information page handler', () => {
       {
         filetype: 'METHOD-STATEMENT',
         multiple: true,
-        supportedFileTypes: [
-          'JPG',
-          'PNG',
-          'TIF',
-          'BMP',
-          'GEOJSON',
-          'KML',
-          'SHAPE',
-          'DOC',
-          'DOCX',
-          'PDF',
-          'ODT',
-          'XLS',
-          'XLSX',
-          'ODS'
-        ]
+        supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'TIF', 'BMP', 'GEOJSON', 'KML', 'DOC', 'DOCX', 'PDF', 'ODT', 'XLS', 'XLSX', 'ODS', 'CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']
       })
   })
 

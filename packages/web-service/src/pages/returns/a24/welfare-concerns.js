@@ -1,7 +1,7 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
-import { isYes } from '../../common/yes-no.js'
+import { boolFromYesNo } from '../../common/common.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { commonValidator } from '../common-return-functions.js'
 
@@ -24,9 +24,9 @@ export const validator = payload => commonValidator(payload, WELFARE_CONCERNS.pa
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const welfareConcerns = isYes(request)
+  const welfareConcerns = boolFromYesNo(request.payload['yes-no'])
   let welfareConcernsDetails
-  if (isYes(request)) {
+  if (boolFromYesNo(request.payload['yes-no'])) {
     welfareConcernsDetails = request.payload['yes-conditional-input']
   }
   const returnId = journeyData?.returns?.id

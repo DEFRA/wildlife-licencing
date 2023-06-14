@@ -8,26 +8,32 @@
     }
   }
 } %}
+
 {% set title = 'Does the project need any permissions?' %}
+
 {% block pageTitle %}
   {{ 'Error: ' + title if error else title }}
 {% endblock %}
+
 {% block pageContent %}
   {{ govukRadios({
-            id: "permissionsRequired",
-            name: "permissionsRequired",
-            errorMessage: { text: 'Select an option' } if error['permissionsRequired'],
-            items: [
-              {
-                value: "yes",
-                text: "Yes",
-                checked: payload['permissionsRequired'] === 'yes' or true if data.permissionsRequired === true
-              },
-              {
-                value: "no",
-                text: "No",
-                checked: payload['permissionsRequired'] === 'no' or true if  data.permissionsRequired === false
-              }
-            ]
-          }) }}
+    id: "permissionsRequired",
+    name: "permissionsRequired",
+    hint: {
+      text: 'For example, planning permission or listed building consent.'
+    },
+    errorMessage: { text: 'Select an option' } if error['permissionsRequired'],
+    items: [
+      {
+        value: "yes",
+        text: "Yes",
+        checked: payload['permissionsRequired'] === 'yes' or true if data.permissionsRequired === true
+      },
+      {
+        value: "no",
+        text: "No",
+        checked: payload['permissionsRequired'] === 'no' or true if  data.permissionsRequired === false
+      }
+    ]
+  }) }}
 {% endblock %}

@@ -1,11 +1,10 @@
 import { ReturnsURIs } from '../../uris.js'
-import { isYes } from '../common/yes-no.js'
 import Joi from 'joi'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { yesNoFromBool } from '../common/common.js'
 import pageRoute from '../../routes/page-route.js'
 import { activityTypes } from './common-return-functions.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
 
@@ -28,7 +27,7 @@ export const getData = async request => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const nilReturn = !isYes(request)
+  const nilReturn = !boolFromYesNo(request.payload['yes-no'])
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceNumber = journeyData?.licenceNumber
@@ -47,7 +46,7 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => isYes(request) ? OUTCOME.uri : WHY_NIL.uri
+export const completion = async request => boolFromYesNo(request.payload['yes-no']) ? OUTCOME.uri : WHY_NIL.uri
 
 export default pageRoute({
   page: NIL_RETURN.page,

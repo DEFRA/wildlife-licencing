@@ -72,7 +72,7 @@ describe('application-summary page', () => {
           applicationType: 'A24',
           applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          siteAddress: 'site street, jubilee, 123, site street, Peckham, kent, SW1W 0NY',
+          siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY',
           userSubmission: '10 August 2022'
         },
         statuses: {

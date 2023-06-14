@@ -3,6 +3,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -12,7 +13,7 @@ export const getData = async request => {
 }
 
 export const completion = async request => {
-  if (request.payload.licence === 'yes') {
+  if (boolFromYesNo(request.payload.licence)) {
     return ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri
   }
 
