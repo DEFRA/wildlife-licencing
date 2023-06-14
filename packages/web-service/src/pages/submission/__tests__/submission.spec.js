@@ -106,13 +106,6 @@ describe('submission spec', () => {
         getData: jest.fn(() => ({}))
       })
     }
-    jest.doMock('../../../services/api-requests.js', () => ({
-      APIRequests: {
-        APPLICATION: {
-          getById: () => {}
-        }
-      }
-    }))
     const mockRedirect = jest.fn(() => 'redirect')
     const h = {
       redirect: mockRedirect
@@ -121,5 +114,21 @@ describe('submission spec', () => {
     const result = await checkApplication(request, h)
     expect(result).toEqual('redirect')
     expect(mockRedirect).toHaveBeenCalledWith('/applications')
+  })
+
+  it('checkApplication returns null if there is an applicationId', async () => {
+    const request = {
+      cache: () => ({
+        getData: jest.fn(() => ({ applicationId: '123abc' }))
+      })
+    }
+    const mockRedirect = jest.fn(() => 'redirect')
+    const h = {
+      redirect: mockRedirect
+    }
+    const { checkApplication } = await import('../submission.js')
+    const result = await checkApplication(request, h)
+    expect(result).toBeNull()
+    expect(mockRedirect).not.toHaveBeenCalled()
   })
 })
