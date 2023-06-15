@@ -7,7 +7,7 @@ import { APIRequests } from './api-requests.js'
 const debug = db('web-service:s3')
 
 export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
-  const { S3Client, PutObjectCommand, bucket } = AWS()
+  const { S3Client, PutObjectCommand, bucket } = AWS().S3
   const fileReadStream = fs.createReadStream(filepath)
 
   // The filename will be recorded by the API

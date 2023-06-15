@@ -12,12 +12,14 @@ describe('the S3 file upload service', () => {
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: () => ({
-          S3Client: {
-            send: mockSend,
-            destroy: mockDestroy
-          },
-          PutObjectCommand: mockPut,
-          bucket: 'bucket'
+          S3: {
+            S3Client: {
+              send: mockSend,
+              destroy: mockDestroy
+            },
+            PutObjectCommand: mockPut,
+            bucket: 'bucket'
+          }
         })
       }))
       jest.doMock('../api-requests.js', () => ({
@@ -52,12 +54,14 @@ describe('the S3 file upload service', () => {
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: () => ({
-          S3Client: {
-            send: mockSend,
-            destroy: mockDestroy
-          },
-          PutObjectCommand: mockPut,
-          bucket: 'bucket'
+          S3: {
+            S3Client: {
+              send: mockSend,
+              destroy: mockDestroy
+            },
+            PutObjectCommand: mockPut,
+            bucket: 'bucket'
+          }
         })
       }))
       const { s3FileUpload } = await import('../s3-upload.js')

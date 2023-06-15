@@ -9,6 +9,9 @@ export default {
     s3: {
       endpoint: process.env.AWS_S3_ENDPOINT,
       bucket: process.env.AWS_S3_BUCKET
+    },
+    secretsManager: {
+      endpoint: process.env.AWS_SM_ENDPOINT
     }
   },
   pg: {

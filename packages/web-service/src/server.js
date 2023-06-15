@@ -121,14 +121,6 @@ const init = async server => {
   // Register the dynamic routes
   await server.route(routes)
 
-  // If the directory doesn't exist to hold our files we need to scan, create it
-  if (!fs.existsSync(process.env.SCANDIR)) {
-    debug(`Created scan directory: ${process.env.SCANDIR}`)
-    fs.mkdirSync(process.env.SCANDIR)
-  } else {
-    debug(`Scan directory exists: ${process.env.SCANDIR}`)
-  }
-
   // Log any errors
   if (!process.env.NO_ERROR_ROUTE) {
     server.ext('onPreResponse', errorHandler)
