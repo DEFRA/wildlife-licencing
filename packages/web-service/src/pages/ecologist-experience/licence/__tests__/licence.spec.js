@@ -88,6 +88,11 @@ describe('The licence page', () => {
     it('returns the check page if user selects no and class mitigation is set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               experienceDetails: 'details',

@@ -26,6 +26,11 @@ describe('The enter methods page', () => {
     it('returns the check page if the class licence has been set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               classMitigation: true
