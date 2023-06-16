@@ -156,6 +156,7 @@ import licensedActions from '../pages/returns/licensed-actions.js'
 import outcome from '../pages/returns/outcome.js'
 import whyNil from '../pages/returns/why-nil.js'
 import { anotherLicence } from '../pages/returns/another-licence.js'
+import { returnUpload } from '../pages/returns/returns-upload.js'
 import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
 import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
 import workStart from '../pages/returns/work-start.js'
@@ -345,6 +346,7 @@ const routes = [
   ...artificialSettCreatedBeforeClosurePage,
   ...licenceConditions,
   ...welfareConcerns,
+  ...returnUpload,
   ...returnsCheck,
   ...declarationOfReturns,
   ...confirmationOfReturns,

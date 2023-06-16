@@ -6,6 +6,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { commonValidator } from '../common-return-functions.js'
 
 const { WELFARE_CONCERNS } = ReturnsURIs.A24
+const { UPLOAD } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -42,6 +43,7 @@ export default pageRoute({
   page: WELFARE_CONCERNS.page,
   uri: WELFARE_CONCERNS.uri,
   checkData: checkApplication,
+  completion: UPLOAD.uri,
   getData: getData,
   setData: setData,
   validator: validator

@@ -192,6 +192,8 @@ export const ReturnsURIs = {
   CHECK_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
   DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },
   CONFIRMATION: { uri: '/returns-confirmation', page: 'returns-confirmation' },
+  UPLOAD: { uri: '/returns-upload', page: 'returns-upload' },
+  UPLOAD_FILE: { uri: '/returns-upload-file', page: 'returns-upload-file' },
 
   A24: {
     DISTURB_BADGERS: { uri: '/a24/disturb-badgers', page: 'disturb-badgers' },
