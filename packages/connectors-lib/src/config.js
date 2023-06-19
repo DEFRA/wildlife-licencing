@@ -63,8 +63,8 @@ export default {
   },
   address: {
     url: process.env.ADDRESS_LOOKUP_URL,
-    certificatePath: process.env.ADDRESS_LOOKUP_CERTIFICATE_PATH,
-    passphrase: process.env.ADDRESS_LOOKUP_PASSPHRASE,
+    certificateParam: process.env.ADDRESS_LOOKUP_CERTIFICATE_PARAMETER,
+    keyParam: process.env.ADDRESS_LOOKUP_KEY_PARAMETER,
     timeout: process.env.ADDRESS_LOOKUP_TIMEOUT_MS
   }
 }
