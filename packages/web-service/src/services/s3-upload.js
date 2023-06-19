@@ -7,14 +7,14 @@ import { APIRequests } from './api-requests.js'
 const debug = db('web-service:s3')
 
 export const s3FileUpload = async (applicationId, filename, filepath, filetype) => {
-  const { WriteFileStream } = AWS.S3
+  const { writeFileStream } = AWS.S3
   const fileReadStream = fs.createReadStream(filepath)
 
   // The filename will be recorded by the API
   const objectKey = uuidv4()
 
   try {
-    await WriteFileStream(objectKey, fileReadStream)
+    await writeFileStream(objectKey, fileReadStream)
     debug(`Wrote file ${filename} with key: ${objectKey}`)
 
     // Record the file upload on the API

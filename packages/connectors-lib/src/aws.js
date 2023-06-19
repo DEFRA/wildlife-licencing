@@ -4,7 +4,7 @@ import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-sec
 
 export const AWS = {
   S3: {
-    WriteFileStream: async (objectKey, fileStream) => {
+    writeFileStream: async (objectKey, fileStream) => {
       const client = new S3Client({
         ...(Config.aws.s3.endpoint && {
           region: Config.aws.region,
@@ -29,7 +29,7 @@ export const AWS = {
         client.destroy()
       }
     },
-    ReadFileStream: async objectKey => {
+    readFileStream: async objectKey => {
       const client = new S3Client({
         ...(Config.aws.s3.endpoint && {
           region: Config.aws.region,
@@ -51,7 +51,7 @@ export const AWS = {
       }
     }
   },
-  SecretsManager: () => {
+  secretsManager: () => {
     const client = new SecretsManagerClient({
       ...(Config.aws.secretsManager.endpoint && {
         endpoint: Config.aws.secretsManager.endpoint

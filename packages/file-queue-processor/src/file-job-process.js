@@ -6,7 +6,7 @@ export class UnRecoverableUploadError extends Error {}
 
 export const getReadStream = async objectKey => {
   try {
-    return await AWS.S3.ReadFileStream(objectKey)
+    return await AWS.S3.readFileStream(objectKey)
   } catch ({ httpStatusCode, message }) {
     if (Math.floor(httpStatusCode / 100) === 4) {
       // Client errors, such as missing buckets are unrecoverable

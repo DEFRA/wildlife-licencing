@@ -12,7 +12,7 @@ describe('the S3 file upload service', () => {
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: {
           S3: {
-            WriteFileStream: mockWriteFileStream
+            writeFileStream: mockWriteFileStream
           }
         }
       }))
@@ -41,7 +41,7 @@ describe('the S3 file upload service', () => {
       jest.doMock('@defra/wls-connectors-lib', () => ({
         AWS: {
           S3: {
-            WriteFileStream: mockWriteFileStream
+            writeFileStream: mockWriteFileStream
           }
         }
       }))

@@ -14,7 +14,7 @@ let keyAndCertsBuffers = {}
 export const ADDRESS = ({
   initialize: async () => {
     console.log('Initializing the address lookup...')
-    const { getSecret } = AWS.SecretsManager()
+    const { getSecret } = AWS.secretsManager()
     const certificate = await getSecret(Config.address.certificateParam)
     const key = await getSecret(Config.address.keyParam)
     keyAndCertsBuffers = {

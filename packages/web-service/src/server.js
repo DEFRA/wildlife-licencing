@@ -1,4 +1,3 @@
-import fs from 'fs'
 import 'dotenv/config'
 import Hapi from '@hapi/hapi'
 import find from 'find'

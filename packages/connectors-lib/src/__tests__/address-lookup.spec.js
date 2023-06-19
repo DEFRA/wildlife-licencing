@@ -55,7 +55,7 @@ describe('The address-lookup connector', () => {
     jest.doMock('node-fetch', () => ({ default: mockFetch }))
     jest.doMock('../aws.js', () => ({
       AWS: {
-        SecretsManager: () => ({
+        secretsManager: () => ({
           getSecret: () => 'secrets'
         })
       }

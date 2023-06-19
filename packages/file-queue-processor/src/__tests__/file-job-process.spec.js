@@ -27,7 +27,7 @@ describe('The file job processor', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       AWS: {
         S3: {
-          ReadFileStream: mockRead
+          readFileStream: mockRead
         }
       },
       GRAPH: {
@@ -64,7 +64,7 @@ describe('The file job processor', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       AWS: {
         S3: {
-          ReadFileStream: jest.fn()
+          readFileStream: jest.fn()
         }
       }
     }))
@@ -116,7 +116,7 @@ describe('The file job processor', () => {
       AWS: {
         S3: {
           // eslint-disable-next-line no-throw-literal
-          ReadFileStream: jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
+          readFileStream: jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
         }
       }
     }))
@@ -145,17 +145,12 @@ describe('The file job processor', () => {
   })
 
   it('rejects with recoverable error from AZURE', async () => {
-    const mockSend = jest.fn(() => ({
-      Body: 'byte-stream',
-      ContentLength: 500
-    }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: mockSend
-        },
-        GetObjectCommand: jest.fn()
-      }),
+      AWS: {
+        S3: {
+          readFileStream: jest.fn()
+        }
+      },
       GRAPH: {
         client: jest.fn(() => ({
           uploadFile: jest.fn(() => { throw new Error() })

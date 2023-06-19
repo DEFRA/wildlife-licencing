@@ -3,7 +3,7 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 describe('aws connectors', () => {
   beforeEach(() => jest.resetModules())
   describe('The S3 functions', () => {
-    it('ReadFileStream calls the underlying API correctly', async () => {
+    it('readFileStream calls the underlying API correctly', async () => {
       const mockSend = jest.fn().mockReturnValue({ Body: 'HGFDS', ContentLength: 5 })
       const mockGet = jest.fn()
       const mockDestroy = jest.fn()
@@ -25,15 +25,15 @@ describe('aws connectors', () => {
       }))
 
       const { AWS } = await import('../aws.js')
-      const { ReadFileStream } = AWS.S3
-      const result = await ReadFileStream('object-key')
+      const { readFileStream } = AWS.S3
+      const result = await readFileStream('object-key')
       expect(result).toEqual({ bytes: 5, stream: 'HGFDS' })
       expect(mockGet).toHaveBeenCalledWith({ Bucket: 'bucket', Key: 'object-key' })
       expect(mockSend).toHaveBeenCalled()
       expect(mockDestroy).toHaveBeenCalled()
     })
 
-    it('ReadFileStream handles an error correctly', async () => {
+    it('readFileStream handles an error correctly', async () => {
       const mockSend = jest.fn(() => { throw new Error() })
       const mockGet = jest.fn()
       const mockDestroy = jest.fn()
@@ -55,12 +55,12 @@ describe('aws connectors', () => {
       }))
 
       const { AWS } = await import('../aws.js')
-      const { ReadFileStream } = AWS.S3
-      await expect(() => ReadFileStream('object-key')).rejects.toThrow()
+      const { readFileStream } = AWS.S3
+      await expect(() => readFileStream('object-key')).rejects.toThrow()
       expect(mockDestroy).toHaveBeenCalled()
     })
 
-    it('WriteFileStream calls the underlying API correctly', async () => {
+    it('writeFileStream calls the underlying API correctly', async () => {
       const mockSend = jest.fn().mockReturnValue()
       const mockPut = jest.fn()
       const mockDestroy = jest.fn()
@@ -80,14 +80,14 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const { WriteFileStream } = AWS.S3
-      await WriteFileStream('object-key', 'fs')
+      const { writeFileStream } = AWS.S3
+      await writeFileStream('object-key', 'fs')
       expect(mockPut).toHaveBeenCalledWith({ Bucket: 'bucket', Key: 'object-key', ACL: 'authenticated-read', Body: 'fs' })
       expect(mockSend).toHaveBeenCalled()
       expect(mockDestroy).toHaveBeenCalled()
     })
 
-    it('WriteFileStream handles error correctly correctly', async () => {
+    it('writeFileStream handles error correctly correctly', async () => {
       const mockSend = jest.fn(() => { throw new Error() })
       const mockPut = jest.fn()
       const mockDestroy = jest.fn()
@@ -107,8 +107,8 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const { WriteFileStream } = AWS.S3
-      await expect(() => WriteFileStream('object-key', 'fs')).rejects.toThrow()
+      const { writeFileStream } = AWS.S3
+      await expect(() => writeFileStream('object-key', 'fs')).rejects.toThrow()
       expect(mockDestroy).toHaveBeenCalled()
     })
   })
@@ -132,7 +132,7 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const sm = AWS.SecretsManager()
+      const sm = AWS.secretsManager()
       const result = await sm.getSecret('name')
       expect(result).toEqual('1234e')
     })
@@ -155,7 +155,7 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const sm = AWS.SecretsManager()
+      const sm = AWS.secretsManager()
       await expect(() => sm.getSecret('name')).rejects.toThrow()
     })
   })
