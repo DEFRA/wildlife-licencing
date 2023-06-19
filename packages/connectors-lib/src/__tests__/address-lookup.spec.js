@@ -53,6 +53,14 @@ describe('The address-lookup connector', () => {
       headers: { get: () => 'application/json' }
     }))
     jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    jest.doMock('../aws.js', () => ({
+      AWS: {
+        SecretsManager: () => ({
+          getSecret: () => 'secrets'
+        })
+      }
+    }))
+
     const { ADDRESS } = await import('../address-lookup.js')
     await ADDRESS.initialize()
     const response = await ADDRESS.lookup('BS8 2QA')

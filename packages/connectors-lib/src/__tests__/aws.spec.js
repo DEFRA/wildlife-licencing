@@ -112,4 +112,51 @@ describe('aws connectors', () => {
       expect(mockDestroy).toHaveBeenCalled()
     })
   })
+
+  describe('The secret manager functions', () => {
+    it('getSecret calls the underlying API correctly', async () => {
+      const mockSend = jest.fn().mockReturnValue({ SecretString: '1234e' })
+      const mockSecretsManagerClient = jest.fn(() => ({
+        send: mockSend
+      }))
+      const mockGetSecretValueCommand = jest.fn()
+      jest.doMock('@aws-sdk/client-secrets-manager', () => ({
+        SecretsManagerClient: mockSecretsManagerClient,
+        GetSecretValueCommand: mockGetSecretValueCommand
+      }))
+      jest.doMock('../config.js', () => ({
+        aws: {
+          secretsManager: {
+            endpoint: 'https://aws.com'
+          }
+        }
+      }))
+      const { AWS } = await import('../aws.js')
+      const sm = AWS.SecretsManager()
+      const result = await sm.getSecret('name')
+      expect(result).toEqual('1234e')
+    })
+
+    it('getSecret throws an error if the secret cannot be retrieved', async () => {
+      const mockSend = jest.fn().mockImplementation(() => { throw Error() })
+      const mockSecretsManagerClient = jest.fn(() => ({
+        send: mockSend
+      }))
+      const mockGetSecretValueCommand = jest.fn()
+      jest.doMock('@aws-sdk/client-secrets-manager', () => ({
+        SecretsManagerClient: mockSecretsManagerClient,
+        GetSecretValueCommand: mockGetSecretValueCommand
+      }))
+      jest.doMock('../config.js', () => ({
+        aws: {
+          secretsManager: {
+            endpoint: 'https://aws.com'
+          }
+        }
+      }))
+      const { AWS } = await import('../aws.js')
+      const sm = AWS.SecretsManager()
+      await expect(() => sm.getSecret('name')).rejects.toThrow()
+    })
+  })
 })

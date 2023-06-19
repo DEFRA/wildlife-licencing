@@ -1,7 +1,7 @@
 import * as https from 'https'
 import { checkResponseOkElseThrow, httpFetch } from './fetch-helper.js'
 import Config from './config.js'
-import { AWS } from './connectors.js'
+import { AWS } from './aws.js'
 
 const addressUrl = search => {
   const url = new URL(Config.address.url)
