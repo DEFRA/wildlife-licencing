@@ -1,3 +1,7 @@
+import { POWERAPPS } from '@defra/wls-connectors-lib'
+
+const HTTPResponseError = POWERAPPS.HTTPResponseError
+
 describe('The batch query update', () => {
   beforeEach(() => jest.resetModules())
 
@@ -25,8 +29,8 @@ describe('The batch query update', () => {
     [401, 'Unauthorized'],
     [408, 'Timeout'],
     [500, 'Server error']])('throws recoverable batch error on http response %i', async status => {
-    const originalModule = jest.requireActual('@defra/wls-connectors-lib')
-    const HTTPResponseError = originalModule.POWERAPPS.HTTPResponseError
+    // const originalModule = jest.requireActual('@defra/wls-connectors-lib')
+    // const HTTPResponseError = originalModule.POWERAPPS.HTTPResponseError
     const mockBatchRequest = jest.fn(() => {
       throw new HTTPResponseError({ ok: false, status })
     })
