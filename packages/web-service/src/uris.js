@@ -9,6 +9,7 @@ export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 export const SIGN_IN = { uri: '/sign-in' }
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 export const DEFRA_IDM_CALLBACK = { uri: '/auth-complete' }
+export const USER_ROLE = { uri: '/user-role', page: 'user-role' }
 
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }

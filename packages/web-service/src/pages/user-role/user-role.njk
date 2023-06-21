@@ -1,0 +1,48 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'user-role': {
+          'any.required': { ref: '#user-role', text: 'Enter a user-role' }
+        }
+    }
+%}
+
+{% set title = 'What is your role with respect to this application?' %}
+
+{% set roleTextMap = {
+        APPLICANT: 'The applicant',
+        ECOLOGIST: 'The ecologist'
+    }
+%}
+
+{% set radioItems = [] %}
+
+<div hidden>
+    {% for key, text in roleTextMap %}
+       {{ radioItems.push({
+            text: text,
+            value: key
+       }) }}
+    {% endfor %}
+
+    {{ radioItems.push({ divider: 'or' }) }}
+    {{ radioItems.push({
+        text: 'Other',
+        value: 'OTHER'
+    }) }}
+</div>
+
+{% block pageContent %}
+  {{ govukRadios({
+    id: "user-role",
+    name: "user-role",
+    hint: {
+      text: "Select one option."
+    },
+    errorMessage: { text: "Select a role." } if error['user-role'],
+    items: radioItems
+  }) }}
+
+{% endblock %}
