@@ -7,7 +7,7 @@ const debug = db('web-service:api-requests')
 export const PERMISSION = {
   updatePermissionsSection: async (applicationId, payload) => apiRequestsWrapper(
     async () => {
-      const permissions = API.put(`${apiUrls.APPLICATION}/${applicationId}${apiUrls.PERMISSIONS_SECTION}`, payload)
+      const permissions = await API.put(`${apiUrls.APPLICATION}/${applicationId}${apiUrls.PERMISSIONS_SECTION}`, payload)
       debug(`Updating permissions details with applicationId ${applicationId}`)
       return permissions
     },
