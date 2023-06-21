@@ -194,6 +194,8 @@ export const ReturnsURIs = {
   CONFIRMATION: { uri: '/returns-confirmation', page: 'returns-confirmation' },
   UPLOAD: { uri: '/returns-upload', page: 'returns-upload' },
   UPLOAD_FILE: { uri: '/returns-upload-file', page: 'returns-upload-file' },
+  UPLOADED_FILES_CHECK: { uri: '/returns-uploaded-files', page: 'returns-uploaded-files' },
+  REMOVE_RETURNS_UPLOADED_FILE: { uri: '/remove-returns-uploaded-file', page: 'remove-returns-uploaded-file' },
 
   A24: {
     DISTURB_BADGERS: { uri: '/a24/disturb-badgers', page: 'disturb-badgers' },
