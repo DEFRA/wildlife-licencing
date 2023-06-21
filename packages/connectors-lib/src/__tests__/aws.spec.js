@@ -25,12 +25,11 @@ describe('aws connectors', () => {
       }))
 
       const { AWS } = await import('../aws.js')
-      const { readFileStream } = AWS.S3
+      const { readFileStream } = AWS.S3()
       const result = await readFileStream('object-key')
       expect(result).toEqual({ bytes: 5, stream: 'HGFDS' })
       expect(mockGet).toHaveBeenCalledWith({ Bucket: 'bucket', Key: 'object-key' })
       expect(mockSend).toHaveBeenCalled()
-      expect(mockDestroy).toHaveBeenCalled()
     })
 
     it('readFileStream handles an error correctly', async () => {
@@ -55,9 +54,8 @@ describe('aws connectors', () => {
       }))
 
       const { AWS } = await import('../aws.js')
-      const { readFileStream } = AWS.S3
+      const { readFileStream } = AWS.S3()
       await expect(() => readFileStream('object-key')).rejects.toThrow()
-      expect(mockDestroy).toHaveBeenCalled()
     })
 
     it('writeFileStream calls the underlying API correctly', async () => {
@@ -80,11 +78,10 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const { writeFileStream } = AWS.S3
+      const { writeFileStream } = AWS.S3()
       await writeFileStream('object-key', 'fs')
       expect(mockPut).toHaveBeenCalledWith({ Bucket: 'bucket', Key: 'object-key', ACL: 'authenticated-read', Body: 'fs' })
       expect(mockSend).toHaveBeenCalled()
-      expect(mockDestroy).toHaveBeenCalled()
     })
 
     it('writeFileStream handles error correctly correctly', async () => {
@@ -107,9 +104,8 @@ describe('aws connectors', () => {
         }
       }))
       const { AWS } = await import('../aws.js')
-      const { writeFileStream } = AWS.S3
+      const { writeFileStream } = AWS.S3()
       await expect(() => writeFileStream('object-key', 'fs')).rejects.toThrow()
-      expect(mockDestroy).toHaveBeenCalled()
     })
   })
 

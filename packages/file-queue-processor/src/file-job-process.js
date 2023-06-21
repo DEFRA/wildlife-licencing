@@ -4,9 +4,11 @@ import { AWS, GRAPH } from '@defra/wls-connectors-lib'
 export class RecoverableUploadError extends Error {}
 export class UnRecoverableUploadError extends Error {}
 
+const { readFileStream } = AWS.S3()
+
 export const getReadStream = async objectKey => {
   try {
-    return await AWS.S3.readFileStream(objectKey)
+    return await readFileStream(objectKey)
   } catch ({ httpStatusCode, message }) {
     if (Math.floor(httpStatusCode / 100) === 4) {
       // Client errors, such as missing buckets are unrecoverable
