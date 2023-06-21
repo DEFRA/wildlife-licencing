@@ -86,10 +86,10 @@ describe('The NSIP page', () => {
       })
     }
     const result = await completion(request)
-    expect(result).toEqual('/landowner')
+    expect(result).toEqual('/user-role')
   })
 
-  it('the NSIP page completion causes a redirect to the landowner page if NSIP is true', async () => {
+  it('the NSIP page completion causes a redirect to the user-role page if NSIP is true', async () => {
     jest.useFakeTimers().setSystemTime(new Date('2022-01-01'))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
@@ -108,6 +108,6 @@ describe('The NSIP page', () => {
       })
     }
     const result = await completion(request)
-    expect(result).toEqual('/landowner')
+    expect(result).toEqual('/user-role')
   })
 })

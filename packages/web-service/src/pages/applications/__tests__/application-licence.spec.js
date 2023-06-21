@@ -14,7 +14,10 @@ describe('application-licence page', () => {
           getData: mockGetData,
           setData: mockSetData
         }),
-        query: { applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }
+        query: {
+          applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+          licenceId: '7eabe3f9-8818-ed11-b83e-002248c5c45b'
+        }
       }
 
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -55,7 +58,8 @@ describe('application-licence page', () => {
               applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
               endDate: '2022-08-26',
               startDate: '2022-08-10',
-              licenceNumber: 'LI-0016N0Z4'
+              licenceNumber: 'LI-0016N0Z4',
+              annotations: [{ filename: '2023-1253092-WLM-LIC-licence document.pdf', mimetype: 'application/pdf', modifiedOn: '2023-06-09T16:09:06Z', objectTypeCode: 'sdds_license' }]
             }])
           }
         }
@@ -77,9 +81,17 @@ describe('application-licence page', () => {
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
           endDate: '26 August 2022',
           id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-          lastSent: null,
+          lastSent: '9 June 2023',
           licenceNumber: 'LI-0016N0Z4',
-          startDate: '10 August 2022'
+          startDate: '10 August 2022',
+          annotations: [
+            {
+              filename: '2023-1253092-WLM-LIC-licence document.pdf',
+              mimetype: 'application/pdf',
+              modifiedOn: '2023-06-09T16:09:06Z',
+              objectTypeCode: 'sdds_license'
+            }
+          ]
         }],
         statuses: {
           1: 'RECEIVED',
@@ -92,7 +104,7 @@ describe('application-licence page', () => {
           100000008: 'NOT_GRANTED',
           452120001: 'EXPIRED'
         },
-        lastSentEventFlag: null
+        lastSentEventFlag: true
       })
     })
   })
@@ -157,41 +169,46 @@ describe('application-licence page', () => {
             cacheDirect: () => {
               return {
                 getData: () => ({
-                  applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+                  applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+                  lastSentEventFlag: true
                 })
               }
             }
           }
         })
 
-        jest.doMock('../../../services/api-requests.js', () => ({
-          APIRequests: {
-            LICENCES: {
-              findByApplicationId: jest.fn(() => [{
-                id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-                applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-                endDate: '2022-08-26',
-                startDate: '2022-08-10',
-                licenceNumber: 'LI-0016N0Z4',
-                annotations: [
-                  {
-                    objectTypeCode: 'sdds_license',
-                    mimetype: 'application/pdf',
-                    filename: 'LI-0016N0Z4 document.pdf',
-                    endDate: '2022-08-26',
-                    startDate: '2022-08-10'
-                  }
-                ]
-              }])
-            }
-          }
-        }))
         const { validator } = await import('../application-licence.js')
         expect(await validator(payload, context))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
         expect(e.details[0].message).toBe('Error')
       }
+    })
+
+    it('should return null there are no events', async () => {
+      const payload = { 'email-or-return': '' }
+      const context = {
+        context: {
+          query: {
+          }
+        }
+      }
+      jest.doMock('../../../session-cache/cache-decorator.js', () => {
+        return {
+          cacheDirect: () => {
+            return {
+              getData: () => ({
+                applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+                lastSentEventFlag: false
+              })
+            }
+          }
+        }
+      })
+
+      const { validator } = await import('../application-licence.js')
+
+      expect(await validator(payload, context)).toBeUndefined()
     })
 
     it('should return null when there is no error', async () => {
@@ -207,34 +224,13 @@ describe('application-licence page', () => {
           cacheDirect: () => {
             return {
               getData: () => ({
-                applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+                applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+                lastSentEventFlag: true
               })
             }
           }
         }
       })
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          LICENCES: {
-            findByApplicationId: jest.fn(() => [{
-              id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-              applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-              endDate: '2022-08-26',
-              startDate: '2022-08-10',
-              licenceNumber: 'LI-0016N0Z4',
-              annotations: [
-                {
-                  objectTypeCode: 'sdds_license',
-                  mimetype: 'application/pdf',
-                  filename: 'LI-0016N0Z4 document.pdf',
-                  endDate: '2022-08-26',
-                  startDate: '2022-08-10'
-                }
-              ]
-            }])
-          }
-        }
-      }))
       const { validator } = await import('../application-licence.js')
       expect(await validator(payload, context)).toBeUndefined()
     })

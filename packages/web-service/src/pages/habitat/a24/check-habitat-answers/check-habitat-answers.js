@@ -38,7 +38,6 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  await checkApplication(request, h)
 
   // Ensure if a user just deleted their only sett, we take them back to /tasklist
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
@@ -123,8 +122,8 @@ export const completion = async request => {
 export default pageRoute({
   page: habitatURIs.CHECK_YOUR_ANSWERS.page,
   uri: habitatURIs.CHECK_YOUR_ANSWERS.uri,
+  checkData: [checkData, checkApplication],
   getData,
   validator,
-  completion,
-  checkData
+  completion
 })

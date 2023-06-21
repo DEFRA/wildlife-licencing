@@ -1,24 +1,20 @@
+jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the S3 file upload service', () => {
   beforeEach(() => jest.resetModules())
   describe('s3FileUpload', () => {
     it('sends the put command and unlinks the file', async () => {
-      const mockSend = jest.fn()
-      const mockPut = jest.fn()
-      const mockDestroy = jest.fn()
+      const mockWriteFileStream = jest.fn()
       jest.doMock('fs', () => ({
         createReadStream: jest.fn(() => 'rs'),
         unlinkSync: jest.fn()
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
-        AWS: () => ({
-          S3Client: {
-            send: mockSend,
-            destroy: mockDestroy
-          },
-          PutObjectCommand: mockPut,
-          bucket: 'bucket'
-        })
+        AWS: {
+          S3: () => ({
+            writeFileStream: mockWriteFileStream
+          })
+        }
       }))
       jest.doMock('../api-requests.js', () => ({
         APIRequests: {
@@ -33,32 +29,21 @@ describe('the S3 file upload service', () => {
         '/tmp/123',
         { filetype: 'method', multiple: false }
       )
-      expect(mockPut).toHaveBeenCalledWith({
-        ACL: 'authenticated-read',
-        Body: 'rs',
-        Bucket: 'bucket',
-        Key: expect.any(String)
-      })
-      expect(mockDestroy).toHaveBeenCalled()
+      expect(mockWriteFileStream).toHaveBeenCalledWith(expect.any(String), 'rs')
     })
 
     it('throws an error if unable to write', async () => {
-      const mockSend = jest.fn()
-      const mockPut = jest.fn(() => { throw new Error() })
-      const mockDestroy = jest.fn()
+      const mockWriteFileStream = jest.fn(() => { throw new Error() })
       jest.doMock('fs', () => ({
         createReadStream: jest.fn(() => 'rs'),
         unlinkSync: jest.fn()
       }))
       jest.doMock('@defra/wls-connectors-lib', () => ({
-        AWS: () => ({
-          S3Client: {
-            send: mockSend,
-            destroy: mockDestroy
-          },
-          PutObjectCommand: mockPut,
-          bucket: 'bucket'
-        })
+        AWS: {
+          S3: () => ({
+            writeFileStream: mockWriteFileStream
+          })
+        }
       }))
       const { s3FileUpload } = await import('../s3-upload.js')
       try {
@@ -69,7 +54,6 @@ describe('the S3 file upload service', () => {
         )
       } catch (err) {
         expect(err.output.statusCode).toEqual(500)
-        expect(mockDestroy).toHaveBeenCalled()
       }
     })
   })

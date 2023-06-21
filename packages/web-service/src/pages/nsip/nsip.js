@@ -1,4 +1,4 @@
-import { eligibilityURIs, NSIP, WINDOW_NOT_OPEN } from '../../uris.js'
+import { USER_ROLE, NSIP, WINDOW_NOT_OPEN } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -28,7 +28,7 @@ export const completion = async request => {
     return WINDOW_NOT_OPEN.uri
   }
 
-  return eligibilityURIs.LANDOWNER.uri
+  return USER_ROLE.uri
 }
 
 export default yesNoPage({

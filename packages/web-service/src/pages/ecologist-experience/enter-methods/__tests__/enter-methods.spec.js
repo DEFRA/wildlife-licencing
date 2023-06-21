@@ -98,6 +98,9 @@ describe('The enter methods page', () => {
           NOT_STARTED: 'not-started'
         },
         APIRequests: {
+          APPLICATION: {
+            getById: () => {}
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: jest.fn(() => ({ methodExperience: 'hello world' }))
           }

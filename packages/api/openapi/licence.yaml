@@ -202,12 +202,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: role
+        - name: userRole
           in: query
           description: ID of the user
           required: false
           schema:
-            $ref: '#/components/schemas/roles'
+            $ref: '#/components/schemas/userRoles'
       responses:
         200:
           description: Success
@@ -2087,12 +2087,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: role
+        - name: userRole
           in: query
-          description: ID of the user
+          description: the primary user-role for the user on this application
           required: false
           schema:
-            $ref: '#/components/schemas/roles'
+            $ref: '#/components/schemas/userRoles'
       responses:
         200:
           description: Success
@@ -2829,12 +2829,6 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: role
-          in: query
-          description: ID of the user
-          required: false
-          schema:
-            $ref: '#/components/schemas/roles'
       responses:
         200:
           description: Success
@@ -3801,12 +3795,20 @@ components:
           $ref: '#/components/schemas/uuid'
         applicationId:
           $ref: '#/components/schemas/uuid'
-        role:
-          $ref: '#/components/schemas/roles'
+        userRole:
+          $ref: '#/components/schemas/userRoles'
+        applicationRole:
+          $ref: '#/components/schemas/applicationRoles'
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    userRoles:
+      type: string
+
+    applicationRoles:
+      type: string
 
     contacts:
       type: array
@@ -4177,11 +4179,6 @@ components:
             $ref: '#/components/schemas/uuid'
           updatedAt:
             $ref: '#/components/schemas/timestamp'
-
-    roles:
-      type: string
-      enum:
-        - USER
 
     referenceDataTypes:
       type: array

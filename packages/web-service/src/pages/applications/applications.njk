@@ -32,7 +32,7 @@
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4">
         {% if application.licences.length and data.statuses[application.statusCode] === 'GRANTED' %}
-            <a href="{{_uri.applicationLicence}}?licenceId={{application.licences[0].id}}&&applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
+            <a href="{{_uri.applicationLicence}}?licenceId={{application.licences[0].id}}&applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% elif application.userSubmission %}
             <a href="{{_uri.applicationSummary}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% else %}

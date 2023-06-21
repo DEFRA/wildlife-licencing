@@ -188,19 +188,19 @@ async function defineApplicationUsers (sequelize) {
         key: 'id'
       }
     },
-    role: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: models.userRoles,
-        key: 'role'
-      }
+    userRole: {
+      type: DataTypes.STRING(20)
+    },
+    applicationRole: {
+      type: DataTypes.STRING(20)
     }
   }, {
     timestamps: true,
     indexes: [
       { unique: false, fields: ['user_id'], name: 'application_user_user_fk' },
       { unique: false, fields: ['application_id'], name: 'application_user_application_fk' },
-      { unique: false, fields: ['role'], name: 'application_user_role_fk' }
+      { unique: false, fields: ['user_role'], name: 'application_user_user_role_fk' },
+      { unique: false, fields: ['application_role'], name: 'application_user_application_role_fk' }
     ]
   })
 }

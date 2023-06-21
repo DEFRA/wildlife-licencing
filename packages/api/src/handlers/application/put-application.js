@@ -3,7 +3,9 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { clearApplicationCaches } from './application-cache.js'
 import { prepareResponse, alwaysExclude } from './application-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
+import db from 'debug'
 const { cache } = REDIS
+const debug = db('api:post-submission-update')
 
 export default async (context, req, h) => {
   try {
@@ -39,6 +41,12 @@ export default async (context, req, h) => {
         .type(APPLICATION_JSON)
         .code(201)
     } else {
+      // Currently an application may only be submitted once. It therefore should not be modified by the
+      // front end after that submission. This is not currently an error because that possibility has been deliberately left open
+      // However it is suspected that the automated tests are forcing this to happen. To diagnose this log a debug message
+      if (application.userSubmission) {
+        debug(`Post submission update on ${applicationId}: ${application.application?.applicationReferenceNumber}`)
+      }
       const [, updatedApplication] = await models.applications.update({
         application: alwaysExclude(req.payload),
         updateStatus: 'L'

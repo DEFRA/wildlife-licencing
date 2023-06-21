@@ -1,3 +1,4 @@
+import { APIRequests } from '../../services/api-requests.js'
 import { APPLICATIONS } from '../../uris.js'
 
 /**
@@ -8,8 +9,9 @@ import { APPLICATIONS } from '../../uris.js'
  */
 export const checkApplication = async (request, h) => {
   const journeyData = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(journeyData.applicationId)
 
-  if (!journeyData.applicationId) {
+  if (!journeyData.applicationId || application?.userSubmission !== undefined) {
     return h.redirect(APPLICATIONS.uri)
   }
 

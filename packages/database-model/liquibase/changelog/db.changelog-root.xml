@@ -38,4 +38,16 @@
             <column  name="user"  type="jsonb"/>
         </addColumn>
     </changeSet>
+
+    <changeSet  id="5"  author="sdds">
+        <addColumn  tableName="application-users">
+            <column  name="application-role"  type="varchar(20)" />
+        </addColumn>
+        <addColumn  tableName="application-users">
+            <column  name="user-role"  type="varchar(20)" />
+        </addColumn>
+        <dropColumn  tableName="application-users">
+            <column  name="role"   />
+        </dropColumn>
+    </changeSet>
 </databaseChangeLog>

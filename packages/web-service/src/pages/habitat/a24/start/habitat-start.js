@@ -13,7 +13,6 @@ export const getData = async request => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  await checkApplication(request, h)
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
@@ -29,6 +28,6 @@ export default pageRoute({
   page: habitatURIs.START.page,
   uri: habitatURIs.START.uri,
   completion: habitatURIs.NAME.uri,
-  getData,
-  checkData
+  checkData: [checkData, checkApplication],
+  getData
 })
