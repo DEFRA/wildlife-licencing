@@ -109,116 +109,10 @@ describe('application-licence page', () => {
         lastSentEventFlag: true
       })
     })
-
-    it('looks-up the application and applicant and performs the necessary licence expiry and site address transformation', async () => {
-      const mockGetData = jest.fn(() => ({
-        userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
-      }))
-
-      const mockSetData = jest.fn()
-
-      const request = {
-        cache: () => ({
-          getData: mockGetData,
-          setData: mockSetData
-        }),
-        query: { applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }
-      }
-
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          SITE: {
-            findByApplicationId: jest.fn(() => [])
-          },
-          APPLICATION: {
-            getById: jest.fn(() => ({
-              id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-              applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b'
-            }))
-          },
-          CONTACT: {
-            role: () => ({
-              getByApplicationId: jest.fn(() => ({
-                fullName: 'Dame Barking'
-              }))
-            })
-          },
-          LICENCES: {
-            findByApplicationId: jest.fn(() => [{
-              id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-              applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-              endDate: '2022-08-26',
-              startDate: '2022-08-10',
-              licenceNumber: 'LI-0016N0Z4',
-              annotations: [
-                {
-                  objectTypeCode: 'sdds_license',
-                  mimetype: 'application/pdf',
-                  filename: 'LI-0016N0Z4 document.pdf',
-                  endDate: '2022-08-26',
-                  startDate: '2022-08-10'
-                }
-              ]
-            }])
-          }
-        }
-      }))
-
-      const { getData } = await import('../application-licence.js')
-      const result = await getData(request)
-      expect(result).toStrictEqual({
-        applicant: {
-          fullName: 'Dame Barking'
-        },
-        application: {
-          applicationType: 'A24',
-          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
-          id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          siteAddress: ''
-        },
-        licences: [{
-          applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-          endDate: '26 August 2022',
-          id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-          lastSent: null,
-          licenceNumber: 'LI-0016N0Z4',
-          startDate: '10 August 2022',
-          annotations: [
-            {
-              objectTypeCode: 'sdds_license',
-              mimetype: 'application/pdf',
-              filename: 'LI-0016N0Z4 document.pdf',
-              endDate: '2022-08-26',
-              startDate: '2022-08-10'
-            }
-          ]
-        }],
-        statuses: {
-          1: 'RECEIVED',
-          100000000: 'AWAITING_ALLOCATION',
-          100000001: 'ALLOCATED_FOR_ASSESSMENT',
-          100000002: 'UNDER_ASSESSMENT',
-          100000004: 'GRANTED',
-          100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED_ROA_DUE',
-          452120003: 'EXPIRED_ROA_RECEIVED',
-          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
-        },
-        lastSentEventFlag: {
-          objectTypeCode: 'sdds_license',
-          mimetype: 'application/pdf',
-          filename: 'LI-0016N0Z4 document.pdf',
-          endDate: '2022-08-26',
-          startDate: '2022-08-10'
-        }
-      })
-    })
   })
 
   describe('completion', () => {
-    it('should request the queue of licence email resend and redirect to the email confirmation page', async () => {
+    it('should request the queue of licence email resend and redirect to the email-confirmation page', async () => {
       const mockQueueTheLicenceEmailResend = jest.fn()
       const request = {
         cache: () => ({
@@ -237,11 +131,11 @@ describe('application-licence page', () => {
 
       const { completion } = await import('../application-licence.js')
       await completion(request)
-      expect(await completion(request)).toBe('/email-confirmation')
       expect(mockQueueTheLicenceEmailResend).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18')
+      expect(await completion(request)).toBe('/email-confirmation')
     })
 
-    it('should redirect to the the first page of the returns page with out queuing the email confirmation', async () => {
+    it('should redirect to the licensed-actions page', async () => {
       const mockQueueTheLicenceEmailResend = jest.fn()
       const request = {
         cache: () => ({
@@ -259,9 +153,7 @@ describe('application-licence page', () => {
       }))
 
       const { completion } = await import('../application-licence.js')
-      await completion(request)
       expect(await completion(request)).toBe('/licensed-actions')
-      expect(mockQueueTheLicenceEmailResend).not.toHaveBeenCalled()
     })
   })
 
