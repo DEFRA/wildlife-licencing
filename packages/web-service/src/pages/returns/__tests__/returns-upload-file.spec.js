@@ -44,19 +44,4 @@ describe('Upload returns file', () => {
     const { completion } = await import('../returns-upload-file.js')
     expect(await completion(request)).toStrictEqual('/returns-uploaded-files')
   })
-
-  it('getData clears page data', async () => {
-    const mockClearPageData = jest.fn()
-    const request = {
-      cache: () => ({
-        getData: jest.fn(() => ({
-          applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
-        })),
-        clearPageData: mockClearPageData
-      })
-    }
-    const { getData } = await import('../returns-upload-file.js')
-    await getData(request)
-    expect(mockClearPageData).toHaveBeenCalled()
-  })
 })

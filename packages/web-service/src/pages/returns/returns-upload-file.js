@@ -14,12 +14,9 @@ export const completion = async request => {
   return UPLOADED_FILES_CHECK.uri
 }
 
-export const getData = async request => await request.cache().clearPageData()
-
 export const uploadReturnSupportingInformation = fileUploadPageRoute({
   view: UPLOAD_FILE.page,
   fileUploadUri: UPLOAD_FILE.uri,
   fileUploadCompletion: completion,
-  fileType: FILETYPES.SUPPORTING_INFORMATION.filetype,
-  getData
+  fileType: FILETYPES.SUPPORTING_INFORMATION.filetype
 })
