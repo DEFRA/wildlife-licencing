@@ -4,12 +4,16 @@ import { SERVER_PORT } from './constants.js'
 import db from 'debug'
 
 import {
+  getUserRole,
+  putUserRole
+} from './handlers/user-role/user-role.js'
+
+import {
   getUserByUserId,
   getUsers,
   deleteUser,
   postUser,
-  putUser,
-  authenticateUser
+  putUser
 } from './handlers/user/user.js'
 
 import {
@@ -176,12 +180,13 @@ const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 // Split out to comply with sonar-cube line restriction on functions
 const handlers = {
   // User handlers
+  getUserRole,
+  putUserRole,
   getUserByUserId,
   getUsers,
   postUser,
   putUser,
   deleteUser,
-  authenticateUser,
 
   // Contact handlers
   getContacts,

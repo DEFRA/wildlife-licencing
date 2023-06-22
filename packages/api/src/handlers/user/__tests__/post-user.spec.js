@@ -49,7 +49,11 @@ describe('The postUser handler', () => {
     }
     cache.save = jest.fn()
     await postUser(context, { payload: { username: 'Graham' } }, h)
-    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), username: 'graham' })
+    expect(models.users.create).toHaveBeenCalledWith({
+      id: expect.any(String),
+      username: 'graham',
+      user: {}
+    })
     expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)

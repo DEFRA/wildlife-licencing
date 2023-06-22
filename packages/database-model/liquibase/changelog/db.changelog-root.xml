@@ -9,42 +9,4 @@
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
 		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <changeSet  id="1"  author="sdds">
-        <createTable  tableName="version_log">
-            <column  name="version"  type="varchar(50)"/>
-            <column  name="created_at"  type="timestamp with time zone not null"/>
-        </createTable>
-        <insert  tableName="version_log">
-            <column  name="version"  value="7.0.2-alpha.0"/>
-            <column  name="created_at" valueComputed="now()"/>
-        </insert>
-    </changeSet>
-
-    <changeSet  id="2"  author="sdds">
-        <insert  tableName="version_log">
-            <column  name="version"  value="7.0.5-alpha.0"/>
-            <column  name="created_at" valueComputed="now()"/>
-        </insert>
-    </changeSet>
-
-    <changeSet  id="3"  author="sdds">
-        <addColumn  tableName="users">
-            <column  name="cookie_prefs"  type="jsonb"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet  id="4"  author="sdds">
-        <addColumn  tableName="users">
-            <column  name="user"  type="jsonb"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet  id="5"  author="sdds">
-        <addColumn  tableName="application-users">
-            <column  name="application-role"  type="varchar(20)" />
-        </addColumn>
-        <addColumn  tableName="application-users">
-            <column  name="user-role"  type="varchar(20)" />
-        </addColumn>
-    </changeSet>
 </databaseChangeLog>

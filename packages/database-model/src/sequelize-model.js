@@ -8,11 +8,52 @@ const models = {}
 
 async function defineUserRoles (sequelize) {
   models.userRoles = await sequelize.define('user-roles', {
-    role: { type: DataTypes.STRING(20), primaryKey: true }
+    id: { type: DataTypes.UUID, primaryKey: true },
+    name: { type: DataTypes.STRING(50), allowNull: false }
   }, {
-    timestamps: false,
+    timestamps: true,
     indexes: [
-      { unique: true, fields: ['role'], name: 'user_roles_uk' }
+      { unique: true, fields: ['name'], name: 'user_role_name_uk' }
+    ]
+  })
+}
+
+async function defineUsers (sequelize) {
+  models.users = await sequelize.define('user', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    username: { type: DataTypes.STRING(50), allowNull: false },
+    user: { type: DataTypes.JSONB },
+    cookiePrefs: { type: DataTypes.JSONB }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['username'], name: 'user_username_uk' }
+    ]
+  })
+}
+
+async function defineOrganisation (sequelize) {
+  models.organisations = await sequelize.define('organisation', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    name: { type: DataTypes.STRING(50), allowNull: false },
+    organisation: { type: DataTypes.JSONB }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['name'], name: 'organisation_name_uk' }
+    ]
+  })
+}
+
+async function defineUserOrganisation (sequelize) {
+  models.userOrganisations = await sequelize.define('user-organisations', {
+    userId: { type: DataTypes.UUID, primaryKey: true },
+    organisationId: { type: DataTypes.UUID, primaryKey: true }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'organisation_user_fk' },
+      { unique: false, fields: ['organisation_id'], name: 'organisation_organisation_fk' }
     ]
   })
 }
@@ -35,21 +76,6 @@ async function defineAccountRoles (sequelize) {
     timestamps: false,
     indexes: [
       { unique: true, fields: ['account_role'], name: 'account_roles_uk' }
-    ]
-  })
-}
-
-async function defineUsers (sequelize) {
-  models.users = await sequelize.define('user', {
-    id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(50), allowNull: false },
-    password: { type: DataTypes.STRING(127) },
-    user: { type: DataTypes.JSONB },
-    cookiePrefs: { type: DataTypes.JSONB }
-  }, {
-    timestamps: true,
-    indexes: [
-      { unique: true, fields: ['username'], name: 'user_username_uk' }
     ]
   })
 }
@@ -566,8 +592,10 @@ const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
 
   // Define the tables (THE ORDERING REFLECTS INTERDEPENDENCIES)
-  await defineUsers(sequelize)
   await defineUserRoles(sequelize)
+  await defineUsers(sequelize)
+  await defineOrganisation(sequelize)
+  await defineUserOrganisation(sequelize)
 
   // Define the account and contact tables
   await defineContactRoles(sequelize)
@@ -632,8 +660,10 @@ const createModels = async () => {
   models.applicationPurposes.belongsToMany(models.applicationTypes, { through: models.applicationTypeApplicationPurposes })
 
   // Synchronize the model
-  await models.users.sync()
   await models.userRoles.sync()
+  await models.users.sync()
+  await models.organisations.sync()
+  await models.userOrganisations.sync()
 
   await models.contactRoles.sync()
   await models.accountRoles.sync()
@@ -669,9 +699,6 @@ const createModels = async () => {
   await models.applicationTypeApplicationPurposes.sync()
 
   await models.optionSets.sync()
-
-  // Create user roles
-  await models.userRoles.upsert({ role: 'USER' })
 
   // Create the contact roles
   await models.contactRoles.upsert({ contactRole: 'APPLICANT' })

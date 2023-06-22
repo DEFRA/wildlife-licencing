@@ -1,9 +1,8 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
 import { models } from '@defra/wls-database-model'
-import { prepareResponse } from './user-proc.js'
+import { alwaysExclude, prepareResponse } from './user-proc.js'
 import { REDIS } from '@defra/wls-connectors-lib'
-import { toHash } from './password.js'
 const { cache } = REDIS
 
 /*
@@ -28,7 +27,7 @@ export default async (context, req, h) => {
     const user = await models.users.create({
       id: uuidv4(),
       username,
-      ...(req.payload.password && { password: await toHash(req.payload.password) }),
+      user: alwaysExclude(Object.assign({}, req.payload)),
       cookiePrefs: req.payload?.cookiePrefs
     })
 
