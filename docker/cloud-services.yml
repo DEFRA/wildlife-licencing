@@ -58,7 +58,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3
+      - SERVICES=s3,secretsmanager
       - DEFAULT_REGION=eu-west-2
       - DEBUG=true
       - DATA_DIR=/tmp/localstack/data

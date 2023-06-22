@@ -65,8 +65,10 @@ The docker services running should be as follows:
 
 Ensure you have node version 16.13.0 or greater installed; `node --version`
 
-#### Localstack
-The AWS S3 interface is simulated in the local docker stack using the localstack image
+### Localstack
+The AWS S3 interface is simulated in the local docker stack using the localstack image. 4566 is the port for the localstack interface.
+
+#### S3
 In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary
 Alternatively you can install the AWS CLI.
 Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
@@ -79,7 +81,28 @@ aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-buck
 aws --endpoint-url=http://localhost:4566 s3 ls
 ```
 
-Here 4566 is the edge port for the localstack s4 interface
+#### Secrets Manager
+The service uses the Secrets Manager to hold the address lookup certificates. These should be uploaded into the localstack secrets manager as follows
+
+```
+aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
+--name /tst/ldn/new/devops/web_service/address-lookup-certificate \
+--secret-string file://<Certificate File>
+
+aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
+	--name /tst/ldn/new/devops/web_service/address-lookup-key \
+	--secret-string file://<Key File>
+
+```
+
+This requires the following corresponding environment variables to be set
+
+```
+ADDRESS_LOOKUP_CERTIFICATE_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-certificate;
+ADDRESS_LOOKUP_KEY_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-key;
+```
+
+The address lookup certificates are provided to us as a pfx file combined format. In order to extract the certificate and key from the pxf file follow the procedure shown at the end of this README
 
 #### To run any package locally
 
@@ -198,3 +221,19 @@ The queued data is consumed by the __Application Queue Processor__ and wrtiien i
 The __Application Extract Processor__ and the __Reference Data Extract Processor__ are used to extract data from the Power Platform and write it down to the Postgres tables.
 
 For details of the inbound and outbound processes see [powerapps-lib/README.md](packages/powerapps-lib/README.md)
+
+#### Appendix
+To extract a certificate and key for the address lookup from the provided pxf file follow these steps:
+
+1. Extract .crt file from the .pfx certificate (you will be prompted for the password)
+```
+openssl pkcs12 -in BOOMI-SDDS-SND.pfx -clcerts -nokeys -out BOOMI-SDDS-SND.crt
+```
+
+2. Extract the private key from the .pfx file
+```
+openssl pkcs12 -in BOOMI-SDDS-SND.pfx -nocerts -out temp.key
+```
+
+3. Extract the .key file from the encrypted private key
+openssl rsa -in temp.key -out BOOMI-SDDS-SND.key

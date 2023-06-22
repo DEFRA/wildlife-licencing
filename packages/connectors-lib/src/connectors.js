@@ -1,4 +1,4 @@
-import AWS from './aws.js'
+import { AWS } from './aws.js'
 import { REDIS } from './redis.js'
 import { SEQUELIZE } from './sequelize.js'
 import { QUEUE } from './queue.js'
