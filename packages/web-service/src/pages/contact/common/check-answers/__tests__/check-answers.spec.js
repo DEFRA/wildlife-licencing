@@ -45,10 +45,6 @@ describe('the check-answers page', () => {
     expect(result).toEqual({
       checkYourAnswers: [
         {
-          key: 'contactIsUser',
-          value: '-'
-        },
-        {
           key: 'whoIsTheLicenceFor',
           value: 'Keith Richards'
         },
@@ -114,10 +110,6 @@ describe('the check-answers page', () => {
     const result = await getCheckAnswersData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
     expect(result).toEqual({
       checkYourAnswers: [
-        {
-          key: 'contactIsUser',
-          value: 'yes'
-        },
         {
           key: 'whoIsTheLicenceFor',
           value: 'Keith Richards'

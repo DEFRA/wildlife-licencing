@@ -433,30 +433,7 @@ describe('the invoice-responsible page', () => {
   })
 
   describe('completion', () => {
-    it('go to the user page if other is chosen and neither the applicant or the ecologist is not the user', async () => {
-      jest.doMock('../../common/common.js', () => ({
-        canBeUser: () => true
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({
-            payload: { responsible: 'other' }
-          }),
-          getData: jest.fn(() => ({
-            applicationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10'
-          }))
-        })
-      }
-
-      const { completion } = await import('../invoice-responsible.js')
-      const result = await completion(request)
-      expect(result).toEqual('/invoice-user')
-    })
-
     it('go to the names page if other is chosen if there are candidates, and the ecologist or applicant is the user', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
-      }))
       jest.doMock('../../common/common.js', () => ({
         hasContactCandidates: () => true
       }))
@@ -478,9 +455,6 @@ describe('the invoice-responsible page', () => {
     })
 
     it('go to the name page if other is chosen if there are candidates, and the ecologist or applicant is the user', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
-      }))
       jest.doMock('../../common/common.js', () => ({
         hasContactCandidates: () => false
       }))

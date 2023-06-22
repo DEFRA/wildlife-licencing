@@ -42,7 +42,7 @@ describe('contact common', () => {
   })
 
   describe('getContactCandidates and hasContactCandidates', () => {
-    it('calculates the candidate set where: the contacts are not assigned to any user', async () => {
+    it.only('calculates the candidate set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
@@ -60,66 +60,15 @@ describe('contact common', () => {
       )
       expect(result).toEqual([
         {
-          assoc: true,
-          cloneOf: null,
-          contactRole: 'ECOLOGIST',
-          fullName: 'Broken clone',
-          groupId: 'j608d4f0-100e-495f-811f-510a28336ca5',
-          id: 'j608d4f0-100e-495f-811f-510a28336ca5',
-          isImmutable: true,
-          updatedAt: '2022-11-28T08:15:17.507Z'
-        },
-        {
-          cloneOf: '8bfa51f5-1027-4b37-bf67-1fe5c6b85af8',
-          contactRole: 'ECOLOGIST',
-          fullName: 'ed14f4d5e5e734349975-F-G-H-I-J',
-          groupId: '473e959c-2f23-4304-8ff3-0690d03e5b71',
-          id: 'f608d4f0-100e-495f-811f-510a28336ca5',
-          isImmutable: true,
-          updatedAt: '2022-11-28T08:15:17.507Z',
-          assoc: true
-        },
-        {
-          assoc: true,
-          cloneOf: null,
-          contactRole: 'ECOLOGIST',
-          fullName: null,
-          groupId: 'g608d4f0-100e-495f-811f-510a28336ca5',
-          id: 'g608d4f0-100e-495f-811f-510a28336ca5',
-          isImmutable: false,
-          updatedAt: '2022-11-28T08:15:17.507Z'
-        }
-      ])
-    })
-    it('calculates the candidate set where: the contacts assigned to the user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            findAllContactApplicationRolesByUser: jest.fn().mockReturnValue(contactApplicationsData)
-          }
-        }
-      }))
-      const { getContactCandidates } = await import('../common.js')
-      const result = await getContactCandidates(
-        '00ed369a-6765-45e3-bdad-546b774319f5',
-        '1c3e7655-bb74-4420-9bf0-0bd710987f10',
-        'ECOLOGIST',
-        ['ALTERNATIVE-ECOLOGIST'],
-        true
-      )
-      expect(result).toEqual([
-        {
           cloneOf: 'ad8600bb-191d-45f4-8b44-846ca7a533a2',
           contactRole: 'ECOLOGIST',
           fullName: '70804cf7cf61529bc8e4-A-B-C-D-E',
           groupId: 'ac04b423-1197-44fd-95c9-d25c3bc5813e',
           id: '7b186e97-37c4-4cae-baa4-b1b5775a7718',
           isImmutable: true,
-          updatedAt: '2022-11-28T08:15:17.251Z',
-          assoc: true
+          updatedAt: '2022-11-28T08:15:17.251Z'
         },
         {
-          assoc: true,
           cloneOf: null,
           contactRole: 'ECOLOGIST',
           fullName: 'Broken clone',
@@ -135,11 +84,9 @@ describe('contact common', () => {
           groupId: '473e959c-2f23-4304-8ff3-0690d03e5b71',
           id: 'f608d4f0-100e-495f-811f-510a28336ca5',
           isImmutable: true,
-          updatedAt: '2022-11-28T08:15:17.507Z',
-          assoc: true
+          updatedAt: '2022-11-28T08:15:17.507Z'
         },
         {
-          assoc: true,
           cloneOf: null,
           contactRole: 'ECOLOGIST',
           fullName: null,

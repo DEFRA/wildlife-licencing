@@ -8,9 +8,6 @@ describe('additional-contacts: common', () => {
 
   describe('getAdditionalContactData', () => {
     it('fetches the appropriate data', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => true
-      }))
       const request = {
         cache: () => ({
           getPageData: () => null,
@@ -37,7 +34,7 @@ describe('additional-contacts: common', () => {
       })
       const { getAdditionalContactData } = await import('../common.js')
       const result = await getAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual({ isSignedInUserApplicant: false, yesNo: 'yes' })
+      expect(result).toEqual({ yesNo: 'yes' })
     })
   })
 
@@ -117,28 +114,9 @@ describe('additional-contacts: common', () => {
       expect(result).toEqual('/add-additional-ecologist')
     })
 
-    it('returns the user page if the applicant is not the signed in user', async () => {
-      jest.doMock('../../common/common.js', () => ({ canBeUser: () => true }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { addAdditionalContactCompletion } = await import('../common.js')
-      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-user')
-    })
-
     it('returns the name page if there are no candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
         getContactCandidates: () => []
-      }))
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
       }))
       const request = {
         cache: () => ({
@@ -156,10 +134,7 @@ describe('additional-contacts: common', () => {
 
     it('returns the names page if there are candidate contacts', async () => {
       jest.doMock('../../common/common.js', () => ({
-        getContactCandidates: () => [{}]
-      }))
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
+        getContactCandidates: () => [{ id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b' }]
       }))
       const request = {
         cache: () => ({
@@ -173,125 +148,6 @@ describe('additional-contacts: common', () => {
       const { addAdditionalContactCompletion } = await import('../common.js')
       const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
       expect(result).toEqual('/additional-applicant-names')
-    })
-  })
-
-  describe('additionalContactUserCompletion', () => {
-    it('if not the signed in user, return the value returned by contactsRoute', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        contactsRoute: () => 'contacts-route'
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'no' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('contacts-route')
-    })
-
-    it('if the signed in user, return the name page for a newly created user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => false,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_ECOLOGIST)(request)
-      expect(result).toEqual('/additional-ecologist-name')
-    })
-
-    it('if the signed in user, return next name page for a mutable user with a name', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => false,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Jimi Hendrix' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true, [ContactRoles.ADDITIONAL_ECOLOGIST]: false }
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
-    })
-
-    it('if the signed in user, return the next page (add additional ecologist) for a immutable user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => true,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true }
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.ADDITIONAL_APPLICANT,
-        [ContactRoles.APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/add-additional-ecologist')
     })
   })
 
@@ -408,7 +264,7 @@ describe('additional-contacts: common', () => {
       expect(result).toEqual('/additional-contact-check-answers')
     })
 
-    it('returns the name page a new contact isn selected', async () => {
+    it('returns the name page a new contact is not selected', async () => {
       const request = {
         cache: () => ({
           getPageData: () => ({ payload: { contact: 'new' } }),
@@ -425,7 +281,7 @@ describe('additional-contacts: common', () => {
   })
 
   describe('getAdditionalContactEmailAddressData', () => {
-    it('returns the contact email datas', async () => {
+    it('returns the contact email data', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
         const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {

@@ -213,52 +213,6 @@ describe('contact common handler functions', () => {
     })
   })
 
-  describe('checkCanBeUser', () => {
-    it('return a redirect to NAMES if the role is already assigned', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: jest.fn().mockReturnValue({ getByApplicationId: () => ({ userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }) })
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
-            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkCanBeUser } = await import('../common-handler.js')
-      await checkCanBeUser(['APPLICANT'], contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-names')
-    })
-
-    it('return null if the role is not assigned', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          CONTACT: {
-            role: jest.fn().mockReturnValue({ getByApplicationId: () => ({ }) })
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: jest.fn(() => ({
-            userId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca',
-            applicationId: '35a6c59e-0faf-438b-b4d5-6967d8d075cb'
-          }))
-        })
-      }
-      const h = { redirect: jest.fn() }
-      const { checkCanBeUser } = await import('../common-handler.js')
-      await checkCanBeUser(['APPLICANT'], contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).not.toHaveBeenCalled()
-    })
-  })
-
   describe('contactsRoute', () => {
     it('Returns the NAME page if there are no selectable contacts', async () => {
       jest.doMock('../common.js', () => {

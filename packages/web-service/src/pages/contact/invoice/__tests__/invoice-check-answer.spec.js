@@ -281,20 +281,12 @@ describe('invoice check answers page', () => {
       expect(result).toEqual({
         checkYourAnswers: [
           {
-            key: 'someoneElse',
-            value: 'Somebody else'
-          },
-          {
             key: 'whoIsResponsible',
             value: 'Keith'
           },
           {
             key: 'email',
             value: undefined
-          },
-          {
-            key: 'contactIsUser',
-            value: 'no'
           },
           {
             key: 'contactIsOrganisation',

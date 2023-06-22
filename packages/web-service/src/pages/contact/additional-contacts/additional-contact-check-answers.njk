@@ -6,14 +6,12 @@
 
 {% set applicantQuestionMap = {
     addAdditionalApplicant: { question: 'Add an additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantAdd },
-    applicantIsUser: { question: 'Are you the additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantUser },
     applicantName: { question: 'What is the name of the person we should contact?', href: _uri.additionalApplicantNames },
     applicantEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalApplicantEmail }
 } %}
 
 {% set ecologistQuestionMap = {
     addAdditionalEcologist: { question: 'Add an additional ecologist contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistAdd },
-    ecologistIsUser: { question: 'Are you the additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistUser },
     ecologistName: { question: 'What is the name of the person we should contact?', href: _uri.additionalEcologistNames },
     ecologistEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalEcologistEmail }
 } %}
