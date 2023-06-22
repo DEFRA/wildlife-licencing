@@ -42,19 +42,27 @@ describe('The address-lookup connector', () => {
     jest.doMock('../config.js', () => ({
       address: {
         url: 'https://address',
-        certificatePath: '/cert',
-        passphrase: 'pass',
+        certificateParam: '/tst/ldn/new/devops/web_service/address-lookup-certificate',
+        keyParam: '/tst/ldn/new/devops/web_service/address-lookup-key',
         timeout: 20000
       }
     }))
-    jest.doMock('fs')
     const mockFetch = jest.fn(() => Promise.resolve({
       ok: true,
       json: () => JSON.stringify(results),
       headers: { get: () => 'application/json' }
     }))
     jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    jest.doMock('../aws.js', () => ({
+      AWS: {
+        secretsManager: () => ({
+          getSecret: () => 'secrets'
+        })
+      }
+    }))
+
     const { ADDRESS } = await import('../address-lookup.js')
+    await ADDRESS.initialize()
     const response = await ADDRESS.lookup('BS8 2QA')
     expect(response).toEqual(JSON.stringify(results))
     expect(mockFetch).toHaveBeenCalledWith('https://address/?postcode=BS8+2QA', expect.objectContaining({ method: 'GET' }))
