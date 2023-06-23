@@ -25,6 +25,10 @@ coverage/
 *.crt
 *.key
 
+# Except the self-signed
+!docker/nginx/ssl/*.crt
+!docker/nginx/ssl/*.key
+
 # Ignore public which is built by gulp
 packages/web-service/public/**/*
 
