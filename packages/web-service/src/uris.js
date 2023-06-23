@@ -15,6 +15,7 @@ export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
 export const EMAIL_CONFIRMATION = { uri: '/email-confirmation', page: 'email-confirmation' }
 export const REMOVE_FILE_UPLOAD = { uri: '/remove/upload', page: 'check-supporting-information' }
+export const REMOVE_RETURNS_UPLOADED_FILE = { uri: '/remove-returns-uploaded-file', page: 'returns-uploaded-files' }
 
 export const eligibilityURIs = {
   LANDOWNER: { uri: '/landowner', page: 'landowner' },
@@ -192,6 +193,9 @@ export const ReturnsURIs = {
   CHECK_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
   DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },
   CONFIRMATION: { uri: '/returns-confirmation', page: 'returns-confirmation' },
+  UPLOAD: { uri: '/returns-upload', page: 'returns-upload' },
+  UPLOAD_FILE: { uri: '/returns-upload-file', page: 'returns-upload-file' },
+  UPLOADED_FILES_CHECK: { uri: '/returns-uploaded-files', page: 'returns-uploaded-files' },
 
   A24: {
     DISTURB_BADGERS: { uri: '/a24/disturb-badgers', page: 'disturb-badgers' },

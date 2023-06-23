@@ -5,6 +5,7 @@ import { gridReferenceValidator } from '../../../pages/common/grid-ref-validator
 import { APIRequests } from '../../../services/api-requests.js'
 
 const { ARTIFICIAL_SETT_GRID_REFERENCE } = ReturnsURIs.A24
+const { LICENCE_CONDITIONS } = ReturnsURIs
 
 const artificialSettGridReference = 'artificial-sett-grid-reference'
 export const validator = payload => gridReferenceValidator(payload, artificialSettGridReference)
@@ -36,6 +37,7 @@ export const setData = async request => {
 export default pageRoute({
   page: ARTIFICIAL_SETT_GRID_REFERENCE.page,
   uri: ARTIFICIAL_SETT_GRID_REFERENCE.uri,
+  completion: LICENCE_CONDITIONS.uri,
   checkData: checkApplication,
   validator: validator,
   getData: getData,

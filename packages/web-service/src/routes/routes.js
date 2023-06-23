@@ -156,6 +156,7 @@ import licensedActions from '../pages/returns/licensed-actions.js'
 import outcome from '../pages/returns/outcome.js'
 import whyNil from '../pages/returns/why-nil.js'
 import { anotherLicence } from '../pages/returns/another-licence.js'
+import { returnUpload } from '../pages/returns/returns-upload.js'
 import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
 import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
 import workStart from '../pages/returns/work-start.js'
@@ -176,6 +177,8 @@ import licenceConditions from '../pages/returns/licence-conditions.js'
 import welfareConcerns from '../pages/returns/a24/welfare-concerns.js'
 import returnsCheck from '../pages/returns/check-your-answers.js'
 import declarationOfReturns from '../pages/returns/declaration.js'
+import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
+import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
 import confirmationOfReturns from '../pages/returns/confirmation.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
@@ -345,6 +348,9 @@ const routes = [
   ...artificialSettCreatedBeforeClosurePage,
   ...licenceConditions,
   ...welfareConcerns,
+  ...returnUpload,
+  ...uploadReturnSupportingInformation,
+  ...returnUploadedFiles,
   ...returnsCheck,
   ...declarationOfReturns,
   ...confirmationOfReturns,
