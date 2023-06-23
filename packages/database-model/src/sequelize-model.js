@@ -32,6 +32,28 @@ async function defineUsers (sequelize) {
   })
 }
 
+async function defineUserUserRoles (sequelize) {
+  models.userUserRoles = await sequelize.define('user-user-roles', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.users,
+        key: 'id'
+      }
+    },
+    userRoleId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.userRoles,
+        key: 'id'
+      }
+    }
+  }, {
+    timestamps: true
+  })
+}
+
 async function defineOrganisation (sequelize) {
   models.organisations = await sequelize.define('organisation', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -595,6 +617,7 @@ const createModels = async () => {
   // Define the tables (THE ORDERING REFLECTS INTERDEPENDENCIES)
   await defineUserRoles(sequelize)
   await defineUsers(sequelize)
+  await defineUserUserRoles(sequelize)
   await defineOrganisation(sequelize)
   await defineUserOrganisation(sequelize)
 
@@ -663,6 +686,7 @@ const createModels = async () => {
   // Synchronize the model
   await models.userRoles.sync()
   await models.users.sync()
+  await models.userUserRoles.sync()
   await models.organisations.sync()
   await models.userOrganisations.sync()
 

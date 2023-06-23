@@ -9,6 +9,9 @@ info:
   title: Wildlife Licencing
   version: 1.0.0
 
+######################################################################################################################
+# Schemas
+######################################################################################################################
 components:
   schemas:
     a24Return:
@@ -906,6 +909,21 @@ components:
         $ref: '#/components/schemas/user'
       type: array
 
+    userUserRole:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        userRoleId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
     uuid:
       example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
       maxLength: 36
@@ -914,6 +932,9 @@ components:
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
       type: string
 
+######################################################################################################################
+# Paths
+######################################################################################################################
 paths:
   /account:
     post:
@@ -4419,6 +4440,68 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Unexpected error on server
       summary: Get the users and optionally filter by name
+
+  /user-user-role/{roleId}:
+    get:
+      description: Get user (Identity) user-user-role by Id
+      operationId: getUserUserRole
+      parameters:
+        - in: path
+          name: userUserRoleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the user role by id
+
+    put:
+      description: Put user role by Id
+      operationId: putUserUserRole
+      parameters:
+        - in: path
+          name: userUserRoleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userUserRole'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the user-user-role by id
+
 
 servers:
   - url: http://locahost:3000
