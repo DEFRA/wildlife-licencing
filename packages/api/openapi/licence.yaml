@@ -3205,6 +3205,126 @@ paths:
                 $ref: '#/components/schemas/error'
 
 
+  '/organisation/{organisationId}':
+    get:
+      description: Get organisation by Id
+      summary: Get organisation by Id
+      operationId: getOrganisationById
+      parameters:
+        - in: path
+          name: organisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+    put:
+      description: Put organisation by Id
+      summary: Put the organisation by id
+      operationId: putOrganisation
+      parameters:
+        - in: path
+          name: organisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisation'
+      responses:
+        201:
+          description: Success - updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+        202:
+          description: Success - no change
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user-organisation/{userOrganisationId}':
+    get:
+      description: Get user-organisation by Id
+      summary: Get user-organisation by Id
+      operationId: getUserOrganisationById
+      parameters:
+        - in: path
+          name: userOrganisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+    put:
+      description: Put userOrganisation by Id
+      summary: Put the userOrganisation by id
+      operationId: putUserOrganisation
+      parameters:
+        - in: path
+          name: userOrganisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userOrganisation'
+      responses:
+        201:
+          description: Success - updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+        202:
+          description: Success - no change
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # Reference Data
 ################################################################################################
@@ -4151,6 +4271,39 @@ components:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    organisation:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        email:
+          $ref: '#/components/schemas/email'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
+    userOrganisation:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
+        relationship:
+          type: string
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+
 
     cookiePrefs:
       type: object

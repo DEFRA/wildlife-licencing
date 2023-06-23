@@ -17,6 +17,16 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  getOrganisationById,
+  putOrganisation
+} from './handlers/organisation/organisation.js'
+
+import {
+  getUserOrganisationById,
+  putUserOrganisation
+} from './handlers/user-organisation/user-organisation.js'
+
+import {
   getContacts,
   postContact,
   getContactByContactId,
@@ -187,6 +197,10 @@ const handlers = {
   postUser,
   putUser,
   deleteUser,
+  getOrganisationById,
+  putOrganisation,
+  getUserOrganisationById,
+  putUserOrganisation,
 
   // Contact handlers
   getContacts,
