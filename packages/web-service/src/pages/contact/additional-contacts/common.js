@@ -6,7 +6,6 @@ import { contactAccountOperations, contactOperations } from '../common/operation
 import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
-import { contactsRoute } from '../common/common-handler.js'
 
 // a contact cannot be the applicant and the additional applicant etc.
 const conflictingRoles = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
