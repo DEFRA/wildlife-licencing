@@ -343,7 +343,7 @@ const init = async server => {
   /*
    * Create the OpenAPI backend
    */
-  const api = new OpenAPIBackend({ definition: 'openapi/licence.yaml' })
+  const api = new OpenAPIBackend({ definition: 'openapi/api.yaml' })
 
   /*
    * Register the openapi/hapi route handler mappings

@@ -80,7 +80,7 @@ describe('The getOrganisations handler', () => {
           findByPk: () => ({
             dataValues: {
               id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-              name: 'ORGANISATION-B',
+              name: 'ORGANISATION-A',
               organisation: { foo: 'bar' },
               ...ts
             }
@@ -93,13 +93,13 @@ describe('The getOrganisations handler', () => {
     await getOrganisations(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-      name: 'ORGANISATION-B',
-      organisation: { foo: 'bar' },
+      name: 'ORGANISATION-A',
+      foo: 'bar',
       ...tsR
     })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
-    expect(mockSave).toHaveBeenCalledWith('organisation/uuid/', expect.objectContaining({ name: 'ORGANISATION-B' }))
+    expect(mockSave).toHaveBeenCalledWith('organisation/uuid/', expect.objectContaining({ name: 'ORGANISATION-A' }))
   })
 
   it('returns a 404 on organisation not found (no return)', async () => {

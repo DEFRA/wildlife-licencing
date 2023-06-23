@@ -100,8 +100,8 @@ describe('The putOrganisation handler', () => {
         id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { name: 'ORGANISATION-A', organisation: { foo: 'bar' }, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ name: 'ORGANISATION-A', organisation: { foo: 'bar' }, ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, { name: 'ORGANISATION-A', foo: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(202)
   })
