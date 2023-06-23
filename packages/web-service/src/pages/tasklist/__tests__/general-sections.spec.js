@@ -18,7 +18,7 @@ describe('tasklist general sections', () => {
 
   it('applicant check', () => {
     const task = TASKS[SECTION_TASKS.LICENCE_HOLDER]
-    expect(task.uri([])).toEqual('/applicant-user')
+    expect(task.uri([])).toEqual('/applicant-names')
     expect(task.uri([{ tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE }])).toEqual('/applicant-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
@@ -35,7 +35,7 @@ describe('tasklist general sections', () => {
 
   it('ecologist check', () => {
     const task = TASKS[SECTION_TASKS.ECOLOGIST]
-    expect(task.uri([])).toEqual('/ecologist-user')
+    expect(task.uri([])).toEqual('/ecologist-names')
     expect(task.uri([{ tag: SECTION_TASKS.ECOLOGIST, tagState: tagStatus.COMPLETE }])).toEqual('/ecologist-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))

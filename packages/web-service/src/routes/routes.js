@@ -20,7 +20,6 @@ import { checkSupportingInformation } from '../pages/supporting-information/chec
 
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
-import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
@@ -31,7 +30,6 @@ import { applicantAddressForm } from '../pages/contact/applicant/applicant-addre
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
-import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
 import { ecologistEmail } from '../pages/contact/ecologist/ecologist-email.js'
 import { ecologistCheckAnswers } from '../pages/contact/ecologist/ecologist-check-answers.js'
 import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
@@ -49,13 +47,11 @@ import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
 import { addAdditionalApplicant } from '../pages/contact/additional-contacts/add-additional-applicant.js'
-import { additionalApplicantUser } from '../pages/contact/additional-contacts/additional-applicant-user.js'
 import { additionalApplicantName } from '../pages/contact/additional-contacts/additional-applicant-name.js'
 import { additionalApplicantNames } from '../pages/contact/additional-contacts/additional-applicant-names.js'
 import { additionalApplicantEmail } from '../pages/contact/additional-contacts/additional-applicant-email.js'
 
 import { addAdditionalEcologist } from '../pages/contact/additional-contacts/add-additional-ecologist.js'
-import { additionalEcologistUser } from '../pages/contact/additional-contacts/additional-ecologist-user.js'
 import { additionalEcologistName } from '../pages/contact/additional-contacts/additional-ecologist-name.js'
 import { additionalEcologistNames } from '../pages/contact/additional-contacts/additional-ecologist-names.js'
 import { additionalEcologistEmail } from '../pages/contact/additional-contacts/additional-ecologist-email.js'
@@ -72,7 +68,6 @@ import checkWorkAnswers from '../pages/work-activity/check-work-answers/check-wo
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
 import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
-import { invoiceUser } from '../pages/contact/invoice/invoice-user.js'
 import { invoiceEmail } from '../pages/contact/invoice/invoice-email.js'
 import { invoiceCheckAnswers } from '../pages/contact/invoice/invoice-check-answers.js'
 import { invoiceOrganisation } from '../pages/contact/invoice/invoice-organisation.js'
@@ -150,8 +145,8 @@ import conditionsNotCompleted from '../pages/permissions/conditions-not-complete
 import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
+import userRole from '../pages/user-role/user-role.js'
 import { signOut } from '../handlers/sign-out.js'
-
 import { signIn } from '../handlers/defra-idm.js'
 import { defraIdmCallback } from '../handlers/defra-idm-callback.js'
 
@@ -177,7 +172,6 @@ const routes = [
   ...eligibilityCheck,
   ...eligible,
   ...tasklist,
-  ...applicantUser,
   ...applicantName,
   ...applicantNames,
   ...applicantOrganisation,
@@ -187,7 +181,6 @@ const routes = [
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
-  ...ecologistUser,
   ...ecologistName,
   ...ecologistNames,
   ...ecologistOrganisation,
@@ -205,18 +198,15 @@ const routes = [
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
   ...addAdditionalApplicant,
-  ...additionalApplicantUser,
   ...additionalApplicantNames,
   ...additionalApplicantName,
   ...additionalApplicantEmail,
   ...addAdditionalEcologist,
-  ...additionalEcologistUser,
   ...additionalEcologistNames,
   ...additionalEcologistName,
   ...additionalEcologistEmail,
   ...additionalContactCheckAnswers,
   ...invoiceResponsible,
-  ...invoiceUser,
   ...invoiceName,
   ...invoiceNames,
   ...invoiceOrganisation,
@@ -298,6 +288,7 @@ const routes = [
 
   signIn,
   signOut,
+  ...userRole,
   defraIdmCallback,
 
   ...miscRoutes

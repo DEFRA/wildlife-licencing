@@ -4,8 +4,6 @@ import { workActivityURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../common/check-application.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { tagStatus } from '../../../services/status-tags.js'
 
 const exemptDetails = 'exempt-details'
 
@@ -71,12 +69,6 @@ export const setData = async request => {
   }
 
   await APIRequests.APPLICATION.update(applicationId, newData)
-}
-
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.WORK_ACTIVITY, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
-  return workActivityURIs.CHECK_YOUR_ANSWERS.uri
 }
 
 export const validator = async payload => {

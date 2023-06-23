@@ -3,7 +3,6 @@ import { SUBMISSION, APPLICATIONS, TASKLIST } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { isAppSubmittable } from '../tasklist/licence-type.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkApplication } from '../common/check-application.js'
 
 export const checkData = async (request, h) => {
   if (!await isAppSubmittable(request)) {
@@ -20,6 +19,16 @@ export const getData = async request => {
   return {
     currentApplication: application
   }
+}
+
+export const checkApplication = async (request, h) => {
+  const journeyData = await request.cache().getData()
+
+  if (!journeyData.applicationId) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  return null
 }
 
 export default pageRoute({

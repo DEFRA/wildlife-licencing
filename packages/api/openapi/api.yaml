@@ -1,0 +1,4425 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: graham.willis@defra.gov.uk
+  description: Wildlife Licencing API definition
+  license:
+    name: The Open Government Licence (OGL) Version 3
+    url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
+  title: Wildlife Licencing
+  version: 1.0.0
+
+components:
+  schemas:
+    a24Return:
+      allOf:
+        - $ref: '#/components/schemas/return'
+        - properties:
+            destroyVacantSettByMechanicalMeans:
+              type: boolean
+          type: object
+
+    account:
+      additionalProperties: false
+      properties:
+        address:
+          $ref: '#/components/schemas/address'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          maxLength: 160
+          minLength: 1
+          type: string
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    accountRoles:
+      enum:
+        - APPLICANT-ORGANISATION
+        - ECOLOGIST-ORGANISATION
+        - PAYER-ORGANISATION
+      type: string
+
+    accounts:
+      items:
+        $ref: '#/components/schemas/account'
+      type: array
+
+    address:
+      properties:
+        addressLine1:
+          maxLength: 80
+          minLength: 1
+          type: string
+        addressLine2:
+          maxLength: 80
+          minLength: 1
+          type: string
+        buildingName:
+          maxLength: 80
+          minLength: 1
+          type: string
+        buildingNumber:
+          maxLength: 80
+          minLength: 1
+          type: string
+        country:
+          maxLength: 50
+          minLength: 1
+          type: string
+        county:
+          maxLength: 80
+          minLength: 1
+          type: string
+        dependentLocality:
+          maxLength: 80
+          minLength: 1
+          type: string
+        locality:
+          maxLength: 80
+          minLength: 1
+          type: string
+        postcode:
+          maxLength: 10
+          minLength: 1
+          type: string
+        street:
+          maxLength: 80
+          minLength: 1
+          type: string
+        subBuildingName:
+          maxLength: 80
+          minLength: 1
+          type: string
+        town:
+          maxLength: 80
+          minLength: 1
+          type: string
+        uprn:
+          maxLength: 12
+          minLength: 1
+          type: string
+        xCoordinate:
+          type: number
+        yCoordinate:
+          type: number
+      type: object
+
+    application:
+      additionalProperties: false
+      properties:
+        applicationCategory:
+          type: number
+        applicationPurposeId:
+          $ref: '#/components/schemas/uuid'
+        applicationReferenceNumber:
+          maxLength: 30
+          minLength: 13
+          type: string
+        applicationTags:
+          items:
+            type: object
+          type: array
+        applicationTypeId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        detailsOfConvictions:
+          maxLength: 300
+          minLength: 1
+          type: string
+        ecologistExperience:
+          $ref: '#/components/schemas/ecologistExperience'
+        effectsOnSpecialAreas:
+          enum:
+            - 'YES'
+            - 'NO'
+            - NO-ADVICE
+          type: string
+        eligibility:
+          $ref: '#/components/schemas/eligibility'
+        exemptFromPayment:
+          type: boolean
+        id:
+          $ref: '#/components/schemas/uuid'
+        isRelatedConviction:
+          type: boolean
+        licenceReason:
+          maxLength: 300
+          minLength: 1
+          type: string
+        nationallySignificantInfrastructure:
+          type: boolean
+        necessaryToManageSpecialArea:
+          type: boolean
+        onOrNextToDesignatedSite:
+          type: boolean
+        paymentExemptReason:
+          type: number
+        paymentExemptReasonExplanation:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        permissionsSection:
+          $ref: '#/components/schemas/permissionsSection'
+        proposalDescription:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        referenceOrPurchaseOrderNumber:
+          maxLength: 100
+          minLength: 1
+          type: string
+        statusCode:
+          $ref: '#/components/schemas/option'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userSubmission:
+          $ref: '#/components/schemas/timestamp'
+      required:
+        - applicationTypeId
+        - applicationPurposeId
+      type: object
+
+    applicationAccount:
+      additionalProperties: false
+      properties:
+        accountId:
+          $ref: '#/components/schemas/uuid'
+        accountRole:
+          $ref: '#/components/schemas/accountRoles'
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      required:
+        - applicationId
+        - accountId
+        - accountRole
+      type: object
+
+    applicationAccounts:
+      items:
+        $ref: '#/components/schemas/applicationAccount'
+      type: array
+    applicationContact:
+      additionalProperties: false
+      properties:
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        contactId:
+          $ref: '#/components/schemas/uuid'
+        contactRole:
+          $ref: '#/components/schemas/contactRoles'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      required:
+        - applicationId
+        - contactId
+        - contactRole
+      type: object
+
+    applicationContacts:
+      items:
+        $ref: '#/components/schemas/applicationContact'
+      type: array
+    applicationDesignatedSite:
+      properties:
+        adviceDescription:
+          type: string
+        adviceFromNaturalEngland:
+          type: boolean
+        adviceFromWho:
+          type: string
+        designatedSiteId:
+          $ref: '#/components/schemas/uuid'
+        detailsOfPermission:
+          maxLength: 4000
+          type: string
+        id:
+          $ref: '#/components/schemas/uuid'
+        onSiteOrCloseToSite:
+          $ref: '#/components/schemas/option'
+        permissionFromOwner:
+          type: boolean
+      type: object
+
+    applicationDesignatedSites:
+      items:
+        $ref: '#/components/schemas/applicationDesignatedSite'
+      type: array
+    applicationFileUpload:
+      additionalProperties: false
+      properties:
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        filename:
+          maximum: 255
+          type: string
+        filetype:
+          $ref: '#/components/schemas/filetype'
+        id:
+          $ref: '#/components/schemas/uuid'
+        objectKey:
+          $ref: '#/components/schemas/uuid'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      required:
+        - filetype
+        - filename
+        - objectKey
+      type: object
+
+    applicationFileUploads:
+      items:
+        $ref: '#/components/schemas/applicationFileUpload'
+      type: array
+    applicationRoles:
+      type: string
+    applicationSite:
+      additionalProperties: false
+      properties:
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        siteId:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    applicationSites:
+      items:
+        $ref: '#/components/schemas/applicationSite'
+      type: array
+
+    applicationType:
+      allOf:
+        - $ref: '#/components/schemas/referenceDataType'
+        - properties:
+            refNoSuffix:
+              type: string
+          type: object
+
+    applicationTypes:
+      items:
+        $ref: '#/components/schemas/applicationType'
+      type: array
+
+    applicationUser:
+      additionalProperties: false
+      properties:
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        applicationRole:
+          $ref: '#/components/schemas/applicationRoles'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        userRole:
+          $ref: '#/components/schemas/userRoles'
+      required:
+        - userId
+        - applicationId
+      type: object
+
+    applicationUsers:
+      items:
+        $ref: '#/components/schemas/applicationUser'
+      type: array
+
+    applications:
+      items:
+        $ref: '#/components/schemas/application'
+      type: array
+
+    badgerSett:
+      allOf:
+        - $ref: '#/components/schemas/habitatSite'
+        - properties:
+            active:
+              type: boolean
+            numberOfEntrances:
+              maximum: 100
+              minimum: 1
+              type: number
+            settType:
+              $ref: '#/components/schemas/option'
+            willReopen:
+              type: boolean
+          type: object
+
+    badgerSetts:
+      items:
+        $ref: '#/components/schemas/badgerSett'
+      type: array
+
+    contact:
+      additionalProperties: false
+      properties:
+        address:
+          $ref: '#/components/schemas/address'
+        cloneOf:
+          $ref: '#/components/schemas/uuid'
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        fullName:
+          maxLength: 160
+          minLength: 1
+          type: string
+        id:
+          $ref: '#/components/schemas/uuid'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
+    contactDetails:
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        phone:
+          $ref: '#/components/schemas/phone'
+      type: object
+    contactRoles:
+      enum:
+        - APPLICANT
+        - ECOLOGIST
+        - PAYER
+        - AUTHORISED-PERSON
+        - ADDITIONAL-APPLICANT
+        - ADDITIONAL-ECOLOGIST
+      type: string
+
+    contacts:
+      items:
+        $ref: '#/components/schemas/contact'
+      type: array
+    cookiePrefs:
+      nullable: true
+      properties:
+        analytics:
+          type: boolean
+      type: object
+
+    date:
+      example: 2021-12-06T00:00:00.000Z
+      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+      readOnly: true
+      type: string
+
+    designatedSite:
+      properties:
+        siteCode:
+          type: string
+        siteGridReference:
+          type: string
+        siteName:
+          type: string
+        siteType:
+          $ref: '#/components/schemas/option'
+      type: object
+
+    designatedSites:
+      items:
+        $ref: '#/components/schemas/designatedSite'
+      type: array
+
+    ecologistExperience:
+      properties:
+        classMitigation:
+          type: boolean
+        classMitigationDetails:
+          type: string
+        experienceDetails:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        methodExperience:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        previousLicense:
+          type: boolean
+      type: object
+
+    eligibility:
+      properties:
+        hasLandOwnerPermission:
+          type: boolean
+        isOwnerOfLand:
+          type: boolean
+        permissionsGranted:
+          type: boolean
+        permissionsRequired:
+          type: boolean
+      type: object
+
+    email:
+      example: email@email.com
+      type: string
+
+    error:
+      properties:
+        code:
+          type: number
+        error:
+          type: object
+        errors:
+          items:
+            type: object
+          type: array
+      required:
+        - code
+      type: object
+
+    filetype:
+      enum:
+        - MAP
+        - METHOD-STATEMENT
+        - WORK-SCHEDULE
+      type: string
+
+    gridReference:
+      type: string
+
+    habitatSite:
+      properties:
+        activityId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        endDate:
+          $ref: '#/components/schemas/timestamp'
+        gridReference:
+          $ref: '#/components/schemas/gridReference'
+        id:
+          $ref: '#/components/schemas/uuid'
+        methodIds:
+          items:
+            $ref: '#/components/schemas/uuid'
+          type: array
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        speciesId:
+          $ref: '#/components/schemas/uuid'
+        speciesSubjectId:
+          $ref: '#/components/schemas/uuid'
+        startDate:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      required:
+        - activityId
+        - speciesId
+        - methodIds
+      type: object
+
+    licence:
+      additionalProperties: false
+      properties:
+        annotations:
+          items:
+            properties:
+              filename:
+                type: string
+              mimetype:
+                type: string
+              modifiedOn:
+                $ref: '#/components/schemas/timestamp'
+              objectTypeCode:
+                type: string
+            type: object
+          type: array
+        applicationId:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        endDate:
+          $ref: '#/components/schemas/date'
+        id:
+          $ref: '#/components/schemas/uuid'
+        licenceNumber:
+          type: string
+        startDate:
+          $ref: '#/components/schemas/date'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    licences:
+      items:
+        $ref: '#/components/schemas/licence'
+      type: array
+
+    objectSet:
+      properties:
+        description:
+          type: string
+        value:
+          type: number
+      type: object
+
+    option:
+      maximum: 999999999
+      minimum: 0
+      type: integer
+
+    optionSetType:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        values:
+          items:
+            $ref: '#/components/schemas/objectSet'
+          type: array
+      type: object
+
+    optionSetTypes:
+      additionalProperties:
+        items:
+          $ref: '#/components/schemas/optionSetType'
+        type: object
+      type: object
+
+    organisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        email:
+          $ref: '#/components/schemas/email'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    permission:
+      properties:
+        authority:
+          $ref: '#/components/schemas/uuid'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        planningType:
+          $ref: '#/components/schemas/option'
+        planningTypeOtherDescription:
+          maxLength: 100
+          minLength: 1
+          type: string
+        referenceNumber:
+          maxLength: 100
+          minLength: 1
+          type: string
+        type:
+          $ref: '#/components/schemas/option'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    permissions:
+      items:
+        $ref: '#/components/schemas/permission'
+      type: array
+
+    permissionsSection:
+      properties:
+        allOtherConditionsMet:
+          type: boolean
+        conditionsNotMetReason:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        noPermissionDescription:
+          maxLength: 100
+          minLength: 1
+          type: string
+        noPermissionReason:
+          $ref: '#/components/schemas/option'
+        potentialConflictDescription:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        potentialConflicts:
+          type: boolean
+      type: object
+
+    phone:
+      type: string
+
+    referenceDataType:
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        description:
+          nullable: true
+          type: string
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    referenceDataTypes:
+      items:
+        $ref: '#/components/schemas/referenceDataType'
+      type: array
+
+    return:
+      properties:
+        completedWithinLicenceDates:
+          type: boolean
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        endDate:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        nilReturn:
+          type: boolean
+        outcome:
+          type: boolean
+        startDate:
+          $ref: '#/components/schemas/timestamp'
+        submitted:
+          $ref: '#/components/schemas/timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userSubmission:
+          $ref: '#/components/schemas/timestamp'
+        whyNil:
+          maxLength: 4000
+          minLength: 1
+          type: string
+        whyNotCompletedWithinLicenceDates:
+          maxLength: 4000
+          minLength: 1
+          type: string
+      type: object
+
+    site:
+      additionalProperties: false
+      properties:
+        address:
+          $ref: '#/components/schemas/address'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        gridReference:
+          $ref: '#/components/schemas/gridReference'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        siteMapFiles:
+          $ref: '#/components/schemas/siteMapFiles'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    siteMapFiles:
+      additionalProperties: false
+      properties:
+        activity:
+          maxLength: 255
+          type: string
+        mitigationsAfterDevelopment:
+          maxLength: 255
+          type: string
+        mitigationsDuringDevelopment:
+          maxLength: 255
+          type: string
+      type: object
+
+    sites:
+      items:
+        $ref: '#/components/schemas/site'
+      type: array
+
+    timestamp:
+      example: 2021-12-06T15:56:46.825Z
+      nullable: true
+      pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?Z$
+      readOnly: true
+      type: string
+
+    user:
+      additionalProperties: false
+      properties:
+        cookiePrefs:
+          $ref: '#/components/schemas/cookiePrefs'
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        email:
+          $ref: '#/components/schemas/email'
+        firstName:
+          type: string
+        id:
+          $ref: '#/components/schemas/uuid'
+        lastName:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        username:
+          type: string
+      type: object
+
+    userAccountsHelper:
+      items:
+        properties:
+          accountRole:
+            $ref: '#/components/schemas/accountRoles'
+          applicationId:
+            $ref: '#/components/schemas/uuid'
+          cloneOf:
+            $ref: '#/components/schemas/uuid'
+          id:
+            $ref: '#/components/schemas/uuid'
+          name:
+            type: string
+          submitted:
+            $ref: '#/components/schemas/timestamp'
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
+        type: object
+      type: array
+
+    userContactsHelper:
+      items:
+        properties:
+          applicationId:
+            $ref: '#/components/schemas/uuid'
+          cloneOf:
+            $ref: '#/components/schemas/uuid'
+          contactRole:
+            $ref: '#/components/schemas/contactRoles'
+          fullName:
+            type: string
+          id:
+            $ref: '#/components/schemas/uuid'
+          submitted:
+            $ref: '#/components/schemas/timestamp'
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
+          userId:
+            $ref: '#/components/schemas/uuid'
+        type: object
+      type: array
+
+    userIdentityRole:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    userOrganisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
+        relationship:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
+    userRoles:
+      type: string
+
+    userSitesHelper:
+      items:
+        properties:
+          applicationId:
+            $ref: '#/components/schemas/uuid'
+          id:
+            $ref: '#/components/schemas/uuid'
+          name:
+            type: string
+          updatedAt:
+            $ref: '#/components/schemas/timestamp'
+        type: object
+      type: array
+
+    users:
+      items:
+        $ref: '#/components/schemas/user'
+      type: array
+
+    uuid:
+      example: 5e790ab3-c37a-4e4c-a19d-97fb72cdbd42
+      maxLength: 36
+      minLength: 36
+      nullable: true
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      type: string
+
+paths:
+  /account:
+    post:
+      description: Create and store account
+      operationId: postAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/account'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+          description: The account has been created
+        '400':
+          description: Bad request. Username required
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new account with a generated ID
+
+  /account/{accountId}:
+    delete:
+      description: Delete account
+      operationId: deleteAccount
+      parameters:
+        - description: ID of the account
+          in: path
+          name: accountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The account object has been deleted
+        '400':
+          description: Bad request. account ID must be a uuid
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the account on the provided ID
+    get:
+      description: Retrieve a account
+      operationId: getAccountByAccountId
+      parameters:
+        - description: ID of the account
+          in: path
+          name: accountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. User ID must be a uuid.
+        '404':
+          description: A account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve a account
+    put:
+      description: Update a account
+      operationId: putAccount
+      parameters:
+        - description: ID of the account
+          in: path
+          name: accountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/account'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+          description: The account object has been updated
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/account'
+          description: The account object has been created
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update a account
+
+  /accounts:
+    get:
+      description: Get a list accounts
+      operationId: getAccounts
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: role of the account
+          in: query
+          name: role
+          required: false
+          schema:
+            $ref: '#/components/schemas/accountRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accounts'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a list accounts
+
+  /application:
+    post:
+      description: Create a new application
+      operationId: postApplication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/application'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+          description: The application object has been created
+        '400':
+          description: Bad request. user ID must be a uuid
+        '404':
+          description: Not found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new application for an existing userId
+
+  /application-account:
+    post:
+      description: Create and store an application account relationship
+      operationId: postApplicationAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationAccount'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+          description: The application-account relationship has been created
+        '400':
+          description: >-
+            Bad request. AccountId or applicationId not found. Role not
+            recognized.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new account with a generated ID
+
+  /application-account/{applicationAccountId}:
+    delete:
+      description: Delete an application-account
+      operationId: deleteApplicationAccountById
+      parameters:
+        - description: ID of the application-account
+          in: path
+          name: applicationAccountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application-account object has been deleted
+        '400':
+          description: Bad request. account ID must be a uuid
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application-account
+    get:
+      description: Retrieve an application-account
+      operationId: getApplicationAccountById
+      parameters:
+        - description: ID of the application-account
+          in: path
+          name: applicationAccountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve an application-account
+    put:
+      description: Create of update an application-account
+      operationId: putApplicationAccountById
+      parameters:
+        - description: ID of the application-account
+          in: path
+          name: applicationAccountId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationAccount'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccount'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create of update an application-account
+
+  /application-accounts:
+    get:
+      description: Get application-accounts
+      operationId: getApplicationAccounts
+      parameters:
+        - description: ID of the application
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the account
+          in: query
+          name: accountId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: The role
+          in: query
+          name: role
+          required: false
+          schema:
+            $ref: '#/components/schemas/accountRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationAccounts'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get application-accounts
+
+  /application-accounts/accounts:
+    get:
+      description: Get all the accounts/roles for all applications created by a user
+      operationId: userAccountsHelper
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAccountsHelper'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: User accounts helper
+
+  /application-contact:
+    post:
+      description: Create and store an application contact relationship
+      operationId: postApplicationContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationContact'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+          description: The application-contact relationship has been created
+        '400':
+          description: >-
+            Bad request. ContactId or applicationId not found. Role not
+            recognized.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new contact with a generated ID
+
+  /application-contact/{applicationContactId}:
+    delete:
+      description: Delete an application-contact
+      operationId: deleteApplicationContactById
+      parameters:
+        - description: ID of the application-contact
+          in: path
+          name: applicationContactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application-contact object has been deleted
+        '400':
+          description: Bad request. contact ID must be a uuid
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application-contact
+    get:
+      description: Retrieve an application-contact
+      operationId: getApplicationContactById
+      parameters:
+        - description: ID of the application-contact
+          in: path
+          name: applicationContactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-contact ID must be a uuid.
+        '404':
+          description: An application-contact with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve an application-contact
+    put:
+      description: Create of update an application-contact
+      operationId: putApplicationContactById
+      parameters:
+        - description: ID of the application-contact
+          in: path
+          name: applicationContactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationContact'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContact'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-contact ID must be a uuid.
+        '404':
+          description: An application-contact with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create of update an application-contact
+
+  /application-contacts:
+    get:
+      description: Get application-contacts
+      operationId: getApplicationContacts
+      parameters:
+        - description: ID of the application
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the contact
+          in: query
+          name: contactId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: The role
+          in: query
+          name: role
+          required: false
+          schema:
+            $ref: '#/components/schemas/contactRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationContacts'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get application-contacts
+
+  /application-contacts/contacts:
+    get:
+      description: Get all the contact/roles for all applications created by a user
+      operationId: userContactsHelper
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userContactsHelper'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: User contacts helper
+
+  /application-site:
+    post:
+      description: Create a new application-site relationship
+      operationId: postApplicationSite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationSite'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+          description: The application-site object has been created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request
+        '404':
+          description: Not found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: >-
+        Create a new application-site relationship for an existing applicationId
+        and siteId
+
+  /application-site/{applicationSiteId}:
+    delete:
+      description: Delete an application-site by id
+      operationId: deleteApplicationSiteByApplicationSiteId
+      parameters:
+        - description: ID of the application-site
+          in: path
+          name: applicationSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application-site has been deleted
+        '400':
+          description: Bad request
+        '404':
+          description: The application-site is not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get an application-site by id
+    get:
+      description: Get an application-site by id
+      operationId: getApplicationSiteByApplicationSiteId
+      parameters:
+        - description: ID of the application-site
+          in: path
+          name: applicationSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSite'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: The application-site is not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get an application-site by id
+
+  /application-sites:
+    get:
+      description: Get the application-sites
+      operationId: getApplicationSites
+      parameters:
+        - description: ID of the application
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the site
+          in: query
+          name: siteId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationSites'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a list of application-site relationships for a user
+
+  /application-sites/sites:
+    get:
+      description: Get all the application/sites created by a user
+      operationId: userSitesHelper
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userSitesHelper'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: User applications sites helper
+
+  /application-types:
+    get:
+      description: Get the application types using a filter
+      operationId: findApplicationTypes
+      parameters:
+        - description: The filter
+          example: >-
+            {"purposes":["3db073af-201b-ec11-b6e7-0022481a8f18","1c3e7655-bb74-4420-9bf0-0bd710987f10"],"species":["fedb14b6-53a8-ec11-9840-0022481aca85"]}
+          in: query
+          name: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  activities:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                  methods:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                  purposes:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                  species:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                  speciesSubjects:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                  types:
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                    type: array
+                type: object
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: >-
+        The licence types allowed by applying a filter in the query of the form
+        { purposes: [], -- uuid species: [], -- uuid speciesSubjects: [], --
+        uuid activities: [], -- uuid methods: [] -- uuid } This is encoded with
+        JSON.stringify 
+
+  /application-user:
+    post:
+      description: Create and store an application user relationship
+      operationId: postApplicationUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationUser'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+          description: The application-user relationship has been created
+        '400':
+          description: Bad request. UserId or applicationId not found. Role not recognized.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new user with a generated ID
+
+  /application-user/{applicationUserId}:
+    delete:
+      description: Delete an application-user
+      operationId: deleteApplicationUserById
+      parameters:
+        - description: ID of the application-user
+          in: path
+          name: applicationUserId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application-user object has been deleted
+        '400':
+          description: Bad request. user ID must be a uuid
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application-user
+    get:
+      description: Retrieve an application-user
+      operationId: getApplicationUserById
+      parameters:
+        - description: ID of the application-user
+          in: path
+          name: applicationUserId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUser'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-user ID must be a uuid.
+        '404':
+          description: An application-user with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve an application-user
+
+  /application-users:
+    get:
+      description: Get a list application-users
+      operationId: getApplicationUsers
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the user
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: the primary user-role for the user on this application
+          in: query
+          name: userRole
+          required: false
+          schema:
+            $ref: '#/components/schemas/userRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationUsers'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a list application-users
+
+  /application/licence/resend/{applicationId}/submit:
+    post:
+      description: Queue the request for a licence resend email
+      operationId: postLicenceResendSubmit
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Queue the request for a licence resend email
+
+  /application/purposes:
+    get:
+      description: Get the application purposes
+      operationId: getApplicationPurposes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: The purpose of an application
+
+  /application/types:
+    get:
+      description: Get the application types
+      operationId: getApplicationTypes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationTypes'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: The licence type requested by an application
+
+  /application/{applicationId}:
+    delete:
+      description: Delete an application
+      operationId: deleteApplication
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application has been deleted
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application
+    get:
+      description: Get an application
+      operationId: getApplicationByApplicationId
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Application not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get an application
+    put:
+      description: Update an application
+      operationId: putApplication
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/application'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+          description: The application object has been updated
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+          description: The application object has been created
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update an application for a given applicationId
+
+  /application/{applicationId}/designated-site:
+    post:
+      description: Create a designated site for an application
+      operationId: postApplicationDesignatedSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationDesignatedSite'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a designated sites for an application
+
+  /application/{applicationId}/designated-site/{applicationDesignatedSiteId}:
+    delete:
+      description: Delete an application designated for an application
+      operationId: deleteApplicationDesignatedSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: applicationDesignatedSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The licence has been deleted
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application designated for an application
+    get:
+      description: Get an application designated site for an application
+      operationId: getApplicationDesignatedSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: applicationDesignatedSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get an application designated for an application
+    put:
+      description: Put an application designated for an application
+      operationId: putApplicationDesignatedSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: applicationDesignatedSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationDesignatedSite'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSite'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the an application designated for a granted application
+
+  /application/{applicationId}/designated-sites:
+    get:
+      description: Get the designated sites for an application
+      operationId: getApplicationDesignatedSites
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationDesignatedSites'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the designated sites for an application
+
+  /application/{applicationId}/ecologist-experience:
+    delete:
+      description: Delete the application ecologist-experience details
+      operationId: deleteEcologistExperience
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the ecologist-experience details for an application
+    get:
+      description: Get the application ecologist-experience details
+      operationId: getEcologistExperience
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the ecologist-experience details for an application
+    put:
+      description: Update the application ecologist-experience details
+      operationId: putEcologistExperience
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ecologistExperience'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ecologistExperience'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the application ecologist-experience details
+
+  /application/{applicationId}/eligibility:
+    delete:
+      description: Delete the application eligibility details
+      operationId: deleteApplicationEligibility
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the eligibility details for an application
+    get:
+      description: Get the application eligibility details
+      operationId: getApplicationEligibility
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eligibility'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the eligibility details for an application
+    put:
+      description: Update the application eligibility details
+      operationId: putApplicationEligibility
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eligibility'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eligibility'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the application eligibility details
+
+  /application/{applicationId}/file-upload:
+    post:
+      description: Create the application file-upload details
+      operationId: postApplicationFileUpload
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationFileUpload'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create the application file-upload details
+
+  /application/{applicationId}/file-upload/{uploadId}:
+    delete:
+      description: Delete an application-file-upload by id
+      operationId: deleteApplicationFileUploadByUploadId
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application-file-upload
+          in: path
+          name: uploadId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The application-file-upload has been deleted
+        '400':
+          description: Bad request
+        '404':
+          description: The application-file-upload is not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete an application-file-upload by id
+    get:
+      description: Get the application file-upload details
+      operationId: getApplicationFileUpload
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the upload
+          in: path
+          name: uploadId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the eligibility details for an application file-upload
+    put:
+      description: Update the application file-upload details
+      operationId: putApplicationFileUpload
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the upload
+          in: path
+          name: uploadId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/applicationFileUpload'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUpload'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the application file-upload details
+
+  /application/{applicationId}/file-uploads:
+    get:
+      description: Get a list of the file-uploads detail for an application
+      operationId: getApplicationFileUploads
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: The filetype
+          in: query
+          name: filetype
+          required: false
+          schema:
+            $ref: '#/components/schemas/filetype'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationFileUploads'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the application file-upload details
+
+  /application/{applicationId}/habitat-site:
+    post:
+      description: Create a new habitat site for an application
+      operationId: postHabitatSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/badgerSett'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSett'
+          description: The habitat object has been created
+        '400':
+          description: Bad request
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: uses one of the habitat schemas depending on species
+
+  /application/{applicationId}/habitat-site/{habitatSiteId}:
+    delete:
+      description: Delete habitat site
+      operationId: deleteHabitatSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the habitat site
+          in: path
+          name: habitatSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The habitat site object has been deleted
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the habitat site on the provided ID
+    get:
+      description: Retrieve a habitat site
+      operationId: getHabitatSiteByHabitatSiteId
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the habitat site
+          in: path
+          name: habitatSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSett'
+          description: The habitat site object
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve a habitat site
+    put:
+      description: Update a habitat site
+      operationId: putHabitatSite
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the habitat site
+          in: path
+          name: habitatSiteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/badgerSett'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSett'
+          description: The habitat site object has been updated
+        '201':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSett'
+          description: The contact object has been created
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update a habitat site
+
+  /application/{applicationId}/habitat-sites:
+    get:
+      description: lists the habitat sites for an application
+      operationId: getHabitatSitesByApplicationId
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSetts'
+          description: Success.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: uses one of the habitat schemas depending on species
+
+  /application/{applicationId}/licences:
+    get:
+      description: Get the licences for an application
+      operationId: getApplicationLicences
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licences'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the licences for a granted application
+
+  /application/{applicationId}/permission:
+    post:
+      description: Create a new permission for an application
+      operationId: postPermission
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/permission'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/permission'
+          description: The permission object has been created
+        '400':
+          description: Bad request
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new permission for an application
+
+  /application/{applicationId}/permission/{permissionId}:
+    delete:
+      description: Delete a permission
+      operationId: deletePermission
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the permission
+          in: path
+          name: permissionId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete a permission
+    get:
+      description: Get permission details
+      operationId: getPermission
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the permission
+          in: path
+          name: permissionId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permission'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get permission details
+    put:
+      description: update a permission
+      operationId: putPermission
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the permission
+          in: path
+          name: permissionId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/permission'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permission'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the permission details
+
+  /application/{applicationId}/permissions:
+    get:
+      description: Gets the permissions for an application
+      operationId: getPermissions
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permissions'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Gets the permissions for an application
+
+  /application/{applicationId}/permissions-section:
+    delete:
+      description: Delete the application permissions details
+      operationId: deletePermissionsSection
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the permissions details for an application
+    get:
+      description: Get the application permissions details
+      operationId: getPermissionsSection
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permissionsSection'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the permissions details for an application
+    put:
+      description: Update the application permissions details
+      operationId: putPermissionsSection
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/permissionsSection'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/permissionsSection'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update the application permissions details
+
+  /application/{applicationId}/previous-licence:
+    post:
+      description: Create a previous licence for an application
+      operationId: postPreviousLicence
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/licence'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a previous licence for an application
+
+  /application/{applicationId}/previous-licence/{licenceId}:
+    delete:
+      description: Get the licences for an application
+      operationId: deletePreviousLicence
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The licence has been deleted
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the licences for a granted application
+    get:
+      description: Get a previous licence for an application
+      operationId: getPreviousLicence
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a previous licence for an application
+    put:
+      description: Put a previous licence for an application
+      operationId: putPreviousLicence
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licence'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. Application-account ID must be a uuid.
+        '404':
+          description: An application-account with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the licences for a granted application
+
+  /application/{applicationId}/previous-licences:
+    get:
+      description: Get the previous licences for an application
+      operationId: getPreviousLicences
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/licences'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the previous licences for an application
+
+  /application/{applicationId}/submit:
+    post:
+      description: Queue the application for submission
+      operationId: postApplicationSubmit
+      parameters:
+        - description: ID of the application
+          in: path
+          name: applicationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Queue the application for submission
+
+  /applications:
+    get:
+      description: Get the applications for a user
+      operationId: getApplications
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the user
+          in: query
+          name: userRole
+          required: false
+          schema:
+            $ref: '#/components/schemas/userRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applications'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the applications for a user
+
+  /applications/get-reference:
+    get:
+      description: Get the next reference number for an application
+      operationId: getApplicationReference
+      parameters:
+        - in: query
+          name: applicationTypeId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  ref:
+                    type: string
+                type: object
+          description: The next reference number
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not found - ensure reference data extract has run
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: counter
+
+  /authorities:
+    get:
+      description: Get the authorities
+      operationId: getAuthorities
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/referenceDataTypes'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the authorities
+
+  /contact:
+    post:
+      description: Create and store contact
+      operationId: postContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+          description: The contact has been created
+        '400':
+          description: Bad request. Username required
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new contact with a generated ID
+
+  /contact/{contactId}:
+    delete:
+      description: Delete contact
+      operationId: deleteContact
+      parameters:
+        - description: ID of the contact
+          in: path
+          name: contactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The contact object has been deleted
+        '400':
+          description: Bad request. contact ID must be a uuid
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the contact on the provided ID
+    get:
+      description: Retrieve a contact
+      operationId: getContactByContactId
+      parameters:
+        - description: ID of the contact
+          in: path
+          name: contactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. User ID must be a uuid.
+        '404':
+          description: A contact with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve a contact
+    put:
+      description: Update a contact
+      operationId: putContact
+      parameters:
+        - description: ID of the contact
+          in: path
+          name: contactId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contact'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+          description: The contact object has been updated
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact'
+          description: The contact object has been created
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update a contact
+
+  /contacts:
+    get:
+      description: Get a list contacts
+      operationId: getContacts
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: query
+          name: applicationId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: role of the contact
+          in: query
+          name: role
+          required: false
+          schema:
+            $ref: '#/components/schemas/contactRoles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contacts'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a list contacts
+
+  /designated-sites:
+    get:
+      description: Get the designated sites reference data
+      operationId: getDesignatedSites
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/designatedSites'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the designated sites reference data
+
+  /licence/{licenceId}/habitat-sites:
+    get:
+      description: lists the habitat sites for a licence
+      operationId: getHabitatSitesByLicenceId
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/badgerSetts'
+          description: Success.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: lists the habitat sites for a licence
+
+  /licence/{licenceId}/return:
+    post:
+      description: Create a return for a licence
+      operationId: postReturn
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/a24Return'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/a24Return'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a return for a licence
+
+  /licence/{licenceId}/return/{returnId}:
+    delete:
+      description: Delete a return
+      operationId: deleteReturn
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: returnId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete a return
+    get:
+      description: Get a return
+      operationId: getReturn
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: returnId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a return
+    put:
+      description: Create or update a return
+      operationId: putReturn
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: returnId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/a24Return'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+          description: Success
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/return'
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create or update a return
+
+  /licence/{licenceId}/return/{returnId}/submit:
+    post:
+      description: Queue the return for submission
+      operationId: postReturnSubmit
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - description: ID of the application
+          in: path
+          name: returnId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Queue the return for submission
+
+  /licence/{licenceId}/returns:
+    get:
+      description: Get returns for a licence
+      operationId: getReturnsByLicenceId
+      parameters:
+        - description: ID of the licence
+          in: path
+          name: licenceId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/a24Return'
+                type: array
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get returns for a licence
+
+  /option-sets:
+    get:
+      description: Get the global option set values
+      operationId: getOptionSets
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/optionSetTypes'
+          description: Success
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the global option set values
+
+  /organisation/{organisationId}:
+    get:
+      description: Get organisation by Id
+      operationId: getOrganisationById
+      parameters:
+        - in: path
+          required: true
+          name: organisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get organisation by Id
+    put:
+      description: Put organisation by Id
+      operationId: putOrganisation
+      parameters:
+        - in: path
+          name: organisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the organisation by id
+
+  /reset:
+    post:
+      description: For testing environments, clears application data
+      operationId: postResetHandler
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              properties:
+                username:
+                  $ref: '#/components/schemas/email'
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+
+  /site:
+    post:
+      description: Create a new site
+      operationId: postSite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/site'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+          description: The application object has been created
+        '400':
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new site for an existing userId
+
+  /site/{siteId}:
+    delete:
+      description: Delete a site
+      operationId: deleteSite
+      parameters:
+        - description: ID of the site
+          in: path
+          name: siteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The site has been deleted
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete a site
+    get:
+      description: Get a site
+      operationId: getSiteBySiteId
+      parameters:
+        - description: ID of the site
+          in: path
+          name: siteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Site not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get a site
+    put:
+      description: Create a new site or update an existing site
+      operationId: putSite
+      parameters:
+        - description: ID of the site
+          in: path
+          name: siteId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/site'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+          description: The site object has been updated
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/site'
+          description: The site object has been created
+        '400':
+          description: Bad request. user ID must be a uuid
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new site or update an existing site
+
+  /sites:
+    get:
+      description: Get a list of sites
+      operationId: getSites
+      parameters:
+        - description: ID of the user
+          in: query
+          name: userId
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sites'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: >-
+        Get a list of sites with the ability to filter using the user-sites
+        relation
+
+  /user:
+    post:
+      description: Create and store user
+      operationId: postUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: The user has been created
+        '400':
+          description: Bad request. Username required
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Create a new user with a generated ID
+
+  /user-organisation/{userOrganisationId}:
+    get:
+      description: Get user-organisation by Id
+      operationId: getUserOrganisationById
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get user-organisation by Id
+    put:
+      description: Put userOrganisation by Id
+      operationId: putUserOrganisation
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userOrganisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the userOrganisation by id
+
+  /user-role/{roleId}:
+    get:
+      description: Get user (Identity) roles by Id
+      operationId: getUserRole
+      parameters:
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the user role by id
+
+    put:
+      description: Put user role by Id
+      operationId: putUserRole
+      parameters:
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userIdentityRole'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the user role by id
+
+  /user/{userId}:
+    delete:
+      description: Delete user
+      operationId: deleteUser
+      parameters:
+        - description: ID of the user
+          in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The applicant object has been deleted
+        '400':
+          description: Bad request. user ID must be a uuid
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Delete the user on the provided ID
+    get:
+      description: Retrieve a user
+      operationId: getUserByUserId
+      parameters:
+        - description: ID of the applicant
+          in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. User ID must be a uuid.
+        '404':
+          description: An user with the specified ID was not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Retrieve a user
+    put:
+      description: Update a user
+      operationId: putUser
+      parameters:
+        - description: ID of the applicant
+          in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: Success - updated
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: Success - created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: Success - nothing updated.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request. User ID must be a uuid.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Update a user
+
+  /users:
+    get:
+      description: Get users
+      operationId: getUsers
+      parameters:
+        - in: query
+          name: username
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the users and optionally filter by name
+
+servers:
+  - url: http://locahost:3000
+    description: Local API server

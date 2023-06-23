@@ -47,10 +47,6 @@ describe('add additional contact check page', () => {
             value: 'yes'
           },
           {
-            key: 'applicantIsUser',
-            value: 'yes'
-          },
-          {
             key: 'applicantName',
             value: 'Van Morrison'
           },
@@ -62,10 +58,6 @@ describe('add additional contact check page', () => {
         ecologist: [
           {
             key: 'addAdditionalEcologist',
-            value: 'yes'
-          },
-          {
-            key: 'ecologistIsUser',
             value: 'yes'
           },
           {

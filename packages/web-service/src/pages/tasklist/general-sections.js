@@ -63,7 +63,7 @@ export const TASKS = {
     name: SECTION_TASKS.LICENCE_HOLDER,
     uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.LICENCE_HOLDER, tags)
       ? contactURIs.APPLICANT.CHECK_ANSWERS.uri
-      : contactURIs.APPLICANT.USER.uri,
+      : contactURIs.APPLICANT.NAMES.uri,
     status: tags => getTaskStatus(SECTION_TASKS.LICENCE_HOLDER, tags) || eligibilityCheckHelper(tags),
     enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },
@@ -72,7 +72,7 @@ export const TASKS = {
     name: SECTION_TASKS.ECOLOGIST,
     uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.ECOLOGIST, tags)
       ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri
-      : contactURIs.ECOLOGIST.USER.uri,
+      : contactURIs.ECOLOGIST.NAMES.uri,
     status: tags => getTaskStatus(SECTION_TASKS.ECOLOGIST, tags) || eligibilityCheckHelper(tags),
     enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },

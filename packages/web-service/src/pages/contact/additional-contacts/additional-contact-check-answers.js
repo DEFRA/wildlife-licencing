@@ -5,7 +5,6 @@ import { contactURIs, TASKLIST } from '../../../uris.js'
 import { checkAnswersPage } from '../../common/check-answers.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { canBeUser } from '../common/common-handler.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
 const { CHECK_ANSWERS } = contactURIs.ADDITIONAL_APPLICANT
@@ -32,7 +31,6 @@ export const getData = async request => {
     applicant: additionalApplicant
       ? [
           { key: 'addAdditionalApplicant', value: yesNoFromBool(true) },
-          (await canBeUser(request, [ContactRoles.APPLICANT]) && { key: 'applicantIsUser', value: yesNoFromBool(additionalApplicant.userId) }),
           { key: 'applicantName', value: additionalApplicant.fullName },
           { key: 'applicantEmail', value: additionalApplicant.contactDetails.email }
         ].filter(a => a)
@@ -42,7 +40,6 @@ export const getData = async request => {
     ecologist: additionalEcologist
       ? [
           { key: 'addAdditionalEcologist', value: yesNoFromBool(true) },
-          (await canBeUser(request, [ContactRoles.ECOLOGIST]) && { key: 'ecologistIsUser', value: yesNoFromBool(additionalEcologist.userId) }),
           { key: 'ecologistName', value: additionalEcologist.fullName },
           { key: 'ecologistEmail', value: additionalEcologist.contactDetails.email }
         ].filter(a => a)

@@ -1,9 +1,6 @@
 import db from 'debug'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
-import path from 'path'
-import Config from '@defra/wls-connectors-lib/src/config.js'
-import fs from 'fs'
 const debug = db('web-service:address-lookup')
 
 export const getPostcodeData = (contactRole, accountRole, uriBase) => async request => {
@@ -32,11 +29,6 @@ export const addressLookupForPostcode = async (postcode, journeyData, request) =
   } catch (err) {
     // May not be real error so log on a debug
     debug(`Address lookup error: ${err}`)
-    // Log the address lookup certificate file directory
-    const addressCertDir = path.dirname(Config.address.certificatePath)
-    debug(`Address lookup certificate location: ${addressCertDir}...`)
-    debug(`${fs.readdirSync(addressCertDir).forEach(f => console.log(f))}`)
-
     // Remove previous
     delete journeyData.addressLookup
   } finally {

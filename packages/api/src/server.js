@@ -4,13 +4,27 @@ import { SERVER_PORT } from './constants.js'
 import db from 'debug'
 
 import {
+  getUserRole,
+  putUserRole
+} from './handlers/user-role/user-role.js'
+
+import {
   getUserByUserId,
   getUsers,
   deleteUser,
   postUser,
-  putUser,
-  authenticateUser
+  putUser
 } from './handlers/user/user.js'
+
+import {
+  getOrganisationById,
+  putOrganisation
+} from './handlers/organisation/organisation.js'
+
+import {
+  getUserOrganisationById,
+  putUserOrganisation
+} from './handlers/user-organisation/user-organisation.js'
 
 import {
   getContacts,
@@ -176,12 +190,17 @@ const createServer = async () => new Hapi.Server({ port: SERVER_PORT })
 // Split out to comply with sonar-cube line restriction on functions
 const handlers = {
   // User handlers
+  getUserRole,
+  putUserRole,
   getUserByUserId,
   getUsers,
   postUser,
   putUser,
   deleteUser,
-  authenticateUser,
+  getOrganisationById,
+  putOrganisation,
+  getUserOrganisationById,
+  putUserOrganisation,
 
   // Contact handlers
   getContacts,
@@ -324,7 +343,7 @@ const init = async server => {
   /*
    * Create the OpenAPI backend
    */
-  const api = new OpenAPIBackend({ definition: 'openapi/licence.yaml' })
+  const api = new OpenAPIBackend({ definition: 'openapi/api.yaml' })
 
   /*
    * Register the openapi/hapi route handler mappings

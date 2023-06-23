@@ -19,19 +19,17 @@ describe('The file job processor', () => {
   afterAll(() => jest.clearAllMocks())
 
   it('processes a job correctly', async () => {
-    const mockSend = jest.fn(() => ({
-      Body: 'byte-stream',
-      ContentLength: 500
+    const mockRead = jest.fn(() => ({
+      stream: 'byte-stream',
+      bytes: 500
     }))
-    const mockPut = jest.fn()
     const mockUpload = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: mockSend
-        },
-        GetObjectCommand: mockPut
-      }),
+      AWS: {
+        S3: () => ({
+          readFileStream: mockRead
+        })
+      },
       GRAPH: {
         client: jest.fn(() => ({
           uploadFile: mockUpload
@@ -64,12 +62,11 @@ describe('The file job processor', () => {
 
   it('logs error and resolves with unrecoverable error - no record in database', async () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: jest.fn()
-        },
-        GetObjectCommand: jest.fn()
-      })
+      AWS: {
+        S3: () => ({
+          readFileStream: jest.fn()
+        })
+      }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -83,15 +80,13 @@ describe('The file job processor', () => {
   })
 
   it('rejects with recoverable error from AWS', async () => {
-    // eslint-disable-next-line no-throw-literal
-    const mockSend = jest.fn(() => { throw { httpStatusCode: 500, message: 'recoverable error' } })
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: mockSend
-        },
-        GetObjectCommand: jest.fn()
-      })
+      AWS: {
+        S3: () => ({
+          // eslint-disable-next-line no-throw-literal
+          ReadFileStream: jest.fn(() => { throw { httpStatusCode: 500, message: 'recoverable error' } })
+        })
+      }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -117,16 +112,15 @@ describe('The file job processor', () => {
   })
 
   it('rejects with an unrecoverable error from AWS', async () => {
-    // eslint-disable-next-line no-throw-literal
-    const mockSend = jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: mockSend
-        },
-        GetObjectCommand: jest.fn()
-      })
+      AWS: {
+        S3: () => ({
+          // eslint-disable-next-line no-throw-literal
+          readFileStream: jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
+        })
+      }
     }))
+
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applicationUploads: {
@@ -151,17 +145,12 @@ describe('The file job processor', () => {
   })
 
   it('rejects with recoverable error from AZURE', async () => {
-    const mockSend = jest.fn(() => ({
-      Body: 'byte-stream',
-      ContentLength: 500
-    }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: () => ({
-        S3Client: {
-          send: mockSend
-        },
-        GetObjectCommand: jest.fn()
-      }),
+      AWS: {
+        S3: () => ({
+          readFileStream: jest.fn()
+        })
+      },
       GRAPH: {
         client: jest.fn(() => ({
           uploadFile: jest.fn(() => { throw new Error() })

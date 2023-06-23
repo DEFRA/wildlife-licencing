@@ -12,7 +12,7 @@ export const findClones = (rec, recs, clones = []) => {
   return clones
 }
 
-const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated) => {
+const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, userId, applicationId) => {
   const allRoles = [primaryContactRole].concat(otherContactRoles)
   const contactApplications = await APIRequests.CONTACT.findAllContactApplicationRolesByUser(userId)
 
@@ -47,7 +47,6 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
       fullName: contact.fullName,
       contactRole: contact.contactRole,
       updatedAt: contact.updatedAt,
-      assoc: !contact.userId || allowAssociated,
       isImmutable: !contact.fullName
         ? false
         : contact.submitted || !!contactApplications.find(ac => ac.id === contact.id &&
@@ -55,21 +54,19 @@ const getContactCandidatesInner = async (primaryContactRole, otherContactRoles, 
     }]
   }))
 
-  return [...mapApplicationsByContactId.values()].filter(c => c.assoc)
+  return [...mapApplicationsByContactId.values()]
 }
 
 /**
  * Find the set of contacts which may be used to pre-select from
- * (1) These are the set on all the users applications
- * (2) De-duplicated by clone-group
- * For contact candidates contacts against other roles on the current application are always excluded
- * @param contactRole
- * @param additionalContactRoles
- * @returns {function(*): Promise<*>}
+ * @param userId
+ * @param applicationId
+ * @param primaryContactRole
+ * @param otherContactRoles
+ * @returns {Promise<*>}
  */
-export const getContactCandidates = async (userId, applicationId, primaryContactRole,
-  otherContactRoles = [], allowAssociated = false) => {
-  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated)
+export const getContactCandidates = async (userId, applicationId, primaryContactRole, otherContactRoles = []) => {
+  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId)
 
   decorateWithCloneGroups(contactFiltered)
   const ids = duDuplicate(contactFiltered)
@@ -78,8 +75,8 @@ export const getContactCandidates = async (userId, applicationId, primaryContact
 }
 
 export const hasContactCandidates = async (userId, applicationId, primaryContactRole,
-  otherContactRoles = [], allowAssociated = false) => {
-  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId, allowAssociated)
+  otherContactRoles = []) => {
+  const contactFiltered = await getContactCandidatesInner(primaryContactRole, otherContactRoles, userId, applicationId)
   return contactFiltered.length > 0
 }
 

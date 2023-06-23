@@ -72,7 +72,7 @@
         divider: 'or'
       },
       {
-        checked: data.radioChecked === data.OTHER or payload['exempt-details'].length > 4000,
+        checked: payload['work-payment-exempt-reason'] == data.OTHER or data.radioChecked === data.OTHER or payload['exempt-details'].length > 4000,
         value: data.OTHER,
         text: 'Other',
         conditional: {

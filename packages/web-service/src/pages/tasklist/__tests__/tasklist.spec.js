@@ -161,14 +161,15 @@ describe('The task-list handler', () => {
         cache: () => ({
           getData: () => ({
             userId: '510db545-4136-48c4-9680-98d89d3962e7',
-            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064'
+            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+            applicationRole: 'APPLICANT'
           })
         })
       }
       const { getApplication } = await import('../tasklist.js')
       const result = await getApplication(request)
       expect(result).toEqual({ id: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
-      expect(mockInitialize).toHaveBeenCalledWith('510db545-4136-48c4-9680-98d89d3962e7', '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', DEFAULT_ROLE)
+      expect(mockInitialize).toHaveBeenCalledWith('510db545-4136-48c4-9680-98d89d3962e7', '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', DEFAULT_ROLE, 'APPLICANT')
     })
   })
 

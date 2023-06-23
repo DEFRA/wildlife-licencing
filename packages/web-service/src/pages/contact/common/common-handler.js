@@ -4,34 +4,6 @@ import { hasAccountCandidates, hasContactCandidates } from './common.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
 /**
- * Determines if, for this application, the signed-in user is assigned to any of the conflictingRoles
- * @param request
- * @param conflictingRoles
- * @returns {Promise<boolean>}
- */
-export const canBeUser = async (request, conflictingRoles) => {
-  const { applicationId, userId } = await request.cache().getData()
-  const contacts = await Promise.all(conflictingRoles.map(async cr => {
-    const contact = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
-    return contact?.userId === userId
-  }))
-
-  return !contacts.find(c => c === true)
-}
-/**
- * if the roles conflict go to the NAMES page
- * @param conflictingRoles
- * @param urlBase
- * @returns {(function(*, *): Promise<*|null>)|*}
- */
-export const checkCanBeUser = (conflictingRoles, urlBase) => async (request, h) => {
-  if (await canBeUser(request, conflictingRoles)) {
-    return null
-  }
-
-  return h.redirect(urlBase.NAMES.uri)
-}
-/**
  * Throw back to the tasklist contact exists for the role. Call from only the point
  * where a contact must exist.
  * @param contactRole
