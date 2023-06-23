@@ -1,4 +1,4 @@
-import { ReturnsURIs } from '../../uris.js'
+import { REMOVE_RETURNS_UPLOADED_FILE, ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, timestampFormatter } from '../common/common.js'
 import pageRoute from '../../routes/page-route.js'
@@ -6,7 +6,7 @@ import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
 import Joi from 'joi'
 
-const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_ANSWERS, REMOVE_RETURNS_UPLOADED_FILE } = ReturnsURIs
+const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_ANSWERS } = ReturnsURIs
 
 const anotherFileUpload = 'another-file-check'
 
