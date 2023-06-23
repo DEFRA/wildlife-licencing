@@ -77,13 +77,13 @@ describe('The putOrganisation handler', () => {
         id: context.request.params.organisationId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.organisationId, name: 'ORGANISATION-A', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.organisationId, name: 'ORGANISATION-A', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.organisationId, name: 'ORGANISATION-A', foo: 'bar', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.organisationId, name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns a 200 with an existing key', async () => {
+  it('returns a 200 with an existing key', async () => {
     models.organisations = {
       findOrCreate: jest.fn(async () => ([{ dataValues: { name: 'ORGANISATION-A', organisation: { foo: 'bar' }, ...ts } }, false]))
     }

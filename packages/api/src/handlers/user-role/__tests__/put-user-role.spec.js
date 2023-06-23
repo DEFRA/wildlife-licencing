@@ -80,7 +80,7 @@ describe('The putUserRole handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns a 200 with an existing key', async () => {
+  it('returns a 200 with an existing key', async () => {
     models.userRoles = {
       findOrCreate: jest.fn(async () => ([{ dataValues: { name: 'ROLE-A', ...ts } }, false]))
     }

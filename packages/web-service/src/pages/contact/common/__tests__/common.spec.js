@@ -42,7 +42,7 @@ describe('contact common', () => {
   })
 
   describe('getContactCandidates and hasContactCandidates', () => {
-    it.only('calculates the candidate set', async () => {
+    it('calculates the candidate set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           CONTACT: {
