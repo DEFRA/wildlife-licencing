@@ -30,8 +30,9 @@ export const getApplication = async request => {
 
 export const getData = async request => {
   const application = await getApplication(request)
-  // Select the tasklist based on the licence type
-  const licenceType = LICENCE_TYPE_TASKLISTS[application.applicationTypeId]
+  // Select the tasklist based on the licence type and the role
+  const { applicationRole } = await request.cache().getData()
+  const licenceType = LICENCE_TYPE_TASKLISTS[application.applicationTypeId][applicationRole]
   const showReference = await licenceType.canShowReference(request)
   return {
     ...(showReference && { reference: application.applicationReferenceNumber }),

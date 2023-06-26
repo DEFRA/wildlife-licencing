@@ -68,6 +68,14 @@ export const APPLICATION = {
     const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
     return applicationUsers.map(au => au.userRole)
   },
+  findApplicationUsers: async (userId, applicationId) => apiRequestsWrapper(
+    async () => {
+      debug(`find user application for userId: ${userId} and applicationId: ${applicationId}`)
+      return API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
+    },
+  `Error user application for userId: ${userId} and applicationId: ${applicationId}`,
+  500
+  ),
   update: async (applicationId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Amend applications by applicationId: ${applicationId}`)
