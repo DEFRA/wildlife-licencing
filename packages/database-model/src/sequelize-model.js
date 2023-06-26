@@ -69,6 +69,7 @@ async function defineOrganisation (sequelize) {
 
 async function defineUserOrganisation (sequelize) {
   models.userOrganisations = await sequelize.define('user-organisations', {
+    id: { type: DataTypes.UUID, primaryKey: true },
     userId: { type: DataTypes.UUID, primaryKey: true },
     organisationId: { type: DataTypes.UUID, primaryKey: true },
     relationship: { type: DataTypes.STRING(50) }

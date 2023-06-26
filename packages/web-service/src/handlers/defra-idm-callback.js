@@ -33,9 +33,34 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     }
   }
 
-  debug(`Set auth: ${JSON.stringify(tokenPayload, null, 4)}`)
+  // Add the relationships
+  for (const rel of tokenPayload.relationships) {
+    const [userOrganisationId, organisationId, organisationName,, relationship] = rel.split(':')
+    if (relationship !== 'Citizen') {
+      const organisation = await APIRequests.USER.updateOrganisation(organisationId, { name: organisationName })
+      debug(`Setting organisation: ${JSON.stringify(organisation, null, 4)}`)
+      await APIRequests.USER.updateUserOrganisation(userOrganisationId, {
+        userId: tokenPayload.contactId,
+        organisationId: organisationId,
+        relationship: relationship
+      })
+    }
+  }
+
+  debug(`Setting auth: ${JSON.stringify(tokenPayload, null, 4)}`)
   await request.cache().setAuthData(tokenPayload)
-  Object.assign(journeyData, { userId: tokenPayload.contactId })
+
+  const role = tokenPayload.roles
+    .map(r => ({ relationshipId: r.split(':')[0], roleName: r.split(':')[1] }))
+    .find(r => r.relationshipId === tokenPayload.currentRelationshipId)
+
+  debug(`Setting current role: ${JSON.stringify(tokenPayload, null, 4)}`)
+  Object.assign(journeyData, {
+    userId: tokenPayload.contactId,
+    userOrganisationId: tokenPayload.currentRelationshipId,
+    role: role
+  })
+
   await request.cache().setData(journeyData)
 }
 

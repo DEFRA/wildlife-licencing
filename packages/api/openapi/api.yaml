@@ -4501,8 +4501,3 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Unexpected error on server
       summary: Put the user-user-role by id
-
-
-servers:
-  - url: http://locahost:3000
-    description: Local API server
