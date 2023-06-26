@@ -8,7 +8,7 @@ export default async (context, req, h) => {
   try {
     const { organisationId } = context.request.params
 
-    const [userRole, created] = await models.organisations.findOrCreate({
+    const [organisation, created] = await models.organisations.findOrCreate({
       where: { id: organisationId },
       defaults: {
         id: organisationId,
@@ -17,7 +17,7 @@ export default async (context, req, h) => {
       }
     })
 
-    const responseBody = prepareResponse(userRole.dataValues)
+    const responseBody = prepareResponse(organisation.dataValues)
     await cache.save(req.path, responseBody)
     return h.response(responseBody)
       .type(APPLICATION_JSON)

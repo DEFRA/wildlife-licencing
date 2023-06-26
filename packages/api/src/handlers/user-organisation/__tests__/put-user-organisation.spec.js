@@ -46,7 +46,7 @@ let putUserOrganisation
 let cache
 const applicationJson = 'application/json'
 
-describe('The putOrganisation handler', () => {
+describe('The updateOrganisation handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     putUserOrganisation = (await import('../put-user-organisation.js')).default

@@ -17,6 +17,11 @@ import {
 } from './handlers/user/user.js'
 
 import {
+  putUserUserRole,
+  getUserUserRole
+} from './handlers/user-user-role/user-user-role.js'
+
+import {
   getOrganisationById,
   putOrganisation
 } from './handlers/organisation/organisation.js'
@@ -196,6 +201,8 @@ const handlers = {
   getUsers,
   postUser,
   putUser,
+  putUserUserRole,
+  getUserUserRole,
   deleteUser,
   getOrganisationById,
   putOrganisation,
