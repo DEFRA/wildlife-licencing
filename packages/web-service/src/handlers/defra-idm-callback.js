@@ -12,7 +12,14 @@ const debug = db('web-service:authenticate')
  */
 export const consumeTokenPayload = async (request, tokenPayload) => {
   const journeyData = await request.cache().getData() || {}
+
+  // if the signed-in user has changed then delete any application data
+  if (journeyData.userId && journeyData.userId !== tokenPayload.contactId) {
+    delete journeyData.applicationid
+  }
+
   const user = await APIRequests.USER.getById(tokenPayload.contactId)
+
   if (!user) {
     const payload = {
       username: tokenPayload.uniqueReference,
@@ -66,9 +73,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  if (journeyData?.navigation?.requestedPage) {
-    return journeyData.navigation.requestedPage
-  } else if (!request.auth.isAuthenticated) {
+  if (!request.auth.isAuthenticated) {
     return TASKLIST.uri
   } else {
     if (journeyData.applicationId) {

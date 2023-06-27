@@ -12,10 +12,6 @@ export default (_server, _options) => ({
       if (request.auth.mode === 'optional') {
         return h.continue
       } else {
-        // Save the page we are attempting to request.
-        const journeyData = await request.cache().getData() || {}
-        journeyData.navigation = { requestedPage: request.path }
-        await request.cache().setData(journeyData)
         debug(`Not authenticated session: ${request.state?.sid?.id}`)
         return h.redirect(SIGN_IN.uri).takeover()
       }
