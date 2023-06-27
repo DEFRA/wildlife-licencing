@@ -4,7 +4,7 @@ import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
-const { ANOTHER_LICENCE, CHECK_ANSWERS } = ReturnsURIs
+const { ANOTHER_LICENCE, CHECK_YOUR_ANSWERS } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -33,7 +33,7 @@ export const setData = async request => {
 export const anotherLicence = yesNoPage({
   page: ANOTHER_LICENCE.page,
   uri: ANOTHER_LICENCE.uri,
-  completion: CHECK_ANSWERS.uri,
+  completion: CHECK_YOUR_ANSWERS.uri,
   checkData: checkApplication,
   getData,
   setData
