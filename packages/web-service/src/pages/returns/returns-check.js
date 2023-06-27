@@ -7,7 +7,7 @@ import { timestampFormatter } from '../common/common.js'
 
 const { CHECK_YOUR_ANSWERS, DECLARATION } = ReturnsURIs
 
-export const getData = async (request) => {
+export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
