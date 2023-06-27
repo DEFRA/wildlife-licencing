@@ -190,7 +190,7 @@ export const ReturnsURIs = {
   WORK_START: { uri: '/work-start', page: 'work-start' },
   WORK_END: { uri: '/work-finish', page: 'work-finish' },
   LICENCE_CONDITIONS: { uri: '/licence-conditions', page: 'licence-conditions' },
-  CHECK_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
+  CHECK_YOUR_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
   DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },
   CONFIRMATION: { uri: '/returns-confirmation', page: 'returns-confirmation' },
   UPLOAD: { uri: '/returns-upload', page: 'returns-upload' },
