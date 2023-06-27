@@ -28,9 +28,9 @@ export const setData = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-  const payload = { ...licenceReturn, disturbBadgers: artificialSettFoundGridReference }
+  const payload = { ...licenceReturn, artificialSettFoundGridReference }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...journeyData.returns, disturbBadgers: artificialSettFoundGridReference }
+  journeyData.returns = { ...journeyData.returns, artificialSettFoundGridReference }
   await request.cache().setData(journeyData)
 }
 

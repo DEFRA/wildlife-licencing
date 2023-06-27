@@ -6,7 +6,7 @@ import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
 import Joi from 'joi'
 
-const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_ANSWERS } = ReturnsURIs
+const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_YOUR_ANSWERS } = ReturnsURIs
 
 const anotherFileUpload = 'another-file-check'
 
@@ -40,7 +40,7 @@ export const completion = async request => {
   if (boolFromYesNo(request?.payload[anotherFileUpload])) {
     return UPLOAD_FILE.uri
   } else {
-    return CHECK_ANSWERS.uri
+    return CHECK_YOUR_ANSWERS.uri
   }
 }
 
