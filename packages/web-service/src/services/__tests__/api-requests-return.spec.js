@@ -63,5 +63,17 @@ describe('The API requests return service', () => {
       await APIRequests.RETURNS.getLicenceActions('480c-a802')
       expect(mockGetLicenceActions).toHaveBeenCalledWith('/licence/480c-a802/habitat-sites')
     })
+
+    it('queueReturnForSubmission calls the API correctly', async () => {
+      const mockPostLicenceActions = jest.fn().mockReturnValueOnce({ id: 1 })
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPostLicenceActions
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.RETURNS.queueReturnForSubmission('668ee1f0', '480c-a802')
+      expect(mockPostLicenceActions).toHaveBeenCalledWith('/licence/668ee1f0/return/480c-a802/submit')
+    })
   })
 })

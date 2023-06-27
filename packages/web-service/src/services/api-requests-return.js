@@ -42,11 +42,19 @@ export const RETURNS = {
   ),
   getLicenceActions: async licenceId => apiRequestsWrapper(
     async () => {
-      const licences = await API.get(`${apiUrls.LICENCE}/${licenceId}/habitat-sites`)
+      const licences = API.get(`${apiUrls.LICENCE}/${licenceId}/habitat-sites`)
       debug(`Found licence actions for ${JSON.stringify(licenceId)}`)
       return licences
     },
     `Error getting licence actions for ${licenceId}`,
+    500
+  ),
+  queueReturnForSubmission: async (licenceId, returnId) => apiRequestsWrapper(
+    async () => {
+      API.post(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURN}/${returnId}/submit`)
+      debug(`Submitting licence return with returnId ${returnId}`)
+    },
+    `Error submitting licence return with returnId ${returnId}`,
     500
   )
 }
