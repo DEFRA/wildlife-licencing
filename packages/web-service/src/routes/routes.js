@@ -176,7 +176,7 @@ import { artificialSettCreatedBeforeClosurePage } from '../pages/returns/a24/art
 import licenceConditions from '../pages/returns/licence-conditions.js'
 import welfareConcerns from '../pages/returns/a24/welfare-concerns.js'
 import returnsCheck from '../pages/returns/returns-check.js'
-import declarationOfReturns from '../pages/returns/declaration.js'
+import declarationOfReturns from '../pages/returns/returns-declaration.js'
 import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
 import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
 import confirmationOfReturns from '../pages/returns/confirmation.js'
