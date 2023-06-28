@@ -4,26 +4,20 @@
 {% set title = 'Check your answers' %}
 {% from "answer-summary.njk" import answerSummary %}
 
-{% set applicantQuestionMap = {
-    addAdditionalApplicant: { question: 'Add an additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantAdd },
+{% set questionMap = {
+    addAdditionalApplicant: { question: 'Do you want to add an alternative contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantAdd },
     applicantIsUser: { question: 'Are you the additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantUser },
-    applicantName: { question: 'What is the name of the person we should contact?', href: _uri.additionalApplicantNames },
-    applicantEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalApplicantEmail }
-} %}
+    applicantName: { question: 'Which of your previous contacts do you want to use?', href: _uri.additionalApplicantNames },
+    applicantEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalApplicantEmail },
 
-{% set ecologistQuestionMap = {
-    addAdditionalEcologist: { question: 'Add an additional ecologist contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistAdd },
+    addAdditionalEcologist: { question: 'Do you want to add an alternative ecologist contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistAdd },
     ecologistIsUser: { question: 'Are you the additional applicant contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistUser },
-    ecologistName: { question: 'What is the name of the person we should contact?', href: _uri.additionalEcologistNames },
+    ecologistName: { question: 'Which of your previous ecologist contacts do you want to use?', href: _uri.additionalEcologistNames },
     ecologistEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalEcologistEmail }
 } %}
 
 {% block pageContent %}
-    <h2 class="govuk-heading-m">Additional Applicant</h2>
-    {{ answerSummary(applicantQuestionMap, data.applicant) }}
-
-    <h2 class="govuk-heading-m">Additional Ecologist</h2>
-    {{ answerSummary(ecologistQuestionMap, data.ecologist) }}
+    {{ answerSummary(questionMap, data.applicant.concat(data.ecologist) ) }}
 
     {{ govukButton({
         attributes: { id: 'continue' },
