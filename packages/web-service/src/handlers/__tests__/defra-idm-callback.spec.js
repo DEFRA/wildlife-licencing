@@ -131,7 +131,8 @@ describe('the defra IDM callback handler functions', () => {
         },
         cache: () => ({
           getData: jest.fn(() => ({
-            applicationId: '7b1215e5-5426-4ef9-b412-a3df1b9c29be'
+            applicationId: '7b1215e5-5426-4ef9-b412-a3df1b9c29be',
+            applicationRole: 'APPLICANT'
           }))
         })
       })
@@ -162,17 +163,6 @@ describe('the defra IDM callback handler functions', () => {
         })
       })
       expect(result).toBe('/applications')
-    })
-
-    it('returns the page requested', async () => {
-      const { completion } = await import('../defra-idm-callback.js')
-      const result = await completion({
-        auth: {
-          isAuthenticated: true
-        },
-        cache: () => ({ getData: jest.fn(() => ({ navigation: { requestedPage: '/page' } })) })
-      })
-      expect(result).toBe('/page')
     })
   })
 

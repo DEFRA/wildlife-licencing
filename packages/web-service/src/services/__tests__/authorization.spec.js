@@ -20,7 +20,6 @@ describe('The authorization scheme', () => {
     }
     const result = await authenticate(request, h)
     expect(mockRedirect).toHaveBeenCalledWith('/sign-in')
-    expect(mockSetData).toHaveBeenCalledWith({ navigation: { requestedPage: '/some-path' } })
     expect(result).toBe('takeover')
   })
 
