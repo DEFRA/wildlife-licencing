@@ -1,8 +1,8 @@
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { boolFromYesNo } from '../../common/common.js'
+import { checkLicence } from '../common-return-functions.js'
 
 const { DESTROY_VACANT_SETT, DESTROY_DATE } = ReturnsURIs.A24
 
@@ -40,7 +40,7 @@ export const setData = async request => {
 export const destroyVacantSettPage = yesNoConditionalPage({
   page: DESTROY_VACANT_SETT.page,
   uri: DESTROY_VACANT_SETT.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: DESTROY_DATE.uri,
   setData: setData

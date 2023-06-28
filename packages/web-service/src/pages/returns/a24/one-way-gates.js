@@ -1,9 +1,8 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { boolFromYesNo } from '../../common/common.js'
-import { licenceActionsCompletion } from '../common-return-functions.js'
+import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
 
 const { ONE_WAY_GATES } = ReturnsURIs.A24
 
@@ -41,7 +40,7 @@ export const setData = async request => {
 export const oneWayGates = yesNoConditionalPage({
   page: ONE_WAY_GATES.page,
   uri: ONE_WAY_GATES.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: licenceActionsCompletion,
   setData: setData

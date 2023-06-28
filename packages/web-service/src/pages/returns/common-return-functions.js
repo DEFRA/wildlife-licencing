@@ -1,5 +1,5 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { ReturnsURIs } from '../../uris.js'
+import { APPLICATIONS, ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
@@ -67,4 +67,14 @@ export const commonValidator = async (payload, page) => {
       'no-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
+}
+
+export const checkLicence = async (request, h) => {
+  const journeyData = await request.cache().getData()
+
+  if (!journeyData.applicationId || !journeyData.licenceId) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  return null
 }

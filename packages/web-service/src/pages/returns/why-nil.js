@@ -1,9 +1,9 @@
 import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../services/api-requests.js'
+import { checkLicence } from './common-return-functions.js'
 
 const { WHY_NIL, ANOTHER_LICENCE } = ReturnsURIs
 const { WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS: { THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN, THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS, OTHER } } = PowerPlatformKeys
@@ -57,7 +57,7 @@ export default pageRoute({
   page: WHY_NIL.page,
   uri: WHY_NIL.uri,
   completion: ANOTHER_LICENCE.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   validator,
   getData,
   setData

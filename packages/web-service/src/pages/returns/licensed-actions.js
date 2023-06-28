@@ -1,9 +1,8 @@
 import { ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
-import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
-import { activityTypes } from './common-return-functions.js'
+import { activityTypes, checkLicence } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
@@ -11,14 +10,11 @@ const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
-  journeyData.licenceId = licences[0].id
-  journeyData.licenceNumber = licences[0].licenceNumber
-  await request.cache().setData(journeyData)
-  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licences[0].id)
+  const licenceId = journeyData?.licenceId
+  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
   const methodTypes = licenceActions[0]?.methodIds
   if (returnId) {
-    const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licences[0].id, returnId)
+    const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
     return { yesNo: yesNoFromBool(nilReturn), activityTypes, methodTypes }
   } else {
     return { yesNo: undefined, activityTypes, methodTypes }
@@ -56,7 +52,7 @@ export default pageRoute({
       .valid('yes', 'no')
       .required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: completion,
   setData: setData

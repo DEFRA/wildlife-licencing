@@ -1,9 +1,9 @@
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import { isDateInFuture } from '../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../common/date-utils.js'
 import { APIRequests } from '../../services/api-requests.js'
+import { checkLicence } from './common-return-functions.js'
 
 const { WORK_START, WORK_END } = ReturnsURIs
 
@@ -55,7 +55,7 @@ export const setData = async request => {
 export default pageRoute({
   page: WORK_START.page,
   uri: WORK_START.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   completion: WORK_END.uri,
   validator,
   getData,

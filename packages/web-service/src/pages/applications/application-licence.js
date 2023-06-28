@@ -38,13 +38,18 @@ export const getData = async request => {
 }
 
 export const completion = async request => {
-  const { applicationId } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
   const pageData = request.payload['email-or-return']
 
   if (pageData === 'email') {
-    await APIRequests.LICENCES.queueTheLicenceEmailResend(applicationId)
+    await APIRequests.LICENCES.queueTheLicenceEmailResend(journeyData?.applicationId)
     return EMAIL_CONFIRMATION.uri
   }
+
+  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  journeyData.licenceId = licences[0].id
+  journeyData.licenceNumber = licences[0].licenceNumber
+  await request.cache().setData(journeyData)
 
   return ReturnsURIs.NIL_RETURN.uri
 }

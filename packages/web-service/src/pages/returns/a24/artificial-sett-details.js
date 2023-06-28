@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { checkLicence } from '../common-return-functions.js'
 
 const { ARTIFICIAL_SETT_DETAILS, ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE } = ReturnsURIs.A24
 
@@ -36,7 +36,7 @@ export default pageRoute({
   validator: Joi.object({
     'describe-artificial-sett': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri,
   setData: setData

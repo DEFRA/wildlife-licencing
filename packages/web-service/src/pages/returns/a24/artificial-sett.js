@@ -1,9 +1,9 @@
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import Joi from 'joi'
+import { checkLicence } from '../common-return-functions.js'
 
 const { ARTIFICIAL_SETT, WHY_NO_ARTIFICIAL_SETT, ARTIFICIAL_SETT_DETAILS } = ReturnsURIs.A24
 const createArtificialSettRadio = 'create-artificial-sett-check'
@@ -42,7 +42,7 @@ export default pageRoute({
       .valid('yes', 'no')
       .required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: completion,
   setData: setData

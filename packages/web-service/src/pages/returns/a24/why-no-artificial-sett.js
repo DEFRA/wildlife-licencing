@@ -1,9 +1,9 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { checkLicence } from '../common-return-functions.js'
 
 const { WHY_NO_ARTIFICIAL_SETT } = ReturnsURIs.A24
 const { LICENCE_CONDITIONS } = ReturnsURIs
@@ -59,7 +59,7 @@ export default pageRoute({
   page: WHY_NO_ARTIFICIAL_SETT.page,
   uri: WHY_NO_ARTIFICIAL_SETT.uri,
   completion: LICENCE_CONDITIONS.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   setData: setData
 })

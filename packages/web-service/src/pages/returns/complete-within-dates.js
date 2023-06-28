@@ -1,8 +1,7 @@
 import { ReturnsURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
-import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { getNextPage } from './common-return-functions.js'
+import { checkLicence, getNextPage } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool, timestampFormatter } from '../common/common.js'
 
 const { COMPLETE_WITHIN_DATES, WORK_START } = ReturnsURIs
@@ -54,7 +53,7 @@ export const completion = async request => {
 export const completeWithinDates = yesNoPage({
   page: COMPLETE_WITHIN_DATES.page,
   uri: COMPLETE_WITHIN_DATES.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: completion,
   setData: setData

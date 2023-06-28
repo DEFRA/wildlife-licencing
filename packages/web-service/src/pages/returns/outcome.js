@@ -1,8 +1,8 @@
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import pageRoute from '../../routes/page-route.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
+import { checkLicence } from './common-return-functions.js'
 
 const { OUTCOME, COMPLETE_WITHIN_DATES } = ReturnsURIs
 
@@ -60,7 +60,7 @@ export const setData = async request => {
 export default pageRoute({
   page: OUTCOME.page,
   uri: OUTCOME.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   completion: COMPLETE_WITHIN_DATES.uri,
   validator,
   getData,

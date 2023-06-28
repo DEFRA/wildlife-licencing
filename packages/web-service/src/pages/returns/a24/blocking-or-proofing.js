@@ -1,8 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { licenceActionsCompletion } from '../common-return-functions.js'
+import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
 import { boolFromYesNo } from '../../common/common.js'
 
 const { BLOCKING_OR_PROOFING } = ReturnsURIs.A24
@@ -41,7 +40,7 @@ export const setData = async request => {
 export const blockingOrProofing = yesNoConditionalPage({
   page: BLOCKING_OR_PROOFING.page,
   uri: BLOCKING_OR_PROOFING.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   completion: licenceActionsCompletion,
   setData: setData
