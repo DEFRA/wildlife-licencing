@@ -12,7 +12,8 @@
       "allowBranch": [
         "master",
         "develop",
-        "test"
+        "test",
+        "idm"
       ],
       "message": "chore(release): publish %s"
     },
@@ -20,7 +21,8 @@
       "message": "chore(release): publish %s",
       "allowBranch": [
         "master",
-        "develop"
+        "develop",
+        "idm"
       ],
       "ignoreChanges": [
         ".*",
