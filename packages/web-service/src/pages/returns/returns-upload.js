@@ -1,6 +1,6 @@
 import { ReturnsURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
-import { checkApplication } from '../common/check-application.js'
+import { checkLicence } from './common-return-functions.js'
 
 const { UPLOAD, UPLOAD_FILE, CHECK_YOUR_ANSWERS } = ReturnsURIs
 
@@ -9,6 +9,6 @@ export const completion = request => request?.payload['yes-no'] === 'yes' ? UPLO
 export const returnUpload = yesNoPage({
   page: UPLOAD.page,
   uri: UPLOAD.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   completion: completion
 })

@@ -2,9 +2,9 @@ import { REMOVE_RETURNS_UPLOADED_FILE, ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, timestampFormatter } from '../common/common.js'
 import pageRoute from '../../routes/page-route.js'
-import { checkApplication } from '../common/check-application.js'
 import { Backlink } from '../../handlers/backlink.js'
 import Joi from 'joi'
+import { checkLicence } from './common-return-functions.js'
 
 const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_YOUR_ANSWERS } = ReturnsURIs
 
@@ -47,7 +47,7 @@ export const completion = async request => {
 export const returnUploadedFiles = pageRoute({
   page: UPLOADED_FILES_CHECK.page,
   uri: UPLOADED_FILES_CHECK.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   backlink: Backlink.NO_BACKLINK,
   validator,
   getData,
