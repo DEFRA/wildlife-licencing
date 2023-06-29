@@ -1,10 +1,9 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { timestampFormatter } from '../../common/common.js'
-import { getNextPage } from '../common-return-functions.js'
+import { checkLicence, getNextPage } from '../common-return-functions.js'
 
 const { WHY_NOT_COMPLETE_WITHIN_DATES } = ReturnsURIs.A24
 
@@ -55,7 +54,7 @@ export default pageRoute({
     'work-not-completed': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion: completion,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   setData: setData
 })

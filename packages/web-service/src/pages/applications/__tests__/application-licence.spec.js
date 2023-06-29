@@ -136,10 +136,11 @@ describe('application-licence page', () => {
     })
 
     it('should redirect to the licensed-actions page', async () => {
-      const mockQueueTheLicenceEmailResend = jest.fn()
+      const mockSetData = jest.fn()
       const request = {
         cache: () => ({
-          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' })
+          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }),
+          setData: mockSetData
         }),
         payload: { 'email-or-return': 'return' }
       }
@@ -147,13 +148,17 @@ describe('application-licence page', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            queueTheLicenceEmailResend: mockQueueTheLicenceEmailResend
+            findByApplicationId: jest.fn(() => ([{
+              id: '123-AbEF-67',
+              licenceNumber: '2023-500000-SPM-LIC'
+            }]))
           }
         }
       }))
 
       const { completion } = await import('../application-licence.js')
       expect(await completion(request)).toBe('/licensed-actions')
+      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18', licenceId: '123-AbEF-67', licenceNumber: '2023-500000-SPM-LIC' })
     })
   })
 

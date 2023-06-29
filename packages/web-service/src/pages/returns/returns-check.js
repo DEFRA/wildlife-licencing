@@ -2,8 +2,8 @@ import { Backlink } from '../../handlers/backlink.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import { timestampFormatter } from '../common/common.js'
+import { checkLicence } from './common-return-functions.js'
 
 const { CHECK_YOUR_ANSWERS, DECLARATION } = ReturnsURIs
 
@@ -27,7 +27,7 @@ export const getData = async request => {
 export default pageRoute({
   page: CHECK_YOUR_ANSWERS.page,
   uri: CHECK_YOUR_ANSWERS.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   completion: DECLARATION.uri,
   backlink: Backlink.NO_BACKLINK,
   getData: getData

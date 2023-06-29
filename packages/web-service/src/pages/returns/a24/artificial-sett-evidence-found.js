@@ -1,7 +1,7 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { checkLicence } from '../common-return-functions.js'
 
 const { ARTIFICIAL_SETT_EVIDENCE_FOUND, ARTIFICIAL_SETT_GRID_REFERENCE } = ReturnsURIs.A24
 
@@ -33,7 +33,7 @@ export default pageRoute({
   page: ARTIFICIAL_SETT_EVIDENCE_FOUND.page,
   uri: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,
   completion: ARTIFICIAL_SETT_GRID_REFERENCE.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   setData: setData
 })

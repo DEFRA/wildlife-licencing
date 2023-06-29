@@ -4,7 +4,6 @@ describe('the Licensed Actions functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('the getData function', () => {
-    const mockSetData = jest.fn()
     it('returns the nilReturn as true', async () => {
       const request = {
         cache: () => ({
@@ -14,17 +13,11 @@ describe('the Licensed Actions functions', () => {
             returns: {
               id: '123456789'
             }
-          }),
-          setData: mockSetData
+          })
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
-          LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
-              id: '2280-4ea5-ad72-AbdEF-4567'
-            }]))
-          },
           RETURNS: {
             getLicenceReturn: jest.fn(() => ({
               nilReturn: true
@@ -52,7 +45,6 @@ describe('the Licensed Actions functions', () => {
           OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
         }
       })
-      expect(mockSetData).toHaveBeenCalled()
     })
 
     it('returns the nilReturn as undefined', async () => {
@@ -61,17 +53,11 @@ describe('the Licensed Actions functions', () => {
           getData: () => ({
             applicationId: '26a3e94f',
             licenceId: '2280-4ea5-ad72'
-          }),
-          setData: mockSetData
+          })
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
-          LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
-              id: '123-AbEF-67'
-            }]))
-          },
           RETURNS: {
             getLicenceActions: jest.fn(() => ([{
               methodIds: ['12345678', '987654321']
@@ -96,7 +82,6 @@ describe('the Licensed Actions functions', () => {
           OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
         }
       })
-      expect(mockSetData).toHaveBeenCalled()
     })
   })
 

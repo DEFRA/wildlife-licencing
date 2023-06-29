@@ -1,11 +1,11 @@
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import { isDateInFuture } from '../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../common/date-utils.js'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
 import { cacheDirect } from '../../session-cache/cache-decorator.js'
 import Joi from 'joi'
+import { checkLicence } from './common-return-functions.js'
 
 const { WORK_END, A24 } = ReturnsURIs
 const workEndText = 'work-finish'
@@ -76,7 +76,7 @@ export const setData = async request => {
 export default pageRoute({
   page: WORK_END.page,
   uri: WORK_END.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   validator: validator,
   getData: getData,
   completion: A24.WHY_NOT_COMPLETE_WITHIN_DATES.uri,

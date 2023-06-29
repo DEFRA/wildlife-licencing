@@ -1,9 +1,8 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { checkApplication } from '../../common/check-application.js'
 import { isDateInFuture } from '../../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../common/date-utils.js'
-import { licenceActionsCompletion } from '../common-return-functions.js'
+import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
 
 const { DESTROY_DATE } = ReturnsURIs.A24
 
@@ -45,7 +44,7 @@ export default pageRoute({
   page: DESTROY_DATE.page,
   uri: DESTROY_DATE.uri,
   completion: licenceActionsCompletion,
-  checkData: checkApplication,
+  checkData: checkLicence,
   validator,
   getData,
   setData

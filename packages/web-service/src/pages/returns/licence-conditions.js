@@ -1,8 +1,7 @@
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
-import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { commonValidator } from './common-return-functions.js'
+import { checkLicence, commonValidator } from './common-return-functions.js'
 import { boolFromYesNo } from '../common/common.js'
 
 const { LICENCE_CONDITIONS } = ReturnsURIs
@@ -43,7 +42,7 @@ export default pageRoute({
   page: LICENCE_CONDITIONS.page,
   uri: LICENCE_CONDITIONS.uri,
   completion: WELFARE_CONCERNS.uri,
-  checkData: checkApplication,
+  checkData: checkLicence,
   getData: getData,
   setData: setData,
   validator: validator
