@@ -601,8 +601,8 @@ const createModels = async () => {
   await defineApplications(sequelize)
   await defineLicences(sequelize)
   await defineReturns(sequelize)
-  await defineSites(sequelize)
   await defineHabitatSites(sequelize)
+  await defineSites(sequelize)
   await definePermissions(sequelize)
   await defineDesignatedSites(sequelize)
 
@@ -664,13 +664,13 @@ const createModels = async () => {
   await models.accounts.sync()
 
   await models.applications.sync()
-  await models.returns.sync()
   await models.licences.sync()
+  await models.returns.sync()
+  await models.habitatSites.sync()
 
   await models.applicationUploads.sync()
-  await models.returnUploads.sync()
 
-  await models.habitatSites.sync()
+  await models.returnUploads.sync()
   await models.permissions.sync()
   await models.sites.sync()
   await models.applicationUsers.sync()
