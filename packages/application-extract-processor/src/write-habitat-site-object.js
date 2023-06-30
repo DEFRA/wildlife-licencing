@@ -9,9 +9,15 @@ const doHabitatSite = async (sddsHabitatSiteId, ts, data, counter, application, 
   })
   if (habitatSite) {
     if ((habitatSite.updateStatus === 'P' && ts > habitatSite.updatedAt) ||
-      (habitatSite.updateStatus === 'U' && hash(data.habitatSite) !== hash(habitatSite.habitatSite))) {
+      (habitatSite.updateStatus === 'U' && (
+        hash(data.habitatSite) !== hash(habitatSite.habitatSite) ||
+        data.applicationId !== habitatSite.applicationId ||
+        data.licenceId !== habitatSite.licenceId
+      ))) {
       await models.habitatSites.update({
         habitatSite: data.habitatSite,
+        applicationId: application?.id,
+        licenceId: licence?.id,
         updateStatus: 'U'
       }, {
         where: {
@@ -39,7 +45,13 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
   try {
     const sddsHabitatSiteId = keys.find(k => k.apiTable === 'habitatSites').powerAppsKey
-    const sddsApplicationId = keys.find(k => k.apiTable === 'applications')?.powerAppsKey
+    // There is a bit of a problem that applicationId appears in the keys object twice;
+    // (a) Via habitatSite.licenceId.applicationId
+    // (b) Via habitatSite.applicationId
+    // So you get two keys objects for applicationId
+    // The processor will only extract the key data once, so to be safe we need to
+    // Search for the one where the powerapps key is set
+    const sddsApplicationId = keys.find(k => k.apiTable === 'applications' && k.powerAppsKey)?.powerAppsKey
     const sddsLicenceId = keys.find(k => k.apiTable === 'licences')?.powerAppsKey
     const activityId = keys.find(k => k.apiTable === 'activities')?.powerAppsKey
     const speciesId = keys.find(k => k.apiTable === 'species')?.powerAppsKey
@@ -54,22 +66,20 @@ export const writeHabitatSiteObject = async ({ data, keys }, ts) => {
       // The relationship creates { data.methods: [] } which needs to be removed
       delete data.habitatSite.methods
 
-      // The habitat-site is either attached to an application of a licence, not both
+      let application
       if (sddsApplicationId) {
-        const application = await models.applications.findOne({
+        application = await models.applications.findOne({
           where: { sdds_application_id: sddsApplicationId }
         })
+      }
 
-        if (application) {
-          // Create or update the habitable sites
-          await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application)
-        }
-      } else if (sddsLicenceId) {
-        const licence = await models.licences.findByPk(sddsLicenceId)
-        if (licence) {
-          // Create or update the habitable sites
-          await doHabitatSite(sddsHabitatSiteId, ts, data, counter, null, licence)
-        }
+      let licence
+      if (sddsLicenceId) {
+        licence = await models.licences.findByPk(sddsLicenceId)
+      }
+
+      if (application || licence) {
+        await doHabitatSite(sddsHabitatSiteId, ts, data, counter, application, licence)
       }
     }
 
