@@ -12,7 +12,6 @@
       "allowBranch": [
         "master",
         "develop",
-        "test",
         "idm"
       ],
       "message": "chore(release): publish %s"
