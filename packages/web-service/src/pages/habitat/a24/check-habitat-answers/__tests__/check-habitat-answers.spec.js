@@ -531,20 +531,5 @@ describe('The check habitat answers page', () => {
       const { checkData } = await import('../check-habitat-answers.js')
       expect(await checkData(request)).toBe(undefined)
     })
-
-    it('will redirect to the application uri if the user has not got an application id', async () => {
-      const redirectMock = jest.fn()
-      const request = {
-        cache: () => ({
-          getData: () => ({})
-        })
-      }
-      const h = {
-        redirect: redirectMock
-      }
-      const { checkData } = await import('../check-habitat-answers.js')
-      await checkData(request, h)
-      expect(redirectMock).toHaveBeenCalledWith('/applications')
-    })
   })
 })

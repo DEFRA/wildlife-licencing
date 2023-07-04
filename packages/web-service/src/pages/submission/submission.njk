@@ -11,13 +11,14 @@
             {% call govukFieldset({}) %}
 
               {{ govukPanel({
-                titleText: "Application sent"
+                titleText: "Application sent",
+                html: 'Your reference number<br><strong>' + data.currentApplication.applicationReferenceNumber + '</strong>'
               }) }}
 
               <h2 class="govuk-heading-m">What happens next</h2>
 
               <p class="govuk-body">
-                Natural England will review your application and contact you if they need more information.
+                Natural England will review your application. You may be contacted to give more information to support your application.
               </p>
 
                {{ govukButton({

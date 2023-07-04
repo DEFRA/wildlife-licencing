@@ -47,7 +47,6 @@ describe('the WEB server', () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
-    jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
     const { createServer, init } = await import('../server.js')
     const s = await createServer()
     await init(s)
@@ -59,7 +58,6 @@ describe('the WEB server', () => {
     jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
       return ({ init: () => Promise.resolve() })
     }))
-    jest.spyOn(fs, 'mkdirSync').mockImplementation(jest.fn())
     const { createServer, init } = await import('../server.js')
     const s = await createServer()
     await init(s)

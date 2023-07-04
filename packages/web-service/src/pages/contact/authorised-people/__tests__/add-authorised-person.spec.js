@@ -165,9 +165,11 @@ describe('add authorised person', () => {
       expect(results).toEqual({
         contacts:
           [{
-            details: [{ key: 'name', value: 'Peter Hammill' },
-              { key: 'address', value: 'BS32 8IU' },
-              { key: 'email', value: 'Peter.Hammil@vandergrafgenerator' }],
+            details: [
+              { key: 'name', value: 'Peter Hammill' },
+              { key: 'email', value: 'Peter.Hammil@vandergrafgenerator' },
+              { key: 'address', value: 'BS32 8IU' }
+            ],
             uri: {
               address: '/authorised-person-postcode?id=dad9d73e-d591-41df-9475-92c032bd3ceb',
               email: '/authorised-person-email?id=dad9d73e-d591-41df-9475-92c032bd3ceb',

@@ -6,6 +6,7 @@ import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { checkApplication } from '../../../common/check-application.js'
 import { tagStatus } from '../../../../services/status-tags.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
+import { boolFromYesNo } from '../../../common/common.js'
 
 const {
   SETT_TYPE: { MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER },
@@ -37,7 +38,6 @@ export const dateProcessor = date => {
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData()
-  await checkApplication(request, h)
 
   // Ensure if a user just deleted their only sett, we take them back to /tasklist
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
@@ -99,7 +99,7 @@ export const completion = async request => {
   const journeyData = await request.cache().getData()
   const habitatSites = await APIRequests.HABITAT.getHabitatsById(journeyData.applicationId)
 
-  if (pageData.payload[addSett] === 'yes') {
+  if (boolFromYesNo(pageData.payload[addSett])) {
     await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: A24_SETT, tagState: tagStatus.ONE_COMPLETE_AND_REST_IN_PROGRESS })
     delete journeyData.habitatData
     await request.cache().setData(journeyData)
@@ -122,8 +122,8 @@ export const completion = async request => {
 export default pageRoute({
   page: habitatURIs.CHECK_YOUR_ANSWERS.page,
   uri: habitatURIs.CHECK_YOUR_ANSWERS.uri,
+  checkData: [checkData, checkApplication],
   getData,
   validator,
-  completion,
-  checkData
+  completion
 })

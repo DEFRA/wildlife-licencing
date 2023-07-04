@@ -14,7 +14,7 @@
 {% macro getSiteAddress(siteAddress) %}
 
   {% if (siteAddress) %}
-        Address <br> <span>{{ siteAddress }}</span> <br>
+    <b>Address</b> <br> <span>{{ siteAddress | safe }}</span> <br>
   {% endif %}
     
 {% endmacro %}
@@ -22,9 +22,9 @@
 {% macro getGridReference(gridReference) %}
 
   {% if (gridReference) %}
-      National Grid Reference <br> <span>{{ gridReference }}</span> <br>
+    <b>National Grid Reference</b> <br> <span>{{ gridReference }}</span> <br>
   {% else %}
-      National Grid Reference <br>
+    <b>National Grid Reference</b> <br>
   {% endif %}
     
 {% endmacro %}
@@ -41,7 +41,7 @@
         legend: {
           text: "Which one do you want to change?",
           isPageHeading: true,
-          classes: "govuk-fieldset__legend--l"
+          classes: "govuk-fieldset__legend--m"
         }
       },
       items: [

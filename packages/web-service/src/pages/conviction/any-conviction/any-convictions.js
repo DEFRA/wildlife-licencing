@@ -5,6 +5,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { checkApplication } from '../../common/check-application.js'
 import { isCompleteOrConfirmed, moveTagInProgress } from '../../common/tag-functions.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const convictionsRadio = 'convictions-check'
 
@@ -29,7 +30,7 @@ export const setData = async request => {
   const pageData = request.payload[convictionsRadio]
   const application = await APIRequests.APPLICATION.getById(applicationId)
   let isRelatedConviction = false
-  if (pageData === 'yes') {
+  if (boolFromYesNo(pageData)) {
     isRelatedConviction = true
   }
   const payload = { ...application, isRelatedConviction }

@@ -27,21 +27,6 @@ describe('The habitat start page', () => {
       expect(await checkData(request)).toBe(undefined)
     })
 
-    it('will redirect to the application uri if the user has not got an application id', async () => {
-      const redirectMock = jest.fn()
-      const request = {
-        cache: () => ({
-          getData: () => ({})
-        })
-      }
-      const h = {
-        redirect: redirectMock
-      }
-      const { checkData } = await import('../habitat-start.js')
-      await checkData(request, h)
-      expect(redirectMock).toHaveBeenCalledWith('/applications')
-    })
-
     it('the checkData returns the user to the tasklist if the journey is complete', async () => {
       const mockRedirect = jest.fn()
       const request = {

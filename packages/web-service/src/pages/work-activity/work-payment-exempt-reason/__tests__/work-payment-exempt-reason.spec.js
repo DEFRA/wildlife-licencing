@@ -36,7 +36,6 @@ describe('The work-payment-exempt-reason page', () => {
           OTHER: 452120007,
           PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
           PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
-          PREVENT_DISEASE_SPREAD: 452120003,
           SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
           paymentExemptReasonExplanation: 'I wont be paying because its a bridge I need to get onto my fields',
           radioChecked: 101
@@ -78,7 +77,6 @@ describe('The work-payment-exempt-reason page', () => {
           OTHER: 452120007,
           PRESERVING_PUBLIC_HEALTH_AND_SAFETY: 452120000,
           PREVENT_DAMAGE_TO_LIVESTOCK_CROPS_TIMBER_OR_PROPERTY: 452120002,
-          PREVENT_DISEASE_SPREAD: 452120003,
           SCIENTIFIC_RESEARCH_OR_EDUCATION: 452120004,
           paymentExemptReasonExplanation: 'the reason is because i dont want to pay today',
           radioChecked: 101
@@ -175,52 +173,6 @@ describe('The work-payment-exempt-reason page', () => {
           paymentExemptReasonExplanation: 'we move this into the api now'
         }
       )
-    })
-
-    it('the completion function sets the tag status', async () => {
-      const mockSet = jest.fn()
-      const request = {
-        cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
-        })
-      }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { set: mockSet }
-            }
-          }
-        }
-      }))
-      const { completion } = await import('../work-payment-exempt-reason.js')
-      await completion(request)
-      expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'complete-not-confirmed' })
-    })
-
-    it('the completion function returns the CYA uri', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({ applicationId: '123abc' })
-        })
-      }
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          COMPLETE_NOT_CONFIRMED: 'complete-not-confirmed'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return { set: jest.fn() }
-            }
-          }
-        }
-      }))
-      const { completion } = await import('../work-payment-exempt-reason.js')
-      expect(await completion(request)).toEqual('/check-work-answers')
     })
   })
 })

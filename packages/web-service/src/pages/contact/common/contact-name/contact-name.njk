@@ -3,16 +3,12 @@
 
 {% block pageContent %}
     {{ govukInput({
-      label: {
-        text: 'Full name',
-        classes: "govuk-!-margin-top-7"
-      },
       id: "name",
       name: "name",
       spellcheck: false,
       hint: { text: hintText } if hintText else '',
       value: data.fullName if data.fullName else payload['name'],
-      classes: "govuk-!-width-three-quarters",
+      classes: textBoxWidth if textBoxWidth else  "govuk-!-width-three-quarters",
       attributes: { maxlength: 160 },
       errorMessage: { text: 'Enter the full name' } if error['name']
     }) }}

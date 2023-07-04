@@ -1,9 +1,9 @@
 import { conservationConsiderationURIs } from '../../uris.js'
-import { isYes, yesNoPage } from '../common/yes-no.js'
+import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { allCompletion, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { yesNoFromBool } from '../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NE_ADVICE } = conservationConsiderationURIs
 
@@ -15,7 +15,7 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ads = await getCurrentSite(request)
-  ads.adviceFromNaturalEngland = isYes(request)
+  ads.adviceFromNaturalEngland = boolFromYesNo(request.payload['yes-no'])
   if (!ads.adviceFromNaturalEngland) {
     delete ads.adviceFromWho
     delete ads.adviceDescription

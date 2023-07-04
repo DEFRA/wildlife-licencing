@@ -1,8 +1,9 @@
+import { boolFromYesNo } from '../pages/common/common.js'
 import { APIRequests } from '../services/api-requests.js'
 
 export default async (request, h) => {
   const journeyData = await request.cache().getData() || {}
-  journeyData.cookies = { analytics: request.query.analytics === 'yes' }
+  journeyData.cookies = { analytics: boolFromYesNo(request.query.analytics) }
   await request.cache().setData(journeyData)
 
   // If signed save the cookie preferences

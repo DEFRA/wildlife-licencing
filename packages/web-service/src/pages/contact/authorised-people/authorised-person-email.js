@@ -4,13 +4,14 @@ import { checkAuthorisedPeopleData, getAuthorisedPeopleCompletion, getAuthorised
 import { ContactRoles } from '../common/contact-roles.js'
 import { contactAccountOperationsForContactAccount } from '../common/operations.js'
 import { checkApplication } from '../../common/check-application.js'
+import { boolFromYesNo } from '../../common/common.js'
 
 const { EMAIL } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId } = journeyData
-  if (request.payload['change-email'] === 'yes') {
+  if (boolFromYesNo(request.payload['change-email'])) {
     const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,
       applicationId, userId, journeyData.authorisedPeople.contactId, null)
     await contactAcctOps.setEmailAddress(request.payload['email-address'])

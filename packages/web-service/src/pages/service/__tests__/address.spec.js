@@ -12,6 +12,6 @@ describe('the address service', () => {
         postcode: 'L6 3AU'
       }
     }
-    expect(await addressLine(contact)).toStrictEqual('Jubilee House, 3, vicarage road, Aberdeen, merseyside, L6 3AU')
+    expect(await addressLine(contact)).toStrictEqual('Jubilee House,<br>3,<br>vicarage road,<br>Aberdeen,<br>merseyside,<br>L6 3AU')
   })
 })

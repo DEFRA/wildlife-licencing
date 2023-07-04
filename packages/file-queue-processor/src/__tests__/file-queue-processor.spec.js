@@ -11,7 +11,7 @@ describe('The wrapper: file-queue-processor', () => {
       try {
         jest.mock('@defra/wls-database-model')
         jest.mock('@defra/wls-connectors-lib', () => ({
-          AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+          AWS: { S3: () => ({ readFileStream: jest.fn() }) },
           SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
           GRAPH: { client: jest.fn(() => ({ init: jest.fn() })) }
         }))
@@ -46,7 +46,7 @@ describe('The wrapper: file-queue-processor', () => {
         jest.mock('@defra/wls-connectors-lib')
         jest.mock('@defra/wls-queue-defs')
         jest.mock('@defra/wls-connectors-lib', () => ({
-          AWS: () => ({ S3Client: jest.fn(), GetObjectCommand: jest.fn() }),
+          AWS: { S3: () => ({ readFileStream: jest.fn() }) },
           SEQUELIZE: { DataTypes: 'foo', QueryTypes: 'foo' },
           REDIS: { initialiseConnection: jest.fn() },
           GRAPH: { client: jest.fn(() => ({ init: jest.fn() })) }
