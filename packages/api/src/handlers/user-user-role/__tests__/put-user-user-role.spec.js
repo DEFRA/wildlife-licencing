@@ -77,13 +77,23 @@ describe('The putUserUserRole handler', () => {
         id: context.request.params.userUserRoleId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.userUserRoleId, name: 'ROLE-A', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.userUserRoleId, name: 'ROLE-A', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, {
+      id: context.request.params.userUserRoleId,
+      userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+      userRoleId: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: context.request.params.userUserRoleId,
+      userId: '6829ad54-bab7-4a78-8ca9-dcf722117a45',
+      userRoleId: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
-  it.only('returns a 200 with an existing key', async () => {
+  it('returns a 200 with an existing key', async () => {
     models.userUserRoles = {
       findOrCreate: jest.fn(async () => ([{
         dataValues: {
