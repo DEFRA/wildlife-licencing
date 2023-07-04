@@ -1,3 +1,10 @@
+## Build v11.13.7   Thursday 6th July
+PRIVATE-BETA
+- Multiple changes arising from a comprehensive SDDS front-end review
+- Filter out inactive licences from the licence data extract
+- Changes to the method of consuming address lookup certificates
+- Fix problem with batch update failures with invalid permissions
+
 ## Build v11.12.15   Thursday 1st June
 PRIVATE-BETA
 
