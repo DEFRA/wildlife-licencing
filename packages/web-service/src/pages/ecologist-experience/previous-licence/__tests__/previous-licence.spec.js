@@ -107,7 +107,8 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'in-progress'
+              get: () => 'in-progress',
+              set: () => {}
             })
           },
           ECOLOGIST_EXPERIENCE: {
@@ -136,6 +137,11 @@ describe('The previous licence page', () => {
       const mockRemovePreviousLicences = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             putExperienceById: mockPut,
             removePreviousLicences: mockRemovePreviousLicences,
@@ -245,6 +251,11 @@ describe('The previous licence page', () => {
     it('returns the check page if user selects no and the class licence has been set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               experienceDetails: 'details',
@@ -269,42 +280,42 @@ describe('The previous licence page', () => {
     })
   })
 
-  // it('setData resets the journey if the user changes their answer for the previous answer question', async () => {
-  //   const mockSet = jest.fn()
-  //   jest.doMock('../../../../services/api-requests.js', () => ({
-  //     tagStatus: {
-  //       NOT_STARTED: 'not-started',
-  //       IN_PROGRESS: 'in-progress'
-  //     },
-  //     APIRequests: {
-  //       APPLICATION: {
-  //         tags: () => ({
-  //           get: () => 'complete',
-  //           set: mockSet
-  //         })
-  //       },
-  //       ECOLOGIST_EXPERIENCE: {
-  //         putExperienceById: mockSet,
-  //         getExperienceById: () => {
-  //           return {
-  //             previousLicence: false
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }))
-  //   const request = {
-  //     payload: {
-  //       'yes-no': 'yes'
-  //     },
-  //     cache: () => ({
-  //       getData: () => ({
-  //         applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
-  //       })
-  //     })
-  //   }
-  //   const { setData } = await import('../previous-licence.js')
-  //   await setData(request)
-  //   expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'in-progress' })
-  // })
+  it('setData resets the application tags journey if the user changes their answer for the previous answer question', async () => {
+    const mockSet = jest.fn()
+    jest.doMock('../../../../services/api-requests.js', () => ({
+      tagStatus: {
+        NOT_STARTED: 'not-started',
+        IN_PROGRESS: 'in-progress'
+      },
+      APIRequests: {
+        APPLICATION: {
+          tags: () => ({
+            get: () => 'complete',
+            set: mockSet
+          })
+        },
+        ECOLOGIST_EXPERIENCE: {
+          putExperienceById: mockSet,
+          getExperienceById: () => {
+            return {
+              previousLicence: false
+            }
+          }
+        }
+      }
+    }))
+    const request = {
+      payload: {
+        'yes-no': 'yes'
+      },
+      cache: () => ({
+        getData: () => ({
+          applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+        })
+      })
+    }
+    const { setData } = await import('../previous-licence.js')
+    await setData(request)
+    expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'in-progress' })
+  })
 })
