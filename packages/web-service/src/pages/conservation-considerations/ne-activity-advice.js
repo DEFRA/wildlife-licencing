@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { allCompletion, getCurrentSite } from './common.js'
+import { allCompletion, checkDesignatedSite, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 const { ACTIVITY_ADVICE } = conservationConsiderationURIs
 
@@ -25,7 +25,7 @@ export const setData = async request => {
 export default pageRoute({
   page: ACTIVITY_ADVICE.page,
   uri: ACTIVITY_ADVICE.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkDesignatedSite],
   validator: Joi.object({
     'advice-from-who': Joi.string().trim().required().max(100),
     'advice-description': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
