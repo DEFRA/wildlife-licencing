@@ -12,7 +12,7 @@
           'empty-file-chosen' : { ref: '#scan-file', text: 'The selected file is empty.' },
           'infected' : { ref: '#scan-file', text: 'The selected file contains a virus. Upload a different file.' },
           'file-too-big' : { ref: '#scan-file', text: 'The selected file is too big.' },
-          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, Shape, GeoJSON, PDF or ZIP.' }
+          'wrong-file-type' : { ref: '#scan-file', text: 'The selected file must be a JPG, PNG, KML, shape, GeoJSON, PDF or ZIP.' }
         }
     }
 %}
@@ -45,7 +45,7 @@
         <ul class="govuk-list govuk-list--bullet">
             <li>GeoJSON files</li>
             <li>KML files</li>
-            <li>common Shape files</li>
+            <li>common shapefiles</li>
             <li>PDF, jpg or PNG files (if these are used, your application may take longer to process)</li>
             <li>ZIP files</li>
         </ul>
@@ -72,7 +72,7 @@
               {{ govukButton({
                   attributes: { id: 'continue' },
                   preventDoubleClick: true,
-                  text: 'Continue',
+                  text: 'Upload and continue',
                   classes: "govuk-!-margin-top-5"
                 }) }}
             </div>
