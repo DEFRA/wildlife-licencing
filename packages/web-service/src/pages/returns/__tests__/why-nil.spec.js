@@ -78,7 +78,7 @@ describe('the Why nil functions', () => {
 
       const { setData } = await import('../why-nil.js')
       await setData(request)
-      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: '452120000' })
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: 452120000 })
       expect(mockSetData).toHaveBeenCalled()
     })
 
@@ -115,7 +115,7 @@ describe('the Why nil functions', () => {
 
       const { setData } = await import('../why-nil.js')
       await setData(request)
-      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: '452120002', whyNilOther: 'development has not started' })
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: 452120002, whyNilOther: 'development has not started' })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

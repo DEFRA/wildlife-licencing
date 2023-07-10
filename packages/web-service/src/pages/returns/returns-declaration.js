@@ -1,10 +1,10 @@
 import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATIONS, ReturnsURIs } from '../../uris.js'
+import { ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { checkLicence } from './common-return-functions.js'
 
-const { DECLARATION } = ReturnsURIs
+const { DECLARATION, CONFIRMATION } = ReturnsURIs
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -14,7 +14,7 @@ export const completion = async request => {
   delete journeyData?.returns
   await request.cache().setData(journeyData)
 
-  return APPLICATIONS.uri
+  return CONFIRMATION.uri
 }
 
 export default pageRoute({
