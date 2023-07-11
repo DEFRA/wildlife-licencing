@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-database-model",
-  "version": "11.13.6-alpha.1",
+  "version": "11.13.7",
   "description": "Common sequelize database model for the wildlife service",
   "main": "src/sequelize-model.js",
   "type": "module",
@@ -27,7 +27,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@defra/wls-connectors-lib": "^11.13.6-alpha.1",
+    "@defra/wls-connectors-lib": "^11.13.7",
     "debug": "^4.3.3",
     "uuid": "^8.3.2"
   }
