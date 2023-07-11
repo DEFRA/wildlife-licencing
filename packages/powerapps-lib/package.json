@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-powerapps-lib",
-  "version": "11.13.9",
+  "version": "11.13.10",
   "description": "Powerapps lib",
   "main": "src/powerapps-lib.js",
   "type": "module",
