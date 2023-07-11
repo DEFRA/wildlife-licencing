@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-eps-web-service",
-  "version": "11.13.7",
+  "version": "11.13.8",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/web-service.js",
   "type": "module",
