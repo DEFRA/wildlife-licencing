@@ -1,3 +1,7 @@
+## Build v11.13.8   Tuesday 11th July
+PRIVATE-BETA
+- Patch release, fix error in the activities-methods relationships
+
 ## Build v11.13.7   Thursday 6th July
 PRIVATE-BETA
 - Multiple changes arising from a comprehensive SDDS front-end review
