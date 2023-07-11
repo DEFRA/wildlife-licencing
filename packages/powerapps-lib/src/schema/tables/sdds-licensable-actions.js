@@ -8,7 +8,8 @@ export const SddsLicensableActions = new Table('sdds_licensableactions', [
   new Column('sdds_proposedenddate', 'endDate', ed => ed.substring(0, 10), ed => `${ed}T00:00:00.000Z`),
   new Column('sdds_activebadgersett', 'active'),
   new Column('sdds_badgersettbereopenedafterdevelopment', 'willReopen'),
-  new Column('sdds_noentranceholeofbadgersett', 'numberOfEntrances')
+  new Column('sdds_noentranceholeofbadgersett', 'numberOfEntrances'),
+  new Column('sdds_howmanyentranceholesareactive', 'numberOfActiveEntrances')
 ], [
   // Note that for items such as these which are selected as keyOnly = true, the data is not written into the
   // JSON payload but instead appears on the keys object.  This means it needs to be
