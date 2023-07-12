@@ -48,7 +48,9 @@ describe('the check your answers functions', () => {
       expect(result).toEqual({
         nilReturn: false,
         completedWithinLicenceDates: true,
+        destroyDate: null,
         outcome: false,
+        whyNil: undefined,
         obstructionBlockingOrProofing: true,
         obstructionBlockingOrProofingDetails: 'carried out',
         endDate: '26 August 2022',

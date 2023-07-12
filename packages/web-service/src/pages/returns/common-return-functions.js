@@ -78,3 +78,19 @@ export const checkLicence = async (request, h) => {
 
   return null
 }
+
+export const getNilReturnReason = nilReturnReasonValue => {
+  let nilReturnReason
+  const nilReturnReasonText = {
+    THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN: 'The development work did not happen',
+    THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS: 'The sett was not in active use by badgers',
+    OTHER: 'other'
+  }
+
+  for (const [key, value] of Object.entries(PowerPlatformKeys.WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS)) {
+    if (value === nilReturnReasonValue) {
+      nilReturnReason = nilReturnReasonText[key]
+    }
+  }
+  return nilReturnReason
+}

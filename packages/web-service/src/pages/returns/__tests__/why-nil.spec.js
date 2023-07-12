@@ -50,7 +50,7 @@ describe('the Why nil functions', () => {
       const request = {
         payload: {
           'why-nil': '452120000',
-          'other-reason': '452120000'
+          'other-details': '452120000'
         },
         cache: () => ({
           getData: () => ({
@@ -87,7 +87,7 @@ describe('the Why nil functions', () => {
       const request = {
         payload: {
           'why-nil': '452120002',
-          'other-reason': 'development has not started'
+          'other-details': 'development has not started'
         },
         cache: () => ({
           getData: () => ({
@@ -134,12 +134,12 @@ describe('the Why nil functions', () => {
 
     it('should throw an error if the condition input is empty', async () => {
       try {
-        const payload = { 'why-nil': 'no', 'other-reason': '' }
+        const payload = { 'why-nil': 'no', 'other-details': '' }
         const { validator } = await import('../why-nil.js')
         expect(await validator(payload))
       } catch (e) {
         // eslint-disable-next-line
-        expect(e.details[0].message).toBe("\"other-reason\" is not allowed to be empty")
+        expect(e.details[0].message).toBe("\"other-details\" is not allowed to be empty")
       }
     })
 

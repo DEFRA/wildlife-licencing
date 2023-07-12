@@ -2,7 +2,7 @@ import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { boolFromYesNo } from '../../common/common.js'
-import { checkLicence } from '../common-return-functions.js'
+import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
 
 const { DESTROY_VACANT_SETT, DESTROY_DATE } = ReturnsURIs.A24
 
@@ -37,11 +37,19 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
+export const completion = async request => {
+  if (boolFromYesNo(request.payload['yes-no'])) {
+    return DESTROY_DATE.uri
+  } else {
+    return licenceActionsCompletion(request)
+  }
+}
+
 export const destroyVacantSettPage = yesNoConditionalPage({
   page: DESTROY_VACANT_SETT.page,
   uri: DESTROY_VACANT_SETT.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: DESTROY_DATE.uri,
+  completion: completion,
   setData: setData
 })

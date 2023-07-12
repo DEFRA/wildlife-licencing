@@ -4174,6 +4174,10 @@ components:
           maxLength: 4000
         outcome:
           type: boolean
+        outcomeReason:
+          type: string
+          minLength: 1
+          maxLength: 4000
         submitted:
           $ref: '#/components/schemas/timestamp'
         userSubmission:
@@ -4212,6 +4216,8 @@ components:
               type: string
               minLength: 1
               maxLength: 4000
+            destroyDate:
+              $ref: '#/components/schemas/timestamp'
             disturbBadgers:
               type: boolean
             disturbBadgersDetails:

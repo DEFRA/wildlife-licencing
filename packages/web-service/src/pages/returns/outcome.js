@@ -41,19 +41,21 @@ export const getData = async request => {
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const outcomeSelected = request.payload[outcomeRadio]
-  let outcome, noOutcome
-  if (outcomeSelected === 'yes') {
-    outcome = true
-  } else if (outcomeSelected === 'no') {
-    outcome = false
-    noOutcome = request.payload[noOutcomeInput]
-  }
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-  const payload = { ...licenceReturn, outcome }
+  let payload = { ...licenceReturn }
+  let outcome, outcomeReason
+  if (outcomeSelected === 'yes') {
+    outcome = true
+    payload = { ...payload, outcome }
+  } else if (outcomeSelected === 'no') {
+    outcome = false
+    outcomeReason = request.payload[noOutcomeInput]
+    payload = { ...payload, outcome, outcomeReason }
+  }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...licenceReturn, outcome, noOutcome }
+  journeyData.returns = { ...licenceReturn, outcome, outcomeReason }
   await request.cache().setData(journeyData)
 }
 
