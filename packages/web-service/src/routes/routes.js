@@ -179,7 +179,7 @@ import returnsCheck from '../pages/returns/returns-check.js'
 import declarationOfReturns from '../pages/returns/returns-declaration.js'
 import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
 import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
-import confirmationOfReturns from '../pages/returns/confirmation.js'
+import confirmationOfReturns from '../pages/returns/returns-confirmation.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 

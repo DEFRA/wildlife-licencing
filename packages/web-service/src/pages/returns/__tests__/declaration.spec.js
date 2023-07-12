@@ -30,7 +30,7 @@ describe('the Declaration functions', () => {
       const result = await completion(request)
       expect(mockQueueReturnForSubmission).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
-      expect(result).toEqual('/applications')
+      expect(result).toEqual('/returns-confirmation')
     })
   })
 })

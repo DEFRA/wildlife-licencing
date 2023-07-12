@@ -39,13 +39,13 @@ export const validator = async payload => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const whyNil = request.payload[whyNilRadio]
+  const whyNil = parseInt(request.payload[whyNilRadio])
   const whyNilOther = request.payload[whyNilOtherDescription]
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   let payload = { ...licenceReturn, whyNil }
-  if (parseInt(whyNil) === OTHER) {
+  if (whyNil === OTHER) {
     payload = { ...payload, whyNilOther }
   }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
