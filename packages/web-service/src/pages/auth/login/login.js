@@ -9,9 +9,7 @@ const debug = db('web-service:login')
 // If we have request a which needs authorization then redirect to that page
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  if (journeyData?.navigation?.requestedPage) {
-    return journeyData.navigation.requestedPage
-  } else if (!request.auth.isAuthenticated) {
+  if (!request.auth.isAuthenticated) {
     return TASKLIST.uri
   } else {
     if (journeyData.applicationId) {
