@@ -13,7 +13,7 @@
         <dd class="govuk-summary-list__value">No</dd>
       {% endif %}
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/licence-conditions">
+        <a class="govuk-link" href="/licensed-actions">
           Change<span class="govuk-visually-hidden">Did you carry out any of these actions?</span>
         </a>
       </dd>
@@ -184,21 +184,22 @@
         </dd>
       </div>
     </dl>
-
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">When did you destroy the vacant sett?</dt>
-          <dd class="govuk-summary-list__value">{{ data.destroyDate }}</dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/a24/one-way-gates">
-            Change<span class="govuk-visually-hidden">When did you destroy the vacant sett?</span>
-          </a>
-        </dd>
-      </div>
-    </dl>
+    {% if data.destroyVacantSettByHandOrMechanicalMeans %}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">When did you destroy the vacant sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.destroyDate }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/a24/one-way-gates">
+              Change<span class="govuk-visually-hidden">When did you destroy the vacant sett?</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+    {% endif %}
   {% endif %}
 
-  {% if data.disturbBadgersDetails %}
+  {% if data.disturbBadgersDetails or not data.disturbBadgersDetails %}
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Did you disturb badgers?</dt>
@@ -214,18 +215,19 @@
         </dd>
       </div>
     </dl>
-
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Describe the evidence you have that badgers were disturbed</dt>
-          <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/a24/disturb-badgers">
-            Change<span class="govuk-visually-hidden">Describe the evidence you have that badgers were disturbed</span>
-          </a>
-        </dd>
-      </div>
-    </dl>
+    {% if data.disturbBadgers %}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Describe the evidence you have that badgers were disturbed</dt>
+            <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/a24/disturb-badgers">
+              Change<span class="govuk-visually-hidden">Describe the evidence you have that badgers were disturbed</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+    {% endif %}
   {% endif %}
 
   <dl class="govuk-summary-list">
