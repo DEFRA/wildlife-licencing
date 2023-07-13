@@ -32,9 +32,9 @@ export const setData = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-  const payload = { ...licenceReturn, disturbBadgers: licenceConditions, licenceConditionsDetails }
+  const payload = { ...licenceReturn, licenceConditions, licenceConditionsDetails }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...journeyData.returns, disturbBadgers: licenceConditions, licenceConditionsDetails }
+  journeyData.returns = { ...journeyData.returns, licenceConditions, licenceConditionsDetails }
   await request.cache().setData(journeyData)
 }
 

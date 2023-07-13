@@ -82,5 +82,21 @@ describe('the common return functions', () => {
       expect(mockRedirect).toHaveBeenCalled()
       expect(mockRedirect).toHaveBeenCalledWith('/applications')
     })
+
+    it('getNilReturnReason', async () => {
+      const { getNilReturnReason } = await import('../common-return-functions.js')
+      expect(await getNilReturnReason(452120002)).toBe('other')
+      expect(await getNilReturnReason(452120001)).toBe('The sett was not in active use by badgers')
+      expect(await getNilReturnReason(452120000)).toBe('The development work did not happen')
+    })
+  })
+
+  describe('getNilReturnReason', () => {
+    it('should extract the nil return reason', async () => {
+      const { getNilReturnReason } = await import('../common-return-functions.js')
+      expect(await getNilReturnReason(452120002)).toBe('other')
+      expect(await getNilReturnReason(452120001)).toBe('The sett was not in active use by badgers')
+      expect(await getNilReturnReason(452120000)).toBe('The development work did not happen')
+    })
   })
 })

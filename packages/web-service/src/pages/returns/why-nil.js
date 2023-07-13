@@ -8,7 +8,7 @@ import { checkLicence } from './common-return-functions.js'
 const { WHY_NIL, ANOTHER_LICENCE } = ReturnsURIs
 const { WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS: { THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN, THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS, OTHER } } = PowerPlatformKeys
 const whyNilRadio = 'why-nil'
-const whyNilOtherDescription = 'other-reason'
+const whyNilOtherDescription = 'other-details'
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()

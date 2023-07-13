@@ -25,8 +25,6 @@ export const setData = async request => {
   let disturbBadgersDetails
   if (boolFromYesNo(request.payload['yes-no'])) {
     disturbBadgersDetails = request.payload['yes-conditional-input']
-  } else {
-    disturbBadgersDetails = 'there was no evidence that badgers were disturbed'
   }
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId

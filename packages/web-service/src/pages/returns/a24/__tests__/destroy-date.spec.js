@@ -93,8 +93,22 @@ describe('the destroy date functions', () => {
         })
       }
 
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              outcome: true,
+              nilReturn: true
+            })),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
       const { setData } = await import('../destroy-date.js')
       await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: true, outcome: true, destroyDate: new Date('2023-09-11T00:00:00.000Z') })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

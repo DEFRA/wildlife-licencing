@@ -1,5 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATION_LICENCE, EMAIL_CONFIRMATION, ReturnsURIs } from '../../uris.js'
+import { APPLICATIONS, APPLICATION_LICENCE, EMAIL_CONFIRMATION, ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
@@ -46,12 +46,15 @@ export const completion = async request => {
     return EMAIL_CONFIRMATION.uri
   }
 
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
-  journeyData.licenceId = licences[0].id
-  journeyData.licenceNumber = licences[0].licenceNumber
-  await request.cache().setData(journeyData)
+  if (pageData === 'return') {
+    const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+    journeyData.licenceId = licences[0].id
+    journeyData.licenceNumber = licences[0].licenceNumber
+    await request.cache().setData(journeyData)
+    return ReturnsURIs.NIL_RETURN.uri
+  }
 
-  return ReturnsURIs.NIL_RETURN.uri
+  return APPLICATIONS.uri
 }
 
 export const validator = async (payload, context) => {
