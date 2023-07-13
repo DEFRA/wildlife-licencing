@@ -94,3 +94,18 @@ export const getNilReturnReason = nilReturnReasonValue => {
   }
   return nilReturnReason
 }
+
+export const getWhyNoArtificialSettReason = returnData => {
+  let whyNoArtificialSettReason
+  const nilReturnReasonText = {
+    IT_WAS_NOT_REQUIRED_BY_THE_LICENCE: 'It was not required by the licence',
+    IT_COULD_NOT_BE_MADE: returnData?.noArtificialSettReasonDetails
+  }
+
+  for (const [key, value] of Object.entries(PowerPlatformKeys.WHY_DIDNT_YOU_CREATE_AN_ARTIFICIAL_SETT)) {
+    if (value === returnData?.noArtificialSettReason) {
+      whyNoArtificialSettReason = nilReturnReasonText[key]
+    }
+  }
+  return whyNoArtificialSettReason
+}

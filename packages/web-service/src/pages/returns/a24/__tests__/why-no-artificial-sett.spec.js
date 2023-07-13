@@ -107,7 +107,7 @@ describe('the why no artificial sett functions', () => {
 
       const { setData } = await import('../why-no-artificial-sett.js')
       await setData(request)
-      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, noArtificialSettReason: '452120001', noArtificialSettReasonDetails: 'other reason' })
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, noArtificialSettReason: 452120001, noArtificialSettReasonDetails: 'other reason' })
       expect(mockSetData).toHaveBeenCalled()
     })
   })

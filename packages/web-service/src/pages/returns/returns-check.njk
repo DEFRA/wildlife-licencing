@@ -52,7 +52,7 @@
 
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Did you complete the licensed work between {{ data.startDate }} and {{ data.endDate }}?</dt>
+      <dt class="govuk-summary-list__key">Did you complete the licensed work between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</dt>
       {% if data.completedWithinLicenceDates %}
         <dd class="govuk-summary-list__value">Yes</dd>
       {% else %}
@@ -60,11 +60,49 @@
       {% endif %}
       <dd class="govuk-summary-list__actions">
         <a class="govuk-link" href="/complete-within-date">
-          Change<span class="govuk-visually-hidden">Did you complete the licensed work between {{ data.startDate }} and {{ data.endDate }}?</span>
+          Change<span class="govuk-visually-hidden">Did you complete the licensed work between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</span>
         </a>
       </dd>
     </div>
   </dl>
+
+  {% if not data.completedWithinLicenceDates %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">When did you start the work?</dt>
+          <dd class="govuk-summary-list__value">{{ data.startDate }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/work-start">
+            Change<span class="govuk-visually-hidden">When did you start the work?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">When did you finish the work?</dt>
+          <dd class="govuk-summary-list__value">{{ data.endDate }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/work-finish">
+            Change<span class="govuk-visually-hidden">When did you finish the work?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Why was the work not completed between between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</dt>
+          <dd class="govuk-summary-list__value">{{ data.whyNotCompletedWithinLicenceDates }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/one-way-gates">
+            Change<span class="govuk-visually-hidden">Why was the work not completed between between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
 
   {% if data.obstructionByOneWayGatesDetails %}
     <dl class="govuk-summary-list">
@@ -230,6 +268,20 @@
     {% endif %}
   {% endif %}
 
+  {% if data.disturbBadgersDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work carried out to create the artificial sett</dt>
+          <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-details">
+            Change<span class="govuk-visually-hidden">Describe the work carried out to create the artificial sett</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">Did you create an artificial sett?</dt>
@@ -246,59 +298,61 @@
     </div>
   </dl>
 
-  {% if data.disturbBadgersDetails %}
+  {% if data.artificialSett %}
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Describe the work carried out to create the artificial sett</dt>
-          <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
+        <dt class="govuk-summary-list__key">Was the artificial sett created before the licensed sett was closed?</dt>
+          {% if data.artificialSettCreatedBeforeClosure %}
+            <dd class="govuk-summary-list__value">Yes</dd>
+          {% else %}
+            <dd class="govuk-summary-list__value">No</dd>
+          {% endif %}
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/a24/artificial-sett-details">
-            Change<span class="govuk-visually-hidden">Describe the work carried out to create the artificial sett</span>
+          <a class="govuk-link" href="/a24/artificial-sett-created-before-closure">
+            Change<span class="govuk-visually-hidden">Was the artificial sett created before the licensed sett was closed?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">What evidence is there that badgers located the artificial sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettFoundEvidence }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-evidence-found">
+            Change<span class="govuk-visually-hidden">What evidence is there that badgers located the artificial sett?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">What was the artificial sett's grid reference?</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettFoundGridReference }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-grid-reference">
+            Change<span class="govuk-visually-hidden">What was the artificial sett's grid reference?</span>
           </a>
         </dd>
       </div>
     </dl>
   {% endif %}
-  
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Was the artificial sett created before the licensed sett was closed?</dt>
-        {% if data.artificialSettCreatedBeforeClosure %}
-          <dd class="govuk-summary-list__value">Yes</dd>
-        {% else %}
-          <dd class="govuk-summary-list__value">No</dd>
-        {% endif %}
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/a24/artificial-sett-created-before-closure">
-          Change<span class="govuk-visually-hidden">Was the artificial sett created before the licensed sett was closed?</span>
-        </a>
-      </dd>
-    </div>
-  </dl>
 
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">What evidence is there that badgers located the artificial sett?</dt>
-          <dd class="govuk-summary-list__value">{{ data.artificialSettFoundEvidence }}</dd>
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/a24/artificial-sett-evidence-found">
-          Change<span class="govuk-visually-hidden">What evidence is there that badgers located the artificial sett?</span>
-        </a>
-      </dd>
-    </div>
-  </dl>
-
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">What was the artificial sett's grid reference?</dt>
-          <dd class="govuk-summary-list__value">{{ data.artificialSettFoundGridReference }}</dd>
-      <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/a24/artificial-sett-grid-reference">
-          Change<span class="govuk-visually-hidden">What was the artificial sett's grid reference?</span>
-        </a>
-      </dd>
-    </div>
-  </dl>
+  {% if not data.artificialSett %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Why didn't you create an artificial sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.noArtificialSettReason }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/why-no-artificial-sett">
+            Change<span class="govuk-visually-hidden">Why didn't you create an artificial sett?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
 
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
