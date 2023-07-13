@@ -6,5 +6,6 @@ import { POWERAPPS } from './power-apps.js'
 import { API } from './api.js'
 import { GRAPH } from './graph.js'
 import { ADDRESS } from './address-lookup.js'
+import { ERRBIT } from './errbit.js'
 
-export { AWS, REDIS, SEQUELIZE, QUEUE, POWERAPPS, API, GRAPH, ADDRESS }
+export { AWS, REDIS, SEQUELIZE, QUEUE, POWERAPPS, API, GRAPH, ADDRESS, ERRBIT }

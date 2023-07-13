@@ -1,4 +1,4 @@
-import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { ERRBIT, SEQUELIZE } from '@defra/wls-connectors-lib'
 import db from 'debug'
 import fs from 'fs'
 
@@ -53,6 +53,7 @@ debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
 
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
+ERRBIT.initialize('Application extract processor')
 
 proc()
   .then(() => {

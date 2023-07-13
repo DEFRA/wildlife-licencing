@@ -6,7 +6,7 @@ import { ERRORS } from '../uris.js'
  * @param h
  * @returns {string|((key?: IDBValidKey) => void)|*}
  */
-export const errorHandler = (request, h) => {
+export const errorHandler = async (request, h) => {
   if (!request.response.isBoom) {
     return h.continue
   }
@@ -33,7 +33,11 @@ export const errorHandler = (request, h) => {
       stack: request?.response?.stack
     }
 
-    console.error('Error processing request. Request: %j', requestDetail)
+    const journeyData = await request.cache().getData()
+    console.error('Error processing request. Request: %j, userId: %s, applicationId: %s',
+      requestDetail,
+      journeyData?.userId,
+      journeyData?.applicationId)
     return h.view(ERRORS.SERVICE_ERROR.page).code(200)
   }
 }
