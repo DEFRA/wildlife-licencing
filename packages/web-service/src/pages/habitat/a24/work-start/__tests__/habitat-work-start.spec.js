@@ -88,7 +88,7 @@ describe('The habitat work start page', () => {
             }
           }
         })
-        const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': '2023' }
+        const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
         const { validator } = await import('../habitat-work-start.js')
         expect(await validator(payload))
       } catch (e) {
