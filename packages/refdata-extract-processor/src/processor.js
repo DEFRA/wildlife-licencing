@@ -1,4 +1,4 @@
-import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { ERRBIT, SEQUELIZE } from '@defra/wls-connectors-lib'
 import { createModels } from '@defra/wls-database-model'
 import {
   applicationTypesReadStream,
@@ -44,6 +44,7 @@ const extracts = async () => {
 
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
+ERRBIT.initialize('Reference data extract processor')
 
 SEQUELIZE.initialiseConnection()
   .then(() => createModels()

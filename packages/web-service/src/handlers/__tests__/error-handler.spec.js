@@ -19,6 +19,7 @@ describe('the error-page handler function', () => {
 
   it('it returns the service-error page with a error status 200', async () => {
     const request = {
+      cache: () => ({ getData: () => ({ userId: '123' }) }),
       response: {
         isBoom: true,
         output: {
@@ -37,6 +38,7 @@ describe('the error-page handler function', () => {
 
   it('it returns the service-error page with a error status 200', async () => {
     const request = {
+      cache: () => ({ getData: () => ({ userId: '123' }) }),
       url: '/page',
       path: 'path',
       query: 'query',
@@ -63,6 +65,7 @@ describe('the error-page handler function', () => {
 
   it('it returns the not-found page with a error status 200', async () => {
     const request = {
+      cache: () => ({ getData: () => ({ userId: '123' }) }),
       response: {
         isBoom: true,
         output: {
