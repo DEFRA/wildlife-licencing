@@ -99,4 +99,14 @@ describe('the common return functions', () => {
       expect(await getNilReturnReason(452120000)).toBe('The development work did not happen')
     })
   })
+
+  describe('getWhyNoArtificialSettReason', () => {
+    it('should extract the nil return reason', async () => {
+      const returnDataOne = { noArtificialSettReason: 452120000 }
+      const returnDataTwo = { noArtificialSettReason: 452120001, noArtificialSettReasonDetails: 'other reason in place' }
+      const { getWhyNoArtificialSettReason } = await import('../common-return-functions.js')
+      expect(await getWhyNoArtificialSettReason(returnDataOne)).toBe('It was not required by the licence')
+      expect(await getWhyNoArtificialSettReason(returnDataTwo)).toBe('other reason in place')
+    })
+  })
 })
