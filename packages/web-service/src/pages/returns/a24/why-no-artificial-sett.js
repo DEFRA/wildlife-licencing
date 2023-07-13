@@ -41,13 +41,13 @@ export const validator = async payload => {
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const noArtificialSettReason = request.payload[whyNoArtificialSettRadio]
+  const noArtificialSettReason = parseInt(request.payload[whyNoArtificialSettRadio])
   const noArtificialSettReasonDetails = request.payload[whySettNotMadeText]
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   let payload = { ...licenceReturn, noArtificialSettReason }
-  if (parseInt(noArtificialSettReason) === IT_COULD_NOT_BE_MADE) {
+  if (noArtificialSettReason === IT_COULD_NOT_BE_MADE) {
     payload = { ...payload, noArtificialSettReasonDetails }
   }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
