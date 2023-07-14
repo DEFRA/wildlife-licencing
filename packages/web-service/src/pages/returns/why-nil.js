@@ -32,7 +32,7 @@ export const validator = async payload => {
 
   if (OTHER === parseInt(payload[whyNilRadio])) {
     Joi.assert(payload, Joi.object({
-      'other-details': Joi.string().required().replace('\r\n', '\n').max(4000)
+      'other-details': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }

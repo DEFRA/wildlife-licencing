@@ -18,7 +18,7 @@ export const validator = async payload => {
 
   if (payload[outcomeRadio] === 'no') {
     Joi.assert(payload, Joi.object({
-      'no-outcome': Joi.string().required().replace('\r\n', '\n').max(4000)
+      'no-outcome': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }

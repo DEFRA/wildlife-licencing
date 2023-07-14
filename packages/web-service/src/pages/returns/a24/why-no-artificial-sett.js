@@ -34,7 +34,7 @@ export const validator = async payload => {
 
   if (IT_COULD_NOT_BE_MADE === parseInt(payload[whyNoArtificialSettRadio])) {
     Joi.assert(payload, Joi.object({
-      'why-sett-not-made': Joi.string().required().replace('\r\n', '\n').max(4000)
+      'why-sett-not-made': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }
