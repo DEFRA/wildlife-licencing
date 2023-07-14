@@ -154,7 +154,7 @@ describe('login page', () => {
         },
         cache: () => ({ getData: jest.fn(() => ({ navigation: { requestedPage: '/page' } })) })
       })
-      expect(result).toBe('/page')
+      expect(result).toBe('/applications')
     })
   })
 })

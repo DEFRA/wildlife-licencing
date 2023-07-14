@@ -432,8 +432,9 @@ export const buildRequestPathRelationships = (table, include, path, delim) => {
         // Filter the relationships by the tables included in the table set
         const nextTable = include.find(i => i.name === relationship.relatedTable)
         if (nextTable) {
-          // If the relationship is keyOnly then do not expand beyond the named key
-          const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+          const navigationProperty = [RelationshipType.ONE_TO_MANY, RelationshipType.MANY_TO_MANY].includes(relationship.type)
+            ? relationship.name
+            : relationship.lookupColumnName
           if (relationship.keyOnly) {
             path += `${delim}${navigationProperty}($select=${nextTable.keyName})`
           } else {
@@ -534,7 +535,9 @@ async function updateRelationship (relationship, src, data, t, tableSet, objectT
     }
   } else {
     const nextTable = tableSet.find(ts => ts.relationshipName === relationship.name)
-    const navigationProperty = relationship.type === RelationshipType.MANY_TO_MANY ? relationship.name : relationship.lookupColumnName
+    const navigationProperty = [RelationshipType.ONE_TO_MANY, RelationshipType.MANY_TO_MANY].includes(relationship.type)
+      ? relationship.name
+      : relationship.lookupColumnName
     const nextSrc = src[navigationProperty]
     if (nextTable && nextSrc) {
       await objectTransformer(nextSrc, nextTable, data, keys)

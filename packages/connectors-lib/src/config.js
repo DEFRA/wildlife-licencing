@@ -66,5 +66,11 @@ export default {
     certificateParam: process.env.ADDRESS_LOOKUP_CERTIFICATE_PARAMETER,
     keyParam: process.env.ADDRESS_LOOKUP_KEY_PARAMETER,
     timeout: process.env.ADDRESS_LOOKUP_TIMEOUT_MS
+  },
+  errbit: {
+    host: process.env.ERRBIT_HOST,
+    projectId: process.env.ERRBIT_PROJECT_ID,
+    projectKey: process.env.ERRBIT_PROJECT_KEY,
+    environment: process.env.ERRBIT_ENVIRONMENT
   }
 }
