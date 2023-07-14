@@ -1,4 +1,4 @@
-import { SEQUELIZE } from '@defra/wls-connectors-lib'
+import { ERRBIT, SEQUELIZE } from '@defra/wls-connectors-lib'
 import { createQueue, queueDefinitions, queueWorker } from '@defra/wls-queue-defs'
 import { createModels } from '@defra/wls-database-model'
 import { applicationJobProcess } from './application-job-process.js'
@@ -6,6 +6,7 @@ import { licenceResendJobProcess } from './licence-resend-job-process.js'
 import { returnJobProcess } from './return-job-process.js'
 import fs from 'fs'
 
+ERRBIT.initialize('Application queue processor')
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
 
