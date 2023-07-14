@@ -2,6 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { checkLicence } from '../common-return-functions.js'
+import Joi from 'joi'
 
 const { ARTIFICIAL_SETT_EVIDENCE_FOUND, ARTIFICIAL_SETT_GRID_REFERENCE } = ReturnsURIs.A24
 
@@ -33,6 +34,9 @@ export default pageRoute({
   page: ARTIFICIAL_SETT_EVIDENCE_FOUND.page,
   uri: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,
   completion: ARTIFICIAL_SETT_GRID_REFERENCE.uri,
+  validator: Joi.object({
+    'located-artificial-sett': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
+  }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkLicence,
   getData: getData,
   setData: setData

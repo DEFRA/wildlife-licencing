@@ -10,13 +10,13 @@ export const validator = async payload => {
 
   if (payload['yes-no'] === 'yes') {
     Joi.assert(payload, Joi.object({
-      'yes-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+      'yes-conditional-input': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
   if (payload['yes-no'] === 'no') {
     Joi.assert(payload, Joi.object({
-      'no-conditional-input': Joi.string().required().replace('\r\n', '\n').max(4000)
+      'no-conditional-input': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }
