@@ -1,5 +1,5 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import { dateConvSrc, yesNoNASrc, yesNoNATgt } from './common.js'
+import { dateConvSrc, yesNoNASrc, yesNoNASrcNeg, yesNoNATgt, yesNoNATgtNeg } from './common.js'
 
 const SddsReturnA24Columns = [
   new Column('sdds_obstructsettentrancesbymeansofonewaygates', 'obstructionByOneWayGates', yesNoNASrc, yesNoNATgt),
@@ -29,6 +29,7 @@ export const SddsReturn = new Table('sdds_returnofactions', [
   new Column('sdds_name', 'returnReferenceNumber'),
   new Column('sdds_roasource', null, () => true, null, OperationType.OUTBOUND, () => 'sdds_roasource eq true'),
   new Column('sdds_nilroa', 'nilReturn'),
+  new Column('sdds_didyoucarryouttheactions', 'nilReturn', yesNoNASrcNeg, yesNoNATgtNeg),
   new Column('sdds_whydidntyoucarryouttheseactions1', 'whyNil'), // Option WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS
   new Column('sdds_whydidntyoucarryouttheseactions', 'whyNilOther'),
   new Column('sdds_illyouneedanotherlicenceforthisdevelopment', 'needAnotherLicence', yesNoNASrc, yesNoNATgt),
