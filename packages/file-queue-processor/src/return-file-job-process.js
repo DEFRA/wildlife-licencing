@@ -28,12 +28,12 @@ const getDataFromDatabase = async id => {
 export const returnFileJobProcess = async job => {
   const { id, returnId } = job.data
   try {
-    const { returnReferenceNumber, applicationReferenceNumber, objectKey, filename } = await getDataFromDatabase(id)
+    const { returnReferenceNumber, objectKey, filename } = await getDataFromDatabase(id)
     console.log(`Consume file - queue item ${JSON.stringify({ objectKey, filename })} for return: ${returnReferenceNumber}`)
     const { stream, bytes } = await getReadStream(objectKey)
     console.log(`Read file bytes: ${bytes}`)
     // The file location is a folder within the 'Application' drive with the same name as the application reference number
-    const path = `/${applicationReferenceNumber}/${returnReferenceNumber}`
+    const path = `/${returnReferenceNumber}`
     await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', path)
     console.log(`Completed uploading ${filename} to ${path}`)
     await models.returnUploads.update({ submitted: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id } })
