@@ -1,3 +1,8 @@
+## Build v11.13.10   Thursday 6th July
+PRIVATE-BETA
+- Fix activity-method relationship
+- Add missing mapping for number of active holes
+
 ## Build v11.13.7   Thursday 6th July
 PRIVATE-BETA
 - Multiple changes arising from a comprehensive SDDS front-end review

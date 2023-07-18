@@ -1,6 +1,6 @@
 import db from 'debug'
 import { init, createServer } from './server.js'
-import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
+import { SEQUELIZE, REDIS, ERRBIT } from '@defra/wls-connectors-lib'
 import { createQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import { createModels } from '@defra/wls-database-model'
 import fs from 'fs'
@@ -21,6 +21,7 @@ const debug = db('api:env')
 debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
+ERRBIT.initialize('API')
 
 initialize()
   .then(() => createServer()

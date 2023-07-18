@@ -3,8 +3,10 @@ import { init, createServer } from './server.js'
 import { initializeClamScan } from './services/virus-scan.js'
 import fs from 'fs'
 
-import { ADDRESS, REDIS } from '@defra/wls-connectors-lib'
+import { ADDRESS, REDIS, ERRBIT } from '@defra/wls-connectors-lib'
 import { initializeScanDir } from './initialization.js'
+
+ERRBIT.initialize('Web service')
 
 const debug = db('web-service:env')
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
