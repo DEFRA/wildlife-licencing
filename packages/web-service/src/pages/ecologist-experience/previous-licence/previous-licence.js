@@ -29,6 +29,16 @@ export const completion = async request => {
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData() || {}
+
+  const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(journeyData.applicationId)
+  if (previousLicences.length !== 0) {
+    return h.redirect(ecologistExperienceURIs.LICENCE.uri)
+  }
+  return null
+}
+
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   await moveTagInProgress(applicationId, SECTION_TASKS.ECOLOGIST_EXPERIENCE)
@@ -54,7 +64,7 @@ export const setData = async request => {
 export default yesNoPage({
   page: ecologistExperienceURIs.PREVIOUS_LICENCE.page,
   uri: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   completion,
   getData,
   setData
