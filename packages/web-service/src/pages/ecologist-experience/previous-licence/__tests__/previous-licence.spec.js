@@ -340,7 +340,7 @@ describe('The previous licence page', () => {
         redirect: mockRedirect
       }
       const { checkData } = await import('../previous-licence.js')
-      await checkData(request, h)
+      expect(await checkData(request, h)).toEqual(null)
       expect(mockRedirect).not.toHaveBeenCalledWith('/licence')
     })
 

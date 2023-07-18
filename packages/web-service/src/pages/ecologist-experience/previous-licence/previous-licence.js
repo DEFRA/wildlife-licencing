@@ -38,6 +38,7 @@ export const checkData = async (request, h) => {
   if (previousLicences.length !== 0) {
     return h.redirect(ecologistExperienceURIs.LICENCE.uri)
   }
+  return null
 }
 
 export const getData = async request => {
