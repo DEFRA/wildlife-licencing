@@ -318,4 +318,54 @@ describe('The previous licence page', () => {
     await setData(request)
     expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'in-progress' })
   })
+
+  describe('the checkData function', () => {
+    it('if the user has no previous licences entered, we dont redirect them to another page', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getPreviousLicences: jest.fn(() => ([]))
+          }
+        }
+      }))
+      const mockRedirect = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const h = {
+        redirect: mockRedirect
+      }
+      const { checkData } = await import('../previous-licence.js')
+      await checkData(request, h)
+      expect(mockRedirect).not.toHaveBeenCalledWith('/licence')
+    })
+
+    it('if the user has past previous licences entered, we redirect them to another page', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getPreviousLicences: jest.fn(() => (['licence-ref-number-1', 'licence-ref-number-2-badgers']))
+          }
+        }
+      }))
+      const mockRedirect = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const h = {
+        redirect: mockRedirect
+      }
+      const { checkData } = await import('../previous-licence.js')
+      await checkData(request, h)
+      expect(mockRedirect).toHaveBeenCalledWith('/licence')
+    })
+  })
 })
