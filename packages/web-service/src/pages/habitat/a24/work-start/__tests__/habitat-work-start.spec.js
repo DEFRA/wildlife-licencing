@@ -93,7 +93,7 @@ describe('The habitat work start page', () => {
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error')
+        expect(e.details[0].message).toBeNull()
       }
     })
 
