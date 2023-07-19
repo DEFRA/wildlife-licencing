@@ -32,7 +32,7 @@ describe('the Licensed Actions functions', () => {
       const { getData } = await import('../licensed-actions.js')
       const result = await getData(request)
       expect(result).toEqual({
-        yesNo: 'yes',
+        yesNo: 'no',
         methodTypes: [
           '12345678',
           '987654321'

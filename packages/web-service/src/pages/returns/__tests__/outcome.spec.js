@@ -31,7 +31,7 @@ describe('the Outcome functions', () => {
       expect(result).toEqual({ outcome: true })
     })
 
-    it('returns the outcome as undefined', async () => {
+    it('returns the outcome and outcomeReason as undefined', async () => {
       const request = {
         cache: () => ({
           getData: () => ({
@@ -50,17 +50,17 @@ describe('the Outcome functions', () => {
 
       const { getData } = await import('../outcome.js')
       const result = await getData(request)
-      expect(result).toEqual({ outcome: undefined })
+      expect(result).toEqual({ outcome: undefined, outcomeReason: undefined })
     })
 
-    it('returns noOutcome', async () => {
+    it('returns outcomeReason', async () => {
       const request = {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f',
             licenceId: '2280-4ea5-ad72',
             returns: {
-              noOutcome: 'delay on development'
+              id: '123456789'
             }
           })
         })
@@ -69,14 +69,15 @@ describe('the Outcome functions', () => {
         APIRequests: {
           RETURNS: {
             getLicenceReturn: jest.fn(() => ({
-              outcome: false
+              outcome: false,
+              outcomeReason: 'delay on development'
             }))
           }
         }
       }))
 
       const { getData } = await import('../outcome.js')
-      expect(await getData(request)).toEqual({ noOutcome: 'delay on development' })
+      expect(await getData(request)).toEqual({ outcome: false, outcomeReason: 'delay on development' })
     })
   })
 

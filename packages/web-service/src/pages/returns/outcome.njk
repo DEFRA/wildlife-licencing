@@ -16,7 +16,7 @@
   id: "no-outcome",
   name: "no-outcome",
   errorMessage: { text: 'Enter why the development could not start' } if error['no-outcome'],
-  value: data.noOutcome if data.NoOutcome else payload['no-outcome'],
+  value: data.outcomeReason if data.outcomeReason else payload['no-outcome'],
   maxlength: 4000,
   label: {
     text: "Why could the development not start?"
@@ -35,12 +35,12 @@
               {
                 value: "yes",
                 text: "Yes",
-                checked: payload['outcome-check'] === 'yes'
+                checked: payload['outcome-check'] === 'yes' or true if data.outcome
               },
               {
                 value: "no",
                 text: "No",
-                checked: payload['outcome-check'] === 'no',
+                checked: payload['outcome-check'] === 'no' or true if data.outcomeReason,
                 conditional: {
                   html: outcomeHtml
                 }
