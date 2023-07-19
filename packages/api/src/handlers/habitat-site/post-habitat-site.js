@@ -22,6 +22,7 @@ export default async (context, req, h) => {
     const { activityId, speciesId, methodIds, settType } = req.payload
     const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
     if (err) {
+      console.error(err)
       return h.response({ code: 409, error: err })
         .type(APPLICATION_JSON)
         .code(409)
