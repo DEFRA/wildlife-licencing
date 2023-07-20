@@ -15,7 +15,7 @@ const SddsReturnA24Columns = [
   new Column('sdds_disturbbadgerdescription', 'disturbBadgersDetails'),
   new Column('sdds_didyoucreateanartificialsett', 'artificialSett', yesNoNASrc, yesNoNATgt),
   new Column('sdds_whydidntyoucreateanartificialsett', 'noArtificialSettReason'), // Option WHY_DIDNT_YOU_CREATE_AN_ARTIFICIAL_SETT
-  new Column('sdds_artificialsettdescription', 'noArtificialSettReasonDetails'),
+  new Column('sdds_whycouldanartificialsettnotbemade', 'noArtificialSettReasonDetails'),
   new Column('sdds_artificialsettdescription', 'artificialSettDetails'),
   new Column('sdds_evidencebadgersfoundtheartificialsett', 'artificialSettFoundEvidence'),
   new Column('sdds_artificialsettcreatedbeforesettwasclosed', 'artificialSettCreatedBeforeClosure', yesNoNASrc, yesNoNATgt),
