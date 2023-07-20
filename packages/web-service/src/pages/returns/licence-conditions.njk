@@ -40,12 +40,12 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes'
+          checked: payload['yes-no'] === 'yes' or true if data.licenceConditions
         },
         {
           value: "no",
           text: "No",
-          checked: payload['yes-no'] === 'no',
+          checked: payload['yes-no'] === 'no' or true if data.licenceConditionsDetails,
           conditional: {
             html: noContionalInputHtml
           }

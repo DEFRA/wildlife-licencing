@@ -17,7 +17,7 @@
   id: "describe-artificial-sett",
   name: "describe-artificial-sett",
   errorMessage: { text: 'Describe the work carried out to create the artificial sett' } if error['describe-artificial-sett'],
-  value: data.noOutcome if data.NoOutcome else payload['describe-artificial-sett'],
+  value: data.artificialSettDetails if data.artificialSettDetails else payload['describe-artificial-sett'],
   maxlength: 4000,
   hint: {
     text: "You will be able to upload documents showing the work carried out."

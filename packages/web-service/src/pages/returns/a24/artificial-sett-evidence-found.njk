@@ -17,7 +17,7 @@
   id: "located-artificial-sett",
   name: "located-artificial-sett",
   errorMessage: { text: 'Enter evidence that badgers found the artificial sett' } if error['located-artificial-sett'],
-  value: data.noOutcome if data.NoOutcome else payload['located-artificial-sett'],
+  value: data.artificialSettFoundEvidence if data.artificialSettFoundEvidence else payload['located-artificial-sett'],
   maxlength: 4000,
   hint: {
     text: "You will be able to upload documents showing that badgers found the artificial sett."

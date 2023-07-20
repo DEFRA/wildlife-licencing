@@ -7,23 +7,29 @@ import { checkLicence } from './common-return-functions.js'
 const { CONFIRMATION } = ReturnsURIs
 
 export const getData = async request => {
-  const { applicationId } = await request.cache().getData()
-  const licences = await APIRequests.LICENCES.findByApplicationId(applicationId)
-  const licenceReturns = await APIRequests.RETURNS.getLicenceReturns(licences[0]?.id)
-  const returnId = licenceReturns[licenceReturns.length - 1]?.id
-  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
+  const journeyData = await request.cache().getData()
+  const { returns, licenceId } = journeyData
+  const currentReturnReferenceNumber = returns?.returnReferenceNumber
+  const licenceReturns = await APIRequests.RETURNS.getLicenceReturns(licenceId)
+  const licenceReturn = licenceReturns?.find(returnData => returnData.returnReferenceNumber === currentReturnReferenceNumber)
+  const returnReferenceNumber = licenceReturn?.returnReferenceNumber
+  const nilReturn = licenceReturn?.nilReturn
+  return { returnReferenceNumber, nilReturn }
+}
 
-  return {
-    returnReferenceNumber: licenceReturn?.returnReferenceNumber,
-    nilReturn: licenceReturn?.nilReturn
-  }
+export const completion = async request => {
+  const journeyData = await request.cache().getData()
+  delete journeyData?.returns
+  await request.cache().setData(journeyData)
+
+  return APPLICATIONS.uri
 }
 
 export default pageRoute({
   page: CONFIRMATION.page,
   uri: CONFIRMATION.uri,
   backlink: Backlink.NO_BACKLINK,
-  completion: APPLICATIONS.uri,
+  completion: completion,
   checkData: checkLicence,
   getData: getData
 })

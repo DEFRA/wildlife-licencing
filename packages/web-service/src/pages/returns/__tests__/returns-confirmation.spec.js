@@ -9,19 +9,15 @@ describe('the Confirmation functions', () => {
         cache: () => ({
           getData: () => ({
             applicationId: '26a3e94f',
-            licenceId: '2280-4ea5-ad72'
+            licenceId: '2280-4ea5-ad72',
+            returns: {
+              returnReferenceNumber: '2022-500000-SPM-LIC-ROA8'
+            }
           })
         })
       }
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
-          LICENCES: {
-            findByApplicationId: () => {
-              return {
-                id: '123456'
-              }
-            }
-          },
           RETURNS: {
             getLicenceReturns: jest.fn(() => ([{
               id: '123456',
@@ -31,12 +27,8 @@ describe('the Confirmation functions', () => {
             {
               id: '12345678',
               nilReturn: true,
-              returnReferenceNumber: '2023-500000-SPM-LIC-ROA8'
-            }])),
-            getLicenceReturn: jest.fn(() => ({
-              nilReturn: true,
-              returnReferenceNumber: '2023-500000-SPM-LIC-ROA8'
-            }))
+              returnReferenceNumber: '2022-500000-SPM-LIC-ROA8'
+            }]))
           }
         }
       }))
@@ -44,8 +36,30 @@ describe('the Confirmation functions', () => {
       const result = await getData(request)
       expect(result).toEqual({
         nilReturn: true,
-        returnReferenceNumber: '2023-500000-SPM-LIC-ROA8'
+        returnReferenceNumber: '2022-500000-SPM-LIC-ROA8'
       })
+    })
+  })
+
+  describe('the completion function', () => {
+    it('should navigate to the applications page', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: '920d53c110fc',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
+      }
+      const { completion } = await import('../returns-confirmation.js')
+      const result = await completion(request)
+      expect(mockSetData).toHaveBeenCalled()
+      expect(result).toEqual('/applications')
     })
   })
 })

@@ -15,7 +15,7 @@ export const getData = async request => {
   const methodTypes = licenceActions[0]?.methodIds
   if (returnId) {
     const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-    return { yesNo: yesNoFromBool(nilReturn), activityTypes, methodTypes }
+    return { yesNo: yesNoFromBool(!nilReturn), activityTypes, methodTypes }
   } else {
     return { yesNo: undefined, activityTypes, methodTypes }
   }

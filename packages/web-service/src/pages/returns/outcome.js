@@ -27,14 +27,11 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
-  const noOutcome = journeyData?.returns?.noOutcome
   if (returnId) {
-    const { outcome } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-    return { outcome }
-  } else if (noOutcome) {
-    return { noOutcome }
+    const { outcome, outcomeReason } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+    return { outcome, outcomeReason }
   } else {
-    return { outcome: undefined }
+    return { outcome: undefined, outcomeReason: undefined }
   }
 }
 
@@ -55,7 +52,7 @@ export const setData = async request => {
     payload = { ...payload, outcome, outcomeReason }
   }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
-  journeyData.returns = { ...licenceReturn, outcome, outcomeReason }
+  journeyData.returns = { ...journeyData.returns, outcome, outcomeReason }
   await request.cache().setData(journeyData)
 }
 

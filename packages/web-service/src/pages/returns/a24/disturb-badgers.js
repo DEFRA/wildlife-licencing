@@ -1,8 +1,8 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { boolFromYesNo } from '../../common/common.js'
 import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
+import pageRoute from '../../../routes/page-route.js'
 
 const { DISTURB_BADGERS } = ReturnsURIs.A24
 
@@ -35,7 +35,7 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const disturbBadgers = yesNoConditionalPage({
+export default pageRoute({
   page: DISTURB_BADGERS.page,
   uri: DISTURB_BADGERS.uri,
   checkData: checkLicence,

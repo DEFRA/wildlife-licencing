@@ -166,7 +166,7 @@ import { blockingOrProofing } from '../pages/returns/a24/blocking-or-proofing.js
 import { damageByHandOrMechanicalMeans } from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
 import { destroyVacantSettPage } from '../pages/returns/a24/destroy-vacant-sett.js'
 import destroyDate from '../pages/returns/a24/destroy-date.js'
-import { disturbBadgers } from '../pages/returns/a24/disturb-badgers.js'
+import disturbBadgers from '../pages/returns/a24/disturb-badgers.js'
 import artificialSett from '../pages/returns/a24/artificial-sett.js'
 import whyNoArtificialSett from '../pages/returns/a24/why-no-artificial-sett.js'
 import artificialSettDetails from '../pages/returns/a24/artificial-sett-details.js'

@@ -40,7 +40,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes',
+          checked: payload['yes-no'] === 'yes' or true if data.disturbBadgersDetails,
           conditional: {
             html: yesContionalInputHtml
           }
@@ -48,7 +48,7 @@
         {
           value: "no",
           text: "No, there was no evidence that badgers were disturbed",
-          checked: payload['yes-no'] === 'no'
+          checked: payload['yes-no'] === 'no' or true if data.disturbBadgersYesOrNo
         }
       ]
     }) }}

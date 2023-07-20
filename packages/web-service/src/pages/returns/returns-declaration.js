@@ -11,8 +11,6 @@ export const completion = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   await APIRequests.RETURNS.queueReturnForSubmission(licenceId, returnId)
-  delete journeyData?.returns
-  await request.cache().setData(journeyData)
 
   return CONFIRMATION.uri
 }

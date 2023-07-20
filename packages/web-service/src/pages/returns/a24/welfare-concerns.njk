@@ -20,7 +20,7 @@
   name: "yes-conditional-input",
   maxlength: 4000,
   errorMessage: { text: 'Describe the welfare concerns' } if error['yes-conditional-input'],
-  value: payload['yes-conditional-input'],
+  value: data.welfareConcernsDetails if data.welfareConcernsDetails else payload['yes-conditional-input'],
   classes: "govuk-!-width-full",
   label: {
     text: "Describe the welfare concerns"
@@ -40,7 +40,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes',
+          checked: payload['yes-no'] === 'yes' or true if data.welfareConcerns,
           conditional: {
             html: yesContionalInputHtml
           }
