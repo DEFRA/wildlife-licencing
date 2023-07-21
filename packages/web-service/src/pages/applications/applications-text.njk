@@ -1,27 +1,27 @@
 {%
     set statusText = {
-        'RECEIVED': { text: 'SUBMITTED', tag: 'govuk-tag--green' },
-        'AWAITING_ALLOCATION': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag--turquoise' },
-        'ALLOCATED_FOR_ASSESSMENT': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag--turquoise' },
-        'UNDER_ASSESSMENT': { text: 'BEING ASSESSED', tag: 'govuk-tag--purple' },
-        'GRANTED': { text: 'GRANTED', tag: 'govuk-tag--green' },
-        'PAUSED': { text: 'ACTION NEEDED', tag: 'govuk-tag--pink' },
-        'NOT_GRANTED': { text: 'NOT GRANTED', tag: 'govuk-tag--orange' },
-        'EXPIRED_ROA_DUE': { text: 'ACTION NEEDED', tag: 'govuk-tag--pink' },
-        'EXPIRED_ROA_RECEIVED': { text: 'COMPLETED', tag: 'govuk-tag--green' },
-        'EXPIRED_ROA_RECEIVED_LATE': { text: 'COMPLETED', tag: 'govuk-tag--green' },
-        'WITHDRAWN': { text: 'WITHDRAWN', tag: 'govuk-tag--red' }
+        'RECEIVED': { text: 'SUBMITTED', tag: 'govuk-tag govuk-tag--turquoise' },
+        'AWAITING_ALLOCATION': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag govuk-tag--yellow' },
+        'ALLOCATED_FOR_ASSESSMENT': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag govuk-tag--yellow' },
+        'UNDER_ASSESSMENT': { text: 'BEING ASSESSED', tag: 'govuk-tag govuk-tag--purple' },
+        'GRANTED': { text: 'GRANTED', tag: 'govuk-tag govuk-tag--green' },
+        'PAUSED': { text: 'ACTION NEEDED', tag: 'govuk-tag govuk-tag--pink' },
+        'NOT_GRANTED': { text: 'NOT GRANTED', tag: 'govuk-tag govuk-tag--red' },
+        'EXPIRED_ROA_DUE': { text: 'ACTION NEEDED', tag: 'govuk-tag govuk-tag--pink' },
+        'EXPIRED_ROA_RECEIVED': { text: 'COMPLETED', tag: 'govuk-tag' },
+        'EXPIRED_ROA_RECEIVED_LATE': { text: 'COMPLETED', tag: 'govuk-tag' },
+        'WITHDRAWN': { text: 'WITHDRAWN', tag: 'govuk-tag govuk-tag--grey' }
     }
 %}
 
 {% macro govukTaskList(application, statuses) %}
     {% if application.statusCode %}
         {% if statusText[statuses[application.statusCode]] %}
-            <strong class="govuk-tag {{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-top-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
+            <strong class="{{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-top-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
         {% else %}
             <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-top-4">UNKNOWN</strong>
         {% endif %}
     {% else %}
-        <strong class="govuk-tag govuk-tag--green govuk-!-margin-top-4">SUBMITTED</strong>
+        <strong class="govuk-tag govuk-tag--turquoise govuk-!-margin-top-4">SUBMITTED</strong>
     {% endif %}
 {% endmacro %}
