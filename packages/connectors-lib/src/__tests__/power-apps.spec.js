@@ -166,6 +166,50 @@ describe('The powerapps connector', () => {
       .rejects.toThrowError(HTTPResponseError)
   })
 
+  it('batch request error case returns 404 and records the error', async () => {
+    jest.doMock('simple-oauth2', () => ({
+      __esModule: true,
+      ClientCredentials: jest.fn(() => ({
+        getToken: jest.fn(() => ({
+          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
+          expired: jest.fn()
+        }))
+      }))
+    }))
+
+    const errTxt = JSON.stringify({ error: { code: '0x80040217', message: "Entity 'sdds_license' With Id = 9635f51e-ae11-ee11-8f6e-002248c72853 Does Not Exist" } })
+
+    async function * generate () {
+      yield errTxt
+    }
+
+    const mockFetch = jest.fn(() => ({
+      ok: false,
+      status: 404,
+      body: Readable.from(generate()),
+      headers: { get: () => 'multipart/mixed;boundary=batch_batch123' }
+    }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+    const { POWERAPPS } = await import('../power-apps.js')
+    const errorSpy = jest.spyOn(console, 'error')
+    const requestHandle = { batchId: 'batch123' }
+    const response = await POWERAPPS.batchRequest(requestHandle, 'batch-payload')
+    expect(response).toBe(errTxt)
+    expect(errorSpy).toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalledWith('http://powerapps:8080/xyz/$batch', {
+      body: 'batch-payload',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer 56GKJGKJHGS',
+        'Content-Type': 'multipart/mixed;boundary=batch_batch123',
+        'OData-MaxVersion': '4.0',
+        'OData-Version': '4.0',
+        Prefer: 'return=representation'
+      },
+      signal: expect.any(Object)
+    })
+  })
+
   it('batch request failure case fetch throws Error', async () => {
     jest.doMock('simple-oauth2', () => ({
       __esModule: true,
