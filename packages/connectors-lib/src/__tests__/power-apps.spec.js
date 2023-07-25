@@ -146,6 +146,42 @@ describe('The powerapps connector', () => {
     })
   })
 
+  it('batch request error case returns 200 and records the response', async () => {
+    jest.doMock('simple-oauth2', () => ({
+      __esModule: true,
+      ClientCredentials: jest.fn(() => ({
+        getToken: jest.fn(() => ({
+          token: { token_type: 'Bearer', access_token: '56GKJGKJHGS' },
+          expired: jest.fn()
+        }))
+      }))
+    }))
+    const errTxt = JSON.stringify({ error: { code: '1000', message: 'Huston we have a problem' } })
+
+    const mockFetch = jest.fn(() => ({
+      ok: true,
+      json: () => (errTxt),
+      headers: { get: () => 'application/json' }
+    }))
+    jest.doMock('node-fetch', () => ({ default: mockFetch }))
+
+    const { POWERAPPS } = await import('../power-apps.js')
+    const requestHandle = { batchId: 'batch123' }
+    await POWERAPPS.batchRequest(requestHandle, 'batch-payload')
+    expect(mockFetch).toHaveBeenCalledWith('http://powerapps:8080/xyz/$batch', {
+      body: 'batch-payload',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer 56GKJGKJHGS',
+        'Content-Type': 'multipart/mixed;boundary=batch_batch123',
+        'OData-MaxVersion': '4.0',
+        'OData-Version': '4.0',
+        Prefer: 'return=representation'
+      },
+      signal: expect.any(Object)
+    })
+  })
+
   it('batch request with status 400 throws HTTPResponseError', async () => {
     jest.doMock('simple-oauth2', () => ({
       __esModule: true,
