@@ -51,6 +51,9 @@ describe('The reset handler', () => {
     const mockDestroyAccounts = jest.fn()
     const mockDestroySites = jest.fn()
     const mockDestroyHabitatSites = jest.fn()
+    const mockDestroyLicences = jest.fn()
+    const mockDestroyApplicationDesignatedSites = jest.fn()
+    const mockDestroyReturns = jest.fn()
     const mockDestroyPreviousLicences = jest.fn()
     const mockDestroyApplicationUploads = jest.fn()
     const mockDestroyPermissions = jest.fn()
@@ -67,6 +70,9 @@ describe('The reset handler', () => {
         applicationContacts: { findAll: jest.fn(() => [{ contactId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }]), destroy: mockDestroyApplicationContacts },
         applicationAccounts: { findAll: jest.fn(() => [{ accountId: '0d8cb076-efff-4406-9209-4caeb56d613f' }]), destroy: mockDestroyApplicationAccounts },
         applicationSites: { findAll: jest.fn(() => [{ siteId: '1c3e7655-bb74-4420-9bf0-0bd710987f10' }]), destroy: mockDestroyApplicationSites },
+        applicationDesignatedSites: { destroy: mockDestroyApplicationDesignatedSites },
+        returns: { destroy: mockDestroyReturns },
+        licences: { findAll: jest.fn(() => [{ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' }]), destroy: mockDestroyLicences },
         contacts: { destroy: mockDestroyContacts },
         accounts: { destroy: mockDestroyAccounts },
         sites: { destroy: mockDestroySites },
@@ -92,5 +98,8 @@ describe('The reset handler', () => {
     expect(mockDestroyApplicationUploads).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
     expect(mockDestroyPermissions).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
     expect(mockDestroyApplications).toBeCalledWith({ where: { id: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
+    expect(mockDestroyReturns).toBeCalledWith({ where: { licenceId: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] } } })
+    expect(mockDestroyApplicationDesignatedSites).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
+    expect(mockDestroyLicences).toBeCalledWith({ where: { id: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] } } })
   })
 })
