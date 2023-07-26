@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "node src/processor.js",
+    "dev": "nodemon -r dotenv/config src/processor.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "repository": {
