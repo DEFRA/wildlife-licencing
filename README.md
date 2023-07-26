@@ -31,17 +31,22 @@ npm run docker:stop
 
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/login
-- http://localhost:4000/health
 
 The docker services running should be as follows:
 
-- wls_adminer
-- wls_db
-- wls_localstack
-- wls_redis
-- wls_redis_commander
 - wls_api
 - wls_aqp
+- wls_aep
+- wls_rep
+- wls_fqp
+- wls_web
+
+- wls_postgres
+- wls_redis
+- wls_rediscommander
+- wls_localstack
+- wls_clamav
+- wls_adminer
 
 ### To run locally
 
@@ -57,11 +62,12 @@ docker service ls
 
 The docker services running should be as follows:
 
-- wls_adminer
-- wls_db
-- wls_localstack
+- wls_postgres
 - wls_redis
-- wls_redis_commander
+- wls_rediscommander
+- wls_localstack
+- wls_clamav
+- wls_adminer
 
 Ensure you have node version 16.13.0 or greater installed; `node --version`
 
@@ -69,7 +75,8 @@ Ensure you have node version 16.13.0 or greater installed; `node --version`
 The AWS S3 interface is simulated in the local docker stack using the localstack image. 4566 is the port for the localstack interface.
 
 #### S3
-In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary
+In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary.
+
 Alternatively you can install the AWS CLI.
 Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 Then run ```aws configure``` to generate a fake set of credentials. (Localstack does not support IAM)
@@ -113,7 +120,7 @@ To find the process id for the package you want to take out of the swarm you nee
 docker service ls
 ```
 
-For example we'll remove `wls_web`, but this will work for any package
+For example, we'll remove `wls_web`, but this will work for any package
 
 ```shell
 docker service rm wls_web
@@ -139,16 +146,12 @@ Problems have been faced running this in node, but git bash has been successful.
 
 Running `npm run start` from the web-service directory should now work.
 
-#### Installing teh address lookup certificate
-Get the container id for the web service using docker ps
-```sudo docker cp ./BOOMI-SDDS-SND.pfx <containerId>:/certs```
-
 #### Start the API locally
 
 ```shell
 cd wildlife-licencing/packages/api
 cp env.example .env
-node -r dotenv/config src/api-service.js
+npm run dev
 ```
 
 #### How to restart your Docker swarm
@@ -170,7 +173,7 @@ The process is pretty simple:
 ```shell
 cd wildlife-licencing/packages/application-queue-processor
 cp env.example .env
-node -r dotenv/config src/application-queue-processor.js
+npm run dev
 ```
 
 Edit the .env files to add secrets
