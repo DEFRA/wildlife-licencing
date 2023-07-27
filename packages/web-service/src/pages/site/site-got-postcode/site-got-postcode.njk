@@ -12,16 +12,19 @@
     }
   } %}
 {% set postcodeHtml %}
+
 {{ govukInput({
   id: "site-postcode",
   name: "site-postcode",
   errorMessage: { text: 'Enter a postcode' } if error['site-postcode'],
   value: data.sitePostcode if data.sitePostcode else payload['site-postcode'],
   classes: "govuk-!-width-one-third",
+  attributes: { maxlength: 20 },
   label: {
     text: "Postcode"
   }
 }) }}
+
 {% endset -%}
 {% set title = 'Does the site have a postcode?' %}
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}

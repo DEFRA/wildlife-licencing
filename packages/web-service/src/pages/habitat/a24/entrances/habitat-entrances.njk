@@ -24,6 +24,7 @@
     errorMessage: { text: "Enter the number of entrance holes for this sett." } if error['habitat-entrances'],
     inputmode: "numeric",
     value: data.numberOfEntrances,
+    attributes: { maxlength: 3 },
     pattern: "[0-9]*",
     spellcheck: false
   }) }}

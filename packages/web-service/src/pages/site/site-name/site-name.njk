@@ -19,6 +19,7 @@
       classes: "govuk-!-width-three-quarters",
       spellcheck: false,
       value: data.name if data.name else payload['site-name'],
+      attributes: { maxlength: 100 },
       errorMessage: { text: 'Enter a name for this site' } if error['site-name']
     }) }}
 {% endblock %}

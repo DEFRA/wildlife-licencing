@@ -31,7 +31,7 @@
     name: "address-line-1",
     value: data.addressLine1 if data.addressLine1 else payload['address-line-1'],
     autocomplete: "address-line1",
-    attributes: { maxlength: "80" },
+    attributes: { maxlength: 80 },
     errorMessage: { text: 'Enter building and street' } if error['address-line-1']
   }) }}
 
@@ -43,7 +43,7 @@
     name: "address-line-2",
     value: data.addressLine2 if data.addressLine1 else payload['address-line-2'],
     autocomplete: "address-line2",
-    attributes: { maxlength: "80" },
+    attributes: { maxlength: 80 },
     errorMessage: { text: 'Enter locality' } if error['address-line-2']
   }) }}
 
@@ -56,7 +56,7 @@
     name: "address-town",
     value: data.town if data.town else payload['address-town'],
     autocomplete: "address-level2",
-    attributes: { maxlength: "80" },
+    attributes: { maxlength: 80 },
     errorMessage: { text: 'Enter town or city' } if error['address-town']
   }) }}
 
@@ -68,7 +68,7 @@
     id: "address-county",
     name: "address-county",
     value: data.county if data.county else payload['address-county'],
-    attributes: { maxlength: "80" },
+    attributes: { maxlength: 50 },
     errorMessage: { text: 'Enter county' } if error['address-county']
   }) }}
 
@@ -81,7 +81,7 @@
       id: "address-postcode",
       name: "address-postcode",
       value: data.postcode if data.postcode else payload['address-postcode'],
-      attributes: { maxlength: "10" },
+      attributes: { maxlength: 20 },
       errorMessage: { text: 'Enter postcode' } if error['address-postcode']
     }) }}
   {% endif %}
