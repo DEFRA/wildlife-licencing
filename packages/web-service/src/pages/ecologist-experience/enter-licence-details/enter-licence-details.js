@@ -35,6 +35,19 @@ export const validator = async (payload, context) => {
       }
     }], null)
   }
+
+  if (payload[licenceDetailsInput]?.trim()?.length > 100) {
+    throw new Joi.ValidationError('ValidationError', [{
+      message: 'Error: Previous badger mitigation licence details must be 100 characters or less',
+      path: [licenceDetailsInput],
+      type: 'exceededLicenceDetailsLength',
+      context: {
+        label: licenceDetailsInput,
+        value: 'Error',
+        key: licenceDetailsInput
+      }
+    }], null)
+  }
 }
 
 export const setData = async request => {
