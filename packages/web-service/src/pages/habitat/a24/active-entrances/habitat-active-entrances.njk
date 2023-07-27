@@ -25,7 +25,8 @@
     classes: "govuk-input--width-4",
     inputmode: "numeric",
     value: data.numberOfActiveEntrances,
-    pattern: "[0-9]*",
+    attributes: { maxlength: 3 },
+    pattern: "[0-9]",
     spellcheck: false
   }) }}
 
