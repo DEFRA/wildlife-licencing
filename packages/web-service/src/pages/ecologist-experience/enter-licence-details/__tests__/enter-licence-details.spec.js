@@ -49,6 +49,24 @@ describe('The enter licence details page', () => {
     }
   })
 
+  it('should throw an error for previous licence details length greater than 100 characters', async () => {
+    try {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getPreviousLicences: () => []
+          }
+        }
+      }))
+      const payload = { 'enter-licence-details': 'ABC1231457832492349923499234BDHSJAKKAKKDKKDKKDKKKDKDKKKDKKDKKK1231245756786595959595959959595995959959' }
+      const { validator } = await import('../enter-licence-details.js')
+      expect(await validator(payload))
+    } catch (e) {
+      expect(e.message).toBe('ValidationError')
+      expect(e.details[0].message).toBe('Error: Previous badger mitigation licence details must be 100 characters or less')
+    }
+  })
+
   it('should not throw an error for a valid licence details', async () => {
     jest.doMock('../../../../services/api-requests.js', () => ({
       APIRequests: {
