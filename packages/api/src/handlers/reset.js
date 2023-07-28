@@ -57,6 +57,8 @@ export default async (_context, req, h) => {
     const accountIds = applicationAccounts.map(aa => aa.accountId)
     const applicationSites = await models.applicationSites.findAll(inApplicationIds(applicationIds))
     const siteIds = applicationSites.map(as => as.siteId)
+    const licences = await models.licences.findAll(inApplicationIds(applicationIds))
+    const licenceIds = licences.map(l => l.id)
 
     // Begin the destruction
     response.applicationUsers = await models.applicationUsers.destroy(inApplicationIds(applicationIds))
@@ -68,8 +70,11 @@ export default async (_context, req, h) => {
     response.accounts = await models.accounts.destroy(inIds(accountIds))
     response.sites = await models.sites.destroy(inIds(siteIds))
     response.habitatSites = await models.habitatSites.destroy(inApplicationIds(applicationIds))
+    response.returns = await models.returns.destroy({ where: { licenceId: { [Op.in]: licenceIds } } })
+    response.licences = await models.licences.destroy(inIds(licenceIds))
     response.previousLicences = await models.previousLicences.destroy(inApplicationIds(applicationIds))
     response.applicationUploads = await models.applicationUploads.destroy(inApplicationIds(applicationIds))
+    response.applicationDesignatedSites = await models.applicationDesignatedSites.destroy(inApplicationIds(applicationIds))
     response.applications = await models.applications.destroy(inIds(applicationIds))
 
     await Promise.all(applicationIds.map(async id => clearApplicationCaches(id)))

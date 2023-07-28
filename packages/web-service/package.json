@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-eps-web-service",
-  "version": "11.13.12-alpha.0",
+  "version": "11.13.15-alpha.0",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/web-service.js",
   "type": "module",
@@ -15,6 +15,7 @@
   "scripts": {
     "postinstall": "node_modules/gulp/bin/gulp.js build",
     "start": "nodemon -e js,njk,json src/web-service.js",
+    "dev": "nodemon -r dotenv/config -e js,njk,json src/web-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "keywords": [
@@ -29,7 +30,7 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@defra/wls-connectors-lib": "^11.13.12-alpha.0",
+    "@defra/wls-connectors-lib": "^11.13.15-alpha.0",
     "@defra/wls-powerapps-keys": "^11.13.12-alpha.0",
     "@hapi/boom": "^9.1.4",
     "@hapi/crumb": "^9.0.0",
