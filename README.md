@@ -18,6 +18,13 @@ First edit the docker secret environment files to add the secret keys
 
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
+#### Extra step for M1 Mac users
+Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+```
+NO_SCANNING_REQUIRED=true
+```
+
 Now run the following shell commands;
 
 ```shell
@@ -84,21 +91,25 @@ Then run ```aws configure``` to generate a fake set of credentials. (Localstack 
 The service stores files in an S3 bucket before moving them into sharepoint. It is necessary to set up a bucket in local stack as follows
 
 ```
-aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region us-west-2
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region eu-west-2
 aws --endpoint-url=http://localhost:4566 s3 ls
 ```
+
+Note: Be sure to double check that the region also matches the one in the environment variables under `AWS_REGION`
 
 #### Secrets Manager
 The service uses the Secrets Manager to hold the address lookup certificates. These should be uploaded into the localstack secrets manager as follows
 
 ```
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
---name /tst/ldn/new/devops/web_service/address-lookup-certificate \
---secret-string file://<Certificate File>
+	--name /tst/ldn/new/devops/web_service/address-lookup-certificate \
+	--secret-string file://<Certificate File> \
+	--region eu-west-2
 
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
 	--name /tst/ldn/new/devops/web_service/address-lookup-key \
-	--secret-string file://<Key File>
+	--secret-string file://<Key File> \
+	--region eu-west-2
 
 ```
 
@@ -107,6 +118,7 @@ This requires the following corresponding environment variables to be set
 ```
 ADDRESS_LOOKUP_CERTIFICATE_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-certificate;
 ADDRESS_LOOKUP_KEY_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-key;
+AWS_REGION=eu-west-2;
 ```
 
 The address lookup certificates are provided to us as a pfx file combined format. In order to extract the certificate and key from the pxf file follow the procedure shown at the end of this README
