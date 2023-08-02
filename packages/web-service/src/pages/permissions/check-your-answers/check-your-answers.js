@@ -19,12 +19,12 @@ export const checkData = async (request, h) => {
     return h.redirect(permissionsURIs.ADD_PERMISSION_START.uri)
   }
 
-  // When there is potential conflicts, redirect to add conflicts descriptions
+  // When the user mentions there is potential conflicts, redirect to add conflicts descriptions
   if (!eligibility.permissionsRequired && permissionDetails.potentialConflicts && !permissionDetails.potentialConflictDescription) {
     return h.redirect(permissionsURIs.DESC_POTENTIAL_CONFLICTS.uri)
   }
 
-  // When there permission is not required, redirect to add why no permission required
+  // When the user selects permission is not required, redirect to add the reason why no permission required
   if (!eligibility.permissionsRequired && !permissionDetails.noPermissionReason) {
     return h.redirect(permissionsURIs.WHY_NO_PERMISSIONS.uri)
   }
