@@ -12,10 +12,21 @@ export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
   const permissionData = await APIRequests.PERMISSION.getPermissions(applicationId)
   const eligibility = await APIRequests.ELIGIBILITY.getById(applicationId)
+  const permissionDetails = await APIRequests.PERMISSION.getPermissionDetailsById(applicationId)
 
   // When the last permission is removed, redirect to add permission page
   if (eligibility.permissionsRequired && permissionData.length === 0) {
     return h.redirect(permissionsURIs.ADD_PERMISSION_START.uri)
+  }
+
+  // When there is potential conflicts, redirect to add conflicts descriptions
+  if (!eligibility.permissionsRequired && permissionDetails.potentialConflicts && !permissionDetails.potentialConflictDescription) {
+    return h.redirect(permissionsURIs.DESC_POTENTIAL_CONFLICTS.uri)
+  }
+
+  // When there permission is not required, redirect to add why no permission required
+  if (!eligibility.permissionsRequired && !permissionDetails.noPermissionReason) {
+    return h.redirect(permissionsURIs.WHY_NO_PERMISSIONS.uri)
   }
 
   return null
