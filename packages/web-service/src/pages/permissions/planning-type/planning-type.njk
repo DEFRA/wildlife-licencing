@@ -12,16 +12,19 @@
   } %}
 {% set title = 'What type of planning permission was granted?' %}
 {% set planningTypeOtherDescHtml %}
+
 {{ govukInput({
   id: "other-description",
   name: "other-description",
   errorMessage: { text: 'Enter a reason' } if error['other-description'],
+  attributes: { maxlength: 100 },
   value: data.otherDescription if data.otherDescription else payload['other-description'],
   classes: "govuk-!-width-full",
   label: {
     text: "Enter the other type of planning permission"
   }
 }) }}
+
 {% endset -%}
 {% block pageTitle %}
   {{ 'Error: ' + title if error else title }}

@@ -3,13 +3,13 @@ import Config from './config.js'
 import { hide } from './utils.js'
 import {
   HTTPResponseError,
-  httpFetch,
-  checkResponseOkElseThrow
+  httpFetch
 } from './fetch-helper.js'
 
 import db from 'debug'
 import * as _cloneDeep from 'lodash.clonedeep'
 
+const APPLICATION_JSON = 'application/json'
 const DEFAULT_FETCH_SIZE = 100
 const debug = db('connectors-lib:power-platform')
 const { default: cloneDeep } = _cloneDeep
@@ -55,8 +55,34 @@ const batchHeaderFunction = async batchId => ({
   Prefer: 'return=representation'
 })
 
+const checkResponseOkElseThrowError = async responsePromise => {
+  const response = await responsePromise
+  debug(`HTTP response code: ${JSON.stringify(response.status)}`)
+  if (response.ok) {
+    if (response.status === 204) {
+      return null
+    } else {
+      if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
+        return response.json()
+      } else {
+        return response.body
+      }
+    }
+  } else {
+    if (response.status === 404) {
+      if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
+        return response.json()
+      } else {
+        return response.body
+      }
+    } else {
+      throw new HTTPResponseError(response)
+    }
+  }
+}
+
 const batchResponseFunction = async responsePromise => {
-  const response = await checkResponseOkElseThrow(responsePromise)
+  const response = await checkResponseOkElseThrowError(responsePromise)
   const errorRegEx = /{"error":{"code":"(?<code>.*)","message":"(?<message>.*)"}}/g
   let result = ''
   for await (const chunk of response) {

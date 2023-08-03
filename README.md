@@ -18,6 +18,13 @@ First edit the docker secret environment files to add the secret keys
 
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
+#### Extra step for M1 Mac users
+Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+```
+NO_SCANNING_REQUIRED=true
+```
+
 Now run the following shell commands;
 
 ```shell
@@ -31,17 +38,22 @@ npm run docker:stop
 
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/login
-- http://localhost:4000/health
 
 The docker services running should be as follows:
 
-- wls_adminer
-- wls_db
-- wls_localstack
-- wls_redis
-- wls_redis_commander
 - wls_api
 - wls_aqp
+- wls_aep
+- wls_rep
+- wls_fqp
+- wls_web
+
+- wls_postgres
+- wls_redis
+- wls_rediscommander
+- wls_localstack
+- wls_clamav
+- wls_adminer
 
 ### To run locally
 
@@ -57,11 +69,12 @@ docker service ls
 
 The docker services running should be as follows:
 
-- wls_adminer
-- wls_db
-- wls_localstack
+- wls_postgres
 - wls_redis
-- wls_redis_commander
+- wls_rediscommander
+- wls_localstack
+- wls_clamav
+- wls_adminer
 
 Ensure you have node version 16.13.0 or greater installed; `node --version`
 
@@ -69,7 +82,8 @@ Ensure you have node version 16.13.0 or greater installed; `node --version`
 The AWS S3 interface is simulated in the local docker stack using the localstack image. 4566 is the port for the localstack interface.
 
 #### S3
-In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary
+In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary.
+
 Alternatively you can install the AWS CLI.
 Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 Then run ```aws configure``` to generate a fake set of credentials. (Localstack does not support IAM)
@@ -77,21 +91,25 @@ Then run ```aws configure``` to generate a fake set of credentials. (Localstack 
 The service stores files in an S3 bucket before moving them into sharepoint. It is necessary to set up a bucket in local stack as follows
 
 ```
-aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region us-west-2
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket local-bucket --region eu-west-2
 aws --endpoint-url=http://localhost:4566 s3 ls
 ```
+
+Note: Be sure to double check that the region also matches the one in the environment variables under `AWS_REGION`
 
 #### Secrets Manager
 The service uses the Secrets Manager to hold the address lookup certificates. These should be uploaded into the localstack secrets manager as follows
 
 ```
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
---name /tst/ldn/new/devops/web_service/address-lookup-certificate \
---secret-string file://<Certificate File>
+	--name /tst/ldn/new/devops/web_service/address-lookup-certificate \
+	--secret-string file://<Certificate File> \
+	--region eu-west-2
 
 aws --endpoint-url=http://localhost:4566 secretsmanager create-secret \
 	--name /tst/ldn/new/devops/web_service/address-lookup-key \
-	--secret-string file://<Key File>
+	--secret-string file://<Key File> \
+	--region eu-west-2
 
 ```
 
@@ -100,6 +118,7 @@ This requires the following corresponding environment variables to be set
 ```
 ADDRESS_LOOKUP_CERTIFICATE_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-certificate;
 ADDRESS_LOOKUP_KEY_PARAMETER=/tst/ldn/new/devops/web_service/address-lookup-key;
+AWS_REGION=eu-west-2;
 ```
 
 The address lookup certificates are provided to us as a pfx file combined format. In order to extract the certificate and key from the pxf file follow the procedure shown at the end of this README
@@ -113,7 +132,7 @@ To find the process id for the package you want to take out of the swarm you nee
 docker service ls
 ```
 
-For example we'll remove `wls_web`, but this will work for any package
+For example, we'll remove `wls_web`, but this will work for any package
 
 ```shell
 docker service rm wls_web
@@ -139,16 +158,12 @@ Problems have been faced running this in node, but git bash has been successful.
 
 Running `npm run start` from the web-service directory should now work.
 
-#### Installing teh address lookup certificate
-Get the container id for the web service using docker ps
-```sudo docker cp ./BOOMI-SDDS-SND.pfx <containerId>:/certs```
-
 #### Start the API locally
 
 ```shell
 cd wildlife-licencing/packages/api
 cp env.example .env
-node -r dotenv/config src/api-service.js
+npm run dev
 ```
 
 #### How to restart your Docker swarm
@@ -170,7 +185,7 @@ The process is pretty simple:
 ```shell
 cd wildlife-licencing/packages/application-queue-processor
 cp env.example .env
-node -r dotenv/config src/application-queue-processor.js
+npm run dev
 ```
 
 Edit the .env files to add secrets
