@@ -11,16 +11,19 @@
     }
   } %}
 {% set otherReasonNoPermissionHtml %}
+
 {{ govukInput({
   id: "other-reason",
   name: "other-reason",
   errorMessage: { text: 'Enter a reason' } if error['other-reason'],
   value: data.noPermissionRequiredReason if data.noPermissionRequiredReason else payload['other-reason'],
   classes: "govuk-!-width-full",
+  attributes: { maxlength: 100 },
   label: {
     text: "Enter the other reason no permission is required"
   }
 }) }}
+
 {% endset -%}
 {% set title = 'Why is no permission required?' %}
 {% block pageTitle %}

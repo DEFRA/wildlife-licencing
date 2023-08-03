@@ -22,7 +22,7 @@
       spellcheck: false,
       value: data.postcode if data.postcode else payload['postcode'],
       classes: "govuk-input--width-10",
-      attributes: { maxlength: 10 },
+      attributes: { maxlength: 20 },
       errorMessage: { text: 'Enter the postcode' } if error['postcode']
     }) }}
     <p class="govuk-body">

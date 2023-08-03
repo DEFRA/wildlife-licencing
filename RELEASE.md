@@ -1,3 +1,9 @@
+## v11.13.15         Thursday 2nd August
+PRIVATE-BETA
+- Add errbit notifications
+- Improve batch update error logging
+- Ensure length limits are applied to every text input field
+
 ## Build v11.13.10   Thursday 6th July
 PRIVATE-BETA
 - Fix activity-method relationship

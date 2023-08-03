@@ -24,6 +24,7 @@
     name: "reference",
     errorMessage: { text: "Enter a planning permission reference" } if error['reference'],
     classes: "govuk-input--width-10",
+    attributes: { maxlength: 100 },
     value: payload['reference'] if payload['reference'] else data.consentReference
   }) }}
 

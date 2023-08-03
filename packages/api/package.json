@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "node src/api-service.js",
+    "dev": "nodemon -r dotenv/config src/api-service.js",
     "test": "echo \"Error: run tests from root\" && exit 1",
     "postinstall": "if [ \"${NODE_ENV:-development}\" == \"development\" ]; then npx webpack-cli; else echo no webpack build; fi;"
   },

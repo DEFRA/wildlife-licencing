@@ -24,6 +24,7 @@
     errorMessage: { text: "Enter a national grid reference for the site" } if error['site-grid-ref'],
     classes: "govuk-input--width-10",
     value: data.gridReference if data.gridReference else payload['site-grid-ref'],
+    attributes: { maxlength: 30 },
     spellcheck: false
   }) }}
 
