@@ -297,6 +297,29 @@ async function defineApplicationUploads (sequelize) {
   })
 }
 
+async function defineReturnUploads (sequelize) {
+  models.returnUploads = await sequelize.define('return-uploads', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    returnId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.returns,
+        key: 'id'
+      }
+    },
+    filetype: { type: DataTypes.STRING(30) },
+    filename: { type: DataTypes.STRING(255) },
+    objectKey: { type: DataTypes.UUID },
+    submitted: { type: DataTypes.DATE }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['return_id'], name: 'return_upload_return_fk' },
+      { unique: true, fields: ['object_key'], name: 'return_upload_object_key_uk' }
+    ]
+  })
+}
+
 async function defineApplicationSites (sequelize) {
   models.applicationSites = await sequelize.define('application-sites', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -578,8 +601,8 @@ const createModels = async () => {
   await defineApplications(sequelize)
   await defineLicences(sequelize)
   await defineReturns(sequelize)
-  await defineSites(sequelize)
   await defineHabitatSites(sequelize)
+  await defineSites(sequelize)
   await definePermissions(sequelize)
   await defineDesignatedSites(sequelize)
 
@@ -591,6 +614,7 @@ const createModels = async () => {
   await defineApplicationAccounts(sequelize)
 
   await defineApplicationUploads(sequelize)
+  await defineReturnUploads(sequelize)
   await definePreviousLicences(sequelize)
 
   // Define other things
@@ -640,11 +664,13 @@ const createModels = async () => {
   await models.accounts.sync()
 
   await models.applications.sync()
-  await models.applicationUploads.sync()
   await models.licences.sync()
   await models.returns.sync()
-
   await models.habitatSites.sync()
+
+  await models.applicationUploads.sync()
+
+  await models.returnUploads.sync()
   await models.permissions.sync()
   await models.sites.sync()
   await models.applicationUsers.sync()

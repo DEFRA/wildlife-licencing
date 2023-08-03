@@ -21,6 +21,19 @@ export default async (context, _req, h) => {
     const returnQueue = getQueue(queueDefinitions.RETURN_QUEUE)
     const returnJob = await returnQueue.add({ returnId })
     debug(`Queued return ${returnId} - job: ${returnJob.id}`)
+
+    // Add the file upload jobs to the file-queue processor
+    const fileQueue = getQueue(queueDefinitions.RETURN_FILE_QUEUE)
+
+    const returnUploads = await models.returnUploads.findAll({
+      where: { returnId }
+    })
+
+    for await (const upload of returnUploads) {
+      const fileJob = await fileQueue.add({ id: upload.dataValues.id, returnId })
+      debug(`Queued files for return ${returnId} - job: ${fileJob.id}`)
+    }
+
     await models.returns.update({ userSubmission: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id: returnId } })
 
     return h.response().code(204)
