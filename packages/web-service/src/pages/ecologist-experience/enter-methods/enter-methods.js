@@ -1,9 +1,11 @@
 import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
+import { tagStatus } from '../../../services/status-tags.js'
 import { ecologistExperienceURIs } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { restoreInputGetData } from '../../common/restore-input-get-data.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 
 const key = 'enter-methods'
 
@@ -15,6 +17,7 @@ export const completion = async request => {
     return ecologistExperienceURIs.CLASS_MITIGATION.uri
   }
 
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 

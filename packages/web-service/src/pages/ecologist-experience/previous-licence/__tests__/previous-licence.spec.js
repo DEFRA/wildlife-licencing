@@ -107,7 +107,8 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'in-progress'
+              get: () => 'in-progress',
+              set: () => {}
             })
           },
           ECOLOGIST_EXPERIENCE: {
@@ -245,6 +246,11 @@ describe('The previous licence page', () => {
     it('returns the check page if user selects no and the class licence has been set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               experienceDetails: 'details',

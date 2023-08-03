@@ -1,7 +1,7 @@
 import { conservationConsiderationURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
-import { allCompletion, getCurrentSite } from './common.js'
+import { allCompletion, checkDesignatedSite, getCurrentSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
@@ -26,7 +26,7 @@ export const setData = async request => {
 export const adviceFromNaturalEngland = yesNoPage({
   page: NE_ADVICE.page,
   uri: NE_ADVICE.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkDesignatedSite],
   getData: getData,
   completion: allCompletion,
   setData: setData

@@ -48,6 +48,11 @@ describe('The enter experience page', () => {
     it('returns the check page if class mitigation is set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: () => {}
+            })
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               methodExperience: 'method',

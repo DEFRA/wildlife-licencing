@@ -5,6 +5,7 @@ import { APIRequests } from '../../services/api-requests.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
+import { checkAll } from './common.js'
 
 const { DESIGNATED_SITE, DESIGNATED_SITE_CHECK_ANSWERS, DESIGNATED_SITE_START } = conservationConsiderationURIs
 
@@ -27,7 +28,7 @@ export const completion = async request => boolFromYesNo(request.payload['yes-no
 export const onOrNextToDesignatedSite = yesNoPage({
   page: DESIGNATED_SITE.page,
   uri: DESIGNATED_SITE.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkAll],
   getData: getData,
   completion: completion,
   setData: setData
