@@ -5,6 +5,7 @@ import { yesNoPage } from '../../common/yes-no.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo } from '../../common/common.js'
+import { tagStatus } from '../../../services/status-tags.js'
 
 export const completion = async request => {
   if (boolFromYesNo(request.payload['yes-no'])) {
@@ -26,6 +27,7 @@ export const completion = async request => {
     return ecologistExperienceURIs.CLASS_MITIGATION.uri
   }
 
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
 }
 
@@ -53,6 +55,13 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const ecologistExperience = await APIRequests.ECOLOGIST_EXPERIENCE.getExperienceById(applicationId)
+
+  // If the user is going from 'No' to 'Yes', then there are more queestions they need to answer (they won't have answered)
+  // And they can't go back to CYA
+  if (boolFromYesNo(request.payload['yes-no']) && ecologistExperience?.previousLicence === false) {
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
+  }
+
   ecologistExperience.previousLicence = boolFromYesNo(request.payload['yes-no'])
   if (!ecologistExperience.previousLicence) {
     await APIRequests.ECOLOGIST_EXPERIENCE.removePreviousLicences(applicationId)

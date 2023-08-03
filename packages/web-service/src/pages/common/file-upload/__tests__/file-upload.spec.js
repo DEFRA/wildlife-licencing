@@ -122,7 +122,7 @@ describe('the generic file-upload page handler', () => {
       expect(await validator(payload, 'METHOD-STATEMENT'))
     } catch (e) {
       expect(e.message).toBe('ValidationError')
-      expect(e.details[0].message).toBe('Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF')
+      expect(e.details[0].message).toBe('Error: The selected file must be a JPG, BMP, PNG, TIF, KML, shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF')
     }
   })
 
@@ -138,7 +138,7 @@ describe('the generic file-upload page handler', () => {
       expect(await validator(payload, 'MAP'))
     } catch (e) {
       expect(e.message).toBe('ValidationError')
-      expect(e.details[0].message).toBe('Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF')
+      expect(e.details[0].message).toBe('Error: The selected file must be a JPG, BMP, PNG, TIF, KML, shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF')
     }
   })
 

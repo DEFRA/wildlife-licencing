@@ -1,6 +1,6 @@
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { conservationConsiderationURIs } from '../../uris.js'
+import { conservationConsiderationURIs, TASKLIST } from '../../uris.js'
 
 const options = Object.values(PowerPlatformKeys.SITE_TYPE).map(v => v.option)
 const abv = Object.values(PowerPlatformKeys.SITE_TYPE).reduce((a, c) => ({ ...a, [c.option]: c.abbr }), {})
@@ -10,6 +10,63 @@ export const getFilteredDesignatedSites = async () => {
   return designatedSites.filter(ds => options.includes(ds.siteType))
     .map(s => ({ id: s.id, siteName: `${s.siteName} ${abv[s.siteType]}` }))
     .sort((a, b) => (a.siteName).localeCompare(b.siteName))
+}
+
+export const checkDesignatedSite = async (request, h) => {
+  const { applicationId, designatedSite } = await request.cache().getData()
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+  const params = new URLSearchParams(request.query)
+  const id = params.get('id')
+  // There must be application designated sites in the database AND
+  // There must be an id in either the cache or the parameter to proceed
+  // If there is an id it must be one of the designated sites
+  if (applicationDesignatedSites.length && ((id && applicationDesignatedSites.find(ads => ads.id === id)) || designatedSite)) {
+    return null
+  } else {
+    return h.redirect(TASKLIST.uri)
+  }
+}
+
+/**
+ * Check for any unfinished and redirect back to the appropriate question
+ * @param request
+ * @param h
+ * @returns {Promise<null>}
+ */
+export const checkAll = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+
+  if (!applicationDesignatedSites.length) {
+    return null
+  }
+
+  const setCache = async (jd, ads) => {
+    jd.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
+    await request.cache().setData(jd)
+  }
+
+  for (const ads of applicationDesignatedSites) {
+    if (ads.permissionFromOwner === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
+    } else if (ads.permissionFromOwner && !ads.detailsOfPermission) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
+    } else if (ads.adviceFromNaturalEngland === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
+    } else if (ads.adviceFromNaturalEngland && !ads.adviceFromWho) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
+    } else if (ads.onSiteOrCloseToSite === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
+    }
+  }
+
+  return null
 }
 
 export const getCurrentSite = async request => {
