@@ -24,23 +24,23 @@ export const APPLICATION = {
     500
   ),
   /**
-   * Associates a user with the application with the default role. Sets the reference number
+   * Associates a user with the application with the user-role. Sets the reference number
    * @param userId
    * @param applicationId
    * @returns {Promise<void>}
    */
-  initialize: async (userId, applicationId, role) => apiRequestsWrapper(
+  initialize: async (userId, applicationId, userRole, applicationRole) => apiRequestsWrapper(
     async () => {
-      const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}&role=${role}`)
+      const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}&userRole=${userRole}`)
       const result = {}
 
       // Associate user if no association exists
       if (!applicationUsers.length) {
-        result.applicationUser = await API.post(apiUrls.APPLICATION_USER, { userId, applicationId, role })
-        debug(`associated applicationId: ${result.applicationUser.applicationId} with userId: ${result.applicationUser.userId} using role: ${role}`)
+        result.applicationUser = await API.post(apiUrls.APPLICATION_USER, { userId, applicationId, userRole, applicationRole })
+        debug(`associated applicationId: ${result.applicationUser.applicationId} with userId: ${result.applicationUser.userId} using role: ${userRole}`)
       } else {
         result.applicationUser = applicationUsers[0]
-        debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId} using role: ${role}`)
+        debug(`Found existing association between applicationId: ${applicationUsers[0].applicationId} and userId: ${applicationUsers[0].userId} using role: ${userRole}`)
       }
       // Create reference number if no reference number exists
       result.application = await API.get(`${apiUrls.APPLICATION}/${applicationId}`)
@@ -66,8 +66,16 @@ export const APPLICATION = {
   findRoles: async (userId, applicationId) => {
     debug(`Testing the existence of application for userId: ${userId} applicationId: ${applicationId}`)
     const applicationUsers = await API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
-    return applicationUsers.map(au => au.role)
+    return applicationUsers.map(au => au.userRole)
   },
+  findApplicationUsers: async (userId, applicationId) => apiRequestsWrapper(
+    async () => {
+      debug(`find user application for userId: ${userId} and applicationId: ${applicationId}`)
+      return API.get(apiUrls.APPLICATION_USERS, `userId=${userId}&applicationId=${applicationId}`)
+    },
+  `Error user application for userId: ${userId} and applicationId: ${applicationId}`,
+  500
+  ),
   update: async (applicationId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Amend applications by applicationId: ${applicationId}`)

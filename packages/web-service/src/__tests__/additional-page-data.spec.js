@@ -67,6 +67,11 @@ describe('additional page data', () => {
   })
 
   it('return response-toolkit continue', async () => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      DEFRA_ID: {
+        getManagement: () => '/manage'
+      }
+    }))
     const mockHeaders = jest.fn()
     const request = {
       method: 'get',
@@ -79,7 +84,10 @@ describe('additional page data', () => {
           context: {}
         },
         header: mockHeaders
-      }
+      },
+      cache: () => ({
+        getAuthData: () => ({ contactId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', firstName: 'Graham', lastName: 'Willis' })
+      })
     }
 
     const h = {
@@ -128,7 +136,11 @@ describe('additional page data', () => {
         landowner: '/landowner',
         landownerPermission: '/landowner-permission',
         licenceDetails: '/licence',
-        login: '/login',
+        idm: {
+          management: '/manage',
+          signIn: '/sign-in',
+          signOut: '/sign-out'
+        },
         magic: {
           ds: 'https://magic.defra.gov.uk/MagicMap.aspx?chosenLayers=sssiPIndex,sssiIndex,backdropDIndex,backdropIndex,europeIndex,vmlBWIndex,25kBWIndex,50kBWIndex,250kBWIndex,miniscaleBWIndex,baseIndex&box=-187122:5095:1034155:705095&useDefaultbackgroundMapping=false'
         },
@@ -151,7 +163,6 @@ describe('additional page data', () => {
         designatedSiteRemove: '/designated-site-remove',
         isAnyConviction: '/any-convictions',
         purchaseOrderReference: '/invoice-purchase-order',
-        signOut: '/sign-out',
         additionalApplicantAdd: '/add-additional-applicant',
         additionalApplicantEmail: '/additional-applicant-email',
         additionalApplicantNames: '/additional-applicant-names',
@@ -168,7 +179,10 @@ describe('additional page data', () => {
         workProposal: '/work-proposal'
       },
       credentials: 'credentials',
-      cspNonce: expect.any(String)
+      cspNonce: expect.any(String),
+      user: {
+        name: 'Graham Willis'
+      }
     })
   })
 })

@@ -26,6 +26,8 @@ export const ApplicationService = {
     if (!journeyData.applicationId || (journeyData.applicationId && id !== journeyData.applicationId)) {
       journeyData.applicationId = id
       await clearData(request)
+      const [applicationUser] = await APIRequests.APPLICATION.findApplicationUsers(journeyData.userId, journeyData.applicationId)
+      journeyData.applicationRole = applicationUser.applicationRole
       await request.cache().setData(journeyData)
     }
     return id

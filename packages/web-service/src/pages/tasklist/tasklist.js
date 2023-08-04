@@ -20,10 +20,10 @@ export const getApplication = async request => {
     return APIRequests.APPLICATION.getById(id)
   } else {
     // Expect the application to be set in the cache
-    const { applicationId, userId } = await request.cache().getData()
+    const { applicationId, userId, applicationRole } = await request.cache().getData()
     // If created newly, it requires to be associated to the user and assigned a reference number
     // (The call is idempotent
-    const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE)
+    const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE, applicationRole)
     return application
   }
 }
@@ -63,13 +63,13 @@ export const checkData = async (request, h) => {
       return h.redirect(APPLICATIONS.uri)
     }
   } else {
-    if (!journeyData.applicationId) {
-      return h.redirect(APPLICATIONS.uri)
-    } else {
+    if (journeyData.applicationId && journeyData.applicationRole) {
       const application = APIRequests.APPLICATION.getById(journeyData.applicationId)
       if (!application) {
         return h.redirect(APPLICATIONS.uri)
       }
+    } else {
+      return h.redirect(APPLICATIONS.uri)
     }
   }
 

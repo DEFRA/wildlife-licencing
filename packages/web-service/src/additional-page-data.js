@@ -7,7 +7,6 @@ import {
   convictionsURIs,
   siteURIs,
   workActivityURIs,
-  LOGIN,
   SIGN_OUT,
   SPECIES,
   APPLICATION_SUMMARY,
@@ -15,11 +14,13 @@ import {
   conservationConsiderationURIs,
   APPLICATION_LICENCE,
   APPLICATIONS,
-  COOKIE_INFO
+  COOKIE_INFO,
+  SIGN_IN
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
 import { APIRequests } from './services/api-requests.js'
+import { DEFRA_ID } from '@defra/wls-connectors-lib'
 
 export const addCookiePrefs = async (request, h) => {
   const response = request.response
@@ -28,7 +29,7 @@ export const addCookiePrefs = async (request, h) => {
     const journeyData = await request.cache().getData() || {}
     if (journeyData.userId) {
       const user = await APIRequests.USER.getById(journeyData.userId)
-      Object.assign(response.source.context, { cookiePrefs: user.cookiePrefs })
+      Object.assign(response.source.context, { cookiePrefs: user?.cookiePrefs })
     } else if (journeyData.cookies) {
       Object.assign(response.source.context, { cookiePrefs: journeyData.cookies })
     }
@@ -37,13 +38,17 @@ export const addCookiePrefs = async (request, h) => {
   return h.continue
 }
 
-export const additionalPageData = (request, h) => {
+export const additionalPageData = async (request, h) => {
   const response = request.response
   if (request.method === 'get' && response.variety === 'view') {
     Object.assign(response.source.context, {
       _uri: {
-        login: LOGIN.uri,
-        signOut: SIGN_OUT.uri,
+        idm: {
+          signIn: SIGN_IN.uri,
+          signOut: SIGN_OUT.uri,
+          management: DEFRA_ID.getManagement()
+        },
+
         applicationSummary: APPLICATION_SUMMARY.uri,
         applicationLicence: APPLICATION_LICENCE.uri,
         taskList: TASKLIST.uri,
@@ -156,6 +161,16 @@ export const additionalPageData = (request, h) => {
     // Add the GTM tag
     if (process.env.MANAGER_TAG) {
       Object.assign(response.source.context, { gtm: process.env.MANAGER_TAG })
+    }
+
+    // Add the user details if authenticated
+    const authorization = await request.cache().getAuthData()
+    if (authorization) {
+      Object.assign(response.source.context, {
+        user: {
+          name: `${authorization.firstName} ${authorization.lastName}`
+        }
+      })
     }
 
     // Generate the nonce
