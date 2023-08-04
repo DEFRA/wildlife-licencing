@@ -3333,41 +3333,247 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{username}/{password}/authenticate':
+  /user-role/{roleId}:
     get:
-      description: Test a user password
-      summary: Retrieve a user
-      operationId: authenticateUser
+      description: Get user (Identity) roles by Id
+      operationId: getUserRole
       parameters:
-        - name: username
-          in: path
-          description: ID of the applicant
+        - in: path
+          name: roleId
           required: true
           schema:
-            $ref: '#/components/schemas/email'
-        - name: password
-          in: path
-          description: password
-          required: true
-          schema:
-            $ref: '#/components/schemas/password'
+            $ref: '#/components/schemas/uuid'
       responses:
-        200:
-          description: Success
+        '200':
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-        500:
-          description: Unexpected error on server
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success
+        '500':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the user role by id
 
+    put:
+      description: Put user role by Id
+      operationId: putUserRole
+      parameters:
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userIdentityRole'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userIdentityRole'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the user role by id
+
+  /user-user-role/{roleId}:
+    get:
+      description: Get user (Identity) user-user-role by Id
+      operationId: getUserUserRole
+      parameters:
+        - in: path
+          name: userUserRoleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get the user role by id
+
+    put:
+      description: Put user role by Id
+      operationId: putUserUserRole
+      parameters:
+        - in: path
+          name: userUserRoleId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userUserRole'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userUserRole'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the user-user-role by id
+
+  /organisation/{organisationId}:
+    get:
+      description: Get organisation by Id
+      operationId: getOrganisationById
+      parameters:
+        - in: path
+          required: true
+          name: organisationId
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get organisation by Id
+    put:
+      description: Put organisation by Id
+      operationId: putOrganisation
+      parameters:
+        - in: path
+          name: organisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the organisation by id
+
+  /user-organisation/{userOrganisationId}:
+    get:
+      description: Get user-organisation by Id
+      operationId: getUserOrganisationById
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get user-organisation by Id
+    put:
+      description: Put userOrganisation by Id
+      operationId: putUserOrganisation
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userOrganisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the userOrganisation by id
 
 ################################################################################################
 # Reference Data
@@ -3525,8 +3731,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-
 
   '/application-contacts/contacts':
     get:
@@ -4382,21 +4586,88 @@ components:
           maxLength: 255
 
     user:
-      type: object
       additionalProperties: false
       properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        username:
-          $ref: '#/components/schemas/email'
-        password:
-          $ref: '#/components/schemas/password'
         cookiePrefs:
           $ref: '#/components/schemas/cookiePrefs'
         createdAt:
           $ref: '#/components/schemas/timestamp'
+        email:
+          $ref: '#/components/schemas/email'
+        firstName:
+          type: string
+        id:
+          $ref: '#/components/schemas/uuid'
+        lastName:
+          type: string
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+        username:
+          type: string
+      type: object
+
+    organisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        email:
+          $ref: '#/components/schemas/email'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    userOrganisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
+        relationship:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
+    userRoles:
+      type: string
+
+    userUserRole:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        userRoleId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
+    userIdentityRole:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
 
     cookiePrefs:
       type: object
@@ -4619,20 +4890,6 @@ components:
     email:
       type: string
       example: email@email.com
-
-    # At least 8 characters long
-    # Not more than 16 characters long
-    # At least one uppercase character
-    # At least one lowercase character
-    # At least one number
-    # At least one special character
-    # Example Aa1!HHHH
-    password:
-      type: string
-      pattern: (?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])
-      minLength: 8
-      maxLength: 16
-      example:  Aa1!HHHH
 
     phone:
       type: string
