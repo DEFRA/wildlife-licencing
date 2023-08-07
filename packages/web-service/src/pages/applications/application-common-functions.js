@@ -37,12 +37,12 @@ export const statuses = Object.entries(BACKEND_STATUS)
 export const findApplicationType = application => Object.entries(APPLICATION_TYPES)
   .find(([_k, v]) => v === application.applicationTypeId)[0]
 
-export const getApplicationData = async request => {
+export const getApplicationData = async (request, noCache) => {
   const params = new URLSearchParams(request.query)
   const applicationId = params.get('applicationId')
   const journeyData = await request.cache().getData()
   await request.cache().setData(Object.assign(journeyData, { applicationId }))
-  const application = await APIRequests.APPLICATION.getById(applicationId)
+  const application = await APIRequests.APPLICATION.getById(applicationId, noCache)
   const applicationType = findApplicationType(application)
 
   const licenceId = params.get('licenceId')
