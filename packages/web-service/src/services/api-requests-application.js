@@ -84,10 +84,17 @@ export const APPLICATION = {
     `Error amending application by applicationId: ${applicationId}`,
     500
   ),
-  getById: async applicationId => apiRequestsWrapper(
+  getById: async (applicationId, noCache) => apiRequestsWrapper(
     async () => {
-      debug(`Get applications by applicationId: ${applicationId}`)
-      return API.get(`${apiUrls.APPLICATION}/${applicationId}`)
+      const query = {}
+
+      if (noCache) {
+        query.nocache = 'true'
+      }
+
+      debug(`Get applications by applicationId: ${applicationId}. Query: ${query}`)
+
+      return API.get(`${apiUrls.APPLICATION}/${applicationId}`, query)
     },
     `Error getting application by applicationId: ${applicationId}`,
     500

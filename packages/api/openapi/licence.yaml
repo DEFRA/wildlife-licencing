@@ -277,6 +277,11 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+        - in: query
+          name: nocache
+          required: false
+          schema:
+            type: string
       responses:
         200:
           description: Success
