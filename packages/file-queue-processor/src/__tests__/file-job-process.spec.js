@@ -28,7 +28,7 @@ describe('The file job processor', () => {
 
     jest.doMock('@defra/wls-connectors-lib', () => ({
       SEQUELIZE: {
-        getSequelize: () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
+        getSequelize: () => ({ fn: jest.fn().mockImplementation(() => new Date('2023-10-13T10:13:00.000Z')) })
       },
       AWS: {
         S3: () => ({
