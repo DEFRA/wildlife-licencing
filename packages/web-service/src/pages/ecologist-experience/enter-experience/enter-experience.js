@@ -40,7 +40,7 @@ export default pageRoute({
     // Which leads to a mismatch on the character count as
     // '\r\n'.length == 2
     // '\n'.length   == 1
-    'enter-experience': Joi.string().required().replace('\r\n', '\n').max(4000)
+    'enter-experience': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion

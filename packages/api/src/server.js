@@ -77,6 +77,14 @@ import {
 } from './handlers/application-file-upload/application-file-upload.js'
 
 import {
+  getReturnFileUploads,
+  postReturnFileUpload,
+  getReturnFileUpload,
+  putReturnFileUpload,
+  deleteReturnFileUploadByUploadId
+} from './handlers/return-file-upload/return-file-upload.js'
+
+import {
   getSiteBySiteId,
   postSite,
   putSite,
@@ -265,6 +273,13 @@ const handlers = {
   getApplicationFileUpload,
   putApplicationFileUpload,
   deleteApplicationFileUploadByUploadId,
+
+  // Return file upload
+  getReturnFileUploads,
+  postReturnFileUpload,
+  getReturnFileUpload,
+  putReturnFileUpload,
+  deleteReturnFileUploadByUploadId,
 
   // Application site handlers
   getApplicationSites,

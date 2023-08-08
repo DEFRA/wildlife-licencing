@@ -1,0 +1,61 @@
+{% extends "yes-no.njk" %}
+{% set title = 'Your licensed actions' %}
+{% set noneSelected = 'You have not selected an option' %}
+{% set noneSelectedButton = 'Select an option' %}
+{% import "habitat-text.njk" as habitatText %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: 'You have not selected an option' }
+        }
+    }
+%}
+
+{% macro licenceActionsMapper(licenceMethodsTypes, activityTypes) %}
+   
+    {% for item in licenceMethodsTypes %}
+         {% for key, value in activityTypes %}
+          {% if (item == value) %}
+          {% set activityText = key %}
+            <li>{{ habitatText.habitatMethodsText[activityText] }}</li>
+          {% endif %}
+        {% endfor %}
+    {% endfor %}
+    
+  {% endmacro %}
+
+{% block pageContent %}
+  <p class="govuk-body">You were licensed to:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    {{ licenceActionsMapper(data.methodTypes, data.activityTypes) }}
+  </ul>
+
+  <h1 class="govuk-heading-m">
+    Did you carry out any of these actions?
+  </h1>
+
+  {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      hint: {
+        text: radioHint
+      } if radioHint,
+      errorMessage: {
+        text: 'Select an option'
+      } if error['yes-no'],
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
+        },
+        {
+          value: "no",
+          text: "No, I'm submitting a nil report of action",
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

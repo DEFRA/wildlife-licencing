@@ -1,0 +1,78 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: noneSelected }
+        },
+        'yes-conditional-input': {
+          'string.empty': { ref: '#yes-conditional-input', text: yesInputErrorMessage },
+          'string.max': { ref: '#yes-conditional-input', text: tooManyCharactersInputErrorMessage }
+        },
+        'no-conditional-input': {
+          'string.empty': { ref: '#no-conditional-input', text: noInputErrorMessage },
+          'string.max': { ref: '#no-conditional-input', text: tooManyCharactersInputErrorMessage }
+        }
+    }
+%}
+
+{% set yesContionalInputHtml %}
+{{ govukTextarea({
+  id: "yes-conditional-input",
+  name: "yes-conditional-input",
+  maxlength: 4000,
+  errorMessage: { text: inputErrorMessage } if error['yes-conditional-input'],
+  value: yesInputValue if yesInputValue else payload['yes-conditional-input'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: yesInputLabelText
+  }
+}) }}
+{% endset -%}
+
+{% set noContionalInputHtml %}
+{{ govukTextarea({
+  id: "no-conditional-input",
+  name: "no-conditional-input",
+  maxlength: 4000,
+  errorMessage: { text: inputErrorMessage } if error['no-conditional-input'],
+  value: noInputValue if noInputValue else payload['no-conditional-input'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: noInputLabelText
+  }
+}) }}
+{% endset -%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      hint: {
+        text: radioHint
+      } if radioHint,
+      errorMessage: {
+        text: noneSelectedButton if noneSelectedButton else noneSelected
+      } if error['yes-no'] === 'any.required',
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes',
+          conditional: {
+            html: yesContionalInputHtml
+          }
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no',
+          conditional: {
+            html: noContionalInputHtml
+          }
+        }
+      ]
+    }) }}
+{% endblock %}

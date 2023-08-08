@@ -1,0 +1,55 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: 'You have not selected an option' }
+        },
+        'yes-conditional-input': {
+          'string.empty': { ref: '#yes-conditional-input', text: 'You have not described the welfare concerns' },
+          'string.max': { ref: '#yes-conditional-input', text: 'You have entered too many characters' }
+        }
+    }
+%}
+{% set title = "Did the work carried out under the licence cause any concerns about badgers' welfare?" %}
+
+{% set yesContionalInputHtml %}
+{{ govukTextarea({
+  id: "yes-conditional-input",
+  name: "yes-conditional-input",
+  maxlength: 4000,
+  errorMessage: { text: 'Describe the welfare concerns' } if error['yes-conditional-input'],
+  value: data.welfareConcernsDetails if data.welfareConcernsDetails else payload['yes-conditional-input'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Describe the welfare concerns"
+  }
+}) }}
+{% endset -%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      errorMessage: {
+        text: "Select an option"
+      } if error['yes-no'],
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: payload['yes-no'] === 'yes' or true if data.welfareConcerns,
+          conditional: {
+            html: yesContionalInputHtml
+          }
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

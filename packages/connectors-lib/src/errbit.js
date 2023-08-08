@@ -14,7 +14,7 @@ export const ERRBIT = {
       errorNotifications: true
     }
     debug(errbitConfig)
-    if (Config.errbit.environment) {
+    if (Config.errbit.environment && Config.errbit.environment !== 'mute') {
       const error = console.error
       // airbrake = new Notifier(errbitConfig)
       console.error = function (...args) {

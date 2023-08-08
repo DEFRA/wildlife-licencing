@@ -1,5 +1,6 @@
 jest.mock('@defra/wls-database-model')
 jest.mock('@defra/wls-connectors-lib')
+
 jest.mock('@defra/wls-queue-defs', () => ({
   getQueue: jest.fn(() => ({ process: jest.fn })),
   queueDefinitions: { FILE_QUEUE: {} }
@@ -19,21 +20,18 @@ describe('The file job processor', () => {
   afterAll(() => jest.clearAllMocks())
 
   it('processes a job correctly', async () => {
-    const mockRead = jest.fn(() => ({
-      stream: 'byte-stream',
-      bytes: 500
-    }))
+    const mockGetReadStream = jest.fn().mockReturnValue({ stream: 'byte-stream', bytes: 500 })
     const mockUpload = jest.fn()
+    const mockUpdate = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: {
-        S3: () => ({
-          readFileStream: mockRead
-        })
-      },
+      AWS: { S3: () => ({ readFileStream: mockGetReadStream }) },
       GRAPH: {
         client: jest.fn(() => ({
           uploadFile: mockUpload
         }))
+      },
+      SEQUELIZE: {
+        getSequelize: () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
@@ -44,7 +42,8 @@ describe('The file job processor', () => {
             objectKey: '123',
             filename: 'file.txt',
             applicationId
-          }))
+          })),
+          update: mockUpdate
         },
         applications: {
           findByPk: jest.fn(() => ({
@@ -55,18 +54,17 @@ describe('The file job processor', () => {
         }
       }
     }))
-    const { fileJobProcess } = await import('../file-job-process.js')
-    await fileJobProcess(job)
+    const { applicationFileJobProcess } = await import('../application-file-job-process.js')
+    await applicationFileJobProcess(job)
     expect(mockUpload).toHaveBeenCalledWith('file.txt', 500, 'byte-stream', 'Application', '/APPLICATION_REFERENCE')
+    expect(mockUpdate).toHaveBeenCalledWith({ submitted: expect.any(Date) },
+      { where: { id: '412d7297-643d-485b-8745-cc25a0e6ec0a' } })
   })
 
   it('logs error and resolves with unrecoverable error - no record in database', async () => {
+    const mockGetReadStream = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: {
-        S3: () => ({
-          readFileStream: jest.fn()
-        })
-      }
+      AWS: { S3: () => ({ readFileStream: mockGetReadStream }) }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -75,18 +73,15 @@ describe('The file job processor', () => {
         }
       }
     }))
-    const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(() => fileJobProcess(job)).resolves
+    const { applicationFileJobProcess } = await import('../application-file-job-process.js')
+    await expect(() => applicationFileJobProcess(job)).resolves
   })
 
   it('rejects with recoverable error from AWS', async () => {
+    // eslint-disable-next-line no-throw-literal
+    const mockGetReadStream = jest.fn(() => { throw { httpStatusCode: 500, message: 'recoverable error' } })
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: {
-        S3: () => ({
-          // eslint-disable-next-line no-throw-literal
-          ReadFileStream: jest.fn(() => { throw { httpStatusCode: 500, message: 'recoverable error' } })
-        })
-      }
+      AWS: { S3: () => ({ readFileStream: mockGetReadStream }) }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -107,20 +102,16 @@ describe('The file job processor', () => {
         }
       }
     }))
-    const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(fileJobProcess(job)).rejects.toThrow()
+    const { applicationFileJobProcess } = await import('../application-file-job-process.js')
+    await expect(applicationFileJobProcess(job)).rejects.toThrow()
   })
 
   it('rejects with an unrecoverable error from AWS', async () => {
+    // eslint-disable-next-line no-throw-literal
+    const mockGetReadStream = jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: {
-        S3: () => ({
-          // eslint-disable-next-line no-throw-literal
-          readFileStream: jest.fn(() => { throw { httpStatusCode: 400, message: 'unrecoverable error' } })
-        })
-      }
+      AWS: { S3: () => ({ readFileStream: mockGetReadStream }) }
     }))
-
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applicationUploads: {
@@ -140,17 +131,17 @@ describe('The file job processor', () => {
         }
       }
     }))
-    const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(fileJobProcess(job)).resolves
+    const { applicationFileJobProcess } = await import('../application-file-job-process.js')
+    await expect(applicationFileJobProcess(job)).resolves
   })
 
   it('rejects with recoverable error from AZURE', async () => {
+    const mockGetReadStream = jest.fn(() => ({
+      Body: 'byte-stream',
+      ContentLength: 500
+    }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
-      AWS: {
-        S3: () => ({
-          readFileStream: jest.fn()
-        })
-      },
+      AWS: { S3: () => ({ readFileStream: mockGetReadStream }) },
       GRAPH: {
         client: jest.fn(() => ({
           uploadFile: jest.fn(() => { throw new Error() })
@@ -176,7 +167,7 @@ describe('The file job processor', () => {
         }
       }
     }))
-    const { fileJobProcess } = await import('../file-job-process.js')
-    await expect(fileJobProcess(job)).rejects.toThrow()
+    const { applicationFileJobProcess } = await import('../application-file-job-process.js')
+    await expect(applicationFileJobProcess(job)).rejects.toThrow()
   })
 })

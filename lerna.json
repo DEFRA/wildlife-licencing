@@ -2,7 +2,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "11.13.14-alpha.0",
+  "version": "12.2.0-alpha.0",
   "npmClient": "npm",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -12,7 +12,7 @@
       "allowBranch": [
         "master",
         "develop",
-        "test"
+        "returns"
       ],
       "message": "chore(release): publish %s"
     },
@@ -20,7 +20,8 @@
       "message": "chore(release): publish %s",
       "allowBranch": [
         "master",
-        "develop"
+        "develop",
+        "returns"
       ],
       "ignoreChanges": [
         ".*",

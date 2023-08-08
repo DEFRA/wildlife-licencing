@@ -1,0 +1,55 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+{% set errorMap = {
+    'why-nil': {
+      'any.required': { ref: '#why-nil', text: 'You have not selected an option' }
+    },
+    'other-details': {
+      'string.empty': { ref: '#other-details', text: "You have not provided more detail about why you didn't carry out these actions" },
+      'string.max': { ref: '#other-details', text: 'You have entered too many characters'}
+    }
+  } %}
+{% set otherDetailsWhyActions %}
+{{ govukTextarea({
+  id: "other-details",
+  name: "other-details",
+  errorMessage: { text: "Provide more detail about why you didn't carry out these actions" } if error['other-details'],
+  value: data.whyNilOther if data.whyNilOther else payload['other-reason'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Provide more detail why you didn't carry out these actions"
+  }
+}) }}
+{% endset -%}
+{% set title = "Why didn't you carry out these actions?" %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+{% block pageContent %}
+  {{ govukRadios({
+            id: "why-nil",
+            name: "why-nil",
+            errorMessage: { text: 'Select an option' } if error['why-nil'],
+            items: [
+              {
+                value: data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN,
+                text: "The development work did not happen",
+                checked: data.whyNil === data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN
+              },
+              {
+                value: data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS,
+                text: "The sett was not in active use by badgers",
+                checked: data.whyNil === data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS
+              },
+              {
+                value: data.OTHER,
+                text: "Other",
+                checked: payload['why-nil'] === data.OTHER if payload['why-nil'] or data.whyNil === data.OTHER,
+                conditional: {
+                  html: otherDetailsWhyActions
+                }
+              }
+            ]
+          }) }}
+{% endblock %}

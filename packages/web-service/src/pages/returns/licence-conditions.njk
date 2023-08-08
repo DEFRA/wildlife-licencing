@@ -1,0 +1,55 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: 'You have not selected an option' }
+        },
+        'no-conditional-input': {
+          'string.empty': { ref: '#no-conditional-input', text: 'You have not described why were you not able to comply with the conditions' },
+          'string.max': { ref: '#no-conditional-input', text: 'You have entered too many characters' }
+        }
+    }
+%}
+{% set title = 'Did you comply with all the conditions of the licence?' %}
+
+{% set noContionalInputHtml %}
+{{ govukTextarea({
+  id: "no-conditional-input",
+  name: "no-conditional-input",
+  maxlength: 4000,
+  errorMessage: { text: 'Describe why were you not able to comply with the conditions' } if error['no-conditional-input'],
+  value: data.licenceConditionsDetails if data.licenceConditionsDetails else payload['no-conditional-input'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Describe which conditions of the licence you couldn't comply with and why you couldn't comply with them"
+  }
+}) }}
+{% endset -%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      errorMessage: {
+        text: "Select an option"
+      } if error['yes-no'],
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: payload['yes-no'] === 'yes' or true if data.licenceConditions
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: payload['yes-no'] === 'no' or true if data.licenceConditionsDetails,
+          conditional: {
+            html: noContionalInputHtml
+          }
+        }
+      ]
+    }) }}
+{% endblock %}

@@ -5,7 +5,8 @@
 {% set errorMap = {
         'enter-licence-details': {
           'emptyLicenceDetails': { ref: '#enter-licence-details', text: 'You have not entered a licence number' },
-          'existingLicenceDetails': { ref: '#enter-licence-details', text: 'You have already entered this badger mitigation licence' }
+          'existingLicenceDetails': { ref: '#enter-licence-details', text: 'You have already entered this badger mitigation licence' },
+          'exceededLicenceDetailsLength': { ref: '#enter-licence-details', text: 'Previous badger mitigation licence details must be 100 characters or less' }
         }
     }
 %}
@@ -18,6 +19,8 @@
      {% set errMsg = "Enter the reference number of your previously held badger mitigation licence." %}
 {% elseif error['enter-licence-details'] === "existingLicenceDetails" %}
     {% set errMsg = "Enter the reference number of a different previously held licence" %}
+{% elseif error['enter-licence-details'] === "exceededLicenceDetailsLength" %}
+    {% set errMsg = "Enter a reference number that is 100 characters or less" %}
 {% endif %}
 
 
@@ -31,6 +34,7 @@
     },
     errorMessage: { text: errMsg } if errMsg,
     classes: "govuk-input--width-20",
+    attributes: { maxlength: 100 },
     spellcheck: false
   }) }}
 

@@ -9,6 +9,7 @@ import login from '../pages/auth/login/login.js'
 import miscRoutes from './misc-routes.js'
 import declaration from '../pages/declaration/declaration.js'
 import submission from '../pages/submission/submission.js'
+import emailConfirmation from '../pages/applications/email-confirmation.js'
 import {
   consent, consentGranted, eligibilityCheck, eligible, landOwner,
   landOwnerPermission, notEligibleLandowner, notEligibleProject
@@ -151,6 +152,35 @@ import conditionsNotCompleted from '../pages/permissions/conditions-not-complete
 import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
+import licensedActions from '../pages/returns/licensed-actions.js'
+import outcome from '../pages/returns/outcome.js'
+import whyNil from '../pages/returns/why-nil.js'
+import { anotherLicence } from '../pages/returns/another-licence.js'
+import { returnUpload } from '../pages/returns/returns-upload.js'
+import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
+import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
+import workStart from '../pages/returns/work-start.js'
+import workFinish from '../pages/returns/work-finish.js'
+import { oneWayGates } from '../pages/returns/a24/one-way-gates.js'
+import { blockingOrProofing } from '../pages/returns/a24/blocking-or-proofing.js'
+import { damageByHandOrMechanicalMeans } from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
+import { destroyVacantSettPage } from '../pages/returns/a24/destroy-vacant-sett.js'
+import destroyDate from '../pages/returns/a24/destroy-date.js'
+import disturbBadgers from '../pages/returns/a24/disturb-badgers.js'
+import artificialSett from '../pages/returns/a24/artificial-sett.js'
+import whyNoArtificialSett from '../pages/returns/a24/why-no-artificial-sett.js'
+import artificialSettDetails from '../pages/returns/a24/artificial-sett-details.js'
+import artificialSettEvidenceFound from '../pages/returns/a24/artificial-sett-evidence-found.js'
+import artificialSettGridReference from '../pages/returns/a24/artificial-sett-grid-reference.js'
+import { artificialSettCreatedBeforeClosurePage } from '../pages/returns/a24/artificial-sett-created-before-closure.js'
+import licenceConditions from '../pages/returns/licence-conditions.js'
+import welfareConcerns from '../pages/returns/a24/welfare-concerns.js'
+import returnsCheck from '../pages/returns/returns-check.js'
+import declarationOfReturns from '../pages/returns/returns-declaration.js'
+import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
+import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
+import confirmationOfReturns from '../pages/returns/returns-confirmation.js'
+
 import { signOut } from '../pages/sign-out/sign-out.js'
 
 const routes = [
@@ -165,6 +195,7 @@ const routes = [
   ...login,
   ...declaration,
   ...submission,
+  ...emailConfirmation,
   ...uploadSupportingInformation,
   ...checkSupportingInformation,
   ...landOwner,
@@ -294,6 +325,35 @@ const routes = [
   ...conditionsNotCompleted,
   ...descPotentialConflicts,
   ...checkConsentAnswers,
+
+  ...licensedActions,
+  ...outcome,
+  ...whyNil,
+  ...anotherLicence,
+  ...completeWithinDates,
+  ...whyNotCompletesWithinDates,
+  ...workStart,
+  ...workFinish,
+  ...oneWayGates,
+  ...blockingOrProofing,
+  ...damageByHandOrMechanicalMeans,
+  ...destroyVacantSettPage,
+  ...destroyDate,
+  ...disturbBadgers,
+  ...artificialSett,
+  ...whyNoArtificialSett,
+  ...artificialSettDetails,
+  ...artificialSettEvidenceFound,
+  ...artificialSettGridReference,
+  ...artificialSettCreatedBeforeClosurePage,
+  ...licenceConditions,
+  ...welfareConcerns,
+  ...returnUpload,
+  ...uploadReturnSupportingInformation,
+  ...returnUploadedFiles,
+  ...returnsCheck,
+  ...declarationOfReturns,
+  ...confirmationOfReturns,
 
   signOut,
   ...miscRoutes

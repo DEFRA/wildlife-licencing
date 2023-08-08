@@ -1,0 +1,50 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+    'outcome-check': {
+      'any.required': { ref: '#outcome-check', text: 'You have not selected an option' }
+    },
+    'no-outcome': {
+      'string.empty': { ref: '#no-outcome', text: 'You have not entered why the development could not start' },
+      'string.max': { ref: '#no-outcome', text: 'You have entered too many characters' }
+    }
+  } %}
+{% set outcomeHtml %}
+{{ govukTextarea({
+  id: "no-outcome",
+  name: "no-outcome",
+  errorMessage: { text: 'Enter why the development could not start' } if error['no-outcome'],
+  value: data.outcomeReason if data.outcomeReason else payload['no-outcome'],
+  maxlength: 4000,
+  label: {
+    text: "Why could the development not start?"
+  }
+}) }}
+{% endset -%}
+{% set title = 'Did the actions taken under the licence mean that the development could start?' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block pageContent %}
+  {{ govukRadios({
+            id: "outcome-check",
+            name: "outcome-check",
+            errorMessage: { text: 'Select an option' } if error['outcome-check'],
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['outcome-check'] === 'yes' or true if data.outcome
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['outcome-check'] === 'no' or true if data.outcomeReason,
+                conditional: {
+                  html: outcomeHtml
+                }
+              }
+            ]
+          }) }}
+{% endblock %}
