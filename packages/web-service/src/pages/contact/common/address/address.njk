@@ -12,7 +12,7 @@
 {% set items = [] %}
 {{ items.push({ value: 'top', text: data.addressLookup.length + ' addresses found' }) }}
 {% for a in data.addressLookup %}
-    {{ items.push({ value: a.Address.UPRN, text: a.Address.AddressLine }) }}
+    {{ items.push({ value: a.uprn, text: a.addressLine }) }}
 {% endfor %}
 
 {% block pageContent %}
