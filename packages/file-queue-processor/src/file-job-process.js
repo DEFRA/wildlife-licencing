@@ -1,5 +1,5 @@
 import { models } from '@defra/wls-database-model'
-import { AWS, GRAPH } from '@defra/wls-connectors-lib'
+import { AWS, GRAPH, SEQUELIZE } from '@defra/wls-connectors-lib'
 
 export class RecoverableUploadError extends Error {}
 export class UnRecoverableUploadError extends Error {}
@@ -47,6 +47,7 @@ export const fileJobProcess = async job => {
     // The file location is a folder within the 'Application' drive with the same name as the application reference number
     await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', `/${referenceNumber}`)
     console.log(`Completed uploading ${filename} for ${referenceNumber}`)
+    await models.applicationUploads.update({ submitted: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id } })
   } catch (error) {
     if (error instanceof UnRecoverableUploadError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)
