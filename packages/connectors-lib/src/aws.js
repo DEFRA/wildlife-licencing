@@ -27,8 +27,6 @@ export const AWS = {
       } catch (err) {
         console.error('Error writing stream', err)
         throw err
-      } finally {
-        client.destroy()
       }
     },
     readFileStream: async objectKey => {
