@@ -55,7 +55,7 @@ export const GRAPH = {
           rangeSize: CHUNK_SIZE,
           uploadEventHandlers: {
             progress: range => {
-              console.log(`Uploaded $filename bytes ${range?.minValue} to ${range?.maxValue} to ${path}`)
+              console.log(`Uploaded ${filename} bytes ${range?.minValue} to ${range?.maxValue} to ${filepath}`)
             }
           }
         }
