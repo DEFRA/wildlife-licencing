@@ -48,8 +48,6 @@ export const AWS = {
       } catch (err) {
         console.error('Error reading stream', err)
         throw err
-      } finally {
-        client.destroy()
       }
     }
   }),

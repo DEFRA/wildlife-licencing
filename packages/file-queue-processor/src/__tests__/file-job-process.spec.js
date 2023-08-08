@@ -24,7 +24,12 @@ describe('The file job processor', () => {
       bytes: 500
     }))
     const mockUpload = jest.fn()
+    const mockUpdate = jest.fn()
+
     jest.doMock('@defra/wls-connectors-lib', () => ({
+      SEQUELIZE: {
+        getSequelize: () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
+      },
       AWS: {
         S3: () => ({
           readFileStream: mockRead
@@ -44,7 +49,8 @@ describe('The file job processor', () => {
             objectKey: '123',
             filename: 'file.txt',
             applicationId
-          }))
+          })),
+          update: mockUpdate
         },
         applications: {
           findByPk: jest.fn(() => ({
@@ -58,6 +64,8 @@ describe('The file job processor', () => {
     const { fileJobProcess } = await import('../file-job-process.js')
     await fileJobProcess(job)
     expect(mockUpload).toHaveBeenCalledWith('file.txt', 500, 'byte-stream', 'Application', '/APPLICATION_REFERENCE')
+    expect(mockUpdate).toHaveBeenCalledWith({ submitted: new Date('2023-10-13T10:13:00.000Z') },
+      { where: { id: '412d7297-643d-485b-8745-cc25a0e6ec0a' } })
   })
 
   it('logs error and resolves with unrecoverable error - no record in database', async () => {
