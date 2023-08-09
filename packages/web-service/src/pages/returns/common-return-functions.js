@@ -14,6 +14,17 @@ export const activityTypes = {
   DISTURB_A_SETT
 }
 
+export const getLicenceMethodTypes = licenceActions => {
+  const methodIds = []
+
+  licenceActions.forEach(licenceAction => {
+    methodIds.push(...new Set(licenceAction?.methodIds))
+  })
+
+  const uniqueMethodIds = methodIds?.filter((element, index) => methodIds?.indexOf(element) === index)
+  return uniqueMethodIds
+}
+
 export const getNextPage = licenceMethodType => {
   let nextJourney
 

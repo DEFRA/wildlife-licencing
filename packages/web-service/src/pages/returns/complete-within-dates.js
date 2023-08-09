@@ -1,7 +1,7 @@
 import { ReturnsURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence, getNextPage } from './common-return-functions.js'
+import { checkLicence, getLicenceMethodTypes, getNextPage } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool, timestampFormatter } from '../common/common.js'
 
 const { COMPLETE_WITHIN_DATES, WORK_START } = ReturnsURIs
@@ -36,10 +36,10 @@ export const completion = async request => {
   if (boolFromYesNo(request.payload['yes-no'])) {
     const journeyData = await request.cache().getData()
     const licenceActions = await APIRequests.RETURNS.getLicenceActions(journeyData?.licenceId)
-    const methodTypes = licenceActions[0]?.methodIds
+    const methodTypes = getLicenceMethodTypes(licenceActions)
     journeyData.returns = {
       ...journeyData.returns,
-      methodTypes: licenceActions[0]?.methodIds,
+      methodTypes,
       methodTypesLength: methodTypes?.length,
       methodTypesNavigated: methodTypes?.length - 1
     }

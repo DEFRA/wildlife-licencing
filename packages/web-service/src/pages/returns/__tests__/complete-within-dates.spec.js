@@ -142,6 +142,9 @@ describe('the Complete within dates functions', () => {
           RETURNS: {
             getLicenceActions: jest.fn(() => ([{
               methodIds: ['12345678', '987654321']
+            },
+            {
+              methodIds: ['12345678', '987654321', '543217890']
             }]))
           }
         }
