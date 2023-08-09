@@ -11,7 +11,6 @@ export const mapLookedUpAddress = (data) => {
 
     keys.forEach((key) => {
       const mappedKey = isV1 ? addressSchema[key].v1 : addressSchema[key].v2
-
       if (source[mappedKey]) {
         results[key] = source[mappedKey]
       }
