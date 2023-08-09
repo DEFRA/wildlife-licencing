@@ -3,7 +3,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { timestampFormatter } from '../../common/common.js'
-import { checkLicence, getNextPage } from '../common-return-functions.js'
+import { checkLicence, getLicenceMethodTypes, getNextPage } from '../common-return-functions.js'
 
 const { WHY_NOT_COMPLETE_WITHIN_DATES } = ReturnsURIs.A24
 
@@ -36,10 +36,10 @@ export const setData = async request => {
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const licenceActions = await APIRequests.RETURNS.getLicenceActions(journeyData?.licenceId)
-  const methodTypes = licenceActions[0]?.methodIds
+  const methodTypes = getLicenceMethodTypes(licenceActions)
   journeyData.returns = {
     ...journeyData.returns,
-    methodTypes: licenceActions[0]?.methodIds,
+    methodTypes,
     methodTypesLength: methodTypes?.length,
     methodTypesNavigated: methodTypes?.length - 1
   }
