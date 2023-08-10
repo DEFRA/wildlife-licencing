@@ -21,8 +21,7 @@ export const getLicenceMethodTypes = licenceActions => {
     methodIds.push(...new Set(licenceAction?.methodIds))
   })
 
-  const uniqueMethodIds = methodIds?.filter((element, index) => methodIds?.indexOf(element) === index)
-  return uniqueMethodIds
+  return methodIds?.filter((element, index) => methodIds?.indexOf(element) === index)
 }
 
 export const getNextPage = licenceMethodType => {
