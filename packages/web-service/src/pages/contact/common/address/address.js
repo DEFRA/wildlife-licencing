@@ -2,14 +2,14 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
 import addressSchema from './address-schema.js'
 
-export const mapLookedUpAddress = (data) => {
-  return data.map((item) => {
+export const mapLookedUpAddress = data => {
+  return data.map(item => {
     const results = {}
     const isV1 = !!item && !!item.Address
     const source = item.Address ? item.Address : item
     const keys = Object.keys(addressSchema)
 
-    keys.forEach((key) => {
+    keys.forEach(key => {
       const mappedKey = isV1 ? addressSchema[key].v1 : addressSchema[key].v2
       if (source[mappedKey]) {
         results[key] = source[mappedKey]
