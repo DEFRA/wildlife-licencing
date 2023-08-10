@@ -1,4 +1,4 @@
-fdescribe('the address functions', () => {
+describe('the address functions', () => {
   beforeEach(() => jest.resetModules())
 
   describe('getAddressData', () => {
