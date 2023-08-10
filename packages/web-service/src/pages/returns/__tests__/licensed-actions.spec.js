@@ -61,6 +61,9 @@ describe('the Licensed Actions functions', () => {
           RETURNS: {
             getLicenceActions: jest.fn(() => ([{
               methodIds: ['12345678', '987654321']
+            },
+            {
+              methodIds: ['12345678', '987654321', '543217890']
             }]))
           }
         }
@@ -72,7 +75,8 @@ describe('the Licensed Actions functions', () => {
         yesNo: undefined,
         methodTypes: [
           '12345678',
-          '987654321'
+          '987654321',
+          '543217890'
         ],
         activityTypes: {
           DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
