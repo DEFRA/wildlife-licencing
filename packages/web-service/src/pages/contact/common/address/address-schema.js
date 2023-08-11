@@ -1,4 +1,4 @@
-const schema = {
+const addressSchema = {
   addressLine: {
     v1: 'AddressLine',
     v2: 'addressLine'
@@ -53,4 +53,4 @@ const schema = {
   }
 }
 
-export default schema
+export default addressSchema
