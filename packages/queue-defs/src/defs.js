@@ -112,5 +112,25 @@ export const queueDefinitions = {
         }
       }
     }
+  },
+  USER_DETAILS_QUEUE: {
+    name: 'user-details-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
   }
 }

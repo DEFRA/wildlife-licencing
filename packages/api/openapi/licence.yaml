@@ -465,6 +465,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user-update/submit':
+    post:
+      description: Queue the request for defra-customer-updates
+      summary: Queue the request for defra-customer-updates
+      operationId: postUserUpdateSubmit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userUpdate'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # ecologist-experience
 ################################################################################################
@@ -4673,6 +4698,14 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timestamp'
       type: object
+
+    userUpdate:
+      additionalProperties: false
+      properties:
+        userId:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
 
     cookiePrefs:
       type: object

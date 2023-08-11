@@ -31,7 +31,7 @@ export const buildApiObject = async returnId => {
 }
 
 export const returnJobProcess = async job => {
-  const debug = db('return-queue-processor:resend-job-process')
+  const debug = db('application-queue-processor:return-job-process')
   const { returnId } = job.data
   try {
     const payload = await buildApiObject(returnId)

@@ -186,6 +186,10 @@ import {
   getDesignatedSites
 } from './handlers/reference-data/reference-data.js'
 
+import {
+  postUserUpdateSubmit
+} from './handlers/user/user-update-submit.js'
+
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
 
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
@@ -306,6 +310,9 @@ const handlers = {
   getReturnFileUpload,
   putReturnFileUpload,
   deleteReturnFileUploadByUploadId,
+
+  // Post customer update
+  postUserUpdateSubmit,
 
   // Application site handlers
   getApplicationSites,

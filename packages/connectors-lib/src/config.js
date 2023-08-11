@@ -53,6 +53,26 @@ export default {
       fetchSize: process.env.MPSA_FETCH_SIZE
     }
   },
+  defraCustomer: {
+    oauth: {
+      client: {
+        id: process.env.DEFRA_CUSTOMER_CLIENT_ID,
+        secret: process.env.DEFRA_CUSTOMER_SECRET
+      },
+      auth: {
+        tokenHost: process.env.OAUTH_AUTHORITY_HOST_URL,
+        tokenPath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/token`,
+        authorizePath: `${process.env.OAUTH_TENANT}/oauth2/v2.0/authorize`
+      }
+    },
+    tokenExpireWindow: process.env.TOKEN_EXPIRE_WINDOW_SECONDS,
+    scope: process.env.DEFRA_CUSTOMER_SCOPE,
+    client: {
+      url: process.env.DEFRA_CUSTOMER_CLIENT_URL,
+      timeout: process.env.DEFRA_CUSTOMER_CLIENT_TIMEOUT_MS,
+      fetchSize: process.env.DEFRA_CUSTOMER_FETCH_SIZE
+    }
+  },
   defraId: {
     baseUrl: process.env.DEFRA_ID_BASE_URL,
     serviceId: process.env.DEFRA_ID_SERVICE_ID,
