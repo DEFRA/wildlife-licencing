@@ -21,32 +21,22 @@ jest.mock('@defra/wls-database-model')
 
 let models
 let deleteUser
-let cache
 
 describe('The deleteUser handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
-    cache = REDIS.cache
-
     deleteUser = (await import('../delete-user.js')).default
   })
 
   it('returns a 204 on successful delete', async () => {
-    cache.delete = jest.fn()
-    cache.keys = jest.fn(() => ['random'])
     models.users = { destroy: jest.fn(() => 1) }
     models.applicationUsers = { findAll: jest.fn(() => []) }
     await deleteUser(context, req, h)
     expect(models.users.destroy).toHaveBeenCalledWith({ where: { id: uuid } })
-    expect(cache.delete).toHaveBeenCalledWith(req.path)
-    expect(cache.delete).toHaveBeenCalledWith('/users')
-    expect(cache.delete).toHaveBeenCalledWith('random')
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
   it('returns a 409 with an application', async () => {
-    cache.delete = jest.fn()
     models.users = { destroy: jest.fn(() => 1) }
     models.applicationUsers = { findAll: jest.fn(() => [{ foo: 'bar' }]) }
     await deleteUser(context, req, h)
@@ -54,7 +44,6 @@ describe('The deleteUser handler', () => {
   })
 
   it('returns a 404 on id not found', async () => {
-    cache.delete = jest.fn()
     models.users = { destroy: jest.fn(() => 0) }
     models.applicationUsers = { findAll: jest.fn(() => []) }
     await deleteUser(context, req, h)
@@ -62,7 +51,6 @@ describe('The deleteUser handler', () => {
   })
 
   it('returns a 500 with an unexpected database error', async () => {
-    cache.delete = jest.fn()
     models.applicationUsers = { findAll: jest.fn(() => []) }
     models.users = { destroy: jest.fn(() => { throw Error() }) }
     await expect(async () => {

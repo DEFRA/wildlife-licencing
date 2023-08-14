@@ -23,24 +23,25 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
   if (!user) {
     const payload = {
       username: tokenPayload.uniqueReference,
-      email: tokenPayload.email,
-      firstName: tokenPayload.firstName,
-      lastName: tokenPayload.lastName
+      contactDetails: { email: tokenPayload.email },
+      fullName: tokenPayload.firstName + ' ' + tokenPayload.lastName
     }
     if (journeyData?.cookies) {
       Object.assign(payload, { cookiePrefs: journeyData.cookies })
     }
     debug(`Create user: ${JSON.stringify(payload, null, 4)}`)
     await APIRequests.USER.createIDM(tokenPayload.contactId, payload)
+    await APIRequests.USER.requestUserDetails(tokenPayload.contactId)
   } else {
-    debug(`Found user user: ${JSON.stringify(user, null, 4)}`)
+    debug(`Found user: ${JSON.stringify(user, null, 4)}`)
+    await APIRequests.USER.requestUserDetails(user.id)
     if (journeyData?.cookies) {
       Object.assign(user, { cookiePrefs: journeyData?.cookies })
       await APIRequests.USER.update(tokenPayload.contactId, user)
     }
   }
 
-  // Add the relationships
+  // Add the relationships and organisations
   for (const rel of tokenPayload.relationships) {
     const [userOrganisationId, organisationId, organisationName,, relationship] = rel.split(':')
     if (relationship !== 'Citizen') {
@@ -51,6 +52,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
         organisationId: organisationId,
         relationship: relationship
       })
+      await APIRequests.USER.requestOrganisationDetails(organisationId)
     }
   }
 

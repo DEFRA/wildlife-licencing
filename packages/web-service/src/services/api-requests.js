@@ -19,6 +19,7 @@ import { OTHER } from './api-requests-other.js'
 export const apiUrls = {
   USERS: '/users',
   USER: '/user',
+  USER_UPDATE: '/user-update/submit',
   APPLICATION: '/application',
   APPLICATIONS: '/applications',
   APPLICATION_USER: '/application-user',
@@ -44,7 +45,8 @@ export const apiUrls = {
   LICENCE: '/licence',
   RETURN: '/return',
   RETURNS: '/returns',
-  DESIGNATED_SITES: 'designated-sites'
+  DESIGNATED_SITES: 'designated-sites',
+  ORGANISATION_UPDATE: '/organisation-update/submit'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {

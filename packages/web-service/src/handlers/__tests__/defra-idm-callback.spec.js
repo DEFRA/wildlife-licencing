@@ -117,7 +117,7 @@ describe('the defra IDM callback handler functions', () => {
       uniqueReference: '1223'
     }))
     expect(mockSetData).toHaveBeenCalledWith({ userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
-    expect(mockCreateUser).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa', { email: 'a.b@email.com', firstName: 'Graham', lastName: 'Willis', username: '1223' })
+    expect(mockCreateUser).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa', { contactDetails: { email: 'a.b@email.com' }, fullName: 'Graham Willis', username: '1223' })
     expect(mockUpdateOrganisation).toHaveBeenCalledWith('fe4b4959-0d09-ee11-8f6e-6045bd905113', { name: '17 HENLEAZE ROAD MANAGEMENT COMPANY LIMITED' })
     expect(mockUpdateUserOrganisation).toHaveBeenCalledWith('244c4959-0d09-ee11-8f6e-6045bd905113', { organisationId: 'fe4b4959-0d09-ee11-8f6e-6045bd905113', relationship: 'Employee', userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
   })

@@ -21,16 +21,12 @@ jest.mock('@defra/wls-database-model')
 
 let models
 let putUser
-let cache
 
 const applicationJson = 'application/json'
 describe('The putUser handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     putUser = (await import('../put-user')).default
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
-    cache = REDIS.cache
-    cache.save = jest.fn()
   })
 
   it('returns status 201 on a successful create', async () => {

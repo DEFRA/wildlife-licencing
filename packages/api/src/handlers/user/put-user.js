@@ -1,8 +1,6 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '@defra/wls-database-model'
 import { prepareResponse, alwaysExclude } from './user-proc.js'
-import { REDIS } from '@defra/wls-connectors-lib'
-const { cache } = REDIS
 
 /*
  * Updates the user object and return 200.
@@ -22,7 +20,6 @@ export default async (context, req, h) => {
 
     if (created) {
       const response = prepareResponse(user.dataValues)
-      await cache.save(`/user/${userId}`, response)
       return h.response(response)
         .type(APPLICATION_JSON)
         .code(201)
@@ -53,7 +50,6 @@ export default async (context, req, h) => {
       })
 
       const responseBody = prepareResponse(updatedUser[0].dataValues)
-      await cache.save(req.path, responseBody)
       return h.response(responseBody)
         .type(APPLICATION_JSON)
         .code(200)

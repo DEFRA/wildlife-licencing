@@ -21,6 +21,7 @@ export const USER = {
     `Error Updating user with userId ${userId}`,
     500
   ),
+  // TODO -- remove
   create: async username => apiRequestsWrapper(
     async () => {
       debug(`Creating new user: ${username}`)
@@ -36,6 +37,11 @@ export const USER = {
     },
     `Error creating user ${userId}`,
     500),
+  requestUserDetails: async userId => apiRequestsWrapper(async () => {
+    await API.post(apiUrls.USER_UPDATE, { userId })
+  },
+    `Error requesting updates for user ${userId}`,
+    500),
   updateOrganisation: async (organisationId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Upserting new organisation: ${organisationId}`)
@@ -43,6 +49,11 @@ export const USER = {
     },
     `Error creating organisation ${organisationId}`,
     500
+  ),
+  requestOrganisationDetails: async organisationId => apiRequestsWrapper(async () => {
+    await API.post(apiUrls.ORGANISATION_UPDATE, { organisationId })
+  }, `Error requesting updates for organisation ${organisationId}`,
+  500
   ),
   updateUserOrganisation: async (userOrganisationId, { userId, organisationId, relationship }) => apiRequestsWrapper(
     async () => {

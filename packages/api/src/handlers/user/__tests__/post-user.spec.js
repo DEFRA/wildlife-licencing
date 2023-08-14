@@ -30,15 +30,12 @@ jest.mock('@defra/wls-database-model')
 
 let models
 let postUser
-let cache
 
 const applicationJson = 'application/json'
 describe('The postUser handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     postUser = (await import('../post-user')).default
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
-    cache = REDIS.cache
   })
 
   it('returns a 201 on successful create', async () => {
@@ -47,14 +44,12 @@ describe('The postUser handler', () => {
       findByPk: jest.fn(() => ({ id: 'bar', ...ts })),
       create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
     }
-    cache.save = jest.fn()
     await postUser(context, { payload: { username: 'Graham' } }, h)
     expect(models.users.create).toHaveBeenCalledWith({
       id: expect.any(String),
       username: 'graham',
       user: {}
     })
-    expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -66,10 +61,8 @@ describe('The postUser handler', () => {
       findByPk: jest.fn(() => ({ id: 'bar', ...ts })),
       create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
     }
-    cache.save = jest.fn()
     await postUser(context, { payload: { username: 'Graham' } }, h)
     expect(models.users.create).not.toHaveBeenCalled()
-    expect(cache.save).not.toHaveBeenCalledWith()
     expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ code: 400 }))
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(400)

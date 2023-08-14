@@ -490,6 +490,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/organisation-update/submit':
+    post:
+      description: Queue the request for defra-customer-updates (org)
+      summary: Queue the request for defra-customer-updates (org)
+      operationId: postOrganisationUpdateSubmit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisationUpdate'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 ################################################################################################
 # ecologist-experience
 ################################################################################################
@@ -4617,32 +4642,36 @@ components:
 
     user:
       additionalProperties: false
+      type: object
       properties:
+        id:
+          $ref: '#/components/schemas/uuid'
         cookiePrefs:
           $ref: '#/components/schemas/cookiePrefs'
         createdAt:
           $ref: '#/components/schemas/timestamp'
-        email:
-          $ref: '#/components/schemas/email'
-        firstName:
-          type: string
-        id:
-          $ref: '#/components/schemas/uuid'
-        lastName:
-          type: string
-        updatedAt:
-          $ref: '#/components/schemas/timestamp'
         username:
           type: string
-      type: object
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 160
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
 
     organisation:
       additionalProperties: false
       properties:
         createdAt:
           $ref: '#/components/schemas/timestamp'
-        email:
-          $ref: '#/components/schemas/email'
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
         id:
           $ref: '#/components/schemas/uuid'
         name:
@@ -4704,6 +4733,10 @@ components:
       properties:
         userId:
           $ref: '#/components/schemas/uuid'
+
+    organisationUpdate:
+      additionalProperties: false
+      properties:
         organisationId:
           $ref: '#/components/schemas/uuid'
 
