@@ -40,6 +40,7 @@ export const getData = async request => {
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const pageData = request.payload['email-or-return']
+  delete journeyData.returns
 
   if (pageData === 'email') {
     await APIRequests.LICENCES.queueTheLicenceEmailResend(journeyData?.applicationId)
