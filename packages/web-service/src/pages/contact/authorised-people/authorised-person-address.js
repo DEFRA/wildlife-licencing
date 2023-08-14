@@ -11,8 +11,10 @@ const { ADDRESS, ADDRESS_FORM, POSTCODE } = contactURIs.AUTHORISED_PEOPLE
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { userId, applicationId, addressLookup } = journeyData
-  const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === request.payload.uprn)
-  const apiAddress = mapLookedUpAddress(lookupAddress)
+
+  const dataAddress = mapLookedUpAddress(addressLookup)
+  const apiAddress = dataAddress.find(a => Number.parseInt(a.uprn) === request.payload.uprn)
+
   const contactAcctOps = contactAccountOperationsForContactAccount(ContactRoles.AUTHORISED_PERSON, null,
     applicationId, userId, journeyData.authorisedPeople.contactId, null)
   await contactAcctOps.setAddress(apiAddress)
