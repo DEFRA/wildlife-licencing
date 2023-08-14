@@ -7,6 +7,7 @@ describe('the defra IDM callback handler functions', () => {
     const mockFetchToken = jest.fn().mockReturnValue('encrypted')
     const mockSetData = jest.fn()
     const mockSetAuthData = jest.fn()
+    const mockRequestUserDetails = jest.fn()
     const mockVerifyToken = jest.fn().mockReturnValue({
       contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
       relationships: [],
@@ -28,7 +29,8 @@ describe('the defra IDM callback handler functions', () => {
     jest.doMock('../../services/api-requests.js', () => ({
       APIRequests: {
         USER: {
-          getById: mockGetUser
+          getById: mockGetUser,
+          requestUserDetails: mockRequestUserDetails
         }
       }
     })
@@ -52,6 +54,7 @@ describe('the defra IDM callback handler functions', () => {
     await defraIdmCallbackPreAuth(request, h)
     expect(mockFetchToken).toHaveBeenCalledWith('123')
     expect(mockVerifyToken).toHaveBeenCalledWith('encrypted')
+    expect(mockRequestUserDetails).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa')
     expect(mockSetAuthData).toHaveBeenCalledWith({ contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa', relationships: [], roles: [] })
     expect(mockSetData).toHaveBeenCalledWith({ userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
     expect(mockGetUser).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa')
@@ -61,6 +64,8 @@ describe('the defra IDM callback handler functions', () => {
     const mockFetchToken = jest.fn().mockReturnValue('encrypted')
     const mockSetData = jest.fn()
     const mockSetAuthData = jest.fn()
+    const mockRequestUserDetails = jest.fn()
+    const mockRequestOrganisationDetails = jest.fn()
     const mockVerifyToken = jest.fn().mockReturnValue({
       contactId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
       uniqueReference: '1223',
@@ -85,7 +90,9 @@ describe('the defra IDM callback handler functions', () => {
           getById: () => null,
           createIDM: mockCreateUser,
           updateOrganisation: mockUpdateOrganisation,
-          updateUserOrganisation: mockUpdateUserOrganisation
+          updateUserOrganisation: mockUpdateUserOrganisation,
+          requestUserDetails: mockRequestUserDetails,
+          requestOrganisationDetails: mockRequestOrganisationDetails
         }
       }
     })
@@ -116,10 +123,12 @@ describe('the defra IDM callback handler functions', () => {
       lastName: 'Willis',
       uniqueReference: '1223'
     }))
+    expect(mockRequestUserDetails).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa')
     expect(mockSetData).toHaveBeenCalledWith({ userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
     expect(mockCreateUser).toHaveBeenCalledWith('81e36e15-88d0-41e2-9399-1c7646ecc5aa', { contactDetails: { email: 'a.b@email.com' }, fullName: 'Graham Willis', username: '1223' })
     expect(mockUpdateOrganisation).toHaveBeenCalledWith('fe4b4959-0d09-ee11-8f6e-6045bd905113', { name: '17 HENLEAZE ROAD MANAGEMENT COMPANY LIMITED' })
     expect(mockUpdateUserOrganisation).toHaveBeenCalledWith('244c4959-0d09-ee11-8f6e-6045bd905113', { organisationId: 'fe4b4959-0d09-ee11-8f6e-6045bd905113', relationship: 'Employee', userId: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' })
+    expect(mockRequestOrganisationDetails).toHaveBeenCalledWith('fe4b4959-0d09-ee11-8f6e-6045bd905113')
   })
 
   describe('the completion', () => {
