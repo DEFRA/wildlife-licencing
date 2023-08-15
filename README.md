@@ -214,7 +214,8 @@ Alternatively set the environment variables in the running shell or your IDE
 | [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N | 
 | [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N |
 | [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N |
-| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N | 
+| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N |
+| [defra-customer-lib](packages/defra-customer-lib)                       | Handles read queries to the defra customer service                                                                  | N |
 
 ## Application Architecture 
 

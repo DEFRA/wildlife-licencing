@@ -21,7 +21,6 @@ export const USER = {
     `Error Updating user with userId ${userId}`,
     500
   ),
-  // TODO -- remove
   create: async username => apiRequestsWrapper(
     async () => {
       debug(`Creating new user: ${username}`)

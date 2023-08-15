@@ -29,7 +29,19 @@ describe('The API requests user service', () => {
       expect(result).toEqual({ username: 'Keith Moon' })
     })
 
-    it('create calls the API connector correctly', async () => {
+    it('createIDM calls the API connector correctly', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          put: mockPut
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.USER.createIDM('2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', { username: 'RA98712092378' })
+      expect(mockPut).toHaveBeenCalledWith('/user/2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', { username: 'RA98712092378' })
+    })
+
+    it('requestUserDetails calls the API connector correctly', async () => {
       const mockPost = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({
         API: {
@@ -37,8 +49,8 @@ describe('The API requests user service', () => {
         }
       }))
       const { APIRequests } = await import('../api-requests.js')
-      await APIRequests.USER.create('fred.flintstone@email.co.uk')
-      expect(mockPost).toHaveBeenCalledWith('/user', { username: 'fred.flintstone@email.co.uk' })
+      await APIRequests.USER.requestUserDetails('2ffae0ad-9d61-4b7c-b4d0-73ce828d9064')
+      expect(mockPost).toHaveBeenCalledWith('/user-update/submit', { userId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
     })
   })
 
@@ -73,6 +85,18 @@ describe('The API requests user service', () => {
         organisationId: '1c3e7655-bb74-4420-9bf0-0bd710987f10',
         relationship: 'employee'
       })
+    })
+
+    it('requestOrganisationDetails calls the API connector correctly', async () => {
+      const mockPost = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          post: mockPost
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.USER.requestOrganisationDetails('2ffae0ad-9d61-4b7c-b4d0-73ce828d9064')
+      expect(mockPost).toHaveBeenCalledWith('/organisation-update/submit', { organisationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
     })
   })
 })

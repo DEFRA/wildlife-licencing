@@ -14,7 +14,7 @@ export const organisationDetailsJobProcess = async job => {
       })
     }
   } catch (err) {
-    console.log(err)
+    console.error(`request organisation details job ${job.id} failed with unrecoverable error`, err)
     throw err
   }
 }
