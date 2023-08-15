@@ -41,18 +41,21 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     }
   }
 
-  // Add the relationships and organisations
-  for (const rel of tokenPayload.relationships) {
-    const [userOrganisationId, organisationId, organisationName,, relationship] = rel.split(':')
-    if (relationship !== 'Citizen') {
-      const organisation = await APIRequests.USER.updateOrganisation(organisationId, { name: organisationName })
+  const relationships = tokenPayload.relationships.map(r => {
+    const [userOrganisationId, organisationId, organisationName, , relationshipType] = r.split(':')
+    return { userOrganisationId, organisationId, organisationName, relationshipType }
+  })
+
+  for (const rel of relationships) {
+    if (rel.relationshipType !== 'Citizen') {
+      const organisation = await APIRequests.USER.updateOrganisation(rel.organisationId, { name: rel.organisationName })
       debug(`Setting organisation: ${JSON.stringify(organisation, null, 4)}`)
-      await APIRequests.USER.updateUserOrganisation(userOrganisationId, {
+      await APIRequests.USER.updateUserOrganisation(rel.userOrganisationId, {
         userId: tokenPayload.contactId,
-        organisationId: organisationId,
-        relationship: relationship
+        organisationId: rel.organisationId,
+        relationship: rel.relationshipType
       })
-      await APIRequests.USER.requestOrganisationDetails(organisationId)
+      await APIRequests.USER.requestOrganisationDetails(rel.organisationId)
     }
   }
 
@@ -63,11 +66,20 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     .map(r => ({ relationshipId: r.split(':')[0], roleName: r.split(':')[1] }))
     .find(r => r.relationshipId === tokenPayload.currentRelationshipId)
 
-  debug(`Setting current role: ${JSON.stringify(tokenPayload, null, 4)}`)
+  const currentRelationship = relationships.find(r => tokenPayload.currentRelationshipId === r.userOrganisationId)
+
+  debug(`Setting role: ${role?.roleName}`)
+  debug(`Setting organisation: ${currentRelationship?.organisationName}`)
+  debug(`Setting relationshipType: ${currentRelationship?.relationshipType}`)
+
   Object.assign(journeyData, {
     userId: tokenPayload.contactId,
-    userOrganisationId: tokenPayload.currentRelationshipId,
-    role: role
+    ...(currentRelationship?.userOrganisationId && {
+      userOrganisationId: currentRelationship.userOrganisationId,
+      organisationId: currentRelationship.organisationId
+    }),
+    relationshipType: currentRelationship?.relationshipType,
+    role: role?.roleName
   })
 
   await request.cache().setData(journeyData)
