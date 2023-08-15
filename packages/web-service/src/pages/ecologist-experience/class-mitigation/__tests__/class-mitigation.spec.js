@@ -208,14 +208,28 @@ describe('The class mitigation page', () => {
   })
 
   describe('completion function', () => {
-    it('returns the check page if the user answers no', async () => {
+    const mockSet = jest.fn()
+    it('returns the check page if the user answers no, and sets the tag', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet
+            })
+          }
+        }
+      }))
       const request = {
         payload: {
           'yes-no': 'no'
-        }
+        },
+        cache: () => ({
+          getData: () => { return { applicationId: 'abe123' } }
+        })
       }
       const { completion } = await import('../class-mitigation.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
 
     it('returns the class mitigation details page if the user answers yes', async () => {

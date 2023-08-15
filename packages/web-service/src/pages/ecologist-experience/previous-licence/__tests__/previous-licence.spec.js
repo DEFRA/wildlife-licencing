@@ -243,13 +243,16 @@ describe('The previous licence page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check page if user selects no and the class licence has been set', async () => {
+    it('returns the check page if user selects no and the class licence has been set, it also sets the tag', async () => {
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            tags: () => ({
-              set: () => {}
-            })
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
           },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
@@ -272,6 +275,7 @@ describe('The previous licence page', () => {
       }
       const { completion } = await import('../previous-licence.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
   })
 
