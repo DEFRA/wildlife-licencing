@@ -9,7 +9,7 @@ import Joi from 'joi'
 import { getApplicationData, statuses, checkData, findLastSentEvent } from './application-common-functions.js'
 
 export const getData = async request => {
-  const { application, applicationType, applicationId, licences } = await getApplicationData(request)
+  const { application, applicationType, applicationId, licences } = await getApplicationData(request, true)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
