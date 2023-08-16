@@ -20,7 +20,7 @@
   name: "yes-conditional-input",
   maxlength: 4000,
   errorMessage: { text: 'Enter a description' } if error['yes-conditional-input'],
-  value: payload['yes-conditional-input'],
+  value: data.disturbBadgersDetails if data.disturbBadgersDetails else payload['yes-conditional-input'],
   classes: "govuk-!-width-full",
   label: {
     text: "Describe the evidence you have that badger were disturbed"

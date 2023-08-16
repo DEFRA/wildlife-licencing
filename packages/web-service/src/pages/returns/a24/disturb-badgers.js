@@ -1,10 +1,12 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { boolFromYesNo } from '../../common/common.js'
-import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
+import { checkLicence, commonValidator, licenceActionsCompletion } from '../common-return-functions.js'
 import pageRoute from '../../../routes/page-route.js'
 
 const { DISTURB_BADGERS } = ReturnsURIs.A24
+
+export const validator = payload => commonValidator(payload, DISTURB_BADGERS.page)
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -41,5 +43,6 @@ export default pageRoute({
   checkData: checkLicence,
   getData: getData,
   completion: licenceActionsCompletion,
-  setData: setData
+  setData: setData,
+  validator: validator
 })
