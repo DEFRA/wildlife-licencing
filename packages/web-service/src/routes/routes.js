@@ -151,6 +151,7 @@ import conditionsNotCompleted from '../pages/permissions/conditions-not-complete
 import descPotentialConflicts from '../pages/permissions/describe-potential-conflicts/describe-potential-conflicts.js'
 import checkConsentAnswers from '../pages/permissions/check-your-answers/check-your-answers.js'
 
+import userRole from '../pages/user-role/user-role.js'
 import { signOut } from '../handlers/sign-out.js'
 import { signIn } from '../handlers/defra-idm.js'
 import { defraIdmCallback } from '../handlers/defra-idm-callback.js'
@@ -356,6 +357,7 @@ const routes = [
 
   signIn,
   signOut,
+  ...userRole,
   defraIdmCallback,
 
   ...miscRoutes
