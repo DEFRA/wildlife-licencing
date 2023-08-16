@@ -8,7 +8,7 @@ export const userDetailsJobProcess = async job => {
     const user = job.data.userId && await getUserData(job.data.userId)
     if (user) {
       debug(`Update user id: ${job.data.userId} ${JSON.stringify(user)}`)
-      await models.users.update({ user }, {
+      await models.users.update({ user, fetched: true }, {
         where: { id: job.data.userId },
         returning: false
       })

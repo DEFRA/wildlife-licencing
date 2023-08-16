@@ -22,7 +22,7 @@ describe('The organisation details job processor', () => {
     }))
     const { organisationDetailsJobProcess } = await import('../organisation-details-job-process.js')
     await organisationDetailsJobProcess(job)
-    expect(mockUpdate).toHaveBeenCalledWith({ organisation: { foo: 'bar' } }, { returning: false, where: { id: 'b1847e67-07fa-4c51-af03-cb51f5126939' } })
+    expect(mockUpdate).toHaveBeenCalledWith({ organisation: { foo: 'bar' }, fetched: true }, { returning: false, where: { id: 'b1847e67-07fa-4c51-af03-cb51f5126939' } })
   })
   it('throws on any error', async () => {
     jest.doMock('@defra/wls-defra-customer-lib', () => ({

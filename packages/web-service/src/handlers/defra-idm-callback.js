@@ -62,6 +62,8 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
   debug(`Setting auth: ${JSON.stringify(tokenPayload, null, 4)}`)
   await request.cache().setAuthData(tokenPayload)
 
+  // The role relationship is not currently stored in the database as there
+  // is no requirement for it yet. It is simply written into the cache.
   const role = tokenPayload.roles
     .map(r => ({ relationshipId: r.split(':')[0], roleName: r.split(':')[1] }))
     .find(r => r.relationshipId === tokenPayload.currentRelationshipId)

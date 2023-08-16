@@ -8,7 +8,7 @@ export const organisationDetailsJobProcess = async job => {
     const organisation = job.data.organisationId && await getOrganisationData(job.data.organisationId)
     if (organisation) {
       debug(`Update organisation id: ${job.data.organisationId} ${JSON.stringify(organisation)}`)
-      await models.organisations.update({ organisation }, {
+      await models.organisations.update({ organisation, fetched: true }, {
         where: { id: job.data.organisationId },
         returning: false
       })
