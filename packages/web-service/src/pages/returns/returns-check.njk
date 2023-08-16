@@ -1,0 +1,507 @@
+{% extends "standard-form.njk" %}
+
+{% set title = 'Check your answers' %}
+
+{% block pageContent %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did you carry out any of these actions?</dt>
+      {% if not data.nilReturn %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/licensed-actions">
+          Change<span class="govuk-visually-hidden">Did you carry out any of these actions?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+{% if not data.nilReturn %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did the licensed actions achieve the intended licence purpose?</dt>
+      {% if data.outcome %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/outcome">
+          Change<span class="govuk-visually-hidden">Did the licensed actions achieve the intended licence purpose?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  {% if data.outcomeReason %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe why the licensed actions did not achieve the intended licence purpose</dt>
+          <dd class="govuk-summary-list__value">{{ data.outcomeReason }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/outcome">
+            Change<span class="govuk-visually-hidden">Describe why the licensed actions did not achieve the intended licence purpose</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did you complete the licensed work between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</dt>
+      {% if data.completedWithinLicenceDates %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/complete-within-dates">
+          Change<span class="govuk-visually-hidden">Did you complete the licensed work between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  {% if not data.completedWithinLicenceDates %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">When did you start the work?</dt>
+          <dd class="govuk-summary-list__value">{{ data.startDate }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/work-start">
+            Change<span class="govuk-visually-hidden">When did you start the work?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">When did you finish the work?</dt>
+          <dd class="govuk-summary-list__value">{{ data.endDate }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/work-finish">
+            Change<span class="govuk-visually-hidden">When did you finish the work?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Why was the work not completed between between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</dt>
+          <dd class="govuk-summary-list__value">{{ data.whyNotCompletedWithinLicenceDates }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/one-way-gates">
+            Change<span class="govuk-visually-hidden">Why was the work not completed between between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if data.obstructionByOneWayGatesDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Did you obstruct sett entrances by means of one-way badger gates?</dt>
+        {% if data.obstructionByOneWayGates %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/one-way-gates">
+            Change<span class="govuk-visually-hidden">Did you obstruct sett entrances by means of one-way badger gates?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work that was done</dt>
+          <dd class="govuk-summary-list__value">{{ data.obstructionByOneWayGatesDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/one-way-gates">
+            Change<span class="govuk-visually-hidden">Describe the work that was done</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if data.obstructionBlockingOrProofingDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Did you obstruct access to sett entrances by blocking or proofing?</dt>
+        {% if data.obstructionBlockingOrProofing %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/blocking-or-proofing">
+            Change<span class="govuk-visually-hidden">Did you obstruct access to sett entrances by blocking or proofing?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work that was done</dt>
+          <dd class="govuk-summary-list__value">{{ data.obstructionBlockingOrProofingDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/blocking-or-proofing">
+            Change<span class="govuk-visually-hidden">Describe the work that was done</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if data.damageByHandOrMechanicalMeansDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Did you damage a sett by hand and mechanical means?</dt>
+        {% if data.damageByHandOrMechanicalMeans %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/damage-by-hand-or-mechanical-means">
+            Change<span class="govuk-visually-hidden">Did you damage a sett by hand and mechanical means?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work that was done</dt>
+          <dd class="govuk-summary-list__value">{{ data.damageByHandOrMechanicalMeansDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/damage-by-hand-or-mechanical-means">
+            Change<span class="govuk-visually-hidden">Describe the work that was done</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if data.destroyVacantSettByHandOrMechanicalMeansDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Did you destroy a vacant sett by hand and mechanical means?</dt>
+        {% if data.destroyVacantSettByHandOrMechanicalMeans %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/destroy-vacant-sett">
+            Change<span class="govuk-visually-hidden">Did you destruct a vacant sett by hand and mechanical means?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work that was done</dt>
+          <dd class="govuk-summary-list__value">{{ data.destroyVacantSettByHandOrMechanicalMeansDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/destroy-vacant-sett">
+            Change<span class="govuk-visually-hidden">Describe the work that was done</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+    {% if data.destroyVacantSettByHandOrMechanicalMeans %}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">When did you destroy the vacant sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.destroyDate }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/a24/destroy-date">
+              Change<span class="govuk-visually-hidden">When did you destroy the vacant sett?</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+    {% endif %}
+  {% endif %}
+
+  {% if data.disturbBadgersDetails or not data.disturbBadgersDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Did you disturb badgers?</dt>
+        {% if data.disturbBadgers %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/disturb-badgers">
+            Change<span class="govuk-visually-hidden">Did you disturb badgers?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+    {% if data.disturbBadgers %}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Describe the evidence you have that badgers were disturbed</dt>
+            <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/a24/disturb-badgers">
+              Change<span class="govuk-visually-hidden">Describe the evidence you have that badgers were disturbed</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+    {% endif %}
+  {% endif %}
+
+  {% if data.disturbBadgersDetails %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work carried out to create the artificial sett</dt>
+          <dd class="govuk-summary-list__value">{{ data.disturbBadgersDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-details">
+            Change<span class="govuk-visually-hidden">Describe the work carried out to create the artificial sett</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did you create an artificial sett?</dt>
+      {% if data.artificialSett %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/a24/artificial-sett">
+          Change<span class="govuk-visually-hidden">Did you create an artificial sett?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  {% if data.artificialSett %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work carried out to create the artificial sett</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-details">
+            Change<span class="govuk-visually-hidden">Describe the work carried out to create the artificial sett</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if data.artificialSett %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Was the artificial sett created before the licensed sett was closed?</dt>
+          {% if data.artificialSettCreatedBeforeClosure %}
+            <dd class="govuk-summary-list__value">Yes</dd>
+          {% else %}
+            <dd class="govuk-summary-list__value">No</dd>
+          {% endif %}
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-created-before-closure">
+            Change<span class="govuk-visually-hidden">Was the artificial sett created before the licensed sett was closed?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">What evidence is there that badgers located the artificial sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettFoundEvidence }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-evidence-found">
+            Change<span class="govuk-visually-hidden">What evidence is there that badgers located the artificial sett?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">What was the artificial sett's grid reference?</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettFoundGridReference }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-grid-reference">
+            Change<span class="govuk-visually-hidden">What was the artificial sett's grid reference?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if not data.artificialSett %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Why didn't you create an artificial sett?</dt>
+            <dd class="govuk-summary-list__value">{{ data.noArtificialSettReason }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/why-no-artificial-sett">
+            Change<span class="govuk-visually-hidden">Why didn't you create an artificial sett?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did you comply with all the conditions of the licence?</dt>
+          {% if data.licenceConditions %}
+        <dd class="govuk-summary-list__value">Yes</dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">No</dd>
+      {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/licence-conditions">
+          Change<span class="govuk-visually-hidden">Did you comply with all the conditions of the licence?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  {% if not data.licenceConditions %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe which conditions of the licence you couldn't comply with and why you couldn't comply with them</dt>
+          <dd class="govuk-summary-list__value">{{ data.licenceConditionsDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/licence-conditions">
+            Change<span class="govuk-visually-hidden">Describe which conditions of the licence you couldn't comply with and why you couldn't comply with them</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Did the work carried out under the licence cause any concerns about badgers' welfare?</dt>
+        {% if data.welfareConcerns %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/welfare-concerns">
+          Change<span class="govuk-visually-hidden">Did the work carried out under the licence cause any concerns about badgers' welfare?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+
+  {% if data.welfareConcerns %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the welfare concerns</dt>
+          <dd class="govuk-summary-list__value">{{ data.welfareConcernsDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/welfare-concerns">
+            Change<span class="govuk-visually-hidden">Describe the welfare concerns</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
+
+  {% if not data.uploadedFiles or data.uploadedFiles.length === 0 %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Do you want to upload supporting information?</dt>
+          <dd class="govuk-summary-list__value">No</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/returns-upload">
+            Change<span class="govuk-visually-hidden">Do you want to upload supporting information?</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% else %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Do you want to upload supporting information?</dt>
+        <dd class="govuk-summary-list__value">Yes</dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/returns-upload">
+          Change<span class="govuk-visually-hidden">Do you want to upload supporting information?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  {% for upload in data.uploadedFiles %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
+      <dd class="govuk-summary-list__value">
+        {{ upload.filename }} <br>
+        <p>Uploaded {{ upload.uploadedDate }}</p>
+      </dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link govuk-link--no-visited-state" href="/returns-uploaded-files">
+          Change<span class="govuk-visually-hidden">Uploaded file {{ loop.index }}</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  {% endfor %}
+  {% endif %}
+{% endif %}
+
+{% if data.nilReturn %}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Why didn't you carry out these actions?</dt>
+        {% if data.whyNil === 'other' %}
+          <dd class="govuk-summary-list__value">{{ data.whyNilOther }}</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">{{ data.whyNil }}</dd>
+        {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/why-nil">
+          Change<span class="govuk-visually-hidden">Why didn't you carry out these actions?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Will you need another licence for this development?</dt>
+        {% if data.needAnotherLicence %}
+          <dd class="govuk-summary-list__value">Yes</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">No</dd>
+        {% endif %}
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="/another-licence">
+          Change<span class="govuk-visually-hidden">Will you need another licence for this development?</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
+{% endif %}
+  
+{% endblock %}

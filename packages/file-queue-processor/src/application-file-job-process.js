@@ -1,24 +1,6 @@
 import { models } from '@defra/wls-database-model'
-import { AWS, GRAPH } from '@defra/wls-connectors-lib'
-
-export class RecoverableUploadError extends Error {}
-export class UnRecoverableUploadError extends Error {}
-
-const { readFileStream } = AWS.S3()
-
-export const getReadStream = async objectKey => {
-  try {
-    return await readFileStream(objectKey)
-  } catch ({ httpStatusCode, message }) {
-    if (Math.floor(httpStatusCode / 100) === 4) {
-      // Client errors, such as missing buckets are unrecoverable
-      throw new UnRecoverableUploadError(message)
-    } else {
-      // Other errors are assumed to be recoverable
-      throw new RecoverableUploadError(message)
-    }
-  }
-}
+import { GRAPH, SEQUELIZE } from '@defra/wls-connectors-lib'
+import { getReadStream, UnRecoverableUploadError } from './common.js'
 
 // Any error in the database including no data found is not recoverable
 const getDataFromDatabase = async id => {
@@ -36,7 +18,7 @@ const getDataFromDatabase = async id => {
  * @param job
  * @returns {Promise<void>}
  */
-export const fileJobProcess = async job => {
+export const applicationFileJobProcess = async job => {
   const { id, applicationId } = job.data
   try {
     const { objectKey, filename, application } = await getDataFromDatabase(id)
@@ -47,6 +29,7 @@ export const fileJobProcess = async job => {
     // The file location is a folder within the 'Application' drive with the same name as the application reference number
     await GRAPH.client().uploadFile(filename, bytes, stream, 'Application', `/${referenceNumber}`)
     console.log(`Completed uploading ${filename} for ${referenceNumber}`)
+    await models.applicationUploads.update({ submitted: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id } })
   } catch (error) {
     if (error instanceof UnRecoverableUploadError) {
       console.error(`Unrecoverable error for job: ${JSON.stringify(job.data)}`, error.message)

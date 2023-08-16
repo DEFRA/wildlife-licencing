@@ -70,6 +70,25 @@ describe('The getApplicationByApplicationId handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
+  it('returns an application and status 200 from the database if nocache is true', async () => {
+    // Restore has been set to return a value in this test case
+    cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
+    cache.save = jest.fn(() => null)
+    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    await getApplication(context, {
+      ...req,
+      query: {
+        nocache: 'true'
+      }
+    }, h)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ foo: 'bar', ...tsR }))
+    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ foo: 'bar', ...tsR }))
+    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
+    expect(codeFunc).toHaveBeenCalledWith(200)
+  })
+
   it('returns a status 404 on application not found', async () => {
     cache.restore = jest.fn(() => null)
     models.applications = { findByPk: jest.fn(() => null) }

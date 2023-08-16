@@ -1,0 +1,26 @@
+{% extends 'standard-form.njk' %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+    'describe-artificial-sett': {
+      'string.empty': { ref: '#describe-artificial-sett', text: 'You have not described the work carried out to create the artificial sett' },
+      'string.max': { ref: '#describe-artificial-sett', text: 'You have entered too many characters' }
+    }
+  } %}
+{% set title = 'Describe the work carried out to create the artificial sett' %}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}
+{% endblock %}
+
+{% block pageContent %}
+  {{ govukTextarea({
+  id: "describe-artificial-sett",
+  name: "describe-artificial-sett",
+  errorMessage: { text: 'Describe the work carried out to create the artificial sett' } if error['describe-artificial-sett'],
+  value: data.artificialSettDetails if data.artificialSettDetails else payload['describe-artificial-sett'],
+  maxlength: 4000,
+  hint: {
+    text: "You will be able to upload documents showing the work carried out."
+  }
+}) }}
+{% endblock %}

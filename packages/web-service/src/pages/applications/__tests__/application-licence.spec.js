@@ -102,7 +102,9 @@ describe('application-licence page', () => {
           100000005: 'PAUSED',
           100000006: 'WITHDRAWN',
           100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED'
+          452120001: 'EXPIRED_ROA_DUE',
+          452120003: 'EXPIRED_ROA_RECEIVED',
+          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
         },
         lastSentEventFlag: true
       })
@@ -110,7 +112,7 @@ describe('application-licence page', () => {
   })
 
   describe('completion', () => {
-    it('should request the queue of licence email resend', async () => {
+    it('should request the queue of licence email resend and redirect to the email-confirmation page', async () => {
       const mockQueueTheLicenceEmailResend = jest.fn()
       const request = {
         cache: () => ({
@@ -130,13 +132,15 @@ describe('application-licence page', () => {
       const { completion } = await import('../application-licence.js')
       await completion(request)
       expect(mockQueueTheLicenceEmailResend).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18')
+      expect(await completion(request)).toBe('/email-confirmation')
     })
 
-    it('should redirect to the applications page', async () => {
-      const mockQueueTheLicenceEmailResend = jest.fn()
+    it('should redirect to the licensed-actions page', async () => {
+      const mockSetData = jest.fn()
       const request = {
         cache: () => ({
-          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' })
+          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }),
+          setData: mockSetData
         }),
         payload: { 'email-or-return': 'return' }
       }
@@ -144,10 +148,26 @@ describe('application-licence page', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            queueTheLicenceEmailResend: mockQueueTheLicenceEmailResend
+            findByApplicationId: jest.fn(() => ([{
+              id: '123-AbEF-67',
+              licenceNumber: '2023-500000-SPM-LIC'
+            }]))
           }
         }
       }))
+
+      const { completion } = await import('../application-licence.js')
+      expect(await completion(request)).toBe('/licensed-actions')
+      expect(mockSetData).toHaveBeenCalledWith({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18', licenceId: '123-AbEF-67', licenceNumber: '2023-500000-SPM-LIC' })
+    })
+
+    it('should redirect to the applications page when the user does not select to email a copy of a licence or submit a return', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' })
+        }),
+        payload: { }
+      }
 
       const { completion } = await import('../application-licence.js')
       expect(await completion(request)).toBe('/applications')

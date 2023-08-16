@@ -1,5 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
-import { APPLICATION_LICENCE, APPLICATIONS } from '../../uris.js'
+import { APPLICATIONS, APPLICATION_LICENCE, EMAIL_CONFIRMATION, ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
@@ -9,7 +9,7 @@ import Joi from 'joi'
 import { getApplicationData, statuses, checkData, findLastSentEvent } from './application-common-functions.js'
 
 export const getData = async request => {
-  const { application, applicationType, applicationId, licences } = await getApplicationData(request)
+  const { application, applicationType, applicationId, licences } = await getApplicationData(request, true)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
   Object.assign(application, { applicationType, siteAddress })
@@ -38,11 +38,21 @@ export const getData = async request => {
 }
 
 export const completion = async request => {
-  const { applicationId } = await request.cache().getData()
+  const journeyData = await request.cache().getData()
   const pageData = request.payload['email-or-return']
-  // when a return journey is created we have to visit this section to redirect the user to a return journey
+  delete journeyData.returns
+
   if (pageData === 'email') {
-    await APIRequests.LICENCES.queueTheLicenceEmailResend(applicationId)
+    await APIRequests.LICENCES.queueTheLicenceEmailResend(journeyData?.applicationId)
+    return EMAIL_CONFIRMATION.uri
+  }
+
+  if (pageData === 'return') {
+    const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+    journeyData.licenceId = licences[0].id
+    journeyData.licenceNumber = licences[0].licenceNumber
+    await request.cache().setData(journeyData)
+    return ReturnsURIs.NIL_RETURN.uri
   }
 
   return APPLICATIONS.uri

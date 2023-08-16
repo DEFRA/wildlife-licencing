@@ -6,6 +6,18 @@ import { convictionsURIs, TASKLIST } from '../../../uris.js'
 import { checkApplication } from '../../common/check-application.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 
+export const checkData = async (request, h) => {
+  const { applicationId } = await request.cache().getData()
+  const application = await APIRequests.APPLICATION.getById(applicationId)
+
+  // When the user says there are convictions and does not mention the details should be redirected to enter the details of convictions
+  if (application?.isRelatedConviction && !application?.detailsOfConvictions) {
+    return h.redirect(convictionsURIs.CONVICTION_DETAILS.uri)
+  }
+
+  return null
+}
+
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
   const application = await APIRequests.APPLICATION.getById(applicationId)
@@ -36,7 +48,7 @@ export default pageRoute({
   page: convictionsURIs.CHECK_CONVICTIONS_ANSWERS.page,
   uri: convictionsURIs.CHECK_CONVICTIONS_ANSWERS.uri,
   backlink: Backlink.NO_BACKLINK,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   getData,
   completion
 })

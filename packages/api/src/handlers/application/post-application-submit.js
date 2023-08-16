@@ -22,7 +22,7 @@ export default async (context, req, h) => {
     const applicationJob = await applicationQueue.add({ applicationId })
     debug(`Queued application ${applicationId} - job: ${applicationJob.id}`)
 
-    const fileQueue = getQueue(queueDefinitions.FILE_QUEUE)
+    const fileQueue = getQueue(queueDefinitions.APPLICATION_FILE_QUEUE)
 
     const applicationUploads = await models.applicationUploads.findAll({
       where: {

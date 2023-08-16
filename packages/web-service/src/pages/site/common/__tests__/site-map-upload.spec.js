@@ -30,7 +30,6 @@ describe('the map of the site showing the mitigations after development page pag
 
   it('should calls the s3 upload and redirects to the site national grid reference page', async () => {
     const mockSetData = jest.fn()
-    const mockS3FileUpload = jest.fn()
     const mockUpdate = jest.fn()
     const site = [
       {
@@ -73,7 +72,7 @@ describe('the map of the site showing the mitigations after development page pag
     const request = {
       cache: () => ({
         getData: () => ({
-          fileUpload: { filename: 'site-after-development.shp', path: '/tmp/path' },
+          fileUpload: { filename: 'site-after-development.shape', path: '/tmp/path' },
           applicationId: 123,
           siteData: { id: 45678, name: 'site-name', address: '123 site street, Birmingham, B1 4HY', siteMapFiles: { activity: 'site.pdf', mitigationsDuringDevelopment: 'demo.jpg' } }
         }),
@@ -81,8 +80,10 @@ describe('the map of the site showing the mitigations after development page pag
       })
     }
 
+    const mockS3FileUpload = jest.fn()
+    const mockS3FileUploadWrapper = jest.fn().mockImplementation(() => mockS3FileUpload)
     jest.doMock('../../../../services/s3-upload.js', () => ({
-      s3FileUpload: mockS3FileUpload
+      s3FileUpload: mockS3FileUploadWrapper
     }))
     const { uploadMapCompletion } = await import('../site-map-upload.js')
     let result
@@ -105,7 +106,7 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shp'
+        activity: 'site-after-development.shape'
       }
     })
     expect(mockS3FileUpload).toHaveBeenCalled()
@@ -129,8 +130,8 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shp',
-        mitigationsDuringDevelopment: 'site-after-development.shp'
+        activity: 'site-after-development.shape',
+        mitigationsDuringDevelopment: 'site-after-development.shape'
       }
     })
     expect(mockS3FileUpload).toHaveBeenCalled()
@@ -154,13 +155,13 @@ describe('the map of the site showing the mitigations after development page pag
         buildingNumber: '308'
       },
       siteMapFiles: {
-        activity: 'site-after-development.shp',
-        mitigationsDuringDevelopment: 'site-after-development.shp',
-        mitigationsAfterDevelopment: 'site-after-development.shp'
+        activity: 'site-after-development.shape',
+        mitigationsDuringDevelopment: 'site-after-development.shape',
+        mitigationsAfterDevelopment: 'site-after-development.shape'
       }
     })
-    expect(mockS3FileUpload).toHaveBeenCalledWith(123, 'site-after-development.shp', '/tmp/path',
-      { filetype: 'MAP', multiple: true, supportedFileTypes: expect.arrayContaining(['JPG', 'PNG', 'GEOJSON', 'KML', 'ZIP', 'PDF', 'CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']) })
+    expect(mockS3FileUploadWrapper).toHaveBeenCalledWith('APPLICATION', 'site-after-development.shape', '/tmp/path', { filetype: 'MAP', multiple: true, supportedFileTypes: ['ZIP', 'JPG', 'PNG', 'GEOJSON', 'KML', 'PDF', 'CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX'] })
+    expect(mockS3FileUpload).toHaveBeenCalledWith(123)
     expect(mockSetData).toHaveBeenCalled()
   })
 
@@ -208,7 +209,6 @@ describe('the map of the site showing the mitigations after development page pag
 
   it('should redirect user to the check site answers page, when the tag is complete', async () => {
     const mockSetData = jest.fn()
-    const mockS3FileUpload = jest.fn()
     const mockUpdate = jest.fn()
 
     jest.doMock('../../../../services/api-requests.js', () => ({
@@ -242,8 +242,11 @@ describe('the map of the site showing the mitigations after development page pag
       })
     }
 
+    const mockS3FileUpload = jest.fn()
+    const mockS3FileUploadWrapper = jest.fn().mockImplementation(() => mockS3FileUpload)
+
     jest.doMock('../../../../services/s3-upload.js', () => ({
-      s3FileUpload: mockS3FileUpload
+      s3FileUpload: mockS3FileUploadWrapper
     }))
     const { uploadMapCompletion } = await import('../site-map-upload.js')
     expect(await uploadMapCompletion('map-file', { uri: '/next' })(request)).toEqual('/check-site-answers')

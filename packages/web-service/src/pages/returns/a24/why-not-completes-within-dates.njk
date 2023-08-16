@@ -1,0 +1,25 @@
+{% extends "standard-form.njk" %}
+
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'work-not-completed': {
+          'string.empty': { ref: '#work-not-completed', text: 'You have not entered why the work was not completed' },
+          'string.max': { ref: '#work-not-completed', text: 'The description must be 4,000 characters or less' }
+        }
+    }
+%}
+
+{% set title = 'Why was the work not completed between ' + data.startDate + ' and ' + data.endDate + '?' %}
+
+{% block pageContent %}
+
+  {{ govukTextarea({
+    name: "work-not-completed",
+    id: "work-not-completed",
+    value: payload['work-not-completed'] if payload['work-not-completed'] else data.whyNotCompletedWithinLicenceDates,
+    maxlength: 4000,
+    errorMessage: { text: "Enter why the work was not completed" } if error['work-not-completed']
+  }) }}
+
+{% endblock %}
