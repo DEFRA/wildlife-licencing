@@ -1,7 +1,7 @@
 {% extends "yes-no.njk" %}
-{% set title = 'Do you want to add an alternative ecologist contact?' %}
-{% set radioHint = 'This alternative contact must be someone who is authorised to deal with this application on behalf of the named ecologist.' %}
-{% set noneSelected = 'Select yes if you want to add an additional ecologist contact' %}
+{% set title = 'Do you want to add an alternative contact?' %}
+{% set radioHint = 'This alternative contact must be someone who is authorised to deal with this application on behalf of the intended licence-holder.' %}
+{% set noneSelected = 'Select yes if you want to add an additional applicant contact' %}
 
 {% block pageContent %}
     {{ govukRadios({
@@ -22,7 +22,7 @@
         },
         {
           value: "no",
-          text: "No - I am the only ecologist" if data.isSignedInUserEcologist else "No",
+          text: "No",
           checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
         }
       ]

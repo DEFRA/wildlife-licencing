@@ -1,17 +1,10 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { getContactCandidates } from '../common/common.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
 import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
-import { canBeUser, contactsRoute } from '../common/common-handler.js'
-
-// a contact cannot be the applicant and the additional applicant etc.
-const conflictingRoles = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
-  ? [ContactRoles.APPLICANT]
-  : [ContactRoles.ECOLOGIST]
 
 /*
  * The add additional contact functions
@@ -19,10 +12,12 @@ const conflictingRoles = contactRole => contactRole === ContactRoles.ADDITIONAL_
 export const getAdditionalContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  await moveTagInProgress(applicationId, SECTION_TASKS.ADDITIONAL_CONTACTS)
+  const section = contactRole === ContactRoles.ADDITIONAL_APPLICANT
+    ? SECTION_TASKS.ADDITIONAL_APPLICANT
+    : SECTION_TASKS.ADDITIONAL_ECOLOGIST
+  await moveTagInProgress(applicationId, section)
   return {
-    yesNo: yesNoFromBool(journeyData?.additionalContact?.[contactRole]),
-    isSignedInUserApplicant: !await canBeUser(request, conflictingRoles(contactRole))
+    yesNo: yesNoFromBool(journeyData?.additionalContact?.[contactRole])
   }
 }
 
@@ -36,37 +31,13 @@ export const setAdditionalContactData = contactRole => async request => {
   if (request.payload['yes-no'] === 'no') {
     const contactOps = contactOperations(contactRole, applicationId, userId)
     await contactOps.unAssign()
-  }
-}
-
-export const addAdditionalContactCompletion = (contactRole, uriBase) => async request => {
-  const pageData = await request.cache().getPageData()
-  const journeyData = await request.cache().getData()
-  if (boolFromYesNo(pageData.payload['yes-no'])) {
-    if (await canBeUser(request, conflictingRoles(contactRole))) {
-      return uriBase.USER.uri
-    } else {
-      const { userId, applicationId } = journeyData
-      // The conflicting roles are complementary when building the select lists
-      const contacts = await getContactCandidates(userId, applicationId, contactRole,
-        conflictingRoles(contactRole), false)
-
-      if (contacts.length < 1) {
-        return uriBase.NAME.uri
-      } else {
-        return uriBase.NAMES.uri
-      }
-    }
   } else {
-    // If the has additional ecologist answer is set go to the check your answers page
-    if (typeof journeyData?.additionalContact?.[ContactRoles.ADDITIONAL_ECOLOGIST] !== 'undefined') {
-      return contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri
-    } else {
-      return contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
-    }
+    const contactOps = contactOperations(contactRole, applicationId, userId)
+    await contactOps.create(false)
   }
 }
 
+// TODO - Simplify into a single completion function
 const nextUri = async (contactRole, request) => {
   const { additionalContact } = await request.cache().getData()
   if (contactRole === ContactRoles.ADDITIONAL_APPLICANT && typeof additionalContact?.[ContactRoles.ADDITIONAL_ECOLOGIST] === 'undefined') {
@@ -76,28 +47,18 @@ const nextUri = async (contactRole, request) => {
   return contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
 }
 
-/*
- * The additional contact user functions
- */
-export const additionalContactUserCompletion = (contactRole, additionalContactRoles, urlBase) => async request => {
-  const pageData = await request.cache().getPageData()
-  const { userId, applicationId } = await request.cache().getData()
-  if (boolFromYesNo(pageData.payload['yes-no'])) {
-    const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-    const immutable = await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-    if (immutable) {
-      // Contact is immutable, go to end
-      return nextUri(contactRole, request)
-    } else {
-      // Contact may be new, if so gather name
-      if (!contact.fullName) {
-        return urlBase.NAME.uri
-      } else {
-        return nextUri(contactRole, request)
-      }
-    }
+export const additionalContactCompletion = (contactRole, urlBase) => async request => {
+  const { applicationId } = await request.cache().getData()
+  // If an organisation is already assigned,
+  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  if (!contact) {
+    return urlBase.CHECK_ANSWERS.uri
+  } else if (!contact.fullName) {
+    return urlBase.NAME.uri
+  } else if (!contact?.contactDetails?.email) {
+    return urlBase.EMAIL.uri
   } else {
-    return contactsRoute(userId, applicationId, contactRole, additionalContactRoles, urlBase)
+    return urlBase.CHECK_ANSWERS.uri
   }
 }
 
@@ -108,7 +69,7 @@ export const additionalContactNameCompletion = (contactRole, urlBase) => async r
   if (!contact?.contactDetails?.email) {
     return urlBase.EMAIL.uri
   } else {
-    return nextUri(contactRole, request)
+    return urlBase.CHECK_ANSWERS.uri
   }
 }
 
@@ -124,7 +85,7 @@ export const additionalContactNamesCompletion = (contactRole, urlBase) => async 
       return urlBase.EMAIL.uri
     }
 
-    return nextUri(contactRole, request)
+    return urlBase.CHECK_ANSWERS.uri
   }
 }
 

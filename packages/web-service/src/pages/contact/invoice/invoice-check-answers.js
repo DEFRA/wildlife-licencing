@@ -5,7 +5,7 @@ import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { addressLine } from '../../service/address.js'
-import { canBeUser, checkAccountComplete, checkHasContact } from '../common/common-handler.js'
+import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 import { generateOutput } from './common.js'
@@ -31,14 +31,8 @@ export const getData = async request => {
   return {
     responsibility,
     checkYourAnswers: [
-      (responsibility.responsible === 'other' &&
-        { key: 'someoneElse', value: 'Somebody else' }
-      ),
       { key: 'whoIsResponsible', value: responsibility.name },
       { key: 'email', value: responsibility.account?.contactDetails?.email || responsibility.contact?.contactDetails?.email },
-      (responsibility.responsible === 'other' &&
-        await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST]) &&
-        { key: 'contactIsUser', value: yesNoFromBool(!!responsibility.contact.userId) }),
       (responsibility.responsible === 'other' &&
         { key: 'contactIsOrganisation', value: yesNoFromBool(!!responsibility.account) }),
       (responsibility.account && { key: 'contactOrganisations', value: responsibility.account.name }),

@@ -71,7 +71,6 @@ export const workActivityURIs = {
 
 export const contactURIs = {
   ECOLOGIST: {
-    USER: { uri: '/ecologist-user', page: 'ecologist-user' },
     NAMES: { uri: '/ecologist-names', page: 'ecologist-names' },
     NAME: { uri: '/ecologist-name', page: 'ecologist-name' },
     IS_ORGANISATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' },
@@ -83,7 +82,6 @@ export const contactURIs = {
     ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
-    USER: { uri: '/applicant-user', page: 'applicant-user' },
     NAMES: { uri: '/applicant-names', page: 'applicant-names' },
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
     IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
@@ -105,7 +103,6 @@ export const contactURIs = {
   },
   INVOICE_PAYER: {
     RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
-    USER: { uri: '/invoice-user', page: 'invoice-user' },
     NAMES: { uri: '/invoice-names', page: 'invoice-names' },
     NAME: { uri: '/invoice-name', page: 'invoice-name' },
     IS_ORGANISATION: { uri: '/invoice-organisation', page: 'invoice-organisation' },
@@ -120,19 +117,15 @@ export const contactURIs = {
   },
   ADDITIONAL_APPLICANT: {
     ADD: { uri: '/add-additional-applicant', page: 'add-additional-applicant' },
-    USER: { uri: '/additional-applicant-user', page: 'additional-applicant-user' },
-    NAMES: { uri: '/additional-applicant-names', page: 'additional-applicant-names' },
     NAME: { uri: '/additional-applicant-name', page: 'additional-applicant-name' },
     EMAIL: { uri: '/additional-applicant-email', page: 'additional-applicant-email' },
-    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
+    CHECK_ANSWERS: { uri: '/additional-applicant-check-answers', page: 'additional-applicant-check-answers' }
   },
   ADDITIONAL_ECOLOGIST: {
     ADD: { uri: '/add-additional-ecologist', page: 'add-additional-ecologist' },
-    USER: { uri: '/additional-ecologist-user', page: 'additional-ecologist-user' },
-    NAMES: { uri: '/additional-ecologist-names', page: 'additional-ecologist-names' },
     NAME: { uri: '/additional-ecologist-name', page: 'additional-ecologist-name' },
     EMAIL: { uri: '/additional-ecologist-email', page: 'additional-ecologist-email' },
-    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
+    CHECK_ANSWERS: { uri: '/additional-ecologist-check-answers', page: 'additional-ecologist-check-answers' }
   }
 }
 

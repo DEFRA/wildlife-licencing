@@ -1,0 +1,40 @@
+import { APIRequests } from '../../../../services/api-requests.js'
+import { checkApplication } from '../../../common/check-application.js'
+import { ContactRoles } from '../../common/contact-roles.js'
+import { contactURIs, TASKLIST } from '../../../../uris.js'
+import { checkAnswersPage } from '../../../common/check-answers.js'
+import { yesNoFromBool } from '../../../common/common.js'
+import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
+import { tagStatus } from '../../../../services/status-tags.js'
+
+export const getData = async request => {
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_APPLICANT, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  const additionalApplicant = await APIRequests.CONTACT.role(ContactRoles.ADDITIONAL_APPLICANT).getByApplicationId(applicationId)
+  return {
+    applicant: additionalApplicant
+      ? [
+          { key: 'addAdditionalApplicant', value: yesNoFromBool(true) },
+          { key: 'applicantName', value: additionalApplicant.fullName },
+          { key: 'applicantEmail', value: additionalApplicant.contactDetails.email }
+        ].filter(a => a)
+      : [
+          { key: 'addAdditionalApplicant', value: yesNoFromBool(false) }
+        ]
+  }
+}
+
+export const setData = async request => {
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ADDITIONAL_APPLICANT, tagState: tagStatus.COMPLETE })
+}
+
+export const additionalApplicantCheckAnswers = checkAnswersPage({
+  checkData: checkApplication,
+  page: contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.page,
+  uri: contactURIs.ADDITIONAL_APPLICANT.CHECK_ANSWERS.uri,
+  getData: getData,
+  setData: setData,
+  completion: TASKLIST.uri
+})

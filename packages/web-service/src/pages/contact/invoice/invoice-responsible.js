@@ -6,11 +6,10 @@ import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { accountOperations, contactOperations } from '../common/operations.js'
-import { canBeUser } from '../common/common-handler.js'
 import { hasContactCandidates } from '../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 
-const { RESPONSIBLE, USER, CONTACT_DETAILS, NAMES, NAME } = contactURIs.INVOICE_PAYER
+const { RESPONSIBLE, CONTACT_DETAILS, NAMES, NAME } = contactURIs.INVOICE_PAYER
 
 export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
@@ -53,34 +52,38 @@ export const getData = async request => {
 export const setData = async request => {
   const { applicationId, userId } = await request.cache().getData()
   switch (request.payload.responsible) {
-    case 'applicant':
-      {
-        const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
-        const applicantOrganisation = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId(applicationId)
-        await APIRequests.CONTACT.role(ContactRoles.PAYER).assign(applicationId, applicant.id)
-        if (applicantOrganisation) {
-          await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).assign(applicationId, applicantOrganisation.id)
-        }
+    case 'applicant': {
+      const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
+      const applicantOrganisation = await APIRequests.ACCOUNT.role(AccountRoles.APPLICANT_ORGANISATION).getByApplicationId(applicationId)
+      await APIRequests.CONTACT.role(ContactRoles.PAYER).assign(applicationId, applicant.id)
+      if (applicantOrganisation) {
+        await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).assign(applicationId, applicantOrganisation.id)
       }
+    }
       break
-    case 'ecologist':
-      {
-        const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
-        const ecologistOrganisation = await APIRequests.ACCOUNT.role(AccountRoles.ECOLOGIST_ORGANISATION).getByApplicationId(applicationId)
-        await APIRequests.CONTACT.role(ContactRoles.PAYER).assign(applicationId, ecologist.id)
-        if (ecologistOrganisation) {
-          await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).assign(applicationId, ecologistOrganisation.id)
-        }
+    case 'ecologist': {
+      const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
+      const ecologistOrganisation = await APIRequests.ACCOUNT.role(AccountRoles.ECOLOGIST_ORGANISATION).getByApplicationId(applicationId)
+      await APIRequests.CONTACT.role(ContactRoles.PAYER).assign(applicationId, ecologist.id)
+      if (ecologistOrganisation) {
+        await APIRequests.ACCOUNT.role(AccountRoles.PAYER_ORGANISATION).assign(applicationId, ecologistOrganisation.id)
       }
+    }
 
       break
     default: {
-      // Will be created in the user page unless the applicant of the ecologist is the signed-in user in which case created it here
-      const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
-      const accountOps = accountOperations(AccountRoles.PAYER_ORGANISATION, applicationId)
-      // Un-assign payer and payer organisation. Will be created in the user handler or the name pages
-      await contactOps.unAssign()
-      await accountOps.unAssign()
+      // if a payer has already been assigned, unAssign if the contact role has previously been set as the applicant or the ecologist
+      const payer = await APIRequests.CONTACT.role(ContactRoles.PAYER).getByApplicationId(applicationId)
+      if (payer) {
+        const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
+        const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
+        if (payer.id === applicant?.id || payer.id === ecologist?.id) {
+          const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
+          const accountOps = accountOperations(AccountRoles.PAYER_ORGANISATION, applicationId)
+          await contactOps.unAssign()
+          await accountOps.unAssign()
+        }
+      }
     }
   }
 }
@@ -88,17 +91,11 @@ export const setData = async request => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   if (pageData.payload.responsible === 'other') {
-    // If the ecologist or applicant contact is the signed-in user then do ask the 'is the payer the signed-in user?'
-    // question and set that explicitly to 'no', returning the NAMES page
-    if (await canBeUser(request, [ContactRoles.APPLICANT, ContactRoles.ECOLOGIST])) {
-      return USER.uri
+    const { applicationId, userId } = await request.cache().getData()
+    if (await hasContactCandidates(userId, applicationId, ContactRoles.PAYER, [], false)) {
+      return NAMES.uri
     } else {
-      const { applicationId, userId } = await request.cache().getData()
-      if (await hasContactCandidates(userId, applicationId, ContactRoles.PAYER, [], false)) {
-        return NAMES.uri
-      } else {
-        return NAME.uri
-      }
+      return NAME.uri
     }
   }
 

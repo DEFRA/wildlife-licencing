@@ -1,7 +1,6 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { yesNoFromBool } from '../../../common/common.js'
 import { addressLine } from '../../../service/address.js'
-import { canBeUser } from '../common-handler.js'
 
 export const CONTACT_COMPLETE = {
   APPLICANT: 'applicant-contact-complete',
@@ -10,7 +9,7 @@ export const CONTACT_COMPLETE = {
   PAYER: 'invoice-payer-complete'
 }
 
-export const getCheckAnswersData = (contactRole, conflictingRoles, accountRole) => async request => {
+export const getCheckAnswersData = (contactRole, _conflictingRoles, accountRole) => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
@@ -19,7 +18,6 @@ export const getCheckAnswersData = (contactRole, conflictingRoles, accountRole) 
   return {
     hasAccount: !!account,
     checkYourAnswers: [
-      (await canBeUser(request, conflictingRoles) && { key: 'contactIsUser', value: yesNoFromBool(contact.userId) }),
       { key: 'whoIsTheLicenceFor', value: contact.fullName },
       { key: 'contactIsOrganisation', value: yesNoFromBool(!!account) },
       (account && { key: 'contactOrganisations', value: account.name }),

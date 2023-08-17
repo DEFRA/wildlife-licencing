@@ -1,13 +1,13 @@
-import { contactURIs } from '../../../uris.js'
-import { emailAddressPage } from '../common/email-address/email-address-page.js'
-import { ContactRoles } from '../common/contact-roles.js'
+import { contactURIs } from '../../../../uris.js'
+import { emailAddressPage } from '../../common/email-address/email-address-page.js'
+import { ContactRoles } from '../../common/contact-roles.js'
 import {
   getAdditionalContactEmailAddressData,
   setAdditionalContactEmailAddressData,
   additionalContactEmailCompletion
-} from './common.js'
-import { checkHasContact } from '../common/common-handler.js'
-import { checkApplication } from '../../common/check-application.js'
+} from '../common.js'
+import { checkHasContact } from '../../common/common-handler.js'
+import { checkApplication } from '../../../common/check-application.js'
 
 const { EMAIL, ADD } = contactURIs.ADDITIONAL_ECOLOGIST
 

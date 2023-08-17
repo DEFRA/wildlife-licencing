@@ -63,7 +63,8 @@ export const checkData = async (request, h) => {
       return h.redirect(APPLICATIONS.uri)
     }
   } else {
-    if (journeyData.applicationId && journeyData.applicationRole) {
+    // TODO if (journeyData.applicationId && journeyData.applicationRole) {
+    if (journeyData.applicationId) {
       const application = APIRequests.APPLICATION.getById(journeyData.applicationId)
       if (!application) {
         return h.redirect(APPLICATIONS.uri)

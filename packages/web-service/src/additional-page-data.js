@@ -69,7 +69,6 @@ export const additionalPageData = async (request, h) => {
         purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
 
         // Applicant
-        applicantUser: contactURIs.APPLICANT.USER.uri,
         applicantNames: contactURIs.APPLICANT.NAMES.uri,
         applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
         applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
@@ -79,7 +78,6 @@ export const additionalPageData = async (request, h) => {
         applicantAddress: contactURIs.APPLICANT.ADDRESS.uri,
 
         // Ecologist
-        ecologistUser: contactURIs.ECOLOGIST.USER.uri,
         ecologistName: contactURIs.ECOLOGIST.NAME.uri,
         ecologistNames: contactURIs.ECOLOGIST.NAMES.uri,
         ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
@@ -90,18 +88,15 @@ export const additionalPageData = async (request, h) => {
 
         // Additional applicant
         additionalApplicantAdd: contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
-        additionalApplicantUser: contactURIs.ADDITIONAL_APPLICANT.USER.uri,
-        additionalApplicantNames: contactURIs.ADDITIONAL_APPLICANT.NAMES.uri,
+        additionalApplicantName: contactURIs.ADDITIONAL_APPLICANT.NAME.uri,
         additionalApplicantEmail: contactURIs.ADDITIONAL_APPLICANT.EMAIL.uri,
 
         // Additional ecologist
         additionalEcologistAdd: contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri,
-        additionalEcologistUser: contactURIs.ADDITIONAL_ECOLOGIST.USER.uri,
-        additionalEcologistNames: contactURIs.ADDITIONAL_ECOLOGIST.NAMES.uri,
+        additionalEcologistName: contactURIs.ADDITIONAL_ECOLOGIST.NAME.uri,
         additionalEcologistEmail: contactURIs.ADDITIONAL_ECOLOGIST.EMAIL.uri,
 
         // Payer
-        invoiceUser: contactURIs.INVOICE_PAYER.USER.uri,
         invoiceName: contactURIs.INVOICE_PAYER.NAME.uri,
         invoiceNames: contactURIs.INVOICE_PAYER.NAMES.uri,
         invoiceOrganisations: contactURIs.INVOICE_PAYER.ORGANISATIONS.uri,

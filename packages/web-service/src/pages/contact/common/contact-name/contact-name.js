@@ -10,7 +10,6 @@ export const getContactData = contactRole => async request => {
 
 /**
  * Create a contact if one does not already exist
- * The user page will create the signed-in user
  * @param contactRole
  * @returns {(function(*): Promise<void>)|*}
  */

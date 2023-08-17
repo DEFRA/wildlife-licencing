@@ -21,7 +21,6 @@ import { checkSupportingInformation } from '../pages/supporting-information/chec
 
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
-import { applicantUser } from '../pages/contact/applicant/applicant-user.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
@@ -32,7 +31,6 @@ import { applicantAddressForm } from '../pages/contact/applicant/applicant-addre
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
-import { ecologistUser } from '../pages/contact/ecologist/ecologist-user.js'
 import { ecologistEmail } from '../pages/contact/ecologist/ecologist-email.js'
 import { ecologistCheckAnswers } from '../pages/contact/ecologist/ecologist-check-answers.js'
 import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
@@ -49,19 +47,16 @@ import { authorisedPersonAddress } from '../pages/contact/authorised-people/auth
 import { authorisedPersonAddressForm } from '../pages/contact/authorised-people/authorised-person-address-form.js'
 import { removeAuthorisedPerson } from '../pages/contact/authorised-people/remove-authorised-person.js'
 
-import { addAdditionalApplicant } from '../pages/contact/additional-contacts/add-additional-applicant.js'
-import { additionalApplicantUser } from '../pages/contact/additional-contacts/additional-applicant-user.js'
-import { additionalApplicantName } from '../pages/contact/additional-contacts/additional-applicant-name.js'
-import { additionalApplicantNames } from '../pages/contact/additional-contacts/additional-applicant-names.js'
-import { additionalApplicantEmail } from '../pages/contact/additional-contacts/additional-applicant-email.js'
+import { addAdditionalApplicant } from '../pages/contact/additional-contacts/additional-applicant/add-additional-applicant.js'
+import { additionalApplicantName } from '../pages/contact/additional-contacts/additional-applicant/additional-applicant-name.js'
+import { additionalApplicantEmail } from '../pages/contact/additional-contacts/additional-applicant/additional-applicant-email.js'
 
-import { addAdditionalEcologist } from '../pages/contact/additional-contacts/add-additional-ecologist.js'
-import { additionalEcologistUser } from '../pages/contact/additional-contacts/additional-ecologist-user.js'
-import { additionalEcologistName } from '../pages/contact/additional-contacts/additional-ecologist-name.js'
-import { additionalEcologistNames } from '../pages/contact/additional-contacts/additional-ecologist-names.js'
-import { additionalEcologistEmail } from '../pages/contact/additional-contacts/additional-ecologist-email.js'
+import { addAdditionalEcologist } from '../pages/contact/additional-contacts/additional-ecologist/add-additional-ecologist.js'
+import { additionalEcologistName } from '../pages/contact/additional-contacts/additional-ecologist/additional-ecologist-name.js'
+import { additionalEcologistEmail } from '../pages/contact/additional-contacts/additional-ecologist/additional-ecologist-email.js'
 
-import { additionalContactCheckAnswers } from '../pages/contact/additional-contacts/additional-contact-check-answers.js'
+import { additionalEcologistCheckAnswers } from '../pages/contact/additional-contacts/additional-ecologist/additional-ecologist-check-answers.js'
+import { additionalApplicantCheckAnswers } from '../pages/contact/additional-contacts/additional-applicant/additional-applicant-check-answers.js'
 
 import workProposal from '../pages/work-activity/work-proposal/work-proposal.js'
 import workPayment from '../pages/work-activity/work-payment/work-payment.js'
@@ -73,7 +68,6 @@ import checkWorkAnswers from '../pages/work-activity/check-work-answers/check-wo
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
 import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
-import { invoiceUser } from '../pages/contact/invoice/invoice-user.js'
 import { invoiceEmail } from '../pages/contact/invoice/invoice-email.js'
 import { invoiceCheckAnswers } from '../pages/contact/invoice/invoice-check-answers.js'
 import { invoiceOrganisation } from '../pages/contact/invoice/invoice-organisation.js'
@@ -207,7 +201,6 @@ const routes = [
   ...eligibilityCheck,
   ...eligible,
   ...tasklist,
-  ...applicantUser,
   ...applicantName,
   ...applicantNames,
   ...applicantOrganisation,
@@ -217,7 +210,6 @@ const routes = [
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
-  ...ecologistUser,
   ...ecologistName,
   ...ecologistNames,
   ...ecologistOrganisation,
@@ -235,18 +227,14 @@ const routes = [
   ...authorisedPersonAddressForm,
   ...removeAuthorisedPerson,
   ...addAdditionalApplicant,
-  ...additionalApplicantUser,
-  ...additionalApplicantNames,
   ...additionalApplicantName,
   ...additionalApplicantEmail,
+  ...additionalApplicantCheckAnswers,
   ...addAdditionalEcologist,
-  ...additionalEcologistUser,
-  ...additionalEcologistNames,
   ...additionalEcologistName,
   ...additionalEcologistEmail,
-  ...additionalContactCheckAnswers,
+  ...additionalEcologistCheckAnswers,
   ...invoiceResponsible,
-  ...invoiceUser,
   ...invoiceName,
   ...invoiceNames,
   ...invoiceOrganisation,
