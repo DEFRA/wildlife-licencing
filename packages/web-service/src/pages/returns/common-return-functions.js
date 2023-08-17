@@ -66,7 +66,7 @@ export const commonValidator = async (payload, page) => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (page === WELFARE_CONCERNS.page && payload['yes-no'] === 'yes') {
+  if ((page === WELFARE_CONCERNS.page || page === DISTURB_BADGERS.page) && payload['yes-no'] === 'yes') {
     Joi.assert(payload, Joi.object({
       'yes-conditional-input': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
