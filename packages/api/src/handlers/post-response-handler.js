@@ -13,12 +13,14 @@ export default async (context, req, h) => {
   )
 
   if (responseValidation.errors) {
-    return h.response({ errors: responseValidation.errors })
+    return h
+      .response({ errors: responseValidation.errors })
       .type(APPLICATION_JSON)
       .code(500)
   }
 
-  return h.response(context.response)
+  return h
+    .response(context.response)
     .type(APPLICATION_JSON)
     .code(context.response.statusCode)
 }

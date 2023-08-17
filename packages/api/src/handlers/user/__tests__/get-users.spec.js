@@ -37,7 +37,9 @@ describe('The getUsers handler', () => {
   })
 
   it('returns the users and status 200 the database', async () => {
-    models.users = { findAll: jest.fn(() => ([{ dataValues: { username: 'Graham', ...ts } }])) }
+    models.users = {
+      findAll: jest.fn(() => [{ dataValues: { username: 'Graham', ...ts } }])
+    }
     await getUsers(context, { query: null, path: '/users' }, h)
     expect(models.users.findAll).toHaveBeenCalled()
     expect(h.response).toHaveBeenCalledWith([{ username: 'Graham', ...tsR }])
@@ -46,16 +48,28 @@ describe('The getUsers handler', () => {
   })
 
   it('returns a singleton array of users and status 200 the database', async () => {
-    models.users = { findAll: jest.fn(() => ([{ dataValues: { username: 'Graham', ...ts } }])) }
-    await getUsers(context, { query: { username: 'Graham' }, path: '/users' }, h)
-    expect(models.users.findAll).toHaveBeenCalledWith({ where: { username: 'Graham' } })
+    models.users = {
+      findAll: jest.fn(() => [{ dataValues: { username: 'Graham', ...ts } }])
+    }
+    await getUsers(
+      context,
+      { query: { username: 'Graham' }, path: '/users' },
+      h
+    )
+    expect(models.users.findAll).toHaveBeenCalledWith({
+      where: { username: 'Graham' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ username: 'Graham', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on an unexpected database error', async () => {
-    models.users = { findAll: jest.fn(() => { throw new Error() }) }
+    models.users = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getUsers(context, { query: null, path: '/users' }, h)
     }).rejects.toThrow()

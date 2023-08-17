@@ -44,7 +44,9 @@ describe('The getApplicationAccountByApplicationAccountId handler', () => {
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
 
-    getApplicationAccountByApplicationAccountId = (await import('../get-application-account-by-application-account-id.js')).default
+    getApplicationAccountByApplicationAccountId = (
+      await import('../get-application-account-by-application-account-id.js')
+    ).default
   })
 
   it('returns an application-account and status 200 from the cache', async () => {
@@ -58,9 +60,13 @@ describe('The getApplicationAccountByApplicationAccountId handler', () => {
   it('returns an application-account and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.applicationAccounts = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.applicationAccounts = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getApplicationAccountByApplicationAccountId(context, req, h)
-    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(context.request.params.applicationAccountId)
+    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationAccountId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -71,14 +77,20 @@ describe('The getApplicationAccountByApplicationAccountId handler', () => {
     cache.restore = jest.fn(() => null)
     models.applicationAccounts = { findByPk: jest.fn(() => null) }
     await getApplicationAccountByApplicationAccountId(context, req, h)
-    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(context.request.params.applicationAccountId)
+    expect(models.applicationAccounts.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationAccountId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applicationAccounts = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.applicationAccounts = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationAccountByApplicationAccountId(context, req, h)
     }).rejects.toThrow()

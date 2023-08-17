@@ -1,8 +1,8 @@
 import { init, createServer } from '../server.js'
 
 describe('The API server', () => {
-  it('starts', done => {
-    createServer().then(s => {
+  it('starts', (done) => {
+    createServer().then((s) => {
       init(s).then(() => {
         expect(s.info.port).toEqual(3000)
         s.events.on('stop', () => done())
@@ -11,20 +11,20 @@ describe('The API server', () => {
     })
   })
 
-  it('handles a request', done => {
+  it('handles a request', (done) => {
     const uuid = '1e470963-e8bf-41f5-9b0b-52d19c21cb75'
-    createServer().then(s => {
+    createServer().then((s) => {
       init(s).then(() => {
         s.events.on('stop', () => done())
         s.inject({
           method: 'GET',
           url: `/user/${uuid}`
         })
-          .then(r => {
+          .then((r) => {
             expect(r).toBe({ id: uuid })
             s.stop()
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e)
             s.stop()
           })
@@ -36,7 +36,7 @@ describe('The API server', () => {
     ['SIGINT', 130],
     ['SIGTERM', 137]
   ])('shuts down on %s', (signal, code, done) => {
-    createServer().then(s => {
+    createServer().then((s) => {
       init(s).then(() => {
         s.events.on('stop', () => done())
         const serverStopSpy = jest

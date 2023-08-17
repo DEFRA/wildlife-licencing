@@ -1,4 +1,3 @@
-
 /*
  * Mock the hapi response toolkit in order to test the results of the request
  */
@@ -36,7 +35,9 @@ const applicationJson = 'application/json'
 describe('The getHabitatSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getHabitatSitesByLicenceId = (await import('../get-habitat-sites-by-licence-id.js')).default
+    getHabitatSitesByLicenceId = (
+      await import('../get-habitat-sites-by-licence-id.js')
+    ).default
   })
 
   it('returns a 200 on successful fetch', async () => {
@@ -46,7 +47,7 @@ describe('The getHabitatSite handler', () => {
     models.habitatSites = {
       findAll: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }])
     }
-    await getHabitatSitesByLicenceId(context, { }, h)
+    await getHabitatSitesByLicenceId(context, {}, h)
     expect(h.response).toHaveBeenCalledWith([{ id: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -56,15 +57,19 @@ describe('The getHabitatSite handler', () => {
     models.licences = {
       findByPk: jest.fn(() => null)
     }
-    await getHabitatSitesByLicenceId(context, { }, h)
+    await getHabitatSitesByLicenceId(context, {}, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws with an insert error', async () => {
-    models.licences = { create: jest.fn(async () => { throw new Error() }) }
+    models.licences = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
-      await getHabitatSitesByLicenceId(context, { }, h)
+      await getHabitatSitesByLicenceId(context, {}, h)
     }).rejects.toThrow()
   })
 })

@@ -1,4 +1,3 @@
-
 /*
  * Mock the hapi response toolkit in order to test the results of the request
  */
@@ -36,7 +35,9 @@ const applicationJson = 'application/json'
 describe('The getHabitatSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getHabitatSitesByApplicationId = (await import('../get-habitat-sites-by-application-id.js')).default
+    getHabitatSitesByApplicationId = (
+      await import('../get-habitat-sites-by-application-id.js')
+    ).default
   })
 
   it('returns a 200 on successful fetch', async () => {
@@ -46,7 +47,7 @@ describe('The getHabitatSite handler', () => {
     models.habitatSites = {
       findAll: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }])
     }
-    await getHabitatSitesByApplicationId(context, { }, h)
+    await getHabitatSitesByApplicationId(context, {}, h)
     expect(h.response).toHaveBeenCalledWith([{ id: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -56,15 +57,19 @@ describe('The getHabitatSite handler', () => {
     models.applications = {
       findByPk: jest.fn(() => null)
     }
-    await getHabitatSitesByApplicationId(context, { }, h)
+    await getHabitatSitesByApplicationId(context, {}, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws with an insert error', async () => {
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
-      await getHabitatSitesByApplicationId(context, { }, h)
+      await getHabitatSitesByApplicationId(context, {}, h)
     }).rejects.toThrow()
   })
 })

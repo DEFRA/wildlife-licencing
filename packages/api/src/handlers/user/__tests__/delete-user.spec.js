@@ -76,7 +76,11 @@ describe('The deleteUser handler', () => {
     cache.delete = jest.fn()
     models.applications = { findAll: jest.fn(() => []) }
     models.sites = { findAll: jest.fn(() => []) }
-    models.users = { destroy: jest.fn(() => { throw Error() }) }
+    models.users = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteUser(context, req, h)
     }).rejects.toThrow()

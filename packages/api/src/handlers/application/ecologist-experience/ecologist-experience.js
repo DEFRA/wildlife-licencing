@@ -4,4 +4,6 @@ import { deleteSectionHandler } from '../application-section/delete-section.js'
 
 export const getEcologistExperience = getSectionHandler('ecologistExperience')
 export const putEcologistExperience = putSectionHandler('ecologistExperience')
-export const deleteEcologistExperience = deleteSectionHandler('ecologistExperience')
+export const deleteEcologistExperience = deleteSectionHandler(
+  'ecologistExperience'
+)

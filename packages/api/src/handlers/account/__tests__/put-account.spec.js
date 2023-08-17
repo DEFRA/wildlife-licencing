@@ -55,13 +55,15 @@ describe('The putAccount handler', () => {
 
   it('returns a 201 on successful create', async () => {
     models.accounts = {
-      findOrCreate: jest.fn(async () => ([{
-        dataValues:
-          {
+      findOrCreate: jest.fn(async () => [
+        {
+          dataValues: {
             id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
             ...ts
           }
-      }, true]))
+        },
+        true
+      ])
     }
     cache.save = jest.fn()
     cache.delete = jest.fn()
@@ -76,38 +78,61 @@ describe('The putAccount handler', () => {
         id: context.request.params.accountId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.accountId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.accountId, ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, {
+      id: context.request.params.accountId,
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: context.request.params.accountId,
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 200 with an existing key', async () => {
     models.accounts = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => ([1, [{
-        dataValues: {
-          id: context.request.params.accountId,
-          ...ts
-        }
-      }]]))
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => [
+        1,
+        [
+          {
+            dataValues: {
+              id: context.request.params.accountId,
+              ...ts
+            }
+          }
+        ]
+      ])
     }
     cache.save = jest.fn()
     cache.delete = jest.fn()
     await putAccount(context, req, h)
-    expect(models.accounts.update).toHaveBeenCalledWith({
-      updateStatus: 'L',
-      account: (({ ...l }) => l)(req.payload)
-    },
-    { returning: true, where: { id: context.request.params.accountId } })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.accountId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.accountId, ...tsR })
+    expect(models.accounts.update).toHaveBeenCalledWith(
+      {
+        updateStatus: 'L',
+        account: (({ ...l }) => l)(req.payload)
+      },
+      { returning: true, where: { id: context.request.params.accountId } }
+    )
+    expect(cache.save).toHaveBeenCalledWith(path, {
+      id: context.request.params.accountId,
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: context.request.params.accountId,
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws with an insert query error', async () => {
-    models.accounts = { findOrCreate: jest.fn(async () => { throw new Error() }) }
+    models.accounts = {
+      findOrCreate: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await putAccount(context, req, h)
     }).rejects.toThrow()
@@ -115,8 +140,10 @@ describe('The putAccount handler', () => {
 
   it('throws with an update query error', async () => {
     models.accounts = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => { throw new Error() })
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => {
+        throw new Error()
+      })
     }
     await expect(async () => {
       await putAccount(context, req, h)

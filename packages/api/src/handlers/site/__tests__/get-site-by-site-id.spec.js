@@ -59,9 +59,13 @@ describe('The getSiteBySiteId handler', () => {
   it('returns a site and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.sites = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.sites = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getSite(context, req, h)
-    expect(models.sites.findByPk).toHaveBeenCalledWith(context.request.params.siteId)
+    expect(models.sites.findByPk).toHaveBeenCalledWith(
+      context.request.params.siteId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -72,7 +76,9 @@ describe('The getSiteBySiteId handler', () => {
     cache.restore = jest.fn(() => null)
     models.sites = { findByPk: jest.fn(() => null) }
     await getSite(context, req, h)
-    expect(models.sites.findByPk).toHaveBeenCalledWith(context.request.params.siteId)
+    expect(models.sites.findByPk).toHaveBeenCalledWith(
+      context.request.params.siteId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })

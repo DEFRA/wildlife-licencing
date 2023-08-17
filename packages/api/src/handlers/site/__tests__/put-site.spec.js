@@ -55,13 +55,15 @@ describe('The putSite handler', () => {
 
   it('returns a 201 on successful create', async () => {
     models.sites = {
-      findOrCreate: jest.fn(async () => ([{
-        dataValues:
-          {
+      findOrCreate: jest.fn(async () => [
+        {
+          dataValues: {
             id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
             ...ts
           }
-      }, true]))
+        },
+        true
+      ])
     }
     cache.save = jest.fn()
     cache.delete = jest.fn()
@@ -76,38 +78,61 @@ describe('The putSite handler', () => {
         id: context.request.params.siteId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.siteId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.siteId, ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(path, {
+      id: context.request.params.siteId,
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: context.request.params.siteId,
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 200 with an existing key', async () => {
     models.sites = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => ([1, [{
-        dataValues: {
-          id: context.request.params.siteId,
-          ...ts
-        }
-      }]]))
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => [
+        1,
+        [
+          {
+            dataValues: {
+              id: context.request.params.siteId,
+              ...ts
+            }
+          }
+        ]
+      ])
     }
     cache.save = jest.fn()
     cache.delete = jest.fn()
     await putSite(context, req, h)
-    expect(models.sites.update).toHaveBeenCalledWith({
-      updateStatus: 'L',
-      site: (({ ...l }) => l)(req.payload)
-    },
-    { returning: true, where: { id: context.request.params.siteId } })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.siteId, ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: context.request.params.siteId, ...tsR })
+    expect(models.sites.update).toHaveBeenCalledWith(
+      {
+        updateStatus: 'L',
+        site: (({ ...l }) => l)(req.payload)
+      },
+      { returning: true, where: { id: context.request.params.siteId } }
+    )
+    expect(cache.save).toHaveBeenCalledWith(path, {
+      id: context.request.params.siteId,
+      ...tsR
+    })
+    expect(h.response).toHaveBeenCalledWith({
+      id: context.request.params.siteId,
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws with an insert query error', async () => {
-    models.sites = { findOrCreate: jest.fn(async () => { throw new Error() }) }
+    models.sites = {
+      findOrCreate: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await putSite(context, req, h)
     }).rejects.toThrow()
@@ -115,8 +140,10 @@ describe('The putSite handler', () => {
 
   it('throws with an update query error', async () => {
     models.sites = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => { throw new Error() })
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => {
+        throw new Error()
+      })
     }
     await expect(async () => {
       await putSite(context, req, h)

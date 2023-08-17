@@ -40,16 +40,20 @@ describe('The getApplication handler', () => {
     models.applications = {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
-    await getApplications({ }, { query: { }, path }, h)
-    expect(models.applications.findAll).toHaveBeenCalledWith(expect.objectContaining({
-      include: {
-        attributes: [],
-        through: {
-          attributes: []
+    await getApplications({}, { query: {}, path }, h)
+    expect(models.applications.findAll).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: {
+          attributes: [],
+          through: {
+            attributes: []
+          }
         }
-      }
-    }))
-    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({ foo: 'bar', ...tsR })])
+      })
+    )
+    expect(h.response).toHaveBeenCalledWith([
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -58,24 +62,38 @@ describe('The getApplication handler', () => {
     models.applications = {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
-    await getApplications({ }, { query: { role: 'USER', userId: '6877f11b-3755-49bc-8a15-9070c756d1ad' }, path }, h)
-    expect(models.applications.findAll).toHaveBeenCalledWith(expect.objectContaining({
-      include:
-        {
+    await getApplications(
+      {},
+      {
+        query: { role: 'USER', userId: '6877f11b-3755-49bc-8a15-9070c756d1ad' },
+        path
+      },
+      h
+    )
+    expect(models.applications.findAll).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: {
           attributes: [],
           through: { attributes: [], where: { role: 'USER' } },
           where: { id: '6877f11b-3755-49bc-8a15-9070c756d1ad' }
         }
-    }))
-    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({ foo: 'bar', ...tsR })])
+      })
+    )
+    expect(h.response).toHaveBeenCalledWith([
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applications = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applications = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
-      await getApplications({ }, req, h)
+      await getApplications({}, req, h)
     }).rejects.toThrow()
   })
 })

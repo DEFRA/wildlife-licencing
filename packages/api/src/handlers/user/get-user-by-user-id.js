@@ -8,9 +8,7 @@ export default async (context, req, h) => {
   const saved = await cache.restore(req.path)
 
   if (saved) {
-    return h.response(JSON.parse(saved))
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(JSON.parse(saved)).type(APPLICATION_JSON).code(200)
   }
 
   const user = await models.users.findByPk(context.request.params.userId)
@@ -23,7 +21,5 @@ export default async (context, req, h) => {
 
   // Cache
   await cache.save(req.path, response)
-  return h.response(response)
-    .type(APPLICATION_JSON)
-    .code(200)
+  return h.response(response).type(APPLICATION_JSON).code(200)
 }

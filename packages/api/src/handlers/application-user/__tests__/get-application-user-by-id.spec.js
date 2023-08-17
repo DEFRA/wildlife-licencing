@@ -19,23 +19,30 @@ describe('get-application-user-by-id-handler', () => {
 
   it('returns the result from the cache', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
-      models: {
-      }
+      models: {}
     }))
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => JSON.stringify({
-            userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-            applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-            role: 'USER'
-          }))
+          restore: jest.fn(() =>
+            JSON.stringify({
+              userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+              applicationId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+              role: 'USER'
+            })
+          )
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const getApplicationUser = (
+      await import('../get-application-user-by-id.js')
+    ).default
+    await getApplicationUser(context, {}, h)
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(h.response).toHaveBeenCalledWith({
       userId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
@@ -70,9 +77,15 @@ describe('get-application-user-by-id-handler', () => {
       }
     }))
     const mockSave = jest.fn()
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const getApplicationUser = (
+      await import('../get-application-user-by-id.js')
+    ).default
+    await getApplicationUser(context, {}, h)
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(h.response).toHaveBeenCalledWith({
       id: 'eb14153e-7425-4e4c-bcc4-acd8ee1933c3',
@@ -82,7 +95,10 @@ describe('get-application-user-by-id-handler', () => {
       ...tsR
     })
     expect(typeFunc).toHaveBeenCalledWith('application/json')
-    expect(mockSave).toHaveBeenCalledWith('/application-user/1ee0737e-f97d-4f79-8225-81b6014ce37e', expect.any(Object))
+    expect(mockSave).toHaveBeenCalledWith(
+      '/application-user/1ee0737e-f97d-4f79-8225-81b6014ce37e',
+      expect.any(Object)
+    )
   })
 
   it('returns a status 404 if no application-user found', async () => {
@@ -100,9 +116,15 @@ describe('get-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
-    await getApplicationUser(context, { }, h)
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const getApplicationUser = (
+      await import('../get-application-user-by-id.js')
+    ).default
+    await getApplicationUser(context, {}, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
@@ -119,14 +141,22 @@ describe('get-application-user-by-id-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applicationUsers: {
-          findByPk: jest.fn(() => { throw new Error() })
+          findByPk: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const getApplicationUser = (await import('../get-application-user-by-id.js')).default
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const getApplicationUser = (
+      await import('../get-application-user-by-id.js')
+    ).default
     await expect(async () => {
-      await getApplicationUser(context, { }, h)
+      await getApplicationUser(context, {}, h)
     }).rejects.toThrow()
   })
 })

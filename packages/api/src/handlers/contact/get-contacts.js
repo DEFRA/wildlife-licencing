@@ -14,7 +14,9 @@ export default async (_context, req, h) => {
     const where = req.query
     const userClause = where.userId ? `and au.user_id = '${where.userId}'` : ''
     const roleClause = where.role ? `and ac.contact_role = '${where.role}'` : ''
-    const applicationClause = where.applicationId ? `and ac.application_id = '${where.applicationId}'` : ''
+    const applicationClause = where.applicationId
+      ? `and ac.application_id = '${where.applicationId}'`
+      : ''
     const qryStr = `
       select * from contacts c
          where exists (
@@ -23,9 +25,11 @@ export default async (_context, req, h) => {
           where ac.application_id = au.application_id
           ${userClause} ${roleClause} ${applicationClause})`
 
-    const result = await sequelize.query(qryStr, { type: sequelize.QueryTypes.SELECT })
+    const result = await sequelize.query(qryStr, {
+      type: sequelize.QueryTypes.SELECT
+    })
     // Response from this query is slightly different to sequelize fetch
-    const responseBody = result.map(a => ({
+    const responseBody = result.map((a) => ({
       id: a.id,
       ...a.contact,
       userId: a.user_id,
@@ -34,9 +38,7 @@ export default async (_context, req, h) => {
       updatedAt: a.updated_at.toISOString(),
       submitted: a.submitted?.toISOString()
     }))
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the CONTACTS table', err)
     throw new Error(err.message)

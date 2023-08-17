@@ -37,15 +37,22 @@ let postLicenceResendSubmit
 describe('The postApplicationSubmit handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    postLicenceResendSubmit = (await import('../post-licence-resend-submit.js')).default
-    const { SEQUELIZE } = (await import('@defra/wls-connectors-lib'))
-    SEQUELIZE.getSequelize = () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
+    postLicenceResendSubmit = (await import('../post-licence-resend-submit.js'))
+      .default
+    const { SEQUELIZE } = await import('@defra/wls-connectors-lib')
+    SEQUELIZE.getSequelize = () => ({
+      fn: jest
+        .fn()
+        .mockImplementation(() => new Date('October 13, 2023 11:13:00'))
+    })
   })
 
   it('returns a 204 on a successful submission', async () => {
     const mockUpdate = jest.fn()
     models.applications = {
-      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar', userId: 'foo' } })),
+      findByPk: jest.fn(async () => ({
+        dataValues: { id: 'bar', userId: 'foo' }
+      })),
       update: mockUpdate
     }
 
@@ -62,7 +69,13 @@ describe('The postApplicationSubmit handler', () => {
   })
 
   it('throws with a query error', async () => {
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
-    await expect(async () => postLicenceResendSubmit(context, req, h)).rejects.toThrowError()
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
+    await expect(async () =>
+      postLicenceResendSubmit(context, req, h)
+    ).rejects.toThrowError()
   })
 })

@@ -1,5 +1,5 @@
 describe('The wrapper: api-service', () => {
-  it('runs initialisation', done => {
+  it('runs initialisation', (done) => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
@@ -15,7 +15,9 @@ describe('The wrapper: api-service', () => {
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
         createServer.mockImplementation(() => Promise.resolve())
-        SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
+        SEQUELIZE.initialiseConnection = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve())
 
         require('../api-service')
         setImmediate(() => {
@@ -29,7 +31,7 @@ describe('The wrapper: api-service', () => {
     })
   })
 
-  it('has initialisation failure', done => {
+  it('has initialisation failure', (done) => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
@@ -45,12 +47,14 @@ describe('The wrapper: api-service', () => {
         createQueue.mockImplementation(() => Promise.resolve())
         createModels.mockImplementation(() => Promise.resolve())
         createServer.mockImplementation(() => Promise.resolve())
-        SEQUELIZE.initialiseConnection = jest.fn().mockImplementation(() => Promise.resolve())
+        SEQUELIZE.initialiseConnection = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve())
         init.mockImplementation(() => Promise.reject(new Error()))
 
         const processExitSpy = jest
           .spyOn(process, 'exit')
-          .mockImplementation(code => {})
+          .mockImplementation((code) => {})
         require('../api-service')
         setImmediate(() => {
           // expect(fetchSecrets).toHaveBeenCalled()

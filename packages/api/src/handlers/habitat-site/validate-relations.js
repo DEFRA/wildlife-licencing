@@ -13,7 +13,13 @@ const Op = Sequelize.Op
  * @param methodIds
  * @returns {Promise<null>}
  */
-export const validateRelations = async (applicationType, activityId, speciesId, methodIds, settType) => {
+export const validateRelations = async (
+  applicationType,
+  activityId,
+  speciesId,
+  methodIds,
+  settType
+) => {
   let error = null
 
   const activity = await models.activities.findByPk(activityId)
@@ -32,15 +38,23 @@ export const validateRelations = async (applicationType, activityId, speciesId, 
     error = { description: `speciesId: ${speciesId} not found` }
   } else if (!methods.length) {
     error = { description: `methodIds: ${methodIds.join(', ')} not found` }
-  } else if (!await applicationType.hasActivity(activity)) {
-    error = { description: `Invalid activity: ${activityId} for application type: ${applicationType.id}` }
-  } else if (!await applicationType.hasSpecies(species)) {
-    error = { description: `Invalid species: ${speciesId} for application type: ${applicationType.id}` }
-  } else if (!await activity.hasMethods(methods)) {
-    error = { description: `Invalid methods: ${methodIds.join(', ')} for activity: ${activity.id}` }
+  } else if (!(await applicationType.hasActivity(activity))) {
+    error = {
+      description: `Invalid activity: ${activityId} for application type: ${applicationType.id}`
+    }
+  } else if (!(await applicationType.hasSpecies(species))) {
+    error = {
+      description: `Invalid species: ${speciesId} for application type: ${applicationType.id}`
+    }
+  } else if (!(await activity.hasMethods(methods))) {
+    error = {
+      description: `Invalid methods: ${methodIds.join(', ')} for activity: ${
+        activity.id
+      }`
+    }
   } else if (applicationType.id === PowerPlatformKeys.APPLICATION_TYPES.A24) {
     const settTypes = await models.optionSets.findByPk('sdds_setttype')
-    if (!settTypes.json.map(v => v.value).find(v => v === settType)) {
+    if (!settTypes.json.map((v) => v.value).find((v) => v === settType)) {
       error = { description: `Invalid settType: ${settType}` }
     }
   }

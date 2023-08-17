@@ -39,25 +39,35 @@ describe('The getApplicationSites handler', () => {
   })
 
   it('returns an array of application-sites and status 200', async () => {
-    models.applicationSites = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationSites = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationSites(context, { query: {} }, h)
-    expect(models.applicationSites.findAll).toHaveBeenCalledWith({ })
+    expect(models.applicationSites.findAll).toHaveBeenCalledWith({})
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns an array of application-sites and status 200 - with a query', async () => {
-    models.applicationSites = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationSites = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationSites(context, { query: { foo: 'bar' } }, h)
-    expect(models.applicationSites.findAll).toHaveBeenCalledWith({ where: { foo: 'bar' } })
+    expect(models.applicationSites.findAll).toHaveBeenCalledWith({
+      where: { foo: 'bar' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applicationSites = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applicationSites = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationSites(context, { query: {} }, h)
     }).rejects.toThrow()

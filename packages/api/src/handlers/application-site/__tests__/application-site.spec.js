@@ -35,7 +35,7 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { } }
+const context = { request: {} }
 
 jest.mock('@defra/wls-database-model')
 
@@ -53,8 +53,12 @@ describe('The postApplicationSite handler', () => {
   it('returns a 201 on successful create', async () => {
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.sites = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.applications = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
+    models.sites = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
     models.applicationSites = {
       findOne: jest.fn(async () => null),
       create: jest.fn(() => ({
@@ -69,7 +73,8 @@ describe('The postApplicationSite handler', () => {
         }
       }))
     }
-    const postApplicationSite = (await import('../post-application-site.js')).default
+    const postApplicationSite = (await import('../post-application-site.js'))
+      .default
     await postApplicationSite(context, req, h)
     expect(models.applicationSites.create).toHaveBeenCalledWith({
       applicationId: APPLICATION_ID,
@@ -77,24 +82,34 @@ describe('The postApplicationSite handler', () => {
       siteId: SITE_ID,
       updateStatus: 'L'
     })
-    expect(cache.save).toHaveBeenCalledWith(`/application-site/${APPLICATION_SITE_ID}`, expect.any(Object))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({
-      applicationId: APPLICATION_ID,
-      id: APPLICATION_SITE_ID,
-      siteId: SITE_ID,
-      ...tsR
-    }))
+    expect(cache.save).toHaveBeenCalledWith(
+      `/application-site/${APPLICATION_SITE_ID}`,
+      expect.any(Object)
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({
+        applicationId: APPLICATION_ID,
+        id: APPLICATION_SITE_ID,
+        siteId: SITE_ID,
+        ...tsR
+      })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a conflict and error if the application-site already exists', async () => {
-    models.applications = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.sites = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.applications = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
+    models.sites = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
     models.applicationSites = {
       findOne: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
     }
-    const postApplicationSite = (await import('../post-application-site.js')).default
+    const postApplicationSite = (await import('../post-application-site.js'))
+      .default
     await postApplicationSite(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       code: 409,
@@ -107,9 +122,12 @@ describe('The postApplicationSite handler', () => {
   })
 
   it('returns a bad request and error if the site does not exist', async () => {
-    models.applications = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.applications = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
     models.sites = { findByPk: jest.fn(async () => null) }
-    const postApplicationSite = (await import('../post-application-site.js')).default
+    const postApplicationSite = (await import('../post-application-site.js'))
+      .default
     await postApplicationSite(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       code: 400,
@@ -123,7 +141,8 @@ describe('The postApplicationSite handler', () => {
 
   it('returns a bad request and error if the application does not exist', async () => {
     models.applications = { findByPk: jest.fn(async () => null) }
-    const postApplicationSite = (await import('../post-application-site.js')).default
+    const postApplicationSite = (await import('../post-application-site.js'))
+      .default
     await postApplicationSite(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       code: 400,
@@ -136,8 +155,13 @@ describe('The postApplicationSite handler', () => {
   })
 
   it('throws with any model error', async () => {
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
-    const postApplicationSite = (await import('../post-application-site.js')).default
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
+    const postApplicationSite = (await import('../post-application-site.js'))
+      .default
     await expect(async () => {
       await postApplicationSite(context, req, h)
     }).rejects.toThrow()

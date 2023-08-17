@@ -29,7 +29,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -41,7 +43,9 @@ const applicationJson = 'application/json'
 describe('The postHabitatSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    jest.mock('../validate-relations.js', () => ({ validateRelations: jest.fn(null) }))
+    jest.mock('../validate-relations.js', () => ({
+      validateRelations: jest.fn(null)
+    }))
     postHabitatSite = (await import('../post-habitat-site.js')).default
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
@@ -72,7 +76,10 @@ describe('The postHabitatSite handler', () => {
         name: 'name'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/habitat-site/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/habitat-site/bar',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -91,7 +98,11 @@ describe('The postHabitatSite handler', () => {
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await postHabitatSite(context, req, h)
     }).rejects.toThrow()

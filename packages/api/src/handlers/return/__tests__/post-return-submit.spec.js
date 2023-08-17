@@ -39,23 +39,42 @@ describe('The postReturnSubmit handler', () => {
     const mockUpdate = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
       SEQUELIZE: {
-        getSequelize: () => ({ fn: jest.fn().mockImplementation(() => new Date('October 13, 2023 11:13:00')) })
+        getSequelize: () => ({
+          fn: jest
+            .fn()
+            .mockImplementation(() => new Date('October 13, 2023 11:13:00'))
+        })
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: () => ({ dataValues: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae', licenceId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }),
+          findByPk: () => ({
+            dataValues: {
+              id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+              licenceId: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+            }
+          }),
           update: mockUpdate
         },
         returnUploads: {
-          findAll: () => [{ dataValues: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae', returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }]
+          findAll: () => [
+            {
+              dataValues: {
+                id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+                returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+              }
+            }
+          ]
         }
       }
     }))
     const postReturnSubmit = (await import('../post-return-submit.js')).default
     await postReturnSubmit(context, req, h)
-    expect(mockUpdate).toHaveBeenCalledWith({ userSubmission: new Date('October 13, 2023 11:13:00') }, { where: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae' } })
+    expect(mockUpdate).toHaveBeenCalledWith(
+      { userSubmission: new Date('October 13, 2023 11:13:00') },
+      { where: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae' } }
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -94,7 +113,9 @@ describe('The postReturnSubmit handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))

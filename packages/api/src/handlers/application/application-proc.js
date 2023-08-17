@@ -3,26 +3,30 @@
  * @param application.dataValues
  * @returns {any}
  */
-export const prepareResponse = a => Object.assign((({
-  createdAt,
-  updatedAt,
-  userId,
-  application,
-  submitted,
-  targetKeys,
-  sddsApplicationId,
-  updateStatus,
-  userSubmission,
-  ...l
-}) => l)(a), {
-  createdAt: a.createdAt.toISOString(),
-  updatedAt: a.updatedAt.toISOString(),
-  submitted: a.submitted?.toISOString(),
-  userSubmission: a.userSubmission?.toISOString(),
-  ...a.application
-})
+export const prepareResponse = (a) =>
+  Object.assign(
+    (({
+      createdAt,
+      updatedAt,
+      userId,
+      application,
+      submitted,
+      targetKeys,
+      sddsApplicationId,
+      updateStatus,
+      userSubmission,
+      ...l
+    }) => l)(a),
+    {
+      createdAt: a.createdAt.toISOString(),
+      updatedAt: a.updatedAt.toISOString(),
+      submitted: a.submitted?.toISOString(),
+      userSubmission: a.userSubmission?.toISOString(),
+      ...a.application
+    }
+  )
 
-export const alwaysExclude = payload => {
+export const alwaysExclude = (payload) => {
   delete payload.id
   delete payload.statusCode
   delete payload.submitted

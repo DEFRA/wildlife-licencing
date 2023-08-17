@@ -42,7 +42,9 @@ const tsR = {
 const applicationJson = 'application/json'
 
 describe('The putApplicationAccount handler', () => {
-  beforeEach(() => { jest.resetModules() })
+  beforeEach(() => {
+    jest.resetModules()
+  })
 
   it('returns a 400 on application not found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
@@ -52,7 +54,9 @@ describe('The putApplicationAccount handler', () => {
         }
       }
     }))
-    const putApplicationAccount = (await import('../put-application-account.js')).default
+    const putApplicationAccount = (
+      await import('../put-application-account.js')
+    ).default
     await putApplicationAccount(context, req, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(400)
@@ -62,14 +66,18 @@ describe('The putApplicationAccount handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         accounts: {
           findByPk: jest.fn(() => null)
         }
       }
     }))
-    const putApplicationAccount = (await import('../put-application-account.js')).default
+    const putApplicationAccount = (
+      await import('../put-application-account.js')
+    ).default
     await putApplicationAccount(context, req, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(400)
@@ -84,31 +92,39 @@ describe('The putApplicationAccount handler', () => {
         }
       }
     }))
-    const mockFindOrCreate = jest.fn(async () => ([{
-      dataValues:
-        {
+    const mockFindOrCreate = jest.fn(async () => [
+      {
+        dataValues: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
           accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
           applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
           accountRole: 'APPLICANT',
           ...ts
         }
-    }, true]))
+      },
+      true
+    ])
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         accounts: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         applicationAccounts: {
           findOrCreate: mockFindOrCreate
         }
       }
     }))
-    const putApplicationAccount = (await import('../put-application-account.js')).default
+    const putApplicationAccount = (
+      await import('../put-application-account.js')
+    ).default
     await putApplicationAccount(context, req, h)
     expect(mockFindOrCreate).toHaveBeenCalledWith({
       defaults: {
@@ -120,13 +136,16 @@ describe('The putApplicationAccount handler', () => {
         id: context.request.params.applicationAccountId
       }
     })
-    expect(mockSave).toHaveBeenCalledWith('application-account/1e470963-e8bf-41f5-9b0b-52d19c21cb78', {
-      id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
-      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
-      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-      accountRole: 'APPLICANT',
-      ...tsR
-    })
+    expect(mockSave).toHaveBeenCalledWith(
+      'application-account/1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+      {
+        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+        accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+        applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+        accountRole: 'APPLICANT',
+        ...tsR
+      }
+    )
     expect(h.response).toHaveBeenCalledWith({
       id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
       applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
@@ -141,15 +160,20 @@ describe('The putApplicationAccount handler', () => {
   it('returns a 200 on successful update', async () => {
     const mockSave = jest.fn()
 
-    const mockUpdate = jest.fn(() => [true, [{
-      dataValues: {
-        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
-        accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
-        applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-        accountRole: 'APPLICANT',
-        ...ts
-      }
-    }]])
+    const mockUpdate = jest.fn(() => [
+      true,
+      [
+        {
+          dataValues: {
+            id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+            accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+            applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+            accountRole: 'APPLICANT',
+            ...ts
+          }
+        }
+      ]
+    ])
 
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
@@ -159,24 +183,30 @@ describe('The putApplicationAccount handler', () => {
       }
     }))
 
-    const mockFindOrCreate = jest.fn(async () => ([{
-      dataValues:
-        {
+    const mockFindOrCreate = jest.fn(async () => [
+      {
+        dataValues: {
           id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
           accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
           applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
           accountRole: 'APPLICANT',
           ...ts
         }
-    }, false]))
+      },
+      false
+    ])
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         accounts: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         applicationAccounts: {
           findOrCreate: mockFindOrCreate,
@@ -184,7 +214,9 @@ describe('The putApplicationAccount handler', () => {
         }
       }
     }))
-    const putApplicationAccount = (await import('../put-application-account.js')).default
+    const putApplicationAccount = (
+      await import('../put-application-account.js')
+    ).default
     await putApplicationAccount(context, req, h)
     expect(mockFindOrCreate).toHaveBeenCalledWith({
       defaults: {
@@ -196,13 +228,16 @@ describe('The putApplicationAccount handler', () => {
         id: context.request.params.applicationAccountId
       }
     })
-    expect(mockSave).toHaveBeenCalledWith('application-account/1e470963-e8bf-41f5-9b0b-52d19c21cb78', {
-      id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
-      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
-      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-      accountRole: 'APPLICANT',
-      ...tsR
-    })
+    expect(mockSave).toHaveBeenCalledWith(
+      'application-account/1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+      {
+        id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
+        accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+        applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+        accountRole: 'APPLICANT',
+        ...tsR
+      }
+    )
     expect(h.response).toHaveBeenCalledWith({
       id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78',
       applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
@@ -210,13 +245,15 @@ describe('The putApplicationAccount handler', () => {
       accountRole: 'APPLICANT',
       ...tsR
     })
-    expect(mockUpdate).toHaveBeenCalledWith({
-      accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
-      accountRole: 'APPLICANT',
-      applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
-      updateStatus: 'L'
-    },
-    { returning: true, where: { id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78' } })
+    expect(mockUpdate).toHaveBeenCalledWith(
+      {
+        accountId: '324b293c-a184-4cca-a2d7-2d1ac14e367e',
+        accountRole: 'APPLICANT',
+        applicationId: 'e8387a83-1165-42e6-afab-add01e77bc4c',
+        updateStatus: 'L'
+      },
+      { returning: true, where: { id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78' } }
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -225,11 +262,15 @@ describe('The putApplicationAccount handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => { throw new Error() })
+          findByPk: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
-    const putApplicationAccount = (await import('../put-application-account.js')).default
+    const putApplicationAccount = (
+      await import('../put-application-account.js')
+    ).default
     await expect(async () => {
       await putApplicationAccount(context, req, h)
     }).rejects.toThrow()

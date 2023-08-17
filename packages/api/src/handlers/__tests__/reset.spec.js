@@ -1,4 +1,3 @@
-
 import pkg from 'sequelize'
 const { Sequelize } = pkg
 const Op = Sequelize.Op
@@ -34,7 +33,9 @@ describe('The reset handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         users: {
-          findAll: jest.fn(() => { throw new Error() })
+          findAll: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
@@ -65,14 +66,46 @@ describe('The reset handler', () => {
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        users: { findAll: jest.fn(() => [{ id: '98296f05-5b7c-4fd9-bfed-859d882be805' }]), update: jest.fn() },
-        applicationUsers: { findAll: jest.fn(() => [{ applicationId: '4649e882-5840-4515-8c72-16d252b446bb' }]), destroy: mockDestroyApplicationUsers },
-        applicationContacts: { findAll: jest.fn(() => [{ contactId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }]), destroy: mockDestroyApplicationContacts },
-        applicationAccounts: { findAll: jest.fn(() => [{ accountId: '0d8cb076-efff-4406-9209-4caeb56d613f' }]), destroy: mockDestroyApplicationAccounts },
-        applicationSites: { findAll: jest.fn(() => [{ siteId: '1c3e7655-bb74-4420-9bf0-0bd710987f10' }]), destroy: mockDestroyApplicationSites },
-        applicationDesignatedSites: { destroy: mockDestroyApplicationDesignatedSites },
+        users: {
+          findAll: jest.fn(() => [
+            { id: '98296f05-5b7c-4fd9-bfed-859d882be805' }
+          ]),
+          update: jest.fn()
+        },
+        applicationUsers: {
+          findAll: jest.fn(() => [
+            { applicationId: '4649e882-5840-4515-8c72-16d252b446bb' }
+          ]),
+          destroy: mockDestroyApplicationUsers
+        },
+        applicationContacts: {
+          findAll: jest.fn(() => [
+            { contactId: '54b5c443-e5e0-4d81-9daa-671a21bd88ca' }
+          ]),
+          destroy: mockDestroyApplicationContacts
+        },
+        applicationAccounts: {
+          findAll: jest.fn(() => [
+            { accountId: '0d8cb076-efff-4406-9209-4caeb56d613f' }
+          ]),
+          destroy: mockDestroyApplicationAccounts
+        },
+        applicationSites: {
+          findAll: jest.fn(() => [
+            { siteId: '1c3e7655-bb74-4420-9bf0-0bd710987f10' }
+          ]),
+          destroy: mockDestroyApplicationSites
+        },
+        applicationDesignatedSites: {
+          destroy: mockDestroyApplicationDesignatedSites
+        },
         returns: { destroy: mockDestroyReturns },
-        licences: { findAll: jest.fn(() => [{ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' }]), destroy: mockDestroyLicences },
+        licences: {
+          findAll: jest.fn(() => [
+            { id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' }
+          ]),
+          destroy: mockDestroyLicences
+        },
         contacts: { destroy: mockDestroyContacts },
         accounts: { destroy: mockDestroyAccounts },
         sites: { destroy: mockDestroySites },
@@ -86,20 +119,70 @@ describe('The reset handler', () => {
     const resetHandler = (await import('../reset.js')).default
     await resetHandler(null, request, h)
     expect(codeFunc).toBeCalledWith(200)
-    expect(mockDestroyApplicationUsers).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyApplicationContacts).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyApplicationAccounts).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyApplicationSites).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyContacts).toBeCalledWith({ where: { id: { [Op.in]: ['54b5c443-e5e0-4d81-9daa-671a21bd88ca'] } } })
-    expect(mockDestroyAccounts).toBeCalledWith({ where: { id: { [Op.in]: ['0d8cb076-efff-4406-9209-4caeb56d613f'] } } })
-    expect(mockDestroySites).toBeCalledWith({ where: { id: { [Op.in]: ['1c3e7655-bb74-4420-9bf0-0bd710987f10'] } } })
-    expect(mockDestroyHabitatSites).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyPreviousLicences).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyApplicationUploads).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyPermissions).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyApplications).toBeCalledWith({ where: { id: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyReturns).toBeCalledWith({ where: { licenceId: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] } } })
-    expect(mockDestroyApplicationDesignatedSites).toBeCalledWith({ where: { applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } } })
-    expect(mockDestroyLicences).toBeCalledWith({ where: { id: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] } } })
+    expect(mockDestroyApplicationUsers).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyApplicationContacts).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyApplicationAccounts).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyApplicationSites).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyContacts).toBeCalledWith({
+      where: { id: { [Op.in]: ['54b5c443-e5e0-4d81-9daa-671a21bd88ca'] } }
+    })
+    expect(mockDestroyAccounts).toBeCalledWith({
+      where: { id: { [Op.in]: ['0d8cb076-efff-4406-9209-4caeb56d613f'] } }
+    })
+    expect(mockDestroySites).toBeCalledWith({
+      where: { id: { [Op.in]: ['1c3e7655-bb74-4420-9bf0-0bd710987f10'] } }
+    })
+    expect(mockDestroyHabitatSites).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyPreviousLicences).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyApplicationUploads).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyPermissions).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyApplications).toBeCalledWith({
+      where: { id: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] } }
+    })
+    expect(mockDestroyReturns).toBeCalledWith({
+      where: {
+        licenceId: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] }
+      }
+    })
+    expect(mockDestroyApplicationDesignatedSites).toBeCalledWith({
+      where: {
+        applicationId: { [Op.in]: ['4649e882-5840-4515-8c72-16d252b446bb'] }
+      }
+    })
+    expect(mockDestroyLicences).toBeCalledWith({
+      where: { id: { [Op.in]: ['56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'] } }
+    })
   })
 })

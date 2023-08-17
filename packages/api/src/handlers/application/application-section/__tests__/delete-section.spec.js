@@ -76,8 +76,11 @@ describe('delete-section-handler', () => {
     }))
     const { deleteSectionHandler } = await import('../delete-section.js')
     await deleteSectionHandler('section-name')(context, request, h)
-    expect(mockQuery).toHaveBeenCalledWith("UPDATE applications SET application = application::jsonb - 'section-name'" +
-      ' WHERE id = ?', { replacements: ['1e470963-e8bf-41f5-9b0b-52d19c21cb78'], type: 'UPDATE' })
+    expect(mockQuery).toHaveBeenCalledWith(
+      "UPDATE applications SET application = application::jsonb - 'section-name'" +
+        ' WHERE id = ?',
+      { replacements: ['1e470963-e8bf-41f5-9b0b-52d19c21cb78'], type: 'UPDATE' }
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -110,9 +113,15 @@ describe('delete-section-handler', () => {
       }
     }))
     const { deleteSectionHandler } = await import('../delete-section.js')
-    await deleteSectionHandler('section-name', () => [{ old: 'key' }])(context, request, h)
-    expect(mockQuery).toHaveBeenCalledWith("UPDATE applications SET application = application::jsonb - 'section-name' WHERE id = ?",
-      { replacements: ['1e470963-e8bf-41f5-9b0b-52d19c21cb78'], type: 'UPDATE' })
+    await deleteSectionHandler('section-name', () => [{ old: 'key' }])(
+      context,
+      request,
+      h
+    )
+    expect(mockQuery).toHaveBeenCalledWith(
+      "UPDATE applications SET application = application::jsonb - 'section-name' WHERE id = ?",
+      { replacements: ['1e470963-e8bf-41f5-9b0b-52d19c21cb78'], type: 'UPDATE' }
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -127,7 +136,9 @@ describe('delete-section-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => { throw new Error() })
+          findByPk: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))

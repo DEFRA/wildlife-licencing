@@ -45,10 +45,7 @@
     "docker:stop": "docker stack rm wls"
   },
   "standard": {
-    "env": {
-      "node": true,
-      "jest": true
-    },
+    "env": ["jest","node"],
     "ignore": [
       "**/dist/*.js",
       "packages/api/webpack.config.cjs",

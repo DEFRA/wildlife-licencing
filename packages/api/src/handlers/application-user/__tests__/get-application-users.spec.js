@@ -10,8 +10,7 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
  */
 const context = {
   request: {
-    params: {
-    }
+    params: {}
   }
 }
 
@@ -38,25 +37,35 @@ describe('The getApplicationUsers handler', () => {
   })
 
   it('returns an array of application-users and status 200', async () => {
-    models.applicationUsers = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationUsers = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationUsers(context, { query: {} }, h)
-    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({ })
+    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({})
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns an array of application-sites and status 200 - with a query', async () => {
-    models.applicationUsers = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationUsers = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationUsers(context, { query: { foo: 'bar' } }, h)
-    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({ where: { foo: 'bar' } })
+    expect(models.applicationUsers.findAll).toHaveBeenCalledWith({
+      where: { foo: 'bar' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applicationUsers = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applicationUsers = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationUsers(context, { query: {} }, h)
     }).rejects.toThrow()

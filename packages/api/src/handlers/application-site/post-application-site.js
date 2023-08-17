@@ -12,7 +12,11 @@ export default async (_context, req, h) => {
 
     // If the application does not exist return a bad request and error
     if (!application) {
-      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } })
+      return h
+        .response({
+          code: 400,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(400)
     }
@@ -20,7 +24,11 @@ export default async (_context, req, h) => {
     // If the site does not exist return a bad request and error
     const site = await models.sites.findByPk(siteId)
     if (!site) {
-      return h.response({ code: 400, error: { description: `siteId: ${siteId} not found` } })
+      return h
+        .response({
+          code: 400,
+          error: { description: `siteId: ${siteId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(400)
     }
@@ -31,7 +39,13 @@ export default async (_context, req, h) => {
     })
 
     if (applicationSite) {
-      return h.response({ code: 409, error: { description: `an application-site already exists for siteId: ${siteId}, applicationId: ${applicationId}` } })
+      return h
+        .response({
+          code: 409,
+          error: {
+            description: `an application-site already exists for siteId: ${siteId}, applicationId: ${applicationId}`
+          }
+        })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -45,9 +59,7 @@ export default async (_context, req, h) => {
 
     const responseBody = prepareResponse(dataValues)
     await cache.save(`/application-site/${dataValues.id}`, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into APPLICATION-SITES table', err)
     throw new Error(err.message)

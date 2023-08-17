@@ -64,7 +64,10 @@ describe('The getHabitatSite handler', () => {
     cache.save = jest.fn()
     await getHabitatSite(context, req, h)
 
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -104,7 +107,11 @@ describe('The getHabitatSite handler', () => {
 
   it('throws with an insert error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getHabitatSite(context, req, h)
     }).rejects.toThrow()

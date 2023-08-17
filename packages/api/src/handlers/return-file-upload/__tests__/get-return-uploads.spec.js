@@ -23,7 +23,9 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } } }
+const context = {
+  request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }
+}
 
 const req = {
   path: 'path',
@@ -48,57 +50,75 @@ describe('getReturnUploads handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
-          findAll: jest.fn(() => [{ dataValues: Object.assign(returnUpload, { ...ts }) }])
+          findAll: jest.fn(() => [
+            { dataValues: Object.assign(returnUpload, { ...ts }) }
+          ])
         }
       }
     }))
-    const getReturnFileUploads = (await import('../get-return-file-uploads.js')).default
+    const getReturnFileUploads = (await import('../get-return-file-uploads.js'))
+      .default
     await getReturnFileUploads(context, req, h)
-    expect(h.response).toHaveBeenCalledWith([{
-      returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
-      bucket: 'bucket-name',
-      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      filename: 'map.txt',
-      filetype: 'MAP',
-      id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-      ...tsR
-    }])
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
+        bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        filename: 'map.txt',
+        filetype: 'MAP',
+        id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+        ...tsR
+      }
+    ])
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
 
   it('returns an return-uploads and status 200 from the database applying a filetype filter', async () => {
-    const mockFindAll = jest.fn(() => [{ dataValues: Object.assign(returnUpload, { ...ts }) }])
+    const mockFindAll = jest.fn(() => [
+      { dataValues: Object.assign(returnUpload, { ...ts }) }
+    ])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
           findAll: mockFindAll
         }
       }
     }))
-    const getReturnFileUploads = (await import('../get-return-file-uploads.js')).default
-    await getReturnFileUploads(context, Object.assign({}, { query: { filetype: 'MAP' } }, req), h)
+    const getReturnFileUploads = (await import('../get-return-file-uploads.js'))
+      .default
+    await getReturnFileUploads(
+      context,
+      Object.assign({}, { query: { filetype: 'MAP' } }, req),
+      h
+    )
     expect(mockFindAll).toHaveBeenCalledWith({
       where: {
         returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
         filetype: 'MAP'
       }
     })
-    expect(h.response).toHaveBeenCalledWith([{
-      returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
-      bucket: 'bucket-name',
-      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      filename: 'map.txt',
-      filetype: 'MAP',
-      id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-      ...tsR
-    }])
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
+        bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        filename: 'map.txt',
+        filetype: 'MAP',
+        id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+        ...tsR
+      }
+    ])
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
@@ -118,7 +138,8 @@ describe('getReturnUploads handler', () => {
         }
       }
     }))
-    const getReturnFileUploads = (await import('../get-return-file-uploads.js')).default
+    const getReturnFileUploads = (await import('../get-return-file-uploads.js'))
+      .default
     await getReturnFileUploads(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -134,14 +155,17 @@ describe('getReturnUploads handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
           findAll: () => []
         }
       }
     }))
-    const getReturnFileUploads = (await import('../get-return-file-uploads.js')).default
+    const getReturnFileUploads = (await import('../get-return-file-uploads.js'))
+      .default
     await getReturnFileUploads(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -150,12 +174,17 @@ describe('getReturnUploads handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const getReturnFileUploads = (await import('../get-return-file-uploads.js')).default
-    await expect(async () => await getReturnFileUploads(context, req, h)).rejects.toThrow()
+    const getReturnFileUploads = (await import('../get-return-file-uploads.js'))
+      .default
+    await expect(
+      async () => await getReturnFileUploads(context, req, h)
+    ).rejects.toThrow()
   })
 })

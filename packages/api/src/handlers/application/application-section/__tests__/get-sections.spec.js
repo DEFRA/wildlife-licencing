@@ -41,14 +41,16 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findAll: jest.fn(() => [{
-            dataValues: {
-              application: {
-                'section-name': { foo: 'bar' }
-              },
-              targetKeys: null
+          findAll: jest.fn(() => [
+            {
+              dataValues: {
+                application: {
+                  'section-name': { foo: 'bar' }
+                },
+                targetKeys: null
+              }
             }
-          }])
+          ])
         }
       }
     }))
@@ -63,21 +65,25 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findAll: jest.fn(() => [{
-            dataValues: {
-              application: {
-                'section-name': { foo: 'bar' }
-              },
-              targetKeys: [
-                { foo: 'bar' }
-              ]
+          findAll: jest.fn(() => [
+            {
+              dataValues: {
+                application: {
+                  'section-name': { foo: 'bar' }
+                },
+                targetKeys: [{ foo: 'bar' }]
+              }
             }
-          }])
+          ])
         }
       }
     }))
     const { getSectionsHandler } = await import('../get-sections.js')
-    await getSectionsHandler('section-name', () => ({ key: 'data' }))(context, request, h)
+    await getSectionsHandler('section-name', () => ({ key: 'data' }))(
+      context,
+      request,
+      h
+    )
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', key: 'data' }])
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
@@ -87,7 +93,9 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findAll: jest.fn(() => { throw new Error() })
+          findAll: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))

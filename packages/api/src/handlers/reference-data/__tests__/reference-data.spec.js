@@ -14,27 +14,31 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const resp = [{
-  id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
-  name: 'MIT BAT A045',
-  description: 'movements of bats',
-  ...tsR
-}]
+const resp = [
+  {
+    id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
+    name: 'MIT BAT A045',
+    description: 'movements of bats',
+    ...tsR
+  }
+]
 
 describe('The reference data handlers', () => {
   beforeEach(() => jest.resetModules())
 
   it('returns application types from the database', async () => {
-    const mockFindAll = jest.fn(() => [{
-      dataValues: {
-        id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
-        json: {
-          name: 'MIT BAT A045',
-          description: 'movements of bats'
-        },
-        ...ts
+    const mockFindAll = jest.fn(() => [
+      {
+        dataValues: {
+          id: '00171fc3-a556-ec11-8f8f-000d3a0ce11e',
+          json: {
+            name: 'MIT BAT A045',
+            description: 'movements of bats'
+          },
+          ...ts
+        }
       }
-    }])
+    ])
 
     const mockSave = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({

@@ -10,12 +10,22 @@ export default async (_context, req, h) => {
     const { applicationId, accountId, accountRole } = req.payload
     const application = await models.applications.findByPk(applicationId)
     if (!application) {
-      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } }).code(400)
+      return h
+        .response({
+          code: 400,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
+        .code(400)
     }
 
     const account = await models.accounts.findByPk(accountId)
     if (!account) {
-      return h.response({ code: 400, error: { description: `accountId: ${accountId} not found` } }).code(400)
+      return h
+        .response({
+          code: 400,
+          error: { description: `accountId: ${accountId} not found` }
+        })
+        .code(400)
     }
 
     // If the user-application-site already exists then return a conflict and error
@@ -24,13 +34,15 @@ export default async (_context, req, h) => {
     })
 
     if (applicationAccount) {
-      return h.response({
-        code: 409,
-        error: {
-          description: 'an application-account already exists for applicationId: ' +
-            `${applicationId}, accountId: ${accountId} and role: ${accountRole}`
-        }
-      })
+      return h
+        .response({
+          code: 409,
+          error: {
+            description:
+              'an application-account already exists for applicationId: ' +
+              `${applicationId}, accountId: ${accountId} and role: ${accountRole}`
+          }
+        })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -44,9 +56,7 @@ export default async (_context, req, h) => {
 
     const response = prepareResponse(dataValues)
     await cache.save(`/application-account/${dataValues.id}`, response)
-    return h.response(response)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(response).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into APPLICATION-ACCOUNT table', err)
     throw new Error(err.message)

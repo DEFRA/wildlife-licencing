@@ -37,29 +37,50 @@ describe('The putUser handler', () => {
     models.users = {
       update: jest.fn(() => [1, [{ dataValues: { id: 'bar', ...ts } }]])
     }
-    await putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)
-    expect(models.users.update).toHaveBeenCalledWith({
-      password: expect.any(String)
-    }, { returning: true, where: { id: 'uid' } })
+    await putUser(
+      context,
+      { payload: { username: 'Graham', password: 'password' } },
+      h
+    )
+    expect(models.users.update).toHaveBeenCalledWith(
+      {
+        password: expect.any(String)
+      },
+      { returning: true, where: { id: 'uid' } }
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns status 404 on a not found', async () => {
     models.users = { update: jest.fn(() => [0, []]) }
-    await putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)
+    await putUser(
+      context,
+      { payload: { username: 'Graham', password: 'password' } },
+      h
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('returns status 200 with no password given', async () => {
-    await putUser(context, { payload: { } }, h)
+    await putUser(context, { payload: {} }, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws with a create update error', async () => {
-    models.users = { update: jest.fn(async () => { throw Error() }) }
-    await expect(() => putUser(context, { payload: { username: 'Graham', password: 'password' } }, h)).rejects.toThrow()
+    models.users = {
+      update: jest.fn(async () => {
+        throw Error()
+      })
+    }
+    await expect(() =>
+      putUser(
+        context,
+        { payload: { username: 'Graham', password: 'password' } },
+        h
+      )
+    ).rejects.toThrow()
   })
 })

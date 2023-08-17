@@ -13,10 +13,14 @@ export default async (context, _req, h) => {
       return h.response().code(404)
     }
 
-    debug(`Received request for licence resend for applicationId: ${applicationId}`)
+    debug(
+      `Received request for licence resend for applicationId: ${applicationId}`
+    )
     const resendQueue = getQueue(queueDefinitions.LICENCE_RESEND_QUEUE)
     const resendJob = await resendQueue.add({ applicationId })
-    debug(`Queued licence resend for application ${applicationId} - job: ${resendJob.id}`)
+    debug(
+      `Queued licence resend for application ${applicationId} - job: ${resendJob.id}`
+    )
 
     return h.response().code(204)
   } catch (err) {

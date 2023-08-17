@@ -3,7 +3,8 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f'
+const path =
+  '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f'
 const req = {
   path
 }
@@ -54,7 +55,9 @@ describe('The deleteReturn handler', () => {
 
     const deleteReturn = (await import('../delete-return.js')).default
     await deleteReturn(context, req, h)
-    expect(mockDelete).toHaveBeenCalledWith('/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f')
+    expect(mockDelete).toHaveBeenCalledWith(
+      '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f'
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -103,7 +106,9 @@ describe('The deleteReturn handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))

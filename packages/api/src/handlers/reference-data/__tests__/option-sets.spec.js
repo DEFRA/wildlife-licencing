@@ -17,7 +17,10 @@ const tsR = {
 
 const resp = {
   'option-set': {
-    values: [{ value: 1, description: 'd1' }, { value: 2, description: 'd2' }],
+    values: [
+      { value: 1, description: 'd1' },
+      { value: 2, description: 'd2' }
+    ],
     ...tsR
   }
 }
@@ -26,13 +29,18 @@ describe('The option-set data handlers', () => {
   beforeEach(() => jest.resetModules())
 
   it('returns option-sets from the database', async () => {
-    const mockFindAll = jest.fn(() => [{
-      dataValues: {
-        name: 'option-set',
-        json: [{ value: 1, description: 'd1' }, { value: 2, description: 'd2' }],
-        ...ts
+    const mockFindAll = jest.fn(() => [
+      {
+        dataValues: {
+          name: 'option-set',
+          json: [
+            { value: 1, description: 'd1' },
+            { value: 2, description: 'd2' }
+          ],
+          ...ts
+        }
       }
-    }])
+    ])
 
     const mockSave = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({

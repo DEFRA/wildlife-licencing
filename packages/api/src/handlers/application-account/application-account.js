@@ -1,4 +1,3 @@
-
 import getApplicationAccounts from './get-application-accounts.js'
 import postApplicationAccount from './post-application-account.js'
 import getApplicationAccountById from './get-application-account-by-application-account-id.js'

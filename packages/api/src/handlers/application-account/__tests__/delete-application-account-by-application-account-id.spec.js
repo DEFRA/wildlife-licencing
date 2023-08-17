@@ -34,14 +34,18 @@ describe('The deleteApplicationAccountByApplicationAccountId handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-    deleteApplicationAccountByApplicationAccountId = (await import('../delete-application-account-by-application-account-id.js')).default
+    deleteApplicationAccountByApplicationAccountId = (
+      await import('../delete-application-account-by-application-account-id.js')
+    ).default
   })
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
     models.applicationAccounts = { destroy: jest.fn(() => 1) }
     await deleteApplicationAccountByApplicationAccountId(context, req, h)
-    expect(models.applicationAccounts.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationAccountId } })
+    expect(models.applicationAccounts.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.applicationAccountId }
+    })
     expect(cache.delete).toHaveBeenCalledWith(path)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
@@ -55,7 +59,11 @@ describe('The deleteApplicationAccountByApplicationAccountId handler', () => {
 
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
-    models.applicationAccounts = { destroy: jest.fn(() => { throw Error() }) }
+    models.applicationAccounts = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteApplicationAccountByApplicationAccountId(context, req, h)
     }).rejects.toThrow()

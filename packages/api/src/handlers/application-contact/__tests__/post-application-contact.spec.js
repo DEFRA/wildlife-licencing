@@ -22,15 +22,15 @@ describe('post-application-contact-handler', () => {
       }
     }))
     const request = {
-      payload:
-        {
-          applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-          contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-          role: 'ECOLOGIST'
-        }
+      payload: {
+        applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+        contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+        role: 'ECOLOGIST'
+      }
     }
     const context = {}
-    const postSiteUser = (await import('../post-application-contact.js')).default
+    const postSiteUser = (await import('../post-application-contact.js'))
+      .default
     await postSiteUser(context, request, h)
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
@@ -39,7 +39,9 @@ describe('post-application-contact-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         contacts: {
           findByPk: jest.fn()
@@ -47,15 +49,15 @@ describe('post-application-contact-handler', () => {
       }
     }))
     const request = {
-      payload:
-        {
-          applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-          contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-          role: 'ECOLOGIST'
-        }
+      payload: {
+        applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+        contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+        role: 'ECOLOGIST'
+      }
     }
     const context = {}
-    const postSiteUser = (await import('../post-application-contact.js')).default
+    const postSiteUser = (await import('../post-application-contact.js'))
+      .default
     await postSiteUser(context, request, h)
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
@@ -64,26 +66,32 @@ describe('post-application-contact-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         contacts: {
-          findByPk: jest.fn(() => ({ id: 'bbe0a988-2efe-41d5-901d-cad600fef2fd' }))
+          findByPk: jest.fn(() => ({
+            id: 'bbe0a988-2efe-41d5-901d-cad600fef2fd'
+          }))
         },
         applicationContacts: {
-          findOne: jest.fn(() => ({ id: 'eb14153e-7425-4e4c-bcc4-acd8ee1933c3' }))
+          findOne: jest.fn(() => ({
+            id: 'eb14153e-7425-4e4c-bcc4-acd8ee1933c3'
+          }))
         }
       }
     }))
     const request = {
-      payload:
-        {
-          applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-          contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-          role: 'ECOLOGIST'
-        }
+      payload: {
+        applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+        contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+        role: 'ECOLOGIST'
+      }
     }
     const context = {}
-    const postSiteUser = (await import('../post-application-contact.js')).default
+    const postSiteUser = (await import('../post-application-contact.js'))
+      .default
     await postSiteUser(context, request, h)
     expect(codeFunc).toHaveBeenCalledWith(409)
   })
@@ -99,10 +107,14 @@ describe('post-application-contact-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }))
+          findByPk: jest.fn(() => ({
+            id: '1ee0737e-f97d-4f79-8225-81b6014ce37e'
+          }))
         },
         contacts: {
-          findByPk: jest.fn(() => ({ id: 'bbe0a988-2efe-41d5-901d-cad600fef2fd' }))
+          findByPk: jest.fn(() => ({
+            id: 'bbe0a988-2efe-41d5-901d-cad600fef2fd'
+          }))
         },
         applicationContacts: {
           findOne: jest.fn(() => null),
@@ -118,15 +130,15 @@ describe('post-application-contact-handler', () => {
       }
     }))
     const request = {
-      payload:
-        {
-          applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-          contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-          role: 'USER'
-        }
+      payload: {
+        applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+        contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+        role: 'USER'
+      }
     }
     const context = {}
-    const postSiteUser = (await import('../post-application-contact.js')).default
+    const postSiteUser = (await import('../post-application-contact.js'))
+      .default
     await postSiteUser(context, request, h)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -135,20 +147,22 @@ describe('post-application-contact-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => { throw new Error() })
+          findByPk: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     const context = {}
     const request = {
-      payload:
-        {
-          applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
-          contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
-          role: 'USER'
-        }
+      payload: {
+        applicationId: '1ee0737e-f97d-4f79-8225-81b6014ce37e',
+        contactId: 'bbe0a988-2efe-41d5-901d-cad600fef2fd',
+        role: 'USER'
+      }
     }
-    const postSiteUser = (await import('../post-application-contact.js')).default
+    const postSiteUser = (await import('../post-application-contact.js'))
+      .default
     await expect(async () => {
       await postSiteUser(context, request, h)
     }).rejects.toThrow()

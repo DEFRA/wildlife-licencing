@@ -3,7 +3,8 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+const path =
+  '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
 const req = {
   path,
   payload: {
@@ -56,7 +57,10 @@ describe('The putApplicationDesignatedSite handler', () => {
       }
     }))
 
-    const mockFindOrCreate = jest.fn(async () => [{ dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }, true])
+    const mockFindOrCreate = jest.fn(async () => [
+      { dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } },
+      true
+    ])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -66,12 +70,17 @@ describe('The putApplicationDesignatedSite handler', () => {
           findOrCreate: mockFindOrCreate
         },
         designatedSites: {
-          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', json: { siteType: 10000001 } })
+          findByPk: () => ({
+            id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+            json: { siteType: 10000001 }
+          })
         }
       }
     }))
 
-    const putApplicationDesignatedSite = (await import('../put-application-designated-site.js')).default
+    const putApplicationDesignatedSite = (
+      await import('../put-application-designated-site.js')
+    ).default
 
     await putApplicationDesignatedSite(context, req, h)
     expect(mockFindOrCreate).toHaveBeenCalledWith({
@@ -89,8 +98,14 @@ describe('The putApplicationDesignatedSite handler', () => {
         updateStatus: 'L'
       }
     })
-    expect(mockSave).toHaveBeenCalledWith('/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+    expect(mockSave).toHaveBeenCalledWith(
+      '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+      { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR }
+    )
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -105,7 +120,10 @@ describe('The putApplicationDesignatedSite handler', () => {
       }
     }))
 
-    const mockUpdate = jest.fn(async () => [null, [{ dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }]])
+    const mockUpdate = jest.fn(async () => [
+      null,
+      [{ dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }]
+    ])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -116,15 +134,26 @@ describe('The putApplicationDesignatedSite handler', () => {
           update: mockUpdate
         },
         designatedSites: {
-          findByPk: () => ({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', json: { siteType: 10000001 } })
+          findByPk: () => ({
+            id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+            json: { siteType: 10000001 }
+          })
         }
       }
     }))
 
-    const putApplicationDesignatedSite = (await import('../put-application-designated-site.js')).default
+    const putApplicationDesignatedSite = (
+      await import('../put-application-designated-site.js')
+    ).default
     await putApplicationDesignatedSite(context, req, h)
-    expect(mockSave).toHaveBeenCalledWith('/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+    expect(mockSave).toHaveBeenCalledWith(
+      '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+      { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR }
+    )
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -140,7 +169,9 @@ describe('The putApplicationDesignatedSite handler', () => {
         }
       }
     }))
-    const putApplicationDesignatedSite = (await import('../put-application-designated-site.js')).default
+    const putApplicationDesignatedSite = (
+      await import('../put-application-designated-site.js')
+    ).default
     await putApplicationDesignatedSite(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -156,7 +187,9 @@ describe('The putApplicationDesignatedSite handler', () => {
         }
       }
     }))
-    const putApplicationDesignatedSite = (await import('../put-application-designated-site.js')).default
+    const putApplicationDesignatedSite = (
+      await import('../put-application-designated-site.js')
+    ).default
     await putApplicationDesignatedSite(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
@@ -165,11 +198,15 @@ describe('The putApplicationDesignatedSite handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))
-    const putApplicationDesignatedSite = (await import('../put-application-designated-site.js')).default
+    const putApplicationDesignatedSite = (
+      await import('../put-application-designated-site.js')
+    ).default
     await expect(async () => {
       await putApplicationDesignatedSite(context, req, h)
     }).rejects.toThrow()

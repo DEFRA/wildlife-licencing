@@ -44,7 +44,9 @@ describe('The getApplicationContactByApplicationContactId handler', () => {
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
 
-    getApplicationContactByApplicationContactId = (await import('../get-application-contact-by-application-contact-id.js')).default
+    getApplicationContactByApplicationContactId = (
+      await import('../get-application-contact-by-application-contact-id.js')
+    ).default
   })
 
   it('returns an application-contact and status 200 from the cache', async () => {
@@ -58,9 +60,13 @@ describe('The getApplicationContactByApplicationContactId handler', () => {
   it('returns an application-contact and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.applicationContacts = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.applicationContacts = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getApplicationContactByApplicationContactId(context, req, h)
-    expect(models.applicationContacts.findByPk).toHaveBeenCalledWith(context.request.params.applicationContactId)
+    expect(models.applicationContacts.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationContactId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -71,14 +77,20 @@ describe('The getApplicationContactByApplicationContactId handler', () => {
     cache.restore = jest.fn(() => null)
     models.applicationContacts = { findByPk: jest.fn(() => null) }
     await getApplicationContactByApplicationContactId(context, req, h)
-    expect(models.applicationContacts.findByPk).toHaveBeenCalledWith(context.request.params.applicationContactId)
+    expect(models.applicationContacts.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationContactId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applicationContacts = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.applicationContacts = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationContactByApplicationContactId(context, req, h)
     }).rejects.toThrow()

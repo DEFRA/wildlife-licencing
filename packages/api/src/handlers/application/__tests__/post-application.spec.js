@@ -32,7 +32,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { userId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -50,7 +52,9 @@ describe('The postApplication handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.applications = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } })) }
+    models.applications = {
+      create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
+    }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
@@ -60,14 +64,21 @@ describe('The postApplication handler', () => {
       updateStatus: 'L',
       application: (({ ...l }) => l)(req.payload)
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/bar', expect.objectContaining({ id: 'bar', ...tsR }))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: 'bar', ...tsR }))
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/bar',
+      expect.objectContaining({ id: 'bar', ...tsR })
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'bar', ...tsR })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns 409 with an invalid type-purpose', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => null) }
     await postApplication(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(409)
@@ -77,8 +88,14 @@ describe('The postApplication handler', () => {
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     await expect(async () => {
       await postApplication(context, req, h)
     }).rejects.toThrow()

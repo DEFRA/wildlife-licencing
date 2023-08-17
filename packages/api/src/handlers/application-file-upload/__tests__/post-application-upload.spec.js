@@ -23,7 +23,9 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } } }
+const context = {
+  request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }
+}
 
 const req = {
   path: 'path',
@@ -59,14 +61,20 @@ describe(' postApplicationUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
-          create: jest.fn(() => ({ dataValues: Object.assign(applicationUpload, { ...ts }) }))
+          create: jest.fn(() => ({
+            dataValues: Object.assign(applicationUpload, { ...ts })
+          }))
         }
       }
     }))
-    const postApplicationFileUpload = (await import('../post-application-file-upload.js')).default
+    const postApplicationFileUpload = (
+      await import('../post-application-file-upload.js')
+    ).default
     await postApplicationFileUpload(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -80,7 +88,10 @@ describe(' postApplicationUpload handler', () => {
     expect(codeFunc).toHaveBeenCalledWith(201)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(mockCacheSave).toHaveBeenCalledWith(
-      expect.stringContaining('/application/7c3b13ef-c2fb-4955-942e-764593cf0ada/file-upload/'), {
+      expect.stringContaining(
+        '/application/7c3b13ef-c2fb-4955-942e-764593cf0ada/file-upload/'
+      ),
+      {
         applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
         bucket: 'bucket-name',
         filename: 'map.txt',
@@ -107,7 +118,9 @@ describe(' postApplicationUpload handler', () => {
         }
       }
     }))
-    const postApplicationFileUpload = (await import('../post-application-file-upload.js')).default
+    const postApplicationFileUpload = (
+      await import('../post-application-file-upload.js')
+    ).default
     await postApplicationFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -116,12 +129,18 @@ describe(' postApplicationUpload handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const postApplicationFileUpload = (await import('../post-application-file-upload.js')).default
-    await expect(() => postApplicationFileUpload(context, req, h)).rejects.toThrow()
+    const postApplicationFileUpload = (
+      await import('../post-application-file-upload.js')
+    ).default
+    await expect(() =>
+      postApplicationFileUpload(context, req, h)
+    ).rejects.toThrow()
   })
 })

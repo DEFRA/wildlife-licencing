@@ -2,7 +2,7 @@
  * Mock the hapi request object
  */
 const path = 'user/uuid'
-const req = { path, payload: { } }
+const req = { path, payload: {} }
 
 /*
  * Mock the hapi response toolkit in order to test the results of the request
@@ -49,7 +49,10 @@ describe('The postUser handler', () => {
     }
     cache.save = jest.fn()
     await postUser(context, { payload: { username: 'Graham' } }, h)
-    expect(models.users.create).toHaveBeenCalledWith({ id: expect.any(String), username: 'graham' })
+    expect(models.users.create).toHaveBeenCalledWith({
+      id: expect.any(String),
+      username: 'graham'
+    })
     expect(cache.save).toHaveBeenCalledWith('/user/bar', { id: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -66,13 +69,19 @@ describe('The postUser handler', () => {
     await postUser(context, { payload: { username: 'Graham' } }, h)
     expect(models.users.create).not.toHaveBeenCalled()
     expect(cache.save).not.toHaveBeenCalledWith()
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ code: 400 }))
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({ code: 400 })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
 
   it('throws with a create query error', async () => {
-    models.users = { create: jest.fn(async () => { throw Error() }) }
+    models.users = {
+      create: jest.fn(async () => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await postUser(context, req, h)
     }).rejects.toThrow()

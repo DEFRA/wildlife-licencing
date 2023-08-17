@@ -25,9 +25,7 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error INSERTING or UPDATING the RETURN-UPLOADS table', err)
     throw new Error(err.message)

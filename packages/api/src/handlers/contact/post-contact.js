@@ -19,9 +19,7 @@ export default async (_context, req, h) => {
 
     const responseBody = prepareResponse(dataValues)
     await cache.save(`/contact/${dataValues.id}`, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into CONTACTS table', err)
     throw new Error(err.message)

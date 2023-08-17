@@ -1,4 +1,3 @@
-
 describe('The habitat site validate function', () => {
   beforeEach(() => jest.resetModules())
 
@@ -16,7 +15,13 @@ describe('The habitat site validate function', () => {
     const methodIds = null
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'activityId: 100 not found' })
   })
 
@@ -34,7 +39,13 @@ describe('The habitat site validate function', () => {
     const methodIds = null
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'speciesId: 101 not found' })
   })
 
@@ -52,7 +63,13 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'methodIds: 102, 103 not found' })
   })
 
@@ -70,8 +87,16 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
-    expect(err).toEqual({ description: 'Invalid activity: 100 for application type: 104' })
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
+    expect(err).toEqual({
+      description: 'Invalid activity: 100 for application type: 104'
+    })
   })
 
   it('Return error if application type does not permit species', async () => {
@@ -92,14 +117,27 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
-    expect(err).toEqual({ description: 'Invalid species: 101 for application type: 104' })
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
+    expect(err).toEqual({
+      description: 'Invalid species: 101 for application type: 104'
+    })
   })
 
   it('Return error if activity type does not permit methods', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        activities: { findByPk: jest.fn(() => ({ id: 100, hasMethods: jest.fn(() => false) })) },
+        activities: {
+          findByPk: jest.fn(() => ({
+            id: 100,
+            hasMethods: jest.fn(() => false)
+          }))
+        },
         species: { findByPk: jest.fn(() => ({ id: 101 })) },
         methods: { findAll: jest.fn(() => [{ id: 102 }, { id: 103 }]) }
       }
@@ -114,18 +152,30 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
-    expect(err).toEqual({ description: 'Invalid methods: 102, 103 for activity: 100' })
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
+    expect(err).toEqual({
+      description: 'Invalid methods: 102, 103 for activity: 100'
+    })
   })
 
   it('Return error if the sett type is not found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        activities: { findByPk: jest.fn(() => ({ id: 100, hasMethods: jest.fn(() => true) })) },
+        activities: {
+          findByPk: jest.fn(() => ({
+            id: 100,
+            hasMethods: jest.fn(() => true)
+          }))
+        },
         species: { findByPk: jest.fn(() => ({ id: 101 })) },
         methods: { findAll: jest.fn(() => [{ id: 102 }, { id: 103 }]) },
         optionSets: { findByPk: jest.fn(() => ({ json: [105] })) }
-
       }
     }))
     const applicationType = {
@@ -138,18 +188,28 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = 104
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'Invalid settType: 104' })
   })
 
   it('Return error if the sett type is not set', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        activities: { findByPk: jest.fn(() => ({ id: 100, hasMethods: jest.fn(() => true) })) },
+        activities: {
+          findByPk: jest.fn(() => ({
+            id: 100,
+            hasMethods: jest.fn(() => true)
+          }))
+        },
         species: { findByPk: jest.fn(() => ({ id: 101 })) },
         methods: { findAll: jest.fn(() => [{ id: 102 }, { id: 103 }]) },
         optionSets: { findByPk: jest.fn(() => ({ json: [105] })) }
-
       }
     }))
     const applicationType = {
@@ -162,14 +222,25 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'Invalid settType: null' })
   })
 
   it('Return null if no error found', async () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
-        activities: { findByPk: jest.fn(() => ({ id: 100, hasMethods: jest.fn(() => true) })) },
+        activities: {
+          findByPk: jest.fn(() => ({
+            id: 100,
+            hasMethods: jest.fn(() => true)
+          }))
+        },
         species: { findByPk: jest.fn(() => ({ id: 101 })) },
         methods: { findAll: jest.fn(() => [{ id: 102 }, { id: 103 }]) },
         optionSets: { findByPk: jest.fn(() => ({ json: [104] })) }
@@ -185,7 +256,13 @@ describe('The habitat site validate function', () => {
     const methodIds = [102, 103]
     const settType = null
     const { validateRelations } = await import('../validate-relations.js')
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     expect(err).toEqual({ description: 'Invalid settType: null' })
   })
 })

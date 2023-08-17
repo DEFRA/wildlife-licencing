@@ -4,7 +4,8 @@ const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    const { applicationId, applicationDesignatedSiteId } = context.request.params
+    const { applicationId, applicationDesignatedSiteId } =
+      context.request.params
     const application = await models.applications.findByPk(applicationId)
 
     // Check the application id exists
@@ -26,7 +27,10 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
   } catch (err) {
-    console.error('Error DELETING from the APPLICATION-DESIGNATED-SITES table', err)
+    console.error(
+      'Error DELETING from the APPLICATION-DESIGNATED-SITES table',
+      err
+    )
     throw new Error(err.message)
   }
 }

@@ -31,7 +31,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { licenceId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { licenceId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 const applicationJson = 'application/json'
 
@@ -63,19 +65,22 @@ describe('The getReturnsByLicenceId handler', () => {
       }
     }))
 
-    const getReturnsByLicenceId = (await import('../get-returns-by-licence-id.js')).default
+    const getReturnsByLicenceId = (
+      await import('../get-returns-by-licence-id.js')
+    ).default
     await getReturnsByLicenceId(context, req, h)
-    expect(h.response).toHaveBeenCalledWith([{
-      id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-      completedWithinLicenceDates: true,
-      destroyVacantSettByMechanicalMeans: true,
-      nilReturn: true,
-      outcome: true,
-      whyNil: 'string',
-      whyNotCompletedWithinLicenceDates: 'string',
-      ...tsR
-    }]
-    )
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+        completedWithinLicenceDates: true,
+        destroyVacantSettByMechanicalMeans: true,
+        nilReturn: true,
+        outcome: true,
+        whyNil: 'string',
+        whyNotCompletedWithinLicenceDates: 'string',
+        ...tsR
+      }
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -88,7 +93,9 @@ describe('The getReturnsByLicenceId handler', () => {
         }
       }
     }))
-    const getReturnsByLicenceId = (await import('../get-returns-by-licence-id.js')).default
+    const getReturnsByLicenceId = (
+      await import('../get-returns-by-licence-id.js')
+    ).default
     await getReturnsByLicenceId(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -97,11 +104,15 @@ describe('The getReturnsByLicenceId handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))
-    const getReturnsByLicenceId = (await import('../get-returns-by-licence-id.js')).default
+    const getReturnsByLicenceId = (
+      await import('../get-returns-by-licence-id.js')
+    ).default
     await expect(async () => {
       await getReturnsByLicenceId(context, req, h)
     }).rejects.toThrow()

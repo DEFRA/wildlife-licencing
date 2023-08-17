@@ -3,7 +3,8 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f'
+const path =
+  '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f'
 const req = {
   path,
   payload: {
@@ -55,12 +56,15 @@ describe('The putReturn handler', () => {
       }
     }))
 
-    const mockFindOrCreate = jest.fn(async () => [{
-      dataValues: {
-        id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
-        ...ts
-      }
-    }, true])
+    const mockFindOrCreate = jest.fn(async () => [
+      {
+        dataValues: {
+          id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+          ...ts
+        }
+      },
+      true
+    ])
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -88,8 +92,14 @@ describe('The putReturn handler', () => {
         id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa'
       }
     })
-    expect(mockSave).toHaveBeenCalledWith('/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+    expect(mockSave).toHaveBeenCalledWith(
+      '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR }
+    )
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -104,12 +114,17 @@ describe('The putReturn handler', () => {
       }
     }))
 
-    const mockUpdate = jest.fn(() => [null, [{
-      dataValues: {
-        id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
-        ...ts
-      }
-    }]])
+    const mockUpdate = jest.fn(() => [
+      null,
+      [
+        {
+          dataValues: {
+            id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+            ...ts
+          }
+        }
+      ]
+    ])
 
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
@@ -126,16 +141,24 @@ describe('The putReturn handler', () => {
     const putReturn = (await import('../put-return.js')).default
 
     await putReturn(context, req, h)
-    expect(mockUpdate).toHaveBeenCalledWith({
-      licenceId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
-      returnData: {
-        completedWithinLicenceDates: true
+    expect(mockUpdate).toHaveBeenCalledWith(
+      {
+        licenceId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77',
+        returnData: {
+          completedWithinLicenceDates: true
+        },
+        updateStatus: 'L'
       },
-      updateStatus: 'L'
-    },
-    { returning: true, where: { id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' } })
-    expect(mockSave).toHaveBeenCalledWith('/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+      { returning: true, where: { id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa' } }
+    )
+    expect(mockSave).toHaveBeenCalledWith(
+      '/licence/1e470963-e8bf-41f5-9b0b-52d19c21cb77/return/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR }
+    )
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -157,7 +180,9 @@ describe('The putReturn handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         licences: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))

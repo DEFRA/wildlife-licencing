@@ -8,12 +8,16 @@ const resFunc = jest.fn(() => ({ type: typeFunc }))
 
 describe('The postResponseHandler handler', () => {
   it('Ignore not found', async () => {
-    const result = await postResponseHandler({ response: { source: 'foo', statusCode: 404 } })
+    const result = await postResponseHandler({
+      response: { source: 'foo', statusCode: 404 }
+    })
     expect(result.statusCode).toEqual(404)
   })
 
   it('Ignore no content', async () => {
-    const result = await postResponseHandler({ response: { source: 'foo', statusCode: 204 } })
+    const result = await postResponseHandler({
+      response: { source: 'foo', statusCode: 204 }
+    })
     expect(result.statusCode).toEqual(204)
   })
 
@@ -39,15 +43,16 @@ describe('The postResponseHandler handler', () => {
 
   it('Returns a 200 valid response', async () => {
     const validateResponseFunc = jest.fn(() => ({}))
-    const result = await postResponseHandler({
-      response: { source: 'foo', statusCode: 200, header: jest.fn() },
-      operation: 'bar',
-      api: {
-        validateResponse: validateResponseFunc
-      }
-    },
-    { path: '/path' },
-    { response: resFunc }
+    const result = await postResponseHandler(
+      {
+        response: { source: 'foo', statusCode: 200, header: jest.fn() },
+        operation: 'bar',
+        api: {
+          validateResponse: validateResponseFunc
+        }
+      },
+      { path: '/path' },
+      { response: resFunc }
     )
     expect(validateResponseFunc).toBeCalledWith('foo', 'bar', 200)
     expect(codeFunc).toBeCalledWith(200)
@@ -56,15 +61,16 @@ describe('The postResponseHandler handler', () => {
 
   it('Returns a 201 valid response', async () => {
     const validateResponseFunc = jest.fn(() => ({}))
-    const result = await postResponseHandler({
-      response: { source: 'foo', statusCode: 201, header: jest.fn() },
-      operation: 'bar',
-      api: {
-        validateResponse: validateResponseFunc
-      }
-    },
-    { path: '/path' },
-    { response: resFunc }
+    const result = await postResponseHandler(
+      {
+        response: { source: 'foo', statusCode: 201, header: jest.fn() },
+        operation: 'bar',
+        api: {
+          validateResponse: validateResponseFunc
+        }
+      },
+      { path: '/path' },
+      { response: resFunc }
     )
     expect(validateResponseFunc).toBeCalledWith('foo', 'bar', 201)
     expect(codeFunc).toBeCalledWith(201)

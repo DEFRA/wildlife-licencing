@@ -24,9 +24,15 @@ describe('delete-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
-    await deleteApplicationUser(context, { }, h)
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const deleteApplicationUser = (
+      await import('../delete-application-user-by-id.js')
+    ).default
+    await deleteApplicationUser(context, {}, h)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -46,9 +52,15 @@ describe('delete-application-user-by-id-handler', () => {
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
-    await deleteApplicationUser(context, { }, h)
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const deleteApplicationUser = (
+      await import('../delete-application-user-by-id.js')
+    ).default
+    await deleteApplicationUser(context, {}, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
@@ -63,14 +75,22 @@ describe('delete-application-user-by-id-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applicationUsers: {
-          destroy: jest.fn(() => { throw new Error() })
+          destroy: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
-    const context = { request: { params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' } } }
-    const deleteApplicationUser = (await import('../delete-application-user-by-id.js')).default
+    const context = {
+      request: {
+        params: { applicationUserId: '1ee0737e-f97d-4f79-8225-81b6014ce37e' }
+      }
+    }
+    const deleteApplicationUser = (
+      await import('../delete-application-user-by-id.js')
+    ).default
     await expect(async () => {
-      await deleteApplicationUser(context, { }, h)
+      await deleteApplicationUser(context, {}, h)
     }).rejects.toThrow()
   })
 })

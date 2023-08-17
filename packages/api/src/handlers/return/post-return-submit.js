@@ -12,7 +12,11 @@ export default async (context, _req, h) => {
 
     // If the licence does not exist return a not found and error
     if (!rec || rec.dataValues.licenceId !== licenceId) {
-      return h.response({ code: 404, error: { description: `returnId: ${returnId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `returnId: ${returnId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
@@ -30,11 +34,17 @@ export default async (context, _req, h) => {
     })
 
     for await (const upload of returnUploads) {
-      const fileJob = await fileQueue.add({ id: upload.dataValues.id, returnId })
+      const fileJob = await fileQueue.add({
+        id: upload.dataValues.id,
+        returnId
+      })
       debug(`Queued files for return ${returnId} - job: ${fileJob.id}`)
     }
 
-    await models.returns.update({ userSubmission: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id: returnId } })
+    await models.returns.update(
+      { userSubmission: SEQUELIZE.getSequelize().fn('NOW') },
+      { where: { id: returnId } }
+    )
 
     return h.response().code(204)
   } catch (err) {

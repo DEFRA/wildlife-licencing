@@ -10,14 +10,22 @@ export default async (_context, req, h) => {
     // Ensure that the application type and purpose are an allowable combination
     const application = alwaysExclude(req.payload)
     const { applicationTypeId, applicationPurposeId } = application
-    const applicationTypeApplicationPurpose = await models.applicationTypeApplicationPurposes.findOne({
-      where: {
-        applicationTypeId, applicationPurposeId
-      }
-    })
+    const applicationTypeApplicationPurpose =
+      await models.applicationTypeApplicationPurposes.findOne({
+        where: {
+          applicationTypeId,
+          applicationPurposeId
+        }
+      })
 
     if (!applicationTypeApplicationPurpose) {
-      return h.response({ code: 409, error: { description: `Invalid application type: ${applicationTypeId} for purpose: ${applicationPurposeId}` } })
+      return h
+        .response({
+          code: 409,
+          error: {
+            description: `Invalid application type: ${applicationTypeId} for purpose: ${applicationPurposeId}`
+          }
+        })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -30,9 +38,7 @@ export default async (_context, req, h) => {
 
     const responseBody = prepareResponse(dataValues)
     await cache.save(`/application/${dataValues.id}`, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into APPLICATIONS table', err)
     throw new Error(err.message)

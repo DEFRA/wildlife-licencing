@@ -57,15 +57,19 @@ describe('The putApplication handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     models.applications = {
-      findOrCreate: jest.fn(async () => ([{
-        dataValues:
-          {
+      findOrCreate: jest.fn(async () => [
+        {
+          dataValues: {
             id: context.request.params.applicationId,
             ...ts
           }
-      }, true]))
+        },
+        true
+      ])
     }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
@@ -82,62 +86,105 @@ describe('The putApplication handler', () => {
         id: context.request.params.applicationId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
+    expect(cache.save).toHaveBeenCalledWith(
+      path,
+      expect.objectContaining({
+        id: context.request.params.applicationId,
+        ...tsR
+      })
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: context.request.params.applicationId,
+        ...tsR
+      })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 200 with an existing key', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     models.applications = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => ([1, [{
-        dataValues: {
-          id: context.request.params.applicationId,
-          userId: context.request.params.userId,
-          ...ts
-        }
-      }]]))
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => [
+        1,
+        [
+          {
+            dataValues: {
+              id: context.request.params.applicationId,
+              userId: context.request.params.userId,
+              ...ts
+            }
+          }
+        ]
+      ])
     }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     cache.save = jest.fn()
     cache.delete = jest.fn()
     cache.keys = jest.fn(() => [])
     await putApplication(context, req, h)
-    expect(models.applications.update).toHaveBeenCalledWith({
-      updateStatus: 'L',
-      application: (({ ...l }) => l)(req.payload)
-    },
-    { returning: true, where: { id: context.request.params.applicationId } })
-    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ id: context.request.params.applicationId, ...tsR }))
+    expect(models.applications.update).toHaveBeenCalledWith(
+      {
+        updateStatus: 'L',
+        application: (({ ...l }) => l)(req.payload)
+      },
+      { returning: true, where: { id: context.request.params.applicationId } }
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      path,
+      expect.objectContaining({
+        id: context.request.params.applicationId,
+        ...tsR
+      })
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: context.request.params.applicationId,
+        ...tsR
+      })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns 409 with an invalid type-purpose', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => null) }
     await putApplication(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(409)
   })
 
   it('throws with an insert query error', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
-    models.applications = { findOrCreate: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      findOrCreate: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await putApplication(context, req, h)
     }).rejects.toThrow()
   })
 
   it('throws with an update query error', async () => {
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { foo: 'bar' } }))
+    }
     models.applicationTypeApplicationPurposes = { findOne: jest.fn(() => ({})) }
     models.applications = {
-      findOrCreate: jest.fn(async () => ([{}, false])),
-      update: jest.fn(async () => { throw new Error() })
+      findOrCreate: jest.fn(async () => [{}, false]),
+      update: jest.fn(async () => {
+        throw new Error()
+      })
     }
     await expect(async () => {
       await putApplication(context, req, h)

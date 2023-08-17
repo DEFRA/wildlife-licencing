@@ -27,7 +27,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -66,7 +68,10 @@ describe('The postPreviousLicence handler', () => {
         licenceNumber: '123'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/previous-licence/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/previous-licence/bar',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -85,7 +90,11 @@ describe('The postPreviousLicence handler', () => {
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await postPreviousLicence(context, req, h)
     }).rejects.toThrow()

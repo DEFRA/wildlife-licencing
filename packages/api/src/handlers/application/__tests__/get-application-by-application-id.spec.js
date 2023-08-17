@@ -45,12 +45,15 @@ describe('The getApplicationByApplicationId handler', () => {
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
 
-    getApplication = (await import('../get-application-by-application-id.js')).default
+    getApplication = (await import('../get-application-by-application-id.js'))
+      .default
   })
 
   it('returns an application and status 200 from the cache', async () => {
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
     await getApplication(context, req, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -60,12 +63,23 @@ describe('The getApplicationByApplicationId handler', () => {
   it('returns an application and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
+    models.applications = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getApplication(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ foo: 'bar', ...tsR }))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ foo: 'bar', ...tsR }))
+    expect(models.applications.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationId
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      path,
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -74,17 +88,32 @@ describe('The getApplicationByApplicationId handler', () => {
     // Restore has been set to return a value in this test case
     cache.restore = jest.fn(() => JSON.stringify({ foo: 'bar' }))
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.applications = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
-    await getApplication(context, {
-      ...req,
-      query: {
-        nocache: 'true'
-      }
-    }, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
-    expect(cache.save).toHaveBeenCalledWith(path, expect.objectContaining({ foo: 'bar', ...tsR }))
-    expect(h.response).toHaveBeenCalledWith(expect.objectContaining({ foo: 'bar', ...tsR }))
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
+    models.applications = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
+    await getApplication(
+      context,
+      {
+        ...req,
+        query: {
+          nocache: 'true'
+        }
+      },
+      h
+    )
+    expect(models.applications.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationId
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      path,
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    )
+    expect(h.response).toHaveBeenCalledWith(
+      expect.objectContaining({ foo: 'bar', ...tsR })
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -93,15 +122,23 @@ describe('The getApplicationByApplicationId handler', () => {
     cache.restore = jest.fn(() => null)
     models.applications = { findByPk: jest.fn(() => null) }
     await getApplication(context, req, h)
-    expect(models.applications.findByPk).toHaveBeenCalledWith(context.request.params.applicationId)
+    expect(models.applications.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } })) }
-    models.applications = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.users = {
+      findByPk: jest.fn(async () => ({ dataValues: { id: 'bar' } }))
+    }
+    models.applications = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplication(context, req, h)
     }).rejects.toThrow()

@@ -29,24 +29,23 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(permission.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedPermission] = await models.permissions.update({
-        permission: alwaysExclude(req.payload),
-        updateStatus: 'L'
-      }, {
-        where: {
-          id: permissionId
+      const [, updatedPermission] = await models.permissions.update(
+        {
+          permission: alwaysExclude(req.payload),
+          updateStatus: 'L'
         },
-        returning: true
-      })
+        {
+          where: {
+            id: permissionId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedPermission[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error updating from the PERMISSIONS table', err)

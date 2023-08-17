@@ -23,26 +23,27 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(contact.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedContact] = await models.contacts.update({
-        contact: contactObj,
-        updateStatus: 'L',
-        ...(req.payload.userId ? { userId: req.payload.userId } : { userId: null }),
-        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
-      }, {
-        where: {
-          id: contactId
+      const [, updatedContact] = await models.contacts.update(
+        {
+          contact: contactObj,
+          updateStatus: 'L',
+          ...(req.payload.userId
+            ? { userId: req.payload.userId }
+            : { userId: null }),
+          ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
         },
-        returning: true
-      })
+        {
+          where: {
+            id: contactId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedContact[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error inserting into, or updating, the CONTACTS table', err)

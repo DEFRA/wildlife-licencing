@@ -19,24 +19,23 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(site.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedSite] = await models.sites.update({
-        site: alwaysExclude(req.payload),
-        updateStatus: 'L'
-      }, {
-        where: {
-          id: siteId
+      const [, updatedSite] = await models.sites.update(
+        {
+          site: alwaysExclude(req.payload),
+          updateStatus: 'L'
         },
-        returning: true
-      })
+        {
+          where: {
+            id: siteId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedSite[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error inserting into, or updating, the SITES table', err)

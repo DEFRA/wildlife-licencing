@@ -58,9 +58,13 @@ describe('The getAccountByAccountId handler', () => {
   it('returns a account and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.accounts = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.accounts = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getAccount(context, req, h)
-    expect(models.accounts.findByPk).toHaveBeenCalledWith(context.request.params.accountId)
+    expect(models.accounts.findByPk).toHaveBeenCalledWith(
+      context.request.params.accountId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -71,14 +75,20 @@ describe('The getAccountByAccountId handler', () => {
     cache.restore = jest.fn(() => null)
     models.accounts = { findByPk: jest.fn(() => null) }
     await getAccount(context, req, h)
-    expect(models.accounts.findByPk).toHaveBeenCalledWith(context.request.params.accountId)
+    expect(models.accounts.findByPk).toHaveBeenCalledWith(
+      context.request.params.accountId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.accounts = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.accounts = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     const getAccount = (await import('../get-account-by-account-id.js')).default
     await expect(async () => {
       await getAccount(context, req, h)

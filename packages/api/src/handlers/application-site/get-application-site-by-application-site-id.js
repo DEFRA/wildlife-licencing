@@ -10,12 +10,12 @@ export default async (context, req, h) => {
     const result = await checkCache(req)
 
     if (result) {
-      return h.response(result)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(result).type(APPLICATION_JSON).code(200)
     }
 
-    const applicationSite = await models.applicationSites.findByPk(context.request.params.applicationSiteId)
+    const applicationSite = await models.applicationSites.findByPk(
+      context.request.params.applicationSiteId
+    )
 
     // Check the application-site exists
     if (!applicationSite) {
@@ -25,9 +25,7 @@ export default async (context, req, h) => {
     const responseBody = prepareResponse(applicationSite.dataValues)
 
     await cache.save(req.path, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the APPLICATION-SITES table', err)
     throw new Error(err.message)

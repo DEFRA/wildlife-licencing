@@ -29,12 +29,16 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/application/${applicationId}/file-upload/${dataValues.id}`, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    await cache.save(
+      `/application/${applicationId}/file-upload/${dataValues.id}`,
+      responseBody
+    )
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
-    console.error('Error INSERTING or UPDATING the APPLICATION-UPLOADS table', err)
+    console.error(
+      'Error INSERTING or UPDATING the APPLICATION-UPLOADS table',
+      err
+    )
     throw new Error(err.message)
   }
 }

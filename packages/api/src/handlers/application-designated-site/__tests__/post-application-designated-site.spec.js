@@ -32,7 +32,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 const applicationJson = 'application/json'
 
@@ -49,7 +51,9 @@ describe('The postApplicationDesignatedSite handler', () => {
       }
     }))
 
-    const mockCreate = jest.fn(async () => ({ dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }))
+    const mockCreate = jest.fn(async () => ({
+      dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts }
+    }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -59,12 +63,17 @@ describe('The postApplicationDesignatedSite handler', () => {
           create: mockCreate
         },
         designatedSites: {
-          findByPk: () => ({ id: '2342fce0-3067-4ca5-ae7a-23cae648e45c', json: { siteType: 10000001 } })
+          findByPk: () => ({
+            id: '2342fce0-3067-4ca5-ae7a-23cae648e45c',
+            json: { siteType: 10000001 }
+          })
         }
       }
     }))
 
-    const postApplicationDesignatedSite = (await import('../post-application-designated-site.js')).default
+    const postApplicationDesignatedSite = (
+      await import('../post-application-designated-site.js')
+    ).default
 
     await postApplicationDesignatedSite(context, req, h)
     expect(mockCreate).toHaveBeenCalledWith({
@@ -77,8 +86,14 @@ describe('The postApplicationDesignatedSite handler', () => {
         permissionFromOwner: true
       }
     })
-    expect(mockSave).toHaveBeenCalledWith('/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/designated-site/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+    expect(mockSave).toHaveBeenCalledWith(
+      '/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/designated-site/1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR }
+    )
+    expect(h.response).toHaveBeenCalledWith({
+      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+      ...tsR
+    })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
@@ -94,7 +109,9 @@ describe('The postApplicationDesignatedSite handler', () => {
         }
       }
     }))
-    const postApplicationDesignatedSite = (await import('../post-application-designated-site.js')).default
+    const postApplicationDesignatedSite = (
+      await import('../post-application-designated-site.js')
+    ).default
     await postApplicationDesignatedSite(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -110,7 +127,9 @@ describe('The postApplicationDesignatedSite handler', () => {
         }
       }
     }))
-    const postApplicationDesignatedSite = (await import('../post-application-designated-site.js')).default
+    const postApplicationDesignatedSite = (
+      await import('../post-application-designated-site.js')
+    ).default
     await postApplicationDesignatedSite(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(400)
   })
@@ -119,11 +138,15 @@ describe('The postApplicationDesignatedSite handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))
-    const postApplicationDesignatedSite = (await import('../post-application-designated-site.js')).default
+    const postApplicationDesignatedSite = (
+      await import('../post-application-designated-site.js')
+    ).default
     await expect(async () => {
       await postApplicationDesignatedSite(context, req, h)
     }).rejects.toThrow()

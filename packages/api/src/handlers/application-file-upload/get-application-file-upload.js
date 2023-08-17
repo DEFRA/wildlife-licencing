@@ -11,9 +11,7 @@ export default async (context, req, h) => {
     const result = await checkCache(req)
 
     if (result) {
-      return h.response(result)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(result).type(APPLICATION_JSON).code(200)
     }
 
     const application = await models.applications.findByPk(applicationId)
@@ -32,9 +30,7 @@ export default async (context, req, h) => {
 
     const responseBody = prepareResponse(applicationUpload.dataValues)
     await cache.save(req.path, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the APPLICATION-UPLOADS table', err)
     throw new Error(err.message)

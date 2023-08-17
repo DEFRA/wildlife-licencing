@@ -4,4 +4,10 @@ import getPermission from './get-permission.js'
 import putPermission from './put-permission.js'
 import deletePermission from './delete-permission.js'
 
-export { postPermission, getPermissions, getPermission, putPermission, deletePermission }
+export {
+  postPermission,
+  getPermissions,
+  getPermission,
+  putPermission,
+  deletePermission
+}

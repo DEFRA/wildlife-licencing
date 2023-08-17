@@ -44,7 +44,9 @@ describe('The getApplicationSiteByApplicationSiteId handler', () => {
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
 
-    getApplicationSiteByApplicationSiteId = (await import('../get-application-site-by-application-site-id.js')).default
+    getApplicationSiteByApplicationSiteId = (
+      await import('../get-application-site-by-application-site-id.js')
+    ).default
   })
 
   it('returns an application-site and status 200 from the cache', async () => {
@@ -58,9 +60,13 @@ describe('The getApplicationSiteByApplicationSiteId handler', () => {
   it('returns an application-site and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.applicationSites = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.applicationSites = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
+    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationSiteId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -71,14 +77,20 @@ describe('The getApplicationSiteByApplicationSiteId handler', () => {
     cache.restore = jest.fn(() => null)
     models.applicationSites = { findByPk: jest.fn(() => null) }
     await getApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(context.request.params.applicationSiteId)
+    expect(models.applicationSites.findByPk).toHaveBeenCalledWith(
+      context.request.params.applicationSiteId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on a query error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applicationSites = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.applicationSites = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationSiteByApplicationSiteId(context, req, h)
     }).rejects.toThrow()

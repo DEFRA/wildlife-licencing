@@ -18,7 +18,14 @@ const ts = {
   updatedAt: { toISOString: () => '2022-08-02T12:04:04.004Z' }
 }
 
-const context = { request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada', uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } } }
+const context = {
+  request: {
+    params: {
+      returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+    }
+  }
+}
 
 const req = {
   path: 'path',
@@ -43,7 +50,9 @@ describe('getReturnUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
           findByPk: jest.fn(() => ({
@@ -54,7 +63,8 @@ describe('getReturnUpload handler', () => {
         }
       }
     }))
-    const getReturnFileUpload = (await import('../get-return-file-upload.js')).default
+    const getReturnFileUpload = (await import('../get-return-file-upload.js'))
+      .default
     await getReturnFileUpload(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -78,7 +88,8 @@ describe('getReturnUpload handler', () => {
         }
       }
     }))
-    const getReturnFileUpload = (await import('../get-return-file-upload.js')).default
+    const getReturnFileUpload = (await import('../get-return-file-upload.js'))
+      .default
     await getReturnFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -87,21 +98,27 @@ describe('getReturnUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
           findByPk: jest.fn(() => null)
         }
       }
     }))
-    const getReturnFileUpload = (await import('../get-return-file-upload.js')).default
+    const getReturnFileUpload = (await import('../get-return-file-upload.js'))
+      .default
     await getReturnFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
 
   it('throws on error', async () => {
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const getReturnFileUpload = (await import('../get-return-file-upload.js')).default
-    await expect(async () => await getReturnFileUpload(context, req, h)).rejects.toThrow()
+    const getReturnFileUpload = (await import('../get-return-file-upload.js'))
+      .default
+    await expect(
+      async () => await getReturnFileUpload(context, req, h)
+    ).rejects.toThrow()
   })
 })

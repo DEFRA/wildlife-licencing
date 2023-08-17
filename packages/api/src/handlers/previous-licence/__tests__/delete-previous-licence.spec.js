@@ -34,7 +34,8 @@ let cache
 describe('The deletePreviousLicence handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    deletePreviousLicence = (await import('../delete-previous-licence.js')).default
+    deletePreviousLicence = (await import('../delete-previous-licence.js'))
+      .default
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
   })
@@ -49,7 +50,9 @@ describe('The deletePreviousLicence handler', () => {
     cache.delete = jest.fn()
     await deletePreviousLicence(context, req, h)
 
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/previous-licence/uuid')
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/previous-licence/uuid'
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -75,7 +78,11 @@ describe('The deletePreviousLicence handler', () => {
 
   it('throws with an insert error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await deletePreviousLicence(context, req, h)
     }).rejects.toThrow()

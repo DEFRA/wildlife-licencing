@@ -1,7 +1,8 @@
 import { APPLICATION_JSON } from '../../constants.js'
 import { SEQUELIZE, REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
-const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
+const baseQuery =
+  'select "a-t".id as "applicationTypeIds",\n' +
   '       "a-t-a-p".application_purpose_id as "applicationPurposeIds",\n' +
   '       s.id as "speciesIds",\n' +
   '       s.species_subject_id as "speciesSubjectIds",\n' +
@@ -21,7 +22,7 @@ const baseQuery = 'select "a-t".id as "applicationTypeIds",\n' +
  * @param u
  * @returns {`'${string}'`}
  */
-const w = u => `'${u}'`
+const w = (u) => `'${u}'`
 
 /**
  * Create SQL IN list
@@ -30,7 +31,7 @@ const w = u => `'${u}'`
  * @param h
  * @returns {string}
  */
-const ils = a => `(${a.map(p => w(p)).join(',')})`
+const ils = (a) => `(${a.map((p) => w(p)).join(',')})`
 
 /**
  * Selects the unique values of a field in the result
@@ -38,7 +39,8 @@ const ils = a => `(${a.map(p => w(p)).join(',')})`
  * @param field
  * @returns {any[]}
  */
-const unique = (result, field) => [...new Set(result.map(r => r[field])).values()].filter(r => r)
+const unique = (result, field) =>
+  [...new Set(result.map((r) => r[field])).values()].filter((r) => r)
 
 export const findApplicationTypes = async (_context, req, h) => {
   try {
@@ -47,9 +49,7 @@ export const findApplicationTypes = async (_context, req, h) => {
     const cacheResult = JSON.parse(await cache.restore(cacheKey))
 
     if (cacheResult) {
-      return h.response(cacheResult)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(cacheResult).type(APPLICATION_JSON).code(200)
     }
 
     const sequelize = SEQUELIZE.getSequelize()
@@ -84,7 +84,9 @@ export const findApplicationTypes = async (_context, req, h) => {
     const whereClause = filters.length ? 'where ' + filters.join(' and ') : ''
 
     const qryStr = `${baseQuery} ${whereClause}`
-    const result = await sequelize.query(qryStr, { type: sequelize.QueryTypes.SELECT })
+    const result = await sequelize.query(qryStr, {
+      type: sequelize.QueryTypes.SELECT
+    })
 
     const responseBody = {
       types: unique(result, 'applicationTypeIds'),

@@ -10,12 +10,22 @@ export default async (_context, req, h) => {
     const { applicationId, contactId, contactRole } = req.payload
     const application = await models.applications.findByPk(applicationId)
     if (!application) {
-      return h.response({ code: 400, error: { description: `applicationId: ${applicationId} not found` } }).code(400)
+      return h
+        .response({
+          code: 400,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
+        .code(400)
     }
 
     const contact = await models.contacts.findByPk(contactId)
     if (!contact) {
-      return h.response({ code: 400, error: { description: `contactId: ${contactId} not found` } }).code(400)
+      return h
+        .response({
+          code: 400,
+          error: { description: `contactId: ${contactId} not found` }
+        })
+        .code(400)
     }
 
     // If the user-application-site already exists then return a conflict and error
@@ -24,13 +34,15 @@ export default async (_context, req, h) => {
     })
 
     if (applicationContact) {
-      return h.response({
-        code: 409,
-        error: {
-          description: 'an application-contact already exists for applicationId: ' +
-            `${applicationId}, contactId: ${contactId} and role: ${contactRole}`
-        }
-      })
+      return h
+        .response({
+          code: 409,
+          error: {
+            description:
+              'an application-contact already exists for applicationId: ' +
+              `${applicationId}, contactId: ${contactId} and role: ${contactRole}`
+          }
+        })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -44,9 +56,7 @@ export default async (_context, req, h) => {
 
     const response = prepareResponse(dataValues)
     await cache.save(`/application-contact/${dataValues.id}`, response)
-    return h.response(response)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(response).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into APPLICATION-CONTACT table', err)
     throw new Error(err.message)

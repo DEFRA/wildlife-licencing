@@ -36,7 +36,7 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { } }
+const context = { request: {} }
 
 jest.mock('@defra/wls-database-model')
 
@@ -54,7 +54,9 @@ describe('The postSite handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.sites = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } })) }
+    models.sites = {
+      create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts } }))
+    }
     cache.save = jest.fn(() => null)
     await postSite(context, req, h)
     expect(models.sites.create).toHaveBeenCalledWith({
@@ -70,7 +72,11 @@ describe('The postSite handler', () => {
 
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
-    models.sites = { create: jest.fn(async () => { throw new Error() }) }
+    models.sites = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await postSite(context, req, h)
     }).rejects.toThrow()

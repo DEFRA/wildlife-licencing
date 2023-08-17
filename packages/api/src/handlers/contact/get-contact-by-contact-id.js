@@ -10,12 +10,12 @@ export default async (context, req, h) => {
     const result = await checkCache(req)
 
     if (result) {
-      return h.response(result)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(result).type(APPLICATION_JSON).code(200)
     }
 
-    const contact = await models.contacts.findByPk(context.request.params.contactId)
+    const contact = await models.contacts.findByPk(
+      context.request.params.contactId
+    )
 
     // Check the contact exists
     if (!contact) {
@@ -25,9 +25,7 @@ export default async (context, req, h) => {
     const responseBody = prepareResponse(contact.dataValues)
 
     await cache.save(req.path, responseBody)
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the CONTACTS table', err)
     throw new Error(err.message)

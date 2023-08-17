@@ -14,10 +14,8 @@ export default async (_context, req, h) => {
       users = await models.users.findAll()
     }
 
-    const response = users.map(u => prepareResponse(u.dataValues))
-    return h.response(response)
-      .type(APPLICATION_JSON)
-      .code(200)
+    const response = users.map((u) => prepareResponse(u.dataValues))
+    return h.response(response).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error inserting into USERS table', err)
     throw new Error(err.message)

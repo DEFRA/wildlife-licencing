@@ -58,13 +58,21 @@ describe('The putPermission handler', () => {
       }))
     }
     models.permissions = {
-      findOrCreate: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }, true])
+      findOrCreate: jest.fn(async () => [
+        { dataValues: { id: 'bar', ...ts } },
+        true
+      ])
     }
     cache.delete = jest.fn()
     cache.save = jest.fn()
     await putPermission(context, req, h)
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/permission/uuid')
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/permission/uuid', { id: 'bar', ...tsR })
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid'
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -80,14 +88,25 @@ describe('The putPermission handler', () => {
       }))
     }
     models.permissions = {
-      findOrCreate: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }, false]),
-      update: jest.fn(async () => [false, [{ dataValues: { id: 'bar', ...ts } }]])
+      findOrCreate: jest.fn(async () => [
+        { dataValues: { id: 'bar', ...ts } },
+        false
+      ]),
+      update: jest.fn(async () => [
+        false,
+        [{ dataValues: { id: 'bar', ...ts } }]
+      ])
     }
     cache.delete = jest.fn()
     cache.save = jest.fn()
     await putPermission(context, req, h)
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/permission/uuid')
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/permission/uuid', { id: 'bar', ...tsR })
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid'
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -105,7 +124,11 @@ describe('The putPermission handler', () => {
 
   it('throws with an insert error', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => null)
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await putPermission(context, req, h)
     }).rejects.toThrow()

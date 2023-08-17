@@ -52,7 +52,9 @@ describe('The deleteHabitatSite handler', () => {
     cache.delete = jest.fn()
     await deleteHabitatSite(context, req, h)
 
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid')
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid'
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -78,7 +80,11 @@ describe('The deleteHabitatSite handler', () => {
 
   it('throws with an insert error', async () => {
     cache.restore = jest.fn(() => null)
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await deleteHabitatSite(context, req, h)
     }).rejects.toThrow()

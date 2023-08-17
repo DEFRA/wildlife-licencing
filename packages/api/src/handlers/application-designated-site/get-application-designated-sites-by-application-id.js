@@ -9,19 +9,29 @@ export default async (context, _req, h) => {
 
     // If the application does not exist return a not found and error
     if (!application) {
-      return h.response({ code: 404, error: { description: `applicationId: ${applicationId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
 
-    const applicationDesignatedSites = await models.applicationDesignatedSites.findAll({ where: { applicationId } })
-    const responseBody = applicationDesignatedSites.map(ads => prepareResponse(ads.dataValues))
+    const applicationDesignatedSites =
+      await models.applicationDesignatedSites.findAll({
+        where: { applicationId }
+      })
+    const responseBody = applicationDesignatedSites.map((ads) =>
+      prepareResponse(ads.dataValues)
+    )
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
-    console.error('Error inserting into APPLICATION-DESIGNATED-SITES table', err)
+    console.error(
+      'Error inserting into APPLICATION-DESIGNATED-SITES table',
+      err
+    )
     throw new Error(err.message)
   }
 }

@@ -27,24 +27,23 @@ export default async (context, req, h) => {
 
     if (created) {
       const responseBody = prepareResponse(returnUpload.dataValues)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedReturnUploads] = await models.returnUploads.update({
-        returnId,
-        filetype,
-        filename,
-        bucket,
-        objectKey
-      }, {
-        where: { id: uploadId },
-        returning: true
-      })
+      const [, updatedReturnUploads] = await models.returnUploads.update(
+        {
+          returnId,
+          filetype,
+          filename,
+          bucket,
+          objectKey
+        },
+        {
+          where: { id: uploadId },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedReturnUploads[0].dataValues)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error INSERTING or UPDATING the RETURN-UPLOADS table', err)

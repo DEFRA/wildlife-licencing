@@ -11,7 +11,11 @@ export default async (context, req, h) => {
 
     // If the licence does not exist return a not found and error
     if (!licence) {
-      return h.response({ code: 404, error: { description: `licenceId: ${licenceId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `licenceId: ${licenceId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
@@ -30,25 +34,24 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(rec.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedReturn] = await models.returns.update({
-        licenceId: licenceId,
-        returnData: data,
-        updateStatus: 'L'
-      }, {
-        where: {
-          id: returnId
+      const [, updatedReturn] = await models.returns.update(
+        {
+          licenceId: licenceId,
+          returnData: data,
+          updateStatus: 'L'
         },
-        returning: true
-      })
+        {
+          where: {
+            id: returnId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedReturn[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error INSERTING or UPDATING into the RETURNS table', err)

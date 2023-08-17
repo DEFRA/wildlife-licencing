@@ -20,25 +20,24 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(account.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedAccount] = await models.accounts.update({
-        account: alwaysExclude(req.payload),
-        updateStatus: 'L',
-        ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
-      }, {
-        where: {
-          id: accountId
+      const [, updatedAccount] = await models.accounts.update(
+        {
+          account: alwaysExclude(req.payload),
+          updateStatus: 'L',
+          ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
         },
-        returning: true
-      })
+        {
+          where: {
+            id: accountId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedAccount[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error inserting into, or updating, the ACCOUNTS table', err)

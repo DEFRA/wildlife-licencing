@@ -7,20 +7,28 @@
  * @param powerAppsKey
  * @param powerAppsTable
  */
-export const sectionKeyFunc = (targetKeys, applicationId, section, powerAppsKey, powerAppsTable) => {
+export const sectionKeyFunc = (
+  targetKeys,
+  applicationId,
+  section,
+  powerAppsKey,
+  powerAppsTable
+) => {
   const sectionPath = `application.${section}`
 
   // If the keys are not initialized then initialize them
   if (!targetKeys) {
-    targetKeys = [{
-      apiTable: 'applications',
-      apiKey: applicationId,
-      apiBasePath: 'application',
-      powerAppsTable: 'sdds_applications'
-    }]
+    targetKeys = [
+      {
+        apiTable: 'applications',
+        apiKey: applicationId,
+        apiBasePath: 'application',
+        powerAppsTable: 'sdds_applications'
+      }
+    ]
   }
 
-  const elem = targetKeys.find(k => k.apiBasePath === sectionPath)
+  const elem = targetKeys.find((k) => k.apiBasePath === sectionPath)
 
   // Either amend or add the section key
   if (elem) {

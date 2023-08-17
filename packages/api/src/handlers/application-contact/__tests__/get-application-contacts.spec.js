@@ -35,11 +35,14 @@ const applicationJson = 'application/json'
 describe('The getApplicationContacts handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationContacts = (await import('../get-application-contacts.js')).default
+    getApplicationContacts = (await import('../get-application-contacts.js'))
+      .default
   })
 
   it('returns an array of application-contacts and status 200', async () => {
-    models.applicationContacts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationContacts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationContacts(context, { query: {} }, h)
     expect(models.applicationContacts.findAll).toHaveBeenCalled()
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
@@ -48,25 +51,41 @@ describe('The getApplicationContacts handler', () => {
   })
 
   it('returns an array of application-contacts and status 200 - with an applicationId filter', async () => {
-    models.applicationContacts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
-    await getApplicationContacts(context, { query: { applicationId: '123' } }, h)
-    expect(models.applicationContacts.findAll).toHaveBeenCalledWith({ where: { applicationId: '123' } })
+    models.applicationContacts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
+    await getApplicationContacts(
+      context,
+      { query: { applicationId: '123' } },
+      h
+    )
+    expect(models.applicationContacts.findAll).toHaveBeenCalledWith({
+      where: { applicationId: '123' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns an array of application-contacts and status 200 - with a role filter', async () => {
-    models.applicationContacts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationContacts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationContacts(context, { query: { role: 'APPLICANT' } }, h)
-    expect(models.applicationContacts.findAll).toHaveBeenCalledWith({ where: { contactRole: 'APPLICANT' } })
+    expect(models.applicationContacts.findAll).toHaveBeenCalledWith({
+      where: { contactRole: 'APPLICANT' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applicationContacts = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applicationContacts = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationContacts(context, { query: {} }, h)
     }).rejects.toThrow()

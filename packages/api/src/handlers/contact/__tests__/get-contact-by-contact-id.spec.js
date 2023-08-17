@@ -58,9 +58,13 @@ describe('The getContactByContactId handler', () => {
   it('returns a contact and status 200 from the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.contacts = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.contacts = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getContact(context, req, h)
-    expect(models.contacts.findByPk).toHaveBeenCalledWith(context.request.params.contactId)
+    expect(models.contacts.findByPk).toHaveBeenCalledWith(
+      context.request.params.contactId
+    )
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -71,7 +75,9 @@ describe('The getContactByContactId handler', () => {
     cache.restore = jest.fn(() => null)
     models.contacts = { findByPk: jest.fn(() => null) }
     await getContact(context, req, h)
-    expect(models.contacts.findByPk).toHaveBeenCalledWith(context.request.params.contactId)
+    expect(models.contacts.findByPk).toHaveBeenCalledWith(
+      context.request.params.contactId
+    )
     expect(h.response).toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
   })

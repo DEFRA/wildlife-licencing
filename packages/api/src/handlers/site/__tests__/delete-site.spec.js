@@ -41,7 +41,9 @@ describe('The deleteApplication handler', () => {
     models.applicationSites = { findAll: jest.fn(() => []) }
     models.sites = { destroy: jest.fn(() => 1) }
     await deleteSite(context, req, h)
-    expect(models.sites.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.siteId } })
+    expect(models.sites.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.siteId }
+    })
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -63,7 +65,11 @@ describe('The deleteApplication handler', () => {
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
     models.applicationSites = { findAll: jest.fn(() => []) }
-    models.sites = { destroy: jest.fn(() => { throw Error() }) }
+    models.sites = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteSite(context, req, h)
     }).rejects.toThrow()

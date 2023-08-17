@@ -5,4 +5,5 @@ const { cache } = REDIS
  * @param context
  * @returns {Promise<boolean>}
  */
-export const checkCache = async req => JSON.parse(await cache.restore(req.path))
+export const checkCache = async (req) =>
+  JSON.parse(await cache.restore(req.path))

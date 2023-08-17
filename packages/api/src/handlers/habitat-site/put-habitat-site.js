@@ -17,12 +17,21 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    const applicationType = await models.applicationTypes.findByPk(application.application.applicationTypeId)
+    const applicationType = await models.applicationTypes.findByPk(
+      application.application.applicationTypeId
+    )
     const { activityId, speciesId, methodIds, settType } = req.payload
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     if (err) {
       console.error(err)
-      return h.response({ code: 409, error: err })
+      return h
+        .response({ code: 409, error: err })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -39,24 +48,23 @@ export default async (context, req, h) => {
     if (created) {
       const responseBody = prepareResponse(habitatSite.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedHabitatSite] = await models.habitatSites.update({
-        habitatSite: alwaysExclude(req.payload),
-        updateStatus: 'L'
-      }, {
-        where: {
-          id: habitatSiteId
+      const [, updatedHabitatSite] = await models.habitatSites.update(
+        {
+          habitatSite: alwaysExclude(req.payload),
+          updateStatus: 'L'
         },
-        returning: true
-      })
+        {
+          where: {
+            id: habitatSiteId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedHabitatSite[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error updating from the HABITAT-SITES table', err)

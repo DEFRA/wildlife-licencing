@@ -21,7 +21,14 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 /*
  * Create the parameters and payload to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada', uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } } }
+const context = {
+  request: {
+    params: {
+      applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+    }
+  }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -34,12 +41,18 @@ describe('The deleteApplication file upload handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-    deleteApplicationFileUpload = (await import('../delete-application-file-upload.js')).default
+    deleteApplicationFileUpload = (
+      await import('../delete-application-file-upload.js')
+    ).default
   })
 
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
-    models.applicationUploads = { destroy: jest.fn(() => { throw Error() }) }
+    models.applicationUploads = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteApplicationFileUpload(context, req, h)
     }).rejects.toThrow()
@@ -49,7 +62,9 @@ describe('The deleteApplication file upload handler', () => {
     cache.delete = jest.fn()
     models.applicationUploads = { destroy: jest.fn(() => 1) }
     await deleteApplicationFileUpload(context, req, h)
-    expect(models.applicationUploads.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.uploadId } })
+    expect(models.applicationUploads.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.uploadId }
+    })
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 

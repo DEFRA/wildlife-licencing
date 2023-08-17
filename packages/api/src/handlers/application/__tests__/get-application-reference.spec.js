@@ -34,24 +34,29 @@ const ts = {
 describe('The getApplicationReference handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationReference = (await import('../get-application-reference.js')).default
+    getApplicationReference = (await import('../get-application-reference.js'))
+      .default
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
   })
 
   it('returns a new reference and status 200 where type is found in cache', async () => {
-    cache.restore = jest.fn(() => JSON.stringify([
+    cache.restore = jest.fn(() =>
+      JSON.stringify([
+        {
+          id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+          createdAt: '2022-02-21T14:15:19.822Z',
+          updatedAt: '2022-02-28T09:01:52.301Z',
+          name: 'A24 badger',
+          refNoSuffix: 'EPS-MIT'
+        }
+      ])
+    )
+    models.getApplicationRef = jest.fn(() => [
       {
-        id: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
-        createdAt: '2022-02-21T14:15:19.822Z',
-        updatedAt: '2022-02-28T09:01:52.301Z',
-        name: 'A24 badger',
-        refNoSuffix: 'EPS-MIT'
+        nextval: '501100'
       }
-    ]))
-    models.getApplicationRef = jest.fn(() => [{
-      nextval: '501100'
-    }])
+    ])
     await getApplicationReference({}, req, h)
     expect(h.response).toHaveBeenCalledWith({
       ref: `${year}-501100-EPS-MIT`
@@ -74,18 +79,23 @@ describe('The getApplicationReference handler', () => {
             },
             ...ts
           }
-        }])
+        }
+      ])
     }
-    models.getApplicationRef = jest.fn(() => [{
-      nextval: '501101'
-    }])
+    models.getApplicationRef = jest.fn(() => [
+      {
+        nextval: '501101'
+      }
+    ])
     await getApplicationReference({}, req, h)
     expect(h.response).toHaveBeenCalledWith({
       ref: `${year}-501101-EPS-MIT`
     })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
-    expect(cache.save).toHaveBeenCalledWith('application/types', [expect.objectContaining({ refNoSuffix: 'EPS-MIT' })])
+    expect(cache.save).toHaveBeenCalledWith('application/types', [
+      expect.objectContaining({ refNoSuffix: 'EPS-MIT' })
+    ])
   })
 
   it('returns 404 not found if no reference data loaded', async () => {
@@ -94,9 +104,11 @@ describe('The getApplicationReference handler', () => {
     models.applicationTypes = {
       findAll: jest.fn(() => [])
     }
-    models.getApplicationRef = jest.fn(() => [{
-      nextval: '501101'
-    }])
+    models.getApplicationRef = jest.fn(() => [
+      {
+        nextval: '501101'
+      }
+    ])
     await getApplicationReference({}, req, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(404)
@@ -116,7 +128,8 @@ describe('The getApplicationReference handler', () => {
             },
             ...ts
           }
-        }])
+        }
+      ])
     }
     await getApplicationReference({}, req, h)
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
@@ -127,7 +140,9 @@ describe('The getApplicationReference handler', () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn()
     models.applicationTypes = {
-      findAll: jest.fn(() => { throw new Error('') })
+      findAll: jest.fn(() => {
+        throw new Error('')
+      })
     }
     await expect(async () => {
       await getApplicationReference({}, req, h)

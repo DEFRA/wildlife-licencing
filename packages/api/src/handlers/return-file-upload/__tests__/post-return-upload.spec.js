@@ -23,7 +23,9 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } } }
+const context = {
+  request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }
+}
 
 const req = {
   path: 'path',
@@ -48,14 +50,19 @@ describe(' postReturnUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         returnUploads: {
-          create: jest.fn(() => ({ dataValues: Object.assign(returnUpload, { ...ts }) }))
+          create: jest.fn(() => ({
+            dataValues: Object.assign(returnUpload, { ...ts })
+          }))
         }
       }
     }))
-    const postReturnFileUpload = (await import('../post-return-file-upload.js')).default
+    const postReturnFileUpload = (await import('../post-return-file-upload.js'))
+      .default
     await postReturnFileUpload(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       returnId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -85,7 +92,8 @@ describe(' postReturnUpload handler', () => {
         }
       }
     }))
-    const postReturnFileUpload = (await import('../post-return-file-upload.js')).default
+    const postReturnFileUpload = (await import('../post-return-file-upload.js'))
+      .default
     await postReturnFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -94,12 +102,15 @@ describe(' postReturnUpload handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const postReturnFileUpload = (await import('../post-return-file-upload.js')).default
+    const postReturnFileUpload = (await import('../post-return-file-upload.js'))
+      .default
     await expect(() => postReturnFileUpload(context, req, h)).rejects.toThrow()
   })
 })

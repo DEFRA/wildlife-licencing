@@ -40,14 +40,19 @@ describe('The getAccounts handler', () => {
       }
     }))
     const getAccounts = (await import('../get-accounts.js')).default
-    await getAccounts({ }, { query: { }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('where aa.application_id = au.application_id'), expect.any(Object))
-    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({
-      id: '69689b9b-8b16-4a7c-9055-8fb792f683f4',
-      createdAt: '2022-06-20T15:03:49.269Z',
-      updatedAt: '2022-06-20T15:03:49.269Z',
-      name: 'contact 1'
-    })])
+    await getAccounts({}, { query: {}, path }, h)
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining('where aa.application_id = au.application_id'),
+      expect.any(Object)
+    )
+    expect(h.response).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: '69689b9b-8b16-4a7c-9055-8fb792f683f4',
+        createdAt: '2022-06-20T15:03:49.269Z',
+        updatedAt: '2022-06-20T15:03:49.269Z',
+        name: 'contact 1'
+      })
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -63,8 +68,11 @@ describe('The getAccounts handler', () => {
       }
     }))
     const getAccounts = (await import('../get-accounts.js')).default
-    await getAccounts({ }, { query: { userId: '123' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('and au.user_id = \'123\''), expect.any(Object))
+    await getAccounts({}, { query: { userId: '123' }, path }, h)
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("and au.user_id = '123'"),
+      expect.any(Object)
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -80,8 +88,11 @@ describe('The getAccounts handler', () => {
       }
     }))
     const getAccounts = (await import('../get-accounts.js')).default
-    await getAccounts({ }, { query: { applicationId: '123' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('and aa.application_id = \'123\''), expect.any(Object))
+    await getAccounts({}, { query: { applicationId: '123' }, path }, h)
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("and aa.application_id = '123'"),
+      expect.any(Object)
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -97,14 +108,23 @@ describe('The getAccounts handler', () => {
       }
     }))
     const getAccounts = (await import('../get-accounts.js')).default
-    await getAccounts({ }, { query: { role: 'ECOLOGIST-ORGANISATION' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('and aa.account_role = \'ECOLOGIST-ORGANISATION\''), expect.any(Object))
+    await getAccounts(
+      {},
+      { query: { role: 'ECOLOGIST-ORGANISATION' }, path },
+      h
+    )
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("and aa.account_role = 'ECOLOGIST-ORGANISATION'"),
+      expect.any(Object)
+    )
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    const mockQuery = jest.fn(() => { throw new Error() })
+    const mockQuery = jest.fn(() => {
+      throw new Error()
+    })
     jest.doMock('@defra/wls-connectors-lib', () => ({
       SEQUELIZE: {
         getSequelize: () => ({
@@ -115,7 +135,7 @@ describe('The getAccounts handler', () => {
     }))
     const getAccounts = (await import('../get-accounts.js')).default
     await expect(async () => {
-      await getAccounts({ }, { query: {} }, h)
+      await getAccounts({}, { query: {} }, h)
     }).rejects.toThrow()
   })
 })

@@ -28,7 +28,9 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } } }
+const context = {
+  request: { params: { applicationId: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' } }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -64,7 +66,10 @@ describe('The postPermission handler', () => {
         referenceNumber: '123'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith('/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/permission/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/1e470963-e8bf-41f5-9b0b-52d19c21cb77/permission/bar',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -84,7 +89,11 @@ describe('The postPermission handler', () => {
     jest.spyOn(console, 'error').mockImplementation(() => null)
     cache.save = jest.fn(() => null)
     cache.delete = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await postPermission(context, req, h)
     }).rejects.toThrow()

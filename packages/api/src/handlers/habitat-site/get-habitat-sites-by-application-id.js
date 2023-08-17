@@ -18,11 +18,11 @@ export default async (context, _req, h) => {
       }
     })
 
-    const responseBody = habitatSites.map(hs => prepareResponse(hs.dataValues))
+    const responseBody = habitatSites.map((hs) =>
+      prepareResponse(hs.dataValues)
+    )
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the HABITAT-SITES table', err)
     throw new Error(err.message)

@@ -34,14 +34,18 @@ describe('The deleteApplicationContactByApplicationContactId handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-    deleteApplicationContactByApplicationContactId = (await import('../delete-application-contact-by-application-contact-id.js')).default
+    deleteApplicationContactByApplicationContactId = (
+      await import('../delete-application-contact-by-application-contact-id.js')
+    ).default
   })
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
     models.applicationContacts = { destroy: jest.fn(() => 1) }
     await deleteApplicationContactByApplicationContactId(context, req, h)
-    expect(models.applicationContacts.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationContactId } })
+    expect(models.applicationContacts.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.applicationContactId }
+    })
     expect(cache.delete).toHaveBeenCalledWith(path)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
@@ -55,7 +59,11 @@ describe('The deleteApplicationContactByApplicationContactId handler', () => {
 
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
-    models.applicationContacts = { destroy: jest.fn(() => { throw Error() }) }
+    models.applicationContacts = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteApplicationContactByApplicationContactId(context, req, h)
     }).rejects.toThrow()

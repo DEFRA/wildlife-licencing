@@ -5,4 +5,11 @@ import putReturn from './put-return.js'
 import deleteReturn from './delete-return.js'
 import postReturnSubmit from './post-return-submit.js'
 
-export { postReturn, getReturnsByLicenceId, getReturn, putReturn, deleteReturn, postReturnSubmit }
+export {
+  postReturn,
+  getReturnsByLicenceId,
+  getReturn,
+  putReturn,
+  deleteReturn,
+  postReturnSubmit
+}

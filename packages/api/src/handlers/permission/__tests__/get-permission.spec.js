@@ -61,7 +61,10 @@ describe('The getPermission handler', () => {
     cache.save = jest.fn()
     await getPermission(context, req, h)
 
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/permission/uuid', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -102,7 +105,11 @@ describe('The getPermission handler', () => {
   it('throws with an insert error', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => null)
     cache.restore = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getPermission(context, req, h)
     }).rejects.toThrow()

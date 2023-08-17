@@ -9,7 +9,11 @@ export default async (context, _req, h) => {
 
     // If the licence does not exist return a not found and error
     if (!licence) {
-      return h.response({ code: 404, error: { description: `licenceId: ${licenceId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `licenceId: ${licenceId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
@@ -18,11 +22,9 @@ export default async (context, _req, h) => {
       where: { licenceId: licence.id }
     })
 
-    const responseBody = returns.map(r => prepareResponse(r.dataValues))
+    const responseBody = returns.map((r) => prepareResponse(r.dataValues))
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error inserting into RETURNS table', err)
     throw new Error(err.message)

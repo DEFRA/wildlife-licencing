@@ -4,4 +4,5 @@ import { deleteSectionHandler } from '../application-section/delete-section.js'
 
 export const getPermissionsSection = getSectionHandler('permissionsSection')
 export const putPermissionsSection = putSectionHandler('permissionsSection')
-export const deletePermissionsSection = deleteSectionHandler('permissionsSection')
+export const deletePermissionsSection =
+  deleteSectionHandler('permissionsSection')

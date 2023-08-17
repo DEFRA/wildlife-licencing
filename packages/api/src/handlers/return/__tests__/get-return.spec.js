@@ -46,10 +46,11 @@ describe('The getReturn handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: () => JSON.stringify({
-            id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-            completedWithinLicenceDates: true
-          })
+          restore: () =>
+            JSON.stringify({
+              id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
+              completedWithinLicenceDates: true
+            })
         }
       }
     }))
@@ -109,7 +110,10 @@ describe('The getReturn handler', () => {
     })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
-    expect(mockSave).toHaveBeenCalledWith('/licence/uuid/return', expect.objectContaining({ completedWithinLicenceDates: true }))
+    expect(mockSave).toHaveBeenCalledWith(
+      '/licence/uuid/return',
+      expect.objectContaining({ completedWithinLicenceDates: true })
+    )
   })
 
   it('returns a 404 on return not found (no return)', async () => {
@@ -154,7 +158,9 @@ describe('The getReturn handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         returns: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))

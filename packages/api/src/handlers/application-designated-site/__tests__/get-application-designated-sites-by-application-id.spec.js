@@ -3,7 +3,8 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-sites'
+const path =
+  '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-sites'
 const req = {
   path,
   payload: {
@@ -41,7 +42,9 @@ describe('The getApplicationDesignatedSiteByApplicationId handler', () => {
   beforeEach(() => jest.resetModules())
 
   it('returns a 200 on a successful fetch', async () => {
-    const mockFindAll = jest.fn(async () => ([{ dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }]))
+    const mockFindAll = jest.fn(async () => [
+      { dataValues: { id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts } }
+    ])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
@@ -52,13 +55,17 @@ describe('The getApplicationDesignatedSiteByApplicationId handler', () => {
         }
       }
     }))
-    const getApplicationDesignatedSites = (await import('../get-application-designated-sites-by-application-id.js')).default
+    const getApplicationDesignatedSites = (
+      await import('../get-application-designated-sites-by-application-id.js')
+    ).default
     await getApplicationDesignatedSites(context, req, h)
-    expect(h.response).toHaveBeenCalledWith([{
-      createdAt: '2021-12-07T09:50:04.666Z',
-      id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
-      updatedAt: '2021-12-07T09:50:04.666Z'
-    }])
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        createdAt: '2021-12-07T09:50:04.666Z',
+        id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f',
+        updatedAt: '2021-12-07T09:50:04.666Z'
+      }
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
@@ -74,7 +81,9 @@ describe('The getApplicationDesignatedSiteByApplicationId handler', () => {
         }
       }
     }))
-    const getApplicationDesignatedSites = (await import('../get-application-designated-sites-by-application-id.js')).default
+    const getApplicationDesignatedSites = (
+      await import('../get-application-designated-sites-by-application-id.js')
+    ).default
     await getApplicationDesignatedSites(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -83,11 +92,15 @@ describe('The getApplicationDesignatedSiteByApplicationId handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))
-    const getApplicationDesignatedSites = (await import('../get-application-designated-sites-by-application-id.js')).default
+    const getApplicationDesignatedSites = (
+      await import('../get-application-designated-sites-by-application-id.js')
+    ).default
     await expect(async () => {
       await getApplicationDesignatedSites(context, req, h)
     }).rejects.toThrow()

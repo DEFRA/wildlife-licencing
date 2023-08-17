@@ -34,14 +34,18 @@ describe('The deleteApplicationSiteByApplicationSiteId handler', () => {
     models = (await import('@defra/wls-database-model')).models
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
-    deleteApplicationSiteByApplicationSiteId = (await import('../delete-application-site-by-application-site-id.js')).default
+    deleteApplicationSiteByApplicationSiteId = (
+      await import('../delete-application-site-by-application-site-id.js')
+    ).default
   })
 
   it('returns a 204 on successful delete', async () => {
     cache.delete = jest.fn()
     models.applicationSites = { destroy: jest.fn(() => 1) }
     await deleteApplicationSiteByApplicationSiteId(context, req, h)
-    expect(models.applicationSites.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.applicationSiteId } })
+    expect(models.applicationSites.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.applicationSiteId }
+    })
     expect(cache.delete).toHaveBeenCalledWith(path)
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
@@ -55,7 +59,11 @@ describe('The deleteApplicationSiteByApplicationSiteId handler', () => {
 
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
-    models.applicationSites = { destroy: jest.fn(() => { throw Error() }) }
+    models.applicationSites = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteApplicationSiteByApplicationSiteId(context, req, h)
     }).rejects.toThrow()

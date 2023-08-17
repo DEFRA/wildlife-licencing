@@ -22,7 +22,8 @@ const applicationJson = 'application/json'
 describe('The GetApplicationLicences handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationLicences = (await import('../get-application-licences.js')).default
+    getApplicationLicences = (await import('../get-application-licences.js'))
+      .default
   })
 
   it('returns a 200 on successful fetch', async () => {
@@ -30,30 +31,33 @@ describe('The GetApplicationLicences handler', () => {
       findByPk: jest.fn(() => ({ id: '1e470963-e8bf-41f5-9b0b-52d19c21cb77' }))
     }
     models.licences = {
-      findAll: jest.fn(async () => [{
-        dataValues: {
-          id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-          applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-          licence: {
-            endDate: '2022-08-26T00:00:00Z',
-            startDate: '2022-08-10T00:00:00Z',
-            licenceNumber: 'LI-0016N0Z4'
-          },
-          createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
-          updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+      findAll: jest.fn(async () => [
+        {
+          dataValues: {
+            id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+            applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+            licence: {
+              endDate: '2022-08-26T00:00:00Z',
+              startDate: '2022-08-10T00:00:00Z',
+              licenceNumber: 'LI-0016N0Z4'
+            },
+            createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
+            updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
+          }
         }
-      }])
+      ])
     }
     await getApplicationLicences(context, {}, h)
-    expect(h.response).toHaveBeenCalledWith([{
-      applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-      createdAt: '2021-12-07T09:50:04.666Z',
-      endDate: '2022-08-26',
-      id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-      licenceNumber: 'LI-0016N0Z4',
-      startDate: '2022-08-10',
-      updatedAt: '2021-12-07T09:50:04.666Z'
-    }
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+        createdAt: '2021-12-07T09:50:04.666Z',
+        endDate: '2022-08-26',
+        id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+        licenceNumber: 'LI-0016N0Z4',
+        startDate: '2022-08-10',
+        updatedAt: '2021-12-07T09:50:04.666Z'
+      }
     ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -69,9 +73,13 @@ describe('The GetApplicationLicences handler', () => {
   })
 
   it('throws with an error', async () => {
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
-      await getApplicationLicences(context, { }, h)
+      await getApplicationLicences(context, {}, h)
     }).rejects.toThrow()
   })
 })

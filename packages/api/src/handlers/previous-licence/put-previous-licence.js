@@ -16,37 +16,37 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    const [previousLicence, created] = await models.previousLicences.findOrCreate({
-      where: { id: licenceId },
-      defaults: {
-        id: licenceId,
-        applicationId: applicationId,
-        licence: alwaysExclude(req.payload),
-        updateStatus: 'L'
-      }
-    })
+    const [previousLicence, created] =
+      await models.previousLicences.findOrCreate({
+        where: { id: licenceId },
+        defaults: {
+          id: licenceId,
+          applicationId: applicationId,
+          licence: alwaysExclude(req.payload),
+          updateStatus: 'L'
+        }
+      })
 
     if (created) {
       const responseBody = prepareResponse(previousLicence.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedPreviousLicence] = await models.previousLicences.update({
-        licence: alwaysExclude(req.payload),
-        updateStatus: 'L'
-      }, {
-        where: {
-          id: licenceId
+      const [, updatedPreviousLicence] = await models.previousLicences.update(
+        {
+          licence: alwaysExclude(req.payload),
+          updateStatus: 'L'
         },
-        returning: true
-      })
+        {
+          where: {
+            id: licenceId
+          },
+          returning: true
+        }
+      )
       const responseBody = prepareResponse(updatedPreviousLicence[0].dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
     console.error('Error updating from the PREVIOUS-LICENCES table', err)

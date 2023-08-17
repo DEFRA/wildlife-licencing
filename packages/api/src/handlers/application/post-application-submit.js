@@ -31,11 +31,19 @@ export default async (context, req, h) => {
     })
 
     for await (const upload of applicationUploads) {
-      const fileJob = await fileQueue.add({ id: upload.dataValues.id, applicationId })
-      debug(`Queued files for application ${applicationId} - job: ${fileJob.id}`)
+      const fileJob = await fileQueue.add({
+        id: upload.dataValues.id,
+        applicationId
+      })
+      debug(
+        `Queued files for application ${applicationId} - job: ${fileJob.id}`
+      )
     }
 
-    await models.applications.update({ userSubmission: SEQUELIZE.getSequelize().fn('NOW') }, { where: { id: applicationId } })
+    await models.applications.update(
+      { userSubmission: SEQUELIZE.getSequelize().fn('NOW') },
+      { where: { id: applicationId } }
+    )
 
     return h.response().code(204)
   } catch (err) {

@@ -17,13 +17,20 @@ export default async (_context, req, h) => {
                              join "application-users" "a-u" on "a-u".application_id = "a-a".application_id
                     where "a-u".user_id = '${userId}'`
 
-    const result = await sequelize.query(qryStr, { type: sequelize.QueryTypes.SELECT })
+    const result = await sequelize.query(qryStr, {
+      type: sequelize.QueryTypes.SELECT
+    })
 
-    return h.response(result.map(r => ({
-      ...r,
-      updatedAt: r.updatedAt.toISOString(),
-      submitted: r.submitted?.toISOString()
-    }))).type(APPLICATION_JSON).code(200)
+    return h
+      .response(
+        result.map((r) => ({
+          ...r,
+          updatedAt: r.updatedAt.toISOString(),
+          submitted: r.submitted?.toISOString()
+        }))
+      )
+      .type(APPLICATION_JSON)
+      .code(200)
   } catch (err) {
     console.error('Error selecting from the ACCOUNTS table', err)
     throw new Error(err.message)

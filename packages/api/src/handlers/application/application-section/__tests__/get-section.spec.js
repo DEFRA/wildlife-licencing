@@ -123,7 +123,7 @@ describe('get-section-handler', () => {
     }))
     const { getSectionHandler } = await import('../get-section.js')
     await getSectionHandler('section-name')(context, request, h)
-    expect(h.response).toHaveBeenCalledWith({ })
+    expect(h.response).toHaveBeenCalledWith({})
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(mockSave).not.toHaveBeenCalledWith()
@@ -152,7 +152,7 @@ describe('get-section-handler', () => {
       }
     }))
     const { getSectionHandler } = await import('../get-section.js')
-    await getSectionHandler('section-name', a => a)(context, request, h)
+    await getSectionHandler('section-name', (a) => a)(context, request, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
@@ -170,7 +170,9 @@ describe('get-section-handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => { throw new Error() })
+          findByPk: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))

@@ -41,7 +41,9 @@ describe('The deleteApplication handler', () => {
     models.applicationAccounts = { findAll: jest.fn(() => []) }
     models.accounts = { destroy: jest.fn(() => 1) }
     await deleteAccount(context, req, h)
-    expect(models.accounts.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.accountId } })
+    expect(models.accounts.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.accountId }
+    })
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -63,7 +65,11 @@ describe('The deleteApplication handler', () => {
   it('returns a 500 with an unexpected database error', async () => {
     cache.delete = jest.fn()
     models.applicationAccounts = { findAll: jest.fn(() => []) }
-    models.accounts = { destroy: jest.fn(() => { throw Error() }) }
+    models.accounts = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteAccount(context, req, h)
     }).rejects.toThrow()

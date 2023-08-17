@@ -23,7 +23,14 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada', uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } } }
+const context = {
+  request: {
+    params: {
+      applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+    }
+  }
+}
 
 const req = {
   path: 'path',
@@ -59,14 +66,21 @@ describe(' putApplicationUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
-          findOrCreate: jest.fn(() => [{ dataValues: Object.assign(applicationUpload, { ...ts }) }, true])
+          findOrCreate: jest.fn(() => [
+            { dataValues: Object.assign(applicationUpload, { ...ts }) },
+            true
+          ])
         }
       }
     }))
-    const putApplicationFileUploads = (await import('../put-application-file-upload.js')).default
+    const putApplicationFileUploads = (
+      await import('../put-application-file-upload.js')
+    ).default
     await putApplicationFileUploads(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -87,14 +101,16 @@ describe(' putApplicationUpload handler', () => {
       filetype: 'MAP',
       id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
       ...tsR
-    }
-    )
+    })
   })
 
   it('updates an existing application-upload', async () => {
     const mockCacheDelete = jest.fn()
     const mockCacheSave = jest.fn()
-    const mockUpdate = jest.fn(() => [true, [{ dataValues: Object.assign(applicationUpload, { ...ts }) }]])
+    const mockUpdate = jest.fn(() => [
+      true,
+      [{ dataValues: Object.assign(applicationUpload, { ...ts }) }]
+    ])
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
@@ -107,16 +123,22 @@ describe(' putApplicationUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
-          findOrCreate: jest.fn(() =>
-            [[{ dataValues: Object.assign(applicationUpload, { ...ts }) }], false]),
+          findOrCreate: jest.fn(() => [
+            [{ dataValues: Object.assign(applicationUpload, { ...ts }) }],
+            false
+          ]),
           update: mockUpdate
         }
       }
     }))
-    const putApplicationFileUploads = (await import('../put-application-file-upload.js')).default
+    const putApplicationFileUploads = (
+      await import('../put-application-file-upload.js')
+    ).default
     await putApplicationFileUploads(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -127,14 +149,16 @@ describe(' putApplicationUpload handler', () => {
       id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
       ...tsR
     })
-    expect(mockUpdate).toHaveBeenCalledWith({
-      applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      bucket: 'bucket-name',
-      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      filename: 'map.txt',
-      filetype: 'MAP'
-    },
-    { returning: true, where: { id: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } })
+    expect(mockUpdate).toHaveBeenCalledWith(
+      {
+        applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        filename: 'map.txt',
+        filetype: 'MAP'
+      },
+      { returning: true, where: { id: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } }
+    )
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
     expect(mockCacheSave).toHaveBeenCalledWith('path', {
@@ -163,7 +187,9 @@ describe(' putApplicationUpload handler', () => {
         }
       }
     }))
-    const putApplicationFileUpload = (await import('../put-application-file-upload.js')).default
+    const putApplicationFileUpload = (
+      await import('../put-application-file-upload.js')
+    ).default
     await putApplicationFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -172,12 +198,18 @@ describe(' putApplicationUpload handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const putApplicationFileUpload = (await import('../put-application-file-upload.js')).default
-    await expect(() => putApplicationFileUpload(context, req, h)).rejects.toThrow()
+    const putApplicationFileUpload = (
+      await import('../put-application-file-upload.js')
+    ).default
+    await expect(() =>
+      putApplicationFileUpload(context, req, h)
+    ).rejects.toThrow()
   })
 })

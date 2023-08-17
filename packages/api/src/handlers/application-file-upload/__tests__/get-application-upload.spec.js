@@ -23,7 +23,14 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada', uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } } }
+const context = {
+  request: {
+    params: {
+      applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+    }
+  }
+}
 
 const req = {
   path: 'path',
@@ -48,12 +55,16 @@ describe('getApplicationUpload handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => Promise.resolve(JSON.stringify(applicationUpload)))
+          restore: jest.fn(() =>
+            Promise.resolve(JSON.stringify(applicationUpload))
+          )
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const getApplicationFileUpload = (await import('../get-application-file-upload.js')).default
+    const getApplicationFileUpload = (
+      await import('../get-application-file-upload.js')
+    ).default
     await getApplicationFileUpload(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -82,7 +93,9 @@ describe('getApplicationUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
           findByPk: jest.fn(() => ({
@@ -93,7 +106,9 @@ describe('getApplicationUpload handler', () => {
         }
       }
     }))
-    const getApplicationFileUpload = (await import('../get-application-file-upload.js')).default
+    const getApplicationFileUpload = (
+      await import('../get-application-file-upload.js')
+    ).default
     await getApplicationFileUpload(context, req, h)
     expect(h.response).toHaveBeenCalledWith({
       applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
@@ -107,17 +122,15 @@ describe('getApplicationUpload handler', () => {
     })
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
-    expect(mockSave).toHaveBeenCalledWith('path',
-      {
-        applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
-        bucket: 'bucket-name',
-        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-        filename: 'map.txt',
-        filetype: 'MAP',
-        id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-        ...tsR
-      }
-    )
+    expect(mockSave).toHaveBeenCalledWith('path', {
+      applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
+      bucket: 'bucket-name',
+      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      filename: 'map.txt',
+      filetype: 'MAP',
+      id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+      ...tsR
+    })
   })
 
   it('returns 404 if the application does not exist', async () => {
@@ -135,7 +148,9 @@ describe('getApplicationUpload handler', () => {
         }
       }
     }))
-    const getApplicationFileUpload = (await import('../get-application-file-upload.js')).default
+    const getApplicationFileUpload = (
+      await import('../get-application-file-upload.js')
+    ).default
     await getApplicationFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -151,14 +166,18 @@ describe('getApplicationUpload handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
           findByPk: jest.fn(() => null)
         }
       }
     }))
-    const getApplicationFileUpload = (await import('../get-application-file-upload.js')).default
+    const getApplicationFileUpload = (
+      await import('../get-application-file-upload.js')
+    ).default
     await getApplicationFileUpload(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -167,12 +186,18 @@ describe('getApplicationUpload handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const getApplicationFileUpload = (await import('../get-application-file-upload.js')).default
-    await expect(async () => await getApplicationFileUpload(context, req, h)).rejects.toThrow()
+    const getApplicationFileUpload = (
+      await import('../get-application-file-upload.js')
+    ).default
+    await expect(
+      async () => await getApplicationFileUpload(context, req, h)
+    ).rejects.toThrow()
   })
 })

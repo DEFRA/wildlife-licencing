@@ -25,10 +25,10 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    const responseBody = applicationUploads.map(au => prepareResponse(au.dataValues))
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    const responseBody = applicationUploads.map((au) =>
+      prepareResponse(au.dataValues)
+    )
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the APPLICATION-UPLOADS table', err)
     throw new Error(err.message)

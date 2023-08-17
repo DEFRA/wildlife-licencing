@@ -48,7 +48,9 @@ const applicationJson = 'application/json'
 describe('The putHabitatSite handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    jest.mock('../validate-relations.js', () => ({ validateRelations: jest.fn(null) }))
+    jest.mock('../validate-relations.js', () => ({
+      validateRelations: jest.fn(null)
+    }))
     putHabitatSite = (await import('../put-habitat-site.js')).default
     const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
     cache = REDIS.cache
@@ -67,13 +69,21 @@ describe('The putHabitatSite handler', () => {
       }))
     }
     models.habitatSites = {
-      findOrCreate: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }, true])
+      findOrCreate: jest.fn(async () => [
+        { dataValues: { id: 'bar', ...ts } },
+        true
+      ])
     }
     cache.delete = jest.fn()
     cache.save = jest.fn()
     await putHabitatSite(context, req, h)
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid')
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid', { id: 'bar', ...tsR })
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid'
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -92,14 +102,25 @@ describe('The putHabitatSite handler', () => {
       }))
     }
     models.habitatSites = {
-      findOrCreate: jest.fn(async () => [{ dataValues: { id: 'bar', ...ts } }, false]),
-      update: jest.fn(async () => [false, [{ dataValues: { id: 'bar', ...ts } }]])
+      findOrCreate: jest.fn(async () => [
+        { dataValues: { id: 'bar', ...ts } },
+        false
+      ]),
+      update: jest.fn(async () => [
+        false,
+        [{ dataValues: { id: 'bar', ...ts } }]
+      ])
     }
     cache.delete = jest.fn()
     cache.save = jest.fn()
     await putHabitatSite(context, req, h)
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid')
-    expect(cache.save).toHaveBeenCalledWith('/application/uuid/habitat-site/uuid', { id: 'bar', ...tsR })
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid'
+    )
+    expect(cache.save).toHaveBeenCalledWith(
+      '/application/uuid/habitat-site/uuid',
+      { id: 'bar', ...tsR }
+    )
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -116,7 +137,11 @@ describe('The putHabitatSite handler', () => {
   })
 
   it('throws with an insert error', async () => {
-    models.applications = { create: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await putHabitatSite(context, req, h)
     }).rejects.toThrow()

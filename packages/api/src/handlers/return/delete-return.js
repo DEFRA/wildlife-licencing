@@ -10,7 +10,11 @@ export default async (context, req, h) => {
 
     // If the licence does not exist return a not found and error
     if (!licence) {
-      return h.response({ code: 404, error: { description: `licenceId: ${licenceId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `licenceId: ${licenceId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }

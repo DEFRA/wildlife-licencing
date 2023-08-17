@@ -35,11 +35,14 @@ const applicationJson = 'application/json'
 describe('The getApplicationAccounts handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    getApplicationAccounts = (await import('../get-application-accounts.js')).default
+    getApplicationAccounts = (await import('../get-application-accounts.js'))
+      .default
   })
 
   it('returns an array of application-accounts and status 200', async () => {
-    models.applicationAccounts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationAccounts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationAccounts(context, { query: {} }, h)
     expect(models.applicationAccounts.findAll).toHaveBeenCalled()
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
@@ -48,25 +51,41 @@ describe('The getApplicationAccounts handler', () => {
   })
 
   it('returns an array of application-accounts and status 200 - with an applicationId filter', async () => {
-    models.applicationAccounts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
-    await getApplicationAccounts(context, { query: { applicationId: '123' } }, h)
-    expect(models.applicationAccounts.findAll).toHaveBeenCalledWith({ where: { applicationId: '123' } })
+    models.applicationAccounts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
+    await getApplicationAccounts(
+      context,
+      { query: { applicationId: '123' } },
+      h
+    )
+    expect(models.applicationAccounts.findAll).toHaveBeenCalledWith({
+      where: { applicationId: '123' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('returns an array of application-accounts and status 200 - with a role filter', async () => {
-    models.applicationAccounts = { findAll: jest.fn(() => ([{ dataValues: { foo: 'bar', ...ts } }])) }
+    models.applicationAccounts = {
+      findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
+    }
     await getApplicationAccounts(context, { query: { role: 'APPLICANT' } }, h)
-    expect(models.applicationAccounts.findAll).toHaveBeenCalledWith({ where: { accountRole: 'APPLICANT' } })
+    expect(models.applicationAccounts.findAll).toHaveBeenCalledWith({
+      where: { accountRole: 'APPLICANT' }
+    })
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    models.applicationAccounts = { findAll: jest.fn(() => { throw new Error() }) }
+    models.applicationAccounts = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getApplicationAccounts(context, { query: {} }, h)
     }).rejects.toThrow()

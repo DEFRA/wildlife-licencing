@@ -3,7 +3,8 @@ jest.spyOn(console, 'error').mockImplementation(() => null)
 /*
  * Mock the hapi request object
  */
-const path = '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+const path =
+  '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
 const req = {
   path,
   payload: {
@@ -56,9 +57,13 @@ describe('The deleteApplicationDesignatedSite handler', () => {
       }
     }))
 
-    const deleteApplicationDesignatedSite = (await import('../delete-application-designated-site.js')).default
+    const deleteApplicationDesignatedSite = (
+      await import('../delete-application-designated-site.js')
+    ).default
     await deleteApplicationDesignatedSite(context, req, h)
-    expect(mockDelete).toHaveBeenCalledWith('/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+    expect(mockDelete).toHaveBeenCalledWith(
+      '/application/54b5c443-e5e0-4d81-9daa-671a21bd88ca/designated-site/2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -84,7 +89,9 @@ describe('The deleteApplicationDesignatedSite handler', () => {
       }
     }))
 
-    const deleteApplicationDesignatedSite = (await import('../delete-application-designated-site.js')).default
+    const deleteApplicationDesignatedSite = (
+      await import('../delete-application-designated-site.js')
+    ).default
     await deleteApplicationDesignatedSite(context, req, h)
     expect(mockDelete).not.toHaveBeenCalled()
     expect(codeFunc).toHaveBeenCalledWith(404)
@@ -101,7 +108,9 @@ describe('The deleteApplicationDesignatedSite handler', () => {
         }
       }
     }))
-    const deleteApplicationDesignatedSite = (await import('../delete-application-designated-site.js')).default
+    const deleteApplicationDesignatedSite = (
+      await import('../delete-application-designated-site.js')
+    ).default
     await deleteApplicationDesignatedSite(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -110,11 +119,15 @@ describe('The deleteApplicationDesignatedSite handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: () => { throw new Error() }
+          findByPk: () => {
+            throw new Error()
+          }
         }
       }
     }))
-    const deleteApplicationDesignatedSite = (await import('../delete-application-designated-site.js')).default
+    const deleteApplicationDesignatedSite = (
+      await import('../delete-application-designated-site.js')
+    ).default
     await expect(async () => {
       await deleteApplicationDesignatedSite(context, req, h)
     }).rejects.toThrow()

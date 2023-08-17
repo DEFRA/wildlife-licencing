@@ -23,7 +23,9 @@ const tsR = {
   updatedAt: ts.updatedAt.toISOString()
 }
 
-const context = { request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } } }
+const context = {
+  request: { params: { applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }
+}
 
 const req = {
   path: 'path',
@@ -48,57 +50,77 @@ describe('getApplicationUploads handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
-          findAll: jest.fn(() => [{ dataValues: Object.assign(applicationUpload, { ...ts }) }])
+          findAll: jest.fn(() => [
+            { dataValues: Object.assign(applicationUpload, { ...ts }) }
+          ])
         }
       }
     }))
-    const getApplicationFileUploads = (await import('../get-application-file-uploads.js')).default
+    const getApplicationFileUploads = (
+      await import('../get-application-file-uploads.js')
+    ).default
     await getApplicationFileUploads(context, req, h)
-    expect(h.response).toHaveBeenCalledWith([{
-      applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
-      bucket: 'bucket-name',
-      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      filename: 'map.txt',
-      filetype: 'MAP',
-      id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-      ...tsR
-    }])
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
+        bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        filename: 'map.txt',
+        filetype: 'MAP',
+        id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+        ...tsR
+      }
+    ])
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
 
   it('returns an application-uploads and status 200 from the database applying a filetype filter', async () => {
-    const mockFindAll = jest.fn(() => [{ dataValues: Object.assign(applicationUpload, { ...ts }) }])
+    const mockFindAll = jest.fn(() => [
+      { dataValues: Object.assign(applicationUpload, { ...ts }) }
+    ])
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
           findAll: mockFindAll
         }
       }
     }))
-    const getApplicationFileUploads = (await import('../get-application-file-uploads.js')).default
-    await getApplicationFileUploads(context, Object.assign({}, { query: { filetype: 'MAP' } }, req), h)
+    const getApplicationFileUploads = (
+      await import('../get-application-file-uploads.js')
+    ).default
+    await getApplicationFileUploads(
+      context,
+      Object.assign({}, { query: { filetype: 'MAP' } }, req),
+      h
+    )
     expect(mockFindAll).toHaveBeenCalledWith({
       where: {
         applicationId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
         filetype: 'MAP'
       }
     })
-    expect(h.response).toHaveBeenCalledWith([{
-      applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
-      bucket: 'bucket-name',
-      objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
-      filename: 'map.txt',
-      filetype: 'MAP',
-      id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
-      ...tsR
-    }])
+    expect(h.response).toHaveBeenCalledWith([
+      {
+        applicationId: 'ee269288-9eae-4627-b4a8-671132cfb6b6',
+        bucket: 'bucket-name',
+        objectKey: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+        filename: 'map.txt',
+        filetype: 'MAP',
+        id: '5e790ab3-c37a-4e4c-a19d-97fb72cdbd42',
+        ...tsR
+      }
+    ])
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')
   })
@@ -118,7 +140,9 @@ describe('getApplicationUploads handler', () => {
         }
       }
     }))
-    const getApplicationFileUploads = (await import('../get-application-file-uploads.js')).default
+    const getApplicationFileUploads = (
+      await import('../get-application-file-uploads.js')
+    ).default
     await getApplicationFileUploads(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -134,14 +158,18 @@ describe('getApplicationUploads handler', () => {
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         applications: {
-          findByPk: jest.fn(() => ({ id: '7c3b13ef-c2fb-4955-942e-764593cf0ada' }))
+          findByPk: jest.fn(() => ({
+            id: '7c3b13ef-c2fb-4955-942e-764593cf0ada'
+          }))
         },
         applicationUploads: {
           findAll: () => []
         }
       }
     }))
-    const getApplicationFileUploads = (await import('../get-application-file-uploads.js')).default
+    const getApplicationFileUploads = (
+      await import('../get-application-file-uploads.js')
+    ).default
     await getApplicationFileUploads(context, req, h)
     expect(codeFunc).toHaveBeenCalledWith(404)
   })
@@ -150,12 +178,18 @@ describe('getApplicationUploads handler', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       REDIS: {
         cache: {
-          restore: jest.fn(() => { throw new Error() })
+          restore: jest.fn(() => {
+            throw new Error()
+          })
         }
       }
     }))
     jest.doMock('@defra/wls-database-model', () => ({ models: {} }))
-    const getApplicationFileUploads = (await import('../get-application-file-uploads.js')).default
-    await expect(async () => await getApplicationFileUploads(context, req, h)).rejects.toThrow()
+    const getApplicationFileUploads = (
+      await import('../get-application-file-uploads.js')
+    ).default
+    await expect(
+      async () => await getApplicationFileUploads(context, req, h)
+    ).rejects.toThrow()
   })
 })

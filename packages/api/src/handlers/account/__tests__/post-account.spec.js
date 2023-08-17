@@ -29,7 +29,7 @@ const tsR = {
 /*
  * Create the parameters to mock the openApi context which is inserted into each handler
  */
-const context = { request: { } }
+const context = { request: {} }
 
 jest.mock('@defra/wls-database-model')
 
@@ -47,7 +47,11 @@ describe('The postAccount handler', () => {
   })
 
   it('returns a 201 on successful create', async () => {
-    models.accounts = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts, account: {} } })) }
+    models.accounts = {
+      create: jest.fn(async () => ({
+        dataValues: { id: 'bar', ...ts, account: {} }
+      }))
+    }
     cache.save = jest.fn(() => null)
     await postAccount(context, req, h)
     expect(models.accounts.create).toHaveBeenCalledWith({
@@ -55,14 +59,21 @@ describe('The postAccount handler', () => {
       updateStatus: 'L',
       account: (({ ...l }) => l)(req.payload)
     })
-    expect(cache.save).toHaveBeenCalledWith('/account/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith('/account/bar', {
+      id: 'bar',
+      ...tsR
+    })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })
 
   it('returns a 201 on successful create with clone', async () => {
-    models.accounts = { create: jest.fn(async () => ({ dataValues: { id: 'bar', ...ts, account: {} } })) }
+    models.accounts = {
+      create: jest.fn(async () => ({
+        dataValues: { id: 'bar', ...ts, account: {} }
+      }))
+    }
     cache.save = jest.fn(() => null)
     Object.assign(req.payload, {
       cloneOf: 'clone-id'
@@ -76,7 +87,10 @@ describe('The postAccount handler', () => {
         name: 'Blogs and Co.'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith('/account/bar', { id: 'bar', ...tsR })
+    expect(cache.save).toHaveBeenCalledWith('/account/bar', {
+      id: 'bar',
+      ...tsR
+    })
     expect(h.response).toHaveBeenCalledWith({ id: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -84,7 +98,11 @@ describe('The postAccount handler', () => {
 
   it('throws with an insert error', async () => {
     cache.save = jest.fn(() => null)
-    models.accounts = { create: jest.fn(async () => { throw new Error() }) }
+    models.accounts = {
+      create: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await postAccount(context, req, h)
     }).rejects.toThrow()

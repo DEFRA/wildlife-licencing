@@ -13,17 +13,30 @@ export default async (context, req, h) => {
 
     // If the application does not exist return a not found and error
     if (!application) {
-      return h.response({ code: 404, error: { description: `applicationId: ${applicationId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
 
-    const applicationType = await models.applicationTypes.findByPk(application.application.applicationTypeId)
+    const applicationType = await models.applicationTypes.findByPk(
+      application.application.applicationTypeId
+    )
     const { activityId, speciesId, methodIds, settType } = req.payload
-    const err = await validateRelations(applicationType, activityId, speciesId, methodIds, settType)
+    const err = await validateRelations(
+      applicationType,
+      activityId,
+      speciesId,
+      methodIds,
+      settType
+    )
     if (err) {
       console.error(err)
-      return h.response({ code: 409, error: err })
+      return h
+        .response({ code: 409, error: err })
         .type(APPLICATION_JSON)
         .code(409)
     }
@@ -36,11 +49,12 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/application/${applicationId}/habitat-site/${responseBody.id}`, responseBody)
+    await cache.save(
+      `/application/${applicationId}/habitat-site/${responseBody.id}`,
+      responseBody
+    )
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into HABITAT-SITES table', err)
     throw new Error(err.message)

@@ -17,15 +17,22 @@ export default async (context, req, h) => {
       return h.response().code(204)
     }
 
-    const [found, updatedUser] = await models.users.update({
-      ...(req.payload.cookiePrefs && { cookiePrefs: req.payload.cookiePrefs }),
-      ...(req.payload.password && { password: await toHash(req.payload.password) })
-    }, {
-      where: {
-        id: userId
+    const [found, updatedUser] = await models.users.update(
+      {
+        ...(req.payload.cookiePrefs && {
+          cookiePrefs: req.payload.cookiePrefs
+        }),
+        ...(req.payload.password && {
+          password: await toHash(req.payload.password)
+        })
       },
-      returning: true
-    })
+      {
+        where: {
+          id: userId
+        },
+        returning: true
+      }
+    )
 
     if (found !== 1) {
       return h.response().code(404)
@@ -33,9 +40,7 @@ export default async (context, req, h) => {
 
     const response = prepareResponse(updatedUser[0].dataValues)
     await cache.save(`/user/${userId}`, response)
-    return h.response(response)
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response(response).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error updating the USERS table', err)
     throw new Error(err.message)

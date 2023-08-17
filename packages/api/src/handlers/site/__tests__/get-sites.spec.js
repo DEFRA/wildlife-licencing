@@ -39,8 +39,8 @@ describe('The getSites handler', () => {
     models.sites = {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
-    await getSites({ }, { query: { }, path }, h)
-    expect(models.sites.findAll).toHaveBeenCalledWith({ })
+    await getSites({}, { query: {}, path }, h)
+    expect(models.sites.findAll).toHaveBeenCalledWith({})
     expect(h.response).toHaveBeenCalledWith([{ foo: 'bar', ...tsR }])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
@@ -50,7 +50,14 @@ describe('The getSites handler', () => {
     models.sites = {
       findAll: jest.fn(() => [{ dataValues: { foo: 'bar', ...ts } }])
     }
-    await getSites({ }, { query: { role: 'USER', userId: '6877f11b-3755-49bc-8a15-9070c756d1ad' }, path }, h)
+    await getSites(
+      {},
+      {
+        query: { role: 'USER', userId: '6877f11b-3755-49bc-8a15-9070c756d1ad' },
+        path
+      },
+      h
+    )
     expect(models.sites.findAll).toHaveBeenCalledWith({
       include: {
         attributes: [],
@@ -66,9 +73,13 @@ describe('The getSites handler', () => {
   })
 
   it('throws on a query error', async () => {
-    models.sites = { findAll: jest.fn(() => { throw new Error() }) }
+    models.sites = {
+      findAll: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
-      await getSites({ }, { query: {} }, h)
+      await getSites({}, { query: {} }, h)
     }).rejects.toThrow()
   })
 })

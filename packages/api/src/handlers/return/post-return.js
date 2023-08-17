@@ -12,7 +12,11 @@ export default async (context, req, h) => {
 
     // If the licence does not exist return a not found and error
     if (!licence) {
-      return h.response({ code: 404, error: { description: `licenceId: ${licenceId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `licenceId: ${licenceId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
@@ -25,11 +29,12 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/licence/${licenceId}/return/${responseBody.id}`, responseBody)
+    await cache.save(
+      `/licence/${licenceId}/return/${responseBody.id}`,
+      responseBody
+    )
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into RETURNS table', err)
     throw new Error(err.message)

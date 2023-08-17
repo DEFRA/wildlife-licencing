@@ -21,7 +21,14 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 /*
  * Create the parameters and payload to mock the openApi context which is inserted into each handler
  */
-const context = { request: { params: { returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada', uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732' } } }
+const context = {
+  request: {
+    params: {
+      returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada',
+      uploadId: 'e6b8de2e-51dc-4196-aa69-5725b3aff732'
+    }
+  }
+}
 
 jest.mock('@defra/wls-database-model')
 
@@ -31,11 +38,16 @@ let deleteReturnFileUpload
 describe('The deleteReturn file upload handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
-    deleteReturnFileUpload = (await import('../delete-return-file-upload.js')).default
+    deleteReturnFileUpload = (await import('../delete-return-file-upload.js'))
+      .default
   })
 
   it('returns a 500 with an unexpected database error', async () => {
-    models.returnUploads = { destroy: jest.fn(() => { throw Error() }) }
+    models.returnUploads = {
+      destroy: jest.fn(() => {
+        throw Error()
+      })
+    }
     await expect(async () => {
       await deleteReturnFileUpload(context, req, h)
     }).rejects.toThrow()
@@ -44,7 +56,9 @@ describe('The deleteReturn file upload handler', () => {
   it('returns a 204 on successful delete', async () => {
     models.returnUploads = { destroy: jest.fn(() => 1) }
     await deleteReturnFileUpload(context, req, h)
-    expect(models.returnUploads.destroy).toHaveBeenCalledWith({ where: { id: context.request.params.uploadId } })
+    expect(models.returnUploads.destroy).toHaveBeenCalledWith({
+      where: { id: context.request.params.uploadId }
+    })
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 

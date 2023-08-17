@@ -18,8 +18,9 @@ export default async (_context, req, h) => {
     if (!cached) {
       const r = await models.applicationTypes.findAll()
       // Only those with a name and a suffix set are of interest
-      response = r.map(t => prepareResponse(t.dataValues))
-        .filter(d => d.name && d.refNoSuffix)
+      response = r
+        .map((t) => prepareResponse(t.dataValues))
+        .filter((d) => d.name && d.refNoSuffix)
       if (response.length) {
         await cache.save(TYPES_CACHE, response)
       }
@@ -32,7 +33,7 @@ export default async (_context, req, h) => {
       return h.response().code(404)
     }
 
-    const suffix = response.find(r => applicationTypeId === r.id)?.refNoSuffix
+    const suffix = response.find((r) => applicationTypeId === r.id)?.refNoSuffix
 
     if (!suffix) {
       return h.response().code(404)
@@ -41,9 +42,7 @@ export default async (_context, req, h) => {
     const res = await models.getApplicationRef()
     const counter = res[0].nextval
     const ref = `${year}-${counter}-${suffix}`
-    return h.response({ ref })
-      .type(APPLICATION_JSON)
-      .code(200)
+    return h.response({ ref }).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error fetching application-reference', err)
     throw new Error(err.message)

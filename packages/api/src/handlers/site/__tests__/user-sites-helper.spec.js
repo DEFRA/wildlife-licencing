@@ -38,17 +38,30 @@ describe('The userSitesHelper handler', () => {
       }
     }))
     const userSitesHelper = (await import('../user-sites-helper.js')).default
-    await userSitesHelper({ }, { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('user_id = \'1a17b038-b4b2-470b-a695-f53ad7cc214b\''), { type: '' })
-    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({
-      id: '69689b9b-8b16-4a7c-9055-8fb792f683f4'
-    })])
+    await userSitesHelper(
+      {},
+      { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' }, path },
+      h
+    )
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "user_id = '1a17b038-b4b2-470b-a695-f53ad7cc214b'"
+      ),
+      { type: '' }
+    )
+    expect(h.response).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: '69689b9b-8b16-4a7c-9055-8fb792f683f4'
+      })
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    const mockQuery = jest.fn(() => { throw new Error() })
+    const mockQuery = jest.fn(() => {
+      throw new Error()
+    })
     jest.doMock('@defra/wls-connectors-lib', () => ({
       SEQUELIZE: {
         getSequelize: () => ({
@@ -59,7 +72,11 @@ describe('The userSitesHelper handler', () => {
     }))
     const userSitesHelper = (await import('../user-sites-helper.js')).default
     await expect(async () => {
-      await userSitesHelper({ }, { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' } }, {})
+      await userSitesHelper(
+        {},
+        { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' } },
+        {}
+      )
     }).rejects.toThrow()
   })
 })

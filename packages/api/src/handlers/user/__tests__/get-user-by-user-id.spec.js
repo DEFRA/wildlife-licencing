@@ -54,7 +54,9 @@ describe('The getUserByUserId handler', () => {
   it('returns a user and status 200 the database', async () => {
     cache.restore = jest.fn(() => null)
     cache.save = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } })) }
+    models.users = {
+      findByPk: jest.fn(() => ({ dataValues: { foo: 'bar', ...ts } }))
+    }
     await getUser(context, req, h)
     expect(cache.save).toHaveBeenCalledWith(path, { foo: 'bar', ...tsR })
     expect(models.users.findByPk).toHaveBeenCalledWith(uuid)
@@ -73,7 +75,11 @@ describe('The getUserByUserId handler', () => {
 
   it('throws on an unexpected database error', async () => {
     cache.restore = jest.fn(() => null)
-    models.users = { findByPk: jest.fn(() => { throw new Error() }) }
+    models.users = {
+      findByPk: jest.fn(() => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await getUser(context, req, h)
     }).rejects.toThrow()

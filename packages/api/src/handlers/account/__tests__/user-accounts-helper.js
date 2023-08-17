@@ -40,18 +40,32 @@ describe('The userAccountsHelper handler', () => {
         })
       }
     }))
-    const userAccountsHelper = (await import('../user-accounts-helper.js')).default
-    await userAccountsHelper({ }, { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' }, path }, h)
-    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('user_id = \'1a17b038-b4b2-470b-a695-f53ad7cc214b\''), { type: '' })
-    expect(h.response).toHaveBeenCalledWith([expect.objectContaining({
-      id: '69689b9b-8b16-4a7c-9055-8fb792f683f4'
-    })])
+    const userAccountsHelper = (await import('../user-accounts-helper.js'))
+      .default
+    await userAccountsHelper(
+      {},
+      { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' }, path },
+      h
+    )
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "user_id = '1a17b038-b4b2-470b-a695-f53ad7cc214b'"
+      ),
+      { type: '' }
+    )
+    expect(h.response).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: '69689b9b-8b16-4a7c-9055-8fb792f683f4'
+      })
+    ])
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
 
   it('throws on a query error', async () => {
-    const mockQuery = jest.fn(() => { throw new Error() })
+    const mockQuery = jest.fn(() => {
+      throw new Error()
+    })
     jest.doMock('@defra/wls-connectors-lib', () => ({
       SEQUELIZE: {
         getSequelize: () => ({
@@ -60,9 +74,14 @@ describe('The userAccountsHelper handler', () => {
         })
       }
     }))
-    const userAccountsHelper = (await import('../user-accounts-helper.js')).default
+    const userAccountsHelper = (await import('../user-accounts-helper.js'))
+      .default
     await expect(async () => {
-      await userAccountsHelper({ }, { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' } }, {})
+      await userAccountsHelper(
+        {},
+        { query: { userId: '1a17b038-b4b2-470b-a695-f53ad7cc214b' } },
+        {}
+      )
     }).rejects.toThrow()
   })
 })

@@ -49,7 +49,9 @@ describe('The deletePermission handler', () => {
     cache.delete = jest.fn()
     await deletePermission(context, req, h)
 
-    expect(cache.delete).toHaveBeenCalledWith('/application/uuid/permission/uuid')
+    expect(cache.delete).toHaveBeenCalledWith(
+      '/application/uuid/permission/uuid'
+    )
     expect(codeFunc).toHaveBeenCalledWith(204)
   })
 
@@ -76,7 +78,11 @@ describe('The deletePermission handler', () => {
   it('throws with an insert error', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => null)
     cache.restore = jest.fn(() => null)
-    models.applications = { findByPk: jest.fn(async () => { throw new Error() }) }
+    models.applications = {
+      findByPk: jest.fn(async () => {
+        throw new Error()
+      })
+    }
     await expect(async () => {
       await deletePermission(context, req, h)
     }).rejects.toThrow()

@@ -18,42 +18,48 @@ export default async (context, req, h) => {
     await clearApplicationCaches(applicationId)
     const { filetype, filename, bucket, objectKey } = req.payload
 
-    const [applicationUpload, created] = await models.applicationUploads.findOrCreate({
-      where: { id: uploadId },
-      defaults: {
-        applicationId,
-        filetype,
-        filename,
-        bucket,
-        objectKey
-      }
-    })
+    const [applicationUpload, created] =
+      await models.applicationUploads.findOrCreate({
+        where: { id: uploadId },
+        defaults: {
+          applicationId,
+          filetype,
+          filename,
+          bucket,
+          objectKey
+        }
+      })
 
     if (created) {
       const responseBody = prepareResponse(applicationUpload.dataValues)
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(201)
+      return h.response(responseBody).type(APPLICATION_JSON).code(201)
     } else {
-      const [, updatedApplicationUploads] = await models.applicationUploads.update({
-        applicationId,
-        filetype,
-        filename,
-        bucket,
-        objectKey
-      }, {
-        where: { id: uploadId },
-        returning: true
-      })
-      const responseBody = prepareResponse(updatedApplicationUploads[0].dataValues)
+      const [, updatedApplicationUploads] =
+        await models.applicationUploads.update(
+          {
+            applicationId,
+            filetype,
+            filename,
+            bucket,
+            objectKey
+          },
+          {
+            where: { id: uploadId },
+            returning: true
+          }
+        )
+      const responseBody = prepareResponse(
+        updatedApplicationUploads[0].dataValues
+      )
       await cache.save(req.path, responseBody)
-      return h.response(responseBody)
-        .type(APPLICATION_JSON)
-        .code(200)
+      return h.response(responseBody).type(APPLICATION_JSON).code(200)
     }
   } catch (err) {
-    console.error('Error INSERTING or UPDATING the APPLICATION-UPLOADS table', err)
+    console.error(
+      'Error INSERTING or UPDATING the APPLICATION-UPLOADS table',
+      err
+    )
     throw new Error(err.message)
   }
 }

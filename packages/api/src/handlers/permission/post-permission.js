@@ -12,7 +12,11 @@ export default async (context, req, h) => {
 
     // If the application does not exist return a not found and error
     if (!application) {
-      return h.response({ code: 404, error: { description: `applicationId: ${applicationId} not found` } })
+      return h
+        .response({
+          code: 404,
+          error: { description: `applicationId: ${applicationId} not found` }
+        })
         .type(APPLICATION_JSON)
         .code(404)
     }
@@ -25,11 +29,12 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(dataValues)
-    await cache.save(`/application/${applicationId}/permission/${responseBody.id}`, responseBody)
+    await cache.save(
+      `/application/${applicationId}/permission/${responseBody.id}`,
+      responseBody
+    )
 
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(201)
+    return h.response(responseBody).type(APPLICATION_JSON).code(201)
   } catch (err) {
     console.error('Error inserting into PERMISSION table', err)
     throw new Error(err.message)

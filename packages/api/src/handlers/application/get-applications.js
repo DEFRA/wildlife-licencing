@@ -21,10 +21,8 @@ export default async (_context, req, h) => {
       }
     })
 
-    const responseBody = applications.map(a => prepareResponse(a.dataValues))
-    return h.response(responseBody)
-      .type(APPLICATION_JSON)
-      .code(200)
+    const responseBody = applications.map((a) => prepareResponse(a.dataValues))
+    return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the APPLICATIONS table', err)
     throw new Error(err.message)
