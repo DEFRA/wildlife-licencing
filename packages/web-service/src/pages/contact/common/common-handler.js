@@ -1,7 +1,6 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { TASKLIST } from '../../../uris.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { tagStatus } from '../../../services/status-tags.js'
 import { ContactRoles } from './contact-roles.js'
 
 export const ROLE_SECTION_MAP = {

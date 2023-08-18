@@ -1,5 +1,6 @@
 import { ContactRoles } from '../../common/contact-roles.js'
 import { contactURIs } from '../../../../uris.js'
+import { setCheckAnswersCompletion } from '../../common/check-answers/check-answers.js'
 
 describe('additional-contacts: common', () => {
   beforeEach(() => {
@@ -8,9 +9,6 @@ describe('additional-contacts: common', () => {
 
   describe('getAdditionalContactData', () => {
     it('fetches the appropriate data', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => true
-      }))
       const request = {
         cache: () => ({
           getPageData: () => null,
@@ -98,7 +96,7 @@ describe('additional-contacts: common', () => {
   })
 
   describe('getAdditionalContactEmailAddressData', () => {
-    it('returns the contact email datas', async () => {
+    it('returns the contact email data', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
         const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {
@@ -266,31 +264,6 @@ describe('additional-contacts: common', () => {
       const result = await additionalContactGetCheckAnswersData(ContactRoles.ADDITIONAL_APPLICANT)(request)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'additional-applicant', tagState: 'complete-not-confirmed' })
       expect(result).toEqual({ contact: [{ key: 'addAdditionalContact', value: 'yes' }, { key: 'contactName', value: 'nob' }, { key: 'contactEmail', value: 'bob@strummer.com' }] })
-    })
-  })
-
-  describe('additionalContactSetCheckAnswersData', () => {
-    it('sets the tag data then check page is confirmed', async () => {
-      const mockSet = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        APIRequests: {
-          APPLICATION: {
-            tags: () => ({
-              set: mockSet
-            })
-          }
-        }
-      }))
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactSetCheckAnswersData } = await import('../common.js')
-      await additionalContactSetCheckAnswersData(ContactRoles.ADDITIONAL_APPLICANT)(request)
-      expect(mockSet).toHaveBeenCalledWith({ tag: 'additional-applicant', tagState: 'complete' })
     })
   })
 })
