@@ -5,13 +5,13 @@
 {% from "answer-summary.njk" import answerSummary %}
 
 {% set questionMap = {
-    addAdditionalApplicant: { question: 'Do you want to add an alternative licence holder contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantAdd },
-    applicantName: { question: 'What is the name of the person we should contact?', href: _uri.additionalApplicantName },
-    applicantEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalApplicantEmail }
+    addAdditionalContact: { question: 'Do you want to add an alternative licence holder contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalApplicantAdd },
+    contactName: { question: 'What is the name of the person we should contact?', href: _uri.additionalApplicantName },
+    contactEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalApplicantEmail }
 } %}
 
 {% block pageContent %}
-    {{ answerSummary(questionMap, data.applicant ) }}
+    {{ answerSummary(questionMap, data.contact ) }}
 
     {{ govukButton({
         attributes: { id: 'continue' },

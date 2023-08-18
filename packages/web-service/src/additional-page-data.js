@@ -69,9 +69,7 @@ export const additionalPageData = async (request, h) => {
         purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
 
         // Applicant
-        applicantNames: contactURIs.APPLICANT.NAMES.uri,
         applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
-        applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
         applicantName: contactURIs.APPLICANT.NAME.uri,
         applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
         applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
@@ -79,9 +77,7 @@ export const additionalPageData = async (request, h) => {
 
         // Ecologist
         ecologistName: contactURIs.ECOLOGIST.NAME.uri,
-        ecologistNames: contactURIs.ECOLOGIST.NAMES.uri,
         ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
-        ecologistOrganisations: contactURIs.ECOLOGIST.ORGANISATIONS.uri,
         ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
         ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
         ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
@@ -98,8 +94,6 @@ export const additionalPageData = async (request, h) => {
 
         // Payer
         invoiceName: contactURIs.INVOICE_PAYER.NAME.uri,
-        invoiceNames: contactURIs.INVOICE_PAYER.NAMES.uri,
-        invoiceOrganisations: contactURIs.INVOICE_PAYER.ORGANISATIONS.uri,
         invoicePostcode: contactURIs.INVOICE_PAYER.POSTCODE.uri,
         invoiceAddress: contactURIs.INVOICE_PAYER.ADDRESS.uri,
         invoiceEmail: contactURIs.INVOICE_PAYER.EMAIL.uri,

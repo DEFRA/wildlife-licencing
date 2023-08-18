@@ -4,7 +4,7 @@ import { ContactRoles } from '../../common/contact-roles.js'
 import {
   getAdditionalContactEmailAddressData,
   setAdditionalContactEmailAddressData,
-  additionalContactEmailCompletion
+  additionalContactCompletion
 } from '../common.js'
 import { checkHasContact } from '../../common/common-handler.js'
 import { checkApplication } from '../../../common/check-application.js'
@@ -17,5 +17,5 @@ export const additionalEcologistEmail = emailAddressPage({
   checkData: [checkApplication, checkHasContact(ContactRoles.ADDITIONAL_ECOLOGIST, ADD)],
   getData: getAdditionalContactEmailAddressData(ContactRoles.ADDITIONAL_ECOLOGIST),
   setData: setAdditionalContactEmailAddressData(ContactRoles.ADDITIONAL_ECOLOGIST),
-  completion: additionalContactEmailCompletion(ContactRoles.ADDITIONAL_ECOLOGIST, contactURIs.ADDITIONAL_ECOLOGIST)
+  completion: additionalContactCompletion(ContactRoles.ADDITIONAL_ECOLOGIST, contactURIs.ADDITIONAL_ECOLOGIST)
 }, ContactRoles.ADDITIONAL_ECOLOGIST)

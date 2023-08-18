@@ -2,9 +2,13 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { ContactRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
-import { contactURIs } from '../../../uris.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
+import { tagStatus } from '../../../services/status-tags.js'
+
+const getSectionHelper = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
+  ? SECTION_TASKS.ADDITIONAL_APPLICANT
+  : SECTION_TASKS.ADDITIONAL_ECOLOGIST
 
 /*
  * The add additional contact functions
@@ -12,9 +16,7 @@ import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 export const getAdditionalContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const section = contactRole === ContactRoles.ADDITIONAL_APPLICANT
-    ? SECTION_TASKS.ADDITIONAL_APPLICANT
-    : SECTION_TASKS.ADDITIONAL_ECOLOGIST
+  const section = getSectionHelper(contactRole)
   await moveTagInProgress(applicationId, section)
   return {
     yesNo: yesNoFromBool(journeyData?.additionalContact?.[contactRole])
@@ -37,19 +39,8 @@ export const setAdditionalContactData = contactRole => async request => {
   }
 }
 
-// TODO - Simplify into a single completion function
-const nextUri = async (contactRole, request) => {
-  const { additionalContact } = await request.cache().getData()
-  if (contactRole === ContactRoles.ADDITIONAL_APPLICANT && typeof additionalContact?.[ContactRoles.ADDITIONAL_ECOLOGIST] === 'undefined') {
-    return contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri
-  }
-
-  return contactURIs.ADDITIONAL_ECOLOGIST.CHECK_ANSWERS.uri
-}
-
 export const additionalContactCompletion = (contactRole, urlBase) => async request => {
   const { applicationId } = await request.cache().getData()
-  // If an organisation is already assigned,
   const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   if (!contact) {
     return urlBase.CHECK_ANSWERS.uri
@@ -58,33 +49,6 @@ export const additionalContactCompletion = (contactRole, urlBase) => async reque
   } else if (!contact?.contactDetails?.email) {
     return urlBase.EMAIL.uri
   } else {
-    return urlBase.CHECK_ANSWERS.uri
-  }
-}
-
-export const additionalContactNameCompletion = (contactRole, urlBase) => async request => {
-  const { applicationId } = await request.cache().getData()
-  // If an organisation is already assigned,
-  const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-  if (!contact?.contactDetails?.email) {
-    return urlBase.EMAIL.uri
-  } else {
-    return urlBase.CHECK_ANSWERS.uri
-  }
-}
-
-export const additionalContactNamesCompletion = (contactRole, urlBase) => async request => {
-  const { payload: { contact: contactId } } = await request.cache().getPageData()
-  if (contactId === 'new') {
-    return urlBase.NAME.uri
-  } else {
-    const { applicationId } = await request.cache().getData()
-    const contact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
-    // This may not have an email if the email is held on the organisation for an existing application
-    if (!contact.contactDetails?.email) {
-      return urlBase.EMAIL.uri
-    }
-
     return urlBase.CHECK_ANSWERS.uri
   }
 }
@@ -107,4 +71,25 @@ export const setAdditionalContactEmailAddressData = contactRole => async request
   }
 }
 
-export const additionalContactEmailCompletion = (contactRole, _urlBase) => async request => nextUri(contactRole, request)
+export const additionalContactGetCheckAnswersData = contactRole => async request => {
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: getSectionHelper(contactRole), tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  const additionalContact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  return {
+    contact: additionalContact
+      ? [
+          { key: 'addAdditionalContact', value: yesNoFromBool(true) },
+          { key: 'contactName', value: additionalContact.fullName },
+          { key: 'contactEmail', value: additionalContact.contactDetails.email }
+        ].filter(a => a)
+      : [
+          { key: 'addAdditionalContact', value: yesNoFromBool(false) }
+        ]
+  }
+}
+
+export const additionalContactSetCheckAnswersData = contactRole => async request => {
+  const { applicationId } = await request.cache().getData()
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: getSectionHelper(contactRole), tagState: tagStatus.COMPLETE })
+}

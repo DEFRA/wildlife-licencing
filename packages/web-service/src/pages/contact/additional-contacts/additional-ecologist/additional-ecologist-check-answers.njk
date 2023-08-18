@@ -5,13 +5,13 @@
 {% from "answer-summary.njk" import answerSummary %}
 
 {% set questionMap = {
-    addAdditionalEcologist: { question: 'Do you want to add an alternative ecologist contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistAdd },
-    ecologistName: { question: 'What is the name of the person we should contact?', href: _uri.additionalEcologistName },
-    ecologistEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalEcologistEmail }
+    addAdditionalContact: { question: 'Do you want to add an alternative ecologist contact?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.additionalEcologistAdd },
+    contactName: { question: 'What is the name of the person we should contact?', href: _uri.additionalEcologistName },
+    contactEmail: { question: 'What is the email address of the person we should contact?', href: _uri.additionalEcologistEmail }
 } %}
 
 {% block pageContent %}
-    {{ answerSummary(questionMap, data.ecologist ) }}
+    {{ answerSummary(questionMap, data.contact ) }}
 
     {{ govukButton({
         attributes: { id: 'continue' },

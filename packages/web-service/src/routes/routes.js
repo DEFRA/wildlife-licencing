@@ -20,21 +20,17 @@ import { uploadSupportingInformation } from '../pages/supporting-information/upl
 import { checkSupportingInformation } from '../pages/supporting-information/check-supporting-information.js'
 
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
-import { applicantNames } from '../pages/contact/applicant/applicant-names.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
-import { applicantOrganisations } from '../pages/contact/applicant/applicant-organisations.js'
 import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
-import { ecologistNames } from '../pages/contact/ecologist/ecologist-names.js'
 import { ecologistEmail } from '../pages/contact/ecologist/ecologist-email.js'
 import { ecologistCheckAnswers } from '../pages/contact/ecologist/ecologist-check-answers.js'
 import { ecologistOrganisation } from '../pages/contact/ecologist/ecologist-organisation.js'
-import { ecologistOrganisations } from '../pages/contact/ecologist/ecologist-organisations.js'
 import { ecologistPostcode } from '../pages/contact/ecologist/ecologist-postcode.js'
 import { ecologistAddress } from '../pages/contact/ecologist/ecologist-address.js'
 import { ecologistAddressForm } from '../pages/contact/ecologist/ecologist-address-form.js'
@@ -67,11 +63,9 @@ import checkWorkAnswers from '../pages/work-activity/check-work-answers/check-wo
 
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
 import { invoiceName } from '../pages/contact/invoice/invoice-name.js'
-import { invoiceNames } from '../pages/contact/invoice/invoice-names.js'
 import { invoiceEmail } from '../pages/contact/invoice/invoice-email.js'
 import { invoiceCheckAnswers } from '../pages/contact/invoice/invoice-check-answers.js'
 import { invoiceOrganisation } from '../pages/contact/invoice/invoice-organisation.js'
-import { invoiceOrganisations } from '../pages/contact/invoice/invoice-organisations.js'
 import { invoicePostcode } from '../pages/contact/invoice/invoice-postcode.js'
 import { invoiceAddress } from '../pages/contact/invoice/invoice-address.js'
 import { invoiceAddressForm } from '../pages/contact/invoice/invoice-address-form.js'
@@ -202,18 +196,14 @@ const routes = [
   ...eligible,
   ...tasklist,
   ...applicantName,
-  ...applicantNames,
   ...applicantOrganisation,
-  ...applicantOrganisations,
   ...applicantEmail,
   ...applicantPostcode,
   ...applicantAddress,
   ...applicantAddressForm,
   ...applicantCheckAnswers,
   ...ecologistName,
-  ...ecologistNames,
   ...ecologistOrganisation,
-  ...ecologistOrganisations,
   ...ecologistEmail,
   ...ecologistPostcode,
   ...ecologistAddress,
@@ -236,9 +226,7 @@ const routes = [
   ...additionalEcologistCheckAnswers,
   ...invoiceResponsible,
   ...invoiceName,
-  ...invoiceNames,
   ...invoiceOrganisation,
-  ...invoiceOrganisations,
   ...invoiceEmail,
   ...invoicePostcode,
   ...invoiceAddress,

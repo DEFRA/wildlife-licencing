@@ -1,5 +1,4 @@
 import { APIRequests } from '../../../../services/api-requests.js'
-import { hasAccountCandidates } from '../common.js'
 import { contactOperations } from '../operations.js'
 
 export const getContactData = contactRole => async request => {
@@ -21,27 +20,17 @@ export const setContactData = contactRole => async request => {
 }
 
 export const contactNameCompletion = (_contactRole, accountRole, otherAccountRoles, urlBase) => async request => {
-  const { userId, applicationId } = await request.cache().getData()
-  // If an organisation is already assigned,
+  const { applicationId } = await request.cache().getData()
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   if (account) {
-    // Immutable
-    if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-      return urlBase.CHECK_ANSWERS.uri
+    if (!account.contactDetails) {
+      return urlBase.EMAIL.uri
+    } else if (!account.address) {
+      return urlBase.POSTCODE.uri
     } else {
-      if (!account.contactDetails) {
-        return urlBase.EMAIL.uri
-      } else if (!account.address) {
-        return urlBase.POSTCODE.uri
-      } else {
-        return urlBase.CHECK_ANSWERS.uri
-      }
+      return urlBase.CHECK_ANSWERS.uri
     }
   }
 
-  if (await hasAccountCandidates(userId, applicationId, accountRole, otherAccountRoles)) {
-    return urlBase.ORGANISATIONS.uri
-  } else {
-    return urlBase.IS_ORGANISATION.uri
-  }
+  return urlBase.IS_ORGANISATION.uri
 }

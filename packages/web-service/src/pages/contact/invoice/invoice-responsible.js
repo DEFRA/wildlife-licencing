@@ -6,7 +6,6 @@ import { ContactRoles, AccountRoles } from '../common/contact-roles.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { accountOperations, contactOperations } from '../common/operations.js'
-import { hasContactCandidates } from '../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 
 const { RESPONSIBLE, CONTACT_DETAILS, NAMES, NAME } = contactURIs.INVOICE_PAYER
@@ -91,12 +90,7 @@ export const setData = async request => {
 export const completion = async request => {
   const pageData = await request.cache().getPageData()
   if (pageData.payload.responsible === 'other') {
-    const { applicationId, userId } = await request.cache().getData()
-    if (await hasContactCandidates(userId, applicationId, ContactRoles.PAYER, [], false)) {
-      return NAMES.uri
-    } else {
-      return NAME.uri
-    }
+    return NAME.uri
   }
 
   return CONTACT_DETAILS.uri

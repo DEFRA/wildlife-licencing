@@ -1,7 +1,7 @@
 {% extends "check-answers.njk" %}
 
 {% set questionMap = {
-    whoIsTheLicenceFor: { question: 'Who is the licence for?', href: _uri.applicantNames },
+    whoIsTheLicenceFor: { question: 'Who is the licence for?', href: _uri.applicantName },
     contactIsOrganisation: { question: 'Is the applicant part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.applicantIsOrganisation },
     contactOrganisations: { question: 'Name of organisation', href: _uri.applicantIsOrganisation },
     email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.applicantEmail },

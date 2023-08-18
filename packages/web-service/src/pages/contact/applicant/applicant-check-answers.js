@@ -8,7 +8,7 @@ import { checkAccountComplete, checkHasContact } from '../common/common-handler.
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
-const { CHECK_ANSWERS, USER } = contactURIs.APPLICANT
+const { CHECK_ANSWERS } = contactURIs.APPLICANT
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -25,7 +25,7 @@ export const completion = async request => {
 export const applicantCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
-    checkHasContact(ContactRoles.APPLICANT, USER),
+    checkHasContact(ContactRoles.APPLICANT),
     checkAccountComplete(AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
   ],
   page: CHECK_ANSWERS.page,

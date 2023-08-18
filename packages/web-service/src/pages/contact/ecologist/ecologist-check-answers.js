@@ -7,7 +7,7 @@ import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { checkAccountComplete, checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
-const { CHECK_ANSWERS, USER } = contactURIs.ECOLOGIST
+const { CHECK_ANSWERS } = contactURIs.ECOLOGIST
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
@@ -24,7 +24,7 @@ export const getData = async request => {
 export const ecologistCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
-    checkHasContact(ContactRoles.ECOLOGIST, USER),
+    checkHasContact(ContactRoles.ECOLOGIST),
     checkAccountComplete(AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
   ],
   page: CHECK_ANSWERS.page,

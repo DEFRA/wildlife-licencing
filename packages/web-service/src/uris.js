@@ -71,10 +71,8 @@ export const workActivityURIs = {
 
 export const contactURIs = {
   ECOLOGIST: {
-    NAMES: { uri: '/ecologist-names', page: 'ecologist-names' },
     NAME: { uri: '/ecologist-name', page: 'ecologist-name' },
     IS_ORGANISATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' },
-    ORGANISATIONS: { uri: '/ecologist-organisations', page: 'ecologist-organisations' },
     EMAIL: { uri: '/ecologist-email', page: 'ecologist-email' },
     CHECK_ANSWERS: { uri: '/ecologist-check-answers', page: 'ecologist-check-answers' },
     POSTCODE: { uri: '/ecologist-postcode', page: 'ecologist-postcode' },
@@ -82,10 +80,8 @@ export const contactURIs = {
     ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
-    NAMES: { uri: '/applicant-names', page: 'applicant-names' },
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
     IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
-    ORGANISATIONS: { uri: '/applicant-organisations', page: 'applicant-organisations' },
     EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
     CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
     POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
@@ -103,10 +99,8 @@ export const contactURIs = {
   },
   INVOICE_PAYER: {
     RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
-    NAMES: { uri: '/invoice-names', page: 'invoice-names' },
     NAME: { uri: '/invoice-name', page: 'invoice-name' },
     IS_ORGANISATION: { uri: '/invoice-organisation', page: 'invoice-organisation' },
-    ORGANISATIONS: { uri: '/invoice-organisations', page: 'invoice-organisations' },
     EMAIL: { uri: '/invoice-email', page: 'invoice-email' },
     CHECK_ANSWERS: { uri: '/invoice-check-answers', page: 'invoice-check-answers' },
     CONTACT_DETAILS: { uri: '/invoice-contact-details', page: 'invoice-contact-details' },

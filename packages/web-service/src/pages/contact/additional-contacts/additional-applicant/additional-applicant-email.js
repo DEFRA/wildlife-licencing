@@ -4,7 +4,7 @@ import { ContactRoles } from '../../common/contact-roles.js'
 import {
   getAdditionalContactEmailAddressData,
   setAdditionalContactEmailAddressData,
-  additionalContactEmailCompletion, additionalContactCompletion
+  additionalContactCompletion
 } from '../common.js'
 import { checkHasContact } from '../../common/common-handler.js'
 import { checkApplication } from '../../../common/check-application.js'
