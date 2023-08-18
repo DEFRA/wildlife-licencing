@@ -1,9 +1,11 @@
 import { APIRequests } from '../../../../services/api-requests.js'
 import { contactOperations } from '../operations.js'
+import { moveTagInProgress } from '../../../common/tag-functions.js'
+import { ROLE_SECTION_MAP } from '../common-handler.js'
 
 export const getContactData = contactRole => async request => {
-  const journeyData = await request.cache().getData()
-  const { applicationId } = journeyData
+  const { applicationId } = await request.cache().getData()
+  await moveTagInProgress(applicationId, ROLE_SECTION_MAP[contactRole])
   return APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
 }
 
@@ -19,7 +21,7 @@ export const setContactData = contactRole => async request => {
   await contactOps.setName(request.payload.name)
 }
 
-export const contactNameCompletion = (_contactRole, accountRole, otherAccountRoles, urlBase) => async request => {
+export const contactNameCompletion = (accountRole, urlBase) => async request => {
   const { applicationId } = await request.cache().getData()
   const account = await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)
   if (account) {

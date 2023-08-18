@@ -17,25 +17,25 @@ describe('tasklist general sections', () => {
   })
 
   it('applicant check', () => {
-    const task = TASKS[SECTION_TASKS.LICENCE_HOLDER]
-    expect(task.uri([])).toEqual('/applicant-user')
-    expect(task.uri([{ tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE }])).toEqual('/applicant-check-answers')
+    const task = TASKS[SECTION_TASKS.APPLICANT]
+    expect(task.uri([])).toEqual('/applicant-name')
+    expect(task.uri([{ tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual('/applicant-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(expect(task.status([
-      { tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE }
+      { tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }
     ])).toEqual('complete'))
 
     expect(task.enabled([])).toBeFalsy()
     expect(task.enabled([
-      { tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE },
+      { tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE },
       { tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE }
     ])).toBeTruthy()
   })
 
   it('ecologist check', () => {
     const task = TASKS[SECTION_TASKS.ECOLOGIST]
-    expect(task.uri([])).toEqual('/ecologist-user')
+    expect(task.uri([])).toEqual('/ecologist-name')
     expect(task.uri([{ tag: SECTION_TASKS.ECOLOGIST, tagState: tagStatus.COMPLETE }])).toEqual('/ecologist-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
@@ -67,20 +67,36 @@ describe('tasklist general sections', () => {
     ])).toBeTruthy()
   })
 
-  it('additional contacts', () => {
-    const task = TASKS[SECTION_TASKS.ADDITIONAL_CONTACTS]
+  it('additional applicant', () => {
+    const task = TASKS[SECTION_TASKS.ADDITIONAL_APPLICANT]
     expect(task.uri([])).toEqual('/add-additional-applicant')
-    expect(task.uri([{ tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE }])).toEqual('/additional-contact-check-answers')
+    expect(task.uri([{ tag: SECTION_TASKS.ADDITIONAL_APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual('/additional-applicant-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(expect(task.status([
-      { tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.COMPLETE }
+      { tag: SECTION_TASKS.ADDITIONAL_APPLICANT, tagState: tagStatus.COMPLETE }
     ])).toEqual('complete'))
 
     expect(task.enabled([])).toBeFalsy()
     expect(task.enabled([
-      { tag: SECTION_TASKS.ADDITIONAL_CONTACTS, tagState: tagStatus.NOT_STARTED },
-      { tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE },
+      { tag: SECTION_TASKS.ADDITIONAL_APPLICANT, tagState: tagStatus.NOT_STARTED },
+      { tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }
+    ])).toBeTruthy()
+  })
+
+  it('additional ecologist', () => {
+    const task = TASKS[SECTION_TASKS.ADDITIONAL_ECOLOGIST]
+    expect(task.uri([])).toEqual('/add-additional-ecologist')
+    expect(task.uri([{ tag: SECTION_TASKS.ADDITIONAL_ECOLOGIST, tagState: tagStatus.COMPLETE }])).toEqual('/additional-ecologist-check-answers')
+
+    expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
+    expect(expect(task.status([
+      { tag: SECTION_TASKS.ADDITIONAL_ECOLOGIST, tagState: tagStatus.COMPLETE }
+    ])).toEqual('complete'))
+
+    expect(task.enabled([])).toBeFalsy()
+    expect(task.enabled([
+      { tag: SECTION_TASKS.ADDITIONAL_ECOLOGIST, tagState: tagStatus.NOT_STARTED },
       { tag: SECTION_TASKS.ECOLOGIST, tagState: tagStatus.COMPLETE }
     ])).toBeTruthy()
   })
@@ -98,7 +114,7 @@ describe('tasklist general sections', () => {
     expect(task.enabled([])).toBeFalsy()
     expect(task.enabled([
       { tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.NOT_STARTED },
-      { tag: SECTION_TASKS.LICENCE_HOLDER, tagState: tagStatus.COMPLETE },
+      { tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE },
       { tag: SECTION_TASKS.ECOLOGIST, tagState: tagStatus.COMPLETE }
     ])).toBeTruthy()
   })

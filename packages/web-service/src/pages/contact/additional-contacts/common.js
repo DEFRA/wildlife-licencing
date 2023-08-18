@@ -1,14 +1,9 @@
 import { APIRequests } from '../../../services/api-requests.js'
-import { ContactRoles } from '../common/contact-roles.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { contactAccountOperations, contactOperations } from '../common/operations.js'
 import { moveTagInProgress } from '../../common/tag-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { tagStatus } from '../../../services/status-tags.js'
-
-const getSectionHelper = contactRole => contactRole === ContactRoles.ADDITIONAL_APPLICANT
-  ? SECTION_TASKS.ADDITIONAL_APPLICANT
-  : SECTION_TASKS.ADDITIONAL_ECOLOGIST
+import { ROLE_SECTION_MAP } from '../common/common-handler.js'
 
 /*
  * The add additional contact functions
@@ -16,7 +11,7 @@ const getSectionHelper = contactRole => contactRole === ContactRoles.ADDITIONAL_
 export const getAdditionalContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  const section = getSectionHelper(contactRole)
+  const section = ROLE_SECTION_MAP[contactRole]
   await moveTagInProgress(applicationId, section)
   return {
     yesNo: yesNoFromBool(journeyData?.additionalContact?.[contactRole])
@@ -74,7 +69,7 @@ export const setAdditionalContactEmailAddressData = contactRole => async request
 export const additionalContactGetCheckAnswersData = contactRole => async request => {
   const journeyData = await request.cache().getData()
   const { applicationId } = journeyData
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: getSectionHelper(contactRole), tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+  await APIRequests.APPLICATION.tags(applicationId).set({ tag: ROLE_SECTION_MAP[contactRole], tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   const additionalContact = await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
   return {
     contact: additionalContact
@@ -87,9 +82,4 @@ export const additionalContactGetCheckAnswersData = contactRole => async request
           { key: 'addAdditionalContact', value: yesNoFromBool(false) }
         ]
   }
-}
-
-export const additionalContactSetCheckAnswersData = contactRole => async request => {
-  const { applicationId } = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(applicationId).set({ tag: getSectionHelper(contactRole), tagState: tagStatus.COMPLETE })
 }

@@ -9,6 +9,7 @@ import { checkAccountComplete, checkHasContact } from '../common/common-handler.
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 import { generateOutput } from './common.js'
+import { setCheckAnswersCompletion } from '../common/check-answers/check-answers.js'
 
 const { CHECK_ANSWERS, RESPONSIBLE, PURCHASE_ORDER } = contactURIs.INVOICE_PAYER
 
@@ -42,12 +43,6 @@ export const getData = async request => {
   }
 }
 
-export const completion = async request => {
-  const journeyData = await request.cache().getData()
-  await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE })
-  return TASKLIST.uri
-}
-
 export const invoiceCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
@@ -58,5 +53,6 @@ export const invoiceCheckAnswers = checkAnswersPage({
   page: CHECK_ANSWERS.page,
   uri: CHECK_ANSWERS.uri,
   getData,
-  completion
+  setData: setCheckAnswersCompletion(ContactRoles.PAYER),
+  completion: TASKLIST.uri
 })

@@ -2,6 +2,8 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { contactAccountOperations } from '../operations.js'
 import { tagStatus } from '../../../../services/status-tags.js'
 import { boolFromYesNo } from '../../../common/common.js'
+import { moveTagInProgress } from '../../../common/tag-functions.js'
+import { ROLE_SECTION_MAP } from '../common-handler.js'
 
 export const getIsOrganization = async (applicationId, accountRole, account) => {
   if (account) {

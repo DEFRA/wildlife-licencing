@@ -1,7 +1,7 @@
 import {
+  contactAccountCompletion,
   getContactAccountData,
-  setContactAccountData,
-  contactAccountCompletion
+  setContactAccountData
 } from '../common/is-organisation/is-organisation.js'
 import { contactURIs } from '../../../uris.js'
 import { isOrganisation } from '../common/is-organisation/is-organisation-page.js'

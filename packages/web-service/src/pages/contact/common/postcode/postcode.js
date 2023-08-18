@@ -1,6 +1,8 @@
 import db from 'debug'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { ADDRESS } from '@defra/wls-connectors-lib'
+import { moveTagInProgress } from '../../../common/tag-functions.js'
+import { ROLE_SECTION_MAP } from '../common-handler.js'
 const debug = db('web-service:address-lookup')
 
 export const getPostcodeData = (contactRole, accountRole, uriBase) => async request => {

@@ -8,13 +8,14 @@ import { APIRequests } from '../../../services/api-requests.js'
 
 const { EMAIL, RESPONSIBLE } = contactURIs.INVOICE_PAYER
 
+// Wrapper function because of the invoice number being grafted on
 export const redirectJourney = async request => {
   const { applicationId } = await request.cache().getData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
   if (!applicationData.referenceOrPurchaseOrderNumber) {
     return contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
   } else {
-    return emailAddressCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)
+    return emailAddressCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER)(request)
   }
 }
 
@@ -22,7 +23,7 @@ export const invoiceEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
   checkData: [checkApplication, checkHasContact(ContactRoles.PAYER, RESPONSIBLE)],
-  completion: emailAddressCompletion(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION, contactURIs.INVOICE_PAYER),
   getData: getEmailAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION),
-  setData: setEmailAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION)
+  setData: setEmailAddressData(ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION),
+  completion: redirectJourney
 }, ContactRoles.PAYER, AccountRoles.PAYER_ORGANISATION)

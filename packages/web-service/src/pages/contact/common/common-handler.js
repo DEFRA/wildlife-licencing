@@ -1,5 +1,17 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { TASKLIST } from '../../../uris.js'
+import { SECTION_TASKS } from '../../tasklist/general-sections.js'
+import { tagStatus } from '../../../services/status-tags.js'
+import { ContactRoles } from './contact-roles.js'
+
+export const ROLE_SECTION_MAP = {
+  [ContactRoles.APPLICANT]: SECTION_TASKS.APPLICANT,
+  [ContactRoles.ECOLOGIST]: SECTION_TASKS.ECOLOGIST,
+  [ContactRoles.ADDITIONAL_APPLICANT]: SECTION_TASKS.ADDITIONAL_APPLICANT,
+  [ContactRoles.ADDITIONAL_ECOLOGIST]: SECTION_TASKS.ADDITIONAL_ECOLOGIST,
+  [ContactRoles.PAYER]: SECTION_TASKS.INVOICE_PAYER,
+  [ContactRoles.AUTHORISED_PERSON]: SECTION_TASKS.AUTHORISED_PEOPLE
+}
 
 /**
  * Throw back to the tasklist contact exists for the role. Call from only the point
@@ -54,5 +66,3 @@ export const checkHasAddress = urlBase => async (request, h) => {
 
   return null
 }
-
-// export const redirectJourney = (_applicationId, urlBase) => urlBase.CHECK_ANSWERS.uri
