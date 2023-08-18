@@ -38,14 +38,14 @@
       } if error['why-no-artificial-sett-check'],
       items: [
         {
-          value: data.IT_WAS_NOT_REQUIRED_BY_THE_LICENCE,
+          value: data.itWasNotRequired,
           text: "It was not required by the licence",
-          checked: data.IT_WAS_NOT_REQUIRED_BY_THE_LICENCE === data.noArtificialSettReason
+          checked: data.itWasNotRequired === data.noArtificialSettReason
         },
         {
-          value: data.IT_COULD_NOT_BE_MADE,
+          value: data.itCouldNotBeMade,
           text: "It could not be made",
-          checked: data.IT_COULD_NOT_BE_MADE === data.noArtificialSettReason,
+          checked: payload['why-no-artificial-sett-check'] === data.itCouldNotBeMade or data.noArtificialSettReason === data.itCouldNotBeMade or payload['why-sett-not-made'].length > 0,
           conditional: {
             html: artificialSettNotBeMadeHtml
           }
