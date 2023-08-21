@@ -10,7 +10,7 @@ const { WELFARE_CONCERNS } = ReturnsURIs.A24
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let licenceConditions, licenceConditionsDetails
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)

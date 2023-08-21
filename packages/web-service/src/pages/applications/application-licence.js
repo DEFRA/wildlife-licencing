@@ -48,7 +48,7 @@ export const completion = async request => {
   }
 
   if (pageData === 'return') {
-    const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+    const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
     journeyData.licenceId = licences[0].id
     journeyData.licenceNumber = licences[0].licenceNumber
     await request.cache().setData(journeyData)

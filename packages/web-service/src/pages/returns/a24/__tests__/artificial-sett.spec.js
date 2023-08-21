@@ -19,7 +19,7 @@ describe('the Artificial sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -49,7 +49,7 @@ describe('the Artificial sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567',
               endDate: '2022-08-26',
               startDate: '2022-08-10'

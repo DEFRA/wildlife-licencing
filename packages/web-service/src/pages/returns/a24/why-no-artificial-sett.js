@@ -15,7 +15,7 @@ const whySettNotMadeText = 'why-sett-not-made'
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let noArtificialSettReason, noArtificialSettReasonDetails
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)

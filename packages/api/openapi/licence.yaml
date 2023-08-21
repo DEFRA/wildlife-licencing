@@ -4312,6 +4312,8 @@ components:
                 type: string
               modifiedOn:
                 $ref: '#/components/schemas/timestamp'
+        stateCode:
+          type: number
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

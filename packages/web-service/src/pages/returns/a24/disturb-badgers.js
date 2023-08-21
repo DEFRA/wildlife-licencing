@@ -11,7 +11,7 @@ export const validator = payload => commonValidator(payload, DISTURB_BADGERS.pag
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let disturbBadgersYesOrNo, disturbBadgersDetails
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)

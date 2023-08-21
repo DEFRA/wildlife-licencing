@@ -9,7 +9,7 @@ const { BLOCKING_OR_PROOFING } = ReturnsURIs.A24
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let obstructBlocking, obstructBlockingDetails
   if (returnId) {
     const { obstructionBlockingOrProofing, obstructionBlockingOrProofingDetails } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
