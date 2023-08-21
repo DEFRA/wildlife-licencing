@@ -58,6 +58,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/organisation-accounts/{organisationId}':
+    get:
+      description: Get a list accounts assigned to an IDM organisation
+      summary:  Get a list accounts assigned to an IDM organisation
+      operationId: getAccountsByOrganisationId
+      parameters:
+        - name: organisationId
+          in: path
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accounts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/account':
     post:
       description: Create and store account
@@ -2500,6 +2532,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/user-contacts/{userId}':
+    get:
+      description: Get a list contacts
+      summary: Get a list contacts
+      operationId: getContactsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contacts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/contact':
     post:
       description: Create and store contact
@@ -3825,6 +3889,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           minLength: 1
@@ -4446,6 +4512,8 @@ components:
                 type: string
               modifiedOn:
                 $ref: '#/components/schemas/timestamp'
+        stateCode:
+          type: number
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:

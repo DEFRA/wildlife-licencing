@@ -27,6 +27,7 @@ import {
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper
@@ -36,6 +37,7 @@ import {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper
@@ -209,6 +211,7 @@ const handlers = {
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper,
@@ -217,6 +220,7 @@ const handlers = {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper,
