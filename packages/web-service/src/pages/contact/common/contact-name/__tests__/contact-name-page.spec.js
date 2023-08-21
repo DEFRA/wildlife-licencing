@@ -1,7 +1,7 @@
 
 describe('contact-name page', () => {
   beforeEach(() => jest.resetModules())
-  it.only('the validator rejects because it finds duplicate name', async () => {
+  it('the validator rejects because it finds duplicate name', async () => {
     jest.doMock('../../../../../session-cache/cache-decorator.js', () => ({
       cacheDirect: () => ({
         getData: () => ({ userId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' })
