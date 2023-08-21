@@ -332,7 +332,7 @@ const handlers = {
  * @param server
  * @returns {Promise<any>}
  */
-const init = async (server) => {
+const init = async server => {
   const { OpenAPIBackend } = await import('openapi-backend')
   const debug = db('api:request')
 
@@ -354,7 +354,7 @@ const init = async (server) => {
   /*
    * For debugging only
    */
-  server.events.on('response', (request) => {
+  server.events.on('response', request => {
     // you can use request.log or server.log it's depends
     debug(
       `${request.info.remoteAddress}: ${request.method.toUpperCase()} ${
@@ -403,7 +403,7 @@ const init = async (server) => {
   /*
    * Set up shutdown handlers
    */
-  const shutdown = async (code) => {
+  const shutdown = async code => {
     console.log(`API server is shutdown with ${code}`)
     await server.stop()
     process.exit(code)

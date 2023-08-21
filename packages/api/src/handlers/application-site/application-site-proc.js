@@ -3,7 +3,7 @@
  * @param applicationSite.dataValues
  * @returns {any}
  */
-export const prepareResponse = (as) =>
+export const prepareResponse = as =>
   Object.assign(
     (({
       createdAt,

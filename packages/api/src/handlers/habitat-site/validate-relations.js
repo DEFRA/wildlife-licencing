@@ -54,7 +54,7 @@ export const validateRelations = async (
     }
   } else if (applicationType.id === PowerPlatformKeys.APPLICATION_TYPES.A24) {
     const settTypes = await models.optionSets.findByPk('sdds_setttype')
-    if (!settTypes.json.map((v) => v.value).find((v) => v === settType)) {
+    if (!settTypes.json.map(v => v.value).find(v => v === settType)) {
       error = { description: `Invalid settType: ${settType}` }
     }
   }

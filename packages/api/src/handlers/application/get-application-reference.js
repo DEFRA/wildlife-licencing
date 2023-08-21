@@ -19,8 +19,8 @@ export default async (_context, req, h) => {
       const r = await models.applicationTypes.findAll()
       // Only those with a name and a suffix set are of interest
       response = r
-        .map((t) => prepareResponse(t.dataValues))
-        .filter((d) => d.name && d.refNoSuffix)
+        .map(t => prepareResponse(t.dataValues))
+        .filter(d => d.name && d.refNoSuffix)
       if (response.length) {
         await cache.save(TYPES_CACHE, response)
       }
@@ -33,7 +33,7 @@ export default async (_context, req, h) => {
       return h.response().code(404)
     }
 
-    const suffix = response.find((r) => applicationTypeId === r.id)?.refNoSuffix
+    const suffix = response.find(r => applicationTypeId === r.id)?.refNoSuffix
 
     if (!suffix) {
       return h.response().code(404)

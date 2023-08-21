@@ -22,7 +22,7 @@ const baseQuery =
  * @param u
  * @returns {`'${string}'`}
  */
-const w = (u) => `'${u}'`
+const w = u => `'${u}'`
 
 /**
  * Create SQL IN list
@@ -31,7 +31,7 @@ const w = (u) => `'${u}'`
  * @param h
  * @returns {string}
  */
-const ils = (a) => `(${a.map((p) => w(p)).join(',')})`
+const ils = a => `(${a.map(p => w(p)).join(',')})`
 
 /**
  * Selects the unique values of a field in the result
@@ -40,7 +40,7 @@ const ils = (a) => `(${a.map((p) => w(p)).join(',')})`
  * @returns {any[]}
  */
 const unique = (result, field) =>
-  [...new Set(result.map((r) => r[field])).values()].filter((r) => r)
+  [...new Set(result.map(r => r[field])).values()].filter(r => r)
 
 export const findApplicationTypes = async (_context, req, h) => {
   try {

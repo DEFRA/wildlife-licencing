@@ -22,7 +22,7 @@ export default async (context, _req, h) => {
       where: { licenceId: licence.id }
     })
 
-    const responseBody = returns.map((r) => prepareResponse(r.dataValues))
+    const responseBody = returns.map(r => prepareResponse(r.dataValues))
 
     return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {

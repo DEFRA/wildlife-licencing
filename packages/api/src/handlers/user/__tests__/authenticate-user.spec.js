@@ -1,6 +1,6 @@
 const encoded =
   '$argon2id$v=19$m=65536,t=3,p=4$wz5hrGPlM/7WF1LT42ocPA$tEdoPx7+k32UkHyI7hAIB6TEFwGaCVUaV0tiEHAA5bE'
-jest.spyOn(console, 'error').mockImplementation((code) => {})
+jest.spyOn(console, 'error').mockImplementation(code => {})
 
 describe('the authenticate user functions', () => {
   beforeEach(() => jest.resetModules())

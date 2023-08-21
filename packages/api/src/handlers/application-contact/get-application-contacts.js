@@ -15,7 +15,7 @@ export default async (_context, req, h) => {
       }
     )
 
-    const responseBody = applicationContacts.map((a) =>
+    const responseBody = applicationContacts.map(a =>
       prepareResponse(a.dataValues)
     )
 

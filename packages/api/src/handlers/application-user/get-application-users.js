@@ -8,7 +8,7 @@ export default async (_context, req, h) => {
     const applicationUsers = await models.applicationUsers.findAll(
       Object.keys(where).length ? { where } : {}
     )
-    const responseBody = applicationUsers.map((a) =>
+    const responseBody = applicationUsers.map(a =>
       prepareResponse(a.dataValues)
     )
     return h.response(responseBody).type(APPLICATION_JSON).code(200)

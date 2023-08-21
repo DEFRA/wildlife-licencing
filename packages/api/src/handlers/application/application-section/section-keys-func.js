@@ -28,7 +28,7 @@ export const sectionKeyFunc = (
     ]
   }
 
-  const elem = targetKeys.find((k) => k.apiBasePath === sectionPath)
+  const elem = targetKeys.find(k => k.apiBasePath === sectionPath)
 
   // Either amend or add the section key
   if (elem) {

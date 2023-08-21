@@ -8,7 +8,7 @@ export default async (_context, req, h) => {
     const applicationSites = await models.applicationSites.findAll(
       Object.keys(where).length ? { where } : {}
     )
-    const responseBody = applicationSites.map((a) =>
+    const responseBody = applicationSites.map(a =>
       prepareResponse(a.dataValues)
     )
     return h.response(responseBody).type(APPLICATION_JSON).code(200)

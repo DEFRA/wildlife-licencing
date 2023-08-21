@@ -9,9 +9,9 @@ info:
     name: The Open Government Licence (OGL) Version 3
     url: www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 paths:
-################################################################################################
-# Accounts
-################################################################################################
+  ################################################################################################
+  # Accounts
+  ################################################################################################
   '/accounts':
     get:
       description: Get a list accounts
@@ -187,9 +187,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Applications
-################################################################################################
+  ################################################################################################
+  # Applications
+  ################################################################################################
   '/applications':
     get:
       description: Get the applications for a user
@@ -465,9 +465,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# ecologist-experience
-################################################################################################
+  ################################################################################################
+  # ecologist-experience
+  ################################################################################################
   '/application/{applicationId}/ecologist-experience':
     put:
       description: Update the application ecologist-experience details
@@ -558,9 +558,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Eligibility
-################################################################################################
+  ################################################################################################
+  # Eligibility
+  ################################################################################################
   '/application/{applicationId}/eligibility':
     put:
       description: Update the application eligibility details
@@ -651,9 +651,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Permissions section
-################################################################################################
+  ################################################################################################
+  # Permissions section
+  ################################################################################################
   '/application/{applicationId}/permissions-section':
     put:
       description: Update the application permissions details
@@ -744,10 +744,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Licences
-################################################################################################
+  ################################################################################################
+  # Licences
+  ################################################################################################
   '/application/{applicationId}/licences':
     get:
       description: Get the licences for an application
@@ -778,9 +777,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Returns
-################################################################################################
+  ################################################################################################
+  # Returns
+  ################################################################################################
   '/licence/{licenceId}/returns':
     get:
       description: Get returns for a licence
@@ -802,7 +801,7 @@ paths:
                 type: array
                 items:
                   oneOf:
-                  - $ref: '#/components/schemas/a24Return'
+                    - $ref: '#/components/schemas/a24Return'
         500:
           description: Unexpected error on server
           content:
@@ -997,9 +996,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Application designated sites
-################################################################################################
+  ################################################################################################
+  # Application designated sites
+  ################################################################################################
   '/application/{applicationId}/designated-sites':
     get:
       description: Get the designated sites for an application
@@ -1159,7 +1158,7 @@ paths:
 
     delete:
       description: Delete an application designated for an application
-      summary:  Delete an application designated for an application
+      summary: Delete an application designated for an application
       operationId: deleteApplicationDesignatedSite
       parameters:
         - name: applicationId
@@ -1186,9 +1185,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Previous licences
-################################################################################################
+  ################################################################################################
+  # Previous licences
+  ################################################################################################
   '/application/{applicationId}/previous-licences':
     get:
       description: Get the previous licences for an application
@@ -1369,10 +1368,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Application-account
-################################################################################################
+  ################################################################################################
+  # Application-account
+  ################################################################################################
   '/application-accounts':
     get:
       description: Get application-accounts
@@ -1556,9 +1554,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Application-contact
-################################################################################################
+  ################################################################################################
+  # Application-contact
+  ################################################################################################
   '/application-contacts':
     get:
       description: Get application-contacts
@@ -1742,9 +1740,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Application File-Uploads
-################################################################################################
+  ################################################################################################
+  # Application File-Uploads
+  ################################################################################################
   '/application/{applicationId}/file-uploads':
     get:
       description: Get a list of the file-uploads detail for an application
@@ -1901,7 +1899,7 @@ paths:
                 $ref: '#/components/schemas/error'
     delete:
       description: Delete an application-file-upload by id
-      summary:  Delete an application-file-upload by id
+      summary: Delete an application-file-upload by id
       operationId: deleteApplicationFileUploadByUploadId
       parameters:
         - name: applicationId
@@ -1930,9 +1928,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Returns File-Uploads
-################################################################################################
+  ################################################################################################
+  # Returns File-Uploads
+  ################################################################################################
   '/return/{returnId}/file-uploads':
     get:
       description: Get a list of the file-uploads detail for an return
@@ -2090,7 +2088,7 @@ paths:
 
     delete:
       description: Delete an return-file-upload by id
-      summary:  Delete an return-file-upload by id
+      summary: Delete an return-file-upload by id
       operationId: deleteReturnFileUploadByUploadId
       parameters:
         - name: returnId
@@ -2119,10 +2117,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Application Sites
-################################################################################################
+  ################################################################################################
+  # Application Sites
+  ################################################################################################
   '/application-sites':
     get:
       description: Get the application-sites
@@ -2205,7 +2202,7 @@ paths:
   '/application-site/{applicationSiteId}':
     get:
       description: Get an application-site by id
-      summary:  Get an application-site by id
+      summary: Get an application-site by id
       operationId: getApplicationSiteByApplicationSiteId
       parameters:
         - name: applicationSiteId
@@ -2238,7 +2235,7 @@ paths:
 
     delete:
       description: Delete an application-site by id
-      summary:  Get an application-site by id
+      summary: Get an application-site by id
       operationId: deleteApplicationSiteByApplicationSiteId
       parameters:
         - name: applicationSiteId
@@ -2261,9 +2258,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Application-user
-################################################################################################
+  ################################################################################################
+  # Application-user
+  ################################################################################################
   '/application-users':
     get:
       description: Get a list application-users
@@ -2401,9 +2398,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Contacts
-################################################################################################
+  ################################################################################################
+  # Contacts
+  ################################################################################################
   '/contacts':
     get:
       description: Get a list contacts
@@ -2554,7 +2551,7 @@ paths:
 
     delete:
       description: Delete contact
-      summary:  Delete the contact on the provided ID
+      summary: Delete the contact on the provided ID
       operationId: deleteContact
       parameters:
         - name: contactId
@@ -2579,9 +2576,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Habitat-Sites. Initially badger sett.
-################################################################################################
+  ################################################################################################
+  # Habitat-Sites. Initially badger sett.
+  ################################################################################################
   '/application/{applicationId}/habitat-site':
     post:
       description: Create a new habitat site for an application
@@ -2759,7 +2756,7 @@ paths:
 
     delete:
       description: Delete habitat site
-      summary:  Delete the habitat site on the provided ID
+      summary: Delete the habitat site on the provided ID
       operationId: deleteHabitatSite
       parameters:
         - name: applicationId
@@ -2823,9 +2820,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# permission
-################################################################################################
+  ################################################################################################
+  # permission
+  ################################################################################################
   '/application/{applicationId}/permissions':
     get:
       description: Gets the permissions for an application
@@ -3008,10 +3005,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Sites
-################################################################################################
+  ################################################################################################
+  # Sites
+  ################################################################################################
   '/sites':
     get:
       description: Get a list of sites
@@ -3181,9 +3177,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-################################################################################################
-# Users
-################################################################################################
+  ################################################################################################
+  # Users
+  ################################################################################################
   '/users':
     get:
       description: Get users
@@ -3313,7 +3309,7 @@ paths:
 
     delete:
       description: Delete user
-      summary:  Delete the user on the provided ID
+      summary: Delete the user on the provided ID
       operationId: deleteUser
       parameters:
         - name: userId
@@ -3373,24 +3369,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Reference Data
-################################################################################################
+  ################################################################################################
+  # Reference Data
+  ################################################################################################
   '/application-types':
     get:
       description: Get the application types using a filter
       summary:
-          "The licence types allowed by applying a filter in the query of the form
-          {
-            purposes: [], -- uuid
-            species: [], -- uuid
-            speciesSubjects: [], -- uuid
-            activities: [], -- uuid
-            methods: [] -- uuid
-          }
-          This is encoded with JSON.stringify
-        "
+        'The licence types allowed by applying a filter in the query of the form
+        {
+        purposes: [], -- uuid
+        species: [], -- uuid
+        speciesSubjects: [], -- uuid
+        activities: [], -- uuid
+        methods: [] -- uuid
+        }
+        This is encoded with JSON.stringify
+        '
       operationId: findApplicationTypes
       parameters:
         - name: query
@@ -3399,7 +3394,7 @@ paths:
           required: true
           schema:
             type: string
-          example: "{\"purposes\":[\"3db073af-201b-ec11-b6e7-0022481a8f18\",\"1c3e7655-bb74-4420-9bf0-0bd710987f10\"],\"species\":[\"fedb14b6-53a8-ec11-9840-0022481aca85\"]}"
+          example: '{"purposes":["3db073af-201b-ec11-b6e7-0022481a8f18","1c3e7655-bb74-4420-9bf0-0bd710987f10"],"species":["fedb14b6-53a8-ec11-9840-0022481aca85"]}'
       responses:
         200:
           description: Success
@@ -3441,8 +3436,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-
 
   '/application/types':
     get:
@@ -3531,8 +3524,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-
   '/application-contacts/contacts':
     get:
       description: Get all the contact/roles for all applications created by a user
@@ -3617,10 +3608,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-################################################################################################
-# Option sets
-################################################################################################
+  ################################################################################################
+  # Option sets
+  ################################################################################################
   '/option-sets':
     get:
       description: Get the global option set values
@@ -3671,11 +3661,11 @@ paths:
                 $ref: '#/components/schemas/error'
 
 components:
-################################################################################################
-#
-# Schemas
-#
-################################################################################################
+  ################################################################################################
+  #
+  # Schemas
+  #
+  ################################################################################################
   schemas:
     users:
       type: array
@@ -4637,7 +4627,7 @@ components:
       pattern: (?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])
       minLength: 8
       maxLength: 16
-      example:  Aa1!HHHH
+      example: Aa1!HHHH
 
     phone:
       type: string

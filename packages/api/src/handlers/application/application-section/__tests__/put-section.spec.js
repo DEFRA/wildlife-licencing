@@ -95,7 +95,7 @@ describe('put-section-handler', () => {
       'section-name',
       () => '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
       mockSddsRemoveKeyFunction,
-      (a) => ({ a: a[1].powerAppsKey })
+      a => ({ a: a[1].powerAppsKey })
     )(context, request, h)
     expect(h.response).toHaveBeenCalledWith({
       foo: 'bar',

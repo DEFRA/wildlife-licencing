@@ -23,7 +23,7 @@ export default async (_context, req, h) => {
 
     return h
       .response(
-        result.map((r) => ({
+        result.map(r => ({
           ...r,
           updatedAt: r.updatedAt.toISOString(),
           submitted: r.submitted?.toISOString()

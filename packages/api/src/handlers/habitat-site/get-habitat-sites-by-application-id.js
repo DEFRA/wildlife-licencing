@@ -18,9 +18,7 @@ export default async (context, _req, h) => {
       }
     })
 
-    const responseBody = habitatSites.map((hs) =>
-      prepareResponse(hs.dataValues)
-    )
+    const responseBody = habitatSites.map(hs => prepareResponse(hs.dataValues))
 
     return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {

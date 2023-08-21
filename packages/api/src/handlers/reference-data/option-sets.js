@@ -12,7 +12,7 @@ export const getOptionSets = async (context, req, h) => {
 
   const res = await models.optionSets.findAll()
   const response = res
-    .map((r) => r.dataValues)
+    .map(r => r.dataValues)
     .reduce(
       (a, c) => ({
         ...a,

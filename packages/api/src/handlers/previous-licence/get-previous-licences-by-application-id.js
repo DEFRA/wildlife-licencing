@@ -18,7 +18,7 @@ export default async (context, _req, h) => {
       }
     })
 
-    const responseBody = previousLicences.map((hs) =>
+    const responseBody = previousLicences.map(hs =>
       prepareResponse(hs.dataValues)
     )
 

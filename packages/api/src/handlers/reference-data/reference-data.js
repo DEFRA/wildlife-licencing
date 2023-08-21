@@ -3,7 +3,7 @@ import { models } from '@defra/wls-database-model'
 import { REDIS } from '@defra/wls-connectors-lib'
 const { cache } = REDIS
 
-export const prepareResponse = (r) =>
+export const prepareResponse = r =>
   Object.assign((({ createdAt, updatedAt, json, ...l }) => l)(r), {
     id: r.id,
     createdAt: r.createdAt.toISOString(),
@@ -19,7 +19,7 @@ const getReferenceData = async (context, req, h, model) => {
   }
 
   const r = await model.findAll()
-  const response = r.map((t) => prepareResponse(t.dataValues))
+  const response = r.map(t => prepareResponse(t.dataValues))
 
   // Cache
   await cache.save(req.path, response)

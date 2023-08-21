@@ -1,5 +1,5 @@
 describe('The wrapper: api-service', () => {
-  it('runs initialisation', (done) => {
+  it('runs initialisation', done => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
@@ -31,7 +31,7 @@ describe('The wrapper: api-service', () => {
     })
   })
 
-  it('has initialisation failure', (done) => {
+  it('has initialisation failure', done => {
     jest.isolateModules(() => {
       try {
         jest.mock('../server.js')
@@ -54,7 +54,7 @@ describe('The wrapper: api-service', () => {
 
         const processExitSpy = jest
           .spyOn(process, 'exit')
-          .mockImplementation((code) => {})
+          .mockImplementation(code => {})
         require('../api-service')
         setImmediate(() => {
           // expect(fetchSecrets).toHaveBeenCalled()

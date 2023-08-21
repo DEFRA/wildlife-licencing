@@ -25,8 +25,8 @@ console.log(`Starting ${json.name}:${json.version}`)
 ERRBIT.initialize('API')
 
 initialize()
-  .then(() => createServer().then((s) => init(s)))
-  .catch((e) => {
+  .then(() => createServer().then(s => init(s)))
+  .catch(e => {
     console.error(e)
     process.exit(1)
   })

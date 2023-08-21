@@ -3,7 +3,7 @@
  * @param application.dataValues
  * @returns {any}
  */
-export const prepareResponse = (a) =>
+export const prepareResponse = a =>
   Object.assign(
     (({
       createdAt,
@@ -26,7 +26,7 @@ export const prepareResponse = (a) =>
     }
   )
 
-export const alwaysExclude = (payload) => {
+export const alwaysExclude = payload => {
   delete payload.id
   delete payload.statusCode
   delete payload.submitted

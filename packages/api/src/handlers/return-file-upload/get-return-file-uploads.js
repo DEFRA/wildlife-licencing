@@ -25,9 +25,7 @@ export default async (context, req, h) => {
       return h.response().code(404)
     }
 
-    const responseBody = returnUploads.map((au) =>
-      prepareResponse(au.dataValues)
-    )
+    const responseBody = returnUploads.map(au => prepareResponse(au.dataValues))
     return h.response(responseBody).type(APPLICATION_JSON).code(200)
   } catch (err) {
     console.error('Error selecting from the RETURN-UPLOADS table', err)

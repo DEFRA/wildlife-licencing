@@ -29,7 +29,7 @@ export default async (_context, req, h) => {
       type: sequelize.QueryTypes.SELECT
     })
     // Response from this query is slightly different to sequelize fetch
-    const responseBody = result.map((a) => ({
+    const responseBody = result.map(a => ({
       id: a.id,
       ...a.contact,
       userId: a.user_id,

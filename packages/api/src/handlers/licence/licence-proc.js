@@ -1,4 +1,4 @@
-export const prepareResponse = (a) =>
+export const prepareResponse = a =>
   (({ licence, ...l }) => l)(
     Object.assign(a, {
       ...a.licence,

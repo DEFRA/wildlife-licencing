@@ -18,12 +18,12 @@ export const getSectionsHandler =
       )
 
       const result = applications
-        .map((a) => ({
+        .map(a => ({
           data: Object.assign(a.dataValues.application[section], { id: a.id }),
           keys: a.dataValues.targetKeys
         }))
-        .filter((a) => a.data)
-        .map((a) => (keyFunc ? Object.assign(a.data, keyFunc(a.keys)) : a.data))
+        .filter(a => a.data)
+        .map(a => (keyFunc ? Object.assign(a.data, keyFunc(a.keys)) : a.data))
 
       // Check the applicant exists
       if (!result.length) {

@@ -152,7 +152,7 @@ describe('get-section-handler', () => {
       }
     }))
     const { getSectionHandler } = await import('../get-section.js')
-    await getSectionHandler('section-name', (a) => a)(context, request, h)
+    await getSectionHandler('section-name', a => a)(context, request, h)
     expect(h.response).toHaveBeenCalledWith({ foo: 'bar' })
     expect(codeFunc).toHaveBeenCalledWith(200)
     expect(typeFunc).toHaveBeenCalledWith('application/json')

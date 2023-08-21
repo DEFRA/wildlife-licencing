@@ -22,7 +22,7 @@ export default async (context, _req, h) => {
       await models.applicationDesignatedSites.findAll({
         where: { applicationId }
       })
-    const responseBody = applicationDesignatedSites.map((ads) =>
+    const responseBody = applicationDesignatedSites.map(ads =>
       prepareResponse(ads.dataValues)
     )
 
