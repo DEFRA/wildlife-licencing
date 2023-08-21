@@ -1,5 +1,6 @@
 import { ContactRoles } from '../../common/contact-roles.js'
 import { contactURIs } from '../../../../uris.js'
+import { setCheckAnswersCompletion } from '../../common/check-answers/check-answers.js'
 
 describe('additional-contacts: common', () => {
   beforeEach(() => {
@@ -8,9 +9,6 @@ describe('additional-contacts: common', () => {
 
   describe('getAdditionalContactData', () => {
     it('fetches the appropriate data', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => true
-      }))
       const request = {
         cache: () => ({
           getPageData: () => null,
@@ -22,7 +20,6 @@ describe('additional-contacts: common', () => {
         })
       }
       jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {
           APIRequests: {
             APPLICATION: {
@@ -31,19 +28,19 @@ describe('additional-contacts: common', () => {
                 set: jest.fn()
               })
             }
-          },
-          tagStatus: originalModule.tagStatus
+          }
         }
       })
       const { getAdditionalContactData } = await import('../common.js')
       const result = await getAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual({ isSignedInUserApplicant: false, yesNo: 'yes' })
+      expect(result).toEqual({ yesNo: 'yes' })
     })
   })
 
   describe('setAdditionalContactData', () => {
     it('set the data correctly if the user responds \'yes\'', async () => {
       const mockSetData = jest.fn()
+      const mockCreate = jest.fn()
       const request = {
         payload: { 'yes-no': 'yes' },
         cache: () => ({
@@ -54,6 +51,11 @@ describe('additional-contacts: common', () => {
           setData: mockSetData
         })
       }
+      jest.doMock('../../common/operations.js', () => ({
+        contactOperations: () => ({
+          create: mockCreate
+        })
+      }))
       const { setAdditionalContactData } = await import('../common.js')
       await setAdditionalContactData(ContactRoles.ADDITIONAL_APPLICANT)(request)
       expect(mockSetData).toHaveBeenCalledWith({
@@ -61,24 +63,16 @@ describe('additional-contacts: common', () => {
         applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
         userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
       })
+      expect(mockCreate).toHaveBeenCalledWith(false)
     })
 
     it('set the data correctly if the user responds \'no\'', async () => {
-      const mockUnlink = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              role: () => ({
-                unLink: mockUnlink,
-                getByApplicationId: () => ({ id: '6c77278f-b1d8-4754-97ba-d86b5c05d51e' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
+      const mockUnAssign = jest.fn()
+      jest.doMock('../../common/operations.js', () => ({
+        contactOperations: () => ({
+          unAssign: mockUnAssign
+        })
+      }))
       const mockSetData = jest.fn()
       const request = {
         payload: { 'yes-no': 'no' },
@@ -97,335 +91,12 @@ describe('additional-contacts: common', () => {
         applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
         userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b'
       })
-      expect(mockUnlink).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18', '6c77278f-b1d8-4754-97ba-d86b5c05d51e')
-    })
-  })
-
-  describe('addAdditionalContactCompletion', () => {
-    it('returns the ecologist-add page if the user answers no', async () => {
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          }),
-          getPageData: () => ({ payload: { 'yes-no': 'no' } })
-        })
-      }
-      const { addAdditionalContactCompletion } = await import('../common.js')
-      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/add-additional-ecologist')
-    })
-
-    it('returns the user page if the applicant is not the signed in user', async () => {
-      jest.doMock('../../common/common.js', () => ({ canBeUser: () => true }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { addAdditionalContactCompletion } = await import('../common.js')
-      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-user')
-    })
-
-    it('returns the name page if there are no candidate contacts', async () => {
-      jest.doMock('../../common/common.js', () => ({
-        getContactCandidates: () => []
-      }))
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { addAdditionalContactCompletion } = await import('../common.js')
-      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-name')
-    })
-
-    it('returns the names page if there are candidate contacts', async () => {
-      jest.doMock('../../common/common.js', () => ({
-        getContactCandidates: () => [{}]
-      }))
-      jest.doMock('../../common/common-handler.js', () => ({
-        canBeUser: () => false
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { addAdditionalContactCompletion } = await import('../common.js')
-      const result = await addAdditionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-names')
-    })
-  })
-
-  describe('additionalContactUserCompletion', () => {
-    it('if not the signed in user, return the value returned by contactsRoute', async () => {
-      jest.doMock('../../common/common-handler.js', () => ({
-        contactsRoute: () => 'contacts-route'
-      }))
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'no' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('contacts-route')
-    })
-
-    it('if the signed in user, return the name page for a newly created user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => false,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_ECOLOGIST)(request)
-      expect(result).toEqual('/additional-ecologist-name')
-    })
-
-    it('if the signed in user, return next name page for a mutable user with a name', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => false,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', fullName: 'Jimi Hendrix' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true, [ContactRoles.ADDITIONAL_ECOLOGIST]: false }
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.APPLICANT,
-        [ContactRoles.ADDITIONAL_APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
-    })
-
-    it('if the signed in user, return the next page (add additional ecologist) for a immutable user', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              isImmutable: () => true,
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { 'yes-no': 'yes' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true }
-          })
-        })
-      }
-
-      const { additionalContactUserCompletion } = await import('../common.js')
-      const result = await additionalContactUserCompletion(ContactRoles.ADDITIONAL_APPLICANT,
-        [ContactRoles.APPLICANT], contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/add-additional-ecologist')
-    })
-  })
-
-  describe('additionalContactNameCompletion', () => {
-    it('returns the email address page if required', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactNameCompletion } = await import('../common.js')
-      const result = await additionalContactNameCompletion(ContactRoles.APPLICANT,
-        contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-email')
-    })
-
-    it('returns the next page if email already set', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', contactDetails: { email: 'a@a.com' } })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactNameCompletion } = await import('../common.js')
-      const result = await additionalContactNameCompletion(ContactRoles.APPLICANT,
-        contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
-    })
-  })
-
-  describe('additionalContactNamesCompletion', () => {
-    it('returns the email page if the contact requires an email address', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8' })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { contact: '8a3e8c32-0138-402c-8913-87e78ed44ebd' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactNamesCompletion } = await import('../common.js')
-      const result = await additionalContactNamesCompletion(ContactRoles.APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-email')
-    })
-
-    it('returns the next page if the contact email address is set', async () => {
-      jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
-        return {
-          APIRequests: {
-            CONTACT: {
-              role: () => ({
-                getByApplicationId: () => ({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', contactDetails: { email: 'a@a.com' } })
-              })
-            }
-          },
-          tagStatus: originalModule.tagStatus
-        }
-      })
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { contact: '8a3e8c32-0138-402c-8913-87e78ed44ebd' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactNamesCompletion } = await import('../common.js')
-      const result = await additionalContactNamesCompletion(ContactRoles.APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
-    })
-
-    it('returns the name page a new contact isn selected', async () => {
-      const request = {
-        cache: () => ({
-          getPageData: () => ({ payload: { contact: 'new' } }),
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
-          })
-        })
-      }
-      const { additionalContactNamesCompletion } = await import('../common.js')
-      const result = await additionalContactNamesCompletion(ContactRoles.APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-applicant-name')
+      expect(mockUnAssign).toHaveBeenCalledWith()
     })
   })
 
   describe('getAdditionalContactEmailAddressData', () => {
-    it('returns the contact email datas', async () => {
+    it('returns the contact email data', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
         const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {
@@ -484,62 +155,115 @@ describe('additional-contacts: common', () => {
     })
   })
 
-  describe('additionalContactEmailCompletion', () => {
-    it('returns the check page if complete', async () => {
+  describe('additionalContactCompletion', () => {
+    const request = {
+      cache: () => ({
+        getData: () => ({
+          applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+        })
+      })
+    }
+
+    it('returns the check page if there is no a contact for a given role', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
         return {
           APIRequests: {
-            APPLICATION: {
-              tags: () => ({
-                get: jest.fn().mockReturnValueOnce('complete')
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: () => null
               })
             }
-          },
-          tagStatus: originalModule.tagStatus
+          }
         }
       })
-      const request = {
-        payload: { 'email-address': 'bob@strummer.com' },
-        cache: () => ({
-          getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
-            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-            additionalContact: { [ContactRoles.ADDITIONAL_APPLICANT]: true, [ContactRoles.ADDITIONAL_ECOLOGIST]: true }
-          })
-        })
-      }
-      const { additionalContactEmailCompletion } = await import('../common.js')
-      const result = await additionalContactEmailCompletion(ContactRoles.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/additional-contact-check-answers')
+      const { additionalContactCompletion } = await import('../common.js')
+      const result = await additionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-check-answers')
     })
 
-    it('returns the next page if in progress', async () => {
+    it('returns the name page if the name is not set', async () => {
       jest.doMock('../../../../services/api-requests.js', () => {
-        const originalModule = jest.requireActual('../../../../services/api-requests.js')
+        return {
+          APIRequests: {
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: () => ({})
+              })
+            }
+          }
+        }
+      })
+      const { additionalContactCompletion } = await import('../common.js')
+      const result = await additionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-name')
+    })
+
+    it('returns the email page if the email address is not set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => {
+        return {
+          APIRequests: {
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: () => ({ fullName: 'nob' })
+              })
+            }
+          }
+        }
+      })
+      const { additionalContactCompletion } = await import('../common.js')
+      const result = await additionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-email')
+    })
+
+    it('returns the check page if all required items are set', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => {
+        return {
+          APIRequests: {
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: () => ({ fullName: 'nob', contactDetails: { email: 'bob@strummer.com' } })
+              })
+            }
+          }
+        }
+      })
+
+      const { additionalContactCompletion } = await import('../common.js')
+      const result = await additionalContactCompletion(ContactRoles.ADDITIONAL_APPLICANT, contactURIs.ADDITIONAL_APPLICANT)(request)
+      expect(result).toEqual('/additional-applicant-check-answers')
+    })
+  })
+
+  describe('additionalContactGetCheckAnswersData', () => {
+    it('gets the data to render the check page for a given contact', async () => {
+      const mockSet = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => {
         return {
           APIRequests: {
             APPLICATION: {
               tags: () => ({
-                get: jest.fn().mockReturnValueOnce('in-progress')
+                set: mockSet
+              })
+            },
+            CONTACT: {
+              role: () => ({
+                getByApplicationId: () => ({ fullName: 'nob', contactDetails: { email: 'bob@strummer.com' } })
               })
             }
-          },
-          tagStatus: originalModule.tagStatus
+          }
         }
       })
       const request = {
-        payload: { 'email-address': 'bob@strummer.com' },
         cache: () => ({
           getData: () => ({
-            userId: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
             applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
           })
         })
       }
-      const { additionalContactEmailCompletion } = await import('../common.js')
-      const result = await additionalContactEmailCompletion(ContactRoles.ADDITIONAL_APPLICANT)(request)
-      expect(result).toEqual('/add-additional-ecologist')
+      const { additionalContactGetCheckAnswersData } = await import('../common.js')
+      const result = await additionalContactGetCheckAnswersData(ContactRoles.ADDITIONAL_APPLICANT)(request)
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'additional-applicant', tagState: 'complete-not-confirmed' })
+      expect(result).toEqual({ contact: [{ key: 'addAdditionalContact', value: 'yes' }, { key: 'contactName', value: 'nob' }, { key: 'contactEmail', value: 'bob@strummer.com' }] })
     })
   })
 })

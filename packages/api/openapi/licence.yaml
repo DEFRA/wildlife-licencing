@@ -2332,7 +2332,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: role
+        - name: userRole
           in: query
           description: ID of the user
           required: false
@@ -4151,8 +4151,10 @@ components:
           $ref: '#/components/schemas/uuid'
         applicationId:
           $ref: '#/components/schemas/uuid'
-        role:
+        userRole:
           $ref: '#/components/schemas/roles'
+        applicationRole:
+          type: string
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -4536,6 +4538,8 @@ components:
           maxLength: 160
         contactDetails:
           $ref: '#/components/schemas/contactDetails'
+        fetched:
+          type: boolean
         address:
           $ref: '#/components/schemas/address'
         updatedAt:
@@ -4554,6 +4558,8 @@ components:
           $ref: '#/components/schemas/uuid'
         name:
           type: string
+        fetched:
+          type: boolean
         updatedAt:
           $ref: '#/components/schemas/timestamp'
       type: object
