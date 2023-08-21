@@ -9,7 +9,7 @@ const { DESTROY_VACANT_SETT, DESTROY_DATE } = ReturnsURIs.A24
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let destroyVacantSett, destroyVacantSettDetails
   if (returnId) {
     const { destroyVacantSettByHandOrMechanicalMeans, destroyVacantSettByHandOrMechanicalMeansDetails } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)

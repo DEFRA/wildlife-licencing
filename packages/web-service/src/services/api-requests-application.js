@@ -58,6 +58,7 @@ export const APPLICATION = {
   findByUser: async userId => apiRequestsWrapper(
     async () => {
       debug(`Finding applications for userId: ${userId}`)
+      // TODO Richard - API call to get applications
       return API.get(apiUrls.APPLICATIONS, `userId=${userId}`)
     },
     `Error finding application with userId ${userId}`,

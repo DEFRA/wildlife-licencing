@@ -9,7 +9,7 @@ const { ARTIFICIAL_SETT_DETAILS, ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE } = Retu
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let artificialSettDetails
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)

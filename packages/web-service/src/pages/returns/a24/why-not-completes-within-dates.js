@@ -10,7 +10,7 @@ const { WHY_NOT_COMPLETE_WITHIN_DATES } = ReturnsURIs.A24
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   const startDate = timestampFormatter(licences[0]?.startDate)
   const endDate = timestampFormatter(licences[0]?.endDate)
   if (returnId) {
