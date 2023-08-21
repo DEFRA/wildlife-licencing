@@ -22,7 +22,9 @@ export const getData = async request => {
     noArtificialSettReason = licenceReturn?.noArtificialSettReason
     noArtificialSettReasonDetails = licenceReturn?.noArtificialSettReasonDetails
   }
-  return { noArtificialSettReason, noArtificialSettReasonDetails, IT_WAS_NOT_REQUIRED_BY_THE_LICENCE, IT_COULD_NOT_BE_MADE }
+  const itWasNotRequired = IT_WAS_NOT_REQUIRED_BY_THE_LICENCE.toString()
+  const itCouldNotBeMade = IT_COULD_NOT_BE_MADE.toString()
+  return { noArtificialSettReason, noArtificialSettReasonDetails, itWasNotRequired, itCouldNotBeMade }
 }
 
 export const validator = async payload => {
@@ -61,5 +63,6 @@ export default pageRoute({
   completion: LICENCE_CONDITIONS.uri,
   checkData: checkLicence,
   getData: getData,
-  setData: setData
+  setData: setData,
+  validator: validator
 })
