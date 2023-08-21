@@ -2,13 +2,7 @@ describe('the check-answers page', () => {
   beforeEach(() => jest.resetModules())
 
   it('getCheckAnswersData fetch data with account', async () => {
-    jest.doMock('../../../common/common-handler.js', () => ({
-      canBeUser: () => true
-    }))
     jest.doMock('../../../../../services/api-requests.js', () => ({
-      tagStatus: {
-        COMPLETE: 'complete'
-      },
       APIRequests: {
         APPLICATION: {
           tags: () => ({
@@ -44,10 +38,6 @@ describe('the check-answers page', () => {
     const result = await getCheckAnswersData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
     expect(result).toEqual({
       checkYourAnswers: [
-        {
-          key: 'contactIsUser',
-          value: '-'
-        },
         {
           key: 'whoIsTheLicenceFor',
           value: 'Keith Richards'
@@ -114,10 +104,6 @@ describe('the check-answers page', () => {
     const result = await getCheckAnswersData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
     expect(result).toEqual({
       checkYourAnswers: [
-        {
-          key: 'contactIsUser',
-          value: 'yes'
-        },
         {
           key: 'whoIsTheLicenceFor',
           value: 'Keith Richards'
