@@ -12,7 +12,6 @@ node_modules/
 !.env.example
 !.eslintignore
 !.eslintrc.cjs
-!.prettierrc
 
 #git checkout -b  Any log file
 **/*.log
