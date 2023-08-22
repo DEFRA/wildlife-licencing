@@ -14,10 +14,10 @@
 
 Recommanded to use Visual studio code, intellij with the following plugins and configuration
 
-Prettier
+Standard JS
 
 Visual Studio Code
-https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+https://marketplace.visualstudio.com/items?itemName=standard.vscode-standard
 
 ```
 {
@@ -25,8 +25,12 @@ https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 }
 ```
 
-Intellij
-https://plugins.jetbrains.com/plugin/10456-prettier
+```
+standard.autoFixOnSave
+
+enable or disable auto fix on save. It is only available when VSCode's files.autoSave is either off, onFocusChange or onWindowChange. It will not work with afterDelay.
+
+```
 
 ### To run the application in a local docker stack
 
