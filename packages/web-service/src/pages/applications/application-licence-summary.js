@@ -12,7 +12,7 @@ export const getData = async request => {
   const { application, applicationType, applicationId, licences } = await getApplicationData(request, true)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
-  const licence = licences.length > 0 ? licences[0] : []
+  const applicationLicence = licences.length > 0 ? licences[0] : []
   Object.assign(application, { applicationType, siteAddress })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
 
@@ -32,7 +32,7 @@ export const getData = async request => {
     application,
     applicant,
     licenceStatuses,
-    licence,
+    applicationLicence,
     lastSentEventFlag
   }
 }

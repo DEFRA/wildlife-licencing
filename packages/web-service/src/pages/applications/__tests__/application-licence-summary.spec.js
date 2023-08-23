@@ -77,7 +77,7 @@ describe('application-licence page', () => {
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
           siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY'
         },
-        licence: {
+        applicationLicence: {
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
           endDate: '26 August 2022',
           id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',

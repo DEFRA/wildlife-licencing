@@ -50,7 +50,9 @@
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    {% if application.userSubmission %}
+    {% if application.userSubmission and application.licences.length %}
+        {{ applicationAndLicenceStatusText.getLicenceStatus(application.licences[0], data.statuses) }}
+    {% elif application.userSubmission %}
         {{ applicationAndLicenceStatusText.getApplicationStatus(application, data.statuses) }}
     {% else %}
         <strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-4">IN PROGRESS</strong>

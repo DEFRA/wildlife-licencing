@@ -5,7 +5,7 @@ import { APPLICATIONS, SPECIES } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
-import { applicationStatuses } from './application-common-functions.js'
+import { applicationStatuses, licenceStatuses } from './application-common-functions.js'
 
 const sorter = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 
@@ -53,9 +53,14 @@ export const getData = async request => {
   })).sort(sorter)
 
   const applicationsWithLicences = await getApplicationsWithLicences(applications)
+  const statuses = {
+    ...applicationStatuses,
+    ...licenceStatuses
+  }
+
   return {
     totalSections,
-    statuses: applicationStatuses,
+    statuses,
     applications: applicationsWithLicences
   }
 }
