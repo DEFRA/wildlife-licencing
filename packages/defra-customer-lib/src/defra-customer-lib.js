@@ -1,4 +1,4 @@
-import { DEFRA_CUSTOMER } from '@defra/wls-connectors-lib/src/power-apps.js'
+import { DEFRA_CUSTOMER } from '@defra/wls-connectors-lib'
 
 const USER_QUERY = userId => 'contacts(' + userId + ')?$select=emailaddress1,fullname,telephone1,defra_uniquereference,defra_addrcorsubbuildingname,defra_addrcorbuildingname,defra_addrcorbuildingnumber,defra_addrcorstreet,defra_addrcorlocality,defra_addrcortown,defra_addrcorcounty,defra_addrcorpostcode,defra_addrcoruprn'
 const ORGANISATION_QUERY = organisationId => 'accounts(' + organisationId + ')?$select=name,emailaddress1,defra_addrregsubbuildingname,defra_addrregbuildingname,defra_addrregbuildingnumber,defra_addrregstreet,defra_addrreglocality,defra_addrregtown,defra_addrregcounty,defra_addrregpostcode,defra_addrreguprn'

@@ -1,8 +1,6 @@
 import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './organisation-proc.js'
 import { APPLICATION_JSON } from '../../constants.js'
-import { REDIS } from '@defra/wls-connectors-lib'
-const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
@@ -18,7 +16,6 @@ export default async (context, req, h) => {
     })
 
     const responseBody = prepareResponse(organisation.dataValues)
-    await cache.save(req.path, responseBody)
     return h.response(responseBody)
       .type(APPLICATION_JSON)
       .code(created ? 201 : 202)

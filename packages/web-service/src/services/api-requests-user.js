@@ -54,6 +54,14 @@ export const USER = {
   }, `Error requesting updates for organisation ${organisationId}`,
   500
   ),
+  getOrganisation: async organisationId => apiRequestsWrapper(
+    async () => {
+      debug(`Get organisation: ${organisationId}`)
+      return API.get(`/organisation/${organisationId}`)
+    },
+    `Error fetching organisation ${organisationId}`,
+    500
+  ),
   updateUserOrganisation: async (userOrganisationId, { userId, organisationId, relationship }) => apiRequestsWrapper(
     async () => {
       debug(`Upserting new user-organisation: ${organisationId}`)
