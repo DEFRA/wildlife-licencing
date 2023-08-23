@@ -82,11 +82,7 @@ describe('application-summary page', () => {
           100000002: 'UNDER_ASSESSMENT',
           100000004: 'GRANTED',
           100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED_ROA_DUE',
-          452120003: 'EXPIRED_ROA_RECEIVED',
-          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
+          100000008: 'NOT_GRANTED'
         }
       })
     })
@@ -157,11 +153,7 @@ describe('application-summary page', () => {
           100000002: 'UNDER_ASSESSMENT',
           100000004: 'GRANTED',
           100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED_ROA_DUE',
-          452120003: 'EXPIRED_ROA_RECEIVED',
-          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
+          100000008: 'NOT_GRANTED'
         }
       })
     })
