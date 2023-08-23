@@ -6,12 +6,13 @@ import { ContactRoles } from '../contact/common/contact-roles.js'
 import { addressLine } from '../service/address.js'
 import { cacheDirect } from '../../session-cache/cache-decorator.js'
 import Joi from 'joi'
-import { getApplicationData, statuses, checkData, findLastSentEvent } from './application-common-functions.js'
+import { getApplicationData, licenceStatuses, checkData, findLastSentEvent } from './application-common-functions.js'
 
 export const getData = async request => {
   const { application, applicationType, applicationId, licences } = await getApplicationData(request, true)
   const sites = await APIRequests.SITE.findByApplicationId(applicationId)
   const siteAddress = sites.length > 0 ? addressLine(sites[0]) : ''
+  const licence = licences.length > 0 ? licences[0] : []
   Object.assign(application, { applicationType, siteAddress })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
 
@@ -27,12 +28,11 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
   journeyData.lastSentEventFlag = lastSentEventFlag
   await request.cache().setData(journeyData)
-
   return {
     application,
     applicant,
-    statuses,
-    licences,
+    licenceStatuses,
+    licence,
     lastSentEventFlag
   }
 }
