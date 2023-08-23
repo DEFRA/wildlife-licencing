@@ -96,17 +96,6 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
           })
         }
       }
-    },
-    setContactIsUser: async contactIsUser => {
-      const contact = await getContact()
-      const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (contact) {
-        if (contactIsUser && !contact.userId) {
-          await setContactIsUserUnassociated(userId, contactImmutable, contactRole, applicationId, contact)
-        } else if (!contactIsUser && contact.userId) {
-          await setContactIsUserAssociated(contactImmutable, contactRole, applicationId, contact)
-        }
-      }
     }
   }
 }
@@ -305,49 +294,6 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       }
     }
   })
-
-const setContactIsUserUnassociated = async (userId, contactImmutable, contactRole, applicationId, contact) => {
-  const user = await APIRequests.USER.getById(userId)
-  // Add user to contact
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      userId: user.id,
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      contactDetails: { email: user.username },
-      ...(contact.address && { address: contact.address })
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      userId: user.id,
-      fullName: contact.fullName,
-      contactDetails: { email: user.username },
-      ...(contact.address && { address: contact.address }),
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
-    })
-  }
-}
-
-const setContactIsUserAssociated = async (contactImmutable, contactRole, applicationId, contact) => {
-  // Remove user from contact
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address })
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      fullName: contact.fullName,
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address }),
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
-    })
-  }
-}
 
 /**
  * Scenarios

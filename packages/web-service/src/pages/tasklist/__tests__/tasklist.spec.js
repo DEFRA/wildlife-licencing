@@ -152,10 +152,17 @@ describe('The task-list handler', () => {
           id: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064'
         }
       })
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: jest.fn(), create: jest.fn() }),
+        accountOperations: () => ({ assign: jest.fn(), create: jest.fn() })
+      }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
             initialize: mockInitialize
+          },
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([])
           }
         }
       }))
@@ -176,8 +183,15 @@ describe('The task-list handler', () => {
   })
 
   it('the getData function returns the correct data to the template', async () => {
+    jest.doMock('../../contact/common/operations.js', () => ({
+      contactOperations: () => ({ assign: jest.fn(), create: jest.fn() }),
+      accountOperations: () => ({ assign: jest.fn(), create: jest.fn() })
+    }))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
+        CONTACT: {
+          findContactsByIDMUser: jest.fn().mockReturnValue([])
+        },
         APPLICATION: {
           tags: () => ({
             getAll: () => [{ tag: 'eligibility-check', tagState: 'in-progress' }]
@@ -245,6 +259,130 @@ describe('The task-list handler', () => {
       ],
       progress: { complete: 3, from: 4 },
       reference: 'ref'
+    })
+  })
+
+  describe('setUpIDMContacts', () => {
+    it('creates a new IDM contact if none exist for the user', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([])
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockCreate).toHaveBeenCalledWith(true)
+    })
+
+    it('creates a new IDM contact if none exist for the user that exactly match', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([{ fullName: 'A' }])
+          },
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockCreate).toHaveBeenCalledWith(true)
+    })
+
+    it('reuses an IDM contact if one exists for the user that exactly match', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([{ id: 1, fullName: 'A' }])
+          },
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'A' })
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockAssign).toHaveBeenCalledWith(1)
+    })
+  })
+
+  describe('setUpIDMAccounts', () => {
+    it('creates a new IDM account if none exist for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([])
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockCreate).toHaveBeenCalledWith(true)
+    })
+
+    it('creates a new IDM account if none exactly match for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([{ name: 'A' }])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ name: 'B' })
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockCreate).toHaveBeenCalledWith(true)
+    })
+
+    it('reuses an existing IDM account if one exactly matches for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([{ id: 1, name: 'A' }])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ name: 'A' })
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockAssign).toHaveBeenCalledWith(1)
     })
   })
 

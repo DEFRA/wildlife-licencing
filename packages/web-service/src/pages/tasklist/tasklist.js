@@ -30,7 +30,7 @@ const accountMatcher = a => ({
  * @param contactRole
  * @returns {Promise<void>}
  */
-const setUpIDMContacts = async (applicationId, userId, contactRole) => {
+export const setUpIDMContacts = async (applicationId, userId, contactRole) => {
   const contacts = await APIRequests.CONTACT.findContactsByIDMUser(userId)
   const contactOps = contactOperations(contactRole, applicationId, userId)
   if (!contacts.length) {
@@ -46,7 +46,7 @@ const setUpIDMContacts = async (applicationId, userId, contactRole) => {
   }
 }
 
-const setUpIDMAccounts = async (applicationId, organisationId, accountRole) => {
+export const setUpIDMAccounts = async (applicationId, organisationId, accountRole) => {
   const accounts = await APIRequests.ACCOUNT.findAccountsByIDMOrganisation(organisationId)
   const accountOps = accountOperations(accountRole, applicationId, organisationId)
   if (!accounts.length) {
