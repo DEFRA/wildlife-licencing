@@ -124,15 +124,12 @@ const unLinkAccount = async (accountRole, applicationId, accountId) => {
 }
 
 export const ACCOUNT = {
-  findAccountsByIDMOrganisation: async organisationId => {
-    try {
+  findAccountsByIDMOrganisation: async organisationId => apiRequestsWrapper(
+    async () => {
       return API.get(`${apiUrls.ORGANISATION_ACCOUNTS}/${organisationId}`)
-    } catch (error) {
-      console.error(`Finding IDM accounts for organisationId: ${organisationId}`, error)
-      boomify(error, { statusCode: 500 })
-      throw error
-    }
-  },
+    }, `Finding IDM accounts for organisationId: ${organisationId}`,
+    500
+  ),
   findAllAccountApplicationRolesByUser: async userId => apiRequestsWrapper(
     async () => {
       debug(`Get account-application-accounts by userId: ${userId}`)

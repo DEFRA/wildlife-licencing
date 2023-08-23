@@ -21,14 +21,6 @@ export const USER = {
     `Error Updating user with userId ${userId}`,
     500
   ),
-  create: async username => apiRequestsWrapper(
-    async () => {
-      debug(`Creating new user: ${username}`)
-      await API.post(apiUrls.USER, { username })
-    },
-    `Error creating user ${username}`,
-    500
-  ),
   createIDM: async (userId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Creating new user: ${userId}`)

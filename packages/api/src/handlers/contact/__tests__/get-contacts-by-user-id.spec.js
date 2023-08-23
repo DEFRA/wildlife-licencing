@@ -51,4 +51,11 @@ describe('The getContactsByUserId handler', () => {
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
+
+  it('throws on a query error', async () => {
+    models.contacts = { findAll: jest.fn(() => { throw new Error() }) }
+    await expect(async () => {
+      await getContact({ }, { query: {} }, h)
+    }).rejects.toThrow()
+  })
 })

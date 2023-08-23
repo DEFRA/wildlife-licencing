@@ -51,4 +51,12 @@ describe('The getContactsByOrganisationId handler', () => {
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
   })
+
+  it('throws on a query error', async () => {
+    models.accounts = { findAll: jest.fn(() => { throw new Error() }) }
+    const getAccounts = (await import('../get-accounts.js')).default
+    await expect(async () => {
+      await getAccounts({ }, { query: {} }, h)
+    }).rejects.toThrow()
+  })
 })

@@ -149,15 +149,11 @@ export const CONTACT = {
    * @param userId
    * @returns {Promise<*>}
    */
-  findContactsByIDMUser: async userId => {
-    try {
-      return API.get(`${apiUrls.USER_CONTACTS}/${userId}`)
-    } catch (error) {
-      console.error(`Finding IDM contacts for userId: ${userId}`, error)
-      boomify(error, { statusCode: 500 })
-      throw error
-    }
-  },
+  findContactsByIDMUser: async userId => apiRequestsWrapper(
+    async () => API.get(`${apiUrls.USER_CONTACTS}/${userId}`),
+    `Finding IDM contacts for userId: ${userId}`,
+    500
+  ),
   findAllByUser: async userId => findContactByUser(null, userId),
   findAllContactApplicationRolesByUser: async userId => apiRequestsWrapper(
     async () => {
