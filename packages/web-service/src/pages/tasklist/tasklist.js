@@ -88,8 +88,7 @@ export const getApplication = async request => {
       if (organisationId) {
         await setUpIDMAccounts(applicationId, organisationId, applicationRole
           ? AccountRoles.ECOLOGIST_ORGANISATION
-          : AccountRoles.APPLICANT_ORGANISATION,
-        organisationId)
+          : AccountRoles.APPLICANT_ORGANISATION)
       }
     }
     return application

@@ -9,7 +9,7 @@ import { prepareResponse } from './account-proc.js'
  * @param h
  * @returns {Promise<*>}
  */
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const accounts = await models.accounts.findAll({ where: { organisationId: context.request.params.organisationId } })
     const responseBody = accounts.map(a => prepareResponse(a.dataValues))

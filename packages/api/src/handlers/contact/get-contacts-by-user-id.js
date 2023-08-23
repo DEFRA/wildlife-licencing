@@ -9,7 +9,7 @@ import { prepareResponse } from './contact-proc.js'
  * @param h
  * @returns {Promise<*>}
  */
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   try {
     const contacts = await models.contacts.findAll({ where: { userId: context.request.params.userId } })
     const responseBody = contacts.map(c => prepareResponse(c.dataValues))
