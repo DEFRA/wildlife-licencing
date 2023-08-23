@@ -17,7 +17,6 @@
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.33.2",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
