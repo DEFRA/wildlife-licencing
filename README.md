@@ -10,6 +10,28 @@
 
 ## Getting started
 
+## Editor configuration
+
+Recommanded to use Visual studio code, intellij with the following plugins and configuration
+
+Standard JS
+
+Visual Studio Code
+https://marketplace.visualstudio.com/items?itemName=standard.vscode-standard
+
+```
+{
+"editor.formatOnSave": true
+}
+```
+
+```
+standard.autoFixOnSave
+
+enable or disable auto fix on save. It is only available when VSCode's files.autoSave is either off, onFocusChange or onWindowChange. It will not work with afterDelay.
+
+```
+
 ### To run the application in a local docker stack
 
 First edit the docker secret environment files to add the secret keys
@@ -19,6 +41,7 @@ First edit the docker secret environment files to add the secret keys
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
 #### Extra step for M1 Mac users
+
 Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
 
 ```
@@ -79,14 +102,16 @@ The docker services running should be as follows:
 Ensure you have node version 16.13.0 or greater installed; `node --version`
 
 ### Localstack
+
 The AWS S3 interface is simulated in the local docker stack using the localstack image. 4566 is the port for the localstack interface.
 
 #### S3
+
 In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary.
 
 Alternatively you can install the AWS CLI.
 Instructions to do this are [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-Then run ```aws configure``` to generate a fake set of credentials. (Localstack does not support IAM)
+Then run `aws configure` to generate a fake set of credentials. (Localstack does not support IAM)
 
 The service stores files in an S3 bucket before moving them into sharepoint. It is necessary to set up a bucket in local stack as follows
 
@@ -98,6 +123,7 @@ aws --endpoint-url=http://localhost:4566 s3 ls
 Note: Be sure to double check that the region also matches the one in the environment variables under `AWS_REGION`
 
 #### Secrets Manager
+
 The service uses the Secrets Manager to hold the address lookup certificates. These should be uploaded into the localstack secrets manager as follows
 
 ```
@@ -138,13 +164,13 @@ For example, we'll remove `wls_web`, but this will work for any package
 docker service rm wls_web
 ```
 
-You'll need to `cd` into your package 
+You'll need to `cd` into your package
 
 ```shell
 cd packages/web-service
 ```
 
-If you were to run this you should get to a point where your server is running, but you get a status 500 error. 
+If you were to run this you should get to a point where your server is running, but you get a status 500 error.
 
 The file `env.example` in the web-service directory needs to be copied and renamed
 
@@ -173,7 +199,7 @@ Sometimes, changes may go into `master` that will break your Docker swarm if you
 The process is pretty simple:
 
 1. Pull from `master` and ensure you're upto date
-2. You need to drop all your database tables inside `wls`. You'll need your database container to be up, for this to work. Sometimes you may face with some issues with tables having a foreign key that's used elsewhere so it can't be deleted. You'll just have to delete the tables relying on the key first. You can always do this step via calling the delete script that the Jenkins pipelines use: https://gitlab-dev.aws-int.defra.cloud/new/new-jenkins-scripts/-/blob/master/drop_db_tables.sql 
+2. You need to drop all your database tables inside `wls`. You'll need your database container to be up, for this to work. Sometimes you may face with some issues with tables having a foreign key that's used elsewhere so it can't be deleted. You'll just have to delete the tables relying on the key first. You can always do this step via calling the delete script that the Jenkins pipelines use: https://gitlab-dev.aws-int.defra.cloud/new/new-jenkins-scripts/-/blob/master/drop_db_tables.sql
 3. Ensure you haven't lost your Docker .env variables, as pulling will often overwrite them
 4. Stop your swarm with `npm run docker:stop`
 5. Double check you don't need to run `npm i` from the top level of the repo, if the dependencies have changed. Often doesn't happen, just worth a check
@@ -202,53 +228,57 @@ Alternatively set the environment variables in the running shell or your IDE
 
 ## Packages
 
-| Package                                                                 | Description                                                                                                         | Runnable | Docker Image |
-|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------| ----------- | ----------- |
-| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
-| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y | wildlife-licencing/aqp | 
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y | wildlife-licencing/ep | 
-| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y | wildlife-licencing/ep | 
-| [web-service](packages/web-service)                                     | Public facing web server                                                                                            | Y | wildlife-licencing/web-service |
-| [file-queue-processor](packages/file-queue-processor)                   | Write files to sharepoint                                                                                           | Y | wildlife-licencing/web-service |
-| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N | 
-| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N | 
-| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N |
-| [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N |
-| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N | 
+| Package                                                                 | Description                                                                                                         | Runnable | Docker Image                   |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
+| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y        | wildlife-licencing/api         |
+| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y        | wildlife-licencing/aqp         |
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y        | wildlife-licencing/ep          |
+| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y        | wildlife-licencing/ep          |
+| [web-service](packages/web-service)                                     | Public facing web server                                                                                            | Y        | wildlife-licencing/web-service |
+| [file-queue-processor](packages/file-queue-processor)                   | Write files to sharepoint                                                                                           | Y        | wildlife-licencing/web-service |
+| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N        |
+| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N        |
+| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N        |
+| [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N        |
+| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N        |
 
-## Application Architecture 
+## Application Architecture
 
 #### Overview
+
 ![](./wls-system-stack.png)
 
 A set of API request handlers has been created for the manipulation of the application data in the POSTGRES database. These are
 documented via OpenAPI at `http://localhost:3000/openapi-ui` when running locally.
 
-Requests to the API perform SQL on the postgres tables and populate the JSON structures in the JSONB fields. 
+Requests to the API perform SQL on the postgres tables and populate the JSON structures in the JSONB fields.
 
 Submitted data will be queued using bull-queue. The queues are stored in Redis and can be inspected (locally) using redis-commander `http://localhost:8002/`
 
-The queues are defined centrally in the package ```packages/queue-defs/src/defs.js```. This enables autonomous processes
+The queues are defined centrally in the package `packages/queue-defs/src/defs.js`. This enables autonomous processes
 that connect to the queues on start-up to ensure they have the same definition.
 
-The queued data is consumed by the __Application Queue Processor__ and wrtiien into the Power Platform using the powerapps-lib package.
+The queued data is consumed by the **Application Queue Processor** and wrtiien into the Power Platform using the powerapps-lib package.
 
-The __Application Extract Processor__ and the __Reference Data Extract Processor__ are used to extract data from the Power Platform and write it down to the Postgres tables.
+The **Application Extract Processor** and the **Reference Data Extract Processor** are used to extract data from the Power Platform and write it down to the Postgres tables.
 
 For details of the inbound and outbound processes see [powerapps-lib/README.md](packages/powerapps-lib/README.md)
 
 #### Appendix
+
 To extract a certificate and key for the address lookup from the provided pxf file follow these steps:
 
 1. Extract .crt file from the .pfx certificate (you will be prompted for the password)
+
 ```
 openssl pkcs12 -in BOOMI-SDDS-SND.pfx -clcerts -nokeys -out BOOMI-SDDS-SND.crt
 ```
 
 2. Extract the private key from the .pfx file
+
 ```
 openssl pkcs12 -in BOOMI-SDDS-SND.pfx -nocerts -out temp.key
 ```
 
 3. Extract the .key file from the encrypted private key
-openssl rsa -in temp.key -out BOOMI-SDDS-SND.key
+   openssl rsa -in temp.key -out BOOMI-SDDS-SND.key
