@@ -15,8 +15,8 @@ export const getContactData = contactRole => async request => {
  * @returns {(function(*): Promise<void>)|*}
  */
 export const setContactData = contactRole => async request => {
-  const { userId, applicationId } = await request.cache().getData()
-  const contactOps = contactOperations(contactRole, applicationId, userId)
+  const { applicationId } = await request.cache().getData()
+  const contactOps = contactOperations(contactRole, applicationId)
   await contactOps.create(false)
   await contactOps.setName(request.payload.name)
 }

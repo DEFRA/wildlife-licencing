@@ -17,14 +17,12 @@ export const setData = async request => {
   const id = params.get('id')
   if (id) {
     // Change
-    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
-      applicationId, userId, id)
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, id)
     await contactOps.setName(request.payload.name)
     Object.assign(journeyData, { authorisedPeople: { contactId: id } })
   } else {
     // Create
-    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON,
-      applicationId, userId, null)
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, null)
     const contact = await contactOps.create(false, request.payload.name)
     Object.assign(journeyData, { authorisedPeople: { contactId: contact.id } })
   }

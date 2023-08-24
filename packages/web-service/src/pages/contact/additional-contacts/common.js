@@ -20,16 +20,16 @@ export const getAdditionalContactData = contactRole => async request => {
 
 export const setAdditionalContactData = contactRole => async request => {
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
+  const { applicationId } = journeyData
   const additionalContact = journeyData?.additionalContact || {}
   Object.assign(additionalContact, { [contactRole]: boolFromYesNo(request.payload['yes-no']) })
   Object.assign(journeyData, { additionalContact })
   await request.cache().setData(journeyData)
   if (request.payload['yes-no'] === 'no') {
-    const contactOps = contactOperations(contactRole, applicationId, userId)
+    const contactOps = contactOperations(contactRole, applicationId)
     await contactOps.unAssign()
   } else {
-    const contactOps = contactOperations(contactRole, applicationId, userId)
+    const contactOps = contactOperations(contactRole, applicationId)
     await contactOps.create(false)
   }
 }

@@ -31,33 +31,35 @@ const accountMatcher = a => ({
  * @returns {Promise<void>}
  */
 export const setUpIDMContacts = async (applicationId, userId, contactRole) => {
+  const user = await APIRequests.USER.getById(userId)
   const contacts = await APIRequests.CONTACT.findContactsByIDMUser(userId)
-  const contactOps = contactOperations(contactRole, applicationId, userId)
+  const contactOps = contactOperations(contactRole, applicationId)
   if (!contacts.length) {
-    await contactOps.create(true)
+    await contactOps.create(user)
   } else {
     const user = await APIRequests.USER.getById(userId)
     const contact = contacts.find(c => hash(contactMatcher(c)) === hash(contactMatcher(user)))
     if (contact) {
       await contactOps.assign(contact.id)
     } else {
-      await contactOps.create(true)
+      await contactOps.create(user)
     }
   }
 }
 
 export const setUpIDMAccounts = async (applicationId, organisationId, accountRole) => {
+  const organisation = await APIRequests.USER.getOrganisation(organisationId)
   const accounts = await APIRequests.ACCOUNT.findAccountsByIDMOrganisation(organisationId)
-  const accountOps = accountOperations(accountRole, applicationId, organisationId)
+  const accountOps = accountOperations(accountRole, applicationId)
   if (!accounts.length) {
-    await accountOps.create(true)
+    await accountOps.create(organisation)
   } else {
     const organisation = await APIRequests.USER.getOrganisation(organisationId)
     const account = accounts.find(a => hash(accountMatcher(a)) === hash(accountMatcher(organisation)))
     if (account) {
       await accountOps.assign(account.id)
     } else {
-      await accountOps.create(true)
+      await accountOps.create(organisation)
     }
   }
 }

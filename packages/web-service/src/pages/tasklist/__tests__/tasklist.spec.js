@@ -158,6 +158,9 @@ describe('The task-list handler', () => {
       }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          },
           APPLICATION: {
             initialize: mockInitialize
           },
@@ -189,6 +192,9 @@ describe('The task-list handler', () => {
     }))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
+        USER: {
+          getById: jest.fn().mockReturnValue({ fullName: 'B' })
+        },
         CONTACT: {
           findContactsByIDMUser: jest.fn().mockReturnValue([])
         },
@@ -266,6 +272,9 @@ describe('The task-list handler', () => {
     it('creates a new IDM contact if none exist for the user', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          },
           CONTACT: {
             findContactsByIDMUser: jest.fn().mockReturnValue([])
           }
@@ -278,7 +287,7 @@ describe('The task-list handler', () => {
       }))
       const { setUpIDMContacts } = await import('../tasklist.js')
       await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
-      expect(mockCreate).toHaveBeenCalledWith(true)
+      expect(mockCreate).toHaveBeenCalledWith({ fullName: 'B' })
     })
 
     it('creates a new IDM contact if none exist for the user that exactly match', async () => {
@@ -299,7 +308,7 @@ describe('The task-list handler', () => {
       }))
       const { setUpIDMContacts } = await import('../tasklist.js')
       await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
-      expect(mockCreate).toHaveBeenCalledWith(true)
+      expect(mockCreate).toHaveBeenCalledWith({ fullName: 'B' })
     })
 
     it('reuses an IDM contact if one exists for the user that exactly match', async () => {
@@ -332,6 +341,9 @@ describe('The task-list handler', () => {
         APIRequests: {
           ACCOUNT: {
             findAccountsByIDMOrganisation: jest.fn().mockReturnValue([])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' })
           }
         }
       }))
@@ -340,7 +352,7 @@ describe('The task-list handler', () => {
       }))
       const { setUpIDMAccounts } = await import('../tasklist.js')
       await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
-      expect(mockCreate).toHaveBeenCalledWith(true)
+      expect(mockCreate).toHaveBeenCalledWith({ id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' })
     })
 
     it('creates a new IDM account if none exactly match for the organisation', async () => {
@@ -361,7 +373,7 @@ describe('The task-list handler', () => {
       }))
       const { setUpIDMAccounts } = await import('../tasklist.js')
       await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
-      expect(mockCreate).toHaveBeenCalledWith(true)
+      expect(mockCreate).toHaveBeenCalledWith({ name: 'B' })
     })
 
     it('reuses an existing IDM account if one exactly matches for the organisation', async () => {

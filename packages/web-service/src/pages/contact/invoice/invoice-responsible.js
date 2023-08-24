@@ -77,7 +77,7 @@ export const setData = async request => {
         const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)
         const ecologist = await APIRequests.CONTACT.role(ContactRoles.ECOLOGIST).getByApplicationId(applicationId)
         if (payer.id === applicant?.id || payer.id === ecologist?.id) {
-          const contactOps = contactOperations(ContactRoles.PAYER, applicationId, userId)
+          const contactOps = contactOperations(ContactRoles.PAYER, applicationId)
           const accountOps = accountOperations(AccountRoles.PAYER_ORGANISATION, applicationId)
           await contactOps.unAssign()
           await accountOps.unAssign()

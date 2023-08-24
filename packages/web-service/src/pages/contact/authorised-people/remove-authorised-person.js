@@ -10,10 +10,9 @@ const { ADD, REMOVE } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
+  const { applicationId } = journeyData
   if (boolFromYesNo(request.payload['yes-no'])) {
-    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId,
-      userId, journeyData.authorisedPeople.contactId)
+    const contactOps = contactOperationsForContact(ContactRoles.AUTHORISED_PERSON, applicationId, journeyData.authorisedPeople.contactId)
     await contactOps.unAssign()
     await request.cache().setData(journeyData)
   }
