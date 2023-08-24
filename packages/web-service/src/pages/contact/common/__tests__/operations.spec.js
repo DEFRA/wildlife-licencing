@@ -892,13 +892,14 @@ describe('contact operations', () => {
   })
 
   describe('contactAccountOperations - setOrganisation to true', () => {
-    it('contact mutable - user assigned', async () => {
+    it.only('contact mutable', async () => {
       const mockUpdateContact = jest.fn()
-      const mockCreateAccount = jest.fn(() => ({ id: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c' }))
+      const mockUpdateAccount = jest.fn()
+      const mockCreateAccount = jest.fn(() => ({ id: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c', name: 'Floyd ltd.' }))
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           USER: {
-            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', username: 'Roger.Walters@email.com' })
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
           },
           CONTACT: {
             role: () => ({
@@ -915,24 +916,28 @@ describe('contact operations', () => {
             update: mockUpdateContact
           },
           ACCOUNT: {
+            update: mockUpdateAccount,
             role: () => ({
               getByApplicationId: jest.fn().mockReturnValue(null),
               create: mockCreateAccount
-            }),
-            isImmutable: () => null
+            })
           }
         }
       }))
       const { contactAccountOperations } = await import('../operations.js')
       const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
         '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
-      await ops.setOrganisation(true)
-      expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {})
+      await ops.setOrganisation(true, 'Floyd ltd.')
+      expect(mockCreateAccount).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', { name: 'Floyd ltd.' })
       expect(mockUpdateContact).toHaveBeenCalledWith('4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
         fullName: 'Roger Walters',
-        contactDetails: { email: 'Roger.Walters@email.com' },
         userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
         cloneOf: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+      })
+      expect(mockUpdateAccount).toHaveBeenCalledWith('3ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
+        address: 'Contact address',
+        contactDetails: { email: 'David.Gilmore@floyd.com' },
+        name: 'Floyd ltd.'
       })
     })
 
