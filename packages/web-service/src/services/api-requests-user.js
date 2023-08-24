@@ -21,14 +21,6 @@ export const USER = {
     `Error Updating user with userId ${userId}`,
     500
   ),
-  create: async username => apiRequestsWrapper(
-    async () => {
-      debug(`Creating new user: ${username}`)
-      await API.post(apiUrls.USER, { username })
-    },
-    `Error creating user ${username}`,
-    500
-  ),
   createIDM: async (userId, payload) => apiRequestsWrapper(
     async () => {
       debug(`Creating new user: ${userId}`)
@@ -53,6 +45,14 @@ export const USER = {
     await API.post(apiUrls.ORGANISATION_UPDATE, { organisationId })
   }, `Error requesting updates for organisation ${organisationId}`,
   500
+  ),
+  getOrganisation: async organisationId => apiRequestsWrapper(
+    async () => {
+      debug(`Get organisation: ${organisationId}`)
+      return API.get(`/organisation/${organisationId}`)
+    },
+    `Error fetching organisation ${organisationId}`,
+    500
   ),
   updateUserOrganisation: async (userOrganisationId, { userId, organisationId, relationship }) => apiRequestsWrapper(
     async () => {

@@ -1,3 +1,7 @@
+## v11.13.16         Tuesday 8th August
+PRIVATE-BETA
+- Fix file upload sharepoint writer problem
+
 ## v11.13.15         Thursday 2nd August
 PRIVATE-BETA
 - Add errbit notifications

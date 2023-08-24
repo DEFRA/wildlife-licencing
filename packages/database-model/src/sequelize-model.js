@@ -93,6 +93,7 @@ async function defineContacts (sequelize) {
 async function defineAccounts (sequelize) {
   models.accounts = await sequelize.define('accounts', {
     id: { type: DataTypes.UUID, primaryKey: true },
+    organisationId: { type: DataTypes.UUID },
     account: { type: DataTypes.JSONB },
     sddsAccountId: { type: DataTypes.UUID },
     cloneOf: { type: DataTypes.UUID },
@@ -101,7 +102,8 @@ async function defineAccounts (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: true, fields: ['sdds_account_id'], name: 'account_sdds_id_uk' }
+      { unique: true, fields: ['sdds_account_id'], name: 'account_sdds_id_uk' },
+      { unique: false, fields: ['organisation_id'], name: 'account_organisation_id_fk' }
     ]
   })
 }

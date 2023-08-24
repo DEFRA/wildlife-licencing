@@ -148,7 +148,7 @@ describe('application-licence page', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67',
               licenceNumber: '2023-500000-SPM-LIC'
             }]))

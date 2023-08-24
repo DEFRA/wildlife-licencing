@@ -41,39 +41,7 @@ const applicationJson = 'application/json'
 describe('The getOrganisations handler', () => {
   beforeEach(() => jest.resetModules())
 
-  it('returns a 200 on successful fetch from the cache', async () => {
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      REDIS: {
-        cache: {
-          restore: () => JSON.stringify({
-            id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-            name: 'ORGANISATION-A'
-          })
-        }
-      }
-    }))
-    jest.doMock('@defra/wls-database-model', () => ({}))
-    const getOrganisations = (await import('../get-organisation-by-id.js')).default
-    await getOrganisations(context, req, h)
-    expect(h.response).toHaveBeenCalledWith({
-      id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae',
-      name: 'ORGANISATION-A'
-    })
-    expect(typeFunc).toHaveBeenCalledWith(applicationJson)
-    expect(codeFunc).toHaveBeenCalledWith(200)
-  })
-
   it('returns a 200 on successful fetch', async () => {
-    const mockSave = jest.fn()
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      REDIS: {
-        cache: {
-          restore: () => null,
-          save: mockSave
-        }
-      }
-    }))
-
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         organisations: {
@@ -99,17 +67,9 @@ describe('The getOrganisations handler', () => {
     })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(200)
-    expect(mockSave).toHaveBeenCalledWith('organisation/uuid/', expect.objectContaining({ name: 'ORGANISATION-A' }))
   })
 
   it('returns a 404 on organisation not found (no return)', async () => {
-    jest.doMock('@defra/wls-connectors-lib', () => ({
-      REDIS: {
-        cache: {
-          restore: () => null
-        }
-      }
-    }))
     jest.doMock('@defra/wls-database-model', () => ({
       models: {
         organisations: {

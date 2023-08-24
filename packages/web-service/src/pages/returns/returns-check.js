@@ -11,7 +11,7 @@ export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   const licenceStartDate = timestampFormatter(licences[0]?.startDate)
   const licenceEndDate = timestampFormatter(licences[0]?.endDate)
   const returnData = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)

@@ -42,15 +42,12 @@ jest.mock('@defra/wls-database-model')
 
 let models
 let putOrganisation
-let cache
 const applicationJson = 'application/json'
 
 describe('The updateOrganisation handler', () => {
   beforeAll(async () => {
     models = (await import('@defra/wls-database-model')).models
     putOrganisation = (await import('../put-organisation.js')).default
-    const REDIS = (await import('@defra/wls-connectors-lib')).REDIS
-    cache = REDIS.cache
   })
 
   it('returns a 201 on successful create', async () => {
@@ -64,8 +61,6 @@ describe('The updateOrganisation handler', () => {
         }
       }, true])
     }
-    cache.save = jest.fn()
-    cache.delete = jest.fn()
     await putOrganisation(context, req, h)
     expect(models.organisations.findOrCreate).toHaveBeenCalledWith({
       defaults: {
@@ -77,7 +72,6 @@ describe('The updateOrganisation handler', () => {
         id: context.request.params.organisationId
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { id: context.request.params.organisationId, name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ id: context.request.params.organisationId, name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
@@ -87,8 +81,6 @@ describe('The updateOrganisation handler', () => {
     models.organisations = {
       findOrCreate: jest.fn(async () => ([{ dataValues: { name: 'ORGANISATION-A', organisation: { foo: 'bar' }, ...ts } }, false]))
     }
-    cache.save = jest.fn()
-    cache.delete = jest.fn()
     await putOrganisation(context, req, h)
     expect(models.organisations.findOrCreate).toHaveBeenCalledWith({
       defaults: {
@@ -100,7 +92,6 @@ describe('The updateOrganisation handler', () => {
         id: '1e470963-e8bf-41f5-9b0b-52d19c21cb78'
       }
     })
-    expect(cache.save).toHaveBeenCalledWith(path, { name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(h.response).toHaveBeenCalledWith({ name: 'ORGANISATION-A', foo: 'bar', ...tsR })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(202)

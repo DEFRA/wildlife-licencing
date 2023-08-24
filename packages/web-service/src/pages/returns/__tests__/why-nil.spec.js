@@ -8,7 +8,7 @@ describe('the Why nil functions', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: () => {
+            findActiveLicencesByApplicationId: () => {
               return {
                 id: '123456'
               }

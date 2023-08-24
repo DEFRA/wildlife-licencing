@@ -19,7 +19,7 @@ describe('the Work start functions', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -51,7 +51,7 @@ describe('the Work start functions', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -81,7 +81,7 @@ describe('the Work start functions', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },

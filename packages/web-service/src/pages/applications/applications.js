@@ -33,9 +33,8 @@ export const checkData = async (request, h) => {
 }
 
 const getApplicationLicence = async app => {
-  const licences = await APIRequests.LICENCES.findByApplicationId(app?.id)
-  const licencesSingleton = licences?.sort(sorter).splice(0, 1)
-  Object.assign(app, { licences: licencesSingleton })
+  const activeLicences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(app?.id)
+  Object.assign(app, { licences: activeLicences })
   return app
 }
 

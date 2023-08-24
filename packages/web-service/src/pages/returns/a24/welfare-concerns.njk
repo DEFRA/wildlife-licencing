@@ -40,7 +40,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes' or true if data.welfareConcerns,
+          checked: data.welfareConcerns if data.welfareConcerns else payload['yes-no'] === 'yes',
           conditional: {
             html: yesContionalInputHtml
           }

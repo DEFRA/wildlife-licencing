@@ -55,6 +55,18 @@ describe('The API requests user service', () => {
   })
 
   describe('ORGANISATION requests', () => {
+    it('getOrganisation calls the API connector correctly', async () => {
+      const mockGet = jest.fn()
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.USER.getOrganisation('56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+      expect(mockGet).toHaveBeenCalledWith('/organisation/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
+    })
+
     it('updateOrganisation calls the API connector correctly', async () => {
       const mockPut = jest.fn()
       jest.doMock('@defra/wls-connectors-lib', () => ({

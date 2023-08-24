@@ -197,7 +197,7 @@
   {% if data.destroyVacantSettByHandOrMechanicalMeansDetails %}
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Did you destruct a vacant sett by hand and mechanical means?</dt>
+        <dt class="govuk-summary-list__key">Did you destroy a vacant sett by hand and mechanical means?</dt>
         {% if data.destroyVacantSettByHandOrMechanicalMeans %}
           <dd class="govuk-summary-list__value">Yes</dd>
         {% else %}
@@ -297,6 +297,20 @@
       </dd>
     </div>
   </dl>
+
+  {% if data.artificialSett %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Describe the work carried out to create the artificial sett</dt>
+            <dd class="govuk-summary-list__value">{{ data.artificialSettDetails }}</dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/a24/artificial-sett-details">
+            Change<span class="govuk-visually-hidden">Describe the work carried out to create the artificial sett</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+  {% endif %}
 
   {% if data.artificialSett %}
     <dl class="govuk-summary-list">

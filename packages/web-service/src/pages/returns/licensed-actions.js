@@ -2,7 +2,7 @@ import { ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
-import { activityTypes, checkLicence } from './common-return-functions.js'
+import { activityTypes, checkLicence, getLicenceMethodTypes } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NIL_RETURN, OUTCOME, WHY_NIL } = ReturnsURIs
@@ -12,7 +12,7 @@ export const getData = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
-  const methodTypes = licenceActions[0]?.methodIds
+  const methodTypes = getLicenceMethodTypes(licenceActions)
   if (returnId) {
     const { nilReturn } = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
     return { yesNo: yesNoFromBool(!nilReturn), activityTypes, methodTypes }
