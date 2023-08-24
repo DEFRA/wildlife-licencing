@@ -1,4 +1,3 @@
-import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import pageRoute from '../../routes/page-route.js'
 import { timestampFormatter } from '../common/common.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -6,11 +5,7 @@ import { APPLICATIONS, SPECIES } from '../../uris.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import { tagStatus } from '../../services/status-tags.js'
-
-// Values to keys and keys to values
-const statuses = Object.entries(PowerPlatformKeys.BACKEND_STATUS)
-  .map(([k, v]) => ({ [v]: k }))
-  .reduce((p, c) => ({ ...p, ...c }))
+import { applicationStatuses, licenceStatuses } from './application-common-functions.js'
 
 const sorter = (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 
@@ -58,6 +53,11 @@ export const getData = async request => {
   })).sort(sorter)
 
   const applicationsWithLicences = await getApplicationsWithLicences(applications)
+  const statuses = {
+    ...applicationStatuses,
+    ...licenceStatuses
+  }
+
   return {
     totalSections,
     statuses,

@@ -8,7 +8,7 @@ export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
-export const APPLICATION_LICENCE = { uri: '/application-licence', page: 'application-licence' }
+export const APPLICATION_LICENCE = { uri: '/application-licence-summary', page: 'application-licence-summary' }
 export const LOGIN = { uri: '/login', page: 'login' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }

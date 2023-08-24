@@ -3,7 +3,7 @@ import { DEFAULT_ROLE } from '../../constants.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { APPLICATIONS } from '../../uris.js'
 
-const { BACKEND_STATUS, APPLICATION_TYPES } = PowerPlatformKeys
+const { BACKEND_STATUS, APPLICATION_TYPES, LICENCE_STATUS } = PowerPlatformKeys
 
 export const findLastSentEvent = licence => (licence.annotations &&
   licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf' && a.filename.includes('pdf'))
@@ -30,7 +30,11 @@ export const checkData = async (request, h) => {
 }
 
 // values to keys and keys to values
-export const statuses = Object.entries(BACKEND_STATUS)
+export const applicationStatuses = Object.entries(BACKEND_STATUS)
+  .map(([k, v]) => ({ [v]: k }))
+  .reduce((p, c) => ({ ...p, ...c }))
+
+export const licenceStatuses = Object.entries(LICENCE_STATUS)
   .map(([k, v]) => ({ [v]: k }))
   .reduce((p, c) => ({ ...p, ...c }))
 
