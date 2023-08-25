@@ -163,18 +163,6 @@ const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
       if (account) {
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
       }
-    },
-    setName: async accountName => {
-      const account = await getAccount()
-      // Assign the name
-      if (account && !await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-        await APIRequests.ACCOUNT.update(account.id, {
-          name: accountName,
-          ...(account.contactDetails && { contactDetails: account.contactDetails }),
-          ...(account.address && { address: account.address }),
-          ...(account.cloneOf && { cloneOf: account.cloneOf })
-        })
-      }
     }
   }
 }
@@ -288,26 +276,20 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const contact = await getContact()
       const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (isOrganisation && (!account || (name && account.name.toUpperCase() !== name.toUpperCase()))) {
-        // Add account if name set or there is no account assigned, from is-organisation: yes, given the organisation name
+      if (isOrganisation && !account) {
+        // is_organisation: yes, new account
         // Create an account and move the contact details onto it
         const newAccount = await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
         await copyContactDetailsToAccount(applicationId, accountRole, contact, newAccount, false)
         await removeContactDetailsFromContact(applicationId, contactRole, contact, contactImmutable)
-      } else if (isOrganisation && account) {
+      } else if (isOrganisation && account && account.name.toUpperCase() !== name.toUpperCase()) {
+        // is_organisation: yes, name change
         // If there is an account there should be no details on the contact. On selecting a new account (account-names)
         const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
-        await copyContactDetailsToAccount(applicationId, accountRole, contact, account, accountImmutable)
-        await removeContactDetailsFromContact(applicationId, contactRole, contact, contactImmutable)
+        await updateAccountName(applicationId, accountRole, account, accountImmutable, name)
       } else if (!isOrganisation && account) {
-        // Remove account, from is_organisation: no
-        if (contact.userId) {
-          // If the contact is the user contact then reset the contact details to that on the user
-          await copyUserDetailsToContact(applicationId, contactRole, contact, contactImmutable)
-        } else {
-          // If the contact is not a user contact then reset the contact details from the account
-          await copyAccountDetailsToContact(applicationId, contactRole, contact, account, contactImmutable)
-        }
+        // is_organisation: no, remove account
+        await copyAccountDetailsToContact(applicationId, contactRole, contact, account, contactImmutable)
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
       }
     }
@@ -381,6 +363,27 @@ const updateAccountFields = async (currentAccount, {
   })
 }
 
+const updateAccountName = async (applicationId, accountRole, account, accountImmutable, name) => {
+  if (accountImmutable) {
+    await APIRequests.ACCOUNT.role(accountRole).unAssign(applicationId, account.id)
+    await APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
+      organisationId: account.organisationId,
+      cloneOf: account.id,
+      name: name,
+      contactDetails: account.contactDetails,
+      address: account.address
+    })
+  } else {
+    await APIRequests.ACCOUNT.update(account.id, {
+      organisationId: account.organisationId,
+      name: name,
+      contactDetails: account.contactDetails,
+      address: account.address,
+      cloneOf: account.cloneOf
+    })
+  }
+}
+
 const copyContactDetailsToAccount = async (applicationId, accountRole, contact, account, accountImmutable) => {
   if (accountImmutable) {
     await APIRequests.ACCOUNT.role(accountRole).unAssign(applicationId, account.id)
@@ -398,28 +401,6 @@ const copyContactDetailsToAccount = async (applicationId, accountRole, contact, 
       contactDetails: contact.contactDetails,
       address: contact.address,
       cloneOf: account.cloneOf
-    })
-  }
-}
-
-const copyUserDetailsToContact = async (applicationId, contactRole, contact, contactImmutable) => {
-  const user = contact.userId && await APIRequests.USER.getById(contact.userId)
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      userId: contact.userId,
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      contactDetails: user.contactDetails,
-      address: user.address
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      userId: contact.userId,
-      fullName: contact.fullName,
-      contactDetails: user.contactDetails,
-      address: user.address,
-      cloneOf: contact.cloneOf
     })
   }
 }

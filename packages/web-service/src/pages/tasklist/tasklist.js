@@ -54,7 +54,6 @@ export const setUpIDMAccounts = async (applicationId, organisationId, accountRol
   if (!accounts.length) {
     await accountOps.create(organisation)
   } else {
-    const organisation = await APIRequests.USER.getOrganisation(organisationId)
     const account = accounts.find(a => hash(accountMatcher(a)) === hash(accountMatcher(organisation)))
     if (account) {
       await accountOps.assign(account.id)
@@ -83,14 +82,19 @@ export const getApplication = async request => {
     // (The call is idempotent
     const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE, applicationRole)
 
+    const accountRole = applicationRole === ContactRoles.ECOLOGIST
+      ? AccountRoles.ECOLOGIST_ORGANISATION
+      : AccountRoles.APPLICANT_ORGANISATION
+
     // If the user is the applicant or ecologist on this application
     // create the user contact and optional account and assign them to the role
     if ([ContactRoles.ECOLOGIST, ContactRoles.APPLICANT].includes(applicationRole)) {
-      await setUpIDMContacts(applicationId, userId, applicationRole)
-      if (organisationId) {
-        await setUpIDMAccounts(applicationId, organisationId, applicationRole
-          ? AccountRoles.ECOLOGIST_ORGANISATION
-          : AccountRoles.APPLICANT_ORGANISATION)
+      // Only do this once....
+      if (!await APIRequests.CONTACT.role(applicationRole).getByApplicationId(applicationId)) {
+        await setUpIDMContacts(applicationId, userId, applicationRole)
+      }
+      if (organisationId && !await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)) {
+        await setUpIDMAccounts(applicationId, organisationId, accountRole)
       }
     }
     return application

@@ -165,6 +165,9 @@ describe('The task-list handler', () => {
             initialize: mockInitialize
           },
           CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn()
+            }),
             findContactsByIDMUser: jest.fn().mockReturnValue([])
           }
         }
@@ -196,7 +199,10 @@ describe('The task-list handler', () => {
           getById: jest.fn().mockReturnValue({ fullName: 'B' })
         },
         CONTACT: {
-          findContactsByIDMUser: jest.fn().mockReturnValue([])
+          findContactsByIDMUser: jest.fn().mockReturnValue([]),
+          role: () => ({
+            getByApplicationId: jest.fn()
+          })
         },
         APPLICATION: {
           tags: () => ({
