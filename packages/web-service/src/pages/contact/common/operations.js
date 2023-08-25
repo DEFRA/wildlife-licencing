@@ -285,7 +285,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       } else if (isOrganisation && account && account.name.toUpperCase() !== name.toUpperCase()) {
         // is_organisation: yes, name change
         // If there is an account there should be no details on the contact. On selecting a new account (account-names)
-        const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
+        const accountImmutable = await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
         await updateAccountName(applicationId, accountRole, account, accountImmutable, name)
       } else if (!isOrganisation && account) {
         // is_organisation: no, remove account
