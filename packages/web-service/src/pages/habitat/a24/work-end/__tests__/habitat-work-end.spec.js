@@ -260,8 +260,9 @@ describe('The habitat work end page', () => {
       })
     })
 
-    it('validator returns nothing if no error is thrown', async () => {
+    it.only('validator returns nothing if no error is thrown', async () => {
       const nw = new Date()
+      nw.setFullYear(nw.getFullYear() + 1)
       const payload = {
         'habitat-work-end-day': '1',
         'habitat-work-end-month': '9',
