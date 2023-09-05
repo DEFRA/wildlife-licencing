@@ -280,7 +280,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
         // is_organisation: yes, new account
         // Create an account and move the contact details onto it
         const newAccount = await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
-        await copyContactDetailsToAccount(applicationId, accountRole, contact, newAccount, false)
+        await copyContactDetailsToNewAccount(applicationId, accountRole, contact, newAccount)
         await removeContactDetailsFromContact(applicationId, contactRole, contact, contactImmutable)
       } else if (isOrganisation && account && account.name.toUpperCase() !== name.toUpperCase()) {
         // is_organisation: yes, name change
@@ -384,25 +384,14 @@ const updateAccountName = async (applicationId, accountRole, account, accountImm
   }
 }
 
-const copyContactDetailsToAccount = async (applicationId, accountRole, contact, account, accountImmutable) => {
-  if (accountImmutable) {
-    await APIRequests.ACCOUNT.role(accountRole).unAssign(applicationId, account.id)
-    await APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
-      organisationId: account.organisationId,
-      cloneOf: account.id,
-      name: account.name,
-      contactDetails: contact.contactDetails,
-      address: contact.address
-    })
-  } else {
-    await APIRequests.ACCOUNT.update(account.id, {
-      organisationId: account.organisationId,
-      name: account.name,
-      contactDetails: contact.contactDetails,
-      address: contact.address,
-      cloneOf: account.cloneOf
-    })
-  }
+const copyContactDetailsToNewAccount = async (applicationId, accountRole, contact, account) => {
+  await APIRequests.ACCOUNT.update(account.id, {
+    organisationId: account.organisationId,
+    name: account.name,
+    contactDetails: contact.contactDetails,
+    address: contact.address,
+    cloneOf: account.cloneOf
+  })
 }
 
 const copyAccountDetailsToContact = async (applicationId, contactRole, contact, account, contactImmutable) => {

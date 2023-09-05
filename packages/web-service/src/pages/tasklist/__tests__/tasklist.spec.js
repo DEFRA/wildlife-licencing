@@ -89,7 +89,11 @@ describe('The task-list handler', () => {
       }))
       const request = {
         cache: () => ({
-          getData: () => ({ userId: '510db545-4136-48c4-9680-98d89d3962e7', applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
+          getData: () => ({
+            userId: '510db545-4136-48c4-9680-98d89d3962e7',
+            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+            applicationRole: 'OTHER'
+          })
         })
       }
       const h = { redirect: jest.fn() }
