@@ -16,7 +16,7 @@ import {
 import {
   getTaskStatus,
   hasTaskCompleted,
-  hasTaskCompletedOrCompletedNotConfirmed, haveTasksCompleted
+  hasTaskCompletedOrCompletedNotConfirmed, hasTaskStatusIn, haveTasksCompleted
 } from './licence-type.js'
 
 const { LANDOWNER, ELIGIBILITY_CHECK } = eligibilityURIs
@@ -31,8 +31,8 @@ export const SECTIONS = {
 export const SECTION_TASKS = {
   ELIGIBILITY_CHECK: 'eligibility-check',
   APPLICANT: 'applicant',
-  ADDITIONAL_APPLICANT: 'additional-applicant',
   ECOLOGIST: 'ecologist',
+  ADDITIONAL_APPLICANT: 'additional-applicant',
   ADDITIONAL_ECOLOGIST: 'additional-ecologist',
   INVOICE_PAYER: 'invoice-payer',
   AUTHORISED_PEOPLE: 'authorised-people',
@@ -62,10 +62,19 @@ export const TASKS = {
 
   [SECTION_TASKS.APPLICANT]: {
     name: SECTION_TASKS.APPLICANT,
-    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.APPLICANT, tags)
+    uri: tags => hasTaskStatusIn(SECTION_TASKS.APPLICANT, tags, tagStatus.IN_PROGRESS, tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED)
       ? contactURIs.APPLICANT.CHECK_ANSWERS.uri
       : contactURIs.APPLICANT.NAME.uri,
     status: tags => getTaskStatus(SECTION_TASKS.APPLICANT, tags) || eligibilityCheckHelper(tags),
+    enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
+  },
+
+  [SECTION_TASKS.ECOLOGIST]: {
+    name: SECTION_TASKS.ECOLOGIST,
+    uri: tags => hasTaskStatusIn(SECTION_TASKS.ECOLOGIST, tags, tagStatus.IN_PROGRESS, tagStatus.COMPLETE, tagStatus.COMPLETE_NOT_CONFIRMED)
+      ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri
+      : contactURIs.ECOLOGIST.NAME.uri,
+    status: tags => getTaskStatus(SECTION_TASKS.ECOLOGIST, tags) || eligibilityCheckHelper(tags),
     enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },
 
@@ -76,15 +85,6 @@ export const TASKS = {
       : contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
     status: tags => getTaskStatus(SECTION_TASKS.ADDITIONAL_APPLICANT, tags) || eligibilityCheckHelper(tags),
     enabled: tags => haveTasksCompleted([SECTION_TASKS.APPLICANT], tags)
-  },
-
-  [SECTION_TASKS.ECOLOGIST]: {
-    name: SECTION_TASKS.ECOLOGIST,
-    uri: tags => hasTaskCompletedOrCompletedNotConfirmed(SECTION_TASKS.ECOLOGIST, tags)
-      ? contactURIs.ECOLOGIST.CHECK_ANSWERS.uri
-      : contactURIs.ECOLOGIST.NAME.uri,
-    status: tags => getTaskStatus(SECTION_TASKS.ECOLOGIST, tags) || eligibilityCheckHelper(tags),
-    enabled: tags => hasTaskCompleted(SECTION_TASKS.ELIGIBILITY_CHECK, tags)
   },
 
   [SECTION_TASKS.ADDITIONAL_ECOLOGIST]: {

@@ -166,7 +166,8 @@ describe('The task-list handler', () => {
             getById: jest.fn().mockReturnValue({ fullName: 'B' })
           },
           APPLICATION: {
-            initialize: mockInitialize
+            initialize: mockInitialize,
+            tags: () => ({ get: () => null })
           },
           CONTACT: {
             role: () => ({
@@ -210,6 +211,7 @@ describe('The task-list handler', () => {
         },
         APPLICATION: {
           tags: () => ({
+            get: () => null,
             getAll: () => [{ tag: 'eligibility-check', tagState: 'in-progress' }]
           }),
           initialize: jest.fn(() => ({

@@ -8,6 +8,8 @@ import { LICENCE_TYPE_TASKLISTS } from './licence-type.js'
 import { Backlink } from '../../handlers/backlink.js'
 import { accountOperations, contactOperations } from '../contact/common/operations.js'
 import { AccountRoles, ContactRoles } from '../contact/common/contact-roles.js'
+import { moveTagInProgress } from '../common/tag-functions.js'
+import { ROLE_SECTION_MAP } from '../contact/common/common-handler.js'
 const hash = pkg.default
 
 const contactMatcher = c => ({
@@ -92,6 +94,7 @@ export const getApplication = async request => {
       // Only do this once....
       if (!await APIRequests.CONTACT.role(applicationRole).getByApplicationId(applicationId)) {
         await setUpIDMContacts(applicationId, userId, applicationRole)
+        await moveTagInProgress(applicationId, ROLE_SECTION_MAP[applicationRole])
       }
       if (organisationId && !await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)) {
         await setUpIDMAccounts(applicationId, organisationId, accountRole)
