@@ -1,5 +1,5 @@
 {% extends "information-page.njk" %}
-{% import "applications-text.njk" as text %}
+{% import "applications-text.njk" as applicationAndLicenceStatusText %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
@@ -50,8 +50,10 @@
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    {% if application.userSubmission %}
-        {{ text.govukTaskList(application, data.statuses) }}
+    {% if application.userSubmission and application.licences.length %}
+        {{ applicationAndLicenceStatusText.getLicenceStatus(application.licences[0], data.statuses) }}
+    {% elif application.userSubmission %}
+        {{ applicationAndLicenceStatusText.getApplicationStatus(application, data.statuses) }}
     {% else %}
         <strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-4">IN PROGRESS</strong>
     {% endif %}

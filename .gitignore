@@ -10,6 +10,8 @@ node_modules/
 !.dockerignore
 !.npmignore
 !.env.example
+!.eslintignore
+!.eslintrc.cjs
 
 #git checkout -b  Any log file
 **/*.log

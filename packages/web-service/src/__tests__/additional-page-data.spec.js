@@ -106,7 +106,7 @@ describe('additional page data', () => {
         applicantPostcode: '/applicant-postcode',
         applicationSummary: '/application-summary',
         applications: '/applications',
-        applicationLicence: '/application-licence',
+        applicationLicence: '/application-licence-summary',
         classMitigation: '/class-mitigation',
         classMitigationDetails: '/enter-class-mitigation-details',
         consent: '/consent',

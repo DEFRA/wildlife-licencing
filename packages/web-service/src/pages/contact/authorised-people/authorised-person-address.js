@@ -37,7 +37,7 @@ export const ofContact = async (contact, request) => {
     contactName: contact?.fullName,
     postcode: contact?.address?.postcode,
     uri: { addressForm: ADDRESS_FORM.uri, postcode: POSTCODE.uri },
-    addressLookup: journeyData.addressLookup
+    addressLookup: mapLookedUpAddress(journeyData?.addressLookup)
   }
 }
 
