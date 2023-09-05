@@ -11,7 +11,8 @@
     "version": {
       "allowBranch": [
         "master",
-        "develop"
+        "develop",
+        "feature/IDM"
       ],
       "message": "chore(release): publish %s"
     },
@@ -19,7 +20,8 @@
       "message": "chore(release): publish %s",
       "allowBranch": [
         "master",
-        "develop"
+        "develop",
+        "feature/IDM"
       ],
       "ignoreChanges": [
         ".*",
