@@ -260,7 +260,7 @@ describe('The habitat work end page', () => {
       })
     })
 
-    it.only('validator returns nothing if no error is thrown', async () => {
+    it('validator returns nothing if no error is thrown', async () => {
       const nw = new Date()
       nw.setFullYear(nw.getFullYear() + 1)
       const payload = {
