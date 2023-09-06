@@ -50,7 +50,7 @@
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    {% if application.userSubmission and application.licences.length %}
+    {% if application.userSubmission and application.licences.length and data.statuses[application.statusCode] === 'GRANTED' %}
         {{ applicationAndLicenceStatusText.getLicenceStatus(application.licences[0], data.statuses) }}
     {% elif application.userSubmission %}
         {{ applicationAndLicenceStatusText.getApplicationStatus(application, data.statuses) }}
