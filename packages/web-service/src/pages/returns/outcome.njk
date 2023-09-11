@@ -1,7 +1,6 @@
 {% extends 'standard-form.njk' %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "textarea/macro.njk" import govukTextarea %}
-
 {% set errorMap = {
     'outcome-check': {
       'any.required': { ref: '#outcome-check', text: 'You have not selected an option' }
@@ -24,8 +23,9 @@
 }) }}
 {% endset -%}
 {% set title = 'Did the actions taken under the licence mean that the development could start?' %}
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
-
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 {% block pageContent %}
   {{ govukRadios({
             id: "outcome-check",
@@ -35,12 +35,12 @@
               {
                 value: "yes",
                 text: "Yes",
-                checked: payload['outcome-check'] === 'yes' or true if data.outcome
+                checked: data.outcome if data.outcome else payload['outcome-check'] === 'yes'
               },
               {
                 value: "no",
                 text: "No",
-                checked: payload['outcome-check'] === 'no' or true if data.outcomeReason,
+                checked: data.outcomeReason if data.outcomeReason else payload['outcome-check'] === 'no',
                 conditional: {
                   html: outcomeHtml
                 }
