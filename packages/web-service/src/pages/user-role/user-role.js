@@ -1,6 +1,7 @@
 import pageRoute from '../../routes/page-route.js'
 import { USER_ROLE, eligibilityURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
+import Joi from 'joi'
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
@@ -14,5 +15,8 @@ export default pageRoute({
   completion: eligibilityURIs.LANDOWNER.uri,
   checkData: checkApplication,
   setData: setData,
+  validator: Joi.object({
+    'user-role': Joi.string().valid('OTHER', 'APPLICANT', 'ECOLOGIST').required()
+  }).options({ abortEarly: false, allowUnknown: true }),
   options: { auth: { mode: 'optional' } }
 })
