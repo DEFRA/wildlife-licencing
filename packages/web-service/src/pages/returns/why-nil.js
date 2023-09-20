@@ -46,7 +46,7 @@ export const setData = async request => {
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   let payload = { ...licenceReturn, whyNil }
   if (whyNil === OTHER) {
-    payload = { ...payload, whyNilOther }
+    payload = { ...payload, whyNil, whyNilOther }
   }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
   journeyData.returns = { ...journeyData.returns, whyNil, whyNilOther }
