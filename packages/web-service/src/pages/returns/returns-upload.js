@@ -4,9 +4,7 @@ import { boolFromYesNo } from '../common/common.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { allCompletion, checkLicence } from './common-return-functions.js'
 
-const { UPLOAD, UPLOAD_FILE, CHECK_YOUR_ANSWERS } = ReturnsURIs
-
-export const completion = request => request?.payload['yes-no'] === 'yes' ? UPLOAD_FILE.uri : CHECK_YOUR_ANSWERS.uri
+const { UPLOAD } = ReturnsURIs
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
@@ -25,11 +23,5 @@ export const returnUpload = yesNoPage({
   uri: UPLOAD.uri,
   checkData: checkLicence,
   setData: setData,
-  completion: async (request) => {
-    const uri = await allCompletion(request)
-    const otherUri = await completion(request)
-    console.log('URIs match: ', uri === otherUri)
-    console.log('new uri: ', uri, 'old uri: ', otherUri)
-    return uri
-  }
+  completion: allCompletion
 })
