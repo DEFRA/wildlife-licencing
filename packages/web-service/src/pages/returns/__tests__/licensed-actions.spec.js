@@ -162,24 +162,4 @@ describe('the Licensed Actions functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('redirects to the why Nil page page if the answer is no', async () => {
-      const { completion } = await import('../licensed-actions.js')
-      const request = {
-        payload: { 'yes-no': 'no' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/why-nil')
-    })
-
-    it('redirects to outcome page if the answer is yes', async () => {
-      const { completion } = await import('../licensed-actions.js')
-      const request = {
-        payload: { 'yes-no': 'yes' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/outcome')
-    })
-  })
 })

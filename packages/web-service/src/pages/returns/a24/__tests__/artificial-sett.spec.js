@@ -106,24 +106,4 @@ describe('the Artificial sett functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('redirects to the artificial sett details page if the answer is yes', async () => {
-      const { completion } = await import('../artificial-sett.js')
-      const request = {
-        payload: { 'create-artificial-sett-check': 'yes' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/a24/artificial-sett-details')
-    })
-
-    it('redirects to why not artificial sett page if the answer is no', async () => {
-      const { completion } = await import('../artificial-sett.js')
-      const request = {
-        payload: { 'create-artificial-sett-check': 'no' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/a24/why-no-artificial-sett')
-    })
-  })
 })

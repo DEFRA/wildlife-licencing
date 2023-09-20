@@ -1,6 +1,8 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APPLICATIONS, ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
+import { APIRequests } from '../../services/api-requests.js'
+import { getNextUri } from './get-next-uri.js'
 
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 const { ONE_WAY_GATES, BLOCKING_OR_PROOFING, DAMAGE_BY_HAND_OR_MECHANICAL_MEANS, DESTROY_VACANT_SETT, DISTURB_BADGERS, WELFARE_CONCERNS } = ReturnsURIs.A24
@@ -118,4 +120,19 @@ export const getWhyNoArtificialSettReason = returnData => {
     }
   }
   return whyNoArtificialSettReason
+}
+
+export const allCompletion = async (request) => {
+  const journeyData = await request.cache().getData()
+
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
+  const methodTypes = getLicenceMethodTypes(licenceActions)
+
+  const nextUri = getNextUri(licenceReturn, methodTypes)
+
+  return nextUri
 }

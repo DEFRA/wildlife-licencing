@@ -69,32 +69,6 @@ describe('the check-supporting-information page handler', () => {
     })
   })
 
-  describe('the completion function', () => {
-    it('should returns to the return check answers page if the user selected no to upload another file', async () => {
-      const request = {
-        payload: {
-          'another-file-check': 'no'
-        }
-      }
-
-      const { completion } = await import('../returns-uploaded-files.js')
-      const result = await completion(request)
-      expect(result).toEqual('/returns-check')
-    })
-
-    it('should returns to the returns upload file page if the user selected yes to upload another file', async () => {
-      const request = {
-        payload: {
-          'another-file-check': 'yes'
-        }
-      }
-
-      const { completion } = await import('../returns-uploaded-files.js')
-      const result = await completion(request)
-      expect(result).toEqual('/returns-upload-file')
-    })
-  })
-
   describe('the validator function', () => {
     it('should display a validation error if the user does not input a choice for another file upload', async () => {
       try {

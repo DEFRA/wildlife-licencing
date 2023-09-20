@@ -109,4 +109,53 @@ describe('the common return functions', () => {
       expect(await getWhyNoArtificialSettReason(returnDataTwo)).toBe('other reason in place')
     })
   })
+
+  describe('allCompletion', () => {
+    it('should call getNextUri with data from calling getLicenceReturn and getLicenceMethodTypes', async () => {
+      const getDataMock = jest.fn()
+
+      const request = {
+        cache: () => {
+          return {
+            getData: getDataMock
+          }
+        }
+      }
+
+      const getNextUriMock = jest.fn()
+
+      const getLicenceReturnMock = jest.fn(() => ({
+        nilReturn: true
+      }))
+
+      const methodIdsStub = ['12345678', '987654321']
+
+      const getLicenceActionsMock = jest.fn(() => ([{
+        methodIds: methodIdsStub
+      }]))
+
+      jest.doMock('../get-next-uri.js', () => ({
+        getNextUri: getNextUriMock
+      }))
+
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: getLicenceReturnMock,
+            getLicenceActions: getLicenceActionsMock
+          }
+        }
+      }))
+
+      const { allCompletion } = await import('../common-return-functions.js')
+
+      await allCompletion(request)
+
+      expect(getLicenceActionsMock).toHaveBeenCalled()
+      expect(getDataMock).toHaveBeenCalled()
+      expect(getNextUriMock).toHaveBeenCalledWith({
+        nilReturn: true
+      }, methodIdsStub)
+    })
+  })
 })

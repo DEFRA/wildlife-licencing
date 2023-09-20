@@ -1,5 +1,5 @@
 import { ReturnsURIs } from '../../../uris.js'
-import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
 import { boolFromYesNo } from '../../common/common.js'
@@ -43,6 +43,6 @@ export const damageByHandOrMechanicalMeans = yesNoConditionalPage({
   uri: DAMAGE_BY_HAND_OR_MECHANICAL_MEANS.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: licenceActionsCompletion,
+  completion: allCompletion,
   setData: setData
 })

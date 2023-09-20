@@ -2,9 +2,9 @@ import { ReturnsURIs } from '../../uris.js'
 import pageRoute from '../../routes/page-route.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence } from './common-return-functions.js'
+import { checkLicence, allCompletion } from './common-return-functions.js'
 
-const { OUTCOME, COMPLETE_WITHIN_DATES } = ReturnsURIs
+const { OUTCOME } = ReturnsURIs
 
 const noOutcomeInput = 'no-outcome'
 const outcomeRadio = 'outcome-check'
@@ -60,7 +60,7 @@ export default pageRoute({
   page: OUTCOME.page,
   uri: OUTCOME.uri,
   checkData: checkLicence,
-  completion: COMPLETE_WITHIN_DATES.uri,
+  completion: allCompletion,
   validator,
   getData,
   setData

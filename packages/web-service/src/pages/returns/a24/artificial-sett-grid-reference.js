@@ -2,10 +2,9 @@ import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { gridReferenceValidator } from '../../../pages/common/grid-ref-validator.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 
 const { ARTIFICIAL_SETT_GRID_REFERENCE } = ReturnsURIs.A24
-const { LICENCE_CONDITIONS } = ReturnsURIs
 
 const artificialSettGridReference = 'artificial-sett-grid-reference'
 export const validator = payload => gridReferenceValidator(payload, artificialSettGridReference)
@@ -37,7 +36,7 @@ export const setData = async request => {
 export default pageRoute({
   page: ARTIFICIAL_SETT_GRID_REFERENCE.page,
   uri: ARTIFICIAL_SETT_GRID_REFERENCE.uri,
-  completion: LICENCE_CONDITIONS.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   validator: validator,
   getData: getData,

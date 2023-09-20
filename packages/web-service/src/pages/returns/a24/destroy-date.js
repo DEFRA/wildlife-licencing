@@ -2,7 +2,7 @@ import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { isDateInFuture } from '../../habitat/a24/common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../common/date-utils.js'
-import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 import { APIRequests } from '../../../services/api-requests.js'
 
 const { DESTROY_DATE } = ReturnsURIs.A24
@@ -49,7 +49,7 @@ export const setData = async request => {
 export default pageRoute({
   page: DESTROY_DATE.page,
   uri: DESTROY_DATE.uri,
-  completion: licenceActionsCompletion,
+  completion: allCompletion,
   checkData: checkLicence,
   validator,
   getData,
