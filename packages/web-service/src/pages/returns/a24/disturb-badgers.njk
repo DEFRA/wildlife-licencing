@@ -1,7 +1,6 @@
 {% extends "standard-form.njk" %}
 {% from "radios/macro.njk" import govukRadios %}
 {% from "textarea/macro.njk" import govukTextarea %}
-
 {% set errorMap = {
         'yes-no': {
             'any.required': { ref: '#yes-no', text: 'You have not selected an option' }
@@ -10,10 +9,8 @@
           'string.empty': { ref: '#yes-conditional-input', text: 'You have not described the evidence you have that badgers were disturbed' },
           'string.max': { ref: '#yes-conditional-input', text: 'You have entered too many characters' }
         }
-    }
-%}
+    } %}
 {% set title = 'Did you disturb badgers?' %}
-
 {% set yesContionalInputHtml %}
 {{ govukTextarea({
   id: "yes-conditional-input",
@@ -23,13 +20,12 @@
   value: data.disturbBadgersDetails if data.disturbBadgersDetails else payload['yes-conditional-input'],
   classes: "govuk-!-width-full",
   label: {
-    text: "Describe the evidence you have that badger were disturbed"
+    text: "Describe the evidence you have that badgers were disturbed"
   }
 }) }}
 {% endset -%}
-
 {% block pageContent %}
-    {{ govukRadios({
+  {{ govukRadios({
       idPrefix: "yes-no",
       name: "yes-no",
       isPageHeading: false,
