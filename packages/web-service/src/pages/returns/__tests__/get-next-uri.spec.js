@@ -133,7 +133,6 @@ describe('getNextUri', () => {
     expect(resultUri).toEqual(ReturnsURIs.A24.ARTIFICIAL_SETT.uri)
   })
 
-  // Nil return related tests
   it('returns the WHY_NIL page uri when nilReturn is true and whyNil is undefined', () => {
     licenceReturnData.nilReturn = true
     delete licenceReturnData.whyNil
@@ -141,21 +140,18 @@ describe('getNextUri', () => {
     expect(resultUri).toEqual(ReturnsURIs.WHY_NIL.uri)
   })
 
-  // Outcome related tests
   it('returns the OUTCOME uri when outcome is undefined', () => {
     delete licenceReturnData.outcome
     const resultUri = getNextUri(licenceReturnData, methodTypes)
     expect(resultUri).toEqual(ReturnsURIs.OUTCOME.uri)
   })
 
-  // Completed within license dates related tests
   it('returns the COMPLETE_WITHIN_DATES uri when completedWithinLicenceDates is undefined', () => {
     delete licenceReturnData.completedWithinLicenceDates
     const resultUri = getNextUri(licenceReturnData, methodTypes)
     expect(resultUri).toEqual(ReturnsURIs.COMPLETE_WITHIN_DATES.uri)
   })
 
-  // Work start date related tests
   it('returns the WORK_START uri when completedWithinLicenceDates is false and startDate is undefined', () => {
     licenceReturnData.completedWithinLicenceDates = false
     delete licenceReturnData.startDate
@@ -163,7 +159,6 @@ describe('getNextUri', () => {
     expect(resultUri).toEqual(ReturnsURIs.WORK_START.uri)
   })
 
-  // Work end date related tests
   it('returns the WORK_END uri when completedWithinLicenceDates is false, startDate is defined but endDate is undefined', () => {
     licenceReturnData.completedWithinLicenceDates = false
     licenceReturnData.startDate = '2023-01-01'

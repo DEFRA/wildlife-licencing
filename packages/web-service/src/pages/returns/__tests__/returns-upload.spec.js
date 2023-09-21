@@ -8,7 +8,6 @@ describe('Returns upload functions', () => {
     let mockRequest
 
     beforeEach(() => {
-      // Reset the APIRequests mock methods before each test
       APIRequests.RETURNS.getLicenceReturn.mockReset()
       APIRequests.RETURNS.updateLicenceReturn.mockReset()
 
@@ -24,7 +23,6 @@ describe('Returns upload functions', () => {
     })
 
     it('should get the journey data and update the licence return', async () => {
-      // Mocked journey data
       const mockJourneyData = {
         returns: {
           id: '123'
@@ -33,7 +31,6 @@ describe('Returns upload functions', () => {
       }
       mockRequest.cache().getData.mockResolvedValue(mockJourneyData)
 
-      // Mocked licence return data
       const mockLicenceReturn = {
         someKey: 'someValue'
       }
@@ -61,8 +58,6 @@ describe('Returns upload functions', () => {
         }
       })
     })
-
-    // ... [previous code]
 
     it('should handle "no" in the yes-no payload', async () => {
       mockRequest.payload['yes-no'] = 'no'
@@ -98,7 +93,6 @@ describe('Returns upload functions', () => {
         new Error('API Error')
       )
 
-      // Expect an error to be thrown
       await expect(setData(mockRequest)).rejects.toThrow('API Error')
     })
 
@@ -115,7 +109,6 @@ describe('Returns upload functions', () => {
         new Error('API Update Error')
       )
 
-      // Expect an error to be thrown
       await expect(setData(mockRequest)).rejects.toThrow('API Update Error')
     })
   })
