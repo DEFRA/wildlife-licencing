@@ -11,8 +11,7 @@
     "version": {
       "allowBranch": [
         "master",
-        "develop",
-        "returns"
+        "develop"
       ],
       "message": "chore(release): publish %s"
     },
@@ -20,8 +19,7 @@
       "message": "chore(release): publish %s",
       "allowBranch": [
         "master",
-        "develop",
-        "returns"
+        "develop"
       ],
       "ignoreChanges": [
         ".*",
