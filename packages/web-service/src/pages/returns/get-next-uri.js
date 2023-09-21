@@ -1,5 +1,6 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { ReturnsURIs } from '../../uris.js'
+
 const {
   METHOD_IDS: {
     OBSTRUCT_SETT_WITH_GATES,
@@ -10,128 +11,127 @@ const {
   }
 } = PowerPlatformKeys
 
-export const getNextUriForNilReturnFlow = (licenceReturn) => {
-  if (licenceReturn.whyNil === undefined) {
+const isUndefined = value => value === undefined
+
+// Check and return the appropriate URI for the nil return flow
+export const getNextUriForNilReturnFlow = licenceReturn => {
+  if (isUndefined(licenceReturn.whyNil)) {
     return ReturnsURIs.WHY_NIL.uri
   }
-
   return ReturnsURIs.CHECK_YOUR_ANSWERS.uri
 }
 
+// Check and return the appropriate URI for the regular return flow
 export const getNextUriForReturnFlow = (licenceReturn, methodTypes) => {
-  if (licenceReturn.outcome === undefined) {
+  if (isUndefined(licenceReturn.outcome)) {
     return ReturnsURIs.OUTCOME.uri
   }
 
-  if (licenceReturn.completedWithinLicenceDates === undefined) {
+  if (isUndefined(licenceReturn.completedWithinLicenceDates)) {
     return ReturnsURIs.COMPLETE_WITHIN_DATES.uri
   }
 
-  if (licenceReturn.completedWithinLicenceDates === false) {
-    if (licenceReturn.startDate === undefined) {
+  if (!licenceReturn.completedWithinLicenceDates) {
+    if (isUndefined(licenceReturn.startDate)) {
       return ReturnsURIs.WORK_START.uri
     }
 
-    if (licenceReturn.endDate === undefined) {
+    if (isUndefined(licenceReturn.endDate)) {
       return ReturnsURIs.WORK_END.uri
     }
 
-    if (licenceReturn.whyNotCompletedWithinLicenceDates === undefined) {
-      return ReturnsURIs.WORK_END.uri
+    if (isUndefined(licenceReturn.whyNotCompletedWithinLicenceDates)) {
+      return ReturnsURIs.WHY_NOT_COMPLETED_WITHIN_LICENSE_DATES.uri
     }
   }
 
-  if (methodTypes.includes(OBSTRUCT_SETT_WITH_GATES)) {
-    if (licenceReturn.obstructionByOneWayGates === undefined || licenceReturn.obstructionByOneWayGatesDetails === undefined) {
-      return ReturnsURIs.A24.ONE_WAY_GATES.uri
+  for (const methodType of methodTypes) {
+    switch (methodType) {
+      case OBSTRUCT_SETT_WITH_GATES:
+        if (isUndefined(licenceReturn.obstructionByOneWayGates) || isUndefined(licenceReturn.obstructionByOneWayGatesDetails)) {
+          return ReturnsURIs.A24.ONE_WAY_GATES.uri
+        }
+        break
+
+      case OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF:
+        if (isUndefined(licenceReturn.obstructionBlockingOrProofing) || isUndefined(licenceReturn.obstructionBlockingOrProofingDetails)) {
+          return ReturnsURIs.A24.BLOCKING_OR_PROOFING.uri
+        }
+        break
+
+      case DAMAGE_A_SETT:
+        if (isUndefined(licenceReturn.damageByHandOrMechanicalMeans) || isUndefined(licenceReturn.damageByHandOrMechanicalMeansDetails)) {
+          return ReturnsURIs.A24.DAMAGE_BY_HAND_OR_MECHANICAL_MEANS.uri
+        }
+        break
+
+      case DESTROY_A_SETT:
+        if (isUndefined(licenceReturn.destroyVacantSettByHandOrMechanicalMeans) || isUndefined(licenceReturn.destroyVacantSettByHandOrMechanicalMeansDetails)) {
+          return ReturnsURIs.A24.DESTROY_VACANT_SETT.uri
+        }
+        if (licenceReturn.destroyVacantSettByHandOrMechanicalMeans && isUndefined(licenceReturn.destroyDate)) {
+          return ReturnsURIs.A24.DESTROY_DATE.uri
+        }
+        break
+
+      case DISTURB_A_SETT:
+        if (isUndefined(licenceReturn.disturbBadgers) || (licenceReturn.disturbBadgers && isUndefined(licenceReturn.disturbBadgersDetails))) {
+          return ReturnsURIs.A24.DISTURB_BADGERS.uri
+        }
+        break
+
+      // Add more cases if there are more method types
     }
   }
 
-  if (methodTypes.includes(OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF)) {
-    if (licenceReturn.obstructionBlockingOrProofing === undefined || licenceReturn.obstructionBlockingOrProofingDetails === undefined) {
-      return ReturnsURIs.A24.BLOCKING_OR_PROOFING.uri
-    }
-  }
-
-  if (methodTypes.includes(DAMAGE_A_SETT)) {
-    if (licenceReturn.damageByHandOrMechanicalMeans === undefined || licenceReturn.damageByHandOrMechanicalMeansDetails === undefined) {
-      return ReturnsURIs.A24.DAMAGE_BY_HAND_OR_MECHANICAL_MEANS.uri
-    }
-  }
-
-  if (methodTypes.includes(DESTROY_A_SETT)) {
-    if (licenceReturn.destroyVacantSettByHandOrMechanicalMeans === undefined || licenceReturn.destroyVacantSettByHandOrMechanicalMeansDetails === undefined) {
-      return ReturnsURIs.A24.DESTROY_VACANT_SETT.uri
-    }
-
-    if (licenceReturn.destroyVacantSettByHandOrMechanicalMeans === true && licenceReturn.destroyDate === undefined) {
-      return ReturnsURIs.A24.DESTROY_DATE.uri
-    }
-  }
-
-  if (methodTypes.includes(DISTURB_A_SETT)) {
-    if (licenceReturn.disturbBadgers === undefined || (licenceReturn.disturbBadgers === true && licenceReturn.disturbBadgersDetails === undefined)) {
-      return ReturnsURIs.A24.DISTURB_BADGERS.uri
-    }
-  }
-
-  if (licenceReturn.artificialSett === undefined) {
+  // Additional checks after method-specific ones
+  if (isUndefined(licenceReturn.artificialSett)) {
     return ReturnsURIs.A24.ARTIFICIAL_SETT.uri
   }
 
-  if (licenceReturn.artificialSett === true) {
-    if (licenceReturn.artificialSettDetails === undefined) {
+  if (licenceReturn.artificialSett) {
+    if (isUndefined(licenceReturn.artificialSettDetails)) {
       return ReturnsURIs.A24.ARTIFICIAL_SETT_DETAILS.uri
     }
-
-    if (licenceReturn.artificialSettCreatedBeforeClosure === undefined) {
+    if (isUndefined(licenceReturn.artificialSettCreatedBeforeClosure)) {
       return ReturnsURIs.A24.ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri
     }
-
-    if (licenceReturn.artificialSettFoundEvidence === undefined) {
+    if (isUndefined(licenceReturn.artificialSettFoundEvidence)) {
       return ReturnsURIs.A24.ARTIFICIAL_SETT_EVIDENCE_FOUND.uri
     }
-
-    if (licenceReturn.artificialSettFoundGridReference === undefined) {
+    if (isUndefined(licenceReturn.artificialSettFoundGridReference)) {
       return ReturnsURIs.A24.ARTIFICIAL_SETT_GRID_REFERENCE.uri
     }
-  }
-
-  if (licenceReturn.artificialSett === false) {
-    if (licenceReturn.noArtificialSettReason === undefined) {
+  } else {
+    if (isUndefined(licenceReturn.noArtificialSettReason)) {
       return ReturnsURIs.A24.WHY_NO_ARTIFICIAL_SETT.uri
     }
   }
 
-  if (licenceReturn.licenceConditions === undefined || (licenceReturn.licenceConditions === false && licenceReturn.licenceConditionsDetails === undefined)) {
+  if (isUndefined(licenceReturn.licenceConditions) || (!licenceReturn.licenceConditions && isUndefined(licenceReturn.licenceConditionsDetails))) {
     return ReturnsURIs.LICENCE_CONDITIONS.uri
   }
 
-  if (licenceReturn.welfareConcerns === undefined || (licenceReturn.welfareConcerns === true && licenceReturn.welfareConcernsDetails === undefined)) {
+  if (isUndefined(licenceReturn.welfareConcerns) || (licenceReturn.welfareConcerns && isUndefined(licenceReturn.welfareConcernsDetails))) {
     return ReturnsURIs.A24.WELFARE_CONCERNS.uri
   }
 
-  if (licenceReturn.returnsUpload === undefined) {
+  if (isUndefined(licenceReturn.returnsUpload)) {
     return ReturnsURIs.UPLOAD.uri
   }
 
-  if (licenceReturn.returnsUpload === true) {
-    if (licenceReturn.uploadAnotherFile === undefined || licenceReturn.uploadAnotherFile === true) {
-      return ReturnsURIs.UPLOAD_FILE.uri
-    }
+  if (licenceReturn.returnsUpload && (isUndefined(licenceReturn.uploadAnotherFile) || licenceReturn.uploadAnotherFile)) {
+    return ReturnsURIs.UPLOAD_FILE.uri
   }
 
   return ReturnsURIs.CHECK_YOUR_ANSWERS.uri
 }
 
+// Determine the overall next URI, either for a nil return or the regular flow
 export const getNextUri = (licenceReturn, methodTypes) => {
-  if (licenceReturn.nilReturn === undefined) {
+  if (isUndefined(licenceReturn.nilReturn)) {
     return ReturnsURIs.NIL_RETURN.uri
   }
 
-  if (licenceReturn.nilReturn === true) {
-    return getNextUriForNilReturnFlow(licenceReturn)
-  } else {
-    return getNextUriForReturnFlow(licenceReturn, methodTypes)
-  }
+  return licenceReturn.nilReturn ? getNextUriForNilReturnFlow(licenceReturn) : getNextUriForReturnFlow(licenceReturn, methodTypes)
 }
