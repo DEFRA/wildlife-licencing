@@ -80,7 +80,8 @@ export const getNextUriForReturnFlow = (licenceReturn, methodTypes) => {
         }
         break
 
-      // Add more cases if there are more method types
+      default:
+        break
     }
   }
 
