@@ -69,6 +69,47 @@ describe('the check-supporting-information page handler', () => {
     })
   })
 
+  describe('the setData function', () => {
+    it('updates the uploadAnotherFile flag', async () => {
+      const mockSetData = jest.fn()
+      const licenceId = 'ABC-567-GHU'
+      const returnId = '123456789'
+      const request = {
+        payload: {
+          'another-file-check': 'yes'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId,
+            returns: {
+              id: returnId
+            }
+          }),
+          setData: mockSetData
+        })
+      }
+
+      const mockUpdateLicenceReturn = jest.fn()
+      const mockLicenceReturnData = {
+        nilReturn: false
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => mockLicenceReturnData),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../returns-uploaded-files.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith(licenceId, returnId, { ...mockLicenceReturnData, uploadAnotherFile: true })
+      expect(mockSetData).toHaveBeenCalled()
+    })
+  })
+
   describe('the validator function', () => {
     it('should display a validation error if the user does not input a choice for another file upload', async () => {
       try {
