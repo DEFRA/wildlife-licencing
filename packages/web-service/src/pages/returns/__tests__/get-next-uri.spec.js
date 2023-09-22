@@ -167,6 +167,15 @@ describe('getNextUri', () => {
     expect(resultUri).toEqual(ReturnsURIs.WORK_END.uri)
   })
 
+  it('returns the WHY_NOT_COMPLETED_WITHIN_LICENSE_DATES uri when completedWithinLicenceDates is false, startDate is defined, endDate is defined, but whyNotCompletedWithinLicenceDates is undefined', () => {
+    licenceReturnData.completedWithinLicenceDates = false
+    licenceReturnData.startDate = '2023-01-01'
+    licenceReturnData.endDate = '2023-01-02'
+    delete licenceReturnData.whyNotCompletedWithinLicenceDates
+    const resultUri = getNextUri(licenceReturnData, methodTypes)
+    expect(resultUri).toEqual(ReturnsURIs.A24.WHY_NOT_COMPLETE_WITHIN_DATES.uri)
+  })
+
   it('returns OBSTRUCT_SETT_WITH_GATES uri when applicable', () => {
     methodTypes = [OBSTRUCT_SETT_WITH_GATES]
     delete licenceReturnData.obstructionByOneWayGates
@@ -247,5 +256,18 @@ describe('getNextUri', () => {
     delete licenceReturnData.whyNil
     const resultUri = getNextUriForNilReturnFlow(licenceReturnData)
     expect(resultUri).toBe(ReturnsURIs.WHY_NIL.uri)
+  })
+
+  it('returns check your answers for nil return flow when "whyNil" is defined', () => {
+    licenceReturnData.nilReturn = true
+    licenceReturnData.whyNil = true
+    const resultUri = getNextUriForNilReturnFlow(licenceReturnData)
+    expect(resultUri).toBe(ReturnsURIs.CHECK_YOUR_ANSWERS.uri)
+  })
+
+  it('returns NIL_RETURN uri when nilReturn is undefined', () => {
+    delete licenceReturnData.nilReturn
+    const resultUri = getNextUri(licenceReturnData)
+    expect(resultUri).toBe(ReturnsURIs.NIL_RETURN.uri)
   })
 })

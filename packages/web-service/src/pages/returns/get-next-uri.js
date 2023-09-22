@@ -41,7 +41,7 @@ export const getNextUriForReturnFlow = (licenceReturn, methodTypes) => {
     }
 
     if (isUndefined(licenceReturn.whyNotCompletedWithinLicenceDates)) {
-      return ReturnsURIs.WHY_NOT_COMPLETED_WITHIN_LICENSE_DATES.uri
+      return ReturnsURIs.A24.WHY_NOT_COMPLETE_WITHIN_DATES.uri
     }
   }
 
