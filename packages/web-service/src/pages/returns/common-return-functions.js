@@ -122,7 +122,7 @@ export const getWhyNoArtificialSettReason = returnData => {
   return whyNoArtificialSettReason
 }
 
-export const allCompletion = async (request) => {
+export const allCompletion = async request => {
   const journeyData = await request.cache().getData()
 
   const returnId = journeyData?.returns?.id
@@ -132,7 +132,5 @@ export const allCompletion = async (request) => {
   const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
   const methodTypes = getLicenceMethodTypes(licenceActions)
 
-  const nextUri = getNextUri(licenceReturn, methodTypes)
-
-  return nextUri
+  return getNextUri(licenceReturn, methodTypes)
 }

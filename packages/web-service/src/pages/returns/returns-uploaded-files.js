@@ -53,8 +53,8 @@ export const returnUploadedFiles = pageRoute({
   uri: UPLOADED_FILES_CHECK.uri,
   checkData: checkLicence,
   backlink: Backlink.NO_BACKLINK,
+  completion: allCompletion,
   validator,
   setData,
-  getData,
-  completion: allCompletion
+  getData
 })
