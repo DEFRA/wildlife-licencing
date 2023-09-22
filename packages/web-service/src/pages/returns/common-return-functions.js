@@ -125,7 +125,7 @@ export const getWhyNoArtificialSettReason = returnData => {
 export const allCompletion = async request => {
   const journeyData = await request.cache().getData()
 
-  if (journeyData?.returns === undefined || journeyData?.licenceId === undefined) {
+  if (!journeyData?.returns?.id || !journeyData?.licenceId) {
     console.error('Error loading returns and licenceId from cache.')
     return APPLICATIONS.uri
   }
