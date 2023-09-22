@@ -1,3 +1,5 @@
+import { APPLICATIONS } from '../../../uris.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the common return functions', () => {
@@ -112,7 +114,12 @@ describe('the common return functions', () => {
 
   describe('allCompletion', () => {
     it('should call getNextUri with data from calling getLicenceReturn and getLicenceMethodTypes', async () => {
-      const getDataMock = jest.fn()
+      const getDataMock = jest.fn(() => ({
+        returns: {
+          id: '1'
+        },
+        licenceId: '2'
+      }))
 
       const request = {
         cache: () => {
@@ -156,6 +163,48 @@ describe('the common return functions', () => {
       expect(getNextUriMock).toHaveBeenCalledWith({
         nilReturn: true
       }, methodIdsStub)
+    })
+
+    it('should return the application page uri if returns id not set in cache', async () => {
+      const getDataMock = jest.fn(() => ({
+        returns: {
+          id: '1'
+        }
+      }))
+
+      const request = {
+        cache: () => {
+          return {
+            getData: getDataMock
+          }
+        }
+      }
+
+      const { allCompletion } = await import('../common-return-functions.js')
+
+      const uri = await allCompletion(request)
+
+      expect(uri).toEqual(APPLICATIONS.uri)
+    })
+
+    it('should return the application page uri if licence id not set in cache', async () => {
+      const getDataMock = jest.fn(() => ({
+        licenceId: '2'
+      }))
+
+      const request = {
+        cache: () => {
+          return {
+            getData: getDataMock
+          }
+        }
+      }
+
+      const { allCompletion } = await import('../common-return-functions.js')
+
+      const uri = await allCompletion(request)
+
+      expect(uri).toEqual(APPLICATIONS.uri)
     })
   })
 })
