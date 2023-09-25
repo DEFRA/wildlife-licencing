@@ -1,11 +1,10 @@
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence, commonValidator } from './common-return-functions.js'
+import { allCompletion, checkLicence, commonValidator } from './common-return-functions.js'
 import { boolFromYesNo } from '../common/common.js'
 
 const { LICENCE_CONDITIONS } = ReturnsURIs
-const { WELFARE_CONCERNS } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -41,7 +40,7 @@ export const setData = async request => {
 export default pageRoute({
   page: LICENCE_CONDITIONS.page,
   uri: LICENCE_CONDITIONS.uri,
-  completion: WELFARE_CONCERNS.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   getData: getData,
   setData: setData,

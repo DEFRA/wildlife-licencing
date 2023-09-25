@@ -1,7 +1,7 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { boolFromYesNo } from '../../common/common.js'
-import { checkLicence, commonValidator, licenceActionsCompletion } from '../common-return-functions.js'
+import { allCompletion, checkLicence, commonValidator } from '../common-return-functions.js'
 import pageRoute from '../../../routes/page-route.js'
 
 const { DISTURB_BADGERS } = ReturnsURIs.A24
@@ -42,7 +42,7 @@ export default pageRoute({
   uri: DISTURB_BADGERS.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: licenceActionsCompletion,
+  completion: allCompletion,
   setData: setData,
   validator: validator
 })

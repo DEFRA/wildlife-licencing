@@ -4,9 +4,9 @@ import { boolFromYesNo, timestampFormatter } from '../common/common.js'
 import pageRoute from '../../routes/page-route.js'
 import { Backlink } from '../../handlers/backlink.js'
 import Joi from 'joi'
-import { checkLicence } from './common-return-functions.js'
+import { allCompletion, checkLicence } from './common-return-functions.js'
 
-const { UPLOAD_FILE, UPLOADED_FILES_CHECK, CHECK_YOUR_ANSWERS } = ReturnsURIs
+const { UPLOADED_FILES_CHECK } = ReturnsURIs
 
 const anotherFileUpload = 'another-file-check'
 
@@ -36,12 +36,16 @@ export const getData = async request => {
   }))
 }
 
-export const completion = async request => {
-  if (boolFromYesNo(request?.payload[anotherFileUpload])) {
-    return UPLOAD_FILE.uri
-  } else {
-    return CHECK_YOUR_ANSWERS.uri
-  }
+export const setData = async request => {
+  const journeyData = await request.cache().getData()
+  const uploadAnotherFile = boolFromYesNo(request.payload['another-file-check'])
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+  const payload = { ...licenceReturn, uploadAnotherFile }
+  await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
+  journeyData.returns = { ...journeyData.returns, uploadAnotherFile }
+  await request.cache().setData(journeyData)
 }
 
 export const returnUploadedFiles = pageRoute({
@@ -49,7 +53,8 @@ export const returnUploadedFiles = pageRoute({
   uri: UPLOADED_FILES_CHECK.uri,
   checkData: checkLicence,
   backlink: Backlink.NO_BACKLINK,
+  completion: allCompletion,
   validator,
-  getData,
-  completion
+  setData,
+  getData
 })
