@@ -27,6 +27,33 @@
   ]
 %}
 
+{% set optionItems = [
+    {
+      value: 'email',
+      text: "Email a copy of the licence"
+    }
+  ]
+%}
+
+{% if data.lastLicenceReturn %}
+
+  {{ optionItems.push({
+      value: 'return',
+      text: "Submit a new report of action (WARNING: Progress on previous report of action will be lost)"
+  }) }}
+
+  {{ optionItems.push({
+      value: 'resume',
+      text: "Resume previous report of action (created at " + data.lastLicenceReturn.createdAtFormatted + ")"
+  }) }}
+{% else %}
+  {{ optionItems.push({
+        value: 'return',
+        text: "Submit a new report of action"
+    }) }}
+{% endif %}
+
+
 {% block pageTitle %}
   {{ 'Error: ' + title if error else title }}
 {% endblock %}
@@ -42,16 +69,7 @@
           text: "Select an option",
           classes: "govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24"
         },
-        items: [
-          {
-            value: 'email',
-            text: "Email a copy of the licence"
-          },
-          {
-            value:  'return',
-            text: "Submit a report of action"
-          }
-        ]
+        items: optionItems
       }) }}
   {% endif %}
 {% endblock %}
