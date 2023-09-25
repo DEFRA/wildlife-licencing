@@ -17,8 +17,7 @@ export const RETURNS = {
     async () => {
       const licenceReturns = await API.get(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURNS}`)
       debug(`Getting licence returns with licenceId ${licenceId}`)
-      console.log('licenceReturns', licenceReturns)
-      return licenceReturns[0]
+      return licenceReturns.length > 0 ? licenceReturns[0] : null
     },
     `Error getting last licence return for licenceId ${licenceId}`,
     500
