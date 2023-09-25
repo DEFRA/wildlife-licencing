@@ -53,14 +53,11 @@ export const getData = async request => {
   })).sort(sorter)
 
   const applicationsWithLicences = await getApplicationsWithLicences(applications)
-  const statuses = {
-    ...applicationStatuses,
-    ...licenceStatuses
-  }
 
   return {
     totalSections,
-    statuses,
+    applicationStatuses,
+    licenceStatuses,
     applications: applicationsWithLicences
   }
 }
