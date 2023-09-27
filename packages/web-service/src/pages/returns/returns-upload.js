@@ -12,7 +12,14 @@ export const setData = async request => {
   const returnId = journeyData?.returns?.id
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+
   const payload = { ...licenceReturn, returnsUpload }
+
+  // User has just submitted that they wish to upload a file so prepare state machine to navigate to the upload file page next
+  if (returnsUpload === true) {
+    payload.uploadAnotherFile = true
+  }
+
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
   journeyData.returns = { ...journeyData.returns, returnsUpload }
   await request.cache().setData(journeyData)
