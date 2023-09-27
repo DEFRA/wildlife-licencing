@@ -12,7 +12,7 @@
   {{ govukInput({
     id: "artificial-sett-grid-reference",
     name: "artificial-sett-grid-reference",
-    errorMessage: { text: "Enter a national grid reference for the artificial sett" } if error['artificial-sett-grid-reference'],
+    errorMessage: { text: "Enter a national grid reference that is 2 letters and 6 digits" } if error['artificial-sett-grid-reference'],
     classes: "govuk-input--width-10",
     spellcheck: false,
     value: data.artificialSettFoundGridReference if data.artificialSettFoundGridReference else payload['artificial-sett-grid-reference'],
