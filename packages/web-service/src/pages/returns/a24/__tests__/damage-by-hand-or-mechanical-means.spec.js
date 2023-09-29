@@ -36,8 +36,8 @@ describe('the damage by hand or mechanical means functions', () => {
 
       const { getData } = await import('../damage-by-hand-or-mechanical-means.js')
       expect(await getData(request)).toEqual({
-        damageSett: false,
-        damageSettDetails: 'delay'
+        yesNo: 'no',
+        yesNoDetails: 'delay'
       })
     })
 
@@ -66,8 +66,8 @@ describe('the damage by hand or mechanical means functions', () => {
 
       const { getData } = await import('../damage-by-hand-or-mechanical-means.js')
       expect(await getData(request)).toEqual({
-        damageSett: undefined,
-        damageSettDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })
