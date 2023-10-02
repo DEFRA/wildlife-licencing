@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-file-queue-processor",
-  "version": "12.3.8-alpha.0",
+  "version": "12.3.9-alpha.0",
   "description": "Interface to Microsoft Sharepoint. Queue consumer.",
   "main": "src/file-queue-processor.js",
   "type": "module",
@@ -31,10 +31,11 @@
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "@azure/identity": "^2.1.0",
-    "@defra/wls-connectors-lib": "^12.3.8-alpha.0",
-    "@defra/wls-database-model": "^12.3.8-alpha.0",
-    "@defra/wls-queue-defs": "^12.3.8-alpha.0",
+    "@defra/wls-connectors-lib": "^12.3.9-alpha.0",
+    "@defra/wls-database-model": "^12.3.9-alpha.0",
+    "@defra/wls-queue-defs": "^12.3.9-alpha.0",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "dotenv": "^10.0.0"
-  }
+  },
+  "gitHead": "8b51186f90ae03e7c8a4550e1ab21c868f8e6af3"
 }
