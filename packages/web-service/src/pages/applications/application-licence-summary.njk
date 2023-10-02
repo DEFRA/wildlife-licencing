@@ -17,7 +17,7 @@
 {% set title = 'Licence details' %}
 
 {% set tableRows = [
-    { key: { text: "Status" }, value: { html: applicationAndLicenceStatusText.getLicenceStatus(data.applicationLicence, data.licenceStatuses) } },
+    { key: { text: "Status" }, value: { html: applicationAndLicenceStatusText.getLicenceStatus(data.applicationLicence.statusCode, data.licenceStatuses) } },
     { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
     { key: { text: "Licence reference" }, value: { text: data.applicationLicence.licenceNumber  } },
     { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
@@ -62,7 +62,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
   {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: tableRows }) }}
   {% if data.lastSentEventFlag %}
     {{ govukRadios({

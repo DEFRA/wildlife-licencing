@@ -47,7 +47,8 @@ describe('Returns upload functions', () => {
         '123',
         {
           ...mockLicenceReturn,
-          returnsUpload: true
+          returnsUpload: true,
+          uploadAnotherFile: true
         }
       )
       expect(mockRequest.cache().setData).toHaveBeenCalledWith({

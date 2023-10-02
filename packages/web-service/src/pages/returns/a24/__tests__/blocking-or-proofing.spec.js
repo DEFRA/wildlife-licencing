@@ -36,8 +36,8 @@ describe('the blocking or proofing functions', () => {
 
       const { getData } = await import('../blocking-or-proofing.js')
       expect(await getData(request)).toEqual({
-        obstructBlocking: true,
-        obstructBlockingDetails: 'reason'
+        yesNo: 'yes',
+        yesNoDetails: 'reason'
       })
     })
 
@@ -66,8 +66,8 @@ describe('the blocking or proofing functions', () => {
 
       const { getData } = await import('../blocking-or-proofing.js')
       expect(await getData(request)).toEqual({
-        obstructBlocking: undefined,
-        obstructBlockingDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

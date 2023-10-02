@@ -1,7 +1,7 @@
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { allCompletion, checkLicence } from '../common-return-functions.js'
 
 const { DESTROY_VACANT_SETT } = ReturnsURIs.A24
@@ -16,7 +16,7 @@ export const getData = async request => {
     destroyVacantSett = destroyVacantSettByHandOrMechanicalMeans
     destroyVacantSettDetails = destroyVacantSettByHandOrMechanicalMeansDetails
   }
-  return { destroyVacantSett, destroyVacantSettDetails }
+  return { yesNo: yesNoFromBool(destroyVacantSett), yesNoDetails: destroyVacantSettDetails }
 }
 
 export const setData = async request => {

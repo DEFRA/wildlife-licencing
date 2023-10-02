@@ -20,9 +20,9 @@
 %}
 
 {% macro getApplicationStatus(statusCode, statuses) %}
-    {% if application.statusCode %}
+    {% if statusCode %}
         {% if applicationStatusText[statuses[statusCode]] %}
-            <strong class="{{applicationStatusText[statuses[statusCode]].tag}} govuk-!-margin-top-4">{{ applicationStatusText[statuses[application.statusCode]].text }}</strong>
+            <strong class="{{applicationStatusText[statuses[statusCode]].tag}} govuk-!-margin-top-4">{{ applicationStatusText[statuses[statusCode]].text }}</strong>
         {% else %}
             <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-top-4">UNKNOWN</strong>
         {% endif %}
