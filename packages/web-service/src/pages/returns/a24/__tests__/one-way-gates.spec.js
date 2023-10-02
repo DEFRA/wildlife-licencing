@@ -36,8 +36,8 @@ describe('the one way gates functions', () => {
 
       const { getData } = await import('../one-way-gates.js')
       expect(await getData(request)).toEqual({
-        oneWayGatesYesOrNo: true,
-        oneWayGatesDetails: 'development issues'
+        yesNo: 'yes',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -66,8 +66,8 @@ describe('the one way gates functions', () => {
 
       const { getData } = await import('../one-way-gates.js')
       expect(await getData(request)).toEqual({
-        oneWayGatesYesOrNo: undefined,
-        oneWayGatesDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

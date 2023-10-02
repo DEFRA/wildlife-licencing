@@ -36,8 +36,8 @@ describe('the destroy vacant sett functions', () => {
 
       const { getData } = await import('../destroy-vacant-sett.js')
       expect(await getData(request)).toEqual({
-        destroyVacantSett: false,
-        destroyVacantSettDetails: 'development issues'
+        yesNo: 'no',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -66,8 +66,8 @@ describe('the destroy vacant sett functions', () => {
 
       const { getData } = await import('../destroy-vacant-sett.js')
       expect(await getData(request)).toEqual({
-        destroyVacantSett: undefined,
-        destroyVacantSettDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

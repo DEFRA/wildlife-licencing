@@ -60,7 +60,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes',
+          checked: yesNo === 'yes' or payload['yes-no'] === 'yes',
           conditional: {
             html: yesContionalInputHtml
           }
@@ -68,7 +68,7 @@
         {
           value: "no",
           text: "No",
-          checked: data.yesNo === 'no' or payload['yes-no'] === 'no',
+          checked: yesNo === 'no' or payload['yes-no'] === 'no',
           conditional: {
             html: noContionalInputHtml
           }
