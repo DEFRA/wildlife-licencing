@@ -4,6 +4,60 @@ import { APIRequests } from '../../../services/api-requests.js'
 jest.mock('../../../services/api-requests.js')
 
 describe('Returns upload functions', () => {
+  beforeEach(() => jest.resetModules())
+  describe('the getData function', () => {
+    it('returns yesNo as no when a value has been set', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: '920d53c110fc',
+            returns: {
+              id: '123456789'
+            }
+          })
+        })
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              returnsUpload: false
+            }))
+          }
+        }
+      }))
+
+      const { getData } = await import('../returns-upload.js')
+      const result = await getData(request)
+      expect(result).toEqual({ yesNo: 'no' })
+    })
+
+    it('returns yesNo as undefined when no value has been set', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: '920d53c110fc',
+            returns: {
+              id: '123456789'
+            }
+          })
+        })
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({}))
+          }
+        }
+      }))
+
+      const { getData } = await import('../returns-upload.js')
+      const result = await getData(request)
+      expect(result).toEqual({ yesNo: undefined })
+    })
+  })
   describe('setData', () => {
     let mockRequest
 
