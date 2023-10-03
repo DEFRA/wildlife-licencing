@@ -61,6 +61,11 @@ describe('application-licence page', () => {
               licenceNumber: 'LI-0016N0Z4',
               annotations: [{ filename: '2023-1253092-WLM-LIC-licence document.pdf', mimetype: 'application/pdf', modifiedOn: '2023-06-09T16:09:06Z', objectTypeCode: 'sdds_license' }]
             }])
+          },
+          RETURNS: {
+            getLastLicenceReturn: jest.fn(() => ({
+              id: '1'
+            }))
           }
         }
       }))
@@ -92,6 +97,10 @@ describe('application-licence page', () => {
               objectTypeCode: 'sdds_license'
             }
           ]
+        },
+        lastLicenceReturn: {
+          createdAtFormatted: null,
+          id: '1'
         },
         licenceStatuses: {
           1: 'ACTIVE',
@@ -159,7 +168,8 @@ describe('application-licence page', () => {
     it('should redirect to the applications page when the user does not select to email a copy of a licence or submit a return', async () => {
       const request = {
         cache: () => ({
-          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' })
+          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }),
+          setData: jest.fn()
         }),
         payload: { }
       }
