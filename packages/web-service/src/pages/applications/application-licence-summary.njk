@@ -39,12 +39,15 @@
 
   {{ optionItems.push({
       value: 'return',
-      text: "Submit a new report of action (WARNING: Progress on previous report of action will be lost)"
+      text: "Submit a report of action"
   }) }}
 
   {{ optionItems.push({
       value: 'resume',
-      text: "Resume previous report of action (created at " + data.lastLicenceReturn.createdAtFormatted + ")"
+      text: "Resume previous report of action",
+      hint: {
+        text: "Created on " + data.lastLicenceReturn.createdAtFormatted
+      }
   }) }}
 {% else %}
   {{ optionItems.push({
