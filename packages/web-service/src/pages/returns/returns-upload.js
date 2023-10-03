@@ -6,6 +6,23 @@ import { allCompletion, checkLicence } from './common-return-functions.js'
 
 const { UPLOAD } = ReturnsURIs
 
+export const getData = async request => {
+  const journeyData = await request.cache().getData()
+  const returnId = journeyData?.returns?.id
+  const licenceId = journeyData?.licenceId
+  let returnsUpload
+  if (returnId) {
+    const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
+    returnsUpload = licenceReturn?.returnsUpload
+  }
+
+  // Once the user has added files we don't want to show this question to the user again,
+  // unless they remove all the files and then we want to default the value back to no
+  const yesNo = returnsUpload === undefined ? undefined : 'no'
+
+  return { yesNo }
+}
+
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const returnsUpload = boolFromYesNo(request.payload['yes-no'])
@@ -30,5 +47,6 @@ export const returnUpload = yesNoPage({
   uri: UPLOAD.uri,
   checkData: checkLicence,
   setData: setData,
+  getData: getData,
   completion: allCompletion
 })
