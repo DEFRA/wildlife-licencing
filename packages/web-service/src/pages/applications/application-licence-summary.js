@@ -26,7 +26,10 @@ export const getData = async request => {
   const lastSentEventFlag = licences.length > 0 && !!findLastSentEvent(licences[0])
 
   const lastLicenceReturn = await APIRequests.RETURNS.getLastLicenceReturn(applicationLicence.id)
-  lastLicenceReturn.createdAtFormatted = timestampFormatterWithTime(lastLicenceReturn.createdAt)
+
+  if (lastLicenceReturn) {
+    lastLicenceReturn.createdAtFormatted = timestampFormatterWithTime(lastLicenceReturn.createdAt)
+  }
 
   // Needed in the validator
   const journeyData = await request.cache().getData()
