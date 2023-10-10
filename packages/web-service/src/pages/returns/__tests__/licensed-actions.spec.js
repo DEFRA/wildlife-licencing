@@ -162,4 +162,42 @@ describe('the Licensed Actions functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
+
+  describe('resetReturnDataPayload', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should return expected payload when called', async () => {
+      const mockLicenceReturn = {
+        returnReferenceNumber: 'mockReturnRef',
+        id: 'mockId'
+      }
+      const mockLicenceId = 'mockLicenceId'
+      const mockNilReturn = false
+      const expectedMethodTypes = [
+        'one', 'two', 'three'
+      ]
+
+      jest.mock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceActions: jest.fn().mockResolvedValue(expectedMethodTypes)
+          }
+        }
+      }))
+
+      const { resetReturnDataPayload } = await import('../licensed-actions.js')
+
+      const result = await resetReturnDataPayload(mockLicenceReturn, mockLicenceId, mockNilReturn)
+
+      expect(result).toEqual({
+        nilReturn: mockNilReturn,
+        activityTypes: expect.any(Object), // since we don't have the exact mock for activityTypes, use any Array
+        methodTypes: expect.any(Array),
+        returnReferenceNumber: mockLicenceReturn.returnReferenceNumber,
+        id: mockLicenceReturn.id
+      })
+    })
+  })
 })

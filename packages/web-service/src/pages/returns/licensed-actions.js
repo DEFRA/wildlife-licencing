@@ -21,7 +21,7 @@ export const getData = async request => {
   }
 }
 
-const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn) => {
+export const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn) => {
   const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
   const methodTypes = getLicenceMethodTypes(licenceActions)
   return {
