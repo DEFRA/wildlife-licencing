@@ -21,6 +21,18 @@ export const getData = async request => {
   }
 }
 
+const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn) => {
+  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
+  const methodTypes = getLicenceMethodTypes(licenceActions)
+  return {
+    nilReturn,
+    activityTypes,
+    methodTypes,
+    returnReferenceNumber: licenceReturn.returnReferenceNumber,
+    id: licenceReturn.id
+  }
+}
+
 export const setData = async request => {
   const journeyData = await request.cache().getData()
   const nilReturn = !boolFromYesNo(request.payload['yes-no'])
@@ -29,7 +41,13 @@ export const setData = async request => {
   const licenceNumber = journeyData?.licenceNumber
   if (returnId && licenceId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-    const payload = { ...licenceReturn, nilReturn }
+    let payload = { ...licenceReturn, nilReturn }
+
+    // If we've switched the type of return, reset the data
+    if (nilReturn !== licenceReturn.nilReturn) {
+      payload = await resetReturnDataPayload(licenceReturn, licenceId, nilReturn)
+    }
+
     await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
     journeyData.returns = { ...journeyData.returns, nilReturn }
   } else {
