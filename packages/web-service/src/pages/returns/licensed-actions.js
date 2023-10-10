@@ -2,7 +2,7 @@ import { ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
-import { activityTypes, checkLicence, getLicenceMethodTypes, allCompletion } from './common-return-functions.js'
+import { activityTypes, checkLicence, getLicenceMethodTypes, allCompletion, resetReturnDataPayload } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NIL_RETURN } = ReturnsURIs
@@ -18,18 +18,6 @@ export const getData = async request => {
     return { yesNo: yesNoFromBool(!nilReturn), activityTypes, methodTypes }
   } else {
     return { yesNo: undefined, activityTypes, methodTypes }
-  }
-}
-
-export const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn) => {
-  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
-  const methodTypes = getLicenceMethodTypes(licenceActions)
-  return {
-    nilReturn,
-    activityTypes,
-    methodTypes,
-    returnReferenceNumber: licenceReturn.returnReferenceNumber,
-    id: licenceReturn.id
   }
 }
 

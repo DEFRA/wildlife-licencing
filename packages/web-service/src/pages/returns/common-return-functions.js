@@ -139,3 +139,15 @@ export const allCompletion = async request => {
 
   return getNextUri(licenceReturn, methodTypes)
 }
+
+export const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn) => {
+  const licenceActions = await APIRequests.RETURNS.getLicenceActions(licenceId)
+  const methodTypes = getLicenceMethodTypes(licenceActions)
+  return {
+    nilReturn,
+    activityTypes,
+    methodTypes,
+    returnReferenceNumber: licenceReturn.returnReferenceNumber,
+    id: licenceReturn.id
+  }
+}
