@@ -2,7 +2,7 @@ import { ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
 import pageRoute from '../../routes/page-route.js'
-import { activityTypes, checkLicence, getLicenceMethodTypes, allCompletion } from './common-return-functions.js'
+import { activityTypes, checkLicence, getLicenceMethodTypes, allCompletion, resetReturnDataPayload } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
 const { NIL_RETURN } = ReturnsURIs
@@ -29,7 +29,13 @@ export const setData = async request => {
   const licenceNumber = journeyData?.licenceNumber
   if (returnId && licenceId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
-    const payload = { ...licenceReturn, nilReturn }
+    let payload = { ...licenceReturn, nilReturn }
+
+    // If we've switched the type of return, reset the data
+    if (nilReturn !== licenceReturn.nilReturn) {
+      payload = await resetReturnDataPayload(licenceReturn, licenceId, nilReturn)
+    }
+
     await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
     journeyData.returns = { ...journeyData.returns, nilReturn }
   } else {

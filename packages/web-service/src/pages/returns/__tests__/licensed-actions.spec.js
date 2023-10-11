@@ -1,7 +1,10 @@
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the Licensed Actions functions', () => {
-  beforeEach(() => jest.resetModules())
+  beforeEach(() => {
+    jest.resetModules()
+    jest.clearAllMocks()
+  })
 
   describe('the getData function', () => {
     it('returns the nilReturn as true', async () => {
@@ -160,6 +163,47 @@ describe('the Licensed Actions functions', () => {
       await setData(request)
       expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: '26a3e94f-7420-NGVR-ROA1', nilReturn: true })
       expect(mockSetData).toHaveBeenCalled()
+    })
+
+    it('calls resetReturnDataPayload when the value for nilReturn has changed', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        payload: {
+          'yes-no': 'yes'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
+      }
+
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              nilReturn: true
+            })),
+            getLicenceReturns: jest.fn(() => []),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      jest.doMock('../common-return-functions.js', () => ({
+        resetReturnDataPayload: jest.fn()
+      }))
+
+      const { setData } = await import('../licensed-actions.js')
+      const { resetReturnDataPayload } = await import('../common-return-functions.js')
+      await setData(request)
+      expect(resetReturnDataPayload).toHaveBeenCalled()
     })
   })
 })
