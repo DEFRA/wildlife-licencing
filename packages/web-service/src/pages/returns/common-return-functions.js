@@ -156,4 +156,6 @@ export const redirectIfNextUriNotCheckYourAnswers = async (nextUri, h) => {
   if (nextUri !== ReturnsURIs.CHECK_YOUR_ANSWERS.uri) {
     return h.redirect(nextUri)
   }
+  
+  return null
 }
