@@ -1,4 +1,5 @@
-import { APPLICATIONS } from '../../../uris.js'
+import { APPLICATIONS, ReturnsURIs } from '../../../uris.js'
+import { redirectIfNextUriNotCheckYourAnswers } from '../common-return-functions.js'
 
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
@@ -244,6 +245,39 @@ describe('the common return functions', () => {
         returnReferenceNumber: mockLicenceReturn.returnReferenceNumber,
         id: mockLicenceReturn.id
       })
+    })
+  })
+
+  describe('redirectIfNextUriNotCheckYourAnswers', () => {
+    beforeEach(() => {
+      jest.resetModules()
+      jest.clearAllMocks()
+    })
+
+    it('redirects when the nextUri is not the check your answers page', async () => {
+      const mockRedirect = jest.fn()
+      const h = {
+        redirect: mockRedirect
+      }
+
+      const nextUri = 'not-check-answers'
+
+      redirectIfNextUriNotCheckYourAnswers(nextUri, h)
+
+      expect(mockRedirect).toHaveBeenCalledWith(nextUri)
+    })
+
+    it('does not redirect when the nextUri is the check your answers page', async () => {
+      const mockRedirect = jest.fn()
+      const h = {
+        redirect: mockRedirect
+      }
+
+      const nextUri = ReturnsURIs.CHECK_YOUR_ANSWERS.uri
+
+      redirectIfNextUriNotCheckYourAnswers(nextUri, h)
+
+      expect(mockRedirect).not.toHaveBeenCalled()
     })
   })
 })
