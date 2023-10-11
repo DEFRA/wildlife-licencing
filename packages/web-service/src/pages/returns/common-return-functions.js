@@ -91,6 +91,16 @@ export const checkLicence = async (request, h) => {
   return null
 }
 
+export const checkReturns = async (request, h) => {
+  const journeyData = await request.cache().getData()
+
+  if (!journeyData.returns) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  return null
+}
+
 export const getNilReturnReason = nilReturnReasonValue => {
   let nilReturnReason
   const nilReturnReasonText = {
@@ -149,5 +159,11 @@ export const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn
     methodTypes,
     returnReferenceNumber: licenceReturn.returnReferenceNumber,
     id: licenceReturn.id
+  }
+}
+
+export const redirectIfNextUriNotCheckYourAnswers = async (nextUri, h) => {
+  if (nextUri !== ReturnsURIs.CHECK_YOUR_ANSWERS.uri) {
+    return h.redirect(nextUri)
   }
 }

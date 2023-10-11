@@ -93,6 +93,43 @@ describe('the common return functions', () => {
     })
   })
 
+  describe('checkReturns', () => {
+    it('the check licence should return null when there is a return object in the cache', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            returns: {
+              id: '1',
+              currentReturnReferenceNumber: '2'
+            }
+          })
+        })
+      }
+
+      const { checkReturns } = await import('../common-return-functions.js')
+      expect(await checkReturns(request)).toBeNull()
+    })
+
+    it('the check data should redirect if there is no returns object in the cache', async () => {
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18'
+          })
+        })
+      }
+      const mockRedirect = jest.fn()
+      const h = {
+        redirect: mockRedirect
+      }
+
+      const { checkReturns } = await import('../common-return-functions.js')
+      await checkReturns(request, h)
+      expect(mockRedirect).toHaveBeenCalled()
+      expect(mockRedirect).toHaveBeenCalledWith('/applications')
+    })
+  })
+
   describe('getNilReturnReason', () => {
     it('should extract the nil return reason', async () => {
       const { getNilReturnReason } = await import('../common-return-functions.js')
