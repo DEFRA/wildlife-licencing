@@ -161,9 +161,3 @@ export const resetReturnDataPayload = async (licenceReturn, licenceId, nilReturn
     id: licenceReturn.id
   }
 }
-
-export const redirectIfNextUriNotCheckYourAnswers = async (nextUri, h) => {
-  if (nextUri !== ReturnsURIs.CHECK_YOUR_ANSWERS.uri) {
-    return h.redirect(nextUri)
-  }
-}
