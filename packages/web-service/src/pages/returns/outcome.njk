@@ -40,7 +40,7 @@
               {
                 value: "no",
                 text: "No",
-                checked: data.outcomeReason if data.outcomeReason else payload['outcome-check'] === 'no',
+                checked: data.outcomeReason if not data.outcome and data.outcomeReason else payload['outcome-check'] === 'no',
                 conditional: {
                   html: outcomeHtml
                 }
