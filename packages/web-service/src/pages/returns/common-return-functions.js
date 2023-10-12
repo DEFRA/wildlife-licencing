@@ -91,6 +91,16 @@ export const checkLicence = async (request, h) => {
   return null
 }
 
+export const checkReturns = async (request, h) => {
+  const journeyData = await request.cache().getData()
+
+  if (!journeyData.returns) {
+    return h.redirect(APPLICATIONS.uri)
+  }
+
+  return null
+}
+
 export const getNilReturnReason = nilReturnReasonValue => {
   let nilReturnReason
   const nilReturnReasonText = {
