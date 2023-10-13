@@ -20,7 +20,6 @@
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
     "lerna": "^4.0.0",
-    "lint-staged": "^12.0.2",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
@@ -37,7 +36,8 @@
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
-    "docker:stop": "docker stack rm wls"
+    "docker:stop": "docker stack rm wls",
+    "lint": "standard"
   },
   "standard": {
     "env": {
@@ -66,11 +66,6 @@
     },
     "plugins": [
       "jest"
-    ]
-  },
-  "lint-staged": {
-    "*.js": [
-      "standard"
     ]
   },
   "babel": {
