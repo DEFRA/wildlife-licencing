@@ -1,4 +1,5 @@
-# See https://github.com/SonarSource/sonarcloud-github-action
+name: CI
+
 on:
   # Trigger the analysis when pushing in master or pull requests, and when creating
   # a pull request.
@@ -9,9 +10,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:  
-name: Main Workflow
+
 jobs:
-  sonarcloud:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
