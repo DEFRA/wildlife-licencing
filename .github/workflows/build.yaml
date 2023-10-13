@@ -27,7 +27,8 @@ jobs:
       - name: Run lint check
         run: npm run lint
       - name: Run tests
-        run: npm run test
+        # As per https://jestjs.io/docs/troubleshooting we can improve performance in CI by running tests serially
+        run: npm run test -- --runInBand
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
