@@ -37,7 +37,8 @@
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
     "docker:stop": "docker stack rm wls",
-    "lint": "standard"
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "standard": {
     "env": {
