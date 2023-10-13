@@ -26,13 +26,8 @@ jobs:
         run: npm ci
       - name: Run lint check
         run: npm run lint
-      # As per https://jestjs.io/docs/troubleshooting we can improve performance in CI by getting the number of CPU
-      # cores we have available and passing that number to jest
-      - name: Get number of CPU cores
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v2
       - name: Run tests
-        run: npm run test -- -max-workers ${{ steps.cpu-cores.outputs.count }}
+        run: npm run test
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
