@@ -17,7 +17,6 @@
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-promise": "^6.1.1",
-    "husky": "^7.0.4",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
     "lerna": "^4.0.0",
@@ -35,7 +34,6 @@
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
-    "prepare": "husky install",
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
@@ -48,8 +46,7 @@
     },
     "ignore": [
       "**/dist/*.js",
-      "packages/api/webpack.config.cjs",
-      ".husky"
+      "packages/api/webpack.config.cjs"
     ]
   },
   "eslintConfig": {
