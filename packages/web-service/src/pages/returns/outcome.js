@@ -45,6 +45,11 @@ export const setData = async request => {
   let outcome, outcomeReason
   if (outcomeSelected === 'yes') {
     outcome = true
+
+    // Clear the outcome reason when the outcome is yes
+    if (payload.outcomeReason) {
+      delete payload.outcomeReason
+    }
     payload = { ...payload, outcome }
   } else if (outcomeSelected === 'no') {
     outcome = false
