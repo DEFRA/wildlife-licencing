@@ -8,8 +8,12 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  # We specify the develop branch since this is the one we do our work on
+  target-branch: "develop"
 
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
     interval: "daily"
+  # We specify the develop branch since this is the one we do our work on
+  target-branch: "develop"
