@@ -18,6 +18,11 @@ export const getNextUriForNilReturnFlow = licenceReturn => {
   if (isUndefined(licenceReturn.whyNil)) {
     return ReturnsURIs.WHY_NIL.uri
   }
+
+  if (isUndefined(licenceReturn.needAnotherLicence)) {
+    return ReturnsURIs.ANOTHER_LICENCE.uri
+  }
+
   return ReturnsURIs.CHECK_YOUR_ANSWERS.uri
 }
 
