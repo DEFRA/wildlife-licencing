@@ -43,7 +43,9 @@ describe('getNextUri', () => {
       artificialSettCreatedBeforeClosure: true,
       obstructionBlockingOrProofingDetails: 'asd',
       destroyVacantSettByHandOrMechanicalMeans: true,
-      destroyVacantSettByHandOrMechanicalMeansDetails: 'asd'
+      destroyVacantSettByHandOrMechanicalMeansDetails: 'asd',
+      whyNil: 'Some text',
+      needAnotherLicence: false
     }
 
     methodTypes = [
@@ -245,17 +247,18 @@ describe('getNextUri', () => {
     expect(resultUri).toEqual(ReturnsURIs.LICENCE_CONDITIONS.uri)
   })
 
-  it('returns nil return flow when applicable', () => {
-    licenceReturnData.nilReturn = true
-    const resultUri = getNextUri(licenceReturnData, methodTypes)
-    expect(resultUri).toBe(ReturnsURIs.WHY_NIL.uri)
-  })
-
   it('returns next URI for nil return flow when "whyNil" is undefined', () => {
     licenceReturnData.nilReturn = true
     delete licenceReturnData.whyNil
     const resultUri = getNextUriForNilReturnFlow(licenceReturnData)
     expect(resultUri).toBe(ReturnsURIs.WHY_NIL.uri)
+  })
+
+  it('returns next URI for nil return flow when "needAnotherLicence" is undefined', () => {
+    licenceReturnData.nilReturn = true
+    delete licenceReturnData.needAnotherLicence
+    const resultUri = getNextUriForNilReturnFlow(licenceReturnData)
+    expect(resultUri).toBe(ReturnsURIs.ANOTHER_LICENCE.uri)
   })
 
   it('returns check your answers for nil return flow when "whyNil" is defined', () => {
