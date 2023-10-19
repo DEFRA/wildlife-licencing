@@ -13,7 +13,7 @@
 {% set  errMsg = null %}
 
 {% if error['work-finish'] === "noDateSent" %}
-     {% set errMsg = "You have not entered the date you finished the work" %}
+     {% set errMsg = "Enter the date you finished the work" %}
 {% elseif error['work-finish'] === "invalidDate" %}
     {% set errMsg = "End date must be a real date" %}
 {% elseif error['work-finish'] === "endDateBeforeStart" %}
