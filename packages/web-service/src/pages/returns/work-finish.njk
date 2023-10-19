@@ -9,12 +9,25 @@
         }
     } %}
 {% set title = 'When did you finish the work?' %}
+
+{% set  errMsg = null %}
+
+{% if error['work-finish'] === "noDateSent" %}
+     {% set errMsg = "Enter the date you finished the work" %}
+{% elseif error['work-finish'] === "invalidDate" %}
+    {% set errMsg = "End date must be a real date" %}
+{% elseif error['work-finish'] === "endDateBeforeStart" %}
+    {% set errMsg = "The end date must be after the start date" %}
+{% elseif error['work-finish'] === "dataInFuture" %}
+    {% set errMsg = "The finish date must be in the past" %}
+{% endif %}
+
 {% block pageContent %}
   {{ govukDateInput({
     id: "work-finish",
     namePrefix: "work-finish",
     name: "work-finish",
-    errorMessage: { text: "Enter the date you finished the work" } if error['work-finish'],
+    errorMessage: { text: errMsg if errMsg },
     items: [
       {
         classes: "govuk-input--width-2",
