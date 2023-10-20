@@ -25,7 +25,7 @@ describe('the welfare concerns functions', () => {
           },
           RETURNS: {
             getLicenceReturn: jest.fn(() => ({
-              welfareConcerns: '123456',
+              welfareConcerns: 'yes',
               welfareConcernsDetails: 'other reason in place'
             }))
           }
@@ -35,8 +35,8 @@ describe('the welfare concerns functions', () => {
       const { getData } = await import('../welfare-concerns.js')
       const result = await getData(request)
       expect(result).toEqual({
-        welfareConcerns: '123456',
-        welfareConcernsDetails: 'other reason in place'
+        yesNo: 'yes',
+        yesNoDetails: 'other reason in place'
       })
     })
 
@@ -63,8 +63,8 @@ describe('the welfare concerns functions', () => {
       const { getData } = await import('../welfare-concerns.js')
       const result = await getData(request)
       expect(result).toEqual({
-        welfareConcerns: undefined,
-        welfareConcernsDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })
