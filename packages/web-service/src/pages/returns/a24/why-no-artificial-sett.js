@@ -3,10 +3,9 @@ import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 
 const { WHY_NO_ARTIFICIAL_SETT } = ReturnsURIs.A24
-const { LICENCE_CONDITIONS } = ReturnsURIs
 const { WHY_DIDNT_YOU_CREATE_AN_ARTIFICIAL_SETT: { IT_WAS_NOT_REQUIRED_BY_THE_LICENCE, IT_COULD_NOT_BE_MADE } } = PowerPlatformKeys
 
 const whyNoArtificialSettRadio = 'why-no-artificial-sett-check'
@@ -59,7 +58,7 @@ export const setData = async request => {
 export default pageRoute({
   page: WHY_NO_ARTIFICIAL_SETT.page,
   uri: WHY_NO_ARTIFICIAL_SETT.uri,
-  completion: LICENCE_CONDITIONS.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   getData: getData,
   setData: setData,
