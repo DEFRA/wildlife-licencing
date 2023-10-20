@@ -22,9 +22,8 @@ export const getData = async request => {
     noArtificialSettReason = licenceReturn?.noArtificialSettReason
     noArtificialSettReasonDetails = licenceReturn?.noArtificialSettReasonDetails
   }
-  const itWasNotRequired = IT_WAS_NOT_REQUIRED_BY_THE_LICENCE.toString()
-  const itCouldNotBeMade = IT_COULD_NOT_BE_MADE.toString()
-  return { noArtificialSettReason, noArtificialSettReasonDetails, itWasNotRequired, itCouldNotBeMade }
+
+  return { noArtificialSettReason, noArtificialSettReasonDetails, itWasNotRequired: IT_WAS_NOT_REQUIRED_BY_THE_LICENCE, itCouldNotBeMade: IT_COULD_NOT_BE_MADE }
 }
 
 export const validator = async payload => {

@@ -27,6 +27,18 @@ export const setData = async request => {
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, artificialSett }
+
+  // If we're switching from no to yes, then we do not want the noArtificialSettReason
+  if (artificialSett === true && payload.noArtificialSettReason) {
+    delete payload.noArtificialSettReason
+    delete payload.noArtificialSettReasonDetails
+  }
+
+  // If we're switching from yes to no, then we do not want the artificialSettDetails
+  if (artificialSett === false && payload.artificialSettDetails) {
+    delete payload.artificialSettDetails
+  }
+
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
   journeyData.returns = { ...journeyData.returns, artificialSett }
   await request.cache().setData(journeyData)
