@@ -28,7 +28,7 @@ describe('the special area remove functions', () => {
           setData: jest.fn()
         })
       }
-      const { checkDesignatedSite } = await import('../designated-site-remove.js')
+      const { checkDesignatedSite } = await import('../common.js')
       const h = { redirect: jest.fn() }
       await checkDesignatedSite(request, h)
       expect(h.redirect).toHaveBeenCalledWith('/designated-site-check-answers')
@@ -61,7 +61,7 @@ describe('the special area remove functions', () => {
           setData: jest.fn()
         })
       }
-      const { checkDesignatedSite } = await import('../designated-site-remove.js')
+      const { checkDesignatedSite } = await import('../common.js')
       const h = { redirect: jest.fn() }
       await checkDesignatedSite(request, h)
       expect(h.redirect).not.toHaveBeenCalled()

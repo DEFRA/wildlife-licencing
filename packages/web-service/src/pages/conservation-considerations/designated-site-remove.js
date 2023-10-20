@@ -1,19 +1,11 @@
 import { conservationConsiderationURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
-import { getCurrentSite, getFilteredDesignatedSites } from './common.js'
+import { checkDesignatedSite, getCurrentSite, getFilteredDesignatedSites } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo } from '../common/common.js'
 
 const { DESIGNATED_SITE_REMOVE, DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
-
-export const checkDesignatedSite = async (request, h) => {
-  const ads = await getCurrentSite(request)
-  if (!ads) {
-    return h.redirect(DESIGNATED_SITE_CHECK_ANSWERS.uri)
-  }
-  return null
-}
 
 export const getData = async request => {
   const sites = await getFilteredDesignatedSites()
