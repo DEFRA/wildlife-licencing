@@ -8,12 +8,23 @@
         }
     } %}
 {% set title = 'When did you destroy the vacant sett?' %}
+
+{% set  errMsg = null %}
+
+{% if error['destroy-date'] === "noDateSent" %}
+     {% set errMsg = "Enter the date you destroyed the vacant sett" %}
+{% elseif error['destroy-date'] === "invalidDate" %}
+    {% set errMsg = "The date must be a real date" %}
+{% elseif error['destroy-date'] === "dataInFuture" %}
+    {% set errMsg = "The date must be in the past" %}
+{% endif %}
+
 {% block pageContent %}
   {{ govukDateInput({
     id: "destroy-date",
     namePrefix: "destroy-date",
     name: "destroy-date",
-    errorMessage: { text: "Enter a date in the past" } if error['destroy-date'],
+    errorMessage: { text: errMsg if errMsg },
     items: [
       {
         classes: "govuk-input--width-2",
