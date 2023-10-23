@@ -105,5 +105,81 @@ describe('the Artificial sett functions', () => {
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: true })
       expect(mockSetData).toHaveBeenCalled()
     })
+
+    it('clears the noArtificialSettReason and details when artificialSett set to true from false', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        payload: {
+          'create-artificial-sett-check': 'yes'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
+      }
+
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              nilReturn: false,
+              artificialSett: false,
+              noArtificialSettReason: 'Some reason here that should be removed'
+            })),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../artificial-sett.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: true })
+      expect(mockSetData).toHaveBeenCalled()
+    })
+
+    it('clears the artificialSettDetails and details when artificialSett set to false from true', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        payload: {
+          'create-artificial-sett-check': 'no'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
+      }
+
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              nilReturn: false,
+              artificialSett: true,
+              artificialSettDetails: 'Some details here that should be removed'
+            })),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../artificial-sett.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: false })
+      expect(mockSetData).toHaveBeenCalled()
+    })
   })
 })

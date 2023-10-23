@@ -37,8 +37,8 @@ describe('the why no artificial sett functions', () => {
       expect(result).toEqual({
         noArtificialSettReason: '123456',
         noArtificialSettReasonDetails: 'other reason in place',
-        itWasNotRequired: '452120000',
-        itCouldNotBeMade: '452120001'
+        itWasNotRequired: 452120000,
+        itCouldNotBeMade: 452120001
       })
     })
 
@@ -67,8 +67,8 @@ describe('the why no artificial sett functions', () => {
       expect(result).toEqual({
         noArtificialSettReason: undefined,
         noArtificialSettReasonDetails: undefined,
-        itWasNotRequired: '452120000',
-        itCouldNotBeMade: '452120001'
+        itWasNotRequired: 452120000,
+        itCouldNotBeMade: 452120001
       })
     })
   })

@@ -1,6 +1,6 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { allCompletion, checkLicence, commonValidator } from '../common-return-functions.js'
 
@@ -16,7 +16,7 @@ export const getData = async request => {
     welfareConcerns = licenceReturn?.welfareConcerns
     welfareConcernsDetails = licenceReturn?.welfareConcernsDetails
   }
-  return { welfareConcerns, welfareConcernsDetails }
+  return { yesNo: yesNoFromBool(welfareConcerns), yesNoDetails: welfareConcernsDetails }
 }
 
 export const validator = payload => commonValidator(payload, WELFARE_CONCERNS.page)
