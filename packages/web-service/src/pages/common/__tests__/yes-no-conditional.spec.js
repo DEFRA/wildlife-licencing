@@ -89,8 +89,7 @@ describe('validator', () => {
       const { validator } = await import('../yes-no-conditional.js')
       await validator(payload)
     } catch (e) {
-      // eslint-disable-next-line
-      expect(e.details[0].message).toBe("\"yes-conditional-input\" is not allowed to be empty")
+      expect(e.details[0].message).toBe('"yes-conditional-input" is not allowed to be empty')
     }
   })
 })

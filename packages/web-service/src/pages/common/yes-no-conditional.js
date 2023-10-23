@@ -8,13 +8,13 @@ export const validator = async (payload, skipValidations) => {
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (payload['yes-no'] === 'yes' && (!skipValidations || (skipValidations && !skipValidations.includes('yes-conditional-input')))) {
+  if (payload['yes-no'] === 'yes' && (skipValidations === undefined || !skipValidations.includes('yes-conditional-input'))) {
     Joi.assert(payload, Joi.object({
       'yes-conditional-input': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
-  if (payload['yes-no'] === 'no' && (!skipValidations || (skipValidations && !skipValidations.includes('no-conditional-input')))) {
+  if (payload['yes-no'] === 'no' && (skipValidations === undefined || !skipValidations.includes('no-conditional-input'))) {
     Joi.assert(payload, Joi.object({
       'no-conditional-input': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
     }).options({ abortEarly: false, allowUnknown: true }))
