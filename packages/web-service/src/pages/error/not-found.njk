@@ -1,6 +1,13 @@
 {% extends "information-page.njk" %}
 {% set title = 'Page not found' %}
 {% block pageContent %}
+
+  {% if data.includeHomeLink %}
+    <p class="govuk-body">
+      <a href="/applications">View licences and applications</a> 
+    </p> 
+  {% endif %}
+
   <p class="govuk-body">
     If you typed the web address, check it is correct.
   </p>
@@ -8,7 +15,7 @@
     If you pasted the web address, check you copied the entire address.
   </p>
   <p class="govuk-body">
-     if you need to speak to someone about your application.
+     If you need to speak to someone about your application.
   
     If the web address is correct or you selected a link or button,
     <a href="mailto:enquiries@naturalengland.org.uk" class="govuk-link">enquiries@naturalengland.org.uk</a>

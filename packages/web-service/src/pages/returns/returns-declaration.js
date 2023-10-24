@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence } from './common-return-functions.js'
+import { checkLicence, checkReturns } from './common-return-functions.js'
 
 const { DECLARATION, CONFIRMATION } = ReturnsURIs
 
@@ -21,6 +21,6 @@ export default pageRoute({
   validator: Joi.object({
     'submit-return': Joi.any().required()
   }).options({ abortEarly: false, allowUnknown: true }),
-  checkData: checkLicence,
+  checkData: [checkReturns, checkLicence],
   completion: completion
 })
