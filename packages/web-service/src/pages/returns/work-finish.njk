@@ -10,7 +10,7 @@
     } %}
 {% set title = 'When did you finish the work?' %}
 
-{% set  errMsg = null %}
+{% set errMsg = null %}
 
 {% if error['work-finish'] === "noDateSent" %}
      {% set errMsg = "Enter the date you finished the work" %}
@@ -27,7 +27,7 @@
     id: "work-finish",
     namePrefix: "work-finish",
     name: "work-finish",
-    errorMessage: { text: errMsg if errMsg },
+    errorMessage: { text: errMsg } if errMsg,
     items: [
       {
         classes: "govuk-input--width-2",
