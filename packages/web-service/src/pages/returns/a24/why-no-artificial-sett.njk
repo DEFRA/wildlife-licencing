@@ -1,0 +1,55 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'why-no-artificial-sett-check': {
+            'any.required': { ref: '#why-no-artificial-sett-check', text: 'You have not selected an option' }
+        },
+        'why-sett-not-made': {
+          'string.empty': { ref: '#why-sett-not-made', text: 'You have not entered why an artificial sett could not be made' },
+          'string.max': { ref: '#why-sett-not-made', text: 'You have entered too many characters' }
+        }
+    }
+%}
+{% set title = "Why didn't you create an artificial sett?" %}
+
+{% set artificialSettNotBeMadeHtml %}
+{{ govukTextarea({
+  id: "why-sett-not-made",
+  name: "why-sett-not-made",
+  maxlength: 4000,
+  errorMessage: { text: 'Enter why an artificial sett could not be made' } if error['why-sett-not-made'],
+  value: data.noArtificialSettReasonDetails if data.noArtificialSettReasonDetails else payload['why-sett-not-made'],
+  classes: "govuk-!-width-full",
+  label: {
+    text: "Why could an artificial sett not be made?"
+  }
+}) }}
+{% endset -%}
+
+{% block pageContent %}
+    {{ govukRadios({
+      id: "why-no-artificial-sett-check",
+      name: "why-no-artificial-sett-check",
+      isPageHeading: false,
+      errorMessage: {
+        text: "Select an option"
+      } if error['why-no-artificial-sett-check'],
+      items: [
+        {
+          value: data.itWasNotRequired,
+          text: "It was not required by the licence",
+          checked: data.itWasNotRequired === data.noArtificialSettReason
+        },
+        {
+          value: data.itCouldNotBeMade,
+          text: "It could not be made",
+          checked: payload['why-no-artificial-sett-check'] === data.itCouldNotBeMade or data.noArtificialSettReason === data.itCouldNotBeMade or payload['why-sett-not-made'].length > 0,
+          conditional: {
+            html: artificialSettNotBeMadeHtml
+          }
+        }
+      ]
+    }) }}
+{% endblock %}

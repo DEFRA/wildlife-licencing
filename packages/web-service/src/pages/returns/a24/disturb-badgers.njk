@@ -1,0 +1,11 @@
+{% extends "yes-no-conditional.njk" %}
+{% set title = 'Did you disturb badgers?' %}
+{% set noneSelected = 'You have not selected an option' %}
+{% set noneSelectedButton = 'Select an option' %}
+{% set yesInputLabelText = 'Describe the evidence you have that badgers were disturbed' %}
+{% set inputErrorMessage = 'Enter a description' %}
+{% set yesInputErrorMessage = 'You have not described the evidence you have that badgers were disturbed' %}
+{% set tooManyCharactersInputErrorMessage = 'You have entered too many characters' %}
+{% set yesNo = data.yesNo %}
+{% set yesInputValue = data.yesNoDetails %}
+{% set noInputValue = data.yesNoDetails %}

@@ -113,19 +113,29 @@ describe('application-common-functions', () => {
     })
   })
 
-  describe('statues', () => {
-    it('are as expected', async () => {
-      const { statuses } = await import('../application-common-functions.js')
-      expect(statuses).toEqual({
+  describe('application and licence statues', () => {
+    it('should map application statuses', async () => {
+      const { applicationStatuses } = await import('../application-common-functions.js')
+      expect(applicationStatuses).toEqual({
         1: 'RECEIVED',
         100000000: 'AWAITING_ALLOCATION',
         100000001: 'ALLOCATED_FOR_ASSESSMENT',
         100000002: 'UNDER_ASSESSMENT',
         100000004: 'GRANTED',
         100000005: 'PAUSED',
-        100000006: 'WITHDRAWN',
-        100000008: 'NOT_GRANTED',
-        452120001: 'EXPIRED'
+        100000008: 'NOT_GRANTED'
+      })
+    })
+
+    it('should map licence statuses', async () => {
+      const { licenceStatuses } = await import('../application-common-functions.js')
+      expect(licenceStatuses).toEqual({
+        1: 'ACTIVE',
+        100000000: 'DRAFT',
+        452120001: 'EXPIRED_ROA_DUE',
+        452120002: 'GRANTED_ROA_RECEIVED',
+        452120003: 'EXPIRED_ROA_RECEIVED',
+        452120004: 'EXPIRED_ROA_RECEIVED_LATE'
       })
     })
   })

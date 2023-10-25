@@ -41,8 +41,8 @@ export const validatePageDate = (payload, pageName) => {
   const month = payload[`${pageName}-month`]
   const year = payload[`${pageName}-year`]
 
-  // Empty date validation
-  if (day === '' || month === '' || year === '') {
+  // Date validation
+  if (day === '' || month === '' || year === '' || year.length < 4 || year < 1900) {
     throwJoiError(pageName, 'Error', 'noDateSent')
   }
 

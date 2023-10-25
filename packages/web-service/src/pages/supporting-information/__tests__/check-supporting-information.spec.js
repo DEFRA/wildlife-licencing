@@ -25,8 +25,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            removeUploadedFile: mockRemoveUploadedFile,
-            getUploadedFiles: mockGetUploadedFiles
+            APPLICATION: {
+              removeUploadedFile: mockRemoveUploadedFile,
+              getUploadedFiles: mockGetUploadedFiles
+            }
           }
         })
       }))
@@ -72,8 +74,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            removeUploadedFile: mockRemoveUploadedFile,
-            getUploadedFiles: mockGetUploadedFiles
+            APPLICATION: {
+              removeUploadedFile: mockRemoveUploadedFile,
+              getUploadedFiles: mockGetUploadedFiles
+            }
           }
         })
       }))
@@ -102,8 +106,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            removeUploadedFile: jest.fn(),
-            getUploadedFiles: jest.fn(() => null)
+            APPLICATION: {
+              removeUploadedFile: jest.fn(),
+              getUploadedFiles: jest.fn(() => null)
+            }
           }
         })
       }))
@@ -147,8 +153,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            getUploadedFiles: () => {
-              return [{}]
+            APPLICATION: {
+              getUploadedFiles: () => {
+                return [{}]
+              }
             }
           }
         })
@@ -189,8 +197,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            getUploadedFiles: () => {
-              return [{}]
+            APPLICATION: {
+              getUploadedFiles: () => {
+                return [{}]
+              }
             }
           }
         })
@@ -231,8 +241,10 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            getUploadedFiles: () => {
-              return [{}]
+            APPLICATION: {
+              getUploadedFiles: () => {
+                return [{}]
+              }
             }
           }
         })
@@ -275,7 +287,9 @@ describe('the check-supporting-information page handler', () => {
             }
           },
           FILE_UPLOAD: {
-            getUploadedFiles: mockGetUploadedFiles
+            APPLICATION: {
+              getUploadedFiles: mockGetUploadedFiles
+            }
           }
         })
       }))

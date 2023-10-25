@@ -29,7 +29,7 @@ export default pageRoute({
   uri: convictionsURIs.CONVICTION_DETAILS.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'conviction-details': Joi.string().required().trim().max(300)
+    'conviction-details': Joi.string().trim().required().replace('\r\n', '\n').max(300)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
   getData,

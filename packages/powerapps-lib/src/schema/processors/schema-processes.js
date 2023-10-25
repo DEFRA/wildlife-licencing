@@ -51,7 +51,7 @@ export const createTableSet = (table, include = [], path = table.basePath, relat
 }
 
 /******************************************************************************************
- * The following methods are concerned with INBOUND data
+ * The following methods are concerned with OUTBOUND data AWS->PowerApps
  ******************************************************************************************/
 
 /**
@@ -419,11 +419,8 @@ export const createBatchRequestObjects = async (payload, tableSet) => {
 }
 
 /******************************************************************************************
- * The following methods are concerned with OUTBOUND data
+ * The following methods are concerned with INBOUND data PowerApps->AWS
  ******************************************************************************************/
-/*
- * The following methods are concerned with INBOUND
- */
 export const buildRequestPathRelationships = (table, include, path, delim) => {
   if (table.relationships && table.relationships.length) {
     for (const relationship of table.relationships) {
