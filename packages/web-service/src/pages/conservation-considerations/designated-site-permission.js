@@ -3,7 +3,7 @@ import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
-import { allCompletion, getCurrentSite } from './common.js'
+import { allCompletion, getCurrentSite, checkDesignatedSite } from './common.js'
 
 const { OWNER_PERMISSION } = conservationConsiderationURIs
 
@@ -25,7 +25,7 @@ export const setData = async request => {
 export const designatedSitePermission = yesNoPage({
   page: OWNER_PERMISSION.page,
   uri: OWNER_PERMISSION.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkDesignatedSite],
   getData: getData,
   completion: allCompletion,
   setData: setData

@@ -1,0 +1,50 @@
+{% extends 'information-page.njk' %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+
+{% set errorMap = {
+    'submit-return': {
+      'any.required': { ref: '#submit-return', text: 'You have not selected an option' }
+    }
+  }
+%}
+
+{% set title = "Declaration" %}
+
+{% block pageContent %}
+    <p class="govuk-body">By sending the report of action taken under the licence you confirm that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>an appropriate ecologist has been involved in carrying out the work</li>
+      <li>the ecologist supports the details given in this report</li>
+      <li>the details in the report of action are correct to the best of your knowledge and belief</li>
+    </ul>
+    <p class="govuk-body">If you are making this report of action on behalf of another person, you confirm that you have their permission to do so.</p>
+    <p class="govuk-body">By sending the report of action, they agree that they continue to uphold any conditions of the licence and will abide by the terms and conditions of this service.</p>
+
+    {{ govukRadios({
+        name: "submit-return",
+        errorMessage: { text: "Select an option" } if error['submit-return'],
+        hint: {
+          text: "Who is making this declaration?",
+          classes: "govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24"
+        },
+        items: [
+          {
+            value: 'ecologist',
+            text: "I am the ecologist and I agree to this declaration and confirm the information given"
+          },
+          {
+            value:  'licencen-holder',
+            text: "I am the licence holder and I agree to this declaration and confirm the information given"
+          }
+        ]
+      }) }}
+
+    {{ govukButton({
+        attributes: { id: "continue" },
+        preventDoubleClick: true,
+        name: 'continue',
+        text: 'Agree and send',
+        classes: "govuk-!-margin-top-5"
+    })}}
+{% endblock %}

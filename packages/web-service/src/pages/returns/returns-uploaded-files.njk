@@ -1,0 +1,86 @@
+{% extends 'layout.njk' %}
+{% from "button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "error-summary.njk" import errorSummary %}
+
+{% set errorMap = {
+        'another-file-check': {
+          'no-choice-made': { ref: '#another-file-check', text: 'Select yes if you want to upload another file' }
+        }
+    }
+%}
+
+{% set title = 'Uploaded files'%}
+{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
+
+{% block content %}
+
+{{ errorSummary(error, errorMap, 'There is a problem') }}
+
+<h1 class="govuk-heading-l">Uploaded files</h1>
+
+<div class="govuk-grid-row">
+	<div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list">
+        {% if data and data.length !== 0 %}
+          {% for upload in data %}
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
+                <dd class="govuk-summary-list__value">
+                    {{ upload.filename }} <br>
+                    <p>Uploaded {{ upload.uploadedDate }}</p>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link govuk-link--no-visited-state" href="{{upload.removeUploadUrl}}?uploadId={{upload.id}}"  name: "remove-file">
+                        Remove<span class="govuk-visually-hidden"></span>
+                    </a>
+                </dd>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Uploaded file </dt>
+                <dd class="govuk-summary-list__value">
+                    No file uploaded
+                </dd>        
+            </div>
+        {% endif %}
+        </dl>
+        <form method="post">
+          {{ govukRadios({
+            idPrefix: "another-file-check",
+            name: "another-file-check",
+            errorMessage: { text: 'Select an option' } if error['another-file-check'],
+            fieldset: {
+              legend: {
+                text: "Do you want to upload another file?" if data.length > 0 else "Do you want to upload a file?" ,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: [
+              {
+                value: "yes",
+                text: "Yes",
+                checked: payload['another-file-check'] === 'yes'
+              },
+              {
+                value: "no",
+                text: "No",
+                checked: payload['another-file-check'] === 'no'
+              }
+            ]
+          }) }}
+          <div class="govuk-form-group">
+            {{ govukButton({
+              text: "Continue",
+              attributes: { id: 'continue' }
+            })}}
+          </div>
+          <input type="hidden" name="crumb" value="{{crumb}}"/>
+        </form>
+	</div>
+</div>
+
+{% endblock %}

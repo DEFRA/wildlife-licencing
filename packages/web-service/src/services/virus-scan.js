@@ -36,6 +36,7 @@ export const initializeClamScan = async () => {
       throw new Error('Clam virus scanner container is not initialized')
     }
   } else {
+    clamScan = { isInfected: () => false }
     debug('virus scanner is disabled')
   }
 }

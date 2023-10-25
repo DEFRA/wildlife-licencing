@@ -35,9 +35,7 @@ describe('the address functions', () => {
         accountName: 'The Rolling Stones',
         addressLookup: [
           {
-            Address: {
-              Street: 'EBURY STREET'
-            }
+            street: 'EBURY STREET'
           }
         ],
         contactName: 'Keith Richards',
@@ -50,8 +48,8 @@ describe('the address functions', () => {
     })
   })
 
-  describe('setAddressData', () => {
-    it('sets the address', async () => {
+  describe('setAddressData v1', () => {
+    it('sets the address v1', async () => {
       const mockSetAddress = jest.fn()
       jest.doMock('../../operations.js', () => ({
         contactAccountOperations: () => ({
@@ -75,14 +73,48 @@ describe('the address functions', () => {
     })
   })
 
+  describe('setAddressData v2', () => {
+    it('sets the address v2', async () => {
+      const mockSetAddress = jest.fn()
+      jest.doMock('../../operations.js', () => ({
+        contactAccountOperations: () => ({
+          setAddress: mockSetAddress
+        })
+      }))
+
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            applicationId: '739f4e35-9e06-4585-b52a-c4144d94f7f7',
+            addressLookup: [{ uprn: '123', street: 'EBURY STREET', postcode: 'SW1W 0NY' }]
+          })),
+          getPageData: jest.fn(() => ({ payload: { uprn: 123 } }))
+        })
+      }
+
+      const { setAddressData } = await import('../address.js')
+      await setAddressData('APPLICANT', 'APPLICANT_ORGANISATION')(request)
+      expect(mockSetAddress).toHaveBeenCalledWith({ postcode: 'SW1W 0NY', street: 'EBURY STREET', uprn: '123' })
+    })
+  })
+
   describe('mapLookedUpAddress', () => {
-    it('sets each element', async () => {
+    it('set elements version 1', async () => {
       const { mapLookedUpAddress } = await import('../address.js')
-      expect(mapLookedUpAddress({})).toEqual({})
-      expect(mapLookedUpAddress({ Postcode: '' })).toEqual({ })
-      expect(mapLookedUpAddress({ Postcode: 'BS9' })).toEqual({ postcode: 'BS9' })
-      expect(mapLookedUpAddress({ Postcode: 'BS9', Country: 'England' }))
-        .toEqual({ postcode: 'BS9', country: 'England' })
+
+      expect(mapLookedUpAddress([])).toEqual([])
+      expect(mapLookedUpAddress([{ Address: { Postcode: '' } }])).toEqual([{}])
+      expect(mapLookedUpAddress([{ Address: { Postcode: 'BS9' } }])).toEqual([{ postcode: 'BS9' }])
+      expect(mapLookedUpAddress([{ Address: { Postcode: 'BS9', Country: 'England' } }])).toEqual([{ postcode: 'BS9', country: 'England' }])
+    })
+
+    it('set elements version 2', async () => {
+      const { mapLookedUpAddress } = await import('../address.js')
+
+      expect(mapLookedUpAddress([])).toEqual([])
+      expect(mapLookedUpAddress([{ postcode: '' }])).toEqual([{}])
+      expect(mapLookedUpAddress([{ postcode: 'BS9' }])).toEqual([{ postcode: 'BS9' }])
+      expect(mapLookedUpAddress([{ postcode: 'BS9', country: 'England' }])).toEqual([{ postcode: 'BS9', country: 'England' }])
     })
   })
 })

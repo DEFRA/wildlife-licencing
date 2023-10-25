@@ -24,3 +24,10 @@ export const validateDateInWindow = (pageDate, pageName) => {
     throwJoiError(pageName, null, 'outsideLicence')
   }
 }
+
+export const isDateInFuture = (pageDate, pageName) => {
+  // Is this date in the future?
+  if (isFuture(pageDate)) {
+    throwJoiError(pageName, 'Error', 'dataInFuture')
+  }
+}

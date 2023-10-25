@@ -14,7 +14,7 @@ export default async (request, h) => {
   const uploadId = params.get('uploadId')
 
   if (uploadId) {
-    await APIRequests.FILE_UPLOAD.removeUploadedFile(applicationId, uploadId)
+    await APIRequests.FILE_UPLOAD.APPLICATION.removeUploadedFile(applicationId, uploadId)
   }
 
   return h.redirect(FILE_UPLOADS.SUPPORTING_INFORMATION.CHECK_YOUR_ANSWERS.uri)

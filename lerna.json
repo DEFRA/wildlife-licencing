@@ -2,7 +2,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "11.13.16",
+  "version": "12.3.14-alpha.0",
   "npmClient": "npm",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -11,8 +11,7 @@
     "version": {
       "allowBranch": [
         "master",
-        "develop",
-        "test"
+        "develop"
       ],
       "message": "chore(release): publish %s"
     },

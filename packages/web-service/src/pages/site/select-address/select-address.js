@@ -19,9 +19,9 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const { siteData, addressLookup, applicationId } = journeyData
 
-  const { Address: lookupAddress } = addressLookup.find(a => Number.parseInt(a.Address.UPRN) === request.payload.uprn)
+  const dataAddress = mapLookedUpAddress(addressLookup)
+  const apiAddress = dataAddress.find(a => Number.parseInt(a.uprn) === request.payload.uprn)
 
-  const apiAddress = mapLookedUpAddress(lookupAddress)
   const siteInfo = await getSite(applicationId)
   const payload = { ...siteInfo, address: apiAddress }
   await APIRequests.SITE.update(siteInfo.id, payload)

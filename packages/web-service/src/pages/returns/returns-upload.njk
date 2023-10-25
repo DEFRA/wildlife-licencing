@@ -1,0 +1,36 @@
+{% extends "standard-form.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+
+{% set errorMap = {
+        'yes-no': {
+            'any.required': { ref: '#yes-no', text: 'You have not selected an option' }
+        }
+    }
+%}
+{% set title = 'Do you want to upload supporting information?' %}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      errorMessage: {
+        text: "Select an option"
+      } if error['yes-no'],
+      hint: {
+        text: "You can upload documents or images that are relevant to the actions you took under the licence."
+      },
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

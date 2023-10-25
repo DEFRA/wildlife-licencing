@@ -29,7 +29,7 @@ const context = {
 
 jest.mock('@defra/wls-queue-defs', () => ({
   getQueue: jest.fn(() => ({ add: jest.fn(() => ({ id: 1 })) })),
-  queueDefinitions: { RETURN_QUEUE: {} }
+  queueDefinitions: { RETURN_QUEUE: {}, RETURN_FILE_QUEUE: {} }
 }))
 
 describe('The postReturnSubmit handler', () => {
@@ -47,6 +47,9 @@ describe('The postReturnSubmit handler', () => {
         returns: {
           findByPk: () => ({ dataValues: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae', licenceId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }),
           update: mockUpdate
+        },
+        returnUploads: {
+          findAll: () => [{ dataValues: { id: '2bf9a873-45b2-48a5-a9b4-ca07766804ae', returnId: '7c3b13ef-c2fb-4955-942e-764593cf0ada' } }]
         }
       }
     }))

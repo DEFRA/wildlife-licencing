@@ -75,3 +75,71 @@ docker run wildlife-licencing/liquibase tail -f /dev/null
 docker exec -t $(docker ps | grep wildlife-licencing/liquibase | awk  '{print $1}') /bin/bash
 liquibase update --changelog-file ./changelog/db.changelog-root.xml --url="jdbc:postgresql://host.docker.internal:5432/wls" --username=wlsuser --password=:pw
 ```
+### Building a ClamAV Docker image for arm64 architectures (M1 Macbooks)
+ClamAV do not currently host an ARM64 based image on Docker hub, so in order to run clamav locally in a docker container on an Apple M1 or M2 Macbook, you will need to build it yourself. The original documentation on how to do this is a bit vague (https://docs.clamav.net/manual/Installing/Docker.html#building-the-clamav-image), but carefully following the steps below will hopefully simplify the process.
+
+We are going to need to clone two repositories from Github. This guide will assume you are cloning these two repositories inside the same directory
+
+Clone the main ClamAV repo locally and then jump into that directory...
+```
+git clone git@github.com:Cisco-Talos/clamav.git
+cd clamav
+```
+
+Checkout the 1.1 release branch. At the time of writing this it is currently the latest release of ClamAV that their team has pushed to Docker Hub. We need to ensure the version matches the version of the ClamAV alpine docker file we will be using to build the image...
+```
+git checkout rel/1.1
+```
+Now we'll cd back out of the clamav directory and then clone the `clamav-docker` repository...
+
+```
+cd ..
+git clone git@github.com:Cisco-Talos/clamav-docker.git
+```
+Next, assuming we're on the `main` branch of the repo, cd into the 1.1 version of the alpine docker image setup directory and view its contents...
+```
+cd clamav-docker/clamav/1.1/alpine
+ls
+```
+You should see the following files and directories:
+- Dockerfile
+- Jenkinsfile
+- scripts/
+
+Copy the `Dockerfile` file and the `scripts` directory into the root of the `clamav` repository we cloned earlier.
+```
+cp ./Dockerfile ../../../../clamav/
+cp -R ./scripts ../../../../clamav/
+```
+Now cd into that directory we just copied to...
+```
+cd ../../../../clamav/
+```
+And do a docker build, giving it a tag and label, eg `clamav-arm64:latest` to differentiate it from any others ...
+```
+docker build --tag "clamav-arm64:latest" .
+```
+This will then build ClamAV inside a Docker image using the arm64 architecture by default on an M1 or M2 Macbook. This process does take a little while to complete.
+
+To view the image run... 
+```
+docker images
+``` 
+
+
+To create a container running ClamAV run the following docker command:
+
+```
+docker run -d -it -p 3310:3310 --rm --name "clamav-arm64" clamav-arm64:latest
+```
+Then run
+
+```
+docker ps
+```
+
+You should then see the container running like this...
+
+| CONTAINER ID | IMAGE | COMMAND | CREATED | STATUS | PORTS | NAMES |
+| - | - | - | - | - | - | - |
+| 9b419fd8d9a4 | clamav-arm64:latest | "/init" | About a minute ago | Up About a minute (healthy) | 0.0.0.0:3310->3310/tcp, 7357/tcp | clamav-arm64 |

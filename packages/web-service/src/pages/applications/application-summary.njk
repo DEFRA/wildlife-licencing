@@ -1,6 +1,6 @@
 {% extends "information-page.njk" %}
 {% import "common-text.njk" as descriptions %}
-{% import "applications-text.njk" as text %}
+{% import "applications-text.njk" as applicationAndLicenceStatusText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "summary-list/macro.njk" import govukSummaryList %}
 {% from "table/macro.njk" import govukTable %}
@@ -9,7 +9,7 @@
 {% set title = 'Application details' %}
 
 {% set rows = [
-  { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
+  { key: { text: "Status" }, value: { html: applicationAndLicenceStatusText.getApplicationStatus(data.application.statusCode, data.applicationStatuses) } },
   {  key: { text: "Application type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
   { key: { text: "Application reference" }, value: { text: data.application.applicationReferenceNumber } },
   { key: { text: "Applicant" },value: { text: data.applicant.fullName } },

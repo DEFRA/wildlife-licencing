@@ -34,9 +34,9 @@ const extracts = async () => {
   await databaseWriter(applicationContactsReadStream(), writeApplicationContactObject, new Date(), 'Application-Contacts')
   await databaseWriter(applicationAccountsReadStream(), writeApplicationAccountObject, new Date(), 'Application-Accounts')
   await databaseWriter(applicationSitesReadStream(), writeApplicationSiteObject, new Date(), 'Application-Sites')
+  await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
   await databaseWriter(licensableActionsReadStream(), writeHabitatSiteObject, new Date(), 'Licensable-Actions')
   await databaseWriter(planningConsentsReadStream(), writePermissionsObject, new Date(), 'permissions')
-  await databaseWriter(licenceReadStream(), writeLicenceObject, new Date(), 'licences')
   await databaseWriter(returnReadStream(), writeReturnObject, new Date(), 'returns')
   await databaseWriter(previousLicencesReadStream(), writePreviousLicenceObject, new Date(), 'previous-licences')
 }

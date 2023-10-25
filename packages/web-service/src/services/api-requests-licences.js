@@ -14,6 +14,10 @@ export const LICENCES = {
     `Error getting licences for ${applicationId}`,
     500
   ),
+  findActiveLicencesByApplicationId: async applicationId => {
+    const licences = await LICENCES.findByApplicationId(applicationId)
+    return licences.filter(licence => licence.stateCode === 0)
+  },
   queueTheLicenceEmailResend: async applicationId => apiRequestsWrapper(
     async () => {
       await API.post(`${apiUrls.APPLICATION}/licence/resend/${applicationId}/submit`)

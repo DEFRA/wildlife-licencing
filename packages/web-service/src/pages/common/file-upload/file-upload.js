@@ -3,7 +3,6 @@ import fs from 'fs'
 import handler from '../../../handlers/page-handler.js'
 import { FILE_UPLOAD_HEADROOM_BYTES, MAX_FILE_UPLOAD_SIZE_BYTES } from '../../../constants.js'
 import { scanFile } from '../../../services/virus-scan.js'
-import { checkApplication } from '../check-application.js'
 
 export const SHAPE_FILES = ['CPG', 'DBF', 'PRJ', 'SBN', 'SBX', 'SHP', 'SHP.XML', 'SHX']
 
@@ -130,11 +129,11 @@ export const validator = async (payload, fileType) => {
  * it gives a service unavailable response, but this bypasses
  * (breaks) the error handling. For now set to false and rely on the filesize limit to prevent process hogging
  */
-export const fileUploadPageRoute = ({ view, fileUploadUri, getData, fileUploadCompletion, fileType }) => [
+export const fileUploadPageRoute = ({ view, checkData, fileUploadUri, getData, fileUploadCompletion, fileType }) => [
   {
     method: 'GET',
     path: fileUploadUri,
-    handler: handler(view, checkApplication, getData).get
+    handler: handler(view, checkData, getData).get
   },
   {
     method: 'POST',

@@ -15,7 +15,8 @@ export default async (context, _req, h) => {
     }
 
     const returns = await models.returns.findAll({
-      where: { licenceId: licence.id }
+      where: { licenceId: licence.id },
+      order: [['createdAt', 'DESC']]
     })
 
     const responseBody = returns.map(r => prepareResponse(r.dataValues))

@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-connectors-lib",
-  "version": "11.13.16",
+  "version": "12.3.9-alpha.0",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
   "private": false,
@@ -46,5 +46,5 @@
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "^2.22.0"
   },
-  "gitHead": "f92664418a9b793a35815baae90a253ed12b60bf"
+  "gitHead": "8b51186f90ae03e7c8a4550e1ab21c868f8e6af3"
 }

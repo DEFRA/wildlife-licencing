@@ -67,13 +67,13 @@ describe('authorised person address', () => {
       const request = {
         cache: () => ({
           getData: () => ({
-            addressLookup: 'lookup-result'
+            addressLookup: [{ Address: { AddressLine: 'address 1' } }, { Address: { AddressLine: 'address 2' } }]
           })
         })
       }
       const result = await ofContact(contact, request)
       expect(result).toEqual({
-        addressLookup: 'lookup-result',
+        addressLookup: [{ addressLine: 'address 1' }, { addressLine: 'address 2' }],
         contactName: 'name',
         uri: {
           addressForm: '/authorised-person-address-form',
