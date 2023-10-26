@@ -41,7 +41,6 @@ First edit the docker secret environment files to add the secret keys
 (The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
 #### Extra step for M1 Mac users
-
 Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
 
 ```
@@ -106,7 +105,6 @@ Ensure you have node version 16.13.0 or greater installed; `node --version`
 The AWS S3 interface is simulated in the local docker stack using the localstack image. 4566 is the port for the localstack interface.
 
 #### S3
-
 In order to run S3 operations locally the AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY environment variables must be set in the local shell - the value is arbitrary.
 
 Alternatively you can install the AWS CLI.
