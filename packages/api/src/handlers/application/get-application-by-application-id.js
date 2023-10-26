@@ -7,14 +7,15 @@ const { cache } = REDIS
 
 export default async (context, req, h) => {
   try {
-    const result = await checkCache(req)
+    if (req.query?.nocache !== 'true') {
+      const result = await checkCache(req)
 
-    if (result) {
-      return h.response(result)
-        .type(APPLICATION_JSON)
-        .code(200)
+      if (result) {
+        return h.response(result)
+          .type(APPLICATION_JSON)
+          .code(200)
+      }
     }
-
     const application = await models.applications.findByPk(context.request.params.applicationId)
 
     // Check the application exists

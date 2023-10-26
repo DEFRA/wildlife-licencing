@@ -1,0 +1,49 @@
+{% extends "standard-form.njk" %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% set errorMap = {
+        'destroy-date': {
+          'noDateSent': { ref: '#destroy-date', text: 'You have not entered the date you destroyed the vacant sett' },
+          'invalidDate': { ref: '#destroy-date', text: 'The date must be a real date' },
+          'dataInFuture': { ref: '#destroy-date', text: 'The date must be in the past' }
+        }
+    } %}
+{% set title = 'When did you destroy the vacant sett?' %}
+
+{% set  errMsg = null %}
+
+{% if error['destroy-date'] === "noDateSent" %}
+     {% set errMsg = "Enter the date you destroyed the vacant sett" %}
+{% elseif error['destroy-date'] === "invalidDate" %}
+    {% set errMsg = "The date must be a real date" %}
+{% elseif error['destroy-date'] === "dataInFuture" %}
+    {% set errMsg = "The date must be in the past" %}
+{% endif %}
+
+{% block pageContent %}
+  {{ govukDateInput({
+    id: "destroy-date",
+    namePrefix: "destroy-date",
+    name: "destroy-date",
+    errorMessage: { text: errMsg if errMsg },
+    items: [
+      {
+        classes: "govuk-input--width-2",
+        value: data.day,
+        name: "day"
+      },
+      {
+        classes: "govuk-input--width-2",
+        value: data.month,
+        name: "month"
+      },
+      {
+        classes: "govuk-input--width-4",
+        value: data.year,
+        name: "year"
+      }
+    ],
+    hint: {
+      text: "For example, 27 3 2007"
+    }
+  }) }}
+{% endblock %}

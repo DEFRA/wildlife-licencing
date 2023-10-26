@@ -2,6 +2,8 @@ import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { conservationConsiderationURIs } from '../../uris.js'
 
+const { DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
+
 const options = Object.values(PowerPlatformKeys.SITE_TYPE).map(v => v.option)
 const abv = Object.values(PowerPlatformKeys.SITE_TYPE).reduce((a, c) => ({ ...a, [c.option]: c.abbr }), {})
 
@@ -65,4 +67,17 @@ export const allCompletion = async request => {
   }
 
   return conservationConsiderationURIs.DESIGNATED_SITE_CHECK_ANSWERS.uri
+}
+
+/**
+ * If we hit a page and don't have a designated site (which can happen if we've removed a site at the end of the flow
+ * then gone back to a prior page using back) we redirect to the Check Your Answers page.
+ */
+export const checkDesignatedSite = async (request, h) => {
+  const ads = await getCurrentSite(request)
+  if (!ads) {
+    return h.redirect(DESIGNATED_SITE_CHECK_ANSWERS.uri)
+  }
+
+  return null
 }

@@ -64,7 +64,7 @@ describe('application-summary page', () => {
 
       const { getData } = await import('../application-summary.js')
       const result = await getData(request)
-      expect(result).toStrictEqual({
+      expect(result).toEqual({
         applicant: {
           fullName: 'Joe Blogs'
         },
@@ -75,16 +75,14 @@ describe('application-summary page', () => {
           siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY',
           userSubmission: '10 August 2022'
         },
-        statuses: {
+        applicationStatuses: {
           1: 'RECEIVED',
           100000000: 'AWAITING_ALLOCATION',
           100000001: 'ALLOCATED_FOR_ASSESSMENT',
           100000002: 'UNDER_ASSESSMENT',
           100000004: 'GRANTED',
           100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED'
+          100000008: 'NOT_GRANTED'
         }
       })
     })
@@ -148,16 +146,14 @@ describe('application-summary page', () => {
           siteAddress: '',
           userSubmission: '10 August 2022'
         },
-        statuses: {
+        applicationStatuses: {
           1: 'RECEIVED',
           100000000: 'AWAITING_ALLOCATION',
           100000001: 'ALLOCATED_FOR_ASSESSMENT',
           100000002: 'UNDER_ASSESSMENT',
           100000004: 'GRANTED',
           100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
-          452120001: 'EXPIRED'
+          100000008: 'NOT_GRANTED'
         }
       })
     })

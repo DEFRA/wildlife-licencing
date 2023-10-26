@@ -23,7 +23,7 @@ describe('applications page', () => {
             getApplicationSitesByUserId: jest.fn(() => [])
           },
           LICENCES: {
-            findByApplicationId: jest.fn().mockReturnValueOnce([{
+            findActiveLicencesByApplicationId: jest.fn().mockReturnValueOnce([{
               id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
               applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
               endDate: '2022-08-26',

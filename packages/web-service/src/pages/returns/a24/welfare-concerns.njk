@@ -1,0 +1,11 @@
+{% extends "yes-no-conditional.njk" %}
+{% set title = 'Did the work carried out under the licence cause any concerns about badgers\' welfare?' %}
+{% set noneSelected = 'You have not selected an option' %}
+{% set noneSelectedButton = 'Select an option' %}
+{% set yesInputLabelText = 'Describe the welfare concerns' %}
+{% set inputErrorMessage = 'You have not described the welfare concerns' %}
+{% set yesInputErrorMessage = 'You have not described the welfare concerns' %}
+{% set tooManyCharactersInputErrorMessage = 'You have entered too many characters' %}
+{% set yesNo = data.yesNo %}
+{% set yesInputValue = data.yesNoDetails %}
+{% set noInputValue = data.yesNoDetails %}

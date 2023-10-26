@@ -187,7 +187,7 @@ describe('The API requests application service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.APPLICATION.getById('b306c67f-f5cd-4e69-9986-8390188051b3')
-      expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/application/b306c67f-f5cd-4e69-9986-8390188051b3', {})
       expect(result).toEqual([{ foo: 'bar' }])
     })
 

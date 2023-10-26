@@ -1,0 +1,44 @@
+{% extends "standard-form.njk" %}
+
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% set errorMap = {
+        'work-start': {
+          'noDateSent': { ref: '#work-start', text: 'You have not entered the date you started the work' },
+          'invalidDate': { ref: '#work-start', text: 'Start date must be a real date' },
+          'dataInFuture': { ref: '#work-start', text: 'The start date must be in the past' }
+        }
+    }
+%}
+
+{% set title = 'When did you start the work?' %}
+
+{% block pageContent %}
+  {{ govukDateInput({
+    id: "work-start",
+    namePrefix: "work-start",
+    name: "work-start",
+    errorMessage: { text: "Enter the date you started the work" } if error['work-start'],
+    items: [
+      {
+        classes: "govuk-input--width-2",
+        value: data.day,
+        name: "day"
+      },
+      {
+        classes: "govuk-input--width-2",
+        value: data.month,
+        name: "month"
+      },
+      {
+        classes: "govuk-input--width-4",
+        value: data.year,
+        name: "year"
+      }
+    ],
+    hint: {
+      text: "For example, 27 3 2007"
+    }
+  }) }}
+
+{% endblock %}

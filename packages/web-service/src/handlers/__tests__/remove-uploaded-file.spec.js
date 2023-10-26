@@ -50,7 +50,9 @@ describe('the remove-uploaded-file handler function', () => {
     jest.doMock('../../services/api-requests.js', () => ({
       APIRequests: {
         FILE_UPLOAD: {
-          removeUploadedFile: mockRemoveUploadedFile
+          APPLICATION: {
+            removeUploadedFile: mockRemoveUploadedFile
+          }
         }
       }
     }))
