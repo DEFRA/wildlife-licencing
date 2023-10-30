@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-eps-web-service",
-  "version": "12.3.14",
+  "version": "12.3.15",
   "description": "The web service for wildlife licencing of European Protected Species",
   "main": "src/web-service.js",
   "type": "module",
@@ -30,7 +30,7 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@defra/wls-connectors-lib": "^12.3.14",
+    "@defra/wls-connectors-lib": "^12.3.15",
     "@defra/wls-powerapps-keys": "^12.3.14",
     "@hapi/boom": "^9.1.4",
     "@hapi/crumb": "^9.0.0",
