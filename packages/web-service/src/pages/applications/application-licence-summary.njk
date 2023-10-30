@@ -35,7 +35,7 @@
   ]
 %}
 
-{% if data.lastLicenceReturn %}
+{% if data.lastLicenceReturn and data.licenceStatuses[data.applicationLicence.statusCode] != 'GRANTED_ROA_RECEIVED' %}
 
   {{ optionItems.push({
       value: 'return',
