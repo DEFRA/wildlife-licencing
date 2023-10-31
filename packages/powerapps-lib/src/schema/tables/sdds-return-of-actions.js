@@ -1,26 +1,26 @@
 import { Table, Column, Relationship, RelationshipType, OperationType } from '../schema.js'
-import { dateConvSrc, yesNoNASrc, yesNoNASrcNeg, yesNoNATgt, yesNoNATgtNeg } from './common.js'
+import { dateConvSrc, yesNoNASrc, yesNoNASrcNeg, yesNoNATgt, yesNoNATgtNeg, yesNoNotApplicableSrc } from './common.js'
 
 const SddsReturnA24Columns = [
-  new Column('sdds_obstructsettentrancesbymeansofonewaygates', 'obstructionByOneWayGates', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_obstructsettentrancesbymeansofonewaygates', 'obstructionByOneWayGates', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_obstructsettentrancesonewaydescription', 'obstructionByOneWayGatesDetails'),
-  new Column('sdds_obstructaccesstosettbyblockingorproofing', 'obstructionBlockingOrProofing', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_obstructaccesstosettbyblockingorproofing', 'obstructionBlockingOrProofing', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_blockingorproofingdescription', 'obstructionBlockingOrProofingDetails'),
-  new Column('sdds_damagesettbyhandsmechanicalmeans', 'damageByHandOrMechanicalMeans', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_damagesettbyhandsmechanicalmeans', 'damageByHandOrMechanicalMeans', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_damagebyhandmechanicalmeansdescription', 'damageByHandOrMechanicalMeansDetails'),
-  new Column('sdds_destroyvacantsettbyhandormechanicalmeans', 'destroyVacantSettByHandOrMechanicalMeans', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_destroyvacantsettbyhandormechanicalmeans', 'destroyVacantSettByHandOrMechanicalMeans', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_destroysettbyhandmechanicaldecsription', 'destroyVacantSettByHandOrMechanicalMeansDetails'),
   new Column('sdds_whendidyoudestroythevacantsett', 'destroyDate'),
-  new Column('sdds_didyoudisturbbadgers', 'disturbBadgers', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_didyoudisturbbadgers', 'disturbBadgers', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_disturbbadgerdescription', 'disturbBadgersDetails'),
-  new Column('sdds_didyoucreateanartificialsett', 'artificialSett', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_didyoucreateanartificialsett', 'artificialSett', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_whydidntyoucreateanartificialsett', 'noArtificialSettReason'), // Option WHY_DIDNT_YOU_CREATE_AN_ARTIFICIAL_SETT
   new Column('sdds_whycouldanartificialsettnotbemade', 'noArtificialSettReasonDetails'),
   new Column('sdds_artificialsettdescription', 'artificialSettDetails'),
   new Column('sdds_evidencebadgersfoundtheartificialsett', 'artificialSettFoundEvidence'),
-  new Column('sdds_artificialsettcreatedbeforesettwasclosed', 'artificialSettCreatedBeforeClosure', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_artificialsettcreatedbeforesettwasclosed', 'artificialSettCreatedBeforeClosure', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_artificialbadgersettgridreference', 'artificialSettFoundGridReference'),
-  new Column('sdds_concernsforbadgerswelfare', 'welfareConcerns', yesNoNASrc, yesNoNATgt),
+  new Column('sdds_concernsforbadgerswelfare', 'welfareConcerns', yesNoNotApplicableSrc, yesNoNATgt),
   new Column('sdds_badgerswelfaredescription', 'welfareConcernsDetails')
 ]
 
