@@ -19,7 +19,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
-    "lerna": "^4.0.0",
+    "lerna": "^7.4.2",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
