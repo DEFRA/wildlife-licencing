@@ -2,9 +2,9 @@ import { ReturnsURIs } from '../../../uris.js'
 import { yesNoPage } from '../../common/yes-no.js'
 import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 
-const { ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE, ARTIFICIAL_SETT_EVIDENCE_FOUND } = ReturnsURIs.A24
+const { ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -33,7 +33,7 @@ export const setData = async request => {
 export const artificialSettCreatedBeforeClosurePage = yesNoPage({
   page: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.page,
   uri: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri,
-  completion: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   getData: getData,
   setData: setData

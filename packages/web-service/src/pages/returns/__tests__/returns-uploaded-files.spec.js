@@ -69,29 +69,44 @@ describe('the check-supporting-information page handler', () => {
     })
   })
 
-  describe('the completion function', () => {
-    it('should returns to the return check answers page if the user selected no to upload another file', async () => {
-      const request = {
-        payload: {
-          'another-file-check': 'no'
-        }
-      }
-
-      const { completion } = await import('../returns-uploaded-files.js')
-      const result = await completion(request)
-      expect(result).toEqual('/returns-check')
-    })
-
-    it('should returns to the returns upload file page if the user selected yes to upload another file', async () => {
+  describe('the setData function', () => {
+    it('updates the uploadAnotherFile flag', async () => {
+      const mockSetData = jest.fn()
+      const licenceId = 'ABC-567-GHU'
+      const returnId = '123456789'
       const request = {
         payload: {
           'another-file-check': 'yes'
-        }
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId,
+            returns: {
+              id: returnId
+            }
+          }),
+          setData: mockSetData
+        })
       }
 
-      const { completion } = await import('../returns-uploaded-files.js')
-      const result = await completion(request)
-      expect(result).toEqual('/returns-upload-file')
+      const mockUpdateLicenceReturn = jest.fn()
+      const mockLicenceReturnData = {
+        nilReturn: false
+      }
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => mockLicenceReturnData),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../returns-uploaded-files.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith(licenceId, returnId, { ...mockLicenceReturnData, uploadAnotherFile: true })
+      expect(mockSetData).toHaveBeenCalled()
     })
   })
 

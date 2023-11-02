@@ -21,7 +21,7 @@ describe('the destroy vacant sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -36,8 +36,8 @@ describe('the destroy vacant sett functions', () => {
 
       const { getData } = await import('../destroy-vacant-sett.js')
       expect(await getData(request)).toEqual({
-        destroyVacantSett: false,
-        destroyVacantSettDetails: 'development issues'
+        yesNo: 'no',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -54,7 +54,7 @@ describe('the destroy vacant sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
           },
@@ -66,8 +66,8 @@ describe('the destroy vacant sett functions', () => {
 
       const { getData } = await import('../destroy-vacant-sett.js')
       expect(await getData(request)).toEqual({
-        destroyVacantSett: undefined,
-        destroyVacantSettDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })
@@ -147,29 +147,6 @@ describe('the destroy vacant sett functions', () => {
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
-    })
-  })
-
-  describe('the completion function', () => {
-    it('navigates to when the vacant sett is destroyed', async () => {
-      const request = {
-        payload: {
-          'yes-no': 'yes'
-        },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789'
-            }
-          })
-        })
-      }
-
-      const { completion } = await import('../destroy-vacant-sett.js')
-      await completion(request)
-      expect(await completion(request)).toBe('/a24/destroy-date')
     })
   })
 })

@@ -1,22 +1,22 @@
 import { APIRequests } from '../../../services/api-requests.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 
 const { BLOCKING_OR_PROOFING } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let obstructBlocking, obstructBlockingDetails
   if (returnId) {
     const { obstructionBlockingOrProofing, obstructionBlockingOrProofingDetails } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
     obstructBlocking = obstructionBlockingOrProofing
     obstructBlockingDetails = obstructionBlockingOrProofingDetails
   }
-  return { obstructBlocking, obstructBlockingDetails }
+  return { yesNo: yesNoFromBool(obstructBlocking), yesNoDetails: obstructBlockingDetails }
 }
 
 export const setData = async request => {
@@ -42,6 +42,6 @@ export const blockingOrProofing = yesNoConditionalPage({
   uri: BLOCKING_OR_PROOFING.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: licenceActionsCompletion,
+  completion: allCompletion,
   setData: setData
 })

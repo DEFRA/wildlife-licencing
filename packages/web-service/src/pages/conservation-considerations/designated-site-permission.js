@@ -3,7 +3,7 @@ import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
-import { allCompletion, checkDesignatedSite, getCurrentSite } from './common.js'
+import { allCompletion, getCurrentSite, checkDesignatedSite } from './common.js'
 
 const { OWNER_PERMISSION } = conservationConsiderationURIs
 

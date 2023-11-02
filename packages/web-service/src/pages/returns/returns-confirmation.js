@@ -2,7 +2,7 @@ import pageRoute from '../../routes/page-route.js'
 import { APPLICATIONS, ReturnsURIs } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { Backlink } from '../../handlers/backlink.js'
-import { checkLicence } from './common-return-functions.js'
+import { checkReturns, checkLicence } from './common-return-functions.js'
 
 const { CONFIRMATION } = ReturnsURIs
 
@@ -30,6 +30,6 @@ export default pageRoute({
   uri: CONFIRMATION.uri,
   backlink: Backlink.NO_BACKLINK,
   completion: completion,
-  checkData: checkLicence,
+  checkData: [checkReturns, checkLicence],
   getData: getData
 })

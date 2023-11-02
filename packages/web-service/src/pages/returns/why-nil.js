@@ -3,9 +3,9 @@ import pageRoute from '../../routes/page-route.js'
 import { ReturnsURIs } from '../../uris.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence } from './common-return-functions.js'
+import { allCompletion, checkLicence } from './common-return-functions.js'
 
-const { WHY_NIL, ANOTHER_LICENCE } = ReturnsURIs
+const { WHY_NIL } = ReturnsURIs
 const { WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS: { THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN, THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS, OTHER } } = PowerPlatformKeys
 const whyNilRadio = 'why-nil'
 const whyNilOtherDescription = 'other-details'
@@ -13,7 +13,7 @@ const whyNilOtherDescription = 'other-details'
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let whyNil, whyNilOther
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
@@ -46,7 +46,7 @@ export const setData = async request => {
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   let payload = { ...licenceReturn, whyNil }
   if (whyNil === OTHER) {
-    payload = { ...payload, whyNilOther }
+    payload = { ...payload, whyNil, whyNilOther }
   }
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
   journeyData.returns = { ...journeyData.returns, whyNil, whyNilOther }
@@ -56,7 +56,7 @@ export const setData = async request => {
 export default pageRoute({
   page: WHY_NIL.page,
   uri: WHY_NIL.uri,
-  completion: ANOTHER_LICENCE.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   validator,
   getData,

@@ -21,7 +21,7 @@ describe('the one way gates functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -36,8 +36,8 @@ describe('the one way gates functions', () => {
 
       const { getData } = await import('../one-way-gates.js')
       expect(await getData(request)).toEqual({
-        oneWayGatesYesOrNo: true,
-        oneWayGatesDetails: 'development issues'
+        yesNo: 'yes',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -54,7 +54,7 @@ describe('the one way gates functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
           },
@@ -66,8 +66,8 @@ describe('the one way gates functions', () => {
 
       const { getData } = await import('../one-way-gates.js')
       expect(await getData(request)).toEqual({
-        oneWayGatesYesOrNo: undefined,
-        oneWayGatesDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

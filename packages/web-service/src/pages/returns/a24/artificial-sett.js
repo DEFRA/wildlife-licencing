@@ -3,9 +3,9 @@ import pageRoute from '../../../routes/page-route.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoFromBool } from '../../common/common.js'
 import Joi from 'joi'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 
-const { ARTIFICIAL_SETT, WHY_NO_ARTIFICIAL_SETT, ARTIFICIAL_SETT_DETAILS } = ReturnsURIs.A24
+const { ARTIFICIAL_SETT } = ReturnsURIs.A24
 const createArtificialSettRadio = 'create-artificial-sett-check'
 
 export const getData = async request => {
@@ -27,12 +27,22 @@ export const setData = async request => {
   const licenceId = journeyData?.licenceId
   const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licenceId, returnId)
   const payload = { ...licenceReturn, artificialSett }
+
+  // If we're switching from no to yes, then we do not want the noArtificialSettReason
+  if (artificialSett === true && payload.noArtificialSettReason) {
+    delete payload.noArtificialSettReason
+    delete payload.noArtificialSettReasonDetails
+  }
+
+  // If we're switching from yes to no, then we do not want the artificialSettDetails
+  if (artificialSett === false && payload.artificialSettDetails) {
+    delete payload.artificialSettDetails
+  }
+
   await APIRequests.RETURNS.updateLicenceReturn(licenceId, returnId, payload)
   journeyData.returns = { ...journeyData.returns, artificialSett }
   await request.cache().setData(journeyData)
 }
-
-export const completion = async request => request?.payload[createArtificialSettRadio] === 'yes' ? ARTIFICIAL_SETT_DETAILS.uri : WHY_NO_ARTIFICIAL_SETT.uri
 
 export default pageRoute({
   page: ARTIFICIAL_SETT.page,
@@ -44,6 +54,6 @@ export default pageRoute({
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkLicence,
   getData: getData,
-  completion: completion,
+  completion: allCompletion,
   setData: setData
 })

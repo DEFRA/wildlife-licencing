@@ -21,7 +21,7 @@ describe('the blocking or proofing functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -36,8 +36,8 @@ describe('the blocking or proofing functions', () => {
 
       const { getData } = await import('../blocking-or-proofing.js')
       expect(await getData(request)).toEqual({
-        obstructBlocking: true,
-        obstructBlockingDetails: 'reason'
+        yesNo: 'yes',
+        yesNoDetails: 'reason'
       })
     })
 
@@ -54,7 +54,7 @@ describe('the blocking or proofing functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
           },
@@ -66,8 +66,8 @@ describe('the blocking or proofing functions', () => {
 
       const { getData } = await import('../blocking-or-proofing.js')
       expect(await getData(request)).toEqual({
-        obstructBlocking: undefined,
-        obstructBlockingDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

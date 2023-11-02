@@ -4,7 +4,7 @@ import { APIRequests } from '../../services/api-requests.js'
 import { timestampFormatter } from '../common/common.js'
 import { ContactRoles } from '../contact/common/contact-roles.js'
 import { addressLine } from '../service/address.js'
-import { statuses, checkData, getApplicationData } from './application-common-functions.js'
+import { applicationStatuses, checkData, getApplicationData } from './application-common-functions.js'
 
 export const getData = async request => {
   // Application summary passes nocache=true to the API to ensure the latest data is always returned
@@ -15,7 +15,7 @@ export const getData = async request => {
   Object.assign(application, { userSubmission: timestampFormatter(application?.userSubmission) })
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
 
-  return { application, applicant, statuses }
+  return { application, applicant, applicationStatuses }
 }
 
 export default pageRoute({

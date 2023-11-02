@@ -1,15 +1,15 @@
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 import Joi from 'joi'
 
-const { ARTIFICIAL_SETT_EVIDENCE_FOUND, ARTIFICIAL_SETT_GRID_REFERENCE } = ReturnsURIs.A24
+const { ARTIFICIAL_SETT_EVIDENCE_FOUND } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   let artificialSettFoundEvidence
   if (returnId) {
     const licenceReturn = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
@@ -33,7 +33,7 @@ export const setData = async request => {
 export default pageRoute({
   page: ARTIFICIAL_SETT_EVIDENCE_FOUND.page,
   uri: ARTIFICIAL_SETT_EVIDENCE_FOUND.uri,
-  completion: ARTIFICIAL_SETT_GRID_REFERENCE.uri,
+  completion: allCompletion,
   validator: Joi.object({
     'located-artificial-sett': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),

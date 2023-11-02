@@ -21,7 +21,7 @@ describe('the damage by hand or mechanical means functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -36,8 +36,8 @@ describe('the damage by hand or mechanical means functions', () => {
 
       const { getData } = await import('../damage-by-hand-or-mechanical-means.js')
       expect(await getData(request)).toEqual({
-        damageSett: false,
-        damageSettDetails: 'delay'
+        yesNo: 'no',
+        yesNoDetails: 'delay'
       })
     })
 
@@ -54,7 +54,7 @@ describe('the damage by hand or mechanical means functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
           },
@@ -66,8 +66,8 @@ describe('the damage by hand or mechanical means functions', () => {
 
       const { getData } = await import('../damage-by-hand-or-mechanical-means.js')
       expect(await getData(request)).toEqual({
-        damageSett: undefined,
-        damageSettDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

@@ -2,9 +2,9 @@ import { ReturnsURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
-import { checkLicence } from './common-return-functions.js'
+import { allCompletion, checkLicence } from './common-return-functions.js'
 
-const { ANOTHER_LICENCE, CHECK_YOUR_ANSWERS } = ReturnsURIs
+const { ANOTHER_LICENCE } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -33,7 +33,7 @@ export const setData = async request => {
 export const anotherLicence = yesNoPage({
   page: ANOTHER_LICENCE.page,
   uri: ANOTHER_LICENCE.uri,
-  completion: CHECK_YOUR_ANSWERS.uri,
+  completion: allCompletion,
   checkData: checkLicence,
   getData,
   setData

@@ -35,17 +35,17 @@
               {
                 value: data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN,
                 text: "The development work did not happen",
-                checked: data.whyNil === data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN
+                checked: data.whyNil == data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN
               },
               {
                 value: data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS,
                 text: "The sett was not in active use by badgers",
-                checked: data.whyNil === data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS
+                checked: data.whyNil == data.THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS
               },
               {
                 value: data.OTHER,
                 text: "Other",
-                checked: payload['why-nil'] === data.OTHER if payload['why-nil'] or data.whyNil === data.OTHER,
+                checked: payload['why-nil'] == data.OTHER if payload['why-nil'] or data.whyNil == data.OTHER,
                 conditional: {
                   html: otherDetailsWhyActions
                 }

@@ -1,6 +1,6 @@
 {% extends 'standard-form.njk' %}
 {% import "common-text.njk" as descriptions %}
-{% import "applications-text.njk" as text %}
+{% import "applications-text.njk" as applicationAndLicenceStatusText %}
 {% from "radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "summary-list/macro.njk" import govukSummaryList %}
@@ -17,22 +17,51 @@
 {% set title = 'Licence details' %}
 
 {% set tableRows = [
-    { key: { text: "Status" }, value: { html: text.govukTaskList(data.application, data.statuses) } },
+    { key: { text: "Status" }, value: { html: applicationAndLicenceStatusText.getLicenceStatus(data.applicationLicence.statusCode, data.licenceStatuses) } },
     { key: { text: "Licence type" }, value: { text: descriptions.APPLICATION_TYPES[data.application.applicationType].description } },
-    { key: { text: "Licence reference" }, value: { text: data.licences[0].licenceNumber  } },
+    { key: { text: "Licence reference" }, value: { text: data.applicationLicence.licenceNumber  } },
     { key: { text: "Licence holder" }, value: { text: data.applicant.fullName } },
     { key: { text: "Site address" }, value: { text: data.application.siteAddress | safe } },
-    { key: { text: "Valid from" }, value: { text: data.licences[0].startDate } },
-    { key: { text: "Expires" }, value: { text: data.licences[0].endDate } }
+    { key: { text: "Valid from" }, value: { text: data.applicationLicence.startDate } },
+    { key: { text: "Expires" }, value: { text: data.applicationLicence.endDate } }
   ]
 %}
+
+{% set optionItems = [
+    {
+      value: 'email',
+      text: "Email a copy of the licence"
+    }
+  ]
+%}
+
+{% if data.lastLicenceReturn and data.licenceStatuses[data.applicationLicence.statusCode] != 'GRANTED_ROA_RECEIVED' %}
+
+  {{ optionItems.push({
+      value: 'return',
+      text: "Submit a report of action"
+  }) }}
+
+  {{ optionItems.push({
+      value: 'resume',
+      text: "Resume previous report of action",
+      hint: {
+        text: "Created on " + data.lastLicenceReturn.createdAtFormatted
+      }
+  }) }}
+{% else %}
+  {{ optionItems.push({
+        value: 'return',
+        text: "Submit a new report of action"
+    }) }}
+{% endif %}
+
 
 {% block pageTitle %}
   {{ 'Error: ' + title if error else title }}
 {% endblock %}
 
 {% block pageContent %}
-
   {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: tableRows }) }}
   {% if data.lastSentEventFlag %}
     {{ govukRadios({
@@ -42,16 +71,7 @@
           text: "Select an option",
           classes: "govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24"
         },
-        items: [
-          {
-            value: 'email',
-            text: "Email a copy of the licence"
-          },
-          {
-            value:  'return',
-            text: "Submit a report of action"
-          }
-        ]
+        items: optionItems
       }) }}
   {% endif %}
 {% endblock %}

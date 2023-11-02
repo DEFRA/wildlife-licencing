@@ -40,6 +40,30 @@ describe('The API requests return service', () => {
       expect(mockGetLicenceReturns).toHaveBeenCalledWith('/licence/668ee1f0-073d/returns')
     })
 
+    it('getLastLicenceReturn calls the API correctly', async () => {
+      const mockGetLicenceReturns = jest.fn().mockReturnValueOnce([{ id: 1 }])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGetLicenceReturns
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      await APIRequests.RETURNS.getLastLicenceReturn('668ee1f0-073d')
+      expect(mockGetLicenceReturns).toHaveBeenCalledWith('/licence/668ee1f0-073d/returns')
+    })
+
+    it('getLastLicenceReturn returns null if api returns an empty array', async () => {
+      const mockGetLicenceReturns = jest.fn().mockReturnValueOnce([])
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGetLicenceReturns
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const licenceReturn = await APIRequests.RETURNS.getLastLicenceReturn('668ee1f0-073d')
+      expect(licenceReturn).toBe(null)
+    })
+
     it('getLicenceReturn calls the API correctly', async () => {
       const mockGetLicenceReturn = jest.fn().mockReturnValueOnce({ id: 1 })
       jest.doMock('@defra/wls-connectors-lib', () => ({

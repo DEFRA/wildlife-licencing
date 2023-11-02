@@ -61,11 +61,16 @@ describe('application-licence page', () => {
               licenceNumber: 'LI-0016N0Z4',
               annotations: [{ filename: '2023-1253092-WLM-LIC-licence document.pdf', mimetype: 'application/pdf', modifiedOn: '2023-06-09T16:09:06Z', objectTypeCode: 'sdds_license' }]
             }])
+          },
+          RETURNS: {
+            getLastLicenceReturn: jest.fn(() => ({
+              id: '1'
+            }))
           }
         }
       }))
 
-      const { getData } = await import('../application-licence.js')
+      const { getData } = await import('../application-licence-summary.js')
       const result = await getData(request)
       expect(result).toStrictEqual({
         applicant: {
@@ -77,7 +82,7 @@ describe('application-licence page', () => {
           id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
           siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY'
         },
-        licences: [{
+        applicationLicence: {
           applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
           endDate: '26 August 2022',
           id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
@@ -92,17 +97,16 @@ describe('application-licence page', () => {
               objectTypeCode: 'sdds_license'
             }
           ]
-        }],
-        statuses: {
-          1: 'RECEIVED',
-          100000000: 'AWAITING_ALLOCATION',
-          100000001: 'ALLOCATED_FOR_ASSESSMENT',
-          100000002: 'UNDER_ASSESSMENT',
-          100000004: 'GRANTED',
-          100000005: 'PAUSED',
-          100000006: 'WITHDRAWN',
-          100000008: 'NOT_GRANTED',
+        },
+        lastLicenceReturn: {
+          createdAtFormatted: null,
+          id: '1'
+        },
+        licenceStatuses: {
+          1: 'ACTIVE',
+          100000000: 'DRAFT',
           452120001: 'EXPIRED_ROA_DUE',
+          452120002: 'GRANTED_ROA_RECEIVED',
           452120003: 'EXPIRED_ROA_RECEIVED',
           452120004: 'EXPIRED_ROA_RECEIVED_LATE'
         },
@@ -129,7 +133,7 @@ describe('application-licence page', () => {
         }
       }))
 
-      const { completion } = await import('../application-licence.js')
+      const { completion } = await import('../application-licence-summary.js')
       await completion(request)
       expect(mockQueueTheLicenceEmailResend).toHaveBeenCalledWith('94de2969-91d4-48d6-a5fe-d828a244aa18')
       expect(await completion(request)).toBe('/email-confirmation')
@@ -148,7 +152,7 @@ describe('application-licence page', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67',
               licenceNumber: '2023-500000-SPM-LIC'
             }]))
@@ -156,7 +160,7 @@ describe('application-licence page', () => {
         }
       }))
 
-      const { completion } = await import('../application-licence.js')
+      const { completion } = await import('../application-licence-summary.js')
       expect(await completion(request)).toBe('/licensed-actions')
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18', licenceId: '123-AbEF-67', licenceNumber: '2023-500000-SPM-LIC' })
     })
@@ -164,12 +168,13 @@ describe('application-licence page', () => {
     it('should redirect to the applications page when the user does not select to email a copy of a licence or submit a return', async () => {
       const request = {
         cache: () => ({
-          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' })
+          getData: () => ({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18' }),
+          setData: jest.fn()
         }),
         payload: { }
       }
 
-      const { completion } = await import('../application-licence.js')
+      const { completion } = await import('../application-licence-summary.js')
       expect(await completion(request)).toBe('/applications')
     })
   })
@@ -197,7 +202,7 @@ describe('application-licence page', () => {
           }
         })
 
-        const { validator } = await import('../application-licence.js')
+        const { validator } = await import('../application-licence-summary.js')
         expect(await validator(payload, context))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -226,7 +231,7 @@ describe('application-licence page', () => {
         }
       })
 
-      const { validator } = await import('../application-licence.js')
+      const { validator } = await import('../application-licence-summary.js')
 
       expect(await validator(payload, context)).toBeUndefined()
     })
@@ -251,7 +256,7 @@ describe('application-licence page', () => {
           }
         }
       })
-      const { validator } = await import('../application-licence.js')
+      const { validator } = await import('../application-licence-summary.js')
       expect(await validator(payload, context)).toBeUndefined()
     })
   })

@@ -19,7 +19,7 @@ describe('the Artificial sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -49,7 +49,7 @@ describe('the Artificial sett functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567',
               endDate: '2022-08-26',
               startDate: '2022-08-10'
@@ -105,25 +105,81 @@ describe('the Artificial sett functions', () => {
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: true })
       expect(mockSetData).toHaveBeenCalled()
     })
-  })
 
-  describe('the completion function', () => {
-    it('redirects to the artificial sett details page if the answer is yes', async () => {
-      const { completion } = await import('../artificial-sett.js')
+    it('clears the noArtificialSettReason and details when artificialSett set to true from false', async () => {
+      const mockSetData = jest.fn()
       const request = {
-        payload: { 'create-artificial-sett-check': 'yes' }
+        payload: {
+          'create-artificial-sett-check': 'yes'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
       }
-      const result = await completion(request)
-      expect(result).toEqual('/a24/artificial-sett-details')
+
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              nilReturn: false,
+              artificialSett: false,
+              noArtificialSettReason: 'Some reason here that should be removed'
+            })),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../artificial-sett.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: true })
+      expect(mockSetData).toHaveBeenCalled()
     })
 
-    it('redirects to why not artificial sett page if the answer is no', async () => {
-      const { completion } = await import('../artificial-sett.js')
+    it('clears the artificialSettDetails and details when artificialSett set to false from true', async () => {
+      const mockSetData = jest.fn()
       const request = {
-        payload: { 'create-artificial-sett-check': 'no' }
+        payload: {
+          'create-artificial-sett-check': 'no'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
+            licenceId: 'ABC-567-GHU',
+            returns: {
+              id: '123456789'
+            }
+          }),
+          setData: mockSetData
+        })
       }
-      const result = await completion(request)
-      expect(result).toEqual('/a24/why-no-artificial-sett')
+
+      const mockUpdateLicenceReturn = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          RETURNS: {
+            getLicenceReturn: jest.fn(() => ({
+              nilReturn: false,
+              artificialSett: true,
+              artificialSettDetails: 'Some details here that should be removed'
+            })),
+            updateLicenceReturn: mockUpdateLicenceReturn
+          }
+        }
+      }))
+
+      const { setData } = await import('../artificial-sett.js')
+      await setData(request)
+      expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, artificialSett: false })
+      expect(mockSetData).toHaveBeenCalled()
     })
   })
 })

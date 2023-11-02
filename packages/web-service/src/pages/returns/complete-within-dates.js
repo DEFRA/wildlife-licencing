@@ -1,15 +1,15 @@
 import { ReturnsURIs } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { checkLicence, getLicenceMethodTypes, getNextPage } from './common-return-functions.js'
+import { allCompletion, checkLicence } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool, timestampFormatter } from '../common/common.js'
 
-const { COMPLETE_WITHIN_DATES, WORK_START } = ReturnsURIs
+const { COMPLETE_WITHIN_DATES } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   const startDate = timestampFormatter(licences[0]?.startDate)
   const endDate = timestampFormatter(licences[0]?.endDate)
   if (returnId) {
@@ -32,29 +32,11 @@ export const setData = async request => {
   await request.cache().setData(journeyData)
 }
 
-export const completion = async request => {
-  if (boolFromYesNo(request.payload['yes-no'])) {
-    const journeyData = await request.cache().getData()
-    const licenceActions = await APIRequests.RETURNS.getLicenceActions(journeyData?.licenceId)
-    const methodTypes = getLicenceMethodTypes(licenceActions)
-    journeyData.returns = {
-      ...journeyData.returns,
-      methodTypes,
-      methodTypesLength: methodTypes?.length,
-      methodTypesNavigated: methodTypes?.length - 1
-    }
-    await request.cache().setData(journeyData)
-    return getNextPage(methodTypes[0])
-  } else {
-    return WORK_START.uri
-  }
-}
-
 export const completeWithinDates = yesNoPage({
   page: COMPLETE_WITHIN_DATES.page,
   uri: COMPLETE_WITHIN_DATES.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: completion,
+  completion: allCompletion,
   setData: setData
 })

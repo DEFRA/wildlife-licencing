@@ -21,7 +21,7 @@ describe('the disturb badgers functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '2280-4ea5-ad72-AbdEF-4567'
             }]))
           },
@@ -36,8 +36,8 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgersYesOrNo: true,
-        disturbBadgersDetails: 'development issues'
+        yesNo: 'yes',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -54,7 +54,7 @@ describe('the disturb badgers functions', () => {
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
           LICENCES: {
-            findByApplicationId: jest.fn(() => ([{
+            findActiveLicencesByApplicationId: jest.fn(() => ([{
               id: '123-AbEF-67'
             }]))
           },
@@ -66,8 +66,8 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgersYesOrNo: undefined,
-        disturbBadgersDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })
@@ -109,6 +109,36 @@ describe('the disturb badgers functions', () => {
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
+    })
+  })
+
+  describe('the validator function', () => {
+    it('should throw an error if an option is not selected', async () => {
+      try {
+        const payload = { 'yes-no': '' }
+        const { validator } = await import('../disturb-badgers.js')
+        expect(await validator(payload))
+      } catch (e) {
+        expect(e.message).toBe('ValidationError')
+        expect(e.details[0].message).toBe('Error: You have not selected an option')
+      }
+    })
+
+    it('should throw an error if the condition input is empty', async () => {
+      try {
+        const payload = { 'yes-no': 'yes', 'yes-conditional-input': '' }
+        const { validator } = await import('../disturb-badgers.js')
+        expect(await validator(payload))
+      } catch (e) {
+        // eslint-disable-next-line
+        expect(e.details[0].message).toBe("\"yes-conditional-input\" is not allowed to be empty")
+      }
+    })
+
+    it('should not throws an error if an option is selected', async () => {
+      const payload = { 'yes-no': 'no' }
+      const { validator } = await import('../disturb-badgers.js')
+      expect(await validator(payload)).toBeUndefined()
     })
   })
 })

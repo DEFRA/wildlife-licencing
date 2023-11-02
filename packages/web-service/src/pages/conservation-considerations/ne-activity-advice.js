@@ -2,7 +2,7 @@ import Joi from 'joi'
 import pageRoute from '../../routes/page-route.js'
 import { conservationConsiderationURIs } from '../../uris.js'
 import { checkApplication } from '../common/check-application.js'
-import { allCompletion, checkDesignatedSite, getCurrentSite } from './common.js'
+import { allCompletion, getCurrentSite, checkDesignatedSite } from './common.js'
 import { APIRequests } from '../../services/api-requests.js'
 const { ACTIVITY_ADVICE } = conservationConsiderationURIs
 

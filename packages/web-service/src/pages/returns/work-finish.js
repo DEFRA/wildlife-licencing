@@ -40,7 +40,7 @@ export const validator = async (payload, context) => {
 export const getData = async request => {
   const journeyData = await request.cache().getData()
   const returnId = journeyData?.returns?.id
-  const licences = await APIRequests.LICENCES.findByApplicationId(journeyData?.applicationId)
+  const licences = await APIRequests.LICENCES.findActiveLicencesByApplicationId(journeyData?.applicationId)
   if (returnId) {
     const { endDate } = await APIRequests.RETURNS.getLicenceReturn(licences[0]?.id, returnId)
     if (endDate) {

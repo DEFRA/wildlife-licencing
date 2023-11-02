@@ -641,72 +641,71 @@ describe('the checkData function', () => {
       expect(result).toBeNull()
     })
 
-    it('returns a redirect to the tasklist if the parameter id is not found in the set of designated sites', async () => {
+    it('returns null if there is no site to remove', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           DESIGNATED_SITES: {
-            get: jest.fn(() => [{
-              id: '344be97d-c928-4753-ae09-f8944ad9f228'
-            }])
-          }
-        }
-      }))
-      const { checkDesignatedSite } = await import('../common.js')
-      const request = {
-        query: { id: '644be97d-c928-4753-ae09-f8944ad9f228' },
-        cache: () => ({
-          getData: () => ({})
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      await checkDesignatedSite(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
-    })
-
-    it('returns a redirect to the tasklist if there are is no id in the parameter or the cache', async () => {
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          DESIGNATED_SITES: {
-            get: jest.fn(() => [{
-              id: '344be97d-c928-4753-ae09-f8944ad9f228'
-            }])
-          }
-        }
-      }))
-      const { checkDesignatedSite } = await import('../common.js')
-      const request = {
-        cache: () => ({
-          getData: () => ({})
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      await checkDesignatedSite(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
-    })
-
-    it('returns a redirect to the tasklist if there are no application designated sites', async () => {
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          DESIGNATED_SITES: {
+            getDesignatedSites: jest.fn(() => [
+              {
+                id: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+                siteName: 'Ribble Estuary',
+                siteType: 100000001
+              }
+            ]),
             get: jest.fn(() => [])
           }
         }
       }))
-      const { checkDesignatedSite } = await import('../common.js')
       const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          setData: jest.fn()
         })
       }
-      const h = {
-        redirect: jest.fn()
+      const { checkDesignatedSite } = await import('../common.js')
+      const h = { redirect: jest.fn((uri) => uri) }
+
+      const result = await checkDesignatedSite(request, h)
+
+      expect(result).toEqual('/designated-site-check-answers')
+    })
+
+    it('returns the check page if there is a site to remove', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            getDesignatedSites: jest.fn(() => [
+              {
+                id: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+                siteName: 'Ribble Estuary',
+                siteType: 100000001
+              }
+            ]),
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf'
+            }])
+          }
+        }
+      }))
+      const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          setData: jest.fn()
+        })
       }
-      await checkDesignatedSite(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/tasklist')
+      const { checkDesignatedSite } = await import('../common.js')
+      const h = { redirect: jest.fn() }
+
+      const result = await checkDesignatedSite(request, h)
+
+      expect(result).toEqual(null)
     })
   })
 })
