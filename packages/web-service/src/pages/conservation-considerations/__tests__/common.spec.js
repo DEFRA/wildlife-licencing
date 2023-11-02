@@ -606,7 +606,8 @@ describe('the checkData function', () => {
       const request = {
         query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
         cache: () => ({
-          getData: () => ({})
+          getData: () => ({}),
+          setData: jest.fn()
         })
       }
       const h = {
