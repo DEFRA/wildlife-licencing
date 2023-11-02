@@ -1,6 +1,6 @@
 import { APIRequests } from '../../services/api-requests.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { conservationConsiderationURIs, TASKLIST } from '../../uris.js'
+import { conservationConsiderationURIs } from '../../uris.js'
 
 const { DESIGNATED_SITE_CHECK_ANSWERS } = conservationConsiderationURIs
 

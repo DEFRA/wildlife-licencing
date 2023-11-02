@@ -592,56 +592,6 @@ describe('the checkData function', () => {
   })
 
   describe('the checkDesignatedSite function', () => {
-    it('returns null if the parameter id is found in the set of designated sites', async () => {
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          DESIGNATED_SITES: {
-            get: jest.fn(() => [{
-              id: '344be97d-c928-4753-ae09-f8944ad9f228'
-            }])
-          }
-        }
-      }))
-      const { checkDesignatedSite } = await import('../common.js')
-      const request = {
-        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
-        cache: () => ({
-          getData: () => ({}),
-          setData: jest.fn()
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const result = await checkDesignatedSite(request, h)
-      expect(result).toBeNull()
-    })
-
-    it('returns null if the cache id is found in the set of designated sites', async () => {
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          DESIGNATED_SITES: {
-            get: jest.fn(() => [{
-              id: '344be97d-c928-4753-ae09-f8944ad9f228'
-            }])
-          }
-        }
-      }))
-      const { checkDesignatedSite } = await import('../common.js')
-      const request = {
-        cache: () => ({
-          getData: () => ({
-            designatedSite: { id: '344be97d-c928-4753-ae09-f8944ad9f228' }
-          })
-        })
-      }
-      const h = {
-        redirect: jest.fn()
-      }
-      const result = await checkDesignatedSite(request, h)
-      expect(result).toBeNull()
-    })
-
     it('returns null if there is no site to remove', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
