@@ -8,14 +8,18 @@
  * @param address
  */
 export const addressProcess = address => {
-  if (!address) return
+  if (!address) {
+    return
+  }
 
   const { uprn, street, locality, addressLine1, addressLine2 } = address
   const isSameLine1 = street === addressLine1
   const isSameLine2 = locality === addressLine2
 
   const deleteIfTrue = (condition, field) => {
-    if (condition) delete address[field]
+    if (condition) {
+      delete address[field]
+    }
   }
 
   deleteIfTrue(uprn && isSameLine1, 'addressLine1')
