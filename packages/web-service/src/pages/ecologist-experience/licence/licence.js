@@ -12,9 +12,7 @@ export const getData = async request => {
   return { previousLicences, allRemoved: !!ecologistExperience?.previousLicencesAllRemoved }
 }
 
-export const completion = async request => {
-  return licenceCompletion(request, request.payload.licence)
-}
+export const completion = async request => licenceCompletion(request, request.payload.licence)
 
 export default pageRoute({
   uri: ecologistExperienceURIs.LICENCE.uri,

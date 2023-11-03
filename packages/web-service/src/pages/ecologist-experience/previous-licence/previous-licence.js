@@ -8,9 +8,7 @@ import { boolFromYesNo } from '../../common/common.js'
 import { tagStatus } from '../../../services/status-tags.js'
 import { licenceCompletion } from '../common.js'
 
-export const completion = async request => {
-  return licenceCompletion(request, request.payload['yes-no'])
-}
+export const completion = async request => licenceCompletion(request, request.payload['yes-no'])
 
 export const checkData = async (request, h) => {
   const journeyData = await request.cache().getData() || {}
