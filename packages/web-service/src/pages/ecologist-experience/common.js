@@ -1,8 +1,8 @@
-import { APIRequests } from '../../../services/api-requests.js'
-import { ecologistExperienceURIs } from '../../../uris.js'
-import { SECTION_TASKS } from '../../tasklist/general-sections.js'
-import { boolFromYesNo } from '../../common/common.js'
-import { tagStatus } from '../../../services/status-tags.js'
+import { APIRequests } from '../../services/api-requests'
+import { tagStatus } from '../../services/status-tags'
+import { ecologistExperienceURIs } from '../../uris'
+import { boolFromYesNo } from '../common/common'
+import { SECTION_TASKS } from '../tasklist/general-sections'
 
 export const licenceCompletion = async (request, licenceYesNo) => {
   if (boolFromYesNo(licenceYesNo)) {
