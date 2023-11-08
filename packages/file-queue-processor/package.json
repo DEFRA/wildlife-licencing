@@ -30,7 +30,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@azure/identity": "^2.1.0",
+    "@azure/identity": "^4.0.0",
     "@defra/wls-connectors-lib": "^12.3.14",
     "@defra/wls-database-model": "^12.3.14",
     "@defra/wls-queue-defs": "^12.3.14",
