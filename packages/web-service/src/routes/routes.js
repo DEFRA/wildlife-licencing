@@ -3,6 +3,7 @@ import otherSpecies from '../pages/species/other-species.js'
 import nsip from '../pages/nsip/nsip.js'
 import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
 import applications from '../pages/applications/applications.js'
+import feedback from '../pages/feedback/feedback.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import applicationLicenceSummary from '../pages/applications/application-licence-summary.js'
 import login from '../pages/auth/login/login.js'
@@ -190,6 +191,7 @@ const routes = [
   ...nsip,
   ...windowNotOpen,
   ...applications,
+  ...feedback,
   ...applicationSummary,
   ...applicationLicenceSummary,
   ...login,

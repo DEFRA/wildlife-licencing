@@ -1,0 +1,80 @@
+{% extends "layout.njk" %}
+{% import "common-text.njk" as descriptions %}
+{% import "applications-text.njk" as applicationAndLicenceStatusText %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "table/macro.njk" import govukTable %}
+
+{# TODO - Add validation to js file #}
+{% set errorMap = {
+    'nps-satisfaction': {
+      'any.required': { ref: '#nps-satisfaction', text: 'You have not selected an option' }
+    }
+  }
+%}
+
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Give feedback on Apply for and manage a wildlife licence</h1>
+
+
+      {{ govukRadios({
+        name: "nps-satisfaction",
+        fieldset: {
+          legend: {
+            text: "Overall, how did you feel about the service today?",
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "Very satisfied",
+            text: "Very satisfied"
+          },
+          {
+            value: "Satisfied",
+            text: "Satisfied"
+          },
+          {
+            value: "Neither satisfied nor dissatisfied",
+            text: "Neither satisfied nor dissatisfied"
+          },
+          {
+            value: "Dissatisfied",
+            text: "Dissatisfied"
+          },
+          {
+            value: "Very dissatisfied",
+            text: "Very dissatisfied"
+          }
+        ]
+      }) }}
+
+     
+      {{ govukCharacterCount({
+        name: "withHint",
+        id: "with-hint",
+        maxlength: 4000,
+        label: {
+          text: "How can we improve this service?",
+          classes: "govuk-label--m"
+        },
+        hint: {
+          text: "Do not include personal or financial information like your National Insurance number or credit card details."
+        }
+      }) }}
+
+      {{ govukButton({
+        text: "Send feedback",
+        href: "feedback/confirmation"
+      }) }}
+    </div>
+  </div>
+{% endblock %}

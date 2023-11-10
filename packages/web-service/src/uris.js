@@ -7,6 +7,7 @@ export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
+export const FEEDBACK = { uri: '/feedback', page: 'feedback' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
 export const APPLICATION_LICENCE = { uri: '/application-licence-summary', page: 'application-licence-summary' }
 export const LOGIN = { uri: '/login', page: 'login' }
