@@ -7,7 +7,8 @@
 {% from "summary-list/macro.njk" import govukSummaryList %}
 {% from "table/macro.njk" import govukTable %}
 
-{# TODO - Add validation to js file #}
+{% set title = 'Give feedback on Apply for and manage a wildlife licence' %}
+
 {% set errorMap = {
     'nps-satisfaction': {
       'any.required': { ref: '#nps-satisfaction', text: 'You have not selected an option' }
@@ -20,8 +21,6 @@
 {% endblock %}
 
 {% block pageContent %}
-  <h1 class="govuk-heading-l">Give feedback on Apply for and manage a wildlife licence</h1>
-
   {{ govukRadios({
     name: "nps-satisfaction",
     fieldset: {
@@ -30,6 +29,7 @@
         classes: "govuk-fieldset__legend--m"
       }
     },
+    errorMessage: { text: "Select a rating" } if error['nps-satisfaction'],
     items: [
       {
         value: "Very satisfied",
