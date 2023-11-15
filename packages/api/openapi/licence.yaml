@@ -3616,6 +3616,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  '/feedback':
+    post:
+      summary: Submit feedback
+      description: Endpoint to submit user feedback.
+      operationId: postFeedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: string
+                  description: User's rating of the service.
+                howCanWeImproveThisService:
+                  type: string
+                  description: Suggestions for service improvement.
+                userId:
+                  $ref: '#/components/schemas/uuid'
+              required:
+                - rating
+      responses:
+        '201':
+          description: Feedback submitted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Thank you for your feedback."
+        '400':
+          description: Invalid input received.
 
 
 ################################################################################################
