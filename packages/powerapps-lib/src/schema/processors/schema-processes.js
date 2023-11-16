@@ -278,7 +278,7 @@ const assignColumns = (payload, tableColumnsPayload, contentId, table, updateObj
     updateObjects.push({
       table: table.name,
       apiTable: table.apiTable,
-      apiKey: keys.apiKey,
+      apiKey: keys?.apiKey,
       relationshipName: table.relationshipName,
       contentId: contentId,
       assignments: Object.assign(tableColumnsPayload.columnPayload,

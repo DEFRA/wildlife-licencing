@@ -18,7 +18,8 @@ import {
   SddsLicenceNotes,
   SddsDesignatedSites,
   SddsApplicationDesignatedSite,
-  SddsReturn
+  SddsReturn,
+  SddsFeedback
 } from '../schema/tables/tables.js'
 
 import { createTableSet, buildRequestPath, buildObjectTransformer, globalOptionSetTransformer } from '../schema/processors/schema-processes.js'
@@ -182,6 +183,12 @@ const applicationTypeApplicationPurposesTableSet = createTableSet(SddsApplicatio
 const applicationTypeApplicationPurposesObjectTransformer = buildObjectTransformer(SddsApplicationTypeRelations, applicationTypeApplicationPurposesTableSet)
 export const applicationTypeApplicationPurposesReadStream = () =>
   powerAppsReadStream(applicationTypeApplicationPurposesRequestPath, applicationTypeApplicationPurposesObjectTransformer)
+
+/* Feedback */
+const feedbackRequestPath = buildRequestPath(SddsFeedback)
+const feedbackTableSet = createTableSet(SddsFeedback)
+const feedbackObjectTransformer = buildObjectTransformer(SddsFeedback, feedbackTableSet)
+export const feedbackReadStream = () => powerAppsReadStream(feedbackRequestPath, feedbackObjectTransformer)
 
 /* Global option sets */
 export const globalOptionSetReadStream = () =>

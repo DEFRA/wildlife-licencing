@@ -1,6 +1,9 @@
 import { models } from '@defra/wls-database-model'
 import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
+import db from 'debug'
+import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
+const debug = db('api:submission')
 
 export default async (context, req, h) => {
   try {
@@ -8,11 +11,16 @@ export default async (context, req, h) => {
 
     delete req.payload.userId
 
-    const { dataValues } = await models.returns.create({
+    const { dataValues } = await models.feedbacks.create({
       id: uuidv4(),
       userId: userId,
       feedbackData: req.payload
     })
+
+    debug(`Received submission for feedbackId: ${dataValues.id}`)
+    const feedbackQueue = getQueue(queueDefinitions.FEEDBACK_QUEUE)
+    const feedbackJob = await feedbackQueue.add({ feedbackId: dataValues.id })
+    debug(`Queued feedback ${dataValues.id} - job: ${feedbackJob.id}`)
 
     return h.response(dataValues)
       .type(APPLICATION_JSON)

@@ -1,4 +1,5 @@
 import pageRoute from '../../routes/page-route.js'
+import { APIRequests } from '../../services/api-requests.js'
 import { FEEDBACK } from '../../uris.js'
 import Joi from 'joi'
 
@@ -11,8 +12,21 @@ export const validator = async payload => {
   )
 }
 
+export const setData = async request => {
+  const rating = request.payload['nps-satisfaction']
+  const howCanWeImproveThisService = request.payload.withHint
+  const userId = request.auth.credentials.user
+
+  await APIRequests.FEEDBACK.createFeedback({
+    userId,
+    rating,
+    howCanWeImproveThisService
+  })
+}
+
 export default pageRoute({
   page: FEEDBACK.page,
   uri: FEEDBACK.uri,
-  validator
+  validator,
+  setData
 })

@@ -585,7 +585,7 @@ async function defineApplicationRefSeq (sequelize) {
 }
 
 async function defineFeedbacks (sequelize) {
-  models.returns = await sequelize.define('feedbacks', {
+  models.feedbacks = await sequelize.define('feedbacks', {
     id: { type: DataTypes.UUID, primaryKey: true },
     userId: {
       type: DataTypes.UUID,
@@ -594,11 +594,13 @@ async function defineFeedbacks (sequelize) {
         key: 'id'
       }
     },
-    feedbackData: { type: DataTypes.JSONB }
+    feedbackData: { type: DataTypes.JSONB },
+    sddsFeedbackId: { type: DataTypes.UUID }
   }, {
     timestamps: true,
     indexes: [
-      { unique: false, fields: ['user_id'], name: 'feedback_user_fk' }
+      { unique: false, fields: ['user_id'], name: 'feedback_user_fk' },
+      { unique: true, fields: ['sdds_feedback_id'], name: 'sdds_feedback_id_fk' }
     ]
   })
 }
@@ -714,6 +716,7 @@ const createModels = async () => {
   await models.applicationTypeApplicationPurposes.sync()
 
   await models.optionSets.sync()
+  await models.feedbacks.sync()
 
   // Create user roles
   await models.userRoles.upsert({ role: 'USER' })
