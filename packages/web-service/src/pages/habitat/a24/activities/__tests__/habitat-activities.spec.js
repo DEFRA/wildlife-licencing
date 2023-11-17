@@ -20,6 +20,7 @@ describe('The habitat activities page', () => {
       const { completion } = await import('../habitat-activities.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
+
     it('getData grabs habitat data from the cache when it is available', async () => {
       const cacheGetDataMock = jest.fn().mockResolvedValue({
         applicationId: '123',
@@ -94,6 +95,33 @@ describe('The habitat activities page', () => {
       })
 
       expect(getHabitatBySettIdMock).toHaveBeenCalledWith(applicationId, settId)
+    })
+
+    it('getData returns no habitat data on primary journey', async () => {
+      const applicationId = '321'
+      const request = {
+        query: { },
+        cache: () => ({
+          getData: () => {
+            return {
+              applicationId,
+              habitatData: {
+                methodIds: null
+              }
+            }
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-activities.js')
+      expect(await getData(request)).toEqual({
+        OBSTRUCT_SETT_WITH_GATES,
+        OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+        DAMAGE_A_SETT,
+        DESTROY_A_SETT,
+        DISTURB_A_SETT,
+        methodIds: []
+      })
     })
 
     it('if the user doesnt fill a checkbox - it raises an error', async () => {
