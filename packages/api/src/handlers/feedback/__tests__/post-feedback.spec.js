@@ -1,17 +1,19 @@
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
-// sdds_rating
-// sdds_howcanweimprovethisservice
-
 /*
  * Mock the hapi request object
  */
 const path = '/feedback'
+
+const userId = '6010bdb5-478c-46dc-8511-442fd26e298b'
+
 const req = {
   path,
   payload: {
+    userId: userId,
     rating: 'Satisfied',
-    howCanWeImproveThisService: 'Here is some text on how to improve the service'
+    howCanWeImproveThisService: 'Here is some text on how to improve the service',
+    sddsRating: 1000000
   }
 }
 
@@ -25,11 +27,6 @@ const h = { response: jest.fn(() => ({ type: typeFunc, code: codeFunc })) }
 const ts = {
   createdAt: { toISOString: () => '2021-12-07T09:50:04.666Z' },
   updatedAt: { toISOString: () => '2021-12-07T09:50:04.666Z' }
-}
-
-const tsR = {
-  createdAt: ts.createdAt.toISOString(),
-  updatedAt: ts.updatedAt.toISOString()
 }
 
 /*
@@ -52,16 +49,32 @@ describe('The postFeedback handler', () => {
       }
     }))
 
+    const getQueueMock = jest.fn(() => ({
+      add: jest.fn(() => ({
+        id: 1
+      }))
+    }))
+
+    jest.doMock('@defra/wls-queue-defs', () => ({
+      getQueue: getQueueMock,
+      queueDefinitions: {
+        FEEDBACK_QUEUE: 1
+      }
+    }))
+
     const postFeedback = (await import('../post-feedback.js')).default
 
     await postFeedback(context, req, h)
     expect(mockCreate).toHaveBeenCalledWith({
       id: expect.any(String),
       feedbackData: {
-        completedWithinLicenceDates: true
-      }
+        howCanWeImproveThisService: req.payload.howCanWeImproveThisService,
+        rating: req.payload.rating,
+        sddsRating: req.payload.sddsRating
+      },
+      userId
     })
-    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...tsR })
+    expect(h.response).toHaveBeenCalledWith({ id: '1b239e85-6ddd-4e07-bb4f-3ebc7c76381f', ...ts })
     expect(typeFunc).toHaveBeenCalledWith(applicationJson)
     expect(codeFunc).toHaveBeenCalledWith(201)
   })

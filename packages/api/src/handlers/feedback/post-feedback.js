@@ -7,31 +7,26 @@ import { getSddsRatingValue } from './common.js'
 const debug = db('api:submission')
 
 export default async (context, req, h) => {
-  try {
-    const userId = req.payload.userId
+  const userId = req.payload.userId
 
-    delete req.payload.userId
+  delete req.payload.userId
 
-    const feedbackData = req.payload
+  const feedbackData = req.payload
 
-    feedbackData.sddsRating = getSddsRatingValue(req.payload.rating)
+  feedbackData.sddsRating = getSddsRatingValue(req.payload.rating)
 
-    const { dataValues } = await models.feedbacks.create({
-      id: uuidv4(),
-      userId: userId,
-      feedbackData
-    })
+  const { dataValues } = await models.feedbacks.create({
+    id: uuidv4(),
+    userId: userId,
+    feedbackData
+  })
 
-    debug(`Received submission for feedbackId: ${dataValues.id}`)
-    const feedbackQueue = getQueue(queueDefinitions.FEEDBACK_QUEUE)
-    const feedbackJob = await feedbackQueue.add({ feedbackId: dataValues.id })
-    debug(`Queued feedback ${dataValues.id} - job: ${feedbackJob.id}`)
+  debug(`Received submission for feedbackId: ${dataValues.id}`)
+  const feedbackQueue = getQueue(queueDefinitions.FEEDBACK_QUEUE)
+  const feedbackJob = await feedbackQueue.add({ feedbackId: dataValues.id })
+  debug(`Queued feedback ${dataValues.id} - job: ${feedbackJob.id}`)
 
-    return h.response(dataValues)
-      .type(APPLICATION_JSON)
-      .code(201)
-  } catch (err) {
-    console.error('Error inserting into `feedbacks` table', err)
-    throw new Error(err.message)
-  }
+  return h.response(dataValues)
+    .type(APPLICATION_JSON)
+    .code(201)
 }
