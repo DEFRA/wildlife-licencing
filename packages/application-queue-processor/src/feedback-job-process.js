@@ -17,6 +17,10 @@ export const buildApiObject = async feedbackId => {
       data: {
         feedbackId: feedbackRecord.id,
         ...feedbackRecord.feedbackData
+      },
+      keys: {
+        apiKey: feedbackRecord.id,
+        sddsKey: feedbackRecord.sddsFeedbackId
       }
     }
   }
@@ -30,8 +34,6 @@ export const feedbackJobProcess = async job => {
   const { feedbackId } = job.data
   try {
     const payload = await buildApiObject(feedbackId)
-
-    console.log('payload', payload)
 
     if (!payload) {
       console.error(`Cannot locate feedback: ${feedbackId} for job: ${JSON.stringify(job.data)}`)

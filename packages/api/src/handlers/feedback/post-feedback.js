@@ -3,6 +3,7 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { v4 as uuidv4 } from 'uuid'
 import db from 'debug'
 import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
+import { getSddsRatingValue } from './common.js'
 const debug = db('api:submission')
 
 export default async (context, req, h) => {
@@ -11,10 +12,14 @@ export default async (context, req, h) => {
 
     delete req.payload.userId
 
+    const feedbackData = req.payload
+
+    feedbackData.sddsRating = getSddsRatingValue(req.payload.rating)
+
     const { dataValues } = await models.feedbacks.create({
       id: uuidv4(),
       userId: userId,
-      feedbackData: req.payload
+      feedbackData
     })
 
     debug(`Received submission for feedbackId: ${dataValues.id}`)

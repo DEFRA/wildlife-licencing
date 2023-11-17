@@ -1,6 +1,6 @@
 import { Table, Column } from '../schema.js'
 
-export const SddsFeedback = new Table('sdds_feedback', [
-  new Column('sdds_rating', 'rating'),
+export const SddsFeedback = new Table('sdds_feedbacks', [
+  new Column('sdds_rating', 'sddsRating'),
   new Column('sdds_howcanweimprovethisservice', 'howCanWeImproveThisService')
-], null, 'feedback', 'feedback', 'sdds_feedbackid')
+], null, 'feedback', 'feedbacks', 'sdds_feedbackid')
