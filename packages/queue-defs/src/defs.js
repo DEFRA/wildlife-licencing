@@ -1,6 +1,6 @@
 export const fastThenSlow = function (attemptsMade, err) {
   console.log(`Retry attempt ${attemptsMade} with error err: ${err}`)
-  if (attemptsMade < 200) { // TODO: Revert this change
+  if (attemptsMade < 6) {
     // Every 20 seconds for the first 2 minutes
     return 20 * 1000
   } else if (attemptsMade < 6 + 12) {
