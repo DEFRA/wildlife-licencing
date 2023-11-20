@@ -4,7 +4,7 @@ import db from 'debug'
 const debug = db('web-service:api-requests')
 
 export const FEEDBACK = {
-  createFeedback: async (payload) => apiRequestsWrapper(
+  createFeedback: async payload => apiRequestsWrapper(
     async () => {
       const newFeedbackRecord = await API.post(`${apiUrls.FEEDBACK}`, payload)
       debug('Creating feedback')
