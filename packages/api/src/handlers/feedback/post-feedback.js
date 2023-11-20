@@ -6,7 +6,7 @@ import { getQueue, queueDefinitions } from '@defra/wls-queue-defs'
 import { getSddsRatingValue } from './common.js'
 const debug = db('api:submission')
 
-export default async (context, req, h) => {
+export default async (_context, req, h) => {
   const userId = req.payload.userId
 
   delete req.payload.userId
