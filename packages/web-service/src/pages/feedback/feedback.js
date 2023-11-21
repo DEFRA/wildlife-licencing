@@ -1,6 +1,6 @@
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
-import { FEEDBACK } from '../../uris.js'
+import { FEEDBACK, FEEDBACK_SENT } from '../../uris.js'
 import Joi from 'joi'
 
 export const validator = async payload => {
@@ -28,5 +28,6 @@ export default pageRoute({
   page: FEEDBACK.page,
   uri: FEEDBACK.uri,
   validator,
-  setData
+  setData,
+  completion: FEEDBACK_SENT.uri
 })
