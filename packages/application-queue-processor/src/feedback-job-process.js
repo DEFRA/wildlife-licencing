@@ -38,7 +38,7 @@ export const feedbackJobProcess = async job => {
     if (!payload) {
       console.error(`Cannot locate feedback: ${feedbackId} for job: ${JSON.stringify(job.data)}`)
     } else {
-      // Update the returns and associated data in Power Apps
+      // Update the feedback and associated data in Power Apps
       const targetKeys = await feedbackUpdate(payload)
       await postProcess(targetKeys)
       debug(`Returned key object: ${JSON.stringify(targetKeys, null, 4)}`)
