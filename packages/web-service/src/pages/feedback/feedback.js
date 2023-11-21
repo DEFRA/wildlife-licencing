@@ -25,9 +25,9 @@ export const setData = async request => {
 }
 
 export default pageRoute({
-  validator,
-  setData,
   page: FEEDBACK.page,
   uri: FEEDBACK.uri,
-  completion: FEEDBACK_SENT.uri
+  completion: FEEDBACK_SENT.uri,
+  validator,
+  setData
 })
