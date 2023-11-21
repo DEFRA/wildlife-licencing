@@ -4,6 +4,7 @@ import nsip from '../pages/nsip/nsip.js'
 import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
 import applications from '../pages/applications/applications.js'
 import feedback from '../pages/feedback/feedback.js'
+import feedbackSent from '../pages/feedback/feedback-sent.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import applicationLicenceSummary from '../pages/applications/application-licence-summary.js'
 import login from '../pages/auth/login/login.js'
@@ -192,6 +193,7 @@ const routes = [
   ...windowNotOpen,
   ...applications,
   ...feedback,
+  ...feedbackSent,
   ...applicationSummary,
   ...applicationLicenceSummary,
   ...login,
