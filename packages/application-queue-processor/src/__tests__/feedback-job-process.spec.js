@@ -139,7 +139,7 @@ describe('The feedback job processor', () => {
         }
       }))
       const { feedbackJobProcess } = await import('../feedback-job-process.js')
-      await feedbackJobProcess(job)
+      await expect(feedbackJobProcess(job)).resolves
     })
 
     it('Reject with recoverable error', async () => {
