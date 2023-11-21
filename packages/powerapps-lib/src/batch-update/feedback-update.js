@@ -9,8 +9,8 @@ import {
 const tableSet = createTableSet(SddsFeedback, [])
 
 /**
- * On submit INSERT an feedback into Power Apps
- * or UPDATE an feedback in Power Apps
+ * On submit INSERT a feedback into Power Apps
+ * or UPDATE a feedback in Power Apps
  * Calls the batch update for the feedback
  */
 export const feedbackUpdate = async payload => batchUpdate(payload, tableSet)
