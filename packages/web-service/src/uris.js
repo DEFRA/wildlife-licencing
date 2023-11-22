@@ -220,7 +220,8 @@ export const ReturnsURIs = {
 export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
-  NOT_FOUND: { page: 'not-found' },
+  NOT_FOUND: { uri: '/not-found', page: 'not-found' },
+  NOT_FOUND_LINK_HOME: { uri: '/not-found?includeHomeLink=true', page: 'not-found' },
   SERVICE_ERROR: { page: 'service-error' }
 }
 

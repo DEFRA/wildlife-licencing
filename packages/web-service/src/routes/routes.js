@@ -182,6 +182,7 @@ import declarationOfReturns from '../pages/returns/returns-declaration.js'
 import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
 import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
 import confirmationOfReturns from '../pages/returns/returns-confirmation.js'
+import notFound from '../pages/error/not-found.js'
 
 import { signOut } from '../pages/sign-out/sign-out.js'
 
@@ -358,6 +359,7 @@ const routes = [
   ...returnsCheck,
   ...declarationOfReturns,
   ...confirmationOfReturns,
+  ...notFound,
 
   signOut,
   ...miscRoutes
