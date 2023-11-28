@@ -5,7 +5,7 @@ import { APPLICATIONS } from '../../uris.js'
 
 const { BACKEND_STATUS, APPLICATION_TYPES, LICENCE_STATUS } = PowerPlatformKeys
 
-export const findLastLicenseAnnotation = licence => (licence.annotations &&
+export const findLatestLicenseAnnotation = licence => (licence.annotations &&
   licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf' && a.filename.includes('pdf'))
     .sort((a, b) => new Date(b.modifiedOn) - new Date(a.modifiedOn))[0]) || null
 

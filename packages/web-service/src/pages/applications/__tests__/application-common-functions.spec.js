@@ -74,9 +74,9 @@ describe('application-common-functions', () => {
   })
 
   describe('send events', () => {
-    it('findLastLicenseAnnotation sorts the send events correctly', async () => {
-      const { findLastLicenseAnnotation } = await import('../application-common-functions.js')
-      const result = findLastLicenseAnnotation({
+    it('findLatestLicenseAnnotation sorts the send events correctly', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({
         annotations: [
           {
             filename: '2023-510300-BAD-LIC-licence document.pdf',
@@ -106,15 +106,15 @@ describe('application-common-functions', () => {
       })
     })
 
-    it('findLastLicenseAnnotation returns null with no annotations', async () => {
-      const { findLastLicenseAnnotation } = await import('../application-common-functions.js')
-      const result = findLastLicenseAnnotation({ })
+    it('findLatestLicenseAnnotation returns null with no annotations', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({ })
       expect(result).toBeNull()
     })
 
-    it('findLastLicenseAnnotation returns null with no events', async () => {
-      const { findLastLicenseAnnotation } = await import('../application-common-functions.js')
-      const result = findLastLicenseAnnotation({ annotations: [] })
+    it('findLatestLicenseAnnotation returns null with no events', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({ annotations: [] })
       expect(result).toBeNull()
     })
   })
