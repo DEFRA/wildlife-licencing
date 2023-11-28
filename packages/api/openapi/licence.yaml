@@ -14,6 +14,8 @@ paths:
 ################################################################################################
   '/accounts':
     get:
+      tags:
+        - Accounts
       description: Get a list accounts
       summary: Get a list accounts
       operationId: getAccounts
@@ -60,6 +62,8 @@ paths:
 
   '/account':
     post:
+      tags:
+        - Accounts
       description: Create and store account
       summary: Create a new account with a generated ID
       operationId: postAccount
@@ -87,6 +91,8 @@ paths:
 
   '/account/{accountId}':
     get:
+      tags:
+        - Accounts
       description: Retrieve a account
       summary: Retrieve a account
       operationId: getAccountByAccountId
@@ -120,6 +126,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Accounts
       description: Update a account
       summary: Create or update a account
       operationId: putAccount
@@ -161,6 +169,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Accounts
       description: Delete account
       summary: Delete the account on the provided ID
       operationId: deleteAccount
@@ -192,6 +202,8 @@ paths:
 ################################################################################################
   '/applications':
     get:
+      tags:
+        - Applications
       description: Get the applications for a user
       summary: Get the applications for a user
       operationId: getApplications
@@ -232,6 +244,8 @@ paths:
 
   '/application':
     post:
+      tags:
+        - Applications
       description: Create a new application
       summary: Create a new application for an existing userId
       operationId: postApplication
@@ -267,6 +281,8 @@ paths:
 
   '/application/{applicationId}':
     get:
+      tags:
+        - Applications
       description: Get an application
       summary: Get an application
       operationId: getApplicationByApplicationId
@@ -305,6 +321,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications
       description: Update an application
       summary: Create or update an application for a given applicationId
       operationId: putApplication
@@ -352,6 +370,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete an application
       summary: Delete an application
       operationId: deleteApplication
@@ -380,6 +400,8 @@ paths:
 
   /applications/get-reference:
     get:
+      tags:
+        - Applications
       description: Get the next reference number for an application
       summary: counter
       operationId: getApplicationReference
@@ -415,6 +437,8 @@ paths:
 
   '/application/{applicationId}/submit':
     post:
+      tags:
+        - Applications
       description: Queue the application for submission
       summary: Queue the application for submission
       operationId: postApplicationSubmit
@@ -441,6 +465,8 @@ paths:
 
   '/application/licence/resend/{applicationId}/submit':
     post:
+      tags:
+        - Applications
       description: Queue the request for a licence resend email
       summary: Queue the request for a licence resend email
       operationId: postLicenceResendSubmit
@@ -470,6 +496,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/ecologist-experience':
     put:
+      tags:
+        - Applications
       description: Update the application ecologist-experience details
       summary: Create or update the application ecologist-experience details
       operationId: putEcologistExperience
@@ -505,6 +533,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Applications
       description: Get the application ecologist-experience details
       summary: Get the ecologist-experience details for an application
       operationId: getEcologistExperience
@@ -534,6 +564,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete the application ecologist-experience details
       summary: Delete the ecologist-experience details for an application
       operationId: deleteEcologistExperience
@@ -563,6 +595,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/eligibility':
     put:
+      tags:
+        - Applications
       description: Update the application eligibility details
       summary: Create or update the application eligibility details
       operationId: putApplicationEligibility
@@ -598,6 +632,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Applications
       description: Get the application eligibility details
       summary: Get the eligibility details for an application
       operationId: getApplicationEligibility
@@ -627,6 +663,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete the application eligibility details
       summary: Delete the eligibility details for an application
       operationId: deleteApplicationEligibility
@@ -656,6 +694,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/permissions-section':
     put:
+      tags:
+        - Applications
       description: Update the application permissions details
       summary: Create or update the application permissions details
       operationId: putPermissionsSection
@@ -691,6 +731,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Applications
       description: Get the application permissions details
       summary: Get the permissions details for an application
       operationId: getPermissionsSection
@@ -720,6 +762,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete the application permissions details
       summary: Delete the permissions details for an application
       operationId: deletePermissionsSection
@@ -750,6 +794,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/licences':
     get:
+      tags:
+        - Applications
       description: Get the licences for an application
       summary: Get the licences for a granted application
       operationId: getApplicationLicences
@@ -783,6 +829,8 @@ paths:
 ################################################################################################
   '/licence/{licenceId}/returns':
     get:
+      tags:
+        - Licences
       description: Get returns for a licence
       summary: Get returns for a licence
       operationId: getReturnsByLicenceId
@@ -812,6 +860,8 @@ paths:
 
   '/licence/{licenceId}/return':
     post:
+      tags:
+        - Licences
       description: Create a return for a licence
       summary: Create a return for a licence
       operationId: postReturn
@@ -850,6 +900,8 @@ paths:
 
   '/licence/{licenceId}/return/{returnId}':
     get:
+      tags:
+        - Licences
       description: Get a return
       summary: Get a return
       operationId: getReturn
@@ -885,6 +937,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Licences
       description: Create or update a return
       summary: Create or update a return
       operationId: putReturn
@@ -933,6 +987,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Licences
       description: Delete a return
       summary: Delete a return
       operationId: deleteReturn
@@ -967,6 +1023,8 @@ paths:
 
   '/licence/{licenceId}/return/{returnId}/submit':
     post:
+      tags:
+        - Licences
       description: Queue the return for submission
       summary: Queue the return for submission
       operationId: postReturnSubmit
@@ -1002,6 +1060,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/designated-sites':
     get:
+      tags:
+        - Applications
       description: Get the designated sites for an application
       summary: Get the designated sites for an application
       operationId: getApplicationDesignatedSites
@@ -1032,6 +1092,8 @@ paths:
 
   '/application/{applicationId}/designated-site':
     post:
+      tags:
+        - Applications
       description: Create a designated site for an application
       summary: Create a designated sites for an application
       operationId: postApplicationDesignatedSite
@@ -1068,6 +1130,8 @@ paths:
 
   '/application/{applicationId}/designated-site/{applicationDesignatedSiteId}':
     get:
+      tags:
+        - Applications
       description: Get an application designated site for an application
       summary: Get an application designated for an application
       operationId: getApplicationDesignatedSite
@@ -1107,6 +1171,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications
       description: Put an application designated for an application
       summary: Get the an application designated for a granted application
       operationId: putApplicationDesignatedSite
@@ -1158,6 +1224,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete an application designated for an application
       summary:  Delete an application designated for an application
       operationId: deleteApplicationDesignatedSite
@@ -1191,6 +1259,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/previous-licences':
     get:
+      tags:
+        - Applications
       description: Get the previous licences for an application
       summary: Get the previous licences for an application
       operationId: getPreviousLicences
@@ -1221,6 +1291,8 @@ paths:
 
   '/application/{applicationId}/previous-licence':
     post:
+      tags:
+        - Applications
       description: Create a previous licence for an application
       summary: Create a previous licence for an application
       operationId: postPreviousLicence
@@ -1257,6 +1329,8 @@ paths:
 
   '/application/{applicationId}/previous-licence/{licenceId}':
     get:
+      tags:
+        - Applications
       description: Get a previous licence for an application
       summary: Get a previous licence for an application
       operationId: getPreviousLicence
@@ -1296,6 +1370,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications
       description: Put a previous licence for an application
       summary: Get the licences for a granted application
       operationId: putPreviousLicence
@@ -1341,6 +1417,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Get the licences for an application
       summary: Get the licences for a granted application
       operationId: deletePreviousLicence
@@ -1375,6 +1453,8 @@ paths:
 ################################################################################################
   '/application-accounts':
     get:
+      tags:
+        - Applications accounts
       description: Get application-accounts
       summary: Get application-accounts
       operationId: getApplicationAccounts
@@ -1421,6 +1501,8 @@ paths:
 
   '/application-account':
     post:
+      tags:
+        - Applications accounts
       description: Create and store an application account relationship
       summary: Create a new account with a generated ID
       operationId: postApplicationAccount
@@ -1454,6 +1536,8 @@ paths:
 
   '/application-account/{applicationAccountId}':
     get:
+      tags:
+        - Applications accounts
       description: Retrieve an application-account
       summary: Retrieve an application-account
       operationId: getApplicationAccountById
@@ -1487,6 +1571,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications accounts
       description: Create of update an application-account
       summary: Create of update an application-account
       operationId: putApplicationAccountById
@@ -1532,6 +1618,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications accounts
       description: Delete an application-account
       summary: Delete an application-account
       operationId: deleteApplicationAccountById
@@ -1561,6 +1649,8 @@ paths:
 ################################################################################################
   '/application-contacts':
     get:
+      tags:
+        - Applications contacts
       description: Get application-contacts
       summary: Get application-contacts
       operationId: getApplicationContacts
@@ -1607,6 +1697,8 @@ paths:
 
   '/application-contact':
     post:
+      tags:
+        - Applications contacts
       description: Create and store an application contact relationship
       summary: Create a new contact with a generated ID
       operationId: postApplicationContact
@@ -1640,6 +1732,8 @@ paths:
 
   '/application-contact/{applicationContactId}':
     get:
+      tags:
+        - Applications contacts
       description: Retrieve an application-contact
       summary: Retrieve an application-contact
       operationId: getApplicationContactById
@@ -1673,6 +1767,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications contacts
       description: Create of update an application-contact
       summary: Create of update an application-contact
       operationId: putApplicationContactById
@@ -1718,6 +1814,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications contacts
       description: Delete an application-contact
       summary: Delete an application-contact
       operationId: deleteApplicationContactById
@@ -1747,6 +1845,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/file-uploads':
     get:
+      tags:
+        - Applications
       description: Get a list of the file-uploads detail for an application
       summary: Create or update the application file-upload details
       operationId: getApplicationFileUploads
@@ -1783,6 +1883,8 @@ paths:
 
   '/application/{applicationId}/file-upload':
     post:
+      tags:
+        - Applications
       description: Create the application file-upload details
       summary: Create the application file-upload details
       operationId: postApplicationFileUpload
@@ -1819,6 +1921,8 @@ paths:
 
   '/application/{applicationId}/file-upload/{uploadId}':
     put:
+      tags:
+        - Applications
       description: Update the application file-upload details
       summary: Create or update the application file-upload details
       operationId: putApplicationFileUpload
@@ -1866,6 +1970,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Applications
       description: Get the application file-upload details
       summary: Get the eligibility details for an application file-upload
       operationId: getApplicationFileUpload
@@ -1900,6 +2006,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
     delete:
+      tags:
+        - Applications
       description: Delete an application-file-upload by id
       summary:  Delete an application-file-upload by id
       operationId: deleteApplicationFileUploadByUploadId
@@ -1935,6 +2043,8 @@ paths:
 ################################################################################################
   '/return/{returnId}/file-uploads':
     get:
+      tags:
+        - Returns
       description: Get a list of the file-uploads detail for an return
       summary: Create or update the return file-upload details
       operationId: getReturnFileUploads
@@ -1971,6 +2081,8 @@ paths:
 
   '/return/{returnId}/file-upload':
     post:
+      tags:
+        - Returns
       description: Create the return file-upload details
       summary: Create the return file-upload details
       operationId: postReturnFileUpload
@@ -2007,6 +2119,8 @@ paths:
 
   '/return/{returnId}/file-upload/{uploadId}':
     put:
+      tags:
+        - Returns
       description: Update the return file-upload details
       summary: Create or update the return file-upload details
       operationId: putReturnFileUpload
@@ -2054,6 +2168,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Returns
       description: Get the return file-upload details
       summary: Get the eligibility details for an return file-upload
       operationId: getReturnFileUpload
@@ -2089,6 +2205,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Returns
       description: Delete an return-file-upload by id
       summary:  Delete an return-file-upload by id
       operationId: deleteReturnFileUploadByUploadId
@@ -2125,6 +2243,8 @@ paths:
 ################################################################################################
   '/application-sites':
     get:
+      tags:
+        - Applications Sites
       description: Get the application-sites
       summary: Get a list of application-site relationships for a user
       operationId: getApplicationSites
@@ -2165,6 +2285,8 @@ paths:
 
   '/application-site':
     post:
+      tags:
+        - Applications Sites
       description: Create a new application-site relationship
       summary: Create a new application-site relationship for an existing applicationId and siteId
       operationId: postApplicationSite
@@ -2204,6 +2326,8 @@ paths:
 
   '/application-site/{applicationSiteId}':
     get:
+      tags:
+        - Applications Sites
       description: Get an application-site by id
       summary:  Get an application-site by id
       operationId: getApplicationSiteByApplicationSiteId
@@ -2237,6 +2361,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications Sites
       description: Delete an application-site by id
       summary:  Get an application-site by id
       operationId: deleteApplicationSiteByApplicationSiteId
@@ -2266,6 +2392,8 @@ paths:
 ################################################################################################
   '/application-users':
     get:
+      tags:
+        - Applications Users
       description: Get a list application-users
       summary: Get a list application-users
       operationId: getApplicationUsers
@@ -2312,6 +2440,8 @@ paths:
 
   '/application-user':
     post:
+      tags:
+        - Applications Users
       description: Create and store an application user relationship
       summary: Create a new user with a generated ID
       operationId: postApplicationUser
@@ -2345,6 +2475,8 @@ paths:
 
   '/application-user/{applicationUserId}':
     get:
+      tags:
+        - Applications Users
       description: Retrieve an application-user
       summary: Retrieve an application-user
       operationId: getApplicationUserById
@@ -2377,6 +2509,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
     delete:
+      tags:
+        - Applications Users
       description: Delete an application-user
       summary: Delete an application-user
       operationId: deleteApplicationUserById
@@ -2406,6 +2540,8 @@ paths:
 ################################################################################################
   '/contacts':
     get:
+      tags:
+        - Contacts
       description: Get a list contacts
       summary: Get a list contacts
       operationId: getContacts
@@ -2452,6 +2588,8 @@ paths:
 
   '/contact':
     post:
+      tags:
+        - Contacts
       description: Create and store contact
       summary: Create a new contact with a generated ID
       operationId: postContact
@@ -2479,6 +2617,8 @@ paths:
 
   '/contact/{contactId}':
     get:
+      tags:
+        - Contacts
       description: Retrieve a contact
       summary: Retrieve a contact
       operationId: getContactByContactId
@@ -2512,6 +2652,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Contacts
       description: Update a contact
       summary: Create or update a contact
       operationId: putContact
@@ -2553,6 +2695,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Contacts
       description: Delete contact
       summary:  Delete the contact on the provided ID
       operationId: deleteContact
@@ -2584,6 +2728,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/habitat-site':
     post:
+      tags:
+        - Applications
       description: Create a new habitat site for an application
       summary: uses one of the habitat schemas depending on species
       operationId: postHabitatSite
@@ -2627,6 +2773,8 @@ paths:
 
   '/application/{applicationId}/habitat-sites':
     get:
+      tags:
+        - Applications
       description: lists the habitat sites for an application
       summary: uses one of the habitat schemas depending on species
       operationId: getHabitatSitesByApplicationId
@@ -2662,6 +2810,8 @@ paths:
 
   '/application/{applicationId}/habitat-site/{habitatSiteId}':
     get:
+      tags:
+        - Applications
       description: Retrieve a habitat site
       summary: Retrieve a habitat site
       operationId: getHabitatSiteByHabitatSiteId
@@ -2702,6 +2852,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Applications
       description: Update a habitat site
       summary: Create or update a habitat site
       operationId: putHabitatSite
@@ -2758,6 +2910,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications
       description: Delete habitat site
       summary:  Delete the habitat site on the provided ID
       operationId: deleteHabitatSite
@@ -2790,6 +2944,8 @@ paths:
 
   '/licence/{licenceId}/habitat-sites':
     get:
+      tags:
+        - Licences
       description: lists the habitat sites for a licence
       summary: lists the habitat sites for a licence
       operationId: getHabitatSitesByLicenceId
@@ -2828,6 +2984,8 @@ paths:
 ################################################################################################
   '/application/{applicationId}/permissions':
     get:
+      tags:
+        - Applications permissions
       description: Gets the permissions for an application
       summary: Gets the permissions for an application
       operationId: getPermissions
@@ -2858,6 +3016,8 @@ paths:
 
   '/application/{applicationId}/permission':
     post:
+      tags:
+        - Applications permissions
       description: Create a new permission for an application
       summary: Create a new permission for an application
       operationId: postPermission
@@ -2901,6 +3061,8 @@ paths:
 
   '/application/{applicationId}/permission/{permissionId}':
     put:
+      tags:
+        - Applications permissions
       description: update a permission
       summary: Create or update the permission details
       operationId: putPermission
@@ -2943,6 +3105,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     get:
+      tags:
+        - Applications permissions
       description: Get permission details
       summary: Get permission details
       operationId: getPermission
@@ -2978,6 +3142,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Applications permissions
       description: Delete a permission
       summary: Delete a permission
       operationId: deletePermission
@@ -3014,6 +3180,8 @@ paths:
 ################################################################################################
   '/sites':
     get:
+      tags:
+        - Sites
       description: Get a list of sites
       summary: Get a list of sites with the ability to filter using the user-sites relation
       operationId: getSites
@@ -3054,6 +3222,8 @@ paths:
 
   '/site':
     post:
+      tags:
+        - Sites
       description: Create a new site
       summary: Create a new site for an existing userId
       operationId: postSite
@@ -3081,6 +3251,8 @@ paths:
 
   '/site/{siteId}':
     get:
+      tags:
+        - Sites
       description: Get a site
       summary: Get a site
       operationId: getSiteBySiteId
@@ -3114,6 +3286,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Sites
       description: Create a new site or update an existing site
       summary: Create a new site or update an existing site
       operationId: putSite
@@ -3155,6 +3329,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Sites
       description: Delete a site
       summary: Delete a site
       operationId: deleteSite
@@ -3186,6 +3362,8 @@ paths:
 ################################################################################################
   '/users':
     get:
+      tags:
+        - Users
       description: Get users
       summary: Get the users and optionally filter by name
       operationId: getUsers
@@ -3211,6 +3389,8 @@ paths:
 
   '/user':
     post:
+      tags:
+        - Users
       description: Create and store user
       summary: Create a new user with a generated ID
       operationId: postUser
@@ -3238,6 +3418,8 @@ paths:
 
   '/user/{userId}':
     get:
+      tags:
+        - Users
       description: Retrieve a user
       summary: Retrieve a user
       operationId: getUserByUserId
@@ -3271,6 +3453,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     put:
+      tags:
+        - Users
       description: Update a user
       summary: Update a user
       operationId: putUser
@@ -3312,6 +3496,8 @@ paths:
                 $ref: '#/components/schemas/error'
 
     delete:
+      tags:
+        - Users
       description: Delete user
       summary:  Delete the user on the provided ID
       operationId: deleteUser
@@ -3340,6 +3526,8 @@ paths:
 
   '/user/{username}/{password}/authenticate':
     get:
+      tags:
+        - Users
       description: Test a user password
       summary: Retrieve a user
       operationId: authenticateUser
@@ -3379,6 +3567,8 @@ paths:
 ################################################################################################
   '/application-types':
     get:
+      tags:
+        - Applications Types
       description: Get the application types using a filter
       summary:
           "The licence types allowed by applying a filter in the query of the form
@@ -3446,6 +3636,8 @@ paths:
 
   '/application/types':
     get:
+      tags:
+        - Applications Types
       description: Get the application types
       summary: The licence type requested by an application
       operationId: getApplicationTypes
@@ -3468,6 +3660,8 @@ paths:
 
   '/application/purposes':
     get:
+      tags:
+        - Applications Purposes
       description: Get the application purposes
       summary: The purpose of an application
       operationId: getApplicationPurposes
@@ -3489,6 +3683,8 @@ paths:
 
   '/authorities':
     get:
+      tags:
+        - Authorities
       description: Get the authorities
       summary: Get the authorities
       operationId: getAuthorities
@@ -3511,6 +3707,8 @@ paths:
 
   '/designated-sites':
     get:
+      tags:
+        - Designated sites
       description: Get the designated sites reference data
       summary: Get the designated sites reference data
       operationId: getDesignatedSites
@@ -3535,6 +3733,8 @@ paths:
 
   '/application-contacts/contacts':
     get:
+      tags:
+        - Applications Contacts
       description: Get all the contact/roles for all applications created by a user
       summary: User contacts helper
       operationId: userContactsHelper
@@ -3563,6 +3763,8 @@ paths:
 
   '/application-accounts/accounts':
     get:
+      tags:
+        - Applications accounts
       description: Get all the accounts/roles for all applications created by a user
       summary: User accounts helper
       operationId: userAccountsHelper
@@ -3591,6 +3793,8 @@ paths:
 
   '/application-sites/sites':
     get:
+      tags:
+        - Applications Sites
       description: Get all the application/sites created by a user
       summary: User applications sites helper
       operationId: userSitesHelper
@@ -3618,6 +3822,8 @@ paths:
                 $ref: '#/components/schemas/error'
   '/feedback':
     post:
+      tags:
+        - Feedback
       summary: Submit feedback
       description: Endpoint to submit user feedback.
       operationId: postFeedback
@@ -3658,6 +3864,8 @@ paths:
 ################################################################################################
   '/option-sets':
     get:
+      tags:
+        - Option sets
       description: Get the global option set values
       summary: Get the global option set values
       operationId: getOptionSets
@@ -3679,6 +3887,8 @@ paths:
 
   '/reset':
     post:
+      tags:
+        - Testing
       description: For testing environments, clears application data
       operationId: 'postResetHandler'
       requestBody:
