@@ -5,9 +5,9 @@ import { APPLICATIONS } from '../../uris.js'
 
 const { BACKEND_STATUS, APPLICATION_TYPES, LICENCE_STATUS } = PowerPlatformKeys
 
-export const findLastSentEvent = licence => (licence.annotations &&
+export const findLastLicenseAnnotation = licence => (licence.annotations &&
   licence.annotations.filter(a => a.objectTypeCode === 'sdds_license' && a.mimetype === 'application/pdf' && a.filename.includes('pdf'))
-    .sort((a, b) => Date(a.modifiedOn) > Date(b.modifiedOn))[0]) || null
+    .sort((a, b) => new Date(b.modifiedOn) - new Date(a.modifiedOn))[0]) || null
 
 export const checkData = async (request, h) => {
   const params = new URLSearchParams(request.query)
