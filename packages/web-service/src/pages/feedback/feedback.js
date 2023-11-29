@@ -1,3 +1,4 @@
+import { Backlink } from '../../handlers/backlink.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { FEEDBACK, FEEDBACK_SENT } from '../../uris.js'
@@ -24,10 +25,18 @@ export const setData = async request => {
   })
 }
 
+export const getData = _request => {
+  return {
+    hideFeedbackBanner: true
+  }
+}
+
 export default pageRoute({
   page: FEEDBACK.page,
   uri: FEEDBACK.uri,
   completion: FEEDBACK_SENT.uri,
   validator,
-  setData
+  setData,
+  getData,
+  backlink: Backlink.NO_BACKLINK
 })

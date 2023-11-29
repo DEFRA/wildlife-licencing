@@ -54,4 +54,22 @@ describe('feedback.js', () => {
       })
     })
   })
+
+  describe('getData function', () => {
+    it('should hide the feedback banner', async () => {
+      const mockRequest = {
+        auth: {
+          credentials: { user: '12345' }
+        }
+      }
+
+      const { getData } = (await import('../feedback.js'))
+
+      const data = await getData(mockRequest)
+
+      expect(data).toEqual({
+        hideFeedbackBanner: true
+      })
+    })
+  })
 })
