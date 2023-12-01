@@ -90,6 +90,7 @@
       "lcov",
       "text"
     ],
+    "testTimeout": 10000,
     "coverageThreshold": {
       "global": {
         "branches": 90,

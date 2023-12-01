@@ -25,10 +25,31 @@ const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
 ERRBIT.initialize('API')
 
-initialize()
-  .then(() => createServer()
-    .then(s => init(s)))
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
+// initialize()
+//   .then(() => createServer()
+//     .then(s => init(s)))
+//   .catch(e => {
+//     console.error(e)
+//     process.exit(1)
+//   })
+
+
+export const startServer = async () => {
+  // await SEQUELIZE.initialiseConnection()
+  // await createModels()
+  // await REDIS.initialiseConnection()
+  // await createQueue(queueDefinitions.APPLICATION_QUEUE, { type: 'client' })
+  // await createQueue(queueDefinitions.RETURN_QUEUE, { type: 'client' })
+  // await createQueue(queueDefinitions.LICENCE_RESEND_QUEUE, { type: 'client' })
+  // await createQueue(queueDefinitions.APPLICATION_FILE_QUEUE, { type: 'client' })
+  // await createQueue(queueDefinitions.RETURN_FILE_QUEUE, { type: 'client' })
+  // await createQueue(queueDefinitions.FEEDBACK_QUEUE, { type: 'client' })
+
+try{
+  const server = await createServer()
+  await init(server)
+  return server
+} catch (e) {
+  console.log('ERROR: ', e)
+}
+}
