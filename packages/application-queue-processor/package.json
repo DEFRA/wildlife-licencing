@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node src/application-queue-processor.js",
     "dev": "nodemon -r dotenv/config src/application-queue-processor.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

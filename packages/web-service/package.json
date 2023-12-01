@@ -16,7 +16,7 @@
     "postinstall": "node_modules/gulp/bin/gulp.js build",
     "start": "nodemon -e js,njk,json src/web-service.js",
     "dev": "nodemon -r dotenv/config -e js,njk,json src/web-service.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "Wildlife",
