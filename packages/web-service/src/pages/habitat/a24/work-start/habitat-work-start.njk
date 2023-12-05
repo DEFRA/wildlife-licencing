@@ -25,22 +25,22 @@
     items: [
       {
         classes: "govuk-input--width-2",
-        value: data.day,
+        value: payload['habitat-work-start-day'] if payload['habitat-work-start-day'] else data.day,
         name: "day"
       },
       {
         classes: "govuk-input--width-2",
-        value: data.month,
+        value: payload['habitat-work-start-month'] if payload['habitat-work-start-month'] else data.month,
         name: "month"
       },
       {
         classes: "govuk-input--width-4",
-        value: data.year,
+        value: payload['habitat-work-start-year'] if payload['habitat-work-start-year'] else data.year,
         name: "year"
       }
     ],
     hint: {
-      text: "The work must start during the licence period (from 1 May to 30 November)."
+      text: "The work must start during the licence period (from 1 May to 30 November)"
     }
   }) }}
 

@@ -23,9 +23,17 @@ describe('The enter methods page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check page if the class licence has been set', async () => {
+    it('returns the check page if the class licence has been set, and sets the tag', async () => {
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               classMitigation: true
@@ -42,6 +50,7 @@ describe('The enter methods page', () => {
       }
       const { completion } = await import('../enter-methods.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
   })
 
