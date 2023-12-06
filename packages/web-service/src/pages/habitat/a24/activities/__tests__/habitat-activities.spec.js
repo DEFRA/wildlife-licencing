@@ -20,18 +20,26 @@ describe('The habitat activities page', () => {
       const { completion } = await import('../habitat-activities.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
-    it('the habitat-activities page delivers the correct data from the getData call', async () => {
+
+    it('getData grabs habitat data from the cache when it is available', async () => {
+      const cacheGetDataMock = jest.fn().mockResolvedValue({
+        applicationId: '123',
+        habitatData: {
+          methodIds: [100000010, 100000011]
+        }
+      })
+
       const request = {
+        query: {
+          id: '123'
+        },
         cache: () => ({
-          getData: () => {
-            return {
-              habitatData: {
-                methodIds: [100000010, 100000011]
-              }
-            }
-          }
+          getData: cacheGetDataMock
         })
       }
+
+      const getHabitatBySettIdMock = jest.fn()
+
       const { getData } = await import('../habitat-activities.js')
       expect(await getData(request)).toEqual({
         OBSTRUCT_SETT_WITH_GATES,
@@ -40,6 +48,79 @@ describe('The habitat activities page', () => {
         DESTROY_A_SETT,
         DISTURB_A_SETT,
         methodIds: [100000010, 100000011]
+      })
+
+      expect(cacheGetDataMock).toHaveBeenCalled()
+      expect(getHabitatBySettIdMock).not.toHaveBeenCalled()
+    })
+
+    it('getData grabs habitat data from the database when the data is not available in the cache', async () => {
+      const settId = '123'
+      const applicationId = '321'
+      const request = {
+        query: {
+          id: settId
+        },
+        cache: () => ({
+          getData: () => {
+            return {
+              applicationId: applicationId,
+              habitatData: {
+                methodIds: null
+              }
+            }
+          }
+        })
+      }
+      const getHabitatBySettIdMock = jest.fn().mockResolvedValue({
+        methodIds: [100000010, 100000011]
+      })
+
+      jest.doMock('../../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          HABITAT: {
+            getHabitatBySettId: getHabitatBySettIdMock
+          }
+        }
+      }))
+
+      const { getData } = await import('../habitat-activities.js')
+      expect(await getData(request)).toEqual({
+        OBSTRUCT_SETT_WITH_GATES,
+        OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+        DAMAGE_A_SETT,
+        DESTROY_A_SETT,
+        DISTURB_A_SETT,
+        methodIds: [100000010, 100000011]
+      })
+
+      expect(getHabitatBySettIdMock).toHaveBeenCalledWith(applicationId, settId)
+    })
+
+    it('getData returns no habitat data on primary journey', async () => {
+      const applicationId = '321'
+      const request = {
+        query: { },
+        cache: () => ({
+          getData: () => {
+            return {
+              applicationId,
+              habitatData: {
+                methodIds: null
+              }
+            }
+          }
+        })
+      }
+
+      const { getData } = await import('../habitat-activities.js')
+      expect(await getData(request)).toEqual({
+        OBSTRUCT_SETT_WITH_GATES,
+        OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+        DAMAGE_A_SETT,
+        DESTROY_A_SETT,
+        DISTURB_A_SETT,
+        methodIds: []
       })
     })
 

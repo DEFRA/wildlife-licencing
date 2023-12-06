@@ -66,4 +66,30 @@ describe('validator', () => {
       expect(e.details[0].message).toBe("\"yes-conditional-input\" length must be less than or equal to 4000 characters long")
     }
   })
+
+  it('should not throw an error if the user selected yes and the yes-conditional-input validation is skipped', async () => {
+    const payload = { 'yes-no': 'yes', 'yes-conditional-input': '' }
+    const { validator } = await import('../yes-no-conditional.js')
+    const skipValidations = ['yes-conditional-input']
+
+    await expect(validator(payload, skipValidations)).resolves.not.toThrow()
+  })
+
+  it('should not throw an error if the user selected no and the no-conditional-input validation is skipped', async () => {
+    const payload = { 'yes-no': 'no', 'no-conditional-input': '' }
+    const { validator } = await import('../yes-no-conditional.js')
+    const skipValidations = ['no-conditional-input']
+
+    await expect(validator(payload, skipValidations)).resolves.not.toThrow()
+  })
+
+  it('should throw an error if the user selected yes, skipValidations is not defined, and the yes-conditional-input is empty', async () => {
+    try {
+      const payload = { 'yes-no': 'yes', 'yes-conditional-input': '' }
+      const { validator } = await import('../yes-no-conditional.js')
+      await validator(payload)
+    } catch (e) {
+      expect(e.details[0].message).toBe('"yes-conditional-input" is not allowed to be empty')
+    }
+  })
 })

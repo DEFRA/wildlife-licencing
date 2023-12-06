@@ -110,48 +110,4 @@ describe('the Complete within dates functions', () => {
       expect(mockSetData).toHaveBeenCalled()
     })
   })
-
-  describe('the completion function', () => {
-    it('redirects to the work start page if the answer is no', async () => {
-      const { completion } = await import('../complete-within-dates')
-      const request = {
-        payload: { 'yes-no': 'no' }
-      }
-      const result = await completion(request)
-      expect(result).toEqual('/work-start')
-    })
-
-    it('redirects to the another licence actions page if the answer is yes', async () => {
-      const mockSetData = jest.fn()
-      const request = {
-        payload: { 'yes-no': 'yes' },
-        cache: () => ({
-          getData: () => ({
-            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc',
-            licenceId: 'ABC-567-GHU',
-            returns: {
-              id: '123456789'
-            }
-          }),
-          setData: mockSetData
-        })
-      }
-
-      jest.doMock('../../../services/api-requests.js', () => ({
-        APIRequests: {
-          RETURNS: {
-            getLicenceActions: jest.fn(() => ([{
-              methodIds: ['12345678', '987654321']
-            },
-            {
-              methodIds: ['12345678', '987654321', '543217890']
-            }]))
-          }
-        }
-      }))
-      const { completion } = await import('../complete-within-dates')
-      await completion(request)
-      expect(mockSetData).toHaveBeenCalled()
-    })
-  })
 })

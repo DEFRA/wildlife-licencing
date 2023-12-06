@@ -36,8 +36,8 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgersYesOrNo: true,
-        disturbBadgersDetails: 'development issues'
+        yesNo: 'yes',
+        yesNoDetails: 'development issues'
       })
     })
 
@@ -66,8 +66,8 @@ describe('the disturb badgers functions', () => {
 
       const { getData } = await import('../disturb-badgers.js')
       expect(await getData(request)).toEqual({
-        disturbBadgersYesOrNo: undefined,
-        disturbBadgersDetails: undefined
+        yesNo: '-',
+        yesNoDetails: undefined
       })
     })
   })

@@ -12,6 +12,8 @@ export const DEFRA_IDM_CALLBACK = { uri: '/auth-complete' }
 export const USER_ROLE = { uri: '/user-role', page: 'user-role' }
 
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
+export const FEEDBACK = { uri: '/feedback', page: 'feedback' }
+export const FEEDBACK_SENT = { uri: '/feedback-sent', page: 'feedback-sent' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
 export const APPLICATION_LICENCE = { uri: '/application-licence-summary', page: 'application-licence-summary' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
@@ -207,7 +209,8 @@ export const ReturnsURIs = {
 }
 
 export const ERRORS = {
-  NOT_FOUND: { page: 'not-found' },
+  NOT_FOUND: { uri: '/not-found', page: 'not-found' },
+  NOT_FOUND_LINK_HOME: { uri: '/not-found?includeHomeLink=true', page: 'not-found' },
   SERVICE_ERROR: { page: 'service-error' }
 }
 

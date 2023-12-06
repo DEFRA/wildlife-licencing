@@ -24,12 +24,12 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes'
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
         },
         {
           value: "no",
           text: "No",
-          checked: payload['yes-no'] === 'no'
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
         }
       ]
     }) }}

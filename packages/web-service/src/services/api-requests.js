@@ -12,6 +12,7 @@ import { FILE_UPLOAD } from './api-requests-file-upload.js'
 import { APPLICATION_TYPES } from './api-requests-application-types.js'
 import { DESIGNATED_SITES } from './api-requests-designated-sites.js'
 import { RETURNS } from './api-requests-return.js'
+import { FEEDBACK } from './api-requests-feedback.js'
 
 import { boomify } from '@hapi/boom'
 import { OTHER } from './api-requests-other.js'
@@ -48,6 +49,7 @@ export const apiUrls = {
   RETURN: '/return',
   RETURNS: '/returns',
   DESIGNATED_SITES: 'designated-sites',
+  FEEDBACK: '/feedback',
   ORGANISATION_UPDATE: '/organisation-update/submit'
 }
 
@@ -78,5 +80,6 @@ export const APIRequests = {
   OTHER,
   PERMISSION,
   DESIGNATED_SITES,
-  RETURNS
+  RETURNS,
+  FEEDBACK
 }

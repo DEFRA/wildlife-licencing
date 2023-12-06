@@ -3,6 +3,8 @@ import otherSpecies from '../pages/species/other-species.js'
 import nsip from '../pages/nsip/nsip.js'
 import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
 import applications from '../pages/applications/applications.js'
+import feedback from '../pages/feedback/feedback.js'
+import feedbackSent from '../pages/feedback/feedback-sent.js'
 import applicationSummary from '../pages/applications/application-summary.js'
 import applicationLicenceSummary from '../pages/applications/application-licence-summary.js'
 import miscRoutes from './misc-routes.js'
@@ -171,6 +173,7 @@ import declarationOfReturns from '../pages/returns/returns-declaration.js'
 import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
 import { returnUploadedFiles } from '../pages/returns/returns-uploaded-files.js'
 import confirmationOfReturns from '../pages/returns/returns-confirmation.js'
+import notFound from '../pages/error/not-found.js'
 
 const routes = [
   ...cookieInfo,
@@ -179,6 +182,8 @@ const routes = [
   ...nsip,
   ...windowNotOpen,
   ...applications,
+  ...feedback,
+  ...feedbackSent,
   ...applicationSummary,
   ...applicationLicenceSummary,
   ...declaration,
@@ -330,6 +335,7 @@ const routes = [
   ...returnsCheck,
   ...declarationOfReturns,
   ...confirmationOfReturns,
+  ...notFound,
 
   signIn,
   signOut,

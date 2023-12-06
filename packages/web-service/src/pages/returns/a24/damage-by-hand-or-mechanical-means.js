@@ -1,8 +1,8 @@
 import { ReturnsURIs } from '../../../uris.js'
-import { checkLicence, licenceActionsCompletion } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 import { APIRequests } from '../../../services/api-requests.js'
 import { yesNoConditionalPage } from '../../common/yes-no-conditional.js'
-import { boolFromYesNo } from '../../common/common.js'
+import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 
 const { DAMAGE_BY_HAND_OR_MECHANICAL_MEANS } = ReturnsURIs.A24
 
@@ -16,7 +16,7 @@ export const getData = async request => {
     damageSett = licenceReturn?.damageByHandOrMechanicalMeans
     damageSettDetails = licenceReturn?.damageByHandOrMechanicalMeansDetails
   }
-  return { damageSett, damageSettDetails }
+  return { yesNo: yesNoFromBool(damageSett), yesNoDetails: damageSettDetails }
 }
 
 export const setData = async request => {
@@ -43,6 +43,6 @@ export const damageByHandOrMechanicalMeans = yesNoConditionalPage({
   uri: DAMAGE_BY_HAND_OR_MECHANICAL_MEANS.uri,
   checkData: checkLicence,
   getData: getData,
-  completion: licenceActionsCompletion,
+  completion: allCompletion,
   setData: setData
 })

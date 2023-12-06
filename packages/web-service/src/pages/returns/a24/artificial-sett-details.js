@@ -2,9 +2,9 @@ import Joi from 'joi'
 import pageRoute from '../../../routes/page-route.js'
 import { ReturnsURIs } from '../../../uris.js'
 import { APIRequests } from '../../../services/api-requests.js'
-import { checkLicence } from '../common-return-functions.js'
+import { allCompletion, checkLicence } from '../common-return-functions.js'
 
-const { ARTIFICIAL_SETT_DETAILS, ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE } = ReturnsURIs.A24
+const { ARTIFICIAL_SETT_DETAILS } = ReturnsURIs.A24
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -38,6 +38,6 @@ export default pageRoute({
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkLicence,
   getData: getData,
-  completion: ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE.uri,
+  completion: allCompletion,
   setData: setData
 })

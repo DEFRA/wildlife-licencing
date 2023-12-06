@@ -180,6 +180,10 @@ import {
   getDesignatedSites
 } from './handlers/reference-data/reference-data.js'
 
+import {
+  postFeedback
+} from './handlers/feedback/feedback.js'
+
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
 
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
@@ -346,7 +350,10 @@ const handlers = {
   validationFail,
   notFound,
   postResetHandler,
-  postResponseHandler
+  postResponseHandler,
+
+  // Feedback
+  postFeedback
 }
 
 /**

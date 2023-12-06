@@ -3,10 +3,8 @@ node_modules/
 
 # Ignore any hidden files/folders (starting with a .)
 **/.*
-# except the github, dockerignore, npmignore and husky.
+# except the github, dockerignore and npmignore.
 !.github
-!.husky
-!.huskyrc
 !.dockerignore
 !.npmignore
 !.env.example

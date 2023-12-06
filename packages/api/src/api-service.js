@@ -14,6 +14,7 @@ const initialize = async () => {
   await createQueue(queueDefinitions.LICENCE_RESEND_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.APPLICATION_FILE_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.RETURN_FILE_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.FEEDBACK_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.USER_DETAILS_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.ORGANISATION_DETAILS_QUEUE, { type: 'client' })
 }

@@ -40,7 +40,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: payload['yes-no'] === 'yes'
+          checked: data.licenceConditions if data.licenceConditions else payload['yes-no'] === 'yes'
         },
         {
           value: "no",

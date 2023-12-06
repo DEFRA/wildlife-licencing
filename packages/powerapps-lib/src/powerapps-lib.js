@@ -1,6 +1,7 @@
 import { applicationUpdate } from './batch-update/application-update.js'
 import { returnUpdate } from './batch-update/return-update.js'
 import { licenceResend } from './batch-update/licence-resend.js'
+import { feedbackUpdate } from './batch-update/feedback-update.js'
 
 import {
   applicationReadStream,
@@ -66,5 +67,6 @@ export {
   applicationDesignatedSitesReadStream,
   RecoverableBatchError,
   UnRecoverableBatchError,
-  BaseKeyMapping
+  BaseKeyMapping,
+  feedbackUpdate
 }

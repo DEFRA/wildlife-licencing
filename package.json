@@ -17,11 +17,9 @@
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-promise": "^6.1.1",
-    "husky": "^7.0.4",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
     "lerna": "^4.0.0",
-    "lint-staged": "^12.0.2",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
@@ -35,11 +33,12 @@
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
-    "prepare": "husky install",
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
-    "docker:stop": "docker stack rm wls"
+    "docker:stop": "docker stack rm wls",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "standard": {
     "env": {
@@ -48,8 +47,7 @@
     },
     "ignore": [
       "**/dist/*.js",
-      "packages/api/webpack.config.cjs",
-      ".husky"
+      "packages/api/webpack.config.cjs"
     ]
   },
   "eslintConfig": {
@@ -64,15 +62,11 @@
       "**/dist/*.js"
     ],
     "parserOptions": {
+      "ecmaVersion": 7,
       "sourceType": "module"
     },
     "plugins": [
       "jest"
-    ]
-  },
-  "lint-staged": {
-    "*.js": [
-      "standard"
     ]
   },
   "babel": {

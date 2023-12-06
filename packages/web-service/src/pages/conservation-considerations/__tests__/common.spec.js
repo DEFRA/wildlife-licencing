@@ -297,4 +297,73 @@ describe('the checkData function', () => {
       expect(result).toEqual('/designated-site-check-answers')
     })
   })
+
+  describe('the checkDesignatedSite function', () => {
+    it('returns null if there is no site to remove', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            getDesignatedSites: jest.fn(() => [
+              {
+                id: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+                siteName: 'Ribble Estuary',
+                siteType: 100000001
+              }
+            ]),
+            get: jest.fn(() => [])
+          }
+        }
+      }))
+      const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          setData: jest.fn()
+        })
+      }
+      const { checkDesignatedSite } = await import('../common.js')
+      const h = { redirect: jest.fn((uri) => uri) }
+
+      const result = await checkDesignatedSite(request, h)
+
+      expect(result).toEqual('/designated-site-check-answers')
+    })
+
+    it('returns the check page if there is a site to remove', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            getDesignatedSites: jest.fn(() => [
+              {
+                id: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+                siteName: 'Ribble Estuary',
+                siteType: 100000001
+              }
+            ]),
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf'
+            }])
+          }
+        }
+      }))
+      const request = {
+        query: { id: '344be97d-c928-4753-ae09-f8944ad9f228' },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          }),
+          setData: jest.fn()
+        })
+      }
+      const { checkDesignatedSite } = await import('../common.js')
+      const h = { redirect: jest.fn() }
+
+      const result = await checkDesignatedSite(request, h)
+
+      expect(result).toEqual(null)
+    })
+  })
 })

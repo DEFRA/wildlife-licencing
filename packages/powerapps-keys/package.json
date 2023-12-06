@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-powerapps-keys",
-  "version": "13.0.0-alpha.0",
+  "version": "12.3.17-alpha.0",
   "description": "Powerapps keys",
   "main": "keys/keys.js",
   "type": "module",
@@ -24,5 +24,6 @@
     "licencing"
   ],
   "author": "Graham Willis",
-  "license": "SEE LICENSE IN LICENCE"
+  "license": "SEE LICENSE IN LICENCE",
+  "gitHead": "8b51186f90ae03e7c8a4550e1ab21c868f8e6af3"
 }

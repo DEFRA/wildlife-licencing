@@ -1,0 +1,71 @@
+{% extends 'standard-form.njk' %}
+{% import "common-text.njk" as descriptions %}
+{% import "applications-text.njk" as applicationAndLicenceStatusText %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "table/macro.njk" import govukTable %}
+
+{% set title = 'Give feedback on Apply for and manage a wildlife licence' %}
+
+{% set errorMap = {
+    'nps-satisfaction': {
+      'any.required': { ref: '#nps-satisfaction', text: 'You have not selected an option' }
+    }
+  }
+%}
+
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+
+{% block pageContent %}
+  {{ govukRadios({
+    name: "nps-satisfaction",
+    fieldset: {
+      legend: {
+        text: "Overall, how did you feel about the service today?",
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    errorMessage: { text: "Select a rating" } if error['nps-satisfaction'],
+    items: [
+      {
+        value: "VERY_SATISFIED",
+        text: "Very satisfied"
+      },
+      {
+        value: "SATISFIED",
+        text: "Satisfied"
+      },
+      {
+        value: "NEITHER_SATISFIED_NOR_DISSATISFIED",
+        text: "Neither satisfied nor dissatisfied"
+      },
+      {
+        value: "DISSATISFIED",
+        text: "Dissatisfied"
+      },
+      {
+        value: "VERY_DISSATISFIED",
+        text: "Very dissatisfied"
+      }
+    ]
+  }) }}
+
+  {{ govukCharacterCount({
+    name: "withHint",
+    id: "with-hint",
+    maxlength: 4000,
+    label: {
+      text: "How can we improve this service?",
+      classes: "govuk-label--m"
+    },
+    hint: {
+      text: "Do not include personal or financial information like your National Insurance number or credit card details."
+    }
+  }) }}
+{% endblock %}
+
+{% set buttonText = 'Send feedback' %}

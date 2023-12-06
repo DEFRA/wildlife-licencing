@@ -605,6 +605,27 @@ async function defineApplicationRefSeq (sequelize) {
   models.getApplicationRef = () => sequelize.query('select nextval(\'application_ref_seq\')', { type: QueryTypes.SELECT })
 }
 
+async function defineFeedbacks (sequelize) {
+  models.feedbacks = await sequelize.define('feedbacks', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: {
+      type: DataTypes.UUID,
+      references: {
+        model: models.users,
+        key: 'id'
+      }
+    },
+    feedbackData: { type: DataTypes.JSONB },
+    sddsFeedbackId: { type: DataTypes.UUID }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'feedback_user_fk' },
+      { unique: true, fields: ['sdds_feedback_id'], name: 'sdds_feedback_id_fk' }
+    ]
+  })
+}
+
 const createModels = async () => {
   const sequelize = SEQUELIZE.getSequelize()
 
@@ -654,6 +675,7 @@ const createModels = async () => {
 
   await defineOptionSets(sequelize)
   await defineApplicationRefSeq(sequelize)
+  await defineFeedbacks(sequelize)
 
   // Create M:M associations (it does not seem to want to create the junction tables automatically)
   // users <> applications
@@ -717,6 +739,7 @@ const createModels = async () => {
   await models.applicationTypeApplicationPurposes.sync()
 
   await models.optionSets.sync()
+  await models.feedbacks.sync()
 
   // Create the contact roles
   await models.contactRoles.upsert({ contactRole: 'APPLICANT' })

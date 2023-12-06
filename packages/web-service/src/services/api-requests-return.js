@@ -13,6 +13,15 @@ export const RETURNS = {
     `Error getting licence returns with licenceId ${licenceId}`,
     500
   ),
+  getLastLicenceReturn: async licenceId => apiRequestsWrapper(
+    async () => {
+      const licenceReturns = await API.get(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURNS}`)
+      debug(`Getting licence returns with licenceId ${licenceId}`)
+      return licenceReturns.length > 0 ? licenceReturns[0] : null
+    },
+    `Error getting last licence return for licenceId ${licenceId}`,
+    500
+  ),
   getLicenceReturn: async (licenceId, returnId) => apiRequestsWrapper(
     async () => {
       const licenceReturn = API.get(`${apiUrls.LICENCE}/${licenceId}${apiUrls.RETURN}/${returnId}`)

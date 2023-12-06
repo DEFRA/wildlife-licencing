@@ -1,12 +1,17 @@
 {%
-    set statusText = {
+    set applicationStatusText = {
         'RECEIVED': { text: 'SUBMITTED', tag: 'govuk-tag govuk-tag--turquoise' },
         'AWAITING_ALLOCATION': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag govuk-tag--yellow' },
         'ALLOCATED_FOR_ASSESSMENT': { text: 'AWAITING ASSESSMENT', tag: 'govuk-tag govuk-tag--yellow' },
         'UNDER_ASSESSMENT': { text: 'BEING ASSESSED', tag: 'govuk-tag govuk-tag--purple' },
         'GRANTED': { text: 'GRANTED', tag: 'govuk-tag govuk-tag--green' },
         'PAUSED': { text: 'ACTION NEEDED', tag: 'govuk-tag govuk-tag--pink' },
-        'NOT_GRANTED': { text: 'NOT GRANTED', tag: 'govuk-tag govuk-tag--red' },
+        'NOT_GRANTED': { text: 'NOT GRANTED', tag: 'govuk-tag govuk-tag--red' }
+    }
+%}
+
+{%
+    set licenceStatusText = {
         'EXPIRED_ROA_DUE': { text: 'ACTION NEEDED', tag: 'govuk-tag govuk-tag--pink' },
         'GRANTED_ROA_RECEIVED': { text: 'COMPLETED', tag: 'govuk-tag' },
         'EXPIRED_ROA_RECEIVED': { text: 'COMPLETED', tag: 'govuk-tag' },
@@ -14,10 +19,10 @@
     }
 %}
 
-{% macro getApplicationStatus(application, statuses) %}
-    {% if application.statusCode %}
-        {% if statusText[statuses[application.statusCode]] %}
-            <strong class="{{statusText[statuses[application.statusCode]].tag}} govuk-!-margin-top-4">{{ statusText[statuses[application.statusCode]].text }}</strong>
+{% macro getApplicationStatus(statusCode, statuses) %}
+    {% if statusCode %}
+        {% if applicationStatusText[statuses[statusCode]] %}
+            <strong class="{{applicationStatusText[statuses[statusCode]].tag}} govuk-!-margin-top-4">{{ applicationStatusText[statuses[statusCode]].text }}</strong>
         {% else %}
             <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-top-4">UNKNOWN</strong>
         {% endif %}
@@ -26,9 +31,9 @@
     {% endif %}
 {% endmacro %}
 
-{% macro getLicenceStatus(licence, statuses) %}
-    {% if statusText[statuses[licence.statusCode]] %}
-        <strong class="{{statusText[statuses[licence.statusCode]].tag}} govuk-!-margin-top-4">{{ statusText[statuses[licence.statusCode]].text }}</strong>
+{% macro getLicenceStatus(statusCode, statuses) %}
+    {% if licenceStatusText[statuses[statusCode]] %}
+        <strong class="{{licenceStatusText[statuses[statusCode]].tag}} govuk-!-margin-top-4">{{ licenceStatusText[statuses[statusCode]].text }}</strong>
     {% else %}
         <strong class="govuk-tag govuk-tag--green govuk-!-margin-top-4">GRANTED</strong>
     {% endif %}

@@ -1,3 +1,11 @@
+## v12.3.15          Monday 30th October
+PRIVATE-BETA
+- Small bugfixes
+
+## v12.3.14          Thursday 26th October
+PRIVATE-BETA
+- Implement returns for A24 licence
+
 ## v11.13.16         Tuesday 8th August
 PRIVATE-BETA
 - Fix file upload sharepoint writer problem

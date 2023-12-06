@@ -31,7 +31,7 @@
 
 {% macro applicationReferenceHtml(application) %}
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4">
-        {% if application.licences.length and data.statuses[application.statusCode] === 'GRANTED' %}
+        {% if application.licences.length and data.applicationStatuses[application.statusCode] === 'GRANTED' %}
             <a href="{{_uri.applicationLicence}}?licenceId={{application.licences[0].id}}&applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
         {% elif application.userSubmission %}
             <a href="{{_uri.applicationSummary}}?applicationId={{application.id}}" class="govuk-link govuk-link--no-visited-state">Badger mitigation</a>
@@ -50,17 +50,17 @@
 {% endmacro -%}
 
 {% macro statusHtml(application) %}
-    {% if application.userSubmission and application.licences.length %}
-        {{ applicationAndLicenceStatusText.getLicenceStatus(application.licences[0], data.statuses) }}
+    {% if application.userSubmission and application.licences.length and data.applicationStatuses[application.statusCode] === 'GRANTED' %}
+        {{ applicationAndLicenceStatusText.getLicenceStatus(application.licences[0].statusCode, data.licenceStatuses) }}
     {% elif application.userSubmission %}
-        {{ applicationAndLicenceStatusText.getApplicationStatus(application, data.statuses) }}
+        {{ applicationAndLicenceStatusText.getApplicationStatus(application.statusCode, data.applicationStatuses) }}
     {% else %}
         <strong class="govuk-tag govuk-tag--blue govuk-!-margin-top-4">IN PROGRESS</strong>
     {% endif %}
 {% endmacro -%}
 
 {% macro getReferenceNumber(application) %}
-{% if data.statuses[application.statusCode] === 'GRANTED' %}
+{% if data.applicationStatuses[application.statusCode] === 'GRANTED' and application.licences.length %}
   {% for licence in application.licences %}
     <p>{{ licence.licenceNumber }}</p>
   {% endfor %}

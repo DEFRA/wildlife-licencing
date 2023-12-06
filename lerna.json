@@ -2,7 +2,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "13.0.0-alpha.0",
+  "version": "12.3.17-alpha.0",
   "npmClient": "npm",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -11,6 +11,7 @@
     "version": {
       "allowBranch": [
         "master",
+        "develop"
         "develop",
         "feature/IDM"
       ],
