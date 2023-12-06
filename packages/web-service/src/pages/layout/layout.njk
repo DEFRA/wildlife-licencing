@@ -63,9 +63,9 @@
   </header>
 {% endblock %}
 
-{% set feedbackBannerHtml = '' %}
-{% if (not data.hideFeedbackBanner) %}
 {% set feedbackBannerHtml = '<a class="govuk-link" target="_BLANK" href="/feedback">Your feedback (opens in new tab)</a> can help us to improve this new service.' %}
+{% if (data.hideFeedbackBanner) %}
+  {% set feedbackBannerHtml = '' %}
 {% endif %}
 
 {% block beforeContent %}
