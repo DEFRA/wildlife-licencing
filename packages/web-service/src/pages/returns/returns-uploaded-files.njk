@@ -2,50 +2,46 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "error-summary.njk" import errorSummary %}
-
 {% set errorMap = {
         'another-file-check': {
           'no-choice-made': { ref: '#another-file-check', text: 'Select yes if you want to upload another file' }
         }
-    }
-%}
-
-{% set title = 'Uploaded files'%}
-{% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
-
+    } %}
+{% set title = 'Uploaded files' %}
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
 {% block content %}
-
-{{ errorSummary(error, errorMap, 'There is a problem') }}
-
-<h1 class="govuk-heading-l">Uploaded files</h1>
-
-<div class="govuk-grid-row">
-	<div class="govuk-grid-column-two-thirds">
-        <dl class="govuk-summary-list">
+  {{ errorSummary(error, errorMap, 'There is a problem') }}
+  <h1 class="govuk-heading-l">Uploaded filess</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <dl class="govuk-summary-list">
         {% if data and data.length !== 0 %}
           {% for upload in data %}
-
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
-                <dd class="govuk-summary-list__value">
-                    {{ upload.filename }} <br>
-                    <p>Uploaded {{ upload.uploadedDate }}</p>
+              <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
+              <dd class="govuk-summary-list__value">
+                {{ upload.filename }}
+                <br>
+                  <p class='govuk-body-s'>Uploaded {{ upload.uploadedDate }}</p>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link govuk-link--no-visited-state" href="{{upload.removeUploadUrl}}?uploadId={{upload.id}}"  name: "remove-file">
-                        Remove<span class="govuk-visually-hidden"></span>
-                    </a>
+                  <a class="govuk-link govuk-link--no-visited-state" href="{{ upload.removeUploadUrl }}?uploadId={{ upload.id }}" name: "remove-file">
+                    Remove<span class="govuk-visually-hidden"></span>
+                  </a>
                 </dd>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Uploaded file
+              </dt>
+              <dd class="govuk-summary-list__value">
+                No file uploaded
+              </dd>
             </div>
-          {% endfor %}
-        {% else %}
-          <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Uploaded file </dt>
-                <dd class="govuk-summary-list__value">
-                    No file uploaded
-                </dd>        
-            </div>
-        {% endif %}
+          {% endif %}
         </dl>
         <form method="post">
           {{ govukRadios({
@@ -76,11 +72,10 @@
             {{ govukButton({
               text: "Continue",
               attributes: { id: 'continue' }
-            })}}
+            }) }}
           </div>
-          <input type="hidden" name="crumb" value="{{crumb}}"/>
+          <input type="hidden" name="crumb" value="{{ crumb }}"/>
         </form>
-	</div>
-</div>
-
-{% endblock %}
+      </div>
+    </div>
+  {% endblock %}
