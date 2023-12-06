@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-defra-customer-lib",
-  "version": "13.0.0-alpha.0",
+  "version": "12.3.17-alpha.0",
   "description": "Powerapps keys",
   "main": "src/defra-customer-lib.js",
   "type": "module",

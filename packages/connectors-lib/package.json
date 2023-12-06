@@ -33,6 +33,7 @@
     "debug": "^4.3.3",
     "isomorphic-fetch": "^3.0.0",
     "lodash.clonedeep": "^4.5.0",
+    "openid-client": "^5.4.2",
     "lodash.get": "^4.3.2",
     "lodash.has": "^4.3.2",
     "lodash.set": "^4.3.2",
