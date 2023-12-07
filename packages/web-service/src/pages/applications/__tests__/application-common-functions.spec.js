@@ -74,20 +74,26 @@ describe('application-common-functions', () => {
   })
 
   describe('send events', () => {
-    it('findLastSentEvent sorts the send events correctly', async () => {
-      const { findLastSentEvent } = await import('../application-common-functions.js')
-      const result = findLastSentEvent({
+    it('findLatestLicenseAnnotation sorts the send events correctly', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({
         annotations: [
           {
             filename: '2023-510300-BAD-LIC-licence document.pdf',
             mimetype: 'application/pdf',
-            modifiedOn: '2023-02-21T09:03:14Z',
+            modifiedOn: '2023-02-20T11:03:14Z',
             objectTypeCode: 'sdds_license'
           },
           {
             filename: '2023-510300-BAD-LIC-licence document.pdf',
             mimetype: 'application/pdf',
-            modifiedOn: '2023-02-20T11:03:14Z',
+            modifiedOn: '2023-02-22T09:03:14Z',
+            objectTypeCode: 'sdds_license'
+          },
+          {
+            filename: '2023-510300-BAD-LIC-licence document.pdf',
+            mimetype: 'application/pdf',
+            modifiedOn: '2023-02-21T09:03:14Z',
             objectTypeCode: 'sdds_license'
           }
         ]
@@ -95,20 +101,20 @@ describe('application-common-functions', () => {
       expect(result).toEqual({
         filename: '2023-510300-BAD-LIC-licence document.pdf',
         mimetype: 'application/pdf',
-        modifiedOn: '2023-02-21T09:03:14Z',
+        modifiedOn: '2023-02-22T09:03:14Z',
         objectTypeCode: 'sdds_license'
       })
     })
 
-    it('findLastSentEvent returns null with no annotations', async () => {
-      const { findLastSentEvent } = await import('../application-common-functions.js')
-      const result = findLastSentEvent({ })
+    it('findLatestLicenseAnnotation returns null with no annotations', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({ })
       expect(result).toBeNull()
     })
 
-    it('findLastSentEvent returns null with no events', async () => {
-      const { findLastSentEvent } = await import('../application-common-functions.js')
-      const result = findLastSentEvent({ annotations: [] })
+    it('findLatestLicenseAnnotation returns null with no events', async () => {
+      const { findLatestLicenseAnnotation } = await import('../application-common-functions.js')
+      const result = findLatestLicenseAnnotation({ annotations: [] })
       expect(result).toBeNull()
     })
   })
