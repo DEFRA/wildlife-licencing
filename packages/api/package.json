@@ -29,7 +29,7 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@defra/wls-connectors-lib": "^12.3.16-alpha.0",
+    "@defra/wls-connectors-lib": "^12.3.17-alpha.0",
     "@defra/wls-database-model": "^12.3.17-alpha.0",
     "@defra/wls-powerapps-keys": "^12.3.17-alpha.0",
     "@defra/wls-queue-defs": "^12.3.17-alpha.0",
