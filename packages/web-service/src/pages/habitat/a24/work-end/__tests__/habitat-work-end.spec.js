@@ -1,4 +1,3 @@
-const Joi = require('joi')
 describe('The habitat work end page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -132,10 +131,12 @@ describe('The habitat work end page', () => {
     })
 
     it('you cant pass a date in the past', async () => {
+      jest.setSystemTime(new Date('2023-01-01'))
+
       const payload = {
         'habitat-work-end-day': '11',
         'habitat-work-end-month': '11',
-        'habitat-work-end-year': (new Date().getFullYear() - 1).toString()
+        'habitat-work-end-year': '2022'
       }
       const { validator } = await import('../habitat-work-end.js')
 
@@ -151,10 +152,12 @@ describe('The habitat work end page', () => {
     })
 
     it('you cant pass a date outside of the licence season', async () => {
+      jest.setSystemTime(new Date('2023-01-01'))
+
       const payload = {
         'habitat-work-end-day': '1',
-        'habitat-work-end-month': '12',
-        'habitat-work-end-year': (new Date().getFullYear() + 1).toString()
+        'habitat-work-end-month': '1',
+        'habitat-work-end-year': '2024'
       }
       const { validator } = await import('../habitat-work-end.js')
 
