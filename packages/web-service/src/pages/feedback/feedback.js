@@ -1,3 +1,4 @@
+import { Backlink } from '../../handlers/backlink.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { FEEDBACK, FEEDBACK_SENT } from '../../uris.js'
@@ -29,5 +30,6 @@ export default pageRoute({
   uri: FEEDBACK.uri,
   completion: FEEDBACK_SENT.uri,
   validator,
-  setData
+  setData,
+  backlink: Backlink.NO_BACKLINK
 })

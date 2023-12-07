@@ -63,14 +63,17 @@
   </header>
 {% endblock %}
 
-{% block beforeContent %}
-  {{ govukPhaseBanner({
-      tag: {
-        text: "beta"
-      },
-      html: '<a class="govuk-link" target="_BLANK" href="/feedback">Your feedback (opens in new tab)</a> can help us to improve this new service.'
-    }) }}
+{% if feedbackBannerHtml is not defined %}
+  {% set feedbackBannerHtml = '<a class="govuk-link" target="_BLANK" href="/feedback">Your feedback (opens in new tab)</a> can help us to improve this new service.' %}
+{% endif %}
 
+{% block beforeContent %}
+    {{ govukPhaseBanner({
+        tag: {
+          text: "beta"
+        },
+        html: feedbackBannerHtml
+      }) }}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {% if backlink.enabled %}
