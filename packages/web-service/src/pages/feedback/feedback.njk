@@ -7,11 +7,16 @@
 {% from "summary-list/macro.njk" import govukSummaryList %}
 {% from "table/macro.njk" import govukTable %}
 
+{% set feedbackBannerHtml = '' %}
+
 {% set title = 'Give feedback on Apply for and manage a wildlife licence' %}
 
 {% set errorMap = {
     'nps-satisfaction': {
       'any.required': { ref: '#nps-satisfaction', text: 'You have not selected an option' }
+    },
+    'withHint': {
+      'string.max': { ref: '#with-hint', text: 'You have entered too many characters' }
     }
   }
 %}
@@ -58,10 +63,12 @@
     name: "withHint",
     id: "with-hint",
     maxlength: 4000,
+    errorMessage: { text: "Feedback must be 4000 characters or less" } if error['withHint'],
     label: {
       text: "How can we improve this service?",
       classes: "govuk-label--m"
     },
+    value: payload['withHint'] if payload['withHint'] else '',
     hint: {
       text: "Do not include personal or financial information like your National Insurance number or credit card details."
     }

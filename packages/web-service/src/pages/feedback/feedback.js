@@ -1,3 +1,4 @@
+import { Backlink } from '../../handlers/backlink.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
 import { FEEDBACK, FEEDBACK_SENT } from '../../uris.js'
@@ -7,7 +8,8 @@ export const validator = async payload => {
   Joi.assert(
     payload,
     Joi.object({
-      'nps-satisfaction': Joi.any().required()
+      'nps-satisfaction': Joi.any().required(),
+      withHint: Joi.string().trim().min(0).max(4000)
     }).options({ abortEarly: false, allowUnknown: true })
   )
 }
@@ -29,5 +31,6 @@ export default pageRoute({
   uri: FEEDBACK.uri,
   completion: FEEDBACK_SENT.uri,
   validator,
-  setData
+  setData,
+  backlink: Backlink.NO_BACKLINK
 })

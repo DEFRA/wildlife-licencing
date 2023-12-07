@@ -53,6 +53,20 @@ describe('cookie-info page', () => {
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
     })
+
+    it('does not capture the referrer, if the referrer is cookie-info', async () => {
+      const mockSetData = jest.fn()
+      const request = {
+        info: { referrer: 'https://host/cookie-info' },
+        cache: () => ({
+          setData: mockSetData,
+          getData: () => ({ cookiesReferrer: '/xyz' })
+        })
+      }
+      const { getData } = await import('../cookie-info.js')
+      await getData(request)
+      expect(mockSetData).toHaveBeenCalledWith({ cookiesReferrer: '/xyz' })
+    })
   })
 
   describe('the setData', () => {

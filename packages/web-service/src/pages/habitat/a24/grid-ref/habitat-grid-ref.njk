@@ -23,8 +23,8 @@
     },
     errorMessage: { text: "Enter a national grid reference that is 2 letters and 6 digits. " } if error['habitat-grid-ref'],
     classes: "govuk-input--width-10",
-    value: data.gridReference,
-    attributes: { maxlength: 30 },
+    value: payload['habitat-grid-ref'] if payload['habitat-grid-ref'] else data.gridReference,
+    attributes: { maxlength: 8 },
     spellcheck: false
   }) }}
 

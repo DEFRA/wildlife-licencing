@@ -4,17 +4,19 @@ import { LicenceTypeConstants } from '../../../../common/licence-type-constants.
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { inDateWindow } from '../../../../common/date-utils.js'
 
+export const validateDateInFuture = (pageDate, pageName) => {
+  // Is this in the past?
+  if (!isFuture(pageDate)) {
+    throwJoiError(pageName, 'Error', 'dateHasPassed')
+  }
+}
+
 /**
  *
  * @param {Date} pageDate - the test date
  * @param pageName
  */
 export const validateDateInWindow = (pageDate, pageName) => {
-  // Is this in the past?
-  if (!isFuture(pageDate)) {
-    throwJoiError(pageName, 'Error', 'dateHasPassed')
-  }
-
   const { CLOSED_SEASON_START, CLOSED_SEASON_END } =
     LicenceTypeConstants[PowerPlatformKeys.APPLICATION_TYPES.A24]
 
