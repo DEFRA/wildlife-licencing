@@ -1,5 +1,8 @@
 describe('The habitat work end page', () => {
-  beforeEach(() => jest.resetModules())
+  beforeEach(() => {
+    jest.resetModules()
+    jest.setSystemTime(new Date('2023-01-01'))
+  })
 
   describe('the checkData function', () => {
     it('checkData returns null if the startDate is set', async () => {
@@ -87,13 +90,13 @@ describe('The habitat work end page', () => {
       const payload = {
         'habitat-work-end-day': '',
         'habitat-work-end-month': '10',
-        'habitat-work-end-year': (new Date().getFullYear())
+        'habitat-work-end-year': '2023'
       }
       jest.doMock('../../../../../session-cache/cache-decorator.js', () => {
         return {
           cacheDirect: () => {
             return {
-              getData: () => `11-11-${new Date().getFullYear()}`
+              getData: () => '11-11-2023'
             }
           }
         }
@@ -115,7 +118,7 @@ describe('The habitat work end page', () => {
       const payload = {
         'habitat-work-end-day': '1',
         'habitat-work-end-month': '',
-        'habitat-work-end-year': (new Date().getFullYear())
+        'habitat-work-end-year': '2023'
       }
       const { validator } = await import('../habitat-work-end.js')
 
@@ -131,8 +134,6 @@ describe('The habitat work end page', () => {
     })
 
     it('you cant pass a date in the past', async () => {
-      jest.setSystemTime(new Date('2023-01-01'))
-
       const payload = {
         'habitat-work-end-day': '11',
         'habitat-work-end-month': '11',
@@ -152,8 +153,6 @@ describe('The habitat work end page', () => {
     })
 
     it('you cant pass a date outside of the licence season', async () => {
-      jest.setSystemTime(new Date('2023-01-01'))
-
       const payload = {
         'habitat-work-end-day': '1',
         'habitat-work-end-month': '1',
