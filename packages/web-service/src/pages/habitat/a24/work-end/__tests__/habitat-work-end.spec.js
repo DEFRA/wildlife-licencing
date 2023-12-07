@@ -1,3 +1,5 @@
+class NoErrorThrownError extends Error {}
+
 describe('The habitat work end page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -101,9 +103,10 @@ describe('The habitat work end page', () => {
         })
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
+        throw new NoErrorThrownError('Expected error not thrown')
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error')
+        expect(e.details[0].type).toBe('noDateSent')
       }
     })
 
@@ -116,9 +119,10 @@ describe('The habitat work end page', () => {
         }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
+        throw new NoErrorThrownError('Expected error not thrown')
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error')
+        expect(e.details[0].type).toBe('noDateSent')
       }
     })
 
@@ -131,9 +135,10 @@ describe('The habitat work end page', () => {
         }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
+        throw new NoErrorThrownError('Expected error not thrown')
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBe('Error')
+        expect(e.details[0].type).toBe('dateHasPassed')
       }
     })
 
@@ -146,6 +151,7 @@ describe('The habitat work end page', () => {
         }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
+        throw new NoErrorThrownError('Expected error not thrown')
       } catch (e) {
         expect(e.message).toBe('ValidationError')
         expect(e.details[0].type).toBe('outsideLicence')
@@ -172,9 +178,10 @@ describe('The habitat work end page', () => {
         })
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
+        throw new NoErrorThrownError('Expected error not thrown')
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBeNull()
+        expect(e.details[0].type).toBe('endDateBeforeStart')
       }
     })
 
