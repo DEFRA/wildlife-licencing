@@ -1,11 +1,15 @@
 import { v4 as uuidv4 } from 'uuid'
 import * as pkg from 'object-hash'
 import { models } from '@defra/wls-database-model'
+import { addressProcess } from './common.js'
 const hash = pkg.default
 
 export const writeSiteObject = async (obj, ts) => {
   const { data, keys } = obj
   const counter = { insert: 0, update: 0, pending: 0, error: 0 }
+
+  // Operate on the address if present
+  addressProcess(data.sites?.address)
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'sites')

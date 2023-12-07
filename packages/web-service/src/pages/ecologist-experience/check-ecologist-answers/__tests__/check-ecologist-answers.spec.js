@@ -150,4 +150,100 @@ describe('The check ecologist answers page', () => {
       expect(await completion(request)).toBe('/tasklist')
     })
   })
+
+  describe('checkData function', () => {
+    it('calls the tag get function', async () => {
+      const mockGet = jest.fn()
+      mockGet.mockImplementation(() => { return 'complete' })
+
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: mockGet
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
+      const { checkData } = await import('../check-ecologist-answers.js')
+      await checkData(request)
+      expect(mockGet).toHaveBeenCalledTimes(1)
+      expect(mockGet).toHaveBeenCalledWith('ecologist-experience')
+    })
+
+    it('redirects to the start of the journey if the journey isnt complete or confirmed', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => { 'in-progress' }
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
+      const mockRedirect = jest.fn()
+      const h = {
+        redirect: mockRedirect
+      }
+      const { checkData } = await import('../check-ecologist-answers.js')
+      await checkData(request, h)
+      expect(mockRedirect).toHaveBeenCalledWith('/previous-licence')
+    })
+
+    it('returns null if the journey is complete or confirmed', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          NOT_STARTED: 'not-started'
+        },
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                get: () => 'complete'
+              }
+            }
+          }
+        }
+      }))
+      const request = {
+        cache: () => {
+          return {
+            getData: () => {
+              return { applicationId: 'abe123' }
+            }
+          }
+        }
+      }
+      const { checkData } = await import('../check-ecologist-answers.js')
+      expect(await checkData(request)).toBeNull()
+    })
+  })
 })

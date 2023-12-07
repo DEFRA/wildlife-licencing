@@ -3947,6 +3947,7 @@ components:
           type: string
         adviceDescription:
           type: string
+          maxLength: 4000
 
     applicationFileUploads:
       type: array

@@ -98,6 +98,12 @@ describe('permissions page handler', () => {
         PERMISSION: {
           getPermissions: () => {
             return []
+          },
+          getPermissionDetailsById: () => {
+            return {
+              id: '12345',
+              noPermissionReason: 452120001
+            }
           }
         }
       }
@@ -115,6 +121,76 @@ describe('permissions page handler', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/add-permission-start')
   })
 
+  it('should redirect to add potential conflicts description page when there is potential conflicts', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: () => {
+            return { permissionsRequired: false }
+          }
+        },
+        PERMISSION: {
+          getPermissions: () => {
+            return []
+          },
+          getPermissionDetailsById: () => {
+            return {
+              id: '12345',
+              noPermissionReason: 452120001,
+              potentialConflicts: true
+            }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../check-your-answers/check-your-answers.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/describe-potential-conflicts')
+  })
+
+  it('should redirect to add a reason why no permission required page when the user selects no  permission required', async () => {
+    const mockRedirect = jest.fn()
+    jest.doMock('../../../services/api-requests.js', () => ({
+      APIRequests: {
+        ELIGIBILITY: {
+          getById: () => {
+            return { permissionsRequired: false }
+          }
+        },
+        PERMISSION: {
+          getPermissions: () => {
+            return []
+          },
+          getPermissionDetailsById: () => {
+            return {
+              id: '12345'
+            }
+          }
+        }
+      }
+    }))
+    const request = {
+      cache: () => ({
+        getData: () => {
+          return { applicationId: '2342fce0-3067-4ca5-ae7a-23cae648e45c' }
+        }
+      })
+    }
+    const h = { redirect: mockRedirect }
+    const { checkData } = await import('../check-your-answers/check-your-answers.js')
+    await checkData(request, h)
+    expect(mockRedirect).toHaveBeenCalledWith('/why-no-permission')
+  })
+
   it('checkData', async () => {
     const mockRedirect = jest.fn()
     jest.doMock('../../../services/api-requests.js', () => ({
@@ -127,6 +203,12 @@ describe('permissions page handler', () => {
         PERMISSION: {
           getPermissions: () => {
             return []
+          },
+          getPermissionDetailsById: () => {
+            return {
+              id: '12345',
+              noPermissionReason: 452120001
+            }
           }
         }
       }
