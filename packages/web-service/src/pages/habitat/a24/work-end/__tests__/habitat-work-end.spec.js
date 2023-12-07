@@ -142,13 +142,13 @@ describe('The habitat work end page', () => {
         const payload = {
           'habitat-work-end-day': '1',
           'habitat-work-end-month': '12',
-          'habitat-work-end-year': (new Date().getFullYear()).toString()
+          'habitat-work-end-year': (new Date().getFullYear() + 1).toString()
         }
         const { validator } = await import('../habitat-work-end.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
-        expect(e.details[0].message).toBeNull()
+        expect(e.details[0].type).toBe('outsideLicence')
       }
     })
 
