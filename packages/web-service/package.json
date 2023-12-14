@@ -46,7 +46,7 @@
     "disinfect": "^2.0.0",
     "dotenv": "^16.0.0",
     "find": "^0.3.0",
-    "got": "^11.8.3",
+    "got": "^14.0.0",
     "govuk-frontend": "^3.14.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
