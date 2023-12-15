@@ -73,16 +73,20 @@ jobs:
         path: '**/node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Run Tests
-      run: |
-        ls
-        npm run test
-  
-  sonar: 
-      name: SonarCloud Scan
-      needs: install_dependencies
-      runs-on: ubuntu-latest
-      steps:
-      - uses: sonarsource/sonarcloud-github-action@master
-        env:
+      run: npm run test
+
+    - name: SonarCloud
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+  # sonar: 
+  #     name: SonarCloud Scan
+  #     needs: install_dependencies
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #     - uses: sonarsource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
