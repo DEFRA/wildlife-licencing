@@ -92,7 +92,7 @@ jobs:
           name: coverage-report
           path: coverage/
       - name: check
-        run: ls
+        run: ls && cd coverage && ls
       - name: Sonar Cloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
