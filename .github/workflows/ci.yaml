@@ -25,7 +25,9 @@ jobs:
     - name: Install Lerna
       run: npm install --global lerna@6
     - name: Bootstrap dependencies
-      run: lerna bootstrap
+      run: |
+        npm ci
+        lerna bootstrap
 
   lint:
     name: Lint
