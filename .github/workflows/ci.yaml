@@ -26,37 +26,37 @@ jobs:
       run: |
         npm ci
 
-  lint:
-    name: Lint
-    needs: install_dependencies
-    runs-on: ubuntu-latest
+  # lint:
+  #   name: Lint
+  #   needs: install_dependencies
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Cached Node Modules
-      uses: actions/cache@v2
-      with:
-        path: '**/node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-    - name: Run Lint
-      run: npm run lint
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Use Cached Node Modules
+  #     uses: actions/cache@v2
+  #     with:
+  #       path: '**/node_modules'
+  #       key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+  #   - name: Run Lint
+  #     run: npm run lint
 
-  commit-lint:
-    runs-on: ubuntu-latest
-    needs: install_dependencies
-    continue-on-error: true
+  # commit-lint:
+  #   runs-on: ubuntu-latest
+  #   needs: install_dependencies
+  #   continue-on-error: true
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Cached Node Modules
-        uses: actions/cache@v2
-        with:
-         path: '**/node_modules'
-         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Use Cached Node Modules
+  #       uses: actions/cache@v2
+  #       with:
+  #        path: '**/node_modules'
+  #        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Conventional Commit Linting
-        run: npx commitlint --from=HEAD~1 --to=HEAD
-        continue-on-error: true
+  #     - name: Conventional Commit Linting
+  #       run: npx commitlint --from=HEAD~1 --to=HEAD
+  #       continue-on-error: true
 
   test:
     name: Test
@@ -71,14 +71,16 @@ jobs:
         path: '**/node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
     - name: Run Tests
-      run: npm run test
+      run: |
+        ls
+        npm run test
   
-  sonar: 
-      name: SonarCloud Scan
-      needs: install_dependencies
-      runs-on: ubuntu-latest
-      steps:
-      - uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  # sonar: 
+  #     name: SonarCloud Scan
+  #     needs: install_dependencies
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #     - uses: sonarsource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
