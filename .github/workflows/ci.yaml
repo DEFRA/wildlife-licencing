@@ -23,10 +23,16 @@ jobs:
         path: '**/node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Bootstrap dependencies
-      run: |
-        ls
-        npm ci
-        ls
+      run: npm ci
+
+  commit-lint:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Conventional Commit Linting
+        run: npx commitlint --from=HEAD~1 --to=HEAD
+        continue-on-error: true
 
   lint:
     name: Lint
@@ -42,23 +48,6 @@ jobs:
         key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Run Lint
       run: npm run lint
-
-  commit-lint:
-    runs-on: ubuntu-latest
-    needs: install_dependencies
-    continue-on-error: true
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Cached Node Modules
-        uses: actions/cache@v2
-        with:
-         path: '**/node_modules'
-         key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Conventional Commit Linting
-        run: npx commitlint --from=HEAD~1 --to=HEAD
-        continue-on-error: true
 
   test:
     name: Test
@@ -86,6 +75,7 @@ jobs:
       needs: test
       runs-on: ubuntu-latest
       steps:
+      - uses: actions/checkout@v2
       - name: Download coverage report
         uses: actions/download-artifact@v2
         with:
