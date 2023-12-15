@@ -22,12 +22,9 @@ jobs:
       with:
         path: '**/node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-    - name: Install Lerna
-      run: npm install --global lerna@6
     - name: Bootstrap dependencies
       run: |
         npm ci
-        lerna bootstrap
 
   lint:
     name: Lint
