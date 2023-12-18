@@ -31,6 +31,8 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 
       - name: Use Cached Node Modules
         uses: actions/cache@v2
         with:
