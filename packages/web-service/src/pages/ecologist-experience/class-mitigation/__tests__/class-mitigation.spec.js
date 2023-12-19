@@ -106,6 +106,39 @@ describe('The class mitigation page', () => {
       expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: false })
     })
 
+    it('setData doesnt delete the `classMitigationDetails` if the user doesnt change the answer from yes, to no on the return journey', async () => {
+      const mockPut = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        tagStatus: {
+          COMPLETE: 'complete'
+        },
+        APIRequests: {
+          ECOLOGIST_EXPERIENCE: {
+            getExperienceById: jest.fn(() => ({ classMitigation: false, classMitigationDetails: 'details' })),
+            putExperienceById: mockPut
+          },
+          APPLICATION: {
+            tags: () => ({
+              set: () => jest.fn()
+            })
+          }
+        }
+      }))
+      const request = {
+        payload: {
+          'yes-no': 'no'
+        },
+        cache: () => ({
+          getData: () => ({
+            applicationId: '26a3e94f-2280-4ea5-ad72-920d53c110fc'
+          })
+        })
+      }
+      const { setData } = await import('../class-mitigation.js')
+      await setData(request)
+      expect(mockPut).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: false, classMitigationDetails: 'details' })
+    })
+
     it('will set the tag status to in-progress if the user goes from yes on the primary journey to no on the return journey', async () => {
       const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
@@ -175,14 +208,28 @@ describe('The class mitigation page', () => {
   })
 
   describe('completion function', () => {
-    it('returns the check page if the user answers no', async () => {
+    const mockSet = jest.fn()
+    it('returns the check page if the user answers no, and sets the tag', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => ({
+              set: mockSet
+            })
+          }
+        }
+      }))
       const request = {
         payload: {
           'yes-no': 'no'
-        }
+        },
+        cache: () => ({
+          getData: () => { return { applicationId: 'abe123' } }
+        })
       }
       const { completion } = await import('../class-mitigation.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
 
     it('returns the class mitigation details page if the user answers yes', async () => {

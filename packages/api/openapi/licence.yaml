@@ -3632,6 +3632,7 @@ paths:
                   type: string
                   description: User's rating of the service.
                 howCanWeImproveThisService:
+                  maxLength: 4000
                   type: string
                   description: Suggestions for service improvement.
                 userId:
@@ -3946,6 +3947,7 @@ components:
           type: string
         adviceDescription:
           type: string
+          maxLength: 4000
 
     applicationFileUploads:
       type: array

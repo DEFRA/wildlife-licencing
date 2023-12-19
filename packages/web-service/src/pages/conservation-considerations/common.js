@@ -14,6 +14,48 @@ export const getFilteredDesignatedSites = async () => {
     .sort((a, b) => (a.siteName).localeCompare(b.siteName))
 }
 
+/**
+ * Check for any unfinished and redirect back to the appropriate question
+ * @param request
+ * @param h
+ * @returns {Promise<null>}
+ */
+export const checkAll = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  const { applicationId } = journeyData
+  const applicationDesignatedSites = await APIRequests.DESIGNATED_SITES.get(applicationId)
+
+  if (!applicationDesignatedSites.length) {
+    return null
+  }
+
+  const setCache = async (jd, ads) => {
+    jd.designatedSite = { id: ads.id, designatedSiteId: ads.designatedSiteId }
+    await request.cache().setData(jd)
+  }
+
+  for (const ads of applicationDesignatedSites) {
+    if (ads.permissionFromOwner === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION.uri)
+    } else if (ads.permissionFromOwner && !ads.detailsOfPermission) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri)
+    } else if (ads.adviceFromNaturalEngland === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.NE_ADVICE.uri)
+    } else if (ads.adviceFromNaturalEngland && !ads.adviceFromWho) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.ACTIVITY_ADVICE.uri)
+    } else if (ads.onSiteOrCloseToSite === undefined) {
+      await setCache(journeyData, ads)
+      return h.redirect(conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri)
+    }
+  }
+
+  return null
+}
+
 export const getCurrentSite = async request => {
   const journeyData = await request.cache().getData()
   const { applicationId, designatedSite } = journeyData
