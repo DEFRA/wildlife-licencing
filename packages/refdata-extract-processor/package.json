@@ -37,5 +37,9 @@
     "dotenv": "^10.0.0",
     "sequelize": "^6.12.5"
   },
+  "devDependencies": {
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  },
   "gitHead": "8b51186f90ae03e7c8a4550e1ab21c868f8e6af3"
 }
