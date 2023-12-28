@@ -4,6 +4,9 @@
   "engines": {
     "node": ">=16.13.0"
   },
+  "workspaces": [
+    "./packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:DEFRA/wildlife-licencing.git"
@@ -19,20 +22,18 @@
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
-    "lerna": "^4.0.0",
+    "lerna": "^8.0.1",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
   },
   "scripts": {
-    "postinstall": "npm run lerna:bootstrap",
     "test": "jest",
     "test-clear": "jest --clearCache",
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
-    "lerna:bootstrap": "lerna bootstrap",
     "docker:build": "docker-compose -f docker/services.build.yml build",
     "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
     "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
