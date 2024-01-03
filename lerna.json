@@ -12,7 +12,8 @@
       "allowBranch": [
         "master",
         "develop",
-        "feature/IDM"
+        "feature/IDM",
+        "feature/IDM-update-long-lived-branch"
       ],
       "message": "chore(release): publish %s"
     },
