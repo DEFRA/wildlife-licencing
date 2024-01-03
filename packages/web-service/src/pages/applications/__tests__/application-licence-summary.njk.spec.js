@@ -1,10 +1,9 @@
-import { Nunjucks, environment } from '../../../initialise-snapshot-tests'
-import { readFile } from 'fs/promises'
+import { compileTemplate } from '../../../initialise-snapshot-tests'
 import path from 'path'
+
 describe('application-licence page template', () => {
   it('Matches the snapshot', async () => {
-    const source = await readFile(path.join(__dirname, '../application-licence-summary.njk'), { encoding: 'utf8' })
-    const template = Nunjucks.compile(source, environment)
+    const template = await compileTemplate(path.join(__dirname, '../application-licence-summary.njk'))
 
     const data = {
       application: 'Text',

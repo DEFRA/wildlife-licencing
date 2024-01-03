@@ -1,16 +1,11 @@
 import Nunjucks from 'nunjucks'
 import path from 'path'
 import find from 'find'
+import { readFile } from 'fs/promises'
 
 const GOVUK_FRONTEND = 'govuk-frontend'
 
 const viewsPath = path.join(__dirname, './pages')
-
-const rootDirectory = path.resolve(__dirname)
-
-console.log('viewsPath', viewsPath)
-
-console.log('rootDirectory', rootDirectory)
 
 const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, viewsPath).map(f => path.dirname(f)))]
 
@@ -25,4 +20,9 @@ const paths = [
 
 const environment = Nunjucks.configure(paths)
 
-export { Nunjucks, environment }
+const compileTemplate = async (filePath) => {
+  const source = await readFile(filePath, { encoding: 'utf8' })
+  return Nunjucks.compile(source, environment)
+}
+
+export { compileTemplate }
