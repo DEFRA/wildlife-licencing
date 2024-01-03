@@ -1,13 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`application-licence page application-licence-summary page template Matches the snapshot 1`] = `
+exports[`applications page applications page template Matches the snapshot 1`] = `
 "<!DOCTYPE html>
 <html lang=\\"en\\" class=\\"govuk-template \\">
   <head>
     <meta charset=\\"utf-8\\">
-    <title>
-  Licence details
-</title>
+    <title>View licence applications</title>
     <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1, viewport-fit=cover\\">
     <meta name=\\"theme-color\\" content=\\"#0b0c0c\\"> 
     
@@ -157,18 +155,17 @@ exports[`application-licence page application-licence-summary page template Matc
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
 <div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-column-full\\">
+      
     
-
 
         <form method=\\"post\\" novalidate id=\\"main-content\\">
             <fieldset class=\\"govuk-fieldset\\">
   
-  <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
+  <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-6\\">
   
     <h1 class=\\"govuk-fieldset__heading\\">
-      Licence details
+      View licence applications
     </h1>
   
   </legend>
@@ -176,201 +173,184 @@ exports[`application-licence page application-licence-summary page template Matc
 
 
                 
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-<dl class=\\"govuk-summary-list govuk-!-margin-bottom-9\\">
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Status
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          <strong class=\\"govuk-tag govuk-tag--green govuk-!-margin-top-4\\">GRANTED</strong>
-        </dd>
-        
-      </div>
+<div hidden class=\\"govuk-grid-row\\">
+  <div class=\\"govuk-grid-column-two-thirds\\">
     
   
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Licence type
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          Badger mitigation
-        </dd>
-        
-      </div>
-    
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Licence reference
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          LI-0016N0Z4
-        </dd>
-        
-      </div>
-    
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Licence holder
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          Joe Blogs
-        </dd>
-        
-      </div>
-    
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Site address
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY
-        </dd>
-        
-      </div>
-    
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Valid from
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          10 August 2022
-        </dd>
-        
-      </div>
-    
-  
-    
-      <div class=\\"govuk-summary-list__row\\">
-        <dt class=\\"govuk-summary-list__key\\">
-          Expires
-        </dt>
-        <dd class=\\"govuk-summary-list__value\\">
-          26 August 2022
-        </dd>
-        
-      </div>
-    
-  
-</dl>
 
   
-    
-
-
 
 
 
   
-
   
 
-  
-<div class=\\"govuk-form-group\\">
-
-  <div id=\\"email-or-return-hint\\" class=\\"govuk-hint govuk-label govuk-!-font-weight-bold govuk-!-margin-bottom-4 govuk-!-font-size-24\\">
-    Select an option
+  <div class=\\"govuk-notification-banner govuk-notification-banner--success\\" role=\\"alert\\"
+  aria-labelledby=\\"govuk-notification-banner-title\\"
+  data-module=\\"govuk-notification-banner\\">
+  <div class=\\"govuk-notification-banner__header\\">
+    <h2 class=\\"govuk-notification-banner__title\\" id=\\"govuk-notification-banner-title\\" >
+      Success
+    </h2>
   </div>
-
-
-  <div class=\\"govuk-radios\\">
-    
-      
-          
-        
-        
-        <div class=\\"govuk-radios__item\\">
-          <input class=\\"govuk-radios__input\\" id=\\"email-or-return\\" name=\\"email-or-return\\" type=\\"radio\\" value=\\"email\\">
-          <label class=\\"govuk-label govuk-radios__label\\" for=\\"email-or-return\\">
-        Email a copy of the licence
-      </label>
-          
-        </div>
-        
-        
-      
-    
-      
-        
-        
-        <div class=\\"govuk-radios__item\\">
-          <input class=\\"govuk-radios__input\\" id=\\"email-or-return-2\\" name=\\"email-or-return\\" type=\\"radio\\" value=\\"return\\">
-          <label class=\\"govuk-label govuk-radios__label\\" for=\\"email-or-return-2\\">
-        Submit a report of action
-      </label>
-          
-        </div>
-        
-        
-      
-    
-      
-        
-        
-        <div class=\\"govuk-radios__item\\">
-          <input class=\\"govuk-radios__input\\" id=\\"email-or-return-3\\" name=\\"email-or-return\\" type=\\"radio\\" value=\\"resume\\" aria-describedby=\\"email-or-return-3-item-hint\\">
-          <label class=\\"govuk-label govuk-radios__label\\" for=\\"email-or-return-3\\">
-        Resume previous report of action
-      </label>
-          
-          <div id=\\"email-or-return-3-item-hint\\" class=\\"govuk-hint govuk-radios__hint\\">
-        Created on null
-      </div>
-          
-        </div>
-        
-        
-      
-    
-  </div>
-
+  <div class=\\"govuk-notification-banner__content\\">
+  <p class=\\"govuk-body\\">We use some essential cookies to make this service work.</p>
+  <p class=\\"govuk-body\\">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+</div>
 </div>
 
+  </div>
+</div>
+
+
+
   
+    
+  
+
+<button class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+  New application
+</button>
+
+
+
+
+
+    <div hidden>
+        1
+     </div>
+
+    <div hidden>
+        2
+     </div>
+
+
+
+    <table class=\\"govuk-table\\">
+  
+  
+  <thead class=\\"govuk-table__head\\">
+    <tr class=\\"govuk-table__row\\">
+    
+      <th scope=\\"col\\" class=\\"govuk-table__header\\" colspan=\\"1\\">Application</th>
+    
+      <th scope=\\"col\\" class=\\"govuk-table__header\\" colspan=\\"1\\">Site</th>
+    
+      <th scope=\\"col\\" class=\\"govuk-table__header\\" colspan=\\"1\\">Reference</th>
+    
+      <th scope=\\"col\\" class=\\"govuk-table__header\\" colspan=\\"1\\">Status</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class=\\"govuk-table__body\\">
+    
+      
+        <tr class=\\"govuk-table__row\\">
+        
+          
+          
+          <th scope=\\"row\\" class=\\"govuk-table__header\\"
+          >
+    <p class=\\"govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4\\">
+        
+            <a href=\\"?applicationId=8179c2f2-6eec-43d6-899b-6504d6a1e798\\" class=\\"govuk-link govuk-link--no-visited-state\\">Badger mitigation</a>
+        
+    </p>
+</th>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+  
+    <p></p>
+  
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+
+  <p></p>
+
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+    
+        <strong class=\\"govuk-tag govuk-tag--blue govuk-!-margin-top-4\\">IN PROGRESS</strong>
+    
+</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class=\\"govuk-table__row\\">
+        
+          
+          
+          <th scope=\\"row\\" class=\\"govuk-table__header\\"
+          >
+    <p class=\\"govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4\\">
+        
+            <a href=\\"?applicationId=9179c2f2-6eec-43d6-899b-6504d6a1e798\\" class=\\"govuk-link govuk-link--no-visited-state\\">Badger mitigation</a>
+        
+    </p>
+</th>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+  
+    <p></p>
+  
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+
+  <p></p>
+
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+    
+        <strong class=\\"govuk-tag govuk-tag--blue govuk-!-margin-top-4\\">IN PROGRESS</strong>
+    
+</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+
+
 
 
             
 
 </fieldset>
-
-
-            
-  
-
-
-  
-    
-  
-
-<button name=\\"continue\\" data-prevent-double-click=\\"true\\" class=\\"govuk-button govuk-!-margin-top-5\\" data-module=\\"govuk-button\\" id=\\"continue\\">
-  Continue
-</button>
 
             <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
         </form>

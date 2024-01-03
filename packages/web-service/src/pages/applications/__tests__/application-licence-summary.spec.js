@@ -4,7 +4,7 @@ import path from 'path'
 describe('application-licence page', () => {
   beforeEach(() => jest.resetModules())
 
-  const expectedData = {
+  const testData = {
     applicant: {
       fullName: 'Joe Blogs'
     },
@@ -116,7 +116,7 @@ describe('application-licence page', () => {
 
       const { getData } = await import('../application-licence-summary.js')
       const result = await getData(request)
-      expect(result).toStrictEqual(expectedData)
+      expect(result).toStrictEqual(testData)
     })
   })
 
@@ -124,7 +124,9 @@ describe('application-licence page', () => {
     it('Matches the snapshot', async () => {
       const template = await compileTemplate(path.join(__dirname, '../application-licence-summary.njk'))
 
-      const renderedHtml = template.render(expectedData)
+      const renderedHtml = template.render({
+        data: testData
+      })
 
       expect(renderedHtml).toMatchSnapshot()
     })
