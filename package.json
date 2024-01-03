@@ -70,15 +70,6 @@
       "jest"
     ]
   },
-  "babel": {
-    "env": {
-      "test": {
-        "plugins": [
-          "@babel/plugin-transform-modules-commonjs"
-        ]
-      }
-    }
-  },
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -99,6 +90,10 @@
         "statements": 90
       }
     },
+    "transform": {
+      "^.+\\.m?js$": "babel-jest"
+    },
+    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!(@defra)/).*/"],
     "projects": [
       "<rootDir>/packages/*"
     ],
