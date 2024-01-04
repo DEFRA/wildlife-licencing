@@ -1,10 +1,10 @@
 {
   "name": "@defra/wls-powerapps-lib",
-  "version": "13.1.0-alpha.0",
+  "version": "13.2.0-alpha.0",
   "description": "Powerapps lib",
   "main": "src/powerapps-lib.js",
   "type": "module",
-"private": false,
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
@@ -26,7 +26,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@defra/wls-connectors-lib": "^13.1.0-alpha.0",
+    "@defra/wls-connectors-lib": "^13.2.0-alpha.0",
     "debug": "^4.3.3",
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.3.2",
