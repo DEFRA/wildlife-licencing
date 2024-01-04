@@ -4,7 +4,7 @@
   "description": "Powerapps lib",
   "main": "src/powerapps-lib.js",
   "type": "module",
-  "private": false,
+  "private": true,
   "publishConfig": {
     "access": "public"
   },

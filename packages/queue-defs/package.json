@@ -4,7 +4,7 @@
   "description": "Queue definitions",
   "main": "src/queue-defs.js",
   "type": "module",
-  "private": false,
+  "private": true,
   "publishConfig": {
     "access": "public"
   },

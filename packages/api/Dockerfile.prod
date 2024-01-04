@@ -1,29 +1,12 @@
-####################################################################################################################################
-# Build stage 1 - Create a distribution of the project which we can copy in the second build stage.
-####################################################################################################################################
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-# Install app dependencies
-#COPY package*.json ./
-#COPY . .
-#RUN npm ci --production
-
-#COPY --from=builder /app .
-#COPY --from=builder /app/ /app/
-RUN ls -la
 RUN lerna bootstrap --scope=@defra/wls-api
 
-####################################################################################################################################
-# Build stage 2 - Using the distribution from stage 1, build the final docker image with a minimal number of layers.
-####################################################################################################################################
 FROM wildlife_licensing/base
-#WORKDIR /app
 WORKDIR "app/packages/api"
 COPY --from=builder /app/ /app/
 
-
-# Default service port
 ARG PORT=3000
 EXPOSE ${PORT}
 CMD [ "node", "src/api-service.js" ]
