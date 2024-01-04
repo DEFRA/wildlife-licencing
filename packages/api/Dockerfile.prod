@@ -3,11 +3,7 @@ WORKDIR /app
 
 RUN ls -la
 
-RUN cd packages
-
-RUN ls -la
-
-RUN cd ..
+RUN cd packages && ls -la
 
 RUN lerna bootstrap --scope=@defra/wls-api
 
