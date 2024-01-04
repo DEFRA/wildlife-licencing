@@ -1,6 +1,6 @@
 {
   "name": "@defra/wls-powerapps-keys",
-  "version": "12.3.17-alpha.0",
+  "version": "13.0.0-alpha.0",
   "description": "Powerapps keys",
   "main": "keys/keys.js",
   "type": "module",
