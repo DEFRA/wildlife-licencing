@@ -1,7 +1,7 @@
 describe('The habitat work end page', () => {
   beforeEach(() => {
     jest.resetModules()
-    jest.setSystemTime(new Date('2023-01-01'))
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-01'))
   })
 
   describe('the checkData function', () => {
