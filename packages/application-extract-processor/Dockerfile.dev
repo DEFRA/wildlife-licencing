@@ -4,7 +4,6 @@ WORKDIR /app
 RUN lerna bootstrap --scope=@defra/wls-application-extract-processor
 
 FROM wildlife_licensing/base
-
 WORKDIR "/app/packages/application-extract-processor"
 COPY --from=builder /app/ /app/
 

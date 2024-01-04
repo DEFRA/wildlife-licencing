@@ -33,13 +33,16 @@
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
-    "docker:build": "docker-compose -f docker/services.build.yml build --no-cache",
-    "docker:start-services": "docker-compose -f docker/services.yml up -d",
-    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
-    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
-    "docker:stop": "docker stack rm wls",
     "lint": "standard",
-    "lint:fix": "standard --fix"
+    "lint:fix": "standard --fix",
+    "docker:build-base": "sh Docker-build-base.sh",
+    "docker:build-services": "docker-compose -f docker/services.build.yml build --no-cache",
+    "docker:start-services": "docker-compose -f docker/services.yml up -d",
+    "docker:stop-services": "docker-compose -f docker/services.yml down",
+    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
+    "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
+    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
+    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down"
   },
   "standard": {
     "env": {

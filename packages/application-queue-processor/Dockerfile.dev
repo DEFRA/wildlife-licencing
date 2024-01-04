@@ -5,5 +5,6 @@ RUN lerna bootstrap --scope=@defra/wls-application-queue-processor
 
 FROM wildlife_licensing/base
 WORKDIR /app/packages/application-queue-processor
+COPY --from=builder /app/ /app/
 
 CMD [ "node", "src/application-queue-processor.js" ]
