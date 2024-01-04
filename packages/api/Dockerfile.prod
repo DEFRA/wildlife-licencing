@@ -3,6 +3,12 @@ WORKDIR /app
 
 RUN ls -la
 
+RUN cd packages
+
+RUN ls -la
+
+RUN cd ..
+
 RUN lerna bootstrap --scope=@defra/wls-api
 
 FROM wildlife_licensing/base
