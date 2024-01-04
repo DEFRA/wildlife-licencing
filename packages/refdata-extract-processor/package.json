@@ -4,7 +4,7 @@
   "description": "Interface to Microsoft Dynamics. Extract processor for reference data.",
   "main": "src/processor.js",
   "type": "module",
-  "private": true,
+"private": false,
   "publishConfig": {
     "access": "public"
   },

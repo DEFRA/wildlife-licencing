@@ -3,7 +3,7 @@
   "version": "13.1.0-alpha.0",
   "description": "A library extracting the various connectivity functions for the wildlife service",
   "type": "module",
-  "private": true,
+"private": false,
   "publishConfig": {
     "access": "public"
   },

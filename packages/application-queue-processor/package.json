@@ -4,7 +4,7 @@
   "description": "Interface to Microsoft Dynamics. Queue consumer.",
   "main": "src/application-queue-processor.js",
   "type": "module",
-  "private": true,
+"private": false,
   "publishConfig": {
     "access": "public"
   },
