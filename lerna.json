@@ -13,7 +13,8 @@
         "master",
         "develop",
         "feature/IDM",
-        "feature/IDM-update-long-lived-branch"
+        "feature/IDM-update-long-lived-branch",
+        "ci/monorepo-docker-build "
       ],
       "message": "chore(release): publish %s"
     },

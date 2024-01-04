@@ -4,7 +4,7 @@
   "description": "Common sequelize database model for the wildlife service",
   "main": "src/sequelize-model.js",
   "type": "module",
-  "private": false,
+  "private": true,
   "publishConfig": {
     "access": "public"
   },
