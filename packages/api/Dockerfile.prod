@@ -5,6 +5,8 @@ RUN ls -la
 
 RUN cd packages && ls -la
 
+
+
 RUN lerna bootstrap --scope=@defra/wls-api
 
 FROM wildlife_licensing/base

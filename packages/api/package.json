@@ -4,7 +4,7 @@
   "description": "The API to support the wildlife licencing of European Protected Species",
   "main": "src/api-service.js",
   "type": "module",
-  "private": true,
+"private": false,
   "publishConfig": {
     "access": "public"
   },
