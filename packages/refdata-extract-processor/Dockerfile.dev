@@ -1,11 +1,11 @@
-########################################################################################
-# Create a docker image for the wildlife licencing queue processor
-########################################################################################
-FROM node:16.13.0-alpine
+FROM wildlife_licensing/builder AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
+
+RUN lerna bootstrap --scope=@defra/wls-refdata-extract-processor
+
+FROM wildlife_licensing/base
+WORKDIR "/app/packages/refdata-extract-processor"
+COPY --from=builder /app/ /app/
 
 USER root
 RUN chmod +x entrypoint.sh

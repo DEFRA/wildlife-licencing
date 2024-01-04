@@ -33,9 +33,10 @@
     "format": "standard",
     "lerna:clean": "lerna clean --yes",
     "lerna:bootstrap": "lerna bootstrap",
-    "docker:build": "docker-compose -f docker/services.build.yml build",
-    "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
-    "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
+    "docker:build": "docker-compose -f docker/services.build.yml build --no-cache",
+    "docker:start-services": "docker-compose -f docker/services.yml up -d",
+    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
+    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
     "docker:stop": "docker stack rm wls",
     "lint": "standard",
     "lint:fix": "standard --fix"
