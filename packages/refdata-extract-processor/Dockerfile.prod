@@ -1,7 +1,8 @@
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-RUN lerna bootstrap --scope=@defra/wls-refdata-extract-processor
+RUN lerna link --force-local
+RUN lerna bootstrap --force-local --scope=@defra/wls-refdata-extract-processor
 
 FROM wildlife_licensing/base
 WORKDIR "/app/packages/refdata-extract-processor"
