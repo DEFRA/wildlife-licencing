@@ -1,7 +1,8 @@
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-RUN lerna bootstrap --scope=@defra/wls-eps-web-service
+RUN lerna link --force-local
+RUN lerna bootstrap --force-local --scope=@defra/wls-eps-web-service
 
 FROM wildlife_licensing/base
 WORKDIR "/app/packages/web-service"
