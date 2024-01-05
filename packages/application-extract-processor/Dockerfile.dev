@@ -1,7 +1,7 @@
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-RUN lerna bootstrap --scope=@defra/wls-application-extract-processor
+RUN npm ci
 
 FROM wildlife_licensing/base
 WORKDIR "/app/packages/application-extract-processor"

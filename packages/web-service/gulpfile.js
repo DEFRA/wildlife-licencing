@@ -18,11 +18,13 @@ import concat from 'gulp-concat'
 
 const sass = gulpSass(s)
 
+const nodeModulesPath = '../../node_modules'
+
 const paths = {
   assets: 'assets/',
   public: 'public/',
-  govUk: path.join('node_modules', 'govuk-frontend', 'govuk/'),
-  autocompleteAssets: path.join('node_modules', 'accessible-autocomplete', '/dist/{*.js,*.js.map}')
+  govUk: path.join(nodeModulesPath, 'govuk-frontend', 'govuk/'),
+  autocompleteAssets: path.join(nodeModulesPath, 'accessible-autocomplete', '/dist/{*.js,*.js.map}')
 }
 
 Object.assign(paths, {
@@ -67,7 +69,7 @@ const buildSass = () => {
     .pipe(sourcemaps.init())
     .pipe(sass({
       outputStyle: 'compressed', // 'compressed' or 'expanded' for human-readable
-      includePaths: path.join('..', 'node_modules')
+      includePaths: path.join('..', nodeModulesPath)
     }).on('error', sass.logError))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(`${paths.public}stylesheets/`))

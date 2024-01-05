@@ -1,12 +1,7 @@
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-RUN ls -la
-
-RUN cd packages && ls -la
-
-RUN lerna link --force-local
-RUN lerna bootstrap --force-local --scope=@defra/wls-api
+RUN npm ci
 
 FROM wildlife_licensing/base
 WORKDIR "app/packages/api"

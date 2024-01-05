@@ -9,7 +9,7 @@ RUN mkdir -p /app
 RUN npm config set loglevel error \
     && npm config set audit false
 
-RUN npm install --global lerna@6
+#RUN npm install --global lerna@6
 
 WORKDIR /app
 

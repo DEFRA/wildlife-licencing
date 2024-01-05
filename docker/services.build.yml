@@ -8,11 +8,11 @@ services:
   # The development version of the service runs the webpack post-process to install the
   # Open API browser
   ##############################################################################################################
-  api:
-    image: wildlife-licencing/api:${TAG:-latest}
-    build:
-      context: ../packages/api
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  api:
+#    image: wildlife-licencing/api:${TAG:-latest}
+#    build:
+#      context: ../packages/api
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application queue processor

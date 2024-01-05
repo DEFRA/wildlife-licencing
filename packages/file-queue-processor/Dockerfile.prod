@@ -1,8 +1,7 @@
 FROM wildlife_licensing/builder AS builder
 WORKDIR /app
 
-RUN lerna link --force-local
-RUN lerna bootstrap --force-local --scope=@defra/wls-application-queue-processor
+RUN npm ci
 
 FROM wildlife_licensing/base
 WORKDIR /app/packages/file-queue-processor

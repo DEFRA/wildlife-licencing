@@ -4,6 +4,9 @@
   "engines": {
     "node": ">=16.13.0"
   },
+  "workspaces": [
+    "./packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:DEFRA/wildlife-licencing.git"
@@ -25,7 +28,6 @@
     "standard": "^16.0.4"
   },
   "scripts": {
-    "postinstall": "npm run lerna:bootstrap",
     "test": "jest",
     "test-clear": "jest --clearCache",
     "test:only-changed": "jest --changedSince master",
