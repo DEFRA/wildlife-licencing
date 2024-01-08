@@ -33,8 +33,6 @@
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
     "format": "standard",
-    "lerna:clean": "lerna clean --yes",
-    "lerna:bootstrap": "lerna bootstrap",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "docker:build-base": "sh Docker-build-base.sh",
