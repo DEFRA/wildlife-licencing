@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The remove licence page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -23,6 +26,18 @@ describe('The remove licence page', () => {
       }
       const { getData } = await import('../remove-licence.js')
       expect(await getData(request)).toBe('A1234')
+    })
+  })
+
+  describe('The remove licence page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../remove-licence.njk'))
+
+      const renderedHtml = template.render({
+        data: 'A1234'
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 
 describe('The habitat active entrances page', () => {
   beforeEach(() => jest.resetModules())
@@ -306,6 +308,18 @@ describe('The habitat active entrances page', () => {
       })
       const { validator } = await import('../habitat-active-entrances.js')
       expect(await validator(payload, context)).toBe(undefined)
+    })
+  })
+
+  describe('The habitat active entrances template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../habitat-active-entrances.njk'))
+
+      const renderedHtml = template.render({
+        data: { numberOfActiveEntrances: 22 }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

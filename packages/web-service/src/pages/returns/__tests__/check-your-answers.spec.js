@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the check your answers functions', () => {
@@ -69,6 +72,41 @@ describe('the check your answers functions', () => {
           }
         ]
       })
+    })
+  })
+
+  describe('the returns check your answers template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../returns-check.njk'))
+
+      const renderedHtml = template.render({
+        data: {
+          nilReturn: false,
+          completedWithinLicenceDates: true,
+          destroyDate: null,
+          outcome: false,
+          whyNil: undefined,
+          obstructionBlockingOrProofing: true,
+          obstructionBlockingOrProofingDetails: 'carried out',
+          endDate: null,
+          startDate: null,
+          licenceEndDate: '26 August 2022',
+          licenceStartDate: '10 August 2022',
+          noArtificialSettReason: undefined,
+          uploadedFiles: [
+            {
+              applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',
+              id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+              filetype: 'METHOD-STATEMENT',
+              updatedAt: '2022-03-25T14:10:14.861Z',
+              createdAt: '2022-03-25T14:10:14.861Z',
+              uploadedDate: '25 March 2022'
+            }
+          ]
+        }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })
