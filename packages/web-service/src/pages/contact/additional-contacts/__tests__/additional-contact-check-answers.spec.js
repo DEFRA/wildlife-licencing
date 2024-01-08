@@ -1,5 +1,47 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('add additional contact check page', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = {
+    applicant: [
+      {
+        key: 'addAdditionalApplicant',
+        value: 'yes'
+      },
+      {
+        key: 'applicantIsUser',
+        value: 'yes'
+      },
+      {
+        key: 'applicantName',
+        value: 'Van Morrison'
+      },
+      {
+        key: 'applicantEmail',
+        value: 'van.morrison@chieftons.ire'
+      }
+    ],
+    ecologist: [
+      {
+        key: 'addAdditionalEcologist',
+        value: 'yes'
+      },
+      {
+        key: 'ecologistIsUser',
+        value: 'yes'
+      },
+      {
+        key: 'ecologistName',
+        value: 'Van Morrison'
+      },
+      {
+        key: 'ecologistEmail',
+        value: 'van.morrison@chieftons.ire'
+      }
+    ]
+  }
 
   describe('getData', () => {
     it('fetches the required data', async () => {
@@ -40,43 +82,18 @@ describe('add additional contact check page', () => {
       }
       const { getData } = await import('../additional-contact-check-answers.js')
       const result = await getData(request)
-      expect(result).toEqual({
-        applicant: [
-          {
-            key: 'addAdditionalApplicant',
-            value: 'yes'
-          },
-          {
-            key: 'applicantIsUser',
-            value: 'yes'
-          },
-          {
-            key: 'applicantName',
-            value: 'Van Morrison'
-          },
-          {
-            key: 'applicantEmail',
-            value: 'van.morrison@chieftons.ire'
-          }
-        ],
-        ecologist: [
-          {
-            key: 'addAdditionalEcologist',
-            value: 'yes'
-          },
-          {
-            key: 'ecologistIsUser',
-            value: 'yes'
-          },
-          {
-            key: 'ecologistName',
-            value: 'Van Morrison'
-          },
-          {
-            key: 'ecologistEmail',
-            value: 'van.morrison@chieftons.ire'
-          }
-        ]
+      expect(result).toEqual(testData)
+    })
+
+    describe('add additional contact check page template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../additional-contact-check-answers.njk'))
+
+        const renderedHtml = template.render({
+          data: testData
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
       })
     })
 

@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('conviction details page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the detailsOfConvictions of a conviction', async () => {
@@ -20,6 +23,18 @@ describe('conviction details page handler', () => {
 
     const { getData } = await import('../conviction-details/conviction-details.js')
     expect(await getData(request)).toStrictEqual({ detailsOfConvictions: 'conviction' })
+  })
+
+  describe('conviction details page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../conviction-details/conviction-details.njk'))
+
+      const renderedHtml = template.render({
+        data: { detailsOfConvictions: 'conviction' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
   })
 
   it('setData - update application with details of convictions', async () => {
