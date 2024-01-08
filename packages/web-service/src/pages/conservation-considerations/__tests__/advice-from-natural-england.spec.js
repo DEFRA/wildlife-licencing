@@ -1,3 +1,6 @@
+import { compileTemplate } from '../../../initialise-snapshot-tests'
+import path from 'path'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the advice from natural england function functions', () => {
@@ -31,6 +34,18 @@ describe('the advice from natural england function functions', () => {
       const { getData } = await import('../advice-from-natural-england.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
+    })
+  })
+
+  describe('advice from natual england page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../advice-from-natural-england.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'yes' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

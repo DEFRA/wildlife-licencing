@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
 import { eligibilityURIs, LOGIN, TASKLIST } from '../../../uris.js'
 
 const {
@@ -32,6 +34,18 @@ describe('the eligibility pages', () => {
     const { getData } = await import('../eligibility.js')
     const result = await getData('question')(request)
     expect(result).toEqual({ yesNo: 'yes' })
+  })
+
+  describe('the eligibility page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../eligible.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'yes' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
   })
 
   describe('the setData function', () => {

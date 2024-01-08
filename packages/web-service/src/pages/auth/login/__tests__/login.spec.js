@@ -1,5 +1,20 @@
+import { compileTemplate } from '../../../../initialise-snapshot-tests'
+import path from 'path'
+
 describe('login page', () => {
   beforeEach(() => jest.resetModules())
+
+  describe('login page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../login.njk'))
+
+      const renderedHtml = template.render({
+        data: {}
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
+  })
 
   describe('the setData', () => {
     it('submits the user to the authorization cache', async () => {

@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the details of permission functions', () => {
@@ -31,6 +34,18 @@ describe('the details of permission functions', () => {
       const { getData } = await import('../details-of-permission.js')
       const result = await getData(request)
       expect(result).toEqual({ 'permission-details': 'STRING' })
+    })
+  })
+
+  describe('details-of-permission page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../details-of-permission.njk'))
+
+      const renderedHtml = template.render({
+        data: { 'permission-details': 'STRING' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

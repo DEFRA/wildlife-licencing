@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('the declaration-application handler function', () => {
   beforeEach(() => jest.resetModules())
 
@@ -122,5 +125,17 @@ describe('the declaration-application handler function', () => {
       expect(mockGetData).toHaveBeenCalledTimes(1)
       expect(mockSubmit).toHaveBeenCalledWith('35a6c59e-0faf-438b-b4d5-6967d8d075cb')
     })
+  })
+})
+
+describe('the declaration-application page template', () => {
+  it('Matches the snapshot', async () => {
+    const template = await compileTemplate(path.join(__dirname, '../declaration.njk'))
+
+    const renderedHtml = template.render({
+      data: {}
+    })
+
+    expect(renderedHtml).toMatchSnapshot()
   })
 })
