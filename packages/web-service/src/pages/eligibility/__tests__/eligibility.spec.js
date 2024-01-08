@@ -38,7 +38,7 @@ describe('the eligibility pages', () => {
 
   describe('the eligibility page template', () => {
     it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../eligibility.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../eligible.njk'))
 
       const renderedHtml = template.render({
         data: { yesNo: 'yes' }
