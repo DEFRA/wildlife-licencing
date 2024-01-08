@@ -2,11 +2,8 @@
   "packages": [
     "packages/*"
   ],
-  "version": "13.2.2",
+  "version": "13.3.1",
   "npmClient": "npm",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "command": {
     "version": {
       "allowBranch": [
@@ -17,18 +14,6 @@
         "ci/monorepo-docker-build "
       ],
       "message": "chore(release): publish %s"
-    },
-    "publish": {
-      "message": "chore(release): publish %s",
-      "allowBranch": [
-        "master",
-        "develop",
-        "feature/IDM"
-      ],
-      "ignoreChanges": [
-        ".*",
-        "docker/*"
-      ]
     }
   }
 }

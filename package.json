@@ -22,7 +22,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
-    "lerna": "^4.0.0",
+    "lerna": "^8.0.2",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
@@ -33,8 +33,6 @@
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
     "format": "standard",
-    "lerna:clean": "lerna clean --yes",
-    "lerna:bootstrap": "lerna bootstrap",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "docker:build-base": "sh Docker-build-base.sh",
@@ -44,7 +42,8 @@
     "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
     "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
     "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
-    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down"
+    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
+    "version": "lerna version --force-publish"
   },
   "standard": {
     "env": {
