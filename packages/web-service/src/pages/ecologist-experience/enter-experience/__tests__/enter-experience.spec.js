@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
 
 describe('The enter experience page', () => {
   beforeEach(() => jest.resetModules())
@@ -146,6 +148,18 @@ describe('The enter experience page', () => {
           value: 'javascript: window.history.go(-1)'
         }
       })
+    })
+  })
+
+  describe('The enter experience page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../enter-experience.njk'))
+
+      const renderedHtml = template.render({
+        data: 'hello people'
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

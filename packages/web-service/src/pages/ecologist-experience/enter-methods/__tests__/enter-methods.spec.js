@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The enter methods page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -123,6 +126,18 @@ describe('The enter methods page', () => {
         },
         data: 'hello world'
       })
+    })
+  })
+
+  describe('The enter methods page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../enter-methods.njk'))
+
+      const renderedHtml = template.render({
+        data: {}
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })
