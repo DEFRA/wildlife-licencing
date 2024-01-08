@@ -9,10 +9,12 @@ const viewsPath = path.join(__dirname, './pages')
 
 const pagesViewPaths = [...new Set(find.fileSync(/\.njk$/, viewsPath).map(f => path.dirname(f)))]
 
+const NODE_MODULES_PATH = '../node_modules'
+
 const paths = [
-  path.join(__dirname, '../node_modules', GOVUK_FRONTEND),
-  path.join(__dirname, '../node_modules', GOVUK_FRONTEND, 'govuk'),
-  path.join(__dirname, '../node_modules', GOVUK_FRONTEND, 'govuk', 'components'),
+  path.join(__dirname, NODE_MODULES_PATH, GOVUK_FRONTEND),
+  path.join(__dirname, NODE_MODULES_PATH, GOVUK_FRONTEND, 'govuk'),
+  path.join(__dirname, NODE_MODULES_PATH, GOVUK_FRONTEND, 'govuk', 'components'),
   path.join(__dirname, 'pages/layout'),
   path.join(__dirname, 'pages/macros'),
   ...pagesViewPaths
