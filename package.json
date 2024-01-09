@@ -1,32 +1,13 @@
 {
   "name": "wildlife-licencing-service",
   "type": "module",
+  "version": "13.4.0-alpha.0",
   "engines": {
     "node": ">=16.13.0"
   },
   "workspaces": [
     "./packages/*"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:DEFRA/wildlife-licencing.git"
-  },
-  "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
-    "eslint": "^8.47.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-jest": "^25.2.4",
-    "eslint-plugin-n": "^16.0.1",
-    "eslint-plugin-promise": "^6.1.1",
-    "jest": "^27.3.1",
-    "jest-circus": "^27.3.1",
-    "lerna": "^8.0.2",
-    "nodemon": "^3.0.1",
-    "nunjucks": "^3.2.3",
-    "standard": "^16.0.4"
-  },
   "scripts": {
     "test": "jest",
     "test-clear": "jest --clearCache",
@@ -43,7 +24,29 @@
     "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
     "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
     "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
-    "version": "lerna version --force-publish"
+    "prerelease:patch": "npm version prepatch --preid=alpha ",
+    "prerelease:minor": "npm version preminor --preid=alpha ",
+    "prerelease:major": "npm version premajor --preid=alpha ",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DEFRA/wildlife-licencing.git"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "eslint": "^8.47.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-jest": "^25.2.4",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^27.3.1",
+    "jest-circus": "^27.3.1",
+    "nodemon": "^3.0.1",
+    "nunjucks": "^3.2.3",
+    "standard": "^16.0.4"
   },
   "standard": {
     "env": {
