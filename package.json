@@ -8,6 +8,25 @@
   "workspaces": [
     "./packages/*"
   ],
+  "scripts": {
+    "test": "jest",
+    "test-clear": "jest --clearCache",
+    "test:only-changed": "jest --changedSince master",
+    "test:watch": "jest --watch",
+    "format": "standard",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "docker:build-base": "sh Docker-build-base.sh",
+    "docker:build-services": "docker-compose -f docker/services.build.yml build --no-cache",
+    "docker:start-services": "docker-compose -f docker/services.yml up -d",
+    "docker:stop-services": "docker-compose -f docker/services.yml down",
+    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
+    "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
+    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
+    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
+    "prerelease:patch": "npm version prepatch --preid=omega ",
+    "postversion": "git push && git push --tags"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:DEFRA/wildlife-licencing.git"
@@ -27,25 +46,6 @@
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
-  },
-  "scripts": {
-    "test": "jest",
-    "test-clear": "jest --clearCache",
-    "test:only-changed": "jest --changedSince master",
-    "test:watch": "jest --watch",
-    "format": "standard",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
-    "docker:build-base": "sh Docker-build-base.sh",
-    "docker:build-services": "docker-compose -f docker/services.build.yml build --no-cache",
-    "docker:start-services": "docker-compose -f docker/services.yml up -d",
-    "docker:stop-services": "docker-compose -f docker/services.yml down",
-    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
-    "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
-    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
-    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
-    "prerelease:patch": "npm version patch && npm version prerelease --preid=aplha ",
-    "postversion": "git push && git push --tags"
   },
   "standard": {
     "env": {
