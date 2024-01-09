@@ -25,6 +25,8 @@
     "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
     "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
     "prerelease:patch": "npm version prepatch --preid=omega ",
+    "prerelease:minor": "npm version preminor --preid=omega ",
+    "prerelease:major": "npm version premajor --preid=omega ",
     "postversion": "git push && git push --tags"
   },
   "repository": {
