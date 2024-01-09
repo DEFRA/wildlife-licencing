@@ -1,6 +1,7 @@
 {
   "name": "wildlife-licencing-service",
   "type": "module",
+  "version": "0.0.1",
   "engines": {
     "node": ">=16.13.0"
   },
@@ -43,7 +44,7 @@
     "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
     "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
     "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
-    "release:patch": "npm version patch",
+    "prerelease:patch": "npm version patch && npm version prerelease --preid=aplha ",
     "postversion": "git push && git push --tags"
   },
   "standard": {
@@ -110,6 +111,5 @@
     "testEnvironment": "node",
     "testRunner": "jest-circus/runner",
     "silent": true
-  },
-  "version": "0.0.1"
+  }
 }
