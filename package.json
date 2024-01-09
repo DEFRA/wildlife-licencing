@@ -43,7 +43,8 @@
     "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
     "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
     "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
-    "version": "lerna version --force-publish"
+    "release:patch": "npm version patch",
+    "postversion": "git push && git push --tags"
   },
   "standard": {
     "env": {
