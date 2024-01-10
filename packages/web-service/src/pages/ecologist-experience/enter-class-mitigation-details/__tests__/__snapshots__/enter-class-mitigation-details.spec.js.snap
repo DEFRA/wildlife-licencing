@@ -117,11 +117,8 @@ exports[`The enter class mitigation details page The enter class mitigation deta
       <div class=\\"govuk-header__content\\">
         <a href=\\"\\" class=\\"govuk-header__link govuk-header__link--service-name\\">Apply for a licence to do work that affects a protected species</a>
         
-          <a class=\\"govuk-header__link signout-link\\" href=\\"\\">
-            Sign in
-          </a>
+          <a class=\\"govuk-header__link signout-link\\" href=\\"\\">Sign in</a>
         
-
       </div>
     </div>
   </header>
