@@ -8,7 +8,7 @@ import { moveTagInProgress } from '../../common/tag-functions.js'
 import { accountOperations, contactOperations } from '../common/operations.js'
 import { checkApplication } from '../../common/check-application.js'
 
-const { RESPONSIBLE, CONTACT_DETAILS, NAMES, NAME } = contactURIs.INVOICE_PAYER
+const { RESPONSIBLE, CONTACT_DETAILS, NAME } = contactURIs.INVOICE_PAYER
 
 export const checkData = async (request, h) => {
   const { applicationId } = await request.cache().getData()
@@ -49,7 +49,7 @@ export const getData = async request => {
 }
 
 export const setData = async request => {
-  const { applicationId, userId } = await request.cache().getData()
+  const { applicationId } = await request.cache().getData()
   switch (request.payload.responsible) {
     case 'applicant': {
       const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(applicationId)

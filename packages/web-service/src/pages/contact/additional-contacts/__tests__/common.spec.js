@@ -1,6 +1,5 @@
 import { ContactRoles } from '../../common/contact-roles.js'
 import { contactURIs } from '../../../../uris.js'
-import { setCheckAnswersCompletion } from '../../common/check-answers/check-answers.js'
 
 describe('additional-contacts: common', () => {
   beforeEach(() => {
