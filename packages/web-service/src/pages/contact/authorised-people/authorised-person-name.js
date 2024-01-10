@@ -11,7 +11,7 @@ const { NAME } = contactURIs.AUTHORISED_PEOPLE
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()
-  const { userId, applicationId } = journeyData
+  const { applicationId } = journeyData
 
   const params = new URLSearchParams(request.query)
   const id = params.get('id')
