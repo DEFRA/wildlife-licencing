@@ -16,6 +16,8 @@ import { plugins } from './plugins.js'
 import { defraIdmCallbackPreAuth } from './handlers/defra-idm-callback.js'
 const debug = db('web-service:server')
 
+const nodeModulesPath = '/../../node_modules/'
+
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
 /**
@@ -91,9 +93,9 @@ const init = async server => {
     isCached: process.env.NODE_ENV !== 'development',
 
     path: [
-      path.join(__dirname, '/../../node_modules/', GOVUK_FRONTEND),
-      path.join(__dirname, '/../../node_modules/', GOVUK_FRONTEND, 'govuk'),
-      path.join(__dirname, '/../../node_modules/', GOVUK_FRONTEND, 'govuk', 'components'),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk'),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk', 'components'),
       path.join(__dirname, 'src/pages/layout'),
       path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths
