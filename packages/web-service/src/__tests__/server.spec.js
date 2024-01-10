@@ -18,7 +18,6 @@ describe('the WEB server', () => {
         return ({ init: () => Promise.resolve() })
       }))
 
-
       const { addDefaultHeaders } = await import('../server.js')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({
