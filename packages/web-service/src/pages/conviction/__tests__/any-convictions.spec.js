@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('Any convictions page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns there are convictions', async () => {
@@ -52,6 +55,18 @@ describe('Any convictions page handler', () => {
     const { getData } = await import('../any-conviction/any-convictions.js')
     await getData(request)
     expect(mockTagFn).toHaveBeenCalledWith('2342fce0-3067-4ca5-ae7a-23cae648e45c', 'declare-convictions')
+  })
+
+  describe('Any convictions page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../any-conviction/any-convictions.njk'))
+
+      const renderedHtml = template.render({
+        data: {}
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
   })
 
   it('getData returns there are no any convictions', async () => {

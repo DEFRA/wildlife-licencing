@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The class mitigation page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -69,6 +72,18 @@ describe('The class mitigation page', () => {
       const { getData } = await import('../class-mitigation.js')
       const result = await getData(request)
       expect(result).toEqual(null)
+    })
+  })
+
+  describe('The class mitigation page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../class-mitigation.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'yes' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

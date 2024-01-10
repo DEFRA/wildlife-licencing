@@ -1,5 +1,49 @@
+import { compileTemplate } from '../../../initialise-snapshot-tests'
+import path from 'path'
+
 describe('application-licence page', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = {
+    applicant: {
+      fullName: 'Joe Blogs'
+    },
+    application: {
+      applicationType: 'A24',
+      applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+      id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+      siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY'
+    },
+    applicationLicence: {
+      applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+      endDate: '26 August 2022',
+      id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+      lastSent: '9 June 2023',
+      licenceNumber: 'LI-0016N0Z4',
+      startDate: '10 August 2022',
+      annotations: [
+        {
+          filename: '2023-1253092-WLM-LIC-licence document.pdf',
+          mimetype: 'application/pdf',
+          modifiedOn: '2023-06-09T16:09:06Z',
+          objectTypeCode: 'sdds_license'
+        }
+      ]
+    },
+    lastLicenceReturn: {
+      createdAtFormatted: null,
+      id: '1'
+    },
+    licenceStatuses: {
+      1: 'ACTIVE',
+      100000000: 'DRAFT',
+      452120001: 'EXPIRED_ROA_DUE',
+      452120002: 'GRANTED_ROA_RECEIVED',
+      452120003: 'EXPIRED_ROA_RECEIVED',
+      452120004: 'EXPIRED_ROA_RECEIVED_LATE'
+    },
+    lastSentEventFlag: true
+  }
 
   describe('getData', () => {
     it('looks-up the application and applicant and performs the necessary transformation', async () => {
@@ -72,46 +116,19 @@ describe('application-licence page', () => {
 
       const { getData } = await import('../application-licence-summary.js')
       const result = await getData(request)
-      expect(result).toStrictEqual({
-        applicant: {
-          fullName: 'Joe Blogs'
-        },
-        application: {
-          applicationType: 'A24',
-          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
-          id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY'
-        },
-        applicationLicence: {
-          applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
-          endDate: '26 August 2022',
-          id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
-          lastSent: '9 June 2023',
-          licenceNumber: 'LI-0016N0Z4',
-          startDate: '10 August 2022',
-          annotations: [
-            {
-              filename: '2023-1253092-WLM-LIC-licence document.pdf',
-              mimetype: 'application/pdf',
-              modifiedOn: '2023-06-09T16:09:06Z',
-              objectTypeCode: 'sdds_license'
-            }
-          ]
-        },
-        lastLicenceReturn: {
-          createdAtFormatted: null,
-          id: '1'
-        },
-        licenceStatuses: {
-          1: 'ACTIVE',
-          100000000: 'DRAFT',
-          452120001: 'EXPIRED_ROA_DUE',
-          452120002: 'GRANTED_ROA_RECEIVED',
-          452120003: 'EXPIRED_ROA_RECEIVED',
-          452120004: 'EXPIRED_ROA_RECEIVED_LATE'
-        },
-        lastSentEventFlag: true
+      expect(result).toStrictEqual(testData)
+    })
+  })
+
+  describe('application-licence-summary page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../application-licence-summary.njk'))
+
+      const renderedHtml = template.render({
+        data: testData
       })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

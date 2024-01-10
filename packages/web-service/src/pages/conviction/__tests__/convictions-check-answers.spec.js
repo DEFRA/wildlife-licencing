@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('convictions check answers page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns with yes convictions choice and details of conviction', async () => {
@@ -62,6 +65,18 @@ describe('convictions check answers page handler', () => {
     const { getData } = await import('../convictions-check-answers/convictions-check-answers.js')
     expect(await getData(request)).toStrictEqual([{ key: 'isAnyConviction', value: 'No' }])
     expect(mockSet).toHaveBeenCalledWith({ tag: 'declare-convictions', tagState: 'complete-not-confirmed' })
+  })
+
+  describe('convictions check answers page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../convictions-check-answers/convictions-check-answers.njk'))
+
+      const renderedHtml = template.render({
+        data: [{ key: 'isAnyConviction', value: 'No' }]
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
   })
 
   it('should be redirected to enter the details of convictions when there are convictions', async () => {

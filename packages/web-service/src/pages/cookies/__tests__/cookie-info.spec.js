@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('cookie-info page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -30,6 +33,18 @@ describe('cookie-info page', () => {
       const { getData } = await import('../cookie-info.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'no' })
+    })
+
+    describe('cookie-info page template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../cookie-info.njk'))
+
+        const renderedHtml = template.render({
+          data: { yesNo: 'no' }
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
+      })
     })
 
     it('returns the cookie preference from the database', async () => {
