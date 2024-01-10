@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The previous licence page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -326,6 +329,18 @@ describe('The previous licence page', () => {
       const { checkData } = await import('../previous-licence.js')
       await checkData(request, h)
       expect(mockRedirect).toHaveBeenCalledWith('/licence')
+    })
+  })
+
+  describe('The previous licence page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../previous-licence.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'no' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

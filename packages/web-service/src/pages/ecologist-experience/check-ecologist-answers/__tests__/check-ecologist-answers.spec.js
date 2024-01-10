@@ -1,5 +1,27 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The check ecologist answers page', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = [
+    {
+      key: 'previousLicence',
+      value: 'no'
+    },
+    {
+      key: 'experienceDetails',
+      value: 'experience'
+    },
+    {
+      key: 'methodExperience',
+      value: 'methods'
+    },
+    {
+      key: 'classMitigation',
+      value: 'no'
+    }
+  ]
 
   describe('get data function', () => {
     it('gets the experience data from the database', async () => {
@@ -100,24 +122,19 @@ describe('The check ecologist answers page', () => {
       }
       const { getData } = await import('../check-ecologist-answers.js')
       const result = await getData(request)
-      expect(result).toEqual([
-        {
-          key: 'previousLicence',
-          value: 'no'
-        },
-        {
-          key: 'experienceDetails',
-          value: 'experience'
-        },
-        {
-          key: 'methodExperience',
-          value: 'methods'
-        },
-        {
-          key: 'classMitigation',
-          value: 'no'
-        }
-      ])
+      expect(result).toEqual(testData)
+    })
+  })
+
+  describe('the declaration-application page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../check-ecologist-answers.njk'))
+
+      const renderedHtml = template.render({
+        data: testData
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

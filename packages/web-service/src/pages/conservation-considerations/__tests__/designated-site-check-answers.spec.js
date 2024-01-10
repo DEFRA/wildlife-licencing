@@ -1,8 +1,52 @@
+import { compileTemplate } from '../../../initialise-snapshot-tests'
+import path from 'path'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the sssi check answers functions', () => {
   beforeEach(() => jest.resetModules())
 
+  const testData = {
+    checkData: [
+      {
+        id: '344be97d-c928-4753-ae09-f8944ad9f228',
+        tabData: [
+          {
+            key: 'siteName',
+            value: 'Ribble Estuary SSSI'
+          },
+          {
+            key: 'permissionFromOwner',
+            value: 'yes'
+          },
+          {
+            key: 'detailsOfPermission',
+            value: 'DETAILS'
+          },
+          {
+            key: 'adviceFromNaturalEngland',
+            value: 'yes'
+          },
+          {
+            key: 'adviceFromWho',
+            value: 'ADVICE_WHO'
+          },
+          {
+            key: 'adviceDescription',
+            value: 'ADVICE_DESC'
+          },
+          {
+            key: 'onSiteOrCloseToSite',
+            value: 100000001
+          }
+        ]
+      }
+    ],
+    onOrClose: {
+      NEXT_TO: 100000001,
+      ON: 100000000
+    }
+  }
   describe('the getData function', () => {
     it('returns the data to populate the summary table', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({
@@ -41,47 +85,19 @@ describe('the sssi check answers functions', () => {
       }
       const { getData } = await import('../designated-site-check-answers.js')
       const result = await getData(request)
-      expect(result).toEqual({
-        checkData: [
-          {
-            id: '344be97d-c928-4753-ae09-f8944ad9f228',
-            tabData: [
-              {
-                key: 'siteName',
-                value: 'Ribble Estuary SSSI'
-              },
-              {
-                key: 'permissionFromOwner',
-                value: 'yes'
-              },
-              {
-                key: 'detailsOfPermission',
-                value: 'DETAILS'
-              },
-              {
-                key: 'adviceFromNaturalEngland',
-                value: 'yes'
-              },
-              {
-                key: 'adviceFromWho',
-                value: 'ADVICE_WHO'
-              },
-              {
-                key: 'adviceDescription',
-                value: 'ADVICE_DESC'
-              },
-              {
-                key: 'onSiteOrCloseToSite',
-                value: 100000001
-              }
-            ]
-          }
-        ],
-        onOrClose: {
-          NEXT_TO: 100000001,
-          ON: 100000000
-        }
+      expect(result).toEqual(testData)
+    })
+  })
+
+  describe('designated site check answers page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../designated-site-check-answers.njk'))
+
+      const renderedHtml = template.render({
+        data: testData
       })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

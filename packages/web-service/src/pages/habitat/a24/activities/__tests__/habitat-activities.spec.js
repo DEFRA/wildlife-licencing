@@ -1,4 +1,6 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
+import path from 'path'
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
 describe('The habitat activities page', () => {
@@ -52,6 +54,25 @@ describe('The habitat activities page', () => {
 
       expect(cacheGetDataMock).toHaveBeenCalled()
       expect(getHabitatBySettIdMock).not.toHaveBeenCalled()
+    })
+
+    describe('The habitat activities template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../habitat-activities.njk'))
+
+        const renderedHtml = template.render({
+          data: {
+            OBSTRUCT_SETT_WITH_GATES,
+            OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
+            DAMAGE_A_SETT,
+            DESTROY_A_SETT,
+            DISTURB_A_SETT,
+            methodIds: [100000010, 100000011]
+          }
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
+      })
     })
 
     it('getData grabs habitat data from the database when the data is not available in the cache', async () => {

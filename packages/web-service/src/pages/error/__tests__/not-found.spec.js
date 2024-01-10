@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 describe('not-found page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -24,6 +27,20 @@ describe('not-found page', () => {
       expect(result).not.toEqual({
         includeHomeLink: 'true'
       })
+    })
+  })
+
+  describe('not-found page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../not-found.njk'))
+
+      const renderedHtml = template.render({
+        data: {
+          includeHomeLink: 'true'
+        }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

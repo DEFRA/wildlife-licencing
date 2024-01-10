@@ -10,7 +10,6 @@ jest.mock('@hapi/crumb', () => {
     },
   };
 });
-
 describe('the WEB server', () => {
   beforeEach(() => jest.resetModules())
   describe('the default header function', () => {

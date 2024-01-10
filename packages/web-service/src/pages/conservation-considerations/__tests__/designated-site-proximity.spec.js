@@ -1,7 +1,18 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the designated site proximity functions', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = {
+    proximity: 100000000,
+    values: {
+      NEXT_TO: 100000001,
+      ON: 100000000
+    }
+  }
 
   describe('the getData function', () => {
     it('returns the onSiteOrCloseToSite details from the designated site', async () => {
@@ -30,13 +41,19 @@ describe('the designated site proximity functions', () => {
       }
       const { getData } = await import('../designated-site-proximity.js')
       const result = await getData(request)
-      expect(result).toEqual({
-        proximity: 100000000,
-        values: {
-          NEXT_TO: 100000001,
-          ON: 100000000
-        }
+      expect(result).toEqual(testData)
+    })
+  })
+
+  describe('designated-site-proximity page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../designated-site-proximity.njk'))
+
+      const renderedHtml = template.render({
+        data: testData
       })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

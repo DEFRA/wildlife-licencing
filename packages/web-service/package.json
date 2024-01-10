@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "esm": "^3.2.25",
+    "jest-nunjucks": "^1.0.0",
     "nodemon": "^2.0.15"
   },
   "gitHead": "8b51186f90ae03e7c8a4550e1ab21c868f8e6af3"
