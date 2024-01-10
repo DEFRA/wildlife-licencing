@@ -13,7 +13,9 @@
   },
   "scripts": {
     "start": "node ",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "database:migration:create": "npx sequelize-cli migration:generate --name migration; echo \"\nPlease change generated file extension from .js to .cjs before running migrate script.\";",
+    "database:migration:migrate": "npx sequelize-cli db:migrate --url \"postgres://${POSTGRES_USER}:${POSTGRES_PW}@localhost/${POSTGRES_DB}\""
   },
   "repository": {
     "type": "git",
