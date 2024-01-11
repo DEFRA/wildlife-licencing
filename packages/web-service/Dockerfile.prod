@@ -8,5 +8,5 @@ WORKDIR "/app/packages/web-service"
 COPY --from=builder /app/ /app/
 
 ARG PORT=4000
-EXPOSE 4000
+EXPOSE ${PORT}
 CMD [ "node", "src/web-service.js" ]
