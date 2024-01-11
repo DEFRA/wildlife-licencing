@@ -3,7 +3,6 @@ import { DEFRA_CUSTOMER } from '@defra/wls-connectors-lib'
 const USER_QUERY = userId => 'contacts(' + userId + ')?$select=emailaddress1,fullname,telephone1,defra_uniquereference,defra_addrcorsubbuildingname,defra_addrcorbuildingname,defra_addrcorbuildingnumber,defra_addrcorstreet,defra_addrcorlocality,defra_addrcortown,defra_addrcorcounty,defra_addrcorpostcode,defra_addrcoruprn'
 const ORGANISATION_QUERY = organisationId => 'accounts(' + organisationId + ')?$select=name,emailaddress1,defra_addrregsubbuildingname,defra_addrregbuildingname,defra_addrregbuildingnumber,defra_addrregstreet,defra_addrreglocality,defra_addrregtown,defra_addrregcounty,defra_addrregpostcode,defra_addrreguprn'
 
-
 const mapAddress = defraContact => ({
   ...(defraContact.defra_addrcorsubbuildingname && { subBuildingName: defraContact.defra_addrcorsubbuildingname }),
   ...(defraContact.defra_addrcorbuildingname && { buildingName: defraContact.defra_addrcorbuildingname }),
@@ -34,20 +33,17 @@ const mapContact = defraContact => ({
   })
 })
 
-const mapAccountAddress = defraAccount =>(
-  {
-
-    ...(defraAccount.defra_addrregsubbuildingname && { subBuildingName: defraAccount.defra_addrregsubbuildingname }),
-    ...(defraAccount.defra_addrregbuildingname && { buildingName: defraAccount.defra_addrregbuildingname }),
-    ...(defraAccount.defra_addrregbuildingnumber && { buildingNumber: defraAccount.defra_addrregbuildingnumber }),
-    ...(defraAccount.defra_addrregstreet && { street: defraAccount.defra_addrregstreet }),
-    ...(defraAccount.defra_addrreglocality && { locality: defraAccount.defra_addrreglocality }),
-    ...(defraAccount.defra_addrregtown && { town: defraAccount.defra_addrregtown }),
-    ...(defraAccount.defra_addrregcounty && { county: defraAccount.defra_addrregcounty }),
-    ...(defraAccount.defra_addrregpostcode && { postcode: defraAccount.defra_addrregpostcode }),
-    ...(defraAccount.defra_addrreguprn && { uprn: defraAccount.defra_addrreguprn })
-  }
-)
+const mapAccountAddress = defraAccount => ({
+  ...(defraAccount.defra_addrregsubbuildingname && { subBuildingName: defraAccount.defra_addrregsubbuildingname }),
+  ...(defraAccount.defra_addrregbuildingname && { buildingName: defraAccount.defra_addrregbuildingname }),
+  ...(defraAccount.defra_addrregbuildingnumber && { buildingNumber: defraAccount.defra_addrregbuildingnumber }),
+  ...(defraAccount.defra_addrregstreet && { street: defraAccount.defra_addrregstreet }),
+  ...(defraAccount.defra_addrreglocality && { locality: defraAccount.defra_addrreglocality }),
+  ...(defraAccount.defra_addrregtown && { town: defraAccount.defra_addrregtown }),
+  ...(defraAccount.defra_addrregcounty && { county: defraAccount.defra_addrregcounty }),
+  ...(defraAccount.defra_addrregpostcode && { postcode: defraAccount.defra_addrregpostcode }),
+  ...(defraAccount.defra_addrreguprn && { uprn: defraAccount.defra_addrreguprn })
+})
 
 const mapAccount = defraAccount => ({
   name: defraAccount.name,
