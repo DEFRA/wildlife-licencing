@@ -14,44 +14,44 @@ services:
   ##############################################################################################################
   # Wildlife licencing API service - The application queue processor
   ##############################################################################################################
-#  aqp:
-#    image: wildlife-licencing/aqp:${TAG:-latest}
-#    env_file:
-#      - ./env/aqp.env
-#      - ./env/aqp-secrets.env
+  aqp:
+    image: wildlife-licencing/aqp:${TAG:-latest}
+    env_file:
+      - ./env/aqp.env
+      - ./env/aqp-secrets.env
 
   ##############################################################################################################
   # Wildlife licencing API service - The application extract processor
   ##############################################################################################################
-#  aep:
-#    image: wildlife-licencing/aep:${TAG:-latest}
-#    env_file:
-#      - ./env/aep.env
-#      - ./env/aep-secrets.env
-#    volumes:
-#      - ./resources/cron/application-extract.crontab:/var/spool/cron/crontabs/root:ro
+  aep:
+    image: wildlife-licencing/aep:${TAG:-latest}
+    env_file:
+      - ./env/aep.env
+      - ./env/aep-secrets.env
+    volumes:
+      - ./resources/cron/application-extract.crontab:/var/spool/cron/crontabs/root:ro
 
   ##############################################################################################################
   # Wildlife licencing API service - The reference data extract processor - run on a schedule
   ##############################################################################################################
-#  rep:
-#    image: wildlife-licencing/rep:${TAG:-latest}
-#    env_file:
-#      - ./env/rep.env
-#      - ./env/rep-secrets.env
-#    volumes:
-#      - ./resources/cron/repdata-extract.crontab:/var/spool/cron/crontabs/root:ro
-#    command: crond -f -l 2
+  rep:
+    image: wildlife-licencing/rep:${TAG:-latest}
+    env_file:
+      - ./env/rep.env
+      - ./env/rep-secrets.env
+    volumes:
+      - ./resources/cron/repdata-extract.crontab:/var/spool/cron/crontabs/root:ro
+    command: crond -f -l 2
 
 
   ##############################################################################################################
   # Wildlife licencing API service - The reference data extract processor - run on a schedule
   ##############################################################################################################
-#  fqp:
-#    image: wildlife-licencing/fqp:${TAG:-latest}
-#    env_file:
-#      - ./env/fqp.env
-#      - ./env/fqp-secrets.env
+  fqp:
+    image: wildlife-licencing/fqp:${TAG:-latest}
+    env_file:
+      - ./env/fqp.env
+      - ./env/fqp-secrets.env
 
   ##############################################################################################################
   # Wildlife licencing WLS WEB service - web service is found on localhost:4000
