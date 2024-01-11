@@ -1,4 +1,5 @@
 version: "3.8"
+name: wls
 services:
   ##############################################################################################################
   # Wildlife licencing API service - api service is found on localhost:3000
@@ -9,11 +10,6 @@ services:
       - "3000:3000"
     env_file:
       - ./env/api.env
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
 
   ##############################################################################################################
   # Wildlife licencing API service - The application queue processor
@@ -23,11 +19,6 @@ services:
     env_file:
       - ./env/aqp.env
       - ./env/aqp-secrets.env
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
 
   ##############################################################################################################
   # Wildlife licencing API service - The application extract processor
@@ -39,11 +30,6 @@ services:
       - ./env/aep-secrets.env
     volumes:
       - ./resources/cron/application-extract.crontab:/var/spool/cron/crontabs/root:ro
-    command: crond -f -l 2
-    deploy:
-      mode: replicated
-      restart_policy:
-        condition: on-failure
 
   ##############################################################################################################
   # Wildlife licencing API service - The reference data extract processor - run on a schedule
@@ -56,10 +42,7 @@ services:
     volumes:
       - ./resources/cron/repdata-extract.crontab:/var/spool/cron/crontabs/root:ro
     command: crond -f -l 2
-    deploy:
-      mode: replicated
-      restart_policy:
-        condition: on-failure
+
 
   ##############################################################################################################
   # Wildlife licencing API service - The reference data extract processor - run on a schedule
@@ -69,10 +52,6 @@ services:
     env_file:
       - ./env/fqp.env
       - ./env/fqp-secrets.env
-    deploy:
-      mode: replicated
-      restart_policy:
-        condition: on-failure
 
   ##############################################################################################################
   # Wildlife licencing WLS WEB service - web service is found on localhost:4000
@@ -86,11 +65,7 @@ services:
     volumes:
       - scandir:/scandir
       - certs:/certs
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+
 
 volumes:
   scandir:

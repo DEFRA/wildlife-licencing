@@ -1,0 +1,10 @@
+**/node_modules
+npm-debug.log
+dist
+coverage
+.github
+docker
+sonar-project.properties
+wls-system-stack.png
+README.md
+RELEASE.md

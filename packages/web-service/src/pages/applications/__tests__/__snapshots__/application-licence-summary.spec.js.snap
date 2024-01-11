@@ -115,9 +115,10 @@ exports[`application-licence page application-licence-summary page template Matc
           </span>
         </a>
       </div>
-      
+
       <div class=\\"govuk-header__content\\">
         <a href=\\"\\" class=\\"govuk-header__link govuk-header__link--service-name\\">Apply for a licence to do work that affects a protected species</a>
+
         
           <a class=\\"govuk-header__link signout-link\\" href=\\"\\">Sign in</a>
         

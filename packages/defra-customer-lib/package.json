@@ -1,6 +1,5 @@
 {
   "name": "@defra/wls-defra-customer-lib",
-  "version": "12.3.17-alpha.0",
   "description": "Powerapps keys",
   "main": "src/defra-customer-lib.js",
   "type": "module",
@@ -19,7 +18,6 @@
     "url": "https://github.com/DEFRA/wildlife-licencing.git"
   },
   "dependencies": {
-    "@defra/wls-connectors-lib": "^12.3.17-alpha.0",
     "debug": "^4.3.3"
   },
   "keywords": [

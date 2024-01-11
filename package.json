@@ -1,8 +1,33 @@
 {
   "name": "wildlife-licencing-service",
   "type": "module",
+  "version": "13.6.0-alpha.0",
   "engines": {
     "node": ">=16.13.0"
+  },
+  "workspaces": [
+    "./packages/*"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test-clear": "jest --clearCache",
+    "test:only-changed": "jest --changedSince master",
+    "test:watch": "jest --watch",
+    "format": "standard",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "docker:build-base": "sh Docker-build-base.sh",
+    "docker:build-services": "docker-compose -f docker/services.build.yml build --no-cache",
+    "docker:start-services": "docker-compose -f docker/services.yml up -d",
+    "docker:stop-services": "docker-compose -f docker/services.yml down",
+    "docker:start-cloud": "docker-compose -f docker/cloud-services.yml up -d",
+    "docker:stop-cloud": "docker-compose -f docker/cloud-services.yml down",
+    "docker:start-proxy": "docker-compose -f docker/nginx/nginx-service.yml up -d ",
+    "docker:stop-proxy": "docker-compose -f docker/nginx/nginx-service.yml down",
+    "prerelease:patch": "npm version prepatch --preid=alpha",
+    "prerelease:minor": "npm version preminor --preid=alpha",
+    "prerelease:major": "npm version premajor --preid=alpha",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -19,26 +44,9 @@
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
-    "lerna": "^4.0.0",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
     "standard": "^16.0.4"
-  },
-  "scripts": {
-    "postinstall": "npm run lerna:bootstrap",
-    "test": "jest",
-    "test-clear": "jest --clearCache",
-    "test:only-changed": "jest --changedSince master",
-    "test:watch": "jest --watch",
-    "format": "standard",
-    "lerna:clean": "lerna clean --yes",
-    "lerna:bootstrap": "lerna bootstrap",
-    "docker:build": "docker-compose -f docker/services.build.yml build",
-    "docker:start": "docker stack deploy -c docker/services.yml -c docker/cloud-services.yml wls",
-    "docker:start-cloud": "docker stack deploy -c docker/cloud-services.yml wls_cloud",
-    "docker:stop": "docker stack rm wls",
-    "lint": "standard",
-    "lint:fix": "standard --fix"
   },
   "standard": {
     "env": {

@@ -1,3 +1,14 @@
+jest.mock('@hapi/crumb', () => {
+  return {
+    plugin: {
+      name: 'crumb',
+      register: jest.fn().mockImplementation((server, options) => {
+        // Mock implementation or behavior of crumb
+      })
+    }
+  }
+})
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 jest.mock('@hapi/crumb', () => {
   return {

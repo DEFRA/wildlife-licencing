@@ -32,32 +32,41 @@ enable or disable auto fix on save. It is only available when VSCode's files.aut
 
 ```
 
-### To run the application in a local docker stack
+### To run the application locally using Docker
 
-First edit the docker secret environment files to add the secret keys
+#### First edit the docker secret environment files to add the secret keys
 
 - docker/env/aqp-secrets.env
 
-(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
+*The secrets for the test environment may be obtained from another member of the team*
 
-#### Extra step for M1 Mac users
-Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+#### Setup and / or rebuild the service containers
 
 ```
-NO_SCANNING_REQUIRED=true
+# Builds the base container for the services
+npm run docker:build-base
 ```
+*this is done to replicate the build steps followed by the CI pipeline*
 
-Now run the following shell commands;
+#### Start the Application using docker
+
+> Make sure to set up the Nginx proxy before running the commands below - [docs](docker/nginx/README.md)
 
 ```shell
-cd  wildlife-licencing
-npm i
-npm run docker:build
-npm run docker:start
-docker service ls
-npm run docker:stop
+# Start the dependencies locally
+npm run docker:start-cloud
+
+# Start the proxy locally  
+npm run docker:start-proxy
+
+# Start the services locally 
+npm run docker:start-services
 ```
 
+*To stop and containers you can use the `docker-stop<*>` commands*
+
+#### Check the services are running
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/login
 
@@ -76,10 +85,17 @@ The docker services running should be as follows:
 - wls_localstack
 - wls_clamav
 - wls_adminer
+- 
+#### Extra step for M1 Mac users
+Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+```
+NO_SCANNING_REQUIRED=true
+```
 
 ### To run locally
 
-To run the microservices locally you need to start the supporting cloud services in the docker swarm.
+To run the microservices locally you need to start the supporting cloud services using docker.
 
 Run the following shell commands;
 
@@ -190,19 +206,6 @@ cp env.example .env
 npm run dev
 ```
 
-#### How to restart your Docker swarm
-
-Sometimes, changes may go into `master` that will break your Docker swarm if you don't rebuild it. This isn't true for every change, but it's important to know how to bring your swarm down, rebuild it - and then start it again.
-
-The process is pretty simple:
-
-1. Pull from `master` and ensure you're upto date
-2. You need to drop all your database tables inside `wls`. You'll need your database container to be up, for this to work. Sometimes you may face with some issues with tables having a foreign key that's used elsewhere so it can't be deleted. You'll just have to delete the tables relying on the key first. You can always do this step via calling the delete script that the Jenkins pipelines use: https://gitlab-dev.aws-int.defra.cloud/new/new-jenkins-scripts/-/blob/master/drop_db_tables.sql
-3. Ensure you haven't lost your Docker .env variables, as pulling will often overwrite them
-4. Stop your swarm with `npm run docker:stop`
-5. Double check you don't need to run `npm i` from the top level of the repo, if the dependencies have changed. Often doesn't happen, just worth a check
-6. Build your swarm again with `npm run docker:build`
-7. Start your swarm again with `npm run docker:start`
 
 #### To start the queue processor locally
 
