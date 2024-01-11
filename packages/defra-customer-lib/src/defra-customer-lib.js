@@ -34,6 +34,21 @@ const mapContact = defraContact => ({
   })
 })
 
+const mapAccountAddress = defraAccount =>(
+  {
+
+    ...(defraAccount.defra_addrregsubbuildingname && { subBuildingName: defraAccount.defra_addrregsubbuildingname }),
+    ...(defraAccount.defra_addrregbuildingname && { buildingName: defraAccount.defra_addrregbuildingname }),
+    ...(defraAccount.defra_addrregbuildingnumber && { buildingNumber: defraAccount.defra_addrregbuildingnumber }),
+    ...(defraAccount.defra_addrregstreet && { street: defraAccount.defra_addrregstreet }),
+    ...(defraAccount.defra_addrreglocality && { locality: defraAccount.defra_addrreglocality }),
+    ...(defraAccount.defra_addrregtown && { town: defraAccount.defra_addrregtown }),
+    ...(defraAccount.defra_addrregcounty && { county: defraAccount.defra_addrregcounty }),
+    ...(defraAccount.defra_addrregpostcode && { postcode: defraAccount.defra_addrregpostcode }),
+    ...(defraAccount.defra_addrreguprn && { uprn: defraAccount.defra_addrreguprn })
+  }
+)
+
 const mapAccount = defraAccount => ({
   name: defraAccount.name,
   ...(defraAccount.emailaddress1 && {
@@ -43,17 +58,7 @@ const mapAccount = defraAccount => ({
     }
   }),
   ...(defraAccount.defra_addrregpostcode && {
-    address: {
-      ...(defraAccount.defra_addrregsubbuildingname && { subBuildingName: defraAccount.defra_addrregsubbuildingname }),
-      ...(defraAccount.defra_addrregbuildingname && { buildingName: defraAccount.defra_addrregbuildingname }),
-      ...(defraAccount.defra_addrregbuildingnumber && { buildingNumber: defraAccount.defra_addrregbuildingnumber }),
-      ...(defraAccount.defra_addrregstreet && { street: defraAccount.defra_addrregstreet }),
-      ...(defraAccount.defra_addrreglocality && { locality: defraAccount.defra_addrreglocality }),
-      ...(defraAccount.defra_addrregtown && { town: defraAccount.defra_addrregtown }),
-      ...(defraAccount.defra_addrregcounty && { county: defraAccount.defra_addrregcounty }),
-      ...(defraAccount.defra_addrregpostcode && { postcode: defraAccount.defra_addrregpostcode }),
-      ...(defraAccount.defra_addrreguprn && { uprn: defraAccount.defra_addrreguprn })
-    }
+    address: mapAccountAddress(defraAccount)
   })
 })
 
