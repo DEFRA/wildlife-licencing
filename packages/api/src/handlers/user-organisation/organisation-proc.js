@@ -8,6 +8,6 @@ export const prepareResponse = a => {
   return {
     ...rest,
     createdAt: createdAt.toISOString(),
-    updatedAt: updatedAt.toISOString(),
+    updatedAt: updatedAt.toISOString()
   }
 }
