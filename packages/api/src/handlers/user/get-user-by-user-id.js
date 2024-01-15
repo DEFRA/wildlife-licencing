@@ -2,7 +2,7 @@ import { APPLICATION_JSON } from '../../constants.js'
 import { models } from '@defra/wls-database-model'
 import { prepareResponse } from './user-proc.js'
 
-export default async (context, req, h) => {
+export default async (context, _req, h) => {
   const user = await models.users.findByPk(context.request.params.userId)
 
   if (!user) {

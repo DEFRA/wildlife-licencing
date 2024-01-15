@@ -220,10 +220,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       if (contact && !account) {
         if (contactImmutable) {
-          await migrateContact(applicationId, contact, contactRole, {
-            address: contact.address,
-            contactDetails: { email: emailAddress }
-          })
+          await migrateContact(applicationId, contact, contactRole, { address: contact.address, contactDetails: { email: emailAddress } })
         } else {
           await updateContactFields(contact, {
             contactDetails: { email: emailAddress }
@@ -384,7 +381,7 @@ const updateAccountName = async (applicationId, accountRole, account, accountImm
   }
 }
 
-const copyContactDetailsToNewAccount = async (applicationId, accountRole, contact, account) => {
+const copyContactDetailsToNewAccount = async (_applicationId, _accountRole, contact, account) => {
   await APIRequests.ACCOUNT.update(account.id, {
     organisationId: account.organisationId,
     name: account.name,

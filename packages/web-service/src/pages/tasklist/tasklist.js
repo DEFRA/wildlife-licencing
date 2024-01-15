@@ -39,12 +39,12 @@ export const setUpIDMContacts = async (applicationId, userId, contactRole) => {
   if (!contacts.length) {
     await contactOps.create(user)
   } else {
-    const user = await APIRequests.USER.getById(userId)
-    const contact = contacts.find(c => hash(contactMatcher(c)) === hash(contactMatcher(user)))
+    const userWithContacts = await APIRequests.USER.getById(userId)
+    const contact = contacts.find(c => hash(contactMatcher(c)) === hash(contactMatcher(userWithContacts)))
     if (contact) {
       await contactOps.assign(contact.id)
     } else {
-      await contactOps.create(user)
+      await contactOps.create(userWithContacts)
     }
   }
 }

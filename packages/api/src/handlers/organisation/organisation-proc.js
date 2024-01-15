@@ -3,13 +3,12 @@
  * @param site.dataValues
  * @returns {any}
  */
-export const prepareResponse = a => Object.assign((({
-  createdAt,
-  updatedAt,
-  organisation,
-  ...l
-}) => l)(a), {
-  createdAt: a.createdAt.toISOString(),
-  updatedAt: a.updatedAt.toISOString(),
-  ...a.organisation
-})
+export const prepareResponse = a => {
+  const { createdAt, updatedAt, organisation, ...rest } = a
+  return {
+    ...rest,
+    createdAt: createdAt.toISOString(),
+    updatedAt: updatedAt.toISOString(),
+    ...organisation
+  }
+}

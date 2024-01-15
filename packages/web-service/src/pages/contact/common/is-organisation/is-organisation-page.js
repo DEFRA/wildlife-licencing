@@ -2,7 +2,7 @@
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
 
-export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }, accountRole) => pageRoute({
+export const isOrganisation = ({ page, uri, checkData, getData, completion, setData }, _accountRole) => pageRoute({
   page,
   uri,
   checkData,
