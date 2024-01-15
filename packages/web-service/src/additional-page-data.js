@@ -38,6 +38,51 @@ export const addCookiePrefs = async (request, h) => {
   return h.continue
 }
 
+const Eligibility = () => ({
+  landowner: eligibilityURIs.LANDOWNER.uri,
+  landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
+  consent: eligibilityURIs.CONSENT.uri,
+  consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
+  invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+  purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+})
+
+const Applicant = () => ({
+  applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
+  applicantName: contactURIs.APPLICANT.NAME.uri,
+  applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
+  applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
+  applicantAddress: contactURIs.APPLICANT.ADDRESS.uri
+})
+
+const Ecologist = () => ({
+  ecologistName: contactURIs.ECOLOGIST.NAME.uri,
+  ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
+  ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
+  ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
+  ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri
+})
+
+const Site = () => ({
+  siteName: siteURIs.NAME.uri,
+  siteAddress: siteURIs.SITE_GOT_POSTCODE.uri,
+  siteGridReference: siteURIs.SITE_GRID_REF.uri,
+  siteMap: siteURIs.UPLOAD_MAP.uri,
+  siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
+  siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri
+})
+
+const ConservationConsiderations = () => ({
+  onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
+  designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
+  designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
+  designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
+  designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
+  designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
+  designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
+  designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri
+})
+
 export const additionalPageData = async (request, h) => {
   const response = request.response
   if (request.method === 'get' && response.variety === 'view') {
@@ -61,26 +106,11 @@ export const additionalPageData = async (request, h) => {
         species: SPECIES.uri,
 
         // Eligibility
-        landowner: eligibilityURIs.LANDOWNER.uri,
-        landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
-        consent: eligibilityURIs.CONSENT.uri,
-        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
-        invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-        purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
-
+        ...Eligibility(),
         // Applicant
-        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
-        applicantName: contactURIs.APPLICANT.NAME.uri,
-        applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
-        applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
-        applicantAddress: contactURIs.APPLICANT.ADDRESS.uri,
-
+        ...Applicant(),
         // Ecologist
-        ecologistName: contactURIs.ECOLOGIST.NAME.uri,
-        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
-        ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
-        ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
-        ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
+        ...Ecologist(),
 
         // Additional applicant
         additionalApplicantAdd: contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
@@ -100,12 +130,7 @@ export const additionalPageData = async (request, h) => {
         invoiceIsOrganisation: contactURIs.INVOICE_PAYER.IS_ORGANISATION.uri,
 
         // Site
-        siteName: siteURIs.NAME.uri,
-        siteAddress: siteURIs.SITE_GOT_POSTCODE.uri,
-        siteGridReference: siteURIs.SITE_GRID_REF.uri,
-        siteMap: siteURIs.UPLOAD_MAP.uri,
-        siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
-        siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
+        ...Site(),
 
         // Work activity
         workProposal: workActivityURIs.WORK_PROPOSAL.uri,
@@ -118,14 +143,7 @@ export const additionalPageData = async (request, h) => {
         convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
 
         // Conservation considerations
-        onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
-        designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
-        designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
-        designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
-        designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
-        designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
-        designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
-        designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri,
+        ...ConservationConsiderations(),
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,

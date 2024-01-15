@@ -7,7 +7,7 @@ export const prepareResponse = u => Object.assign((({
   password,
   createdAt,
   updatedAt,
-  user,
+  _user,
   ...l
 }) => l)(u), {
   createdAt: u.createdAt.toISOString(),
