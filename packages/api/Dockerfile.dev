@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . .
 RUN npm ci
 EXPOSE 3000
-CMD [ "sh", "start.sh" ]
+CMD [ "npm", "run", "start" ]
