@@ -4643,6 +4643,8 @@ components:
           maxLength: 160
         contactDetails:
           $ref: '#/components/schemas/contactDetails'
+        user:
+          $ref: '#/components/schemas/user'
         fetched:
           type: boolean
         address:
