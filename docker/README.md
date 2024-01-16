@@ -57,6 +57,24 @@ docker build -t wildlife-licencing/web:latest --file ./packages/web-service/Dock
 
 The production images can be used in the local swarm by running the deployment as above.
 
+### Liquibase
+
+The liquibase container can be used to create database migrations, which is necessary in the live environment where tables cannot be dropped.  
+
+The change-log files (packages/database-model/liquibase/changelog/*.xml) are copied into the container when it is built
+```docker build -t wildlife-licencing/liquibase:latest --file ./docker/liquibase/Dockerfile.prod .```
+
+The liquibase container is intended to be run from the Jenkins pipelines 
+
+For development purposes it can then be run on the command line as follows
+```docker run wildlife-licencing/liquibase update --url="jdbc:postgresql://host.docker.internal:5432/wls" --changeLogFile="./db.changelog-root.xml" --username=wlsuser --password=:pw```
+
+To invoke liquibase within the running container log on to the running container and issue the update command:
+```shell
+docker run wildlife-licencing/liquibase tail -f /dev/null
+docker exec -t $(docker ps | grep wildlife-licencing/liquibase | awk  '{print $1}') /bin/bash
+liquibase update --changelog-file ./changelog/db.changelog-root.xml --url="jdbc:postgresql://host.docker.internal:5432/wls" --username=wlsuser --password=:pw
+```
 ### Building a ClamAV Docker image for arm64 architectures (M1 Macbooks)
 ClamAV do not currently host an ARM64 based image on Docker hub, so in order to run clamav locally in a docker container on an Apple M1 or M2 Macbook, you will need to build it yourself. The original documentation on how to do this is a bit vague (https://docs.clamav.net/manual/Installing/Docker.html#building-the-clamav-image), but carefully following the steps below will hopefully simplify the process.
 

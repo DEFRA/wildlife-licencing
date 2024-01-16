@@ -22,7 +22,6 @@
     "lerna": "^4.0.0",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.3",
-    "sequelize-cli": "^6.6.2",
     "standard": "^16.0.4"
   },
   "scripts": {
