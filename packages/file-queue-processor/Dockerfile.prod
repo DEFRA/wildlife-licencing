@@ -7,4 +7,4 @@ FROM wildlife_licensing/base
 WORKDIR /app/packages/file-queue-processor
 COPY --from=builder /app/ /app/
 
-CMD [ "node", "src/file-queue-processor.js" ]
+CMD [ "npm", "run", "start" ]

@@ -9,4 +9,4 @@ COPY --from=builder /app/ /app/
 
 ARG PORT=4000
 EXPOSE ${PORT}
-CMD [ "node", "src/web-service.js" ]
+CMD [ "npm", "run", "start" ]
