@@ -19,4 +19,4 @@ COPY --from=builder /app/ /app/
 # Default service port
 ARG PORT=3000
 EXPOSE ${PORT}
-CMD [ "node", "src/api-service.js" ]
+CMD [ "npm", "run", "start" ]
