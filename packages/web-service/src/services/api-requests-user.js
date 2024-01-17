@@ -5,14 +5,6 @@ import db from 'debug'
 const debug = db('web-service:api-requests')
 
 export const USER = {
-  authenticate: async (username, password) => apiRequestsWrapper(
-    async () => {
-      const { result } = await API.get(`/user/${username}/${password}/authenticate`)
-      return result
-    },
-    `Error authenticating user with username ${username}`,
-    500
-  ),
   getById: async userId => apiRequestsWrapper(
     async () => {
       debug(`Finding user for userId: ${userId}`)
@@ -29,21 +21,47 @@ export const USER = {
     `Error Updating user with userId ${userId}`,
     500
   ),
-  findByName: async username => apiRequestsWrapper(
+  createIDM: async (userId, payload) => apiRequestsWrapper(
     async () => {
-      debug(`Finding user by username: ${username}`)
-      const users = await API.get(apiUrls.USERS, `username=${username}`)
-      return users.length === 1 ? users[0] : null
+      debug(`Creating new user: ${userId}`)
+      await API.put(`/user/${userId}`, payload)
     },
-    `Error fetching user ${username}`,
+    `Error creating user ${userId}`,
+    500),
+  requestUserDetails: async userId => apiRequestsWrapper(async () => {
+    await API.post(apiUrls.USER_UPDATE, { userId })
+  },
+    `Error requesting updates for user ${userId}`,
+    500),
+  updateOrganisation: async (organisationId, payload) => apiRequestsWrapper(
+    async () => {
+      debug(`Upserting new organisation: ${organisationId}`)
+      return API.put(`/organisation/${organisationId}`, payload)
+    },
+    `Error creating organisation ${organisationId}`,
     500
   ),
-  create: async username => apiRequestsWrapper(
+  requestOrganisationDetails: async organisationId => apiRequestsWrapper(async () => {
+    await API.post(apiUrls.ORGANISATION_UPDATE, { organisationId })
+  }, `Error requesting updates for organisation ${organisationId}`,
+  500
+  ),
+  getOrganisation: async organisationId => apiRequestsWrapper(
     async () => {
-      debug(`Creating new user: ${username}`)
-      await API.post(apiUrls.USER, { username })
+      debug(`Get organisation: ${organisationId}`)
+      return API.get(`/organisation/${organisationId}`)
     },
-    `Error creating user ${username}`,
+    `Error fetching organisation ${organisationId}`,
+    500
+  ),
+  updateUserOrganisation: async (userOrganisationId, { userId, organisationId, relationship }) => apiRequestsWrapper(
+    async () => {
+      debug(`Upserting new user-organisation: ${organisationId}`)
+      return API.put(`/user-organisation/${userOrganisationId}`, {
+        userId, organisationId, relationship
+      })
+    },
+    `Error creating user-organisation ${userOrganisationId} : userId=${userId}, organisationId=${organisationId}, relationship=${relationship}`,
     500
   )
 }

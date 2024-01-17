@@ -7,7 +7,6 @@ import {
   convictionsURIs,
   siteURIs,
   workActivityURIs,
-  LOGIN,
   SIGN_OUT,
   SPECIES,
   APPLICATION_SUMMARY,
@@ -15,11 +14,13 @@ import {
   conservationConsiderationURIs,
   APPLICATION_LICENCE,
   APPLICATIONS,
-  COOKIE_INFO
+  COOKIE_INFO,
+  SIGN_IN
 } from './uris.js'
 
 import { version } from '../dirname.cjs'
 import { APIRequests } from './services/api-requests.js'
+import { DEFRA_ID } from '@defra/wls-connectors-lib'
 
 export const addCookiePrefs = async (request, h) => {
   const response = request.response
@@ -28,7 +29,7 @@ export const addCookiePrefs = async (request, h) => {
     const journeyData = await request.cache().getData() || {}
     if (journeyData.userId) {
       const user = await APIRequests.USER.getById(journeyData.userId)
-      Object.assign(response.source.context, { cookiePrefs: user.cookiePrefs })
+      Object.assign(response.source.context, { cookiePrefs: user?.cookiePrefs })
     } else if (journeyData.cookies) {
       Object.assign(response.source.context, { cookiePrefs: journeyData.cookies })
     }
@@ -37,13 +38,62 @@ export const addCookiePrefs = async (request, h) => {
   return h.continue
 }
 
-export const additionalPageData = (request, h) => {
+const Eligibility = () => ({
+  landowner: eligibilityURIs.LANDOWNER.uri,
+  landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
+  consent: eligibilityURIs.CONSENT.uri,
+  consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
+  invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
+  purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri
+})
+
+const Applicant = () => ({
+  applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
+  applicantName: contactURIs.APPLICANT.NAME.uri,
+  applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
+  applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
+  applicantAddress: contactURIs.APPLICANT.ADDRESS.uri
+})
+
+const Ecologist = () => ({
+  ecologistName: contactURIs.ECOLOGIST.NAME.uri,
+  ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
+  ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
+  ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
+  ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri
+})
+
+const Site = () => ({
+  siteName: siteURIs.NAME.uri,
+  siteAddress: siteURIs.SITE_GOT_POSTCODE.uri,
+  siteGridReference: siteURIs.SITE_GRID_REF.uri,
+  siteMap: siteURIs.UPLOAD_MAP.uri,
+  siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
+  siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri
+})
+
+const ConservationConsiderations = () => ({
+  onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
+  designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
+  designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
+  designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
+  designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
+  designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
+  designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
+  designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri
+})
+
+export const additionalPageData = async (request, h) => {
   const response = request.response
   if (request.method === 'get' && response.variety === 'view') {
     Object.assign(response.source.context, {
       _uri: {
-        login: LOGIN.uri,
-        signOut: SIGN_OUT.uri,
+        idm: {
+          signIn: SIGN_IN.uri,
+          signOut: SIGN_OUT.uri,
+          management: DEFRA_ID.getManagement()
+        },
+
         applicationSummary: APPLICATION_SUMMARY.uri,
         applicationLicence: APPLICATION_LICENCE.uri,
         taskList: TASKLIST.uri,
@@ -56,62 +106,31 @@ export const additionalPageData = (request, h) => {
         species: SPECIES.uri,
 
         // Eligibility
-        landowner: eligibilityURIs.LANDOWNER.uri,
-        landownerPermission: eligibilityURIs.LANDOWNER_PERMISSION.uri,
-        consent: eligibilityURIs.CONSENT.uri,
-        consentGranted: eligibilityURIs.CONSENT_GRANTED.uri,
-        invoiceResponsible: contactURIs.INVOICE_PAYER.RESPONSIBLE.uri,
-        purchaseOrderReference: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
-
+        ...Eligibility(),
         // Applicant
-        applicantUser: contactURIs.APPLICANT.USER.uri,
-        applicantNames: contactURIs.APPLICANT.NAMES.uri,
-        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
-        applicantOrganisations: contactURIs.APPLICANT.ORGANISATIONS.uri,
-        applicantName: contactURIs.APPLICANT.NAME.uri,
-        applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
-        applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
-        applicantAddress: contactURIs.APPLICANT.ADDRESS.uri,
-
+        ...Applicant(),
         // Ecologist
-        ecologistUser: contactURIs.ECOLOGIST.USER.uri,
-        ecologistName: contactURIs.ECOLOGIST.NAME.uri,
-        ecologistNames: contactURIs.ECOLOGIST.NAMES.uri,
-        ecologistIsOrganisation: contactURIs.ECOLOGIST.IS_ORGANISATION.uri,
-        ecologistOrganisations: contactURIs.ECOLOGIST.ORGANISATIONS.uri,
-        ecologistPostcode: contactURIs.ECOLOGIST.POSTCODE.uri,
-        ecologistAddress: contactURIs.ECOLOGIST.ADDRESS.uri,
-        ecologistEmail: contactURIs.ECOLOGIST.EMAIL.uri,
+        ...Ecologist(),
 
         // Additional applicant
         additionalApplicantAdd: contactURIs.ADDITIONAL_APPLICANT.ADD.uri,
-        additionalApplicantUser: contactURIs.ADDITIONAL_APPLICANT.USER.uri,
-        additionalApplicantNames: contactURIs.ADDITIONAL_APPLICANT.NAMES.uri,
+        additionalApplicantName: contactURIs.ADDITIONAL_APPLICANT.NAME.uri,
         additionalApplicantEmail: contactURIs.ADDITIONAL_APPLICANT.EMAIL.uri,
 
         // Additional ecologist
         additionalEcologistAdd: contactURIs.ADDITIONAL_ECOLOGIST.ADD.uri,
-        additionalEcologistUser: contactURIs.ADDITIONAL_ECOLOGIST.USER.uri,
-        additionalEcologistNames: contactURIs.ADDITIONAL_ECOLOGIST.NAMES.uri,
+        additionalEcologistName: contactURIs.ADDITIONAL_ECOLOGIST.NAME.uri,
         additionalEcologistEmail: contactURIs.ADDITIONAL_ECOLOGIST.EMAIL.uri,
 
         // Payer
-        invoiceUser: contactURIs.INVOICE_PAYER.USER.uri,
         invoiceName: contactURIs.INVOICE_PAYER.NAME.uri,
-        invoiceNames: contactURIs.INVOICE_PAYER.NAMES.uri,
-        invoiceOrganisations: contactURIs.INVOICE_PAYER.ORGANISATIONS.uri,
         invoicePostcode: contactURIs.INVOICE_PAYER.POSTCODE.uri,
         invoiceAddress: contactURIs.INVOICE_PAYER.ADDRESS.uri,
         invoiceEmail: contactURIs.INVOICE_PAYER.EMAIL.uri,
         invoiceIsOrganisation: contactURIs.INVOICE_PAYER.IS_ORGANISATION.uri,
 
         // Site
-        siteName: siteURIs.NAME.uri,
-        siteAddress: siteURIs.SITE_GOT_POSTCODE.uri,
-        siteGridReference: siteURIs.SITE_GRID_REF.uri,
-        siteMap: siteURIs.UPLOAD_MAP.uri,
-        siteMapTwo: siteURIs.UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT.uri,
-        siteMapThree: siteURIs.UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT.uri,
+        ...Site(),
 
         // Work activity
         workProposal: workActivityURIs.WORK_PROPOSAL.uri,
@@ -124,14 +143,7 @@ export const additionalPageData = (request, h) => {
         convictionDetails: convictionsURIs.CONVICTION_DETAILS.uri,
 
         // Conservation considerations
-        onOrNextToDesignatedSite: conservationConsiderationURIs.DESIGNATED_SITE.uri,
-        designatedSiteName: conservationConsiderationURIs.DESIGNATED_SITE_NAME.uri,
-        designatedSiteOwnerPermission: conservationConsiderationURIs.OWNER_PERMISSION.uri,
-        designatedSitePermissionDetails: conservationConsiderationURIs.OWNER_PERMISSION_DETAILS.uri,
-        designatedSiteActivityAdvice: conservationConsiderationURIs.ACTIVITY_ADVICE.uri,
-        designatedSiteNEAdvice: conservationConsiderationURIs.NE_ADVICE.uri,
-        designatedSiteProximity: conservationConsiderationURIs.DESIGNATED_SITE_PROXIMITY.uri,
-        designatedSiteRemove: conservationConsiderationURIs.DESIGNATED_SITE_REMOVE.uri,
+        ...ConservationConsiderations(),
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
@@ -156,6 +168,16 @@ export const additionalPageData = (request, h) => {
     // Add the GTM tag
     if (process.env.MANAGER_TAG) {
       Object.assign(response.source.context, { gtm: process.env.MANAGER_TAG })
+    }
+
+    // Add the user details if authenticated
+    const authorization = await request.cache().getAuthData()
+    if (authorization) {
+      Object.assign(response.source.context, {
+        user: {
+          name: `${authorization.firstName} ${authorization.lastName}`
+        }
+      })
     }
 
     // Generate the nonce

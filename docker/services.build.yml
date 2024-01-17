@@ -8,47 +8,47 @@ services:
   # The development version of the service runs the webpack post-process to install the
   # Open API browser
   ##############################################################################################################
-  api:
-    image: wildlife-licencing/api:${TAG:-latest}
-    build:
-      context: ../packages/api
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  api:
+#    image: wildlife-licencing/api:${TAG:-latest}
+#    build:
+#      context: ../packages/api
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application queue processor
   ##############################################################################################################
-  aqp:
-    image: wildlife-licencing/aqp:${TAG:-latest}
-    build:
-      context: ../packages/application-queue-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  aqp:
+#    image: wildlife-licencing/aqp:${TAG:-latest}
+#    build:
+#      context: ../packages/application-queue-processor
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application queue processor
   ##############################################################################################################
-  fqp:
-    image: wildlife-licencing/fqp:${TAG:-latest}
-    build:
-      context: ../packages/file-queue-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  fqp:
+#    image: wildlife-licencing/fqp:${TAG:-latest}
+#    build:
+#      context: ../packages/file-queue-processor
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; application extract processor
   ##############################################################################################################
-  aep:
-    image: wildlife-licencing/aep:${TAG:-latest}
-    build:
-      context: ../packages/application-extract-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  aep:
+#    image: wildlife-licencing/aep:${TAG:-latest}
+#    build:
+#      context: ../packages/application-extract-processor
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing API service; reference data extract processor
   ##############################################################################################################
-  rep:
-    image: wildlife-licencing/rep:${TAG:-latest}
-    build:
-      context: ../packages/refdata-extract-processor
-      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
+#  rep:
+#    image: wildlife-licencing/rep:${TAG:-latest}
+#    build:
+#      context: ../packages/refdata-extract-processor
+#      dockerfile: ${PROJECT_DOCKERFILE:-Dockerfile.dev}
 
   ##############################################################################################################
   # Wildlife licencing Web service

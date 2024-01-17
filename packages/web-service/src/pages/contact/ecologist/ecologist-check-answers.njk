@@ -1,10 +1,9 @@
 {% extends "check-answers.njk" %}
 
 {% set questionMap = {
-    contactIsUser: { question: 'Are you the ecologist for this application?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.ecologistUser },
-    whoIsTheLicenceFor: { question: 'Who is the ecologist?', href: _uri.ecologistNames },
-    contactIsOrganisation: { question: 'Is the ecologist part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.ecologistIsOrganisation if data.hasAccount else _uri.ecologistOrganisations },
-    contactOrganisations: { question: 'Name of organisation', href: _uri.ecologistOrganisations },
+    whoIsTheLicenceFor: { question: 'Who is the ecologist?', href: _uri.ecologistName },
+    contactIsOrganisation: { question: 'Is the ecologist part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.ecologistIsOrganisation },
+    contactOrganisations: { question: 'Name of organisation', href: _uri.ecologistIsOrganisation },
     email: { question: 'Organisation email' if data.hasAccount else 'Contact email', href: _uri.ecologistEmail },
     address: { question: 'Organisation address' if data.hasAccount else 'Contact address',  href: _uri.ecologistPostcode }
 } %}

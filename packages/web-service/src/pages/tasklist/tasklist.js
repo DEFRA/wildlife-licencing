@@ -1,3 +1,4 @@
+import * as pkg from 'object-hash'
 import pageRoute from '../../routes/page-route.js'
 import { APPLICATIONS, TASKLIST } from '../../uris.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -5,6 +6,64 @@ import { DEFAULT_ROLE } from '../../constants.js'
 import { ApplicationService } from '../../services/application.js'
 import { LICENCE_TYPE_TASKLISTS } from './licence-type.js'
 import { Backlink } from '../../handlers/backlink.js'
+import { accountOperations, contactOperations } from '../contact/common/operations.js'
+import { AccountRoles, ContactRoles } from '../contact/common/contact-roles.js'
+import { moveTagInProgress } from '../common/tag-functions.js'
+import { ROLE_SECTION_MAP } from '../contact/common/common-handler.js'
+const hash = pkg.default
+
+const contactMatcher = c => ({
+  fullName: c.fullName,
+  contactDetails: c.contactDetails,
+  address: c.address
+})
+
+const accountMatcher = a => ({
+  name: a.name,
+  contactDetails: a.contactDetails,
+  address: a.address
+})
+
+/**
+ * Set us the contact for the IDM user. if we have one that matches exactly, reuse it. It may be cloned
+ * later if modified
+ * @param applicationId
+ * @param userId
+ * @param contactRole
+ * @returns {Promise<void>}
+ */
+export const setUpIDMContacts = async (applicationId, userId, contactRole) => {
+  const user = await APIRequests.USER.getById(userId)
+  const contacts = await APIRequests.CONTACT.findContactsByIDMUser(userId)
+  const contactOps = contactOperations(contactRole, applicationId)
+  if (!contacts.length) {
+    await contactOps.create(user)
+  } else {
+    const userWithContacts = await APIRequests.USER.getById(userId)
+    const contact = contacts.find(c => hash(contactMatcher(c)) === hash(contactMatcher(userWithContacts)))
+    if (contact) {
+      await contactOps.assign(contact.id)
+    } else {
+      await contactOps.create(userWithContacts)
+    }
+  }
+}
+
+export const setUpIDMAccounts = async (applicationId, organisationId, accountRole) => {
+  const organisation = await APIRequests.USER.getOrganisation(organisationId)
+  const accounts = await APIRequests.ACCOUNT.findAccountsByIDMOrganisation(organisationId)
+  const accountOps = accountOperations(accountRole, applicationId)
+  if (!accounts.length) {
+    await accountOps.create(organisation)
+  } else {
+    const account = accounts.find(a => hash(accountMatcher(a)) === hash(accountMatcher(organisation)))
+    if (account) {
+      await accountOps.assign(account.id)
+    } else {
+      await accountOps.create(organisation)
+    }
+  }
+}
 
 /**
  * Assumes to be authenticated
@@ -20,10 +79,27 @@ export const getApplication = async request => {
     return APIRequests.APPLICATION.getById(id)
   } else {
     // Expect the application to be set in the cache
-    const { applicationId, userId } = await request.cache().getData()
+    const { applicationId, userId, applicationRole, organisationId } = await request.cache().getData()
     // If created newly, it requires to be associated to the user and assigned a reference number
     // (The call is idempotent
-    const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE)
+    const { application } = await APIRequests.APPLICATION.initialize(userId, applicationId, DEFAULT_ROLE, applicationRole)
+
+    const accountRole = applicationRole === ContactRoles.ECOLOGIST
+      ? AccountRoles.ECOLOGIST_ORGANISATION
+      : AccountRoles.APPLICANT_ORGANISATION
+
+    // If the user is the applicant or ecologist on this application
+    // create the user contact and optional account and assign them to the role
+    if ([ContactRoles.ECOLOGIST, ContactRoles.APPLICANT].includes(applicationRole)) {
+      // Only do this once....
+      if (!await APIRequests.CONTACT.role(applicationRole).getByApplicationId(applicationId)) {
+        await setUpIDMContacts(applicationId, userId, applicationRole)
+        await moveTagInProgress(applicationId, ROLE_SECTION_MAP[applicationRole])
+      }
+      if (organisationId && !await APIRequests.ACCOUNT.role(accountRole).getByApplicationId(applicationId)) {
+        await setUpIDMAccounts(applicationId, organisationId, accountRole)
+      }
+    }
     return application
   }
 }
@@ -63,13 +139,13 @@ export const checkData = async (request, h) => {
       return h.redirect(APPLICATIONS.uri)
     }
   } else {
-    if (!journeyData.applicationId) {
-      return h.redirect(APPLICATIONS.uri)
-    } else {
+    if (journeyData.applicationId && journeyData.applicationRole) {
       const application = APIRequests.APPLICATION.getById(journeyData.applicationId)
       if (!application) {
         return h.redirect(APPLICATIONS.uri)
       }
+    } else {
+      return h.redirect(APPLICATIONS.uri)
     }
   }
 

@@ -6,13 +6,46 @@ const debug = db('database-model:define')
 
 const models = {}
 
-async function defineUserRoles (sequelize) {
-  models.userRoles = await sequelize.define('user-roles', {
-    role: { type: DataTypes.STRING(20), primaryKey: true }
+async function defineUsers (sequelize) {
+  models.users = await sequelize.define('user', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    username: { type: DataTypes.STRING(50), allowNull: false },
+    user: { type: DataTypes.JSONB },
+    cookiePrefs: { type: DataTypes.JSONB },
+    fetched: { type: DataTypes.BOOLEAN, defaultValue: false }
   }, {
-    timestamps: false,
+    timestamps: true,
     indexes: [
-      { unique: true, fields: ['role'], name: 'user_roles_uk' }
+      { unique: true, fields: ['username'], name: 'user_username_uk' }
+    ]
+  })
+}
+
+async function defineOrganisation (sequelize) {
+  models.organisations = await sequelize.define('organisation', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    name: { type: DataTypes.STRING(50), allowNull: false },
+    organisation: { type: DataTypes.JSONB },
+    fetched: { type: DataTypes.BOOLEAN, defaultValue: false }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: true, fields: ['name'], name: 'organisation_name_uk' }
+    ]
+  })
+}
+
+async function defineUserOrganisation (sequelize) {
+  models.userOrganisations = await sequelize.define('user-organisations', {
+    id: { type: DataTypes.UUID, primaryKey: true },
+    userId: { type: DataTypes.UUID, primaryKey: true },
+    organisationId: { type: DataTypes.UUID, primaryKey: true },
+    relationship: { type: DataTypes.STRING(50) }
+  }, {
+    timestamps: true,
+    indexes: [
+      { unique: false, fields: ['user_id'], name: 'organisation_user_fk' },
+      { unique: false, fields: ['organisation_id'], name: 'organisation_organisation_fk' }
     ]
   })
 }
@@ -39,20 +72,6 @@ async function defineAccountRoles (sequelize) {
   })
 }
 
-async function defineUsers (sequelize) {
-  models.users = await sequelize.define('user', {
-    id: { type: DataTypes.UUID, primaryKey: true },
-    username: { type: DataTypes.STRING(50), allowNull: false },
-    password: { type: DataTypes.STRING(127) },
-    cookiePrefs: { type: DataTypes.JSONB }
-  }, {
-    timestamps: true,
-    indexes: [
-      { unique: true, fields: ['username'], name: 'user_username_uk' }
-    ]
-  })
-}
-
 async function defineContacts (sequelize) {
   models.contacts = await sequelize.define('contacts', {
     id: { type: DataTypes.UUID, primaryKey: true },
@@ -74,6 +93,7 @@ async function defineContacts (sequelize) {
 async function defineAccounts (sequelize) {
   models.accounts = await sequelize.define('accounts', {
     id: { type: DataTypes.UUID, primaryKey: true },
+    organisationId: { type: DataTypes.UUID },
     account: { type: DataTypes.JSONB },
     sddsAccountId: { type: DataTypes.UUID },
     cloneOf: { type: DataTypes.UUID },
@@ -82,7 +102,8 @@ async function defineAccounts (sequelize) {
   }, {
     timestamps: true,
     indexes: [
-      { unique: true, fields: ['sdds_account_id'], name: 'account_sdds_id_uk' }
+      { unique: true, fields: ['sdds_account_id'], name: 'account_sdds_id_uk' },
+      { unique: false, fields: ['organisation_id'], name: 'account_organisation_id_fk' }
     ]
   })
 }
@@ -187,19 +208,19 @@ async function defineApplicationUsers (sequelize) {
         key: 'id'
       }
     },
-    role: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: models.userRoles,
-        key: 'role'
-      }
+    userRole: {
+      type: DataTypes.STRING(20)
+    },
+    applicationRole: {
+      type: DataTypes.STRING(20)
     }
   }, {
     timestamps: true,
     indexes: [
       { unique: false, fields: ['user_id'], name: 'application_user_user_fk' },
       { unique: false, fields: ['application_id'], name: 'application_user_application_fk' },
-      { unique: false, fields: ['role'], name: 'application_user_role_fk' }
+      { unique: false, fields: ['user_role'], name: 'application_user_user_role_fk' },
+      { unique: false, fields: ['application_role'], name: 'application_user_application_role_fk' }
     ]
   })
 }
@@ -610,7 +631,8 @@ const createModels = async () => {
 
   // Define the tables (THE ORDERING REFLECTS INTERDEPENDENCIES)
   await defineUsers(sequelize)
-  await defineUserRoles(sequelize)
+  await defineOrganisation(sequelize)
+  await defineUserOrganisation(sequelize)
 
   // Define the account and contact tables
   await defineContactRoles(sequelize)
@@ -678,7 +700,8 @@ const createModels = async () => {
 
   // Synchronize the model
   await models.users.sync()
-  await models.userRoles.sync()
+  await models.organisations.sync()
+  await models.userOrganisations.sync()
 
   await models.contactRoles.sync()
   await models.accountRoles.sync()
@@ -717,9 +740,6 @@ const createModels = async () => {
 
   await models.optionSets.sync()
   await models.feedbacks.sync()
-
-  // Create user roles
-  await models.userRoles.upsert({ role: 'USER' })
 
   // Create the contact roles
   await models.contactRoles.upsert({ contactRole: 'APPLICANT' })

@@ -67,6 +67,11 @@ describe('additional page data', () => {
   })
 
   it('return response-toolkit continue', async () => {
+    jest.doMock('@defra/wls-connectors-lib', () => ({
+      DEFRA_ID: {
+        getManagement: () => '/manage'
+      }
+    }))
     const mockHeaders = jest.fn()
     const request = {
       method: 'get',
@@ -79,7 +84,10 @@ describe('additional page data', () => {
           context: {}
         },
         header: mockHeaders
-      }
+      },
+      cache: () => ({
+        getAuthData: () => ({ contactId: '6829ad54-bab7-4a78-8ca9-dcf722117a45', firstName: 'Graham', lastName: 'Willis' })
+      })
     }
 
     const h = {
@@ -95,13 +103,10 @@ describe('additional page data', () => {
         applicantEmail: '/applicant-email',
         applicantIsOrganisation: '/applicant-organisation',
         applicantName: '/applicant-name',
-        applicantNames: '/applicant-names',
-        applicantOrganisations: '/applicant-organisations',
         applicantPostcode: '/applicant-postcode',
         applicationSummary: '/application-summary',
         applications: '/applications',
         applicationLicence: '/application-licence-summary',
-        applicantUser: '/applicant-user',
         classMitigation: '/class-mitigation',
         classMitigationDetails: '/enter-class-mitigation-details',
         consent: '/consent',
@@ -111,24 +116,22 @@ describe('additional page data', () => {
         ecologistEmail: '/ecologist-email',
         ecologistIsOrganisation: '/ecologist-organisation',
         ecologistName: '/ecologist-name',
-        ecologistNames: '/ecologist-names',
-        ecologistOrganisations: '/ecologist-organisations',
         ecologistPostcode: '/ecologist-postcode',
-        ecologistUser: '/ecologist-user',
         experienceDetails: '/enter-experience',
         invoiceResponsible: '/invoice-responsible',
         invoiceAddress: '/invoice-address',
         invoiceEmail: '/invoice-email',
         invoiceIsOrganisation: '/invoice-organisation',
         invoiceName: '/invoice-name',
-        invoiceNames: '/invoice-names',
-        invoiceOrganisations: '/invoice-organisations',
         invoicePostcode: '/invoice-postcode',
-        invoiceUser: '/invoice-user',
         landowner: '/landowner',
         landownerPermission: '/landowner-permission',
         licenceDetails: '/licence',
-        login: '/login',
+        idm: {
+          management: '/manage',
+          signIn: '/sign-in',
+          signOut: '/sign-out'
+        },
         magic: {
           ds: 'https://magic.defra.gov.uk/MagicMap.aspx?chosenLayers=sssiPIndex,sssiIndex,backdropDIndex,backdropIndex,europeIndex,vmlBWIndex,25kBWIndex,50kBWIndex,250kBWIndex,miniscaleBWIndex,baseIndex&box=-187122:5095:1034155:705095&useDefaultbackgroundMapping=false'
         },
@@ -151,15 +154,12 @@ describe('additional page data', () => {
         designatedSiteRemove: '/designated-site-remove',
         isAnyConviction: '/any-convictions',
         purchaseOrderReference: '/invoice-purchase-order',
-        signOut: '/sign-out',
         additionalApplicantAdd: '/add-additional-applicant',
+        additionalApplicantName: '/additional-applicant-name',
         additionalApplicantEmail: '/additional-applicant-email',
-        additionalApplicantNames: '/additional-applicant-names',
-        additionalApplicantUser: '/additional-applicant-user',
         additionalEcologistAdd: '/add-additional-ecologist',
+        additionalEcologistName: '/additional-ecologist-name',
         additionalEcologistEmail: '/additional-ecologist-email',
-        additionalEcologistNames: '/additional-ecologist-names',
-        additionalEcologistUser: '/additional-ecologist-user',
         species: '/which-species',
         taskList: '/tasklist',
         workCategory: '/work-category',
@@ -168,7 +168,10 @@ describe('additional page data', () => {
         workProposal: '/work-proposal'
       },
       credentials: 'credentials',
-      cspNonce: expect.any(String)
+      cspNonce: expect.any(String),
+      user: {
+        name: 'Graham Willis'
+      }
     })
   })
 })

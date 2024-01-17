@@ -7,7 +7,7 @@ const { cache } = REDIS
 
 export default async (_context, req, h) => {
   try {
-    const { userId, applicationId, role } = req.payload
+    const { userId, applicationId, userRole, applicationRole } = req.payload
     const user = await models.users.findByPk(userId)
     if (!user) {
       return h.response({ code: 400, error: { description: `userId: ${userId} not found` } }).code(400)
@@ -33,7 +33,8 @@ export default async (_context, req, h) => {
       id: uuidv4(),
       userId,
       applicationId,
-      role
+      userRole,
+      applicationRole
     })
 
     const response = prepareResponse(dataValues)

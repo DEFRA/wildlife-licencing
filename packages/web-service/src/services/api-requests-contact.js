@@ -124,6 +124,13 @@ const unLinkContact = async (role, applicationId, contactId) => {
   }
 }
 
+/**
+ * This query deals with the user as the creator of the contact as is different to where the contact is created for the IDM identitity
+ * on a given role on the application
+ * @param role
+ * @param userId
+ * @returns {Promise<*>}
+ */
 const findContactByUser = async (role, userId) => {
   try {
     debug(`Finding ${role}'s for userId: ${userId}`)
@@ -136,6 +143,17 @@ const findContactByUser = async (role, userId) => {
 }
 
 export const CONTACT = {
+  /**
+   * This query deals with contacts which are the point-in-time contact information for an IDM user
+   * @param role
+   * @param userId
+   * @returns {Promise<*>}
+   */
+  findContactsByIDMUser: async userId => apiRequestsWrapper(
+    async () => API.get(`${apiUrls.USER_CONTACTS}/${userId}`),
+    `Finding IDM contacts for userId: ${userId}`,
+    500
+  ),
   findAllByUser: async userId => findContactByUser(null, userId),
   findAllContactApplicationRolesByUser: async userId => apiRequestsWrapper(
     async () => {

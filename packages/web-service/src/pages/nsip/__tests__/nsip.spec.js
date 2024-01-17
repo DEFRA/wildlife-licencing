@@ -86,7 +86,7 @@ describe('The NSIP page', () => {
       })
     }
     const result = await completion(request)
-    expect(result).toEqual('/landowner')
+    expect(result).toEqual('/user-role')
   })
 
   it('the NSIP page completion causes a redirect to the landowner page if NSIP is true', async () => {
@@ -108,6 +108,6 @@ describe('The NSIP page', () => {
       })
     }
     const result = await completion(request)
-    expect(result).toEqual('/landowner')
+    expect(result).toEqual('/user-role')
   })
 })

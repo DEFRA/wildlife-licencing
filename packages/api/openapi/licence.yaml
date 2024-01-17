@@ -58,6 +58,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  '/organisation-accounts/{organisationId}':
+    get:
+      description: Get a list accounts assigned to an IDM organisation
+      summary:  Get a list accounts assigned to an IDM organisation
+      operationId: getAccountsByOrganisationId
+      parameters:
+        - name: organisationId
+          in: path
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accounts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
   '/account':
     post:
       description: Create and store account
@@ -451,6 +483,56 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user-update/submit':
+    post:
+      description: Queue the request for defra-customer-updates
+      summary: Queue the request for defra-customer-updates
+      operationId: postUserUpdateSubmit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userUpdate'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/organisation-update/submit':
+    post:
+      description: Queue the request for defra-customer-updates (org)
+      summary: Queue the request for defra-customer-updates (org)
+      operationId: postOrganisationUpdateSubmit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisationUpdate'
       responses:
         204:
           description: Success
@@ -2282,7 +2364,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
-        - name: role
+        - name: userRole
           in: query
           description: ID of the user
           required: false
@@ -2443,6 +2525,38 @@ paths:
                 $ref: '#/components/schemas/error'
         404:
           description: Not found
+        500:
+          description: Unexpected error on server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  '/user-contacts/{userId}':
+    get:
+      description: Get a list contacts
+      summary: Get a list contacts
+      operationId: getContactsByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contacts'
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         500:
           description: Unexpected error on server
           content:
@@ -3338,41 +3452,125 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-  '/user/{username}/{password}/authenticate':
+  /organisation/{organisationId}:
     get:
-      description: Test a user password
-      summary: Retrieve a user
-      operationId: authenticateUser
+      description: Get organisation by Id
+      operationId: getOrganisationById
       parameters:
-        - name: username
-          in: path
-          description: ID of the applicant
+        - in: path
           required: true
+          name: organisationId
           schema:
-            $ref: '#/components/schemas/email'
-        - name: password
-          in: path
-          description: password
-          required: true
-          schema:
-            $ref: '#/components/schemas/password'
+            $ref: '#/components/schemas/uuid'
       responses:
-        200:
-          description: Success
+        '200':
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-        500:
-          description: Unexpected error on server
+                $ref: '#/components/schemas/organisation'
+          description: Success
+        '500':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get organisation by Id
+    put:
+      description: Put organisation by Id
+      operationId: putOrganisation
+      parameters:
+        - in: path
+          name: organisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the organisation by id
 
+  /user-organisation/{userOrganisationId}:
+    get:
+      description: Get user-organisation by Id
+      operationId: getUserOrganisationById
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Get user-organisation by Id
+    put:
+      description: Put userOrganisation by Id
+      operationId: putUserOrganisation
+      parameters:
+        - in: path
+          name: userOrganisationId
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userOrganisation'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userOrganisation'
+          description: Success - no change
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Unexpected error on server
+      summary: Put the userOrganisation by id
 
 ################################################################################################
 # Reference Data
@@ -3530,8 +3728,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-
 
   '/application-contacts/contacts':
     get:
@@ -3728,6 +3924,8 @@ components:
       additionalProperties: false
       properties:
         id:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
           $ref: '#/components/schemas/uuid'
         name:
           type: string
@@ -4056,8 +4254,10 @@ components:
           $ref: '#/components/schemas/uuid'
         applicationId:
           $ref: '#/components/schemas/uuid'
-        role:
+        userRole:
           $ref: '#/components/schemas/roles'
+        applicationRole:
+          type: string
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -4351,8 +4551,6 @@ components:
                 $ref: '#/components/schemas/timestamp'
         stateCode:
           type: number
-        statusCode:
-          type: number
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
@@ -4428,21 +4626,79 @@ components:
           maxLength: 255
 
     user:
-      type: object
       additionalProperties: false
+      type: object
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-        username:
-          $ref: '#/components/schemas/email'
-        password:
-          $ref: '#/components/schemas/password'
         cookiePrefs:
           $ref: '#/components/schemas/cookiePrefs'
         createdAt:
           $ref: '#/components/schemas/timestamp'
+        username:
+          type: string
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 160
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        user:
+          $ref: '#/components/schemas/user'
+        fetched:
+          type: boolean
+        address:
+          $ref: '#/components/schemas/address'
         updatedAt:
           $ref: '#/components/schemas/timestamp'
+
+    organisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        contactDetails:
+          $ref: '#/components/schemas/contactDetails'
+        address:
+          $ref: '#/components/schemas/address'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        fetched:
+          type: boolean
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+      type: object
+
+    userOrganisation:
+      additionalProperties: false
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/timestamp'
+        id:
+          $ref: '#/components/schemas/uuid'
+        organisationId:
+          $ref: '#/components/schemas/uuid'
+        relationship:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/timestamp'
+        userId:
+          $ref: '#/components/schemas/uuid'
+      type: object
+
+    userUpdate:
+      additionalProperties: false
+      properties:
+        userId:
+          $ref: '#/components/schemas/uuid'
+
+    organisationUpdate:
+      additionalProperties: false
+      properties:
+        organisationId:
+          $ref: '#/components/schemas/uuid'
 
     cookiePrefs:
       type: object
@@ -4665,20 +4921,6 @@ components:
     email:
       type: string
       example: email@email.com
-
-    # At least 8 characters long
-    # Not more than 16 characters long
-    # At least one uppercase character
-    # At least one lowercase character
-    # At least one number
-    # At least one special character
-    # Example Aa1!HHHH
-    password:
-      type: string
-      pattern: (?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])
-      minLength: 8
-      maxLength: 16
-      example:  Aa1!HHHH
 
     phone:
       type: string

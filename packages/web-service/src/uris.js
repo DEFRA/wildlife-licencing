@@ -6,12 +6,16 @@ export const WINDOW_NOT_OPEN = { uri: '/window-not-open', page: 'window-not-open
 export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
+export const SIGN_IN = { uri: '/sign-in' }
+export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
+export const DEFRA_IDM_CALLBACK = { uri: '/auth-complete' }
+export const USER_ROLE = { uri: '/user-role', page: 'user-role' }
+
 export const APPLICATIONS = { uri: '/applications', page: 'applications' }
 export const FEEDBACK = { uri: '/feedback', page: 'feedback' }
 export const FEEDBACK_SENT = { uri: '/feedback-sent', page: 'feedback-sent' }
 export const APPLICATION_SUMMARY = { uri: '/application-summary', page: 'application-summary' }
 export const APPLICATION_LICENCE = { uri: '/application-licence-summary', page: 'application-licence-summary' }
-export const LOGIN = { uri: '/login', page: 'login' }
 export const TASKLIST = { uri: '/tasklist', page: 'tasklist' }
 export const DECLARATION = { uri: '/declaration', page: 'declaration' }
 export const SUBMISSION = { uri: '/submission', page: 'submission' }
@@ -69,11 +73,8 @@ export const workActivityURIs = {
 
 export const contactURIs = {
   ECOLOGIST: {
-    USER: { uri: '/ecologist-user', page: 'ecologist-user' },
-    NAMES: { uri: '/ecologist-names', page: 'ecologist-names' },
     NAME: { uri: '/ecologist-name', page: 'ecologist-name' },
     IS_ORGANISATION: { uri: '/ecologist-organisation', page: 'ecologist-organisation' },
-    ORGANISATIONS: { uri: '/ecologist-organisations', page: 'ecologist-organisations' },
     EMAIL: { uri: '/ecologist-email', page: 'ecologist-email' },
     CHECK_ANSWERS: { uri: '/ecologist-check-answers', page: 'ecologist-check-answers' },
     POSTCODE: { uri: '/ecologist-postcode', page: 'ecologist-postcode' },
@@ -81,11 +82,8 @@ export const contactURIs = {
     ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
-    USER: { uri: '/applicant-user', page: 'applicant-user' },
-    NAMES: { uri: '/applicant-names', page: 'applicant-names' },
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
     IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
-    ORGANISATIONS: { uri: '/applicant-organisations', page: 'applicant-organisations' },
     EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
     CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
     POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
@@ -103,11 +101,8 @@ export const contactURIs = {
   },
   INVOICE_PAYER: {
     RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
-    USER: { uri: '/invoice-user', page: 'invoice-user' },
-    NAMES: { uri: '/invoice-names', page: 'invoice-names' },
     NAME: { uri: '/invoice-name', page: 'invoice-name' },
     IS_ORGANISATION: { uri: '/invoice-organisation', page: 'invoice-organisation' },
-    ORGANISATIONS: { uri: '/invoice-organisations', page: 'invoice-organisations' },
     EMAIL: { uri: '/invoice-email', page: 'invoice-email' },
     CHECK_ANSWERS: { uri: '/invoice-check-answers', page: 'invoice-check-answers' },
     CONTACT_DETAILS: { uri: '/invoice-contact-details', page: 'invoice-contact-details' },
@@ -118,19 +113,15 @@ export const contactURIs = {
   },
   ADDITIONAL_APPLICANT: {
     ADD: { uri: '/add-additional-applicant', page: 'add-additional-applicant' },
-    USER: { uri: '/additional-applicant-user', page: 'additional-applicant-user' },
-    NAMES: { uri: '/additional-applicant-names', page: 'additional-applicant-names' },
     NAME: { uri: '/additional-applicant-name', page: 'additional-applicant-name' },
     EMAIL: { uri: '/additional-applicant-email', page: 'additional-applicant-email' },
-    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
+    CHECK_ANSWERS: { uri: '/additional-applicant-check-answers', page: 'additional-applicant-check-answers' }
   },
   ADDITIONAL_ECOLOGIST: {
     ADD: { uri: '/add-additional-ecologist', page: 'add-additional-ecologist' },
-    USER: { uri: '/additional-ecologist-user', page: 'additional-ecologist-user' },
-    NAMES: { uri: '/additional-ecologist-names', page: 'additional-ecologist-names' },
     NAME: { uri: '/additional-ecologist-name', page: 'additional-ecologist-name' },
     EMAIL: { uri: '/additional-ecologist-email', page: 'additional-ecologist-email' },
-    CHECK_ANSWERS: { uri: '/additional-contact-check-answers', page: 'additional-contact-check-answers' }
+    CHECK_ANSWERS: { uri: '/additional-ecologist-check-answers', page: 'additional-ecologist-check-answers' }
   }
 }
 
@@ -216,8 +207,6 @@ export const ReturnsURIs = {
     WELFARE_CONCERNS: { uri: '/welfare-concerns', page: 'welfare-concerns' }
   }
 }
-
-export const SIGN_OUT = { uri: '/sign-out', page: 'sign-out' }
 
 export const ERRORS = {
   NOT_FOUND: { uri: '/not-found', page: 'not-found' },

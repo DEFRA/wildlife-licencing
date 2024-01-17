@@ -5,15 +5,14 @@ import { emailAddressPage } from '../common/email-address/email-address-page.js'
 import { AccountRoles, ContactRoles } from '../common/contact-roles.js'
 import { checkHasContact } from '../common/common-handler.js'
 import { checkApplication } from '../../common/check-application.js'
-import { redirectJourney } from '../common/common.js'
 
-const { EMAIL, USER } = contactURIs.ECOLOGIST
+const { EMAIL } = contactURIs.ECOLOGIST
 
 export const ecologistEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
-  checkData: [checkApplication, checkHasContact(ContactRoles.ECOLOGIST, USER)],
-  completion: emailAddressCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST, redirectJourney),
+  checkData: [checkApplication, checkHasContact(ContactRoles.ECOLOGIST)],
   getData: getEmailAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
-  setData: setEmailAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION)
+  setData: setEmailAddressData(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION),
+  completion: emailAddressCompletion(ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
 }, ContactRoles.ECOLOGIST, AccountRoles.ECOLOGIST_ORGANISATION)

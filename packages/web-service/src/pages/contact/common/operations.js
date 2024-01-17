@@ -12,8 +12,8 @@ import { APIRequests } from '../../../services/api-requests.js'
  * create: ((function(*, *): Promise<*|undefined>)|*),
  * assign: ((function(*): Promise<void>)|*)}}
  */
-export const contactOperations = (contactRole, applicationId, userId) =>
-  contactOperationsFunctions(async () => APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId), userId, contactRole, applicationId)
+export const contactOperations = (contactRole, applicationId) =>
+  contactOperationsFunctions(async () => APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId), contactRole, applicationId)
 
 /**
  * Encapsulate the various operations made against contact
@@ -28,24 +28,29 @@ export const contactOperations = (contactRole, applicationId, userId) =>
  * assign: ((function(*): Promise<void>)|*)
  * }}
  */
-export const contactOperationsForContact = (contactRole, applicationId, userId, contactId) =>
+export const contactOperationsForContact = (contactRole, applicationId, contactId) =>
   contactOperationsFunctions(async () => contactId ? APIRequests.CONTACT.getById(contactId) : null,
-    userId,
     contactRole,
     applicationId)
 
-const contactOperationsFunctions = (getContact, userId, contactRole, applicationId) => {
+const contactOperationsFunctions = (getContact, contactRole, applicationId) => {
   return {
-    create: async (isContactSignedInUser, contactName) => {
+    /**
+     * if user is set it is assumed to be a user entity and the contact is created from it, if null a new contact
+     * is created with a name only
+     * @param contactName
+     * @returns {Promise<*|undefined>}
+     */
+    create: async (user, contactName) => {
       // Create contact once per role
       const contact = await getContact()
       if (!contact) {
-        if (isContactSignedInUser) {
-          const user = await APIRequests.USER.getById(userId)
+        if (user) {
           return APIRequests.CONTACT.role(contactRole).create(applicationId, {
-            ...(contactName && { fullName: contactName }),
+            fullName: user.fullName,
             userId: user.id,
-            contactDetails: { email: user.username }
+            contactDetails: user.contactDetails,
+            ...(user.address && { address: user.address })
           })
         } else {
           return APIRequests.CONTACT.role(contactRole).create(applicationId, {
@@ -78,7 +83,7 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
       if (contact && contactName.toUpperCase() !== contact.fullName?.toUpperCase()) {
         if (await APIRequests.CONTACT.isImmutable(applicationId, contact.id)) {
           // Migrate when changing name
-          await migrateContact(userId, applicationId, contact, contactRole, {
+          await migrateContact(applicationId, contact, contactRole, {
             fullName: contactName,
             ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
             ...(contact.address && { address: contact.address }),
@@ -92,17 +97,6 @@ const contactOperationsFunctions = (getContact, userId, contactRole, application
             ...(contact.userId && { userId: contact.userId }),
             ...(contact.cloneOf && { cloneOf: contact.cloneOf })
           })
-        }
-      }
-    },
-    setContactIsUser: async contactIsUser => {
-      const contact = await getContact()
-      const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (contact) {
-        if (contactIsUser && !contact.userId) {
-          await setContactIsUserUnassociated(userId, contactImmutable, contactRole, applicationId, contact)
-        } else if (!contactIsUser && contact.userId) {
-          await setContactIsUserAssociated(contactImmutable, contactRole, applicationId, contact)
         }
       }
     }
@@ -127,12 +121,27 @@ export const accountOperations = (accountRole, applicationId) =>
 
 const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
   return {
-    create: async accountName => {
+    /**
+     * if organisation is set it is assumed to be a organisation entity and the account is created from it, if null a new organisation
+     * is created with a name only
+     * @param contactName
+     * @returns {Promise<*|undefined>}
+     */
+    create: async (organisation, accountName) => {
       const account = await getAccount()
       if (!account) {
-        return APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
-          ...(accountName && { name: accountName })
-        })
+        if (organisation) {
+          return APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
+            name: organisation.name,
+            contactDetails: organisation.contactDetails,
+            address: organisation?.address,
+            organisationId: organisation.id
+          })
+        } else {
+          return APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
+            ...(accountName && { name: accountName })
+          })
+        }
       }
       return account
     },
@@ -153,18 +162,6 @@ const accountOperationsFunctions = (getAccount, accountRole, applicationId) => {
       const account = await getAccount()
       if (account) {
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
-      }
-    },
-    setName: async accountName => {
-      const account = await getAccount()
-      // Assign the name
-      if (account && !await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
-        await APIRequests.ACCOUNT.update(account.id, {
-          name: accountName,
-          ...(account.contactDetails && { contactDetails: account.contactDetails }),
-          ...(account.address && { address: account.address }),
-          ...(account.cloneOf && { cloneOf: account.cloneOf })
-        })
       }
     }
   }
@@ -215,7 +212,7 @@ export const contactAccountOperationsForContactAccount = (contactRole, accountRo
     contactRole,
     accountRole)
 
-const contactAccountOperationsFunctions = (getContact, applicationId, getAccount, userId, contactRole, accountRole) =>
+const contactAccountOperationsFunctions = (getContact, applicationId, getAccount, _userId, contactRole, accountRole) =>
   ({
     setEmailAddress: async emailAddress => {
       const contact = await getContact()
@@ -223,10 +220,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
       if (contact && !account) {
         if (contactImmutable) {
-          await migrateContact(userId, applicationId, contact, contactRole, {
-            address: contact.address,
-            contactDetails: { email: emailAddress }
-          })
+          await migrateContact(applicationId, contact, contactRole, { address: contact.address, contactDetails: { email: emailAddress } })
         } else {
           await updateContactFields(contact, {
             contactDetails: { email: emailAddress }
@@ -253,7 +247,7 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const accountImmutable = account && await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
       if (contact && !account) {
         if (contactImmutable) {
-          await migrateContact(userId, applicationId, contact, contactRole, {
+          await migrateContact(applicationId, contact, contactRole, {
             address: address,
             contactDetails: contact.contactDetails
           })
@@ -279,63 +273,24 @@ const contactAccountOperationsFunctions = (getContact, applicationId, getAccount
       const contact = await getContact()
       const account = accountRole && await getAccount()
       const contactImmutable = contact && await APIRequests.CONTACT.isImmutable(applicationId, contact.id)
-      if (isOrganisation && (!account || (name && account.name.toUpperCase() !== name.toUpperCase()))) {
-        // Add account if name set or there is no account assigned, from is-organisation: yes, given the organisation name
-        await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
-        await removeContactDetailsFromContact(applicationId, userId, contactRole, contact, contactImmutable)
-      } else if (isOrganisation && account) {
+      if (isOrganisation && !account) {
+        // is_organisation: yes, new account
+        // Create an account and move the contact details onto it
+        const newAccount = await APIRequests.ACCOUNT.role(accountRole).create(applicationId, { name })
+        await copyContactDetailsToNewAccount(applicationId, accountRole, contact, newAccount)
+        await removeContactDetailsFromContact(applicationId, contactRole, contact, contactImmutable)
+      } else if (isOrganisation && account && account.name.toUpperCase() !== name.toUpperCase()) {
+        // is_organisation: yes, name change
         // If there is an account there should be no details on the contact. On selecting a new account (account-names)
-        await removeContactDetailsFromContact(applicationId, userId, contactRole, contact, contactImmutable)
+        const accountImmutable = await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)
+        await updateAccountName(applicationId, accountRole, account, accountImmutable, name)
       } else if (!isOrganisation && account) {
-        // Remove account, from is_organisation: no
-        await copyAccountDetailsToContact(applicationId, userId, contactRole, contact, account, contactImmutable)
+        // is_organisation: no, remove account
+        await copyAccountDetailsToContact(applicationId, contactRole, contact, account, contactImmutable)
         await APIRequests.ACCOUNT.role(accountRole).unLink(applicationId, account.id)
       }
     }
   })
-
-const setContactIsUserUnassociated = async (userId, contactImmutable, contactRole, applicationId, contact) => {
-  const user = await APIRequests.USER.getById(userId)
-  // Add user to contact
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      userId: user.id,
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      contactDetails: { email: user.username },
-      ...(contact.address && { address: contact.address })
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      userId: user.id,
-      fullName: contact.fullName,
-      contactDetails: { email: user.username },
-      ...(contact.address && { address: contact.address }),
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
-    })
-  }
-}
-
-const setContactIsUserAssociated = async (contactImmutable, contactRole, applicationId, contact) => {
-  // Remove user from contact
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address })
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      fullName: contact.fullName,
-      ...(contact.contactDetails && { contactDetails: contact.contactDetails }),
-      ...(contact.address && { address: contact.address }),
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
-    })
-  }
-}
 
 /**
  * Scenarios
@@ -351,24 +306,14 @@ const setContactIsUserAssociated = async (contactImmutable, contactRole, applica
  * @param contactPayload
  * @returns {Promise<applicationId>}
  */
-const migrateContact = async (userId, applicationId, currentContact, contactRole, contactPayload = {}) => {
-  if (currentContact.userId) {
-    const user = await APIRequests.USER.getById(userId)
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, currentContact.id)
-    return APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      ...contactPayload,
-      fullName: contactPayload.fullName ? contactPayload.fullName : currentContact.fullName,
-      userId: user.id,
-      cloneOf: currentContact.id
-    })
-  } else {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, currentContact.id)
-    return APIRequests.CONTACT.role(contactRole).create(applicationId, Object.assign(contactPayload, {
-      ...contactPayload,
-      fullName: contactPayload.fullName ? contactPayload.fullName : currentContact.fullName,
-      cloneOf: currentContact.id
-    }))
-  }
+const migrateContact = async (applicationId, currentContact, contactRole, contactPayload = {}) => {
+  await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, currentContact.id)
+  return APIRequests.CONTACT.role(contactRole).create(applicationId, {
+    ...contactPayload,
+    fullName: contactPayload.fullName ? contactPayload.fullName : currentContact.fullName,
+    userId: currentContact.userId,
+    cloneOf: currentContact.id
+  })
 }
 
 const updateContactFields = async (currentContact, {
@@ -401,6 +346,7 @@ const migrateAccount = async (applicationId, currentAccount, accountRole, payloa
     ...payload
   })
 }
+
 const updateAccountFields = async (currentAccount, {
   address,
   contactDetails
@@ -409,37 +355,47 @@ const updateAccountFields = async (currentAccount, {
     name: currentAccount.name,
     address: address || currentAccount.address,
     contactDetails: contactDetails || currentAccount.contactDetails,
+    organisation: currentAccount.organisation,
     ...(currentAccount.cloneOf && { cloneOf: currentAccount.cloneOf })
   })
 }
 
-const copyAccountDetailsToContactAssociatedUser = async (contactImmutable, contactRole,
-  applicationId, contact, user, account) => {
-  if (contactImmutable) {
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
-      userId: contact.userId,
-      cloneOf: contact.id,
-      fullName: contact.fullName,
-      contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
+const updateAccountName = async (applicationId, accountRole, account, accountImmutable, name) => {
+  if (accountImmutable) {
+    await APIRequests.ACCOUNT.role(accountRole).unAssign(applicationId, account.id)
+    await APIRequests.ACCOUNT.role(accountRole).create(applicationId, {
+      organisationId: account.organisationId,
+      cloneOf: account.id,
+      name: name,
+      contactDetails: account.contactDetails,
       address: account.address
     })
   } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      userId: contact.userId,
-      fullName: contact.fullName,
-      contactDetails: contact.contactDetails.email === user.username ? { email: user.username } : account.contactDetails,
+    await APIRequests.ACCOUNT.update(account.id, {
+      organisationId: account.organisationId,
+      name: name,
+      contactDetails: account.contactDetails,
       address: account.address,
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
+      cloneOf: account.cloneOf
     })
   }
 }
 
-const copyAccountDetailsToContactUnassociatedUser = async (contactImmutable, contactRole,
-  applicationId, contact, account) => {
+const copyContactDetailsToNewAccount = async (_applicationId, _accountRole, contact, account) => {
+  await APIRequests.ACCOUNT.update(account.id, {
+    organisationId: account.organisationId,
+    name: account.name,
+    contactDetails: contact.contactDetails,
+    address: contact.address,
+    cloneOf: account.cloneOf
+  })
+}
+
+const copyAccountDetailsToContact = async (applicationId, contactRole, contact, account, contactImmutable) => {
   if (contactImmutable) {
     await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
     await APIRequests.CONTACT.role(contactRole).create(applicationId, {
+      userId: contact.userId,
       cloneOf: contact.id,
       fullName: contact.fullName,
       contactDetails: account.contactDetails,
@@ -447,74 +403,29 @@ const copyAccountDetailsToContactUnassociatedUser = async (contactImmutable, con
     })
   } else {
     await APIRequests.CONTACT.update(contact.id, {
+      userId: contact.userId,
       fullName: contact.fullName,
       contactDetails: account.contactDetails,
       address: account.address,
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
+      cloneOf: contact.cloneOf
     })
   }
 }
 
-const copyAccountDetailsToContact = async (applicationId, userId, contactRole, contact, account, contactImmutable) => {
-  if (account.address || account.contactDetails) {
-    const user = await APIRequests.USER.getById(userId)
-    // If the contact is associated with a user then preserve the user email address
-    // If user has selected an alternative email, it will be overwritten by the account email
-    if (contact.userId) {
-      await copyAccountDetailsToContactAssociatedUser(contactImmutable, contactRole, applicationId, contact, user, account)
-    } else {
-      await copyAccountDetailsToContactUnassociatedUser(contactImmutable, contactRole, applicationId, contact, account)
-    }
-  }
-}
-
-const removeContactDetailsFromContactAssociatedUser = async (contactImmutable, contactRole,
-  applicationId, contact, user) => {
-  // If the contact is associated with a user then preserve the user email address
+const removeContactDetailsFromContact = async (applicationId, contactRole, contact, contactImmutable) => {
+  // If the user details are set re-read the user contact details
   if (contactImmutable) {
     await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
     await APIRequests.CONTACT.role(contactRole).create(applicationId, {
       userId: contact.userId,
-      fullName: contact.fullName,
-      cloneOf: contact.id,
-      contactDetails: { email: user.username }
-    })
-  } else {
-    await APIRequests.CONTACT.update(contact.id, {
-      userId: contact.userId,
-      fullName: contact.fullName,
-      contactDetails: { email: user.username },
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
-    })
-  }
-}
-
-const removeContactDetailsFromContactUnassociatedUser = async (contactImmutable, contactRole, applicationId, contact) => {
-  // Remove contact and address
-  if (contactImmutable) {
-    // Clone
-    await APIRequests.CONTACT.role(contactRole).unAssign(applicationId, contact.id)
-    await APIRequests.CONTACT.role(contactRole).create(applicationId, {
       fullName: contact.fullName,
       cloneOf: contact.id
     })
   } else {
     await APIRequests.CONTACT.update(contact.id, {
+      userId: contact.userId,
       fullName: contact.fullName,
-      ...(contact.cloneOf && { cloneOf: contact.cloneOf })
+      cloneOf: contact.cloneOf
     })
-  }
-}
-
-const removeContactDetailsFromContact = async (applicationId, userId, contactRole, contact, contactImmutable) => {
-  if (contact.address || contact.contactDetails) {
-    const user = await APIRequests.USER.getById(userId)
-    if (contact.userId) {
-      if (contact.address || contact.contactDetails.email !== user.username) {
-        await removeContactDetailsFromContactAssociatedUser(contactImmutable, contactRole, applicationId, contact, user)
-      }
-    } else {
-      await removeContactDetailsFromContactUnassociatedUser(contactImmutable, contactRole, applicationId, contact)
-    }
   }
 }

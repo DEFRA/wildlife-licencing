@@ -9,13 +9,25 @@ import {
   deleteUser,
   postUser,
   putUser,
-  authenticateUser
+  postUserUpdateSubmit
 } from './handlers/user/user.js'
+
+import {
+  getOrganisationById,
+  putOrganisation,
+  postOrganisationUpdateSubmit
+} from './handlers/organisation/organisation.js'
+
+import {
+  getUserOrganisationById,
+  putUserOrganisation
+} from './handlers/user-organisation/user-organisation.js'
 
 import {
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper
@@ -25,6 +37,7 @@ import {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper
@@ -193,12 +206,16 @@ const handlers = {
   postUser,
   putUser,
   deleteUser,
-  authenticateUser,
+  getOrganisationById,
+  putOrganisation,
+  getUserOrganisationById,
+  putUserOrganisation,
 
   // Contact handlers
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper,
@@ -207,6 +224,7 @@ const handlers = {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper,
@@ -284,6 +302,10 @@ const handlers = {
   getReturnFileUpload,
   putReturnFileUpload,
   deleteReturnFileUploadByUploadId,
+
+  // Post customer update
+  postUserUpdateSubmit,
+  postOrganisationUpdateSubmit,
 
   // Application site handlers
   getApplicationSites,

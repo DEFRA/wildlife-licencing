@@ -20,17 +20,20 @@ import { OTHER } from './api-requests-other.js'
 export const apiUrls = {
   USERS: '/users',
   USER: '/user',
+  USER_UPDATE: '/user-update/submit',
   APPLICATION: '/application',
   APPLICATIONS: '/applications',
   APPLICATION_USER: '/application-user',
   APPLICATION_USERS: '/application-users',
   CONTACTS: '/contacts',
   CONTACT: '/contact',
+  USER_CONTACTS: '/user-contacts',
   APPLICATION_CONTACTS: '/application-contacts',
   APPLICATION_CONTACT: '/application-contact',
   APPLICATION_CONTACTS_CONTACTS: 'application-contacts/contacts',
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
+  ORGANISATION_ACCOUNTS: '/organisation-accounts',
   APPLICATION_ACCOUNTS: '/application-accounts',
   APPLICATION_ACCOUNT: '/application-account',
   APPLICATION_ACCOUNTS_ACCOUNTS: 'application-accounts/accounts',
@@ -46,7 +49,8 @@ export const apiUrls = {
   RETURN: '/return',
   RETURNS: '/returns',
   DESIGNATED_SITES: 'designated-sites',
-  FEEDBACK: '/feedback'
+  FEEDBACK: '/feedback',
+  ORGANISATION_UPDATE: '/organisation-update/submit'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {

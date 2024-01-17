@@ -89,7 +89,11 @@ describe('The task-list handler', () => {
       }))
       const request = {
         cache: () => ({
-          getData: () => ({ userId: '510db545-4136-48c4-9680-98d89d3962e7', applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
+          getData: () => ({
+            userId: '510db545-4136-48c4-9680-98d89d3962e7',
+            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+            applicationRole: 'OTHER'
+          })
         })
       }
       const h = { redirect: jest.fn() }
@@ -123,7 +127,8 @@ describe('The task-list handler', () => {
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
           APPLICATION: {
-            getById: () => ({ applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
+            getById: () => ({ applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' }),
+            findApplicationUsers: () => [{ applicationRole: 'ECOLOGIST' }]
           }
         }
       }))
@@ -140,7 +145,8 @@ describe('The task-list handler', () => {
       expect(result).toEqual({ applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
       expect(mockSetData).toHaveBeenCalledWith({
         applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
-        userId: '510db545-4136-48c4-9680-98d89d3962e7'
+        userId: '510db545-4136-48c4-9680-98d89d3962e7',
+        applicationRole: 'ECOLOGIST'
       })
     })
 
@@ -150,10 +156,24 @@ describe('The task-list handler', () => {
           id: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064'
         }
       })
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: jest.fn(), create: jest.fn() }),
+        accountOperations: () => ({ assign: jest.fn(), create: jest.fn() })
+      }))
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          },
           APPLICATION: {
-            initialize: mockInitialize
+            initialize: mockInitialize,
+            tags: () => ({ get: () => null })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn()
+            }),
+            findContactsByIDMUser: jest.fn().mockReturnValue([])
           }
         }
       }))
@@ -161,22 +181,37 @@ describe('The task-list handler', () => {
         cache: () => ({
           getData: () => ({
             userId: '510db545-4136-48c4-9680-98d89d3962e7',
-            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064'
+            applicationId: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064',
+            applicationRole: 'APPLICANT'
           })
         })
       }
       const { getApplication } = await import('../tasklist.js')
       const result = await getApplication(request)
       expect(result).toEqual({ id: '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064' })
-      expect(mockInitialize).toHaveBeenCalledWith('510db545-4136-48c4-9680-98d89d3962e7', '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', DEFAULT_ROLE)
+      expect(mockInitialize).toHaveBeenCalledWith('510db545-4136-48c4-9680-98d89d3962e7', '2ffae0ad-9d61-4b7c-b4d0-73ce828d9064', DEFAULT_ROLE, 'APPLICANT')
     })
   })
 
   it('the getData function returns the correct data to the template', async () => {
+    jest.doMock('../../contact/common/operations.js', () => ({
+      contactOperations: () => ({ assign: jest.fn(), create: jest.fn() }),
+      accountOperations: () => ({ assign: jest.fn(), create: jest.fn() })
+    }))
     jest.doMock('../../../services/api-requests.js', () => ({
       APIRequests: {
+        USER: {
+          getById: jest.fn().mockReturnValue({ fullName: 'B' })
+        },
+        CONTACT: {
+          findContactsByIDMUser: jest.fn().mockReturnValue([]),
+          role: () => ({
+            getByApplicationId: jest.fn()
+          })
+        },
         APPLICATION: {
           tags: () => ({
+            get: () => null,
             getAll: () => [{ tag: 'eligibility-check', tagState: 'in-progress' }]
           }),
           initialize: jest.fn(() => ({
@@ -194,7 +229,8 @@ describe('The task-list handler', () => {
       cache: () => ({
         getData: jest.fn(() => ({
           userId: '510db545-4136-48c4-9680-98d89d3962e7',
-          applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de'
+          applicationId: '8b2e3431-71f9-4c20-97f6-e5d192bfc0de',
+          applicationRole: 'APPLICANT'
         }))
       })
     }
@@ -241,6 +277,136 @@ describe('The task-list handler', () => {
       ],
       progress: { complete: 3, from: 4 },
       reference: 'ref'
+    })
+  })
+
+  describe('setUpIDMContacts', () => {
+    it('creates a new IDM contact if none exist for the user', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          },
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([])
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockCreate).toHaveBeenCalledWith({ fullName: 'B' })
+    })
+
+    it('creates a new IDM contact if none exist for the user that exactly match', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([{ fullName: 'A' }])
+          },
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'B' })
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockCreate).toHaveBeenCalledWith({ fullName: 'B' })
+    })
+
+    it('reuses an IDM contact if one exists for the user that exactly match', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          CONTACT: {
+            findContactsByIDMUser: jest.fn().mockReturnValue([{ id: 1, fullName: 'A' }])
+          },
+          USER: {
+            getById: jest.fn().mockReturnValue({ fullName: 'A' })
+          }
+        }
+      }))
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../contact/common/operations.js', () => ({
+        contactOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMContacts } = await import('../tasklist.js')
+      await setUpIDMContacts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST')
+      expect(mockAssign).toHaveBeenCalledWith(1)
+    })
+  })
+
+  describe('setUpIDMAccounts', () => {
+    it('creates a new IDM account if none exist for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' })
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockCreate).toHaveBeenCalledWith({ id: 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb' })
+    })
+
+    it('creates a new IDM account if none exactly match for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([{ name: 'A' }])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ name: 'B' })
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockCreate).toHaveBeenCalledWith({ name: 'B' })
+    })
+
+    it('reuses an existing IDM account if one exactly matches for the organisation', async () => {
+      const mockCreate = jest.fn()
+      const mockAssign = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          ACCOUNT: {
+            findAccountsByIDMOrganisation: jest.fn().mockReturnValue([{ id: 1, name: 'A' }])
+          },
+          USER: {
+            getOrganisation: jest.fn().mockReturnValue({ name: 'A' })
+          }
+        }
+      }))
+      jest.doMock('../../contact/common/operations.js', () => ({
+        accountOperations: () => ({ assign: mockAssign, create: mockCreate })
+      }))
+      const { setUpIDMAccounts } = await import('../tasklist.js')
+      await setUpIDMAccounts('35acb529-70bb-4b8d-8688-ccdec837e5d4', 'f6a4d9e0-2611-44cb-9ea3-12bb7e5459eb', 'ECOLOGIST_ORGANISATION')
+      expect(mockAssign).toHaveBeenCalledWith(1)
     })
   })
 

@@ -1,6 +1,6 @@
+import { eligibilityURIs, SIGN_IN, TASKLIST } from '../../../uris.js'
 import path from 'path'
 import { compileTemplate } from '../../../initialise-snapshot-tests.js'
-import { eligibilityURIs, LOGIN, TASKLIST } from '../../../uris.js'
 
 const {
   LANDOWNER, LANDOWNER_PERMISSION, CONSENT, CONSENT_GRANTED,
@@ -661,7 +661,7 @@ describe('the eligibility pages', () => {
           }
         }
       })
-      expect(result).toEqual(LOGIN.uri)
+      expect(result).toEqual(SIGN_IN.uri)
     })
 
     it('getData sets the tag', async () => {

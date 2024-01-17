@@ -1,9 +1,10 @@
-########################################################################################
-# Create a docker image for the wildlife licencing queue processor
-########################################################################################
-FROM node:16.13.0-alpine
+FROM wildlife_licensing/builder AS builder
 WORKDIR /app
-COPY package*.json ./
-COPY . .
+
 RUN npm ci
-CMD [ "node", "src/application-queue-processor.js" ]
+
+FROM wildlife_licensing/base
+WORKDIR /app/packages/application-queue-processor
+COPY --from=builder /app/ /app/
+
+CMD [ "npm", "run", "start" ]

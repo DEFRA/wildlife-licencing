@@ -15,6 +15,8 @@ const initialize = async () => {
   await createQueue(queueDefinitions.APPLICATION_FILE_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.RETURN_FILE_QUEUE, { type: 'client' })
   await createQueue(queueDefinitions.FEEDBACK_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.USER_DETAILS_QUEUE, { type: 'client' })
+  await createQueue(queueDefinitions.ORGANISATION_DETAILS_QUEUE, { type: 'client' })
 }
 
 const debug = db('api:env')

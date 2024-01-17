@@ -3,7 +3,7 @@
  */
 import { yesNoPage } from '../common/yes-no.js'
 import { checkAnswersPage } from '../common/check-answers.js'
-import { eligibilityURIs, TASKLIST, LOGIN } from '../../uris.js'
+import { eligibilityURIs, TASKLIST, SIGN_IN } from '../../uris.js'
 import { SECTION_TASKS } from '../tasklist/general-sections.js'
 import pageRoute from '../../routes/page-route.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -237,7 +237,7 @@ export const eligibleCheckData = async (request, h) => {
 export const eligibleCompletion = async request => {
   const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ELIGIBILITY_CHECK, tagState: tagStatus.COMPLETE })
-  return request.auth.isAuthenticated ? TASKLIST.uri : LOGIN.uri
+  return request.auth.isAuthenticated ? TASKLIST.uri : SIGN_IN.uri
 }
 
 export const eligible = pageRoute({

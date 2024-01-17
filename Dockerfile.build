@@ -10,3 +10,5 @@ RUN npm config set loglevel error \
     && npm config set audit false
 
 WORKDIR /app
+
+COPY . .

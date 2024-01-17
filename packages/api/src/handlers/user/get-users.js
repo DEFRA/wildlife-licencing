@@ -6,7 +6,7 @@ export default async (_context, req, h) => {
   try {
     let users
     if (req.query?.username) {
-      const username = req.query.username.trim().replace(/\s{2,}/g, ' ')
+      const username = req.query.username
       users = await models.users.findAll({
         where: { username }
       })
