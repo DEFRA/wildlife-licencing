@@ -4,7 +4,7 @@
 
 {% set errorMap = {
         'email-address': {
-            'string.empty': { ref: '#email-address', text: 'You have not entered an email address' },
+            'string.empty': { ref: '#email-address', text: 'Enter email address' },
             'string.email': { ref: '#email-address', text: 'You did not enter a valid email address' },
             'any.invalid': { ref: '#email-address', text: 'Enter a different email address'  }
         },
@@ -23,7 +23,7 @@
       spellcheck: false,
       classes: "govuk-input--width-50",
       attributes: { maxlength: 50 },
-      errorMessage: { text: 'Enter the email address' } if error['email-address']
+      errorMessage: { text: 'Enter email address' } if error['email-address']
     }) }}
 {% endset -%}
 
