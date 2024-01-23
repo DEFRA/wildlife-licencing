@@ -29,7 +29,7 @@
   "author": "Graham Willis",
   "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
-    "@azure/identity": "^2.1.0",
+    "@azure/identity": "^4.0.1",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "dotenv": "^10.0.0"
   },
