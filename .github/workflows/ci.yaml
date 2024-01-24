@@ -35,7 +35,7 @@ jobs:
   docker-base-build-publish:
     #    needs: [build]
     #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
-    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
     with:
       CONTEXT: 'packages/web-service'
       DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
