@@ -33,44 +33,10 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   docker-base-build-publish:
-    name: Push Base Docker image to ECR
-    runs-on: ubuntu-latest
-#    needs: [build]
-#    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Install node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16.13.0'
-
-      - name: Build base and builder
-        run: npm run docker:build-base
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
-          ECR_REPOSITORY: new_front_office
-          IMAGE_TAG: test_github_actions
-          DOCKER_FILE: packages/web-service/Dockerfile.prod
-          CONTEXT: packages/web-service
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --file ${DOCKER_FILE} ${CONTEXT}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-
-#          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --file ${DOCKER_FILE} --build-arg HTTP_PROXY='${SETTINGS.HTTP_PROXY}' --build-arg HTTPS_PROXY='${SETTINGS.HTTPS_PROXY}' ${CONTEXT}
+    #    needs: [build]
+    #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml
+    with:
+      CONTEXT: 'packages/web-service'
+      DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
+    secrets: inherit
