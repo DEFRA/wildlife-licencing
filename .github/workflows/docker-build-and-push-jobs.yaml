@@ -44,5 +44,5 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
           docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${SETTINGS.ECR_ENDPOINT}/${IMAGE_NAME}:${IMAGE_TAG}
-          docker push ${SETTINGS.ECR_ENDPOINT}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker push ${secrets.ECR_ENDPOINT}/${IMAGE_NAME}:${IMAGE_TAG}
 
