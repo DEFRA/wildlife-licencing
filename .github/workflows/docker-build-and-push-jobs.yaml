@@ -44,6 +44,9 @@ jobs:
         run: |
           docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
           docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:test_github_actions
+          echo Show Docker images
+          docker images
+          echo Push to ECR
           docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:test_github_actions
 
 
