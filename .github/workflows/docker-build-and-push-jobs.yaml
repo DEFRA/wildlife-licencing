@@ -43,8 +43,8 @@ jobs:
 #          REPOSITORY: my-ecr-repo
         run: |
           docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
-          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:${IMAGE_TAG}
-          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:${IMAGE_TAG}
+          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:test_github_actions
+          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:test_github_actions
 
 
 
