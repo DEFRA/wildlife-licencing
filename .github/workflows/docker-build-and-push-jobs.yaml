@@ -40,9 +40,11 @@ jobs:
 #          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
 #          ECR_REPOSITORY: new_front_office
           IMAGE_TAG: test_github_actions
-          IMAGE_NAME: new_front_office
+#          REPOSITORY: my-ecr-repo
         run: |
-          docker build -t $IMAGE_NAME:$IMAGE_TAG --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
-          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${{ secrets.ECR_ENDPOINT }}/${IMAGE_NAME}:${IMAGE_TAG}
-          docker push ${{secrets.ECR_ENDPOINT}}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
+          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:${IMAGE_TAG}
+          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/new_front_office:${IMAGE_TAG}
+
+
 
