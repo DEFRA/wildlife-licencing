@@ -39,4 +39,5 @@ jobs:
     with:
       CONTEXT: 'packages/web-service'
       DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
+      IMAGE_NAME: 'new_front_office'
     secrets: inherit
