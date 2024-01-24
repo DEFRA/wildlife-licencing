@@ -43,6 +43,6 @@ jobs:
           IMAGE_NAME: new_front_office
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
-          docker tag ${SETTINGS.IMAGE_NAME}:${IMAGE_TAG} ${SETTINGS.ECR_ENDPOINT}/${SETTINGS.IMAGE_NAME}:${IMAGE_TAG}
-          docker push ${SETTINGS.ECR_ENDPOINT}/${SETTINGS.IMAGE_NAME}:${IMAGE_TAG}
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${SETTINGS.ECR_ENDPOINT}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker push ${SETTINGS.ECR_ENDPOINT}/${IMAGE_NAME}:${IMAGE_TAG}
 
