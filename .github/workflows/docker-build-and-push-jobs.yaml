@@ -42,8 +42,8 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          IMAGE_TAG: test_github_actions
+          IMAGE_TAG: test_github_actions-${{ github.sha }}
         run: |
           docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
-          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:test_github_actions
-          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:test_github_actions
+          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
