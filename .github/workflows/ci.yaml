@@ -32,12 +32,24 @@ jobs:
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  docker-base-build-publish:
+  docker-base-build-publish-web:
     #    needs: [build]
+    name: Publish Web Service
     #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
     uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
     with:
       CONTEXT: 'packages/web-service'
       DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
       IMAGE_NAME: 'new_front_office'
+    secrets: inherit
+
+  docker-base-build-publish-api:
+    #    needs: [build]
+    name: Publish API Service
+    #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/api'
+      DOCKER_FILE: 'packages/api/Dockerfile.prod'
+      IMAGE_NAME: 'new_api'
     secrets: inherit
