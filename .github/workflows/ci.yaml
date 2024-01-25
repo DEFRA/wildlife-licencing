@@ -43,13 +43,13 @@ jobs:
       IMAGE_NAME: 'new_front_office'
     secrets: inherit
 
-  docker-base-build-publish-api:
-    #    needs: [build]
-    name: Publish API Service
-    #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
-    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
-    with:
-      CONTEXT: 'packages/api'
-      DOCKER_FILE: 'packages/api/Dockerfile.prod'
-      IMAGE_NAME: 'new_api'
-    secrets: inherit
+#  docker-base-build-publish-api:
+#    #    needs: [build]
+#    name: Publish API Service
+#    #    if: github.ref == 'refs/heads/feat/build-and-publish-to-ecr-github-actions'
+#    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+#    with:
+#      CONTEXT: 'packages/api'
+#      DOCKER_FILE: 'packages/api/Dockerfile.prod'
+#      IMAGE_NAME: 'new_api'
+#    secrets: inherit
