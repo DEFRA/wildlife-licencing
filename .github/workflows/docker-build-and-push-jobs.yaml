@@ -44,6 +44,6 @@ jobs:
         env:
           IMAGE_TAG: test_github_actions
         run: |
-          docker build -t built_image --file ${{ inputs.DOCKER_FILE }} -build-arg HTTP_PROXY='${secrets.HTTP_PROXY}' --build-arg HTTPS_PROXY='${secrets.HTTPS_PROXY}' ${{ inputs.CONTEXT }}
+          docker build -t built_image --file ${{ inputs.DOCKER_FILE }} --build-arg HTTP_PROXY='${secrets.HTTP_PROXY}' --build-arg HTTPS_PROXY='${secrets.HTTPS_PROXY}' ${{ inputs.CONTEXT }}
           docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:test_github_actions
           docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:test_github_actions
