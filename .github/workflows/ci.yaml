@@ -39,6 +39,6 @@ jobs:
   docker-build-and-publish-wrapper:
     if: startsWith(github.ref, 'refs/tags/')
     needs: [build]
-#    name: Docker Build and Push Services
+    name: Docker Build and Push Services
     uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-wrapper.yaml@feat/build-and-publish-to-ecr-github-actions
     secrets: inherit
