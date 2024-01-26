@@ -40,10 +40,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Extract tag name
+        run: echo "TAG=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
+
       - name: Build, tag, and push image to Amazon ECR
-        env:
-          IMAGE_TAG: test_github_actions-${{ github.sha }}
         run: |
           docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
-          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.TAG }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.TAG }}

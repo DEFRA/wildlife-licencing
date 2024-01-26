@@ -1,0 +1,21 @@
+on:
+  workflow_call:
+
+jobs:
+  docker-base-build-publish-web:
+    name: Publish Web Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/web-service'
+      DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
+      IMAGE_NAME: 'new_front_office'
+    secrets: inherit
+
+  docker-base-build-publish-api:
+    name: Publish API Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/api'
+      DOCKER_FILE: 'packages/api/Dockerfile.prod'
+      IMAGE_NAME: 'new_api'
+    secrets: inherit
