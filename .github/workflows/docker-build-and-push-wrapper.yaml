@@ -1,0 +1,57 @@
+on:
+  workflow_call:
+
+jobs:
+  docker-base-build-publish-web:
+    name: Publish Web Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/web-service'
+      DOCKER_FILE: 'packages/web-service/Dockerfile.prod'
+      IMAGE_NAME: 'new_front_office'
+    secrets: inherit
+
+  docker-base-build-publish-api:
+    name: Publish API Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/api'
+      DOCKER_FILE: 'packages/api/Dockerfile.prod'
+      IMAGE_NAME: 'new_api'
+    secrets: inherit
+
+  docker-base-build-publish-qps:
+    name: Publish QPS Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/application-queue-processor'
+      DOCKER_FILE: 'packages/application-queue-processor/Dockerfile.prod'
+      IMAGE_NAME: 'new_qps'
+    secrets: inherit
+
+  docker-base-build-publish-eps:
+    name: Publish EPS Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/application-extract-processor'
+      DOCKER_FILE: 'packages/application-extract-processor/Dockerfile.prod'
+      IMAGE_NAME: 'new_eps'
+    secrets: inherit
+
+  docker-base-build-publish-rps:
+    name: Publish RPS Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/refdata-extract-processor'
+      DOCKER_FILE: 'packages/refdata-extract-processor/Dockerfile.prod'
+      IMAGE_NAME: 'new_rps'
+    secrets: inherit
+
+  docker-base-build-publish-fqp:
+    name: Publish FQP Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@feat/build-and-publish-to-ecr-github-actions
+    with:
+      CONTEXT: 'packages/file-queue-processor'
+      DOCKER_FILE: 'packages/file-queue-processor/Dockerfile.prod'
+      IMAGE_NAME: 'new_fqp'
+    secrets: inherit

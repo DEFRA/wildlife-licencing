@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    inputs:
+      CONTEXT:
+        required: true
+        type: string
+      DOCKER_FILE:
+          required: true
+          type: string
+      IMAGE_NAME:
+        required: true
+        type: string
+
+jobs:
+  docker-base-build-publish:
+    name: Push Base Docker image to ECR
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.13.0'
+
+      - name: Build base and builder
+        run: npm run docker:build-base
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_ENV_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ENV_ACCOUNT }}:role/${{ secrets.AWS_ENV_ROLE }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Extract tag name
+        run: echo "TAG=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          docker build -t built_image --file ${{ inputs.DOCKER_FILE }} ${{ inputs.CONTEXT }}
+          docker tag built_image ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.TAG }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/natural_england_wildlife/${{ inputs.IMAGE_NAME }}:${{ env.TAG }}
