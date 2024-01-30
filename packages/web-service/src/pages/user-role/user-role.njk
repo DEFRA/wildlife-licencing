@@ -4,11 +4,12 @@
 
 {% set errorMap = {
     'user-role': {
-        'any.required': { ref: '#user-role', text: 'Enter why are you making this application' }
+        'any.required': { ref: '#user-role', text: 'Select an option' }
     }
 } %}
 
-{% set title = 'Why are you making this application?' %}
+
+{% set title = 'Your application role' %}
 
 {% set radioItems = [
     {
@@ -31,6 +32,13 @@
     <p class="govuk-body"> You must explain to Natural England your role in this application, and the licence, if
         issued.</p>
     {{ govukRadios({
+        fieldset: {
+            legend: {
+                text: "What is your role in this application?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
         id: "user-role",
         name: "user-role",
         errorMessage: { text: "Select an option." } if error['user-role'],
