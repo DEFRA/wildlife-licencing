@@ -16,10 +16,9 @@ describe('The user-role', () => {
     expect(mockSetData).toHaveBeenCalledWith({ applicationRole: 'a role' })
   })
 
-
-    it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../user-role.njk'))
-      const renderedHtml = template.render({ data: {} })
-      expect(renderedHtml).toMatchSnapshot()
+  it('Matches the snapshot', async () => {
+    const template = await compileTemplate(path.join(__dirname, '../user-role.njk'))
+    const renderedHtml = template.render({ data: {} })
+    expect(renderedHtml).toMatchSnapshot()
   })
 })
