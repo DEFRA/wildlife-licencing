@@ -101,6 +101,7 @@ describe('additional page data', () => {
       _uri: {
         applicantAddress: '/applicant-address',
         applicantEmail: '/applicant-email',
+        applicantPhoneNumber: '/applicant-phone-number',
         applicantIsOrganisation: '/applicant-organisation',
         applicantName: '/applicant-name',
         applicantPostcode: '/applicant-postcode',

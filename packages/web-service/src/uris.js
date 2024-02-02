@@ -85,6 +85,7 @@ export const contactURIs = {
     NAME: { uri: '/applicant-name', page: 'applicant-name' },
     IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
     EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
+    PHONE_NUMBER: { uri: '/applicant-phone-number', page: 'applicant-phone-number' },
     CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
     POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
     ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },

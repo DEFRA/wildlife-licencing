@@ -1,0 +1,22 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'phone-number': {
+            'string.empty': { ref: '#phone-number', text: 'Enter phone number' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    {{ govukInput({
+      id: "phone-number",
+      name: "phone-number",
+      type: "text",
+      spellcheck: false,
+      classes: "govuk-input--width-50",
+      value: data.phoneNumber if data.phoneNumber else payload['phone-number'],
+      attributes: { maxlength: 50 },
+      errorMessage: { text: 'Enter phone number' } if error['phone-number']
+    }) }}
+{% endblock %}
