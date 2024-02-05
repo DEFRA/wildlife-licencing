@@ -195,7 +195,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-email')
+      expect(result).toEqual('/applicant-postcode')
     })
 
     it('if the user has selected \'yes\', the account is not immutable and no address is set go to the postcode page ', async () => {
