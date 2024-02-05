@@ -60,7 +60,9 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
     } else {
       if (!account.address) {
         return urlBase.POSTCODE.uri
-      } else if (!account.contactDetails) {
+      }
+
+      if (!account.contactDetails) {
         return urlBase.EMAIL.uri
       }
       return urlBase.CHECK_ANSWERS.uri
