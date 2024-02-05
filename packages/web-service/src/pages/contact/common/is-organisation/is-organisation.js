@@ -62,9 +62,8 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
         return urlBase.POSTCODE.uri
       } else if (!account.contactDetails) {
         return urlBase.EMAIL.uri
-      } else {
-        return urlBase.CHECK_ANSWERS.uri
       }
+      return urlBase.CHECK_ANSWERS.uri
     }
   } else {
     // No organisation
