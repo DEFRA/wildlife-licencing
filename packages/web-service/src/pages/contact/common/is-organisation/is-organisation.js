@@ -58,11 +58,12 @@ export const contactAccountCompletion = (contactRole, accountRole, urlBase) => a
     if (await APIRequests.ACCOUNT.isImmutable(applicationId, account.id)) {
       return urlBase.CHECK_ANSWERS.uri
     } else {
-      if (!account.contactDetails) {
-        return urlBase.EMAIL.uri
-      } else if (!account.address) {
-        return urlBase.POSTCODE.uri
-      } else {
+       if (!account.address) {
+         return urlBase.POSTCODE.uri
+      }else if (!account.contactDetails) {
+         return urlBase.EMAIL.uri
+       }
+      else {
         return urlBase.CHECK_ANSWERS.uri
       }
     }
