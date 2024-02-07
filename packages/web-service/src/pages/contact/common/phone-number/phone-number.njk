@@ -3,7 +3,8 @@
 
 {% set errorMap = {
         'phone-number': {
-            'string.empty': { ref: '#phone-number', text: 'Enter phone number' }
+            'string.empty': { ref: '#phone-number', text: 'Enter phone number' },
+            'string.alphanum': { ref: '#phone-number', text: 'Enter a valid phone number' }
         }
     }
 %}
@@ -17,6 +18,6 @@
       classes: "govuk-input--width-50",
       value: data.phoneNumber if data.phoneNumber else payload['phone-number'],
       attributes: { maxlength: 50 },
-      errorMessage: { text: 'Enter phone number' } if error['phone-number']
+      errorMessage: { text: errorMap['phone-number'][error['phone-number']].text } if error['phone-number']
     }) }}
 {% endblock %}

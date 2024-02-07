@@ -19,6 +19,6 @@ export const setPhoneNumberData = (contactRole, accountRole) => async request =>
   await contactAccountOps.setPhoneNumber(request.payload['phone-number'])
 }
 
-export const phoneNumberCompletion = (_contactRole, _accountRole, urlBase) => async request => {
+export const phoneNumberCompletion = (_contactRole, _accountRole, urlBase) => {
   return urlBase.CHECK_ANSWERS.uri
 }
