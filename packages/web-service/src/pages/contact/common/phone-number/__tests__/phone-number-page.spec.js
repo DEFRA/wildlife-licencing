@@ -36,7 +36,7 @@ describe('the phone-number-page', () => {
 
     payloads.forEach(async payload => {
       const validator = getValidator('APPLICANT', null)
-      expect(() => validator(payload, {})).resolves
+      await expect(() => validator(payload, {})).resolves
     })
   })
 })
