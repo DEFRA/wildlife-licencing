@@ -12,6 +12,15 @@
         }
     }
 %}
+{% set orgNameError = false%}
+
+{% if error['organisation-name'] === 'string.empty' %}
+    {% set orgNameError = noneNamed%}
+{% elif error['organisation-name'] === 'any.invalid'%}
+    {% set orgNameError = error['organisation-name'] %}
+{% endif %}
+
+
 
 {% set organisationName %}
     {{ govukInput({
@@ -22,7 +31,10 @@
         text: "Name of organisation"
       },
       value: data.account.name if data.account.name else payload['organisation-name'],
-      attributes: { maxlength: 160 }
+      attributes: { maxlength: 160 },
+        errorMessage: {
+            text: orgNameError
+        } if orgNameError
     }) }}
 {% endset -%}
 
@@ -37,7 +49,7 @@
         {
           value: "yes",
           text: "Yes",
-          checked: data.isOrganization === 'yes',
+            checked: data.isOrganization if data.isOrganization === 'yes' else payload['is-organisation'] === 'yes',
           conditional: {
             html: organisationName
           }
@@ -45,7 +57,7 @@
         {
           value: "no",
           text: "No",
-          checked: data.isOrganization === 'no'
+          checked: data.isOrganization and data.isOrganization === 'no' and payload['is-organisation'] !== 'yes'
         }
       ]
     }) }}
