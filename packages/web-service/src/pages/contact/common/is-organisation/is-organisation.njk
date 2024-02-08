@@ -16,7 +16,7 @@
 
 {% if error['organisation-name'] === 'string.empty' %}
     {% set orgNameError = noneNamed %}
-{% elif error['organisation-name'] === 'any.invalid'%}
+{% elif error['organisation-name'] === 'any.invalid' %}
     {% set orgNameError = error['organisation-name'] %}
 {% endif %}
 
