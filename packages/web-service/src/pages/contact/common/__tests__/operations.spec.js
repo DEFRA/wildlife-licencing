@@ -604,6 +604,227 @@ describe('contact operations', () => {
     })
   })
 
+  describe('contactAccountOperations - setPhoneNumber', () => {
+    it('sets the phone number on a mutable contact, retaining other fields', async () => {
+      const mockUpdate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                address: 'Address',
+                cloneOf: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                userId: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                fullName: 'John Smith',
+                contactDetails: { email: 'john@smith.com' }
+              })
+            }),
+            update: mockUpdate,
+            isImmutable: () => false
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue(null)
+            }),
+            isImmutable: () => null
+          }
+        }
+      }))
+      const { contactAccountOperations } = await import('../operations.js')
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+        '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      await ops.setPhoneNumber('0123456789')
+      expect(mockUpdate).toHaveBeenCalledWith('4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        {
+          address: 'Address',
+          cloneOf: '3ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+          contactDetails: { email: 'john@smith.com', phoneNumber: '0123456789' },
+          fullName: 'John Smith',
+          userId: '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+        }
+      )
+    })
+
+    it('sets the phone number on a clone of an immutable contact, retaining other fields - user associated', async () => {
+      const mockCreate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                address: 'Address',
+                userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                fullName: 'John Smith',
+                contactDetails: { email: 'john@smith.com' }
+              }),
+              create: mockCreate,
+              unAssign: jest.fn()
+            }),
+            isImmutable: () => true
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue(null)
+            }),
+            isImmutable: () => null
+          }
+        }
+      }))
+      const { contactAccountOperations } = await import('../operations.js')
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      await ops.setPhoneNumber('0123456789')
+      expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        {
+          address: 'Address',
+          cloneOf: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+          contactDetails: { email: 'john@smith.com', phoneNumber: '0123456789' },
+          fullName: 'John Smith',
+          userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+        }
+      )
+    })
+
+    it('sets the phone number on a clone of an immutable contact, retaining other fields - no user associated', async () => {
+      const mockCreate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                address: 'Address',
+                fullName: 'John Smith',
+                contactDetails: { email: 'john@smith.com' }
+              }),
+              create: mockCreate,
+              unAssign: jest.fn()
+            }),
+            isImmutable: () => true
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue(null)
+            }),
+            isImmutable: () => null
+          }
+        }
+      }))
+      const { contactAccountOperations } = await import('../operations.js')
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      await ops.setPhoneNumber('0123456789')
+      expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        {
+          address: 'Address',
+          cloneOf: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+          contactDetails: { phoneNumber: '0123456789', email: 'john@smith.com' },
+          fullName: 'John Smith'
+        }
+      )
+    })
+
+    it('sets the phone number on a mutable account, retaining other fields', async () => {
+      const mockUpdate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                fullName: 'John Smith',
+                userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+              })
+            }),
+            isImmutable: () => false
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '6ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                address: 'Address',
+                name: 'Acme Corp',
+                contactDetails: { email: 'john@smith.com' }
+              }),
+              unAssign: jest.fn()
+            }),
+            update: mockUpdate,
+            isImmutable: () => false
+          }
+        }
+      }))
+      const { contactAccountOperations } = await import('../operations.js')
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      await ops.setPhoneNumber('0123456789')
+      expect(mockUpdate).toHaveBeenCalledWith('6ca1677a-eb38-47ef-8759-d85b2b4b2e5c', {
+        address: 'Address',
+        contactDetails: { email: 'john@smith.com', phoneNumber: '0123456789' },
+        name: 'Acme Corp'
+      })
+    })
+
+    it('sets the phone number on a clone of an immutable account, retaining other fields', async () => {
+      const mockCreate = jest.fn()
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          USER: {
+            getById: jest.fn().mockReturnValue({ id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c' })
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                fullName: 'John Smith'
+              })
+            }),
+            isImmutable: () => false
+          },
+          ACCOUNT: {
+            role: () => ({
+              getByApplicationId: jest.fn().mockReturnValue({
+                id: '6ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                address: 'Address',
+                userId: '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+                name: 'Acme Corp',
+                contactDetails: { email: 'john@smith.com' }
+              }),
+              create: mockCreate,
+              unAssign: jest.fn()
+            }),
+            isImmutable: () => true
+          }
+        }
+      }))
+      const { contactAccountOperations } = await import('../operations.js')
+      const ops = contactAccountOperations('APPLICANT', 'APPLICANT_ORGANISATION',
+        '2ca1677a-eb38-47ef-8759-d85b2b4b2e5c', '4ca1677a-eb38-47ef-8759-d85b2b4b2e5c')
+      await ops.setPhoneNumber('0123456789')
+      expect(mockCreate).toHaveBeenCalledWith('2ca1677a-eb38-47ef-8759-d85b2b4b2e5c',
+        {
+          address: 'Address',
+          contactDetails: { phoneNumber: '0123456789', email: 'john@smith.com' },
+          name: 'Acme Corp',
+          cloneOf: '6ca1677a-eb38-47ef-8759-d85b2b4b2e5c'
+        }
+      )
+    })
+  })
+
   describe('contactAccountOperations - setAddress', () => {
     it('sets the address on a mutable contact, retaining other fields', async () => {
       const mockUpdate = jest.fn()

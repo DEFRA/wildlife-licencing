@@ -18,7 +18,8 @@ export const getCheckAnswersData = (contactRole, accountRole) => async request =
       { key: 'contactIsOrganisation', value: yesNoFromBool(!!account) },
       (account && { key: 'contactOrganisations', value: account.name }),
       { key: 'address', value: addressLine(account || contact) },
-      { key: 'email', value: account?.contactDetails?.email || contact?.contactDetails?.email }
+      { key: 'email', value: account?.contactDetails?.email || contact?.contactDetails?.email },
+      { key: 'phoneNumber', value: account?.contactDetails?.phoneNumber || contact?.contactDetails?.phoneNumber }
     ].filter(a => a) // Remove null values
   }
 }

@@ -23,6 +23,7 @@ import { checkSupportingInformation } from '../pages/supporting-information/chec
 
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
+import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
 import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
 import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
@@ -203,6 +204,7 @@ const routes = [
   ...applicantName,
   ...applicantOrganisation,
   ...applicantEmail,
+  ...applicantPhoneNumber,
   ...applicantPostcode,
   ...applicantAddress,
   ...applicantAddressForm,

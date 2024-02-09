@@ -51,6 +51,7 @@ const Applicant = () => ({
   applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
   applicantName: contactURIs.APPLICANT.NAME.uri,
   applicantEmail: contactURIs.APPLICANT.EMAIL.uri,
+  applicantPhoneNumber: contactURIs.APPLICANT.PHONE_NUMBER.uri,
   applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
   applicantAddress: contactURIs.APPLICANT.ADDRESS.uri
 })

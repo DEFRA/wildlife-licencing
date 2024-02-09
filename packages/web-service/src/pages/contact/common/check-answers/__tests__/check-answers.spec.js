@@ -19,7 +19,10 @@ describe('the check-answers page', () => {
             getByApplicationId: jest.fn(() => ({
               name: 'The Rolling Stones',
               address: { postcode: 'SW1W 0NY' },
-              contactDetails: { email: 'keith@therollingstones.com' }
+              contactDetails: {
+                email: 'keith@therollingstones.com',
+                phoneNumber: '0123456789'
+              }
             }))
           })
         }
@@ -57,6 +60,10 @@ describe('the check-answers page', () => {
         {
           key: 'email',
           value: 'keith@therollingstones.com'
+        },
+        {
+          key: 'phoneNumber',
+          value: '0123456789'
         }
       ],
       hasAccount: true
@@ -79,7 +86,10 @@ describe('the check-answers page', () => {
             getByApplicationId: jest.fn(() => ({
               fullName: 'Keith Richards',
               address: { postcode: 'SW1W 0NY' },
-              contactDetails: { email: 'keith@therollingstones.com' },
+              contactDetails: {
+                email: 'keith@therollingstones.com',
+                phoneNumber: '0123456789'
+              },
               userId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
             }))
           })
@@ -119,6 +129,10 @@ describe('the check-answers page', () => {
         {
           key: 'email',
           value: 'keith@therollingstones.com'
+        },
+        {
+          key: 'phoneNumber',
+          value: '0123456789'
         }
       ],
       hasAccount: false
