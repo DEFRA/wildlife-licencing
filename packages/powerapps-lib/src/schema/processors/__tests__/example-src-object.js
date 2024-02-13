@@ -404,7 +404,7 @@ export const applicationResponseTransformedDataObject = {
       },
       contactDetails: {
         email: 'me@email.com',
-        phoneNumber: "16542"
+        phoneNumber: '16542'
       },
       fullName: 'Robert Plant'
     },
