@@ -403,7 +403,8 @@ export const applicationResponseTransformedDataObject = {
         addressLine2: 'henleaze'
       },
       contactDetails: {
-        email: 'me@email.com'
+        email: 'me@email.com',
+        phoneNumber: '16542'
       },
       fullName: 'Robert Plant'
     },
@@ -421,7 +422,8 @@ export const applicationResponseTransformedDataObject = {
         town: 'Bristol'
       },
       contactDetails: {
-        email: 'ecologist1@email.com'
+        email: 'ecologist1@email.com',
+        phoneNumber: 'string'
       },
       fullName: 'Mr Brian Ecologist'
     },
