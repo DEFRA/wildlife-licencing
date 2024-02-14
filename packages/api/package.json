@@ -16,8 +16,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1",
     "postinstall": "if [ \"${NODE_ENV:-development}\" == \"development\" ]; then npx webpack-cli; else echo no webpack build; fi;",
     "database:migration:create": "npx sequelize-cli migration:generate --name migration; echo \"\nPlease change generated file extension from .js to .cjs before running migrate script.\"; echo \"\nEnsure that openapi/licence.yaml has also been updated with fields that correspond to any new columns.\";",
-    "database:migration:migrate": "npx sequelize-cli db:migrate --url \"postgres://${POSTGRES_USER}:${POSTGRES_PW}@${POSTGRES_HOST}/${POSTGRES_DB}\"",
-    "database:migration:migrate:undo": "npx sequelize-cli db:migrate:undo --url \"postgres://${POSTGRES_USER}:${POSTGRES_PW}@${POSTGRES_HOST}/${POSTGRES_DB}\""
+    "database:migration:migrate": "npx sequelize-cli db:migrate --config sequelize.config.cjs",
+    "database:migration:migrate:undo": "npx sequelize-cli db:migrate:undo --config sequelize.config.cjs"
   },
   "keywords": [
     "API",
