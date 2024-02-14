@@ -3,13 +3,14 @@
 
 {% set errorMap = {
         'phone-number': {
-            'string.empty': { ref: '#phone-number', text: 'Enter phone number' },
+            'string.empty': { ref: '#phone-number', text: 'Enter a valid phone number' },
             'string.pattern.base': { ref: '#phone-number', text: 'Enter a valid phone number' }
         }
     }
 %}
 
 {% block pageContent %}
+    <h2 class="govuk-hint">For international numbers include the country code.</h2>
     {{ govukInput({
       id: "phone-number",
       name: "phone-number",
