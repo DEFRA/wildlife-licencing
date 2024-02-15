@@ -11,10 +11,11 @@ To run the migrations ensure the necessary environment variables are set
 POSTGRES_USER
 POSTGRES_PW
 POSTGRES_DB
+POSTGRES_NOSSL
 ```
 These should already be exposed on CI, but locally you will need to set them yourself as so: 
 ```
-export POSTGRES_USER=exampleuser; export POSTGRES_PW=examplepassword; export POSTGRES_DB=exampledb;
+export POSTGRES_USER=exampleuser; export POSTGRES_PW=examplepassword; export POSTGRES_DB=exampledb; export POSTGRES_NOSSL=true;
 ```
 and then run the following command:
 
