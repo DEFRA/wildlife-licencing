@@ -1,56 +1,24 @@
-const POSTGRES_USER = process.env.POSTGRES_USER
-const POSTGRES_PW = process.env.POSTGRES_PW
-const POSTGRES_DB = process.env.POSTGRES_DB
-const POSTGRES_HOST = process.env.POSTGRES_HOST
-const POSTGRES_PORT = process.env.POSTGRES_PORT ? process.env.POSTGRES_PORT : 5432
+// All environments use environment variables for db config, so we define a single config that we use in every
+// environment, knowing that the settings that differ between environments will be pulled from the env vars.
+const config = {
+  dialect: 'postgres',
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PW,
+  database: process.env.POSTGRES_DB,
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT ? process.env.POSTGRES_PORT : 5432,
+  ...(process.env?.POSTGRES_NOSSL !== 'true' && {
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  })
+}
 
 module.exports = {
-  development: {
-    username: POSTGRES_USER,
-    password: POSTGRES_PW,
-    database: POSTGRES_DB,
-    host: POSTGRES_HOST,
-    port: POSTGRES_PORT,
-    dialect: 'postgres',
-    ...(process.env?.POSTGRES_NOSSL !== 'true' && {
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      }
-    })
-  },
-  test: {
-    username: POSTGRES_USER,
-    password: POSTGRES_PW,
-    database: POSTGRES_DB,
-    host: POSTGRES_HOST,
-    port: POSTGRES_PORT,
-    dialect: 'postgres',
-    ...(process.env?.POSTGRES_NOSSL !== 'true' && {
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      }
-    })
-  },
-  production: {
-    username: POSTGRES_USER,
-    password: POSTGRES_PW,
-    database: POSTGRES_DB,
-    host: POSTGRES_HOST,
-    port: POSTGRES_PORT,
-    dialect: 'postgres',
-    ...(process.env?.POSTGRES_NOSSL !== 'true' && {
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      }
-    })
-  }
+  development: config,
+  test: config,
+  production: config
 }
