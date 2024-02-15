@@ -7,6 +7,8 @@ const config = {
   database: process.env.POSTGRES_DB,
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT ? process.env.POSTGRES_PORT : 5432,
+  // We expect all our dbs to use ssl but connectors-lib sets the ssl options based on whether POSTGRES_NOSSL is set to
+  // `true` so we follow suit here; it may be required when running locally for example.
   ...(process.env?.POSTGRES_NOSSL !== 'true' && {
     dialectOptions: {
       ssl: {
