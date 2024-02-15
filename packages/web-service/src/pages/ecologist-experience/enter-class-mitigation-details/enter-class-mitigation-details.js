@@ -31,7 +31,7 @@ export default pageRoute({
   page: ecologistExperienceURIs.ENTER_CLASS_MITIGATION.page,
   checkData: checkApplication,
   validator: Joi.object({
-    'enter-class-mitigation-details': Joi.string().required()
+    'enter-class-mitigation-details': Joi.string().trim().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion,

@@ -16,7 +16,7 @@ export const getValidator = (contactRole, accountRole) => async (payload, contex
     'change-email': Joi.any().valid('yes', 'no').required(),
     'email-address': Joi.alternatives().conditional('change-email', {
       is: 'yes',
-      then: email ? Joi.string().email().invalid(email).required().lowercase() : Joi.string().email().required().lowercase(),
+      then: email ? Joi.string().trim().email().invalid(email).required().lowercase() : Joi.string().trim().email().required().lowercase(),
       otherwise: Joi.any().optional()
     }).options({ abortEarly: false, allowUnknown: true })
   }))

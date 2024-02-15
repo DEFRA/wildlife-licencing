@@ -16,7 +16,7 @@ export default pageRoute({
   checkData: checkApplication,
   setData: setData,
   validator: Joi.object({
-    'user-role': Joi.string().valid('OTHER', 'APPLICANT', 'ECOLOGIST').required()
+    'user-role': Joi.string().trim().valid('OTHER', 'APPLICANT', 'ECOLOGIST').required()
   }).options({ abortEarly: false, allowUnknown: true }),
   options: { auth: { mode: 'optional' } }
 })

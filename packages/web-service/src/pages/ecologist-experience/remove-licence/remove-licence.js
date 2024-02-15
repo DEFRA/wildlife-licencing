@@ -39,7 +39,7 @@ export default pageRoute({
   page: ecologistExperienceURIs.REMOVE_LICENCE.page,
   checkData: checkApplication,
   validator: Joi.object({
-    'remove-licence': Joi.string().required()
+    'remove-licence': Joi.string().trim().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   setData,

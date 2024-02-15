@@ -19,7 +19,7 @@ export default pageRoute({
   page: ecologistExperienceURIs.LICENCE.page,
   checkData: checkApplication,
   validator: Joi.object({
-    licence: Joi.string().required()
+    licence: Joi.string().trim().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   completion,
   getData
