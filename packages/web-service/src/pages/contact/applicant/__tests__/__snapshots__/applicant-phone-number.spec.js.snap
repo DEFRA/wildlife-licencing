@@ -172,6 +172,7 @@ exports[`applicant phone number page applicant phone number page template Matche
 
 
                 
+    <h2 class=\\"govuk-hint\\">For international numbers include the country code.</h2>
     
 
 <div class=\\"govuk-form-group\\">
@@ -463,6 +464,7 @@ exports[`applicant phone number page applicant phone number page template Matche
 
 
                 
+    <h2 class=\\"govuk-hint\\">For international numbers include the country code.</h2>
     
 
 <div class=\\"govuk-form-group\\">
