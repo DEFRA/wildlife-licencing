@@ -4551,6 +4551,8 @@ components:
                 $ref: '#/components/schemas/timestamp'
         stateCode:
           type: number
+        statusCode:
+          type: number
         createdAt:
           $ref: '#/components/schemas/timestamp'
         updatedAt:
