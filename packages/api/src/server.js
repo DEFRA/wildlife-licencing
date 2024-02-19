@@ -395,6 +395,13 @@ const init = async server => {
     method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     path: '/{path*}',
     handler (req, h) {
+      debug({
+        method: req.method,
+        path: req.path,
+        body: req.payload,
+        query: req.query,
+        headers: req.headers
+      })
       return api.handleRequest(
         {
           method: req.method,
