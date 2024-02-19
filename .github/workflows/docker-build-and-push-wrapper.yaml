@@ -55,3 +55,12 @@ jobs:
       DOCKER_FILE: 'packages/file-queue-processor/Dockerfile.prod'
       IMAGE_NAME: 'new_fqp'
     secrets: inherit
+
+  docker-base-build-publish-clamav:
+    name: Publish CLAM AV Service
+    uses: DEFRA/wildlife-licencing/.github/workflows/docker-build-and-push-jobs.yaml@develop
+    with:
+      CONTEXT: 'docker/clam'
+      DOCKER_FILE: 'docker/clam/Dockerfile.prod'
+      IMAGE_NAME: 'clamav'
+    secrets: inherit
