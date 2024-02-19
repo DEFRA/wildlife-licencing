@@ -3640,8 +3640,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-
   '/application/types':
     get:
       description: Get the application types
