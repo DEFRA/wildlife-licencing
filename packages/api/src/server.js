@@ -383,6 +383,10 @@ const init = async server => {
   /*
    * For debugging only
    */
+  // server.events.on('request', request => {
+  //   // you can use request.log or server.log it's depends
+  //   debug(request)
+  // })
   server.events.on('response', request => {
     // you can use request.log or server.log it's depends
     debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode} uri: ${request.raw.req.url}`)
@@ -395,6 +399,13 @@ const init = async server => {
     method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     path: '/{path*}',
     handler (req, h) {
+      debug({
+        method: req.method,
+        path: req.path,
+        body: req.payload,
+        query: req.query,
+        headers: req.headers
+      })
       return api.handleRequest(
         {
           method: req.method,
