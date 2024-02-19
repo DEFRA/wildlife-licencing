@@ -3640,8 +3640,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
-
-
   '/application/types':
     get:
       description: Get the application types
@@ -4550,6 +4548,8 @@ components:
               modifiedOn:
                 $ref: '#/components/schemas/timestamp'
         stateCode:
+          type: number
+        statusCode:
           type: number
         createdAt:
           $ref: '#/components/schemas/timestamp'
