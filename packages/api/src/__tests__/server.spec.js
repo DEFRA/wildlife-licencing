@@ -70,26 +70,26 @@ jest.mock('winston', () => ({
   transports: {
     Console: jest.fn()
   }
-}));
+}))
 
 describe('handleErrors', () => {
   it('should log each error', () => {
-    const errors = ['Error 1', 'Error 2'];
-    handleErrors(errors);
-    expect(winston.createLogger().error).toHaveBeenCalledTimes(errors.length);
+    const errors = ['Error 1', 'Error 2']
+    handleErrors(errors)
+    expect(winston.createLogger().error).toHaveBeenCalledTimes(errors.length)
     errors.forEach((error, index) => {
-      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error);
-    });
-  });
-});
+      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error)
+    })
+  })
+})
 
 describe('logResponse', () => {
   beforeEach(() => {
-    jest.clearAllMocks(); // Clear all mock calls before each test
-  });
+    jest.clearAllMocks() // Clear all mock calls before each test
+  })
 
   it('should log the request details with payload when LOG_PAYLOADS is true', () => {
-    process.env.LOG_PAYLOADS = 'true';
+    process.env.LOG_PAYLOADS = 'true'
     const request = {
       method: 'GET',
       response: {
@@ -101,23 +101,23 @@ describe('logResponse', () => {
       path: '/api/resource',
       raw: { req: { url: '/api/resource' } },
       payload: { key: 'value' }
-    };
+    }
 
-    logResponse(request);
+    logResponse(request)
 
-    expect(winston.createLogger().info).toHaveBeenCalled();
-    expect(winston.createLogger().error).toHaveBeenCalledTimes(request.response.source.errors.length);
+    expect(winston.createLogger().info).toHaveBeenCalled()
+    expect(winston.createLogger().error).toHaveBeenCalledTimes(request.response.source.errors.length)
 
-    const expectedLogString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url} payload: ${JSON.stringify(request.payload)}`;
-    expect(winston.createLogger().info).toHaveBeenCalledWith(expectedLogString);
+    const expectedLogString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url} payload: ${JSON.stringify(request.payload)}`
+    expect(winston.createLogger().info).toHaveBeenCalledWith(expectedLogString)
 
     request.response.source.errors.forEach((error, index) => {
-      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error);
-    });
-  });
+      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error)
+    })
+  })
 
   it('should log the request details without payload when LOG_PAYLOADS is false', () => {
-    process.env.LOG_PAYLOADS = 'false';
+    process.env.LOG_PAYLOADS = 'false'
     const request = {
       method: 'GET',
       response: {
@@ -129,18 +129,18 @@ describe('logResponse', () => {
       path: '/api/resource',
       raw: { req: { url: '/api/resource' } },
       payload: { key: 'value' }
-    };
+    }
 
-    logResponse(request);
+    logResponse(request)
 
-    expect(winston.createLogger().info).toHaveBeenCalled();
-    expect(winston.createLogger().error).toHaveBeenCalledTimes(request.response.source.errors.length);
+    expect(winston.createLogger().info).toHaveBeenCalled()
+    expect(winston.createLogger().error).toHaveBeenCalledTimes(request.response.source.errors.length)
 
-    const expectedLogString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`;
-    expect(winston.createLogger().info).toHaveBeenCalledWith(expectedLogString);
+    const expectedLogString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`
+    expect(winston.createLogger().info).toHaveBeenCalledWith(expectedLogString)
 
     request.response.source.errors.forEach((error, index) => {
-      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error);
-    });
-  });
-});
+      expect(winston.createLogger().error).toHaveBeenNthCalledWith(index + 1, error)
+    })
+  })
+})
