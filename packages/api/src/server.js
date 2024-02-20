@@ -365,6 +365,26 @@ const handlers = {
   postFeedback
 }
 
+const handleErrors = errors => {
+  for (const error of errors) {
+    logger.error(error)
+  }
+}
+
+const logResponse = request => {
+  let logString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`
+
+  if (process.env.LOG_PAYLOADS === 'true' && request?.payload) {
+    logString += ` payload: ${JSON.stringify(request.payload)}`
+  }
+
+  logger.info(logString)
+
+  if (request?.response?.source?.errors) {
+    handleErrors(request.response.source.errors)
+  }
+}
+
 /**
  * Initialize the server. Exported for unit testing
  * @param server
@@ -387,25 +407,7 @@ const init = async server => {
    */
   await api.init()
 
-  const handleErrors = errors => {
-    for (const error of errors) {
-      logger.error(error)
-    }
-  }
-
-  server.events.on('response', request => {
-    let logString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`
-
-    if (process.env.LOG_PAYLOADS === 'true' && request?.payload) {
-      logString += ` payload: ${JSON.stringify(request.payload)}`
-    }
-
-    logger.info(logString)
-
-    if (request?.response?.source?.errors) {
-      handleErrors(request.response.source.errors)
-    }
-  })
+  server.events.on('response', logResponse)
 
   /*
    * Direct the generic hapi route handler to the openapi backend
@@ -466,4 +468,4 @@ const init = async server => {
   }
 }
 
-export { init, createServer }
+export { init, createServer, logResponse, handleErrors }
