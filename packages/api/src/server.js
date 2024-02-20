@@ -1,7 +1,6 @@
 import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
-import db from 'debug'
 import * as winston from 'winston'
 
 import {
