@@ -2,7 +2,7 @@ import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
 import db from 'debug'
-import * as winston from 'winston' 
+import * as winston from 'winston'
 
 import {
   getUserByUserId,
@@ -199,8 +199,8 @@ const logger = winston.createLogger({
   format: winston.format.simple(),
   transports: [
     new winston.transports.Console()
-  ],
-});
+  ]
+})
 
 /**
  * Create the hapi server. Exported for unit testing purposes
@@ -373,8 +373,6 @@ const handlers = {
  */
 const init = async server => {
   const { OpenAPIBackend } = await import('openapi-backend')
-  const debug = db('api:request')
-
   /*
    * Create the OpenAPI backend
    */
