@@ -2,6 +2,7 @@ import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
 import db from 'debug'
+import * as winston from 'winston' 
 
 import {
   getUserByUserId,
@@ -192,6 +193,15 @@ import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
 import postResetHandler from './handlers/reset.js'
 
+// Using Winston we can send our logs anywhere we like, but for now we'll just log to the console
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
+  transports: [
+    new winston.transports.Console()
+  ],
+});
+
 /**
  * Create the hapi server. Exported for unit testing purposes
  * @returns {Promise<*>}
@@ -380,12 +390,24 @@ const init = async server => {
    */
   await api.init()
 
-  /*
-   * For debugging only
-   */
+  const handleErrors = errors => {
+    for (const error of errors) {
+      logger.error(error)
+    }
+  }
+
   server.events.on('response', request => {
-    // you can use request.log or server.log it's depends
-    debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode} uri: ${request.raw.req.url}`)
+    let logString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`
+
+    if (process.env.LOG_PAYLOADS === 'true' && request?.payload) {
+      logString += ` payload: ${JSON.stringify(request.payload)}`
+    }
+
+    logger.info(logString)
+
+    if (request?.response?.source?.errors) {
+      handleErrors(request.response.source.errors)
+    }
   })
 
   /*
