@@ -52,7 +52,7 @@ export default pageRoute({
   uri: siteURIs.NAME.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'site-name': Joi.string().required().trim().max(100)
+    'site-name': Joi.string().trim().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   completion: siteURIs.SITE_GOT_POSTCODE.uri,
   getData,

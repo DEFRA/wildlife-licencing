@@ -25,7 +25,7 @@ export default pageRoute({
   uri: DESIGNATED_SITE_PROXIMITY.uri,
   checkData: [checkApplication, checkDesignatedSite],
   validator: Joi.object({
-    proximity: Joi.string().required().valid(...Object.values(PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE).map(v => v.toString()))
+    proximity: Joi.string().trim().required().valid(...Object.values(PowerPlatformKeys.ON_SITE_OR_CLOSE_TO_SITE).map(v => v.toString()))
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: allCompletion,

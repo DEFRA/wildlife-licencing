@@ -49,7 +49,7 @@ export default pageRoute({
   uri: permissionsURIs.PLANNING_AUTHORITY.uri,
   getData: getData,
   validator: Joi.object({
-    'authority-name': Joi.string().required()
+    'authority-name': Joi.string().trim().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   setData: setData,
   completion: completion

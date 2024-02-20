@@ -25,7 +25,7 @@ export const invoicePurchaseOrder = pageRoute({
   page: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.page,
   uri: contactURIs.INVOICE_PAYER.PURCHASE_ORDER.uri,
   validator: Joi.object({
-    'purchase-order': Joi.string().required().trim().max(100)
+    'purchase-order': Joi.string().trim().required().max(100)
   }).options({ abortEarly: false, allowUnknown: true }),
   checkData: checkApplication,
   completion: contactURIs.INVOICE_PAYER.CHECK_ANSWERS.uri,

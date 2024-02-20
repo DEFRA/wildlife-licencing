@@ -39,7 +39,7 @@ export const validator = async payload => {
 
   if (OTHER === parseInt(payload[planningTypeRadio])) {
     Joi.assert(payload, Joi.object({
-      'other-description': Joi.string().required().trim().max(100)
+      'other-description': Joi.string().trim().required().max(100)
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 }

@@ -55,7 +55,7 @@ export default pageRoute({
   uri: DESIGNATED_SITE_NAME.uri,
   checkData: checkApplication,
   validator: Joi.object({
-    'site-id': Joi.string().required()
+    'site-id': Joi.string().trim().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   getData: getData,
   completion: allCompletion,
