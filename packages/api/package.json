@@ -39,7 +39,8 @@
     "openapi-backend": "^5.0.0",
     "sequelize": "^6.12.5",
     "swagger-ui": "^4.1.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "css-loader": "^6.5.1",
