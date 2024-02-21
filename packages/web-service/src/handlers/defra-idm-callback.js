@@ -105,6 +105,7 @@ export const defraIdmCallbackPreAuth = async (request, h) => {
     const params = new URLSearchParams(request.query)
     const code = params.get('code')
     debug(`Got code: ${code.substring(0, 10)}...`)
+    debug(`Time now: ${(new Date()).toString()}`)
     const token = await DEFRA_ID.fetchToken(code)
     const tokenPayload = await DEFRA_ID.verifyToken(token)
     await consumeTokenPayload(request, tokenPayload)
