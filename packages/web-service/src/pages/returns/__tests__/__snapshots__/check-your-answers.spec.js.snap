@@ -152,14 +152,15 @@ exports[`the check your answers functions the returns check your answers templat
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +171,7 @@ exports[`the check your answers functions the returns check your answers templat
   </legend>
   
 
-
+                    
                 
 
   <dl class=\\"govuk-summary-list\\">
@@ -355,12 +356,14 @@ exports[`the check your answers functions the returns check your answers templat
   
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -372,10 +375,10 @@ exports[`the check your answers functions the returns check your answers templat
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>

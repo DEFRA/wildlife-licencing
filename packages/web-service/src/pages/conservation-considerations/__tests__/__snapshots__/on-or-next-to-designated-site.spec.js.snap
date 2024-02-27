@@ -152,14 +152,15 @@ exports[`the on or next to designated site start functions on-or-next-to-designa
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +171,7 @@ exports[`the on or next to designated site start functions on-or-next-to-designa
   </legend>
   
 
-
+                    
                 
 <p class=\\"govuk-body-m\\">You must tell us if the proposed activities you need the licence for could affect any of these designated sites:</p>
 <ul class=\\"govuk-list govuk-list--bullet\\">
@@ -234,12 +235,14 @@ exports[`the on or next to designated site start functions on-or-next-to-designa
 
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -251,10 +254,10 @@ exports[`the on or next to designated site start functions on-or-next-to-designa
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>

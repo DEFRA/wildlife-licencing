@@ -152,14 +152,15 @@ exports[`The user-role Matches the snapshot 1`] = `
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +171,7 @@ exports[`The user-role Matches the snapshot 1`] = `
   </legend>
   
 
-
+                    
                 
 
     <p class=\\"govuk-body\\"> You must explain to Natural England your role in this application, and the licence, if
@@ -263,12 +264,14 @@ exports[`The user-role Matches the snapshot 1`] = `
 
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -280,10 +283,10 @@ exports[`The user-role Matches the snapshot 1`] = `
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>
