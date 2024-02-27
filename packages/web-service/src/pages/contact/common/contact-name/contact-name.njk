@@ -1,9 +1,11 @@
 {% extends "standard-form.njk" %}
 {% from "input/macro.njk" import govukInput %}
 
+{% set labelId = 'name' %}
+
 {% block pageContent %}
     {{ govukInput({
-      id: "name",
+      id: labelId,
       name: "name",
       spellcheck: false,
       hint: { text: hintText } if hintText else '',

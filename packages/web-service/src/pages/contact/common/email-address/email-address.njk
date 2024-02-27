@@ -12,18 +12,20 @@
             'any.required': { ref: '#email-address', text: 'What is the email address'  }
         }
     }
-%}
+} %}
+
+{% set labelId = 'email-address"' %}
 
 {% set emailAddress %}
-   {{ govukInput({
-      id: "email-address",
-      name: "email-address",
-      type: "email",
-      autocomplete: "email",
-      spellcheck: false,
-      classes: "govuk-input--width-50",
-      attributes: { maxlength: 50 },
-      errorMessage: { text: 'Enter email address' } if error['email-address']
+    {{ govukInput({
+        id: labelId,
+        name: "email-address",
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false,
+        classes: "govuk-input--width-50",
+        attributes: { maxlength: 50 },
+        errorMessage: { text: 'Enter email address' } if error['email-address']
     }) }}
 {% endset -%}
 
