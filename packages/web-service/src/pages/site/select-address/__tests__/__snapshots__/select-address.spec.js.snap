@@ -152,14 +152,15 @@ exports[`site-got-postcode page template Matches the snapshot 1`] = `
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +171,7 @@ exports[`site-got-postcode page template Matches the snapshot 1`] = `
   </legend>
   
 
-
+                    
                 
     <p class=\\"govuk-body govuk-!-margin-bottom-6\\">
       <span class=\\"govuk-!-font-weight-bold\\">Postcode</span>
@@ -201,12 +202,14 @@ exports[`site-got-postcode page template Matches the snapshot 1`] = `
     </p>
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -218,10 +221,10 @@ exports[`site-got-postcode page template Matches the snapshot 1`] = `
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>
