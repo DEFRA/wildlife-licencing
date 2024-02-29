@@ -188,11 +188,9 @@ exports[`conviction details page handler conviction details page template Matche
   
 
 <div class=\\"govuk-form-group\\">
-  <h1 class=\\"govuk-label-wrapper\\">
-    <label class=\\"govuk-label govuk-label--m\\" for=\\"conviction-details\\">
-      Describe the convictions and their dates
-    </label>
-    </h1>
+  <label class=\\"govuk-label govuk-label--m\\" for=\\"conviction-details\\">
+    Describe the convictions and their dates
+  </label>
 
 
   <textarea class=\\"govuk-textarea\\" id=\\"conviction-details\\" name=\\"conviction-details\\" rows=\\"5\\">conviction</textarea>
