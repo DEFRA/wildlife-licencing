@@ -22,7 +22,6 @@ export const prepareResponse = a => Object.assign((({
 export const alwaysExclude = payload => {
   const result = Object.assign({}, payload)
   delete result.id
-  delete result.organisationId
   delete result.submitted
   delete result.createdAt
   delete result.updatedAt
