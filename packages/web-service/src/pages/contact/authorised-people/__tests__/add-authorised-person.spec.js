@@ -387,7 +387,7 @@ describe('add authorised person', () => {
       const { getData } = await import('../add-authorised-person.js')
       const results = await getData(request)
       const template = await compileTemplate(path.join(__dirname, '../add-authorised-person.njk'))
-      const renderedHtml = template.render({ data: {...results} })
+      const renderedHtml = template.render({ data: { ...results } })
       expect(renderedHtml).toMatchSnapshot()
     })
   })
