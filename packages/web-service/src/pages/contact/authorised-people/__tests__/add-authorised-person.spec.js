@@ -1,4 +1,6 @@
 import { SECTION_TASKS } from '../../../tasklist/general-sections.js'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+import path from 'path'
 
 describe('add authorised person', () => {
   beforeEach(() => jest.resetModules())
@@ -345,6 +347,48 @@ describe('add authorised person', () => {
       const { completion } = await import('../add-authorised-person.js')
       const result = await completion(request)
       expect(result).toEqual('/authorised-person-name')
+    })
+  })
+
+  describe('Add authro', () => {
+    it('returns the add authorised person html', async () => {
+      jest.doMock('../../../../services/api-requests.js', () => ({
+        APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: jest.fn(),
+                get: jest.fn()
+              }
+            }
+          },
+          CONTACT: {
+            role: () => ({
+              getByApplicationId: jest.fn(() => [{
+                id: 'dad9d73e-d591-41df-9475-92c032bd3ceb',
+                fullName: 'Peter Hammill',
+                contactDetails: { email: 'Peter.Hammil@vandergrafgenerator' },
+                address: {
+                  postcode: 'BS32 8IU'
+                }
+              }])
+            })
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: jest.fn(() => ({
+            userId: '0d5509a8-48d8-4026-961f-a19918dfc28b',
+            applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94'
+          }))
+        })
+      }
+      const { getData } = await import('../add-authorised-person.js')
+      const results = await getData(request)
+      const template = await compileTemplate(path.join(__dirname, '../add-authorised-person.njk'))
+      const renderedHtml = template.render({ data: {...results} })
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })
