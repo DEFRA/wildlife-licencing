@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`conviction details page handler conviction details page template Matches the snapshot 1`] = `
+exports[`add authorised person Add authro returns the add authorised person html 1`] = `
 "<!DOCTYPE html>
 <html lang=\\"en\\" class=\\"govuk-template \\">
   <head>
     <meta charset=\\"utf-8\\">
-    <title>Convictions for animal or wildlife offences</title>
+    <title>Check your answers</title>
     <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1, viewport-fit=cover\\">
     <meta name=\\"theme-color\\" content=\\"#0b0c0c\\"> 
     
@@ -165,7 +165,7 @@ exports[`conviction details page handler conviction details page template Matche
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
     <h1 class=\\"govuk-fieldset__heading\\">
-      Convictions for animal or wildlife offences
+      Check your answers
     </h1>
   
   </legend>
@@ -173,28 +173,152 @@ exports[`conviction details page handler conviction details page template Matche
 
                     
                 
-  <p class=\\"govuk-body\\">You only need to tell us about convictions within the last 5 years or unspent convictions.
-    <a
-      href=\\"https://www.gov.uk/tell-employer-or-college-about-criminal-record/check-your-conviction-caution\\"
-      target=\\"_blank\\"
-      class=\\"govuk-link\\">Check whether your convictions are spent</a>.</p>
-  <p class=\\"govuk-body\\">If people listed on this application have animal related or wildlife convictions the application
-    may:</p>
-  <ul class=\\"govuk-list govuk-list--bullet\\">
-    <li>be subject to more checks</li>
-    <li>take more time to process</li>
-  </ul>
-  <p class=\\"govuk-body\\">You may need to give Natural England more information about these offences.</p>
+
+
+    
+        <h2 class=\\"govuk-heading-m\\">Authorised person</h2>
+        <p class=\\"govuk-body\\" />
+            <a class=\\"govuk-link govuk-link--no-visited-state\\" href=\\"/remove-authorised-person?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\" aria-label=\\"Remove Peter Hammill\\">Remove</a>
+
+        </p>
+        
+        
+    
+        
+        <div hidden>
+            
+                1
+            
+                2
+            
+                3
+            
+        </div>
+        
+
+
   
 
+  
+
+  
+<dl class=\\"govuk-summary-list govuk-!-margin-bottom-9\\">
+  
+    
+      <div class=\\"govuk-summary-list__row\\">
+        <dt class=\\"govuk-summary-list__key\\">
+          Name
+        </dt>
+        <dd class=\\"govuk-summary-list__value\\">
+          Peter Hammill
+        </dd>
+        
+          <dd class=\\"govuk-summary-list__actions\\">
+            
+              <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-name?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
+                Change<span class=\\"govuk-visually-hidden\\"> Name</span>
+                </a>
+            
+          </dd>
+        
+      </div>
+    
+  
+    
+      <div class=\\"govuk-summary-list__row\\">
+        <dt class=\\"govuk-summary-list__key\\">
+          Email address
+        </dt>
+        <dd class=\\"govuk-summary-list__value\\">
+          Peter.Hammil@vandergrafgenerator
+        </dd>
+        
+          <dd class=\\"govuk-summary-list__actions\\">
+            
+              <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-email?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
+                Change<span class=\\"govuk-visually-hidden\\"> Email address</span>
+                </a>
+            
+          </dd>
+        
+      </div>
+    
+  
+    
+      <div class=\\"govuk-summary-list__row\\">
+        <dt class=\\"govuk-summary-list__key\\">
+          Contact address
+        </dt>
+        <dd class=\\"govuk-summary-list__value\\">
+          BS32 8IU
+        </dd>
+        
+          <dd class=\\"govuk-summary-list__actions\\">
+            
+              <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-postcode?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
+                Change<span class=\\"govuk-visually-hidden\\"> Contact address</span>
+                </a>
+            
+          </dd>
+        
+      </div>
+    
+  
+</dl>
+
+    
+
+    
+    <h2 class=\\"govuk-heading-m\\">Do you want to add another authorised person?</h2>
+
+
+
+    
+
+
+
+
+
+  
+
+  
 <div class=\\"govuk-form-group\\">
-  <label class=\\"govuk-label govuk-label--m\\" for=\\"conviction-details\\">
-    Describe the convictions and their dates
-  </label>
 
+  <div class=\\"govuk-radios\\">
+    
+      
+          
+        
+        
+        <div class=\\"govuk-radios__item\\">
+          <input class=\\"govuk-radios__input\\" id=\\"yes-no\\" name=\\"yes-no\\" type=\\"radio\\" value=\\"yes\\">
+          <label class=\\"govuk-label govuk-radios__label\\" for=\\"yes-no\\">
+        Yes
+      </label>
+          
+        </div>
+        
+        
+      
+    
+      
+        
+        
+        <div class=\\"govuk-radios__item\\">
+          <input class=\\"govuk-radios__input\\" id=\\"yes-no-2\\" name=\\"yes-no\\" type=\\"radio\\" value=\\"no\\">
+          <label class=\\"govuk-label govuk-radios__label\\" for=\\"yes-no-2\\">
+        No
+      </label>
+          
+        </div>
+        
+        
+      
+    
+  </div>
 
-  <textarea class=\\"govuk-textarea\\" id=\\"conviction-details\\" name=\\"conviction-details\\" rows=\\"5\\">conviction</textarea>
 </div>
+
 
 
 
