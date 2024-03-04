@@ -13,6 +13,11 @@ describe('the defra IDM callback handler functions', () => {
       relationships: [],
       roles: []
     })
+    const mockDecodeToken = jest.fn().mockReturnValue({
+      exp: 1709567917,
+      iat: 1709567917,
+      nbf: 1709567917
+    })
     const mockGetUser = jest.fn().mockReturnValue({
       id: '81e36e15-88d0-41e2-9399-1c7646ecc5aa',
       uniqueReference: '1223',
@@ -23,7 +28,8 @@ describe('the defra IDM callback handler functions', () => {
     jest.doMock('@defra/wls-connectors-lib', () => ({
       DEFRA_ID: {
         fetchToken: mockFetchToken,
-        verifyToken: mockVerifyToken
+        verifyToken: mockVerifyToken,
+        decodeToken: mockDecodeToken
       }
     }))
     jest.doMock('../../services/api-requests.js', () => ({
@@ -75,13 +81,19 @@ describe('the defra IDM callback handler functions', () => {
       relationships: ['244c4959-0d09-ee11-8f6e-6045bd905113:fe4b4959-0d09-ee11-8f6e-6045bd905113:17 HENLEAZE ROAD MANAGEMENT COMPANY LIMITED:0:Employee:0'],
       roles: ['244c4959-0d09-ee11-8f6e-6045bd905113:fe4b4959-0d09-ee11-8f6e-6045bd905113:17 HENLEAZE ROAD MANAGEMENT COMPANY LIMITED:0:Employee:0']
     })
+    const mockDecodeToken = jest.fn().mockReturnValue({
+      exp: 1709567917,
+      iat: 1709567917,
+      nbf: 1709567917
+    })
     const mockCreateUser = jest.fn()
     const mockUpdateOrganisation = jest.fn()
     const mockUpdateUserOrganisation = jest.fn()
     jest.doMock('@defra/wls-connectors-lib', () => ({
       DEFRA_ID: {
         fetchToken: mockFetchToken,
-        verifyToken: mockVerifyToken
+        verifyToken: mockVerifyToken,
+        decodeToken: mockDecodeToken
       }
     }))
     jest.doMock('../../services/api-requests.js', () => ({
