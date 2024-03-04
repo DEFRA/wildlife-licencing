@@ -45,7 +45,7 @@
            {
                 value: "no",
                 text: data.email,
-                checked: true
+                checked: (not payload['change-email'] or payload['change-email'] == 'no')
             },
             {
               divider: "or"
@@ -55,7 +55,8 @@
               text: "Add a new email address",
               conditional: {
                 html: emailAddress
-              }
+              },
+              checked: (payload['change-email'] == 'yes')
             }
           ]
         }) }}
