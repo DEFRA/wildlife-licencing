@@ -80,6 +80,19 @@ export const DEFRA_ID = {
     }
   },
   /**
+   * Returns the decoded token payload without verifying it
+   * @param jwt
+   * @returns {object}
+   */
+  decodeToken: jwt => {
+    try {
+      return jose.decodeJwt(jwt)
+    } catch (error) {
+      console.error(error)
+      throw new Error('Token decoding failure')
+    }
+  },
+  /**
    * Return the end session endpoint
    */
   getEndSession: () => defraIdInfo.endSessionEndpoint,
