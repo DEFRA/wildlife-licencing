@@ -33,7 +33,7 @@
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link govuk-link--no-visited-state" href="{{upload.removeUploadUrl}}?uploadId={{upload.id}}"  name: "remove-file">
-                        Remove<span class="govuk-visually-hidden"></span>
+                        Remove<span class="govuk-visually-hidden"> {{ upload.filename }} </span>
                     </a>
                 </dd>
             </div>
@@ -43,7 +43,7 @@
                 <dt class="govuk-summary-list__key">Uploaded file </dt>
                 <dd class="govuk-summary-list__value">
                     No file uploaded
-                </dd>        
+                </dd>
             </div>
         {% endif %}
         </dl>
