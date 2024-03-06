@@ -73,7 +73,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     ...additionalOptions
   }
 
-  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)
+  debug(`Making HTTP request to ${url} with options: %o`, options)
 
   // Create a timeout
   debug(`Setting timeout ${parseInt(timeOutMS)}...`)
