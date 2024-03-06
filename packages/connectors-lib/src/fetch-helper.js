@@ -10,6 +10,33 @@ const debugTime = db('connectors-lib:fetch-performance')
 
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
+
+/**
+ * When logging http requests we want to specifically redact objects that are in this format to avoid cluttering the
+ * logs with long (and potentially sensitive) Buffer arrays:
+ *
+ * { type: "Buffer", data: [42, 75, 66, 66, 65, 72, 20, 42, 75, 66, 66, 65, 72, 20, 42, 75, 66, 66, 65, 72] }
+ *
+ * So when we stringify data we use this replacer function to identify objects like this and truncate the `data` array
+ * to just the first 10 entries with '...' appended:
+ *
+ * { type: "Buffer", data: [42, 75, 66, 66, 65, 72, 20, 42, 75, 66, '...'] }
+ */
+const redactBufferArrays = (_key, value) => {
+  // If this isn't an object make no changes
+  if (typeof value !== 'object' || value === null) return value
+
+  // If the object's `type` and `data` don't exist or aren't what we expect, make no changes
+  if (!('type' in value) || !('data' in value)) return value
+  if (value.type !== 'Buffer' || !Array.isArray(value.data)) return value
+
+  // Otherwise, reaplce the data array with a truncated version
+  return {
+    ...value,
+    data: [...value.data.slice(0, 10), '...']
+  }
+}
+
 export class HTTPResponseError extends Error {
   constructor (response) {
     super(`HTTP Error Response: ${response.status} ${response.statusText}`)
@@ -73,7 +100,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     ...additionalOptions
   }
 
-  debug(`Making HTTP request to ${url} with options: %j`, options)
+  debug(`Making HTTP request to ${url} with options: ${JSON.stringify(options, redactBufferArrays)}`)
 
   // Create a timeout
   debug(`Setting timeout ${parseInt(timeOutMS)}...`)
