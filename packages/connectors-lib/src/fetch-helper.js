@@ -11,6 +11,11 @@ const debugTime = db('connectors-lib:fetch-performance')
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
 
+const httpResponse = {
+  NO_CONTENT: 204,
+  NOT_FOUND: 404
+}
+
 /**
  * When logging http requests we want to specifically redact objects that are in this format to avoid cluttering the
  * logs with long (and potentially sensitive) Buffer arrays:
@@ -24,11 +29,11 @@ const APPLICATION_JSON = 'application/json'
  */
 const redactBufferArrays = (_key, value) => {
   // If this isn't an object make no changes
-  if (typeof value !== 'object' || value === null) return value
+  if (typeof value !== 'object' || value === null) { return value }
 
   // If the object's `type` and `data` don't exist or aren't what we expect, make no changes
-  if (!('type' in value) || !('data' in value)) return value
-  if (value.type !== 'Buffer' || !Array.isArray(value.data)) return value
+  if (!('type' in value) || !('data' in value)) { return value }
+  if (value.type !== 'Buffer' || !Array.isArray(value.data)) { return value }
 
   // Otherwise, reaplce the data array with a truncated version
   return {
@@ -54,23 +59,23 @@ export class HTTPResponseError extends Error {
 export const checkResponseOkElseThrow = async responsePromise => {
   const response = await responsePromise
   debug(`HTTP response code: ${JSON.stringify(response.status)}`)
-  if (response.ok) {
-    if (response.status === 204) {
+  if (!response.ok) {
+    if (response.status === httpResponse.NOT_FOUND) {
       return null
-    } else {
-      if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
-        return response.json()
-      } else {
-        return response.body
-      }
     }
-  } else {
-    if (response.status === 404) {
-      return null
-    } else {
-      throw new HTTPResponseError(response)
-    }
+
+    throw new HTTPResponseError(response)
   }
+
+  if (response.status === httpResponse.NO_CONTENT) {
+    return null
+  }
+
+  if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
+    return response.json()
+  }
+
+  return response.body
 }
 
 /**
