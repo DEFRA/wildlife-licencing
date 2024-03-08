@@ -11,7 +11,7 @@ const debugTime = db('connectors-lib:fetch-performance')
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
 
-const httpResponse = {
+const HTTP_STATUS = {
   NO_CONTENT: 204,
   NOT_FOUND: 404
 }
@@ -60,14 +60,14 @@ export const checkResponseOkElseThrow = async responsePromise => {
   const response = await responsePromise
   debug(`HTTP response code: ${JSON.stringify(response.status)}`)
   if (!response.ok) {
-    if (response.status === httpResponse.NOT_FOUND) {
+    if (response.status === HTTP_STATUS.NOT_FOUND) {
       return null
     }
 
     throw new HTTPResponseError(response)
   }
 
-  if (response.status === httpResponse.NO_CONTENT) {
+  if (response.status === HTTP_STATUS.NO_CONTENT) {
     return null
   }
 
@@ -133,20 +133,22 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       // Create a client timeout response
       console.error('Fetch ABORT error', err)
       throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
-    } else if (err.name === 'FetchError') {
+    }
+
+    if (err.name === 'FetchError') {
       console.error('Fetch REQUEST error', err)
       throw err
-    } else {
-      if (err.response) {
-        const msg = 'response error: ' + err.response.headers.get('content-type').includes(APPLICATION_JSON)
-          ? JSON.stringify(await err.response.json())
-          : await err.response.body()
-        console.error(`Unknown error thrown in fetch: ${msg}`)
-        throw new Error(msg)
-      } else {
-        throw err
-      }
     }
+
+    if (err.response) {
+      const msg = 'response error: ' + err.response.headers.get('content-type').includes(APPLICATION_JSON)
+        ? JSON.stringify(await err.response.json())
+        : await err.response.body()
+      console.error(`Unknown error thrown in fetch: ${msg}`)
+      throw new Error(msg)
+    }
+
+    throw err
   } finally {
     debug('Request timeout clear ')
     clearTimeout(timeout)
