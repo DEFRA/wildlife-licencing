@@ -10,6 +10,7 @@
 
 {% set title = 'You have added ' + data.pageData.length + ' permission' %}
 
+
 {% block pageContent %}
   <dl class="govuk-summary-list">
     {% for permission in data.pageData %}
@@ -46,7 +47,7 @@
             fieldset: {
               legend: {
                 text: "Do you want to add another permission?",
-                isPageHeading: true,
+                isPageHeading: false,
                 classes: "govuk-fieldset__legend--m"
               }
             },
