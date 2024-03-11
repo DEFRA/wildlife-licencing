@@ -361,7 +361,6 @@ exports[`the sssi check answers functions designated site check answers page tem
     
 
         
-        <h1 class=\\"govuk-heading-m\\">Do you want to add another site?</h1>
         
     
 
@@ -373,6 +372,15 @@ exports[`the sssi check answers functions designated site check answers page tem
 
   
 <div class=\\"govuk-form-group\\">
+
+  <fieldset class=\\"govuk-fieldset\\">
+  
+  <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--m\\">
+  
+    Do you want to add another site?
+  
+  </legend>
+  
 
   <div class=\\"govuk-radios\\">
     
@@ -406,6 +414,10 @@ exports[`the sssi check answers functions designated site check answers page tem
       
     
   </div>
+  
+
+</fieldset>
+
 
 </div>
 
