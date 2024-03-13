@@ -22,7 +22,7 @@ import { uploadSupportingInformation } from '../pages/supporting-information/upl
 import { checkSupportingInformation } from '../pages/supporting-information/check-supporting-information.js'
 
 import { licenceHolderName } from '../pages/contact/applicant/licence-holder-name.js'
-import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
+import { licenceHolderEmail } from '../pages/contact/applicant/licence-holder-email.js'
 import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
 import { licenceHolderCheckAnswers } from '../pages/contact/applicant/licence-holder-check-answers.js'
 import { licenceHolderOrganisation } from '../pages/contact/applicant/licence-holder-organisation.js'
@@ -203,7 +203,7 @@ const routes = [
   ...tasklist,
   ...licenceHolderName,
   ...licenceHolderOrganisation,
-  ...applicantEmail,
+  ...licenceHolderEmail,
   ...applicantPhoneNumber,
   ...licenceHolderPostcode,
   ...licenceHolderAddress,

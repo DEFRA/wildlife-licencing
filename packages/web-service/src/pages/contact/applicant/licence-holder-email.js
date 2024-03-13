@@ -27,7 +27,7 @@ export const completion = (contactRole, accountRole, urlBase) => async request =
   }
 }
 
-export const applicantEmail = emailAddressPage({
+export const licenceHolderEmail = emailAddressPage({
   page: EMAIL.page,
   uri: EMAIL.uri,
   checkData: checkApplication,
