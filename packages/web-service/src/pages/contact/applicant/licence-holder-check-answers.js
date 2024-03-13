@@ -10,7 +10,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 const { CHECK_ANSWERS } = contactURIs.APPLICANT
 
-export const applicantCheckAnswers = checkAnswersPage({
+export const licenceHolderCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
     checkHasContact(ContactRoles.APPLICANT),

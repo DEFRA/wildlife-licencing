@@ -24,7 +24,7 @@ import { checkSupportingInformation } from '../pages/supporting-information/chec
 import { applicantName } from '../pages/contact/applicant/applicant-name.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
-import { applicantCheckAnswers } from '../pages/contact/applicant/applicant-check-answers.js'
+import { licenceHolderCheckAnswers } from '../pages/contact/applicant/licence-holder-check-answers.js'
 import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
 import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
 import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
@@ -208,7 +208,7 @@ const routes = [
   ...applicantPostcode,
   ...applicantAddress,
   ...applicantAddressForm,
-  ...applicantCheckAnswers,
+  ...licenceHolderCheckAnswers,
   ...ecologistName,
   ...ecologistOrganisation,
   ...ecologistEmail,
