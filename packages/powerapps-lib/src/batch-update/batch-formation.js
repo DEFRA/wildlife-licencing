@@ -5,6 +5,8 @@ import { createBatchRequestObjects, Methods } from '../schema/processors/schema-
 
 const debug = db('powerapps-lib:batch-formation')
 
+const NUMBER_OF_PRECOMPILED_REGEXES_TO_GENERATE = 200
+
 /**
  * Initialize a batch request
  * @param tableSet - The table-set to be included in the updates
@@ -87,7 +89,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
 const preComplied = (n =>
-  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(200)
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(NUMBER_OF_PRECOMPILED_REGEXES_TO_GENERATE)
 
 /**
  * Create a key array from the response body text and the batch request object
