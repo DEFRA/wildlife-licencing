@@ -88,7 +88,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
 /*
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
-const preComplied = (n =>
+const preCompiled = (n =>
   ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(NUMBER_OF_PRECOMPILED_REGEXES_TO_GENERATE)
 
 /**
@@ -101,7 +101,7 @@ export const createKeyObject = (requestHandle, responseBody) => {
   const result = []
   const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
   for (const batchRequestObject of requestHandle.batchRequestObjects) {
-    const sddsId = strippedResponseBody.match(preComplied[batchRequestObject.contentId])?.groups?.eid
+    const sddsId = strippedResponseBody.match(preCompiled[batchRequestObject.contentId])?.groups?.eid
     if (sddsId) {
       result.push({
         apiTableName: batchRequestObject.apiTable,
