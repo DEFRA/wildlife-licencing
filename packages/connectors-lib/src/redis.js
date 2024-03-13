@@ -35,11 +35,11 @@ export const REDIS = {
     client = createClient(options)
 
     // Log events
-    await client.on('error', err => console.error('Redis Client Error', err))
-    await client.on('connect', () => debug('Redis connection is connecting...'))
-    await client.on('ready', () => debug('Redis connection is connected'))
-    await client.on('end', () => debug('Redis connection has disconnected'))
-    await client.on('reconnecting', () => debug('Redis connection is reconnecting'))
+    client.on('error', err => console.error('Redis Client Error', err))
+    client.on('connect', () => debug('Redis connection is connecting...'))
+    client.on('ready', () => debug('Redis connection is connected'))
+    client.on('end', () => debug('Redis connection has disconnected'))
+    client.on('reconnecting', () => debug('Redis connection is reconnecting'))
 
     // Connect
     await client.connect()
