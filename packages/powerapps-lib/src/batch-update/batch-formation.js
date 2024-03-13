@@ -26,13 +26,19 @@ const headerBuilder = (requestHandle, contentId, table, method, powerAppsId) => 
   result += 'Content-Transfer-Encoding:binary\n'
   result += `Content-ID: ${contentId}\n`
   result += '\n'
-  if (method === Methods.PATCH) {
-    result += `PATCH ${requestHandle.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
-  } else if (method === Methods.POST) {
-    result += `POST ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
-  } else if (method === Methods.PUT) {
-    result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+
+  switch (method) {
+    case Methods.PATCH:
+      result += `PATCH ${requestHandle.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
+      break
+    case Methods.POST:
+      result += `POST ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+      break
+    case Methods.PUT:
+      result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+      break
   }
+
   result += 'Content-Type: application/json;type=entry\n'
   return result
 }
