@@ -29,7 +29,7 @@ export const REDIS = {
     }
 
     // Print options -- hide password
-    debug(`Redis connections: ${JSON.stringify(msg, null, 4)}`)
+    debug(`Redis connections: ${JSON.stringify(msg)}`)
 
     // Create client
     client = createClient(options)

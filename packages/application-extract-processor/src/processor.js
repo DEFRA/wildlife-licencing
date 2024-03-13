@@ -49,7 +49,7 @@ const proc = async () => {
 
 // Warning -- may print sensitive info. Ensure disabled in production
 const debug = db('application-extract-processor:env')
-debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
+debug(`Environment: ${JSON.stringify(process.env)}`)
 
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)

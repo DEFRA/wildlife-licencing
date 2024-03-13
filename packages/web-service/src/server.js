@@ -33,7 +33,7 @@ const createServer = async () => {
       }
     }
   })
-  debug(`Created server :${JSON.stringify(server.info, null, 4)}`)
+  debug(`Created server :${JSON.stringify(server.info)}`)
 
   return server
 }
