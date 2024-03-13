@@ -21,7 +21,7 @@ import { tasklist } from '../pages/tasklist/tasklist.js'
 import { uploadSupportingInformation } from '../pages/supporting-information/upload-supporting-information.js'
 import { checkSupportingInformation } from '../pages/supporting-information/check-supporting-information.js'
 
-import { applicantName } from '../pages/contact/applicant/applicant-name.js'
+import { licenceHolderName } from '../pages/contact/applicant/licence-holder-name.js'
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
 import { licenceHolderCheckAnswers } from '../pages/contact/applicant/licence-holder-check-answers.js'
@@ -201,7 +201,7 @@ const routes = [
   ...eligibilityCheck,
   ...eligible,
   ...tasklist,
-  ...applicantName,
+  ...licenceHolderName,
   ...applicantOrganisation,
   ...applicantEmail,
   ...applicantPhoneNumber,
