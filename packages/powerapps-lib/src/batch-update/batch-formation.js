@@ -1,6 +1,9 @@
 import crypto from 'crypto'
+import db from 'debug'
 import { v4 as uuidv4 } from 'uuid'
 import { createBatchRequestObjects, Methods } from '../schema/processors/schema-processes.js'
+
+const debug = db('powerapps-lib:batch-formation')
 
 /**
  * Initialize a batch request
@@ -54,6 +57,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
   let body = batchStart(requestHandle.batchId, changeId)
   // __URL__
   for (const b of requestHandle.batchRequestObjects) {
+    debug(`Creating batch request for: ${JSON.stringify(b)}`)
     const assignments = Object.entries(b.assignments)
       .reduce((a, [key, value]) => ({
         ...a,
