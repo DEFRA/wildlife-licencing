@@ -6,7 +6,10 @@ import * as _cloneDeep from 'lodash.clonedeep'
 const { default: cloneDeep } = _cloneDeep
 
 const debug = db('connectors-lib:redis')
-export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 3600
+
+const ONE_HOUR_IN_SECONDS = 3600
+
+export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || ONE_HOUR_IN_SECONDS
 
 let client
 
