@@ -25,9 +25,9 @@ import { licenceHolderName } from '../pages/contact/applicant/licence-holder-nam
 import { applicantEmail } from '../pages/contact/applicant/applicant-email.js'
 import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
 import { licenceHolderCheckAnswers } from '../pages/contact/applicant/licence-holder-check-answers.js'
-import { applicantOrganisation } from '../pages/contact/applicant/applicant-organisation.js'
-import { applicantPostcode } from '../pages/contact/applicant/applicant-postcode.js'
-import { applicantAddress } from '../pages/contact/applicant/applicant-address.js'
+import { licenceHolderOrganisation } from '../pages/contact/applicant/licence-holder-organisation.js'
+import { licenceHolderPostcode } from '../pages/contact/applicant/licence-holder-postcode.js'
+import { licenceHolderAddress } from '../pages/contact/applicant/licence-holder-address.js'
 import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
@@ -202,11 +202,11 @@ const routes = [
   ...eligible,
   ...tasklist,
   ...licenceHolderName,
-  ...applicantOrganisation,
+  ...licenceHolderOrganisation,
   ...applicantEmail,
   ...applicantPhoneNumber,
-  ...applicantPostcode,
-  ...applicantAddress,
+  ...licenceHolderPostcode,
+  ...licenceHolderAddress,
   ...applicantAddressForm,
   ...licenceHolderCheckAnswers,
   ...ecologistName,

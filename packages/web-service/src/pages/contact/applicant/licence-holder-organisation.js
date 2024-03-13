@@ -10,7 +10,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 const { IS_ORGANISATION } = contactURIs.APPLICANT
 
-export const applicantOrganisation = isOrganisation({
+export const licenceHolderOrganisation = isOrganisation({
   page: IS_ORGANISATION.page,
   uri: IS_ORGANISATION.uri,
   checkData: checkApplication,

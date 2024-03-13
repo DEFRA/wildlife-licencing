@@ -7,7 +7,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 const { POSTCODE } = contactURIs.APPLICANT
 
-export const applicantPostcode = postcodePage({
+export const licenceHolderPostcode = postcodePage({
   page: POSTCODE.page,
   uri: POSTCODE.uri,
   checkData: [checkApplication, checkHasContact(ContactRoles.APPLICANT)],
