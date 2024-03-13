@@ -39,6 +39,8 @@ const headerBuilder = (requestHandle, contentId, table, method, powerAppsId) => 
     case Methods.PUT:
       result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
       break
+    default:
+      // We only care about the methods above so take no action
   }
 
   result += 'Content-Type: application/json;type=entry\n'
