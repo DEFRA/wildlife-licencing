@@ -6,7 +6,7 @@ describe('applicant postcode page', () => {
 
   describe('applicant postcode page template', () => {
     it('Matches the snapshot when accountName provided', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../applicant-postcode.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../licence-holder-postcode.njk'))
 
       const renderedHtml = template.render({
         data: {
@@ -19,7 +19,7 @@ describe('applicant postcode page', () => {
     })
 
     it('Matches the snapshot when accountName not provided', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../applicant-postcode.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../licence-holder-postcode.njk'))
 
       const renderedHtml = template.render({
         data: {

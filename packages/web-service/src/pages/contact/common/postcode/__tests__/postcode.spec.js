@@ -23,8 +23,8 @@ describe('the postcode functions', () => {
         })
       }
       const urlBase = {
-        ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
-        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+        ADDRESS: { uri: '/licence-holder-address', page: 'applicant-address' },
+        ADDRESS_FORM: { uri: '/licence-holder-address-form', page: 'applicant-address-form' }
       }
       const { getPostcodeData } = await import('../postcode.js')
       const result = await getPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
@@ -33,7 +33,7 @@ describe('the postcode functions', () => {
         contactName: 'Keith Richards',
         postcode: 'SW1W 0NY',
         uri: {
-          addressForm: '/applicant-address-form?no-postcode=true'
+          addressForm: '/licence-holder-address-form?no-postcode=true'
         }
       })
     })
@@ -59,8 +59,8 @@ describe('the postcode functions', () => {
         })
       }
       const urlBase = {
-        ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
-        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+        ADDRESS: { uri: '/licence-holder-address', page: 'applicant-address' },
+        ADDRESS_FORM: { uri: '/licence-holder-address-form', page: 'applicant-address-form' }
       }
       const { getPostcodeData } = await import('../postcode.js')
       const result = await getPostcodeData('APPLICANT', 'APPLICANT_ORGANISATION', urlBase)(request)
@@ -68,7 +68,7 @@ describe('the postcode functions', () => {
         contactName: 'Keith Richards',
         postcode: 'SW1W 0NY',
         uri: {
-          addressForm: '/applicant-address-form?no-postcode=true'
+          addressForm: '/licence-holder-address-form?no-postcode=true'
         }
       })
     })
@@ -177,20 +177,20 @@ describe('the postcode functions', () => {
   describe('postcodeCompletion', () => {
     it('returns the address page if the lookup result contains addresses', async () => {
       const { postcodeCompletion } = await import('../postcode.js')
-      const urlBase = { ADDRESS: { uri: '/applicant-address', page: 'applicant-address' } }
+      const urlBase = { ADDRESS: { uri: '/licence-holder-address', page: 'applicant-address' } }
       const request = {
         cache: () => ({
           getData: jest.fn(() => ({ addressLookup: [{ foo: 'bar' }] }))
         })
       }
       const result = await postcodeCompletion(urlBase)(request)
-      expect(result).toEqual('/applicant-address')
+      expect(result).toEqual('/licence-holder-address')
     })
     it('returns the address-form page if the lookup result contains addresses', async () => {
       const { postcodeCompletion } = await import('../postcode.js')
       const urlBase = {
-        ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
-        ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+        ADDRESS: { uri: '/licence-holder-address', page: 'applicant-address' },
+        ADDRESS_FORM: { uri: '/licence-holder-address-form', page: 'applicant-address-form' }
       }
       const request = {
         cache: () => ({
@@ -198,7 +198,7 @@ describe('the postcode functions', () => {
         })
       }
       const result = await postcodeCompletion(urlBase)(request)
-      expect(result).toEqual('/applicant-address-form')
+      expect(result).toEqual('/licence-holder-address-form')
     })
   })
 })

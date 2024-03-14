@@ -6,7 +6,7 @@ describe('applicant phone number page', () => {
 
   describe('applicant phone number page template', () => {
     it('Matches the snapshot when accountName provided', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../applicant-phone-number.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../licence-holder-phone-number.njk'))
 
       const renderedHtml = template.render({
         data: {
@@ -19,7 +19,7 @@ describe('applicant phone number page', () => {
     })
 
     it('Matches the snapshot when accountName not provided', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../applicant-phone-number.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../licence-holder-phone-number.njk'))
 
       const renderedHtml = template.render({
         data: {

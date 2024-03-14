@@ -7,7 +7,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 const { ADDRESS_FORM, CHECK_ANSWERS } = contactURIs.APPLICANT
 
-export const applicantAddressForm = addressFormPage({
+export const licenceHolderAddressForm = addressFormPage({
   page: ADDRESS_FORM.page,
   uri: ADDRESS_FORM.uri,
   checkData: [checkApplication, checkHasContact(ContactRoles.APPLICANT)],

@@ -23,12 +23,12 @@ import { checkSupportingInformation } from '../pages/supporting-information/chec
 
 import { licenceHolderName } from '../pages/contact/applicant/licence-holder-name.js'
 import { licenceHolderEmail } from '../pages/contact/applicant/licence-holder-email.js'
-import { applicantPhoneNumber } from '../pages/contact/applicant/applicant-phone-number.js'
+import { licenceHolderPhoneNumber } from '../pages/contact/applicant/licence-holder-phone-number.js'
 import { licenceHolderCheckAnswers } from '../pages/contact/applicant/licence-holder-check-answers.js'
 import { licenceHolderOrganisation } from '../pages/contact/applicant/licence-holder-organisation.js'
 import { licenceHolderPostcode } from '../pages/contact/applicant/licence-holder-postcode.js'
 import { licenceHolderAddress } from '../pages/contact/applicant/licence-holder-address.js'
-import { applicantAddressForm } from '../pages/contact/applicant/applicant-address-form.js'
+import { licenceHolderAddressForm } from '../pages/contact/applicant/licence-holder-address-form.js'
 
 import { ecologistName } from '../pages/contact/ecologist/ecologist-name.js'
 import { ecologistEmail } from '../pages/contact/ecologist/ecologist-email.js'
@@ -204,10 +204,10 @@ const routes = [
   ...licenceHolderName,
   ...licenceHolderOrganisation,
   ...licenceHolderEmail,
-  ...applicantPhoneNumber,
+  ...licenceHolderPhoneNumber,
   ...licenceHolderPostcode,
   ...licenceHolderAddress,
-  ...applicantAddressForm,
+  ...licenceHolderAddressForm,
   ...licenceHolderCheckAnswers,
   ...ecologistName,
   ...ecologistOrganisation,

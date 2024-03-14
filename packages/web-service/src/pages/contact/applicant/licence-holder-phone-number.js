@@ -6,7 +6,7 @@ import { checkApplication } from '../../common/check-application.js'
 
 const { PHONE_NUMBER } = contactURIs.APPLICANT
 
-export const applicantPhoneNumber = phoneNumberPage({
+export const licenceHolderPhoneNumber = phoneNumberPage({
   page: PHONE_NUMBER.page,
   uri: PHONE_NUMBER.uri,
   checkData: checkApplication,
