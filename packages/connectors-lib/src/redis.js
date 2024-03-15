@@ -6,7 +6,10 @@ import * as _cloneDeep from 'lodash.clonedeep'
 const { default: cloneDeep } = _cloneDeep
 
 const debug = db('connectors-lib:redis')
-export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || 3600
+
+const ONE_HOUR_IN_SECONDS = 3600
+
+export const CACHE_EXPIRE_SECONDS = process.env.CACHE_EXPIRE_SECONDS || ONE_HOUR_IN_SECONDS
 
 let client
 
@@ -29,17 +32,17 @@ export const REDIS = {
     }
 
     // Print options -- hide password
-    debug(`Redis connections: ${JSON.stringify(msg, null, 4)}`)
+    debug(`Redis connections: ${JSON.stringify(msg)}`)
 
     // Create client
     client = createClient(options)
 
     // Log events
-    await client.on('error', err => console.error('Redis Client Error', err))
-    await client.on('connect', () => debug('Redis connection is connecting...'))
-    await client.on('ready', () => debug('Redis connection is connected'))
-    await client.on('end', () => debug('Redis connection has disconnected'))
-    await client.on('reconnecting', () => debug('Redis connection is reconnecting'))
+    client.on('error', err => console.error('Redis Client Error', err))
+    client.on('connect', () => debug('Redis connection is connecting...'))
+    client.on('ready', () => debug('Redis connection is connected'))
+    client.on('end', () => debug('Redis connection has disconnected'))
+    client.on('reconnecting', () => debug('Redis connection is reconnecting'))
 
     // Connect
     await client.connect()

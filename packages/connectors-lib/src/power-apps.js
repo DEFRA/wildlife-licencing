@@ -25,7 +25,7 @@ export const getToken = async platform => {
     const msg = cloneDeep(platform)
     hide(msg, 'oauth.client.id')
     hide(msg, 'oauth.client.secret')
-    debug(`Power Platform connections: ${JSON.stringify(msg, null, 4)}`)
+    debug(`Power Platform connections: ${JSON.stringify(msg)}`)
     const { client, auth } = platform.oauth
     const { id, secret } = client
     const oauthClient = new ClientCredentials({ client: { id, secret }, auth })

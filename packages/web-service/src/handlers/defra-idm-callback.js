@@ -31,11 +31,11 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     if (journeyData?.cookies) {
       Object.assign(payload, { cookiePrefs: journeyData.cookies })
     }
-    debug(`Create user: ${JSON.stringify(payload, null, 4)}`)
+    debug(`Create user: ${JSON.stringify(payload)}`)
     await APIRequests.USER.createIDM(tokenPayload.contactId, payload)
     await APIRequests.USER.requestUserDetails(tokenPayload.contactId)
   } else {
-    debug(`Found user: ${JSON.stringify(user, null, 4)}`)
+    debug(`Found user: ${JSON.stringify(user)}`)
     await APIRequests.USER.requestUserDetails(user.id)
     if (journeyData?.cookies) {
       Object.assign(user, { cookiePrefs: journeyData?.cookies })
@@ -51,7 +51,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
   for (const rel of relationships) {
     if (rel.relationshipType !== 'Citizen') {
       const organisation = await APIRequests.USER.updateOrganisation(rel.organisationId, { name: rel.organisationName })
-      debug(`Setting organisation: ${JSON.stringify(organisation, null, 4)}`)
+      debug(`Setting organisation: ${JSON.stringify(organisation)}`)
       await APIRequests.USER.updateUserOrganisation(rel.userOrganisationId, {
         userId: tokenPayload.contactId,
         organisationId: rel.organisationId,
@@ -61,7 +61,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     }
   }
 
-  debug(`Setting auth: ${JSON.stringify(tokenPayload, null, 4)}`)
+  debug(`Setting auth: ${JSON.stringify(tokenPayload)}`)
   await request.cache().setAuthData(tokenPayload)
 
   // The role relationship is not currently stored in the database as there
@@ -113,7 +113,7 @@ export const defraIdmCallbackPreAuth = async (request, h) => {
     debug(`exp time: ${jwtTimeToString(payload.exp)}`)
     debug(`iat time: ${jwtTimeToString(payload.iat)}`)
     debug(`nbf time: ${jwtTimeToString(payload.nbf)}`)
-    debug(`Token payload: ${JSON.stringify(payload, null, 4)}`)
+    debug(`Token payload: ${JSON.stringify(payload)}`)
 
     // We don't want to log actual tokens in production so we first check that this is a dev environment
     if (process.env.NODE_ENV === 'development') {

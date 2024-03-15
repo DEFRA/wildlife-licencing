@@ -15,7 +15,7 @@ const debug = db('queue-defs:create')
 
 export const createQueue = async (definition, ops) => {
   const msg = Object.assign({}, QUEUE.connection, QUEUE.connection.password && { password: '***' })
-  debug(`Queue connection for ${definition.name} + ${JSON.stringify(msg, null, 4)}`)
+  debug(`Queue connection for ${definition.name} + ${JSON.stringify(msg)}`)
   const options = Object.assign(definition.options, { redis: QUEUE.connection }, ops)
   console.log(`Creating queue: ${definition.name} with options: ${JSON.stringify(Object.assign({}, options, { redis: undefined }))}`)
   const queue = new Queue(definition.name, options)
