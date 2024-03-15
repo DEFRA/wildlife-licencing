@@ -9,6 +9,8 @@ import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
+
+const oldPage = 'habitat-entrances'
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
@@ -33,7 +35,7 @@ export const validator = async (payload, context) => {
   Joi.assert(
     payload,
     Joi.object({
-      [habitatURIs.ENTRANCES.page]: Joi.number().required().integer().min(1).max(100).greater(activeEntranceCount - 1) // because this can be greater than or equal to, we - 1
+      [oldPage]: Joi.number().required().integer().min(1).max(100).greater(activeEntranceCount - 1) // because this can be greater than or equal to, we - 1
     }).options({ abortEarly: false, allowUnknown: true })
   )
 }
@@ -43,7 +45,7 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
-  const numberOfEntrances = parseInt(pageData.payload[habitatURIs.ENTRANCES.page])
+  const numberOfEntrances = parseInt(pageData.payload[oldPage])
 
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })

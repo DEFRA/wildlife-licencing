@@ -20,8 +20,8 @@ describe('The habitat reopen page', () => {
           getData: () => ({ applicationId: '123abc' })
         })
       }
-      const { completion } = await import('../habitat-reopen.js')
-      expect(await completion(request)).toBe('/habitat-entrances')
+      const { completion } = await import('../sett-reopened-after-development.js')
+      expect(await completion(request)).toBe('/sett-entrances-value')
     })
 
     it('the habitat-reopen page forwards onto check-habitat-answers on return journey', async () => {
@@ -42,7 +42,7 @@ describe('The habitat reopen page', () => {
           getData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-reopen.js')
+      const { completion } = await import('../sett-reopened-after-development.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -74,7 +74,7 @@ describe('The habitat reopen page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-reopen.js')
+      const { setData } = await import('../sett-reopened-after-development.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -122,7 +122,7 @@ describe('The habitat reopen page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-reopen.js')
+      const { setData } = await import('../sett-reopened-after-development.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -141,7 +141,7 @@ describe('The habitat reopen page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-reopen.js')
+      const { getData } = await import('../sett-reopened-after-development.js')
       expect(await getData(request)).toStrictEqual({ willReopen: result.habitatData.willReopen })
     })
   })

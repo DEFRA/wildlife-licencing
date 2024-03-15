@@ -23,7 +23,7 @@ describe('The habitat start page', () => {
           }
         }
       }))
-      const { checkData } = await import('../habitat-start.js')
+      const { checkData } = await import('../sett-start.js')
       expect(await checkData(request)).toBe(undefined)
     })
 
@@ -52,7 +52,7 @@ describe('The habitat start page', () => {
           }
         }
       }))
-      const { checkData } = await import('../habitat-start.js')
+      const { checkData } = await import('../sett-start.js')
       await checkData(request, h)
       expect(mockRedirect).toHaveBeenCalledWith('/check-habitat-answers')
     })
@@ -82,7 +82,7 @@ describe('The habitat start page', () => {
           }))
         })
       }
-      const { getData } = await import('../habitat-start.js')
+      const { getData } = await import('../sett-start.js')
       expect(await getData(request)).toBe(null)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'setts', tagState: 'in-progress' })
     })

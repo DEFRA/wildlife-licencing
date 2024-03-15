@@ -47,11 +47,11 @@ export const ecologistExperienceURIs = {
 }
 
 export const habitatURIs = {
-  START: { uri: '/habitat-start', page: 'habitat-start' },
-  NAME: { uri: '/habitat-name', page: 'habitat-name' },
-  TYPES: { uri: '/habitat-types', page: 'habitat-types' },
-  REOPEN: { uri: '/habitat-reopen', page: 'habitat-reopen' },
-  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' },
+  START: { uri: '/sett-start', page: 'sett-start' },
+  NAME: { uri: '/sett-name', page: 'sett-name' },
+  TYPES: { uri: '/sett-use-category', page: 'sett-use-category' },
+  REOPEN: { uri: '/sett-reopened-after-development', page: 'sett-reopened-after-development' },
+  ENTRANCES: { uri: '/sett-entrances-value', page: 'sett-entrances-value' },
   ACTIVE_ENTRANCES: { uri: '/habitat-active-entrances', page: 'habitat-active-entrances' },
   GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
   WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },

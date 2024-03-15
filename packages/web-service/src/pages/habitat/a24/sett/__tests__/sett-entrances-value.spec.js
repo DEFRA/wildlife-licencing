@@ -22,7 +22,7 @@ describe('The habitat entrances page', () => {
           }
         }
       }
-      const { completion } = await import('../habitat-entrances.js')
+      const { completion } = await import('../sett-entrances-value.js')
       expect(await completion(request)).toBe('/habitat-active-entrances')
     })
 
@@ -45,7 +45,7 @@ describe('The habitat entrances page', () => {
           getPageData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-entrances.js')
+      const { completion } = await import('../sett-entrances-value.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -77,7 +77,7 @@ describe('The habitat entrances page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-entrances.js')
+      const { setData } = await import('../sett-entrances-value.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -125,7 +125,7 @@ describe('The habitat entrances page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-entrances.js')
+      const { setData } = await import('../sett-entrances-value.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -144,7 +144,7 @@ describe('The habitat entrances page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-entrances.js')
+      const { getData } = await import('../sett-entrances-value.js')
       expect(await getData(request)).toStrictEqual({ numberOfEntrances: result.habitatData.numberOfEntrances })
     })
 
@@ -178,7 +178,7 @@ describe('The habitat entrances page', () => {
             }
           }
         }
-        const { validator } = await import('../habitat-entrances.js')
+        const { validator } = await import('../sett-entrances-value.js')
         try {
           await validator(payload, context)
         } catch (e) {
@@ -215,7 +215,7 @@ describe('The habitat entrances page', () => {
             }
           }
         }
-        const { validator } = await import('../habitat-entrances.js')
+        const { validator } = await import('../sett-entrances-value.js')
         try {
           await validator(payload, context)
         } catch (e) {
@@ -252,7 +252,7 @@ describe('The habitat entrances page', () => {
             }
           }
         }
-        const { validator } = await import('../habitat-entrances.js')
+        const { validator } = await import('../sett-entrances-value.js')
         try {
           await validator(payload, context)
         } catch (e) {
@@ -289,7 +289,7 @@ describe('The habitat entrances page', () => {
             }
           }
         }
-        const { validator } = await import('../habitat-entrances.js')
+        const { validator } = await import('../sett-entrances-value.js')
         try {
           await validator(payload, context)
         } catch (e) {
@@ -327,7 +327,7 @@ describe('The habitat entrances page', () => {
             }
           }
         }
-        const { validator } = await import('../habitat-entrances.js')
+        const { validator } = await import('../sett-entrances-value.js')
         try {
           await validator(payload, context)
         } catch (e) {
@@ -366,7 +366,7 @@ describe('The habitat entrances page', () => {
           }
         }
       }
-      const { validator } = await import('../habitat-entrances.js')
+      const { validator } = await import('../sett-entrances-value.js')
       expect(await validator(payload, context)).toBe(undefined)
     })
 
@@ -400,7 +400,7 @@ describe('The habitat entrances page', () => {
           }
         }
       }
-      const { validator } = await import('../habitat-entrances.js')
+      const { validator } = await import('../sett-entrances-value.js')
       expect(await validator(payload, context)).toBe(undefined)
     })
 
@@ -433,7 +433,7 @@ describe('The habitat entrances page', () => {
           }
         }
       }
-      const { validator } = await import('../habitat-entrances.js')
+      const { validator } = await import('../sett-entrances-value.js')
       expect(await validator(payload, context)).toBe(undefined)
     })
   })

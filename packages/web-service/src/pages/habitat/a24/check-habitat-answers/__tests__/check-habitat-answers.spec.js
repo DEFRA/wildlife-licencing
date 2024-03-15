@@ -140,7 +140,7 @@ describe('The check habitat answers page', () => {
       }
       const { completion } = await import('../check-habitat-answers.js')
       const result = await completion(request)
-      expect(result).toBe('/habitat-name')
+      expect(result).toBe('/sett-name')
       expect(setData).toHaveBeenCalledWith({
         applicationId: '123abc'
       })
@@ -181,7 +181,7 @@ describe('The check habitat answers page', () => {
         }
       }
       const { completion } = await import('../check-habitat-answers.js')
-      expect(await completion(request)).toBe('/habitat-name')
+      expect(await completion(request)).toBe('/sett-name')
     })
     it('the check-habitat-answers return undefined if the user does not clicked yes or no', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({

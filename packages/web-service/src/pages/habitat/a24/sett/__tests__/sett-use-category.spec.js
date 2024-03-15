@@ -23,8 +23,8 @@ describe('The habitat types page', () => {
           getData: () => ({ applicationId: '123abc' })
         })
       }
-      const { completion } = await import('../habitat-types.js')
-      expect(await completion(request)).toBe('/habitat-reopen')
+      const { completion } = await import('../sett-use-category.js')
+      expect(await completion(request)).toBe('/sett-reopened-after-development')
     })
 
     it('the habitat-types page forwards onto check-habitat-answers on return journey', async () => {
@@ -45,7 +45,7 @@ describe('The habitat types page', () => {
           getData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-types.js')
+      const { completion } = await import('../sett-use-category.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -77,7 +77,7 @@ describe('The habitat types page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-types.js')
+      const { setData } = await import('../sett-use-category.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -125,7 +125,7 @@ describe('The habitat types page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-types.js')
+      const { setData } = await import('../sett-use-category.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -144,7 +144,7 @@ describe('The habitat types page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-types.js')
+      const { getData } = await import('../sett-use-category.js')
       expect(await getData(request)).toStrictEqual({ MAIN_NO_ALTERNATIVE_SETT, ANNEXE, SUBSIDIARY, OUTLIER, settType: result.habitatData.settType })
     })
   })

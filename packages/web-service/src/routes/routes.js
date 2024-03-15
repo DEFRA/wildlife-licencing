@@ -86,11 +86,8 @@ import siteGridRef from '../pages/site/site-grid-ref/site-grid-ref.js'
 import siteMisMatchCheck from '../pages/site/site-check/site-check.js'
 import checkSiteAnswers from '../pages/site/check-site-answers/check-site-answers.js'
 
-import habitatStart from '../pages/habitat/a24/start/habitat-start.js'
-import habitatTypes from '../pages/habitat/a24/types/habitat-types.js'
-import habitatName from '../pages/habitat/a24/name/habitat-name.js'
-import habitatReopen from '../pages/habitat/a24/reopen/habitat-reopen.js'
-import habitatEntrances from '../pages/habitat/a24/entrances/habitat-entrances.js'
+import settRoutes from '../pages/habitat/a24/sett/router.js'
+
 import habitatActiveEntrances from '../pages/habitat/a24/active-entrances/habitat-active-entrances.js'
 import habitatGridRef from '../pages/habitat/a24/grid-ref/habitat-grid-ref.js'
 import habitatWorkStart from '../pages/habitat/a24/work-start/habitat-work-start.js'
@@ -251,15 +248,11 @@ const routes = [
   ...siteGridRef,
   ...siteMisMatchCheck,
   ...checkSiteAnswers,
-  ...habitatStart,
-  ...habitatName,
+  ...settRoutes,
   ...habitatActiveEntrances,
   ...habitatGridRef,
-  ...habitatTypes,
-  ...habitatReopen,
   ...habitatWorkStart,
   ...habitatWorkEnd,
-  ...habitatEntrances,
   ...habitatActivities,
   ...activeSettDropout,
   ...checkHabitatAnswers,
