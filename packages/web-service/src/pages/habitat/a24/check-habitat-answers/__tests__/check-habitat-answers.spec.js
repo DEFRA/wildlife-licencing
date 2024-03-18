@@ -1,5 +1,6 @@
 import path from 'path'
 import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
+import { habitatURIs } from '../../../../../uris.js'
 
 describe('The check habitat answers page', () => {
   beforeEach(() => jest.resetModules())
@@ -266,6 +267,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData:
           [
             {
@@ -302,6 +304,7 @@ describe('The check habitat answers page', () => {
         const renderedHtml = template.render({
           data: {
             confirmDelete: '/confirm-delete',
+            habitatURIs: { ...habitatURIs },
             pageData:
               [
                 {
@@ -420,6 +423,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData: [
           {
             settType: 100000000,

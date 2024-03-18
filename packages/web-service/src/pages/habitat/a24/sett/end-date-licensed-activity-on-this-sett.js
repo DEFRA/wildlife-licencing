@@ -15,7 +15,6 @@ import { extractDateFromPageDate, validatePageDate } from '../../../../common/da
 import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
-
 const oldKey = 'habitat-work-end'
 export const checkHasStart = async (request, h) => {
   const { habitatData } = await request.cache().getData()
@@ -26,7 +25,6 @@ export const checkHasStart = async (request, h) => {
 
   return null
 }
-
 
 export const getData = async request => {
   const { habitatData } = await request.cache().getData()

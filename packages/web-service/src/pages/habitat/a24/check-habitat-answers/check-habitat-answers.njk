@@ -5,7 +5,7 @@
 
 {% import "habitat-text.njk" as habitatText %}
 
-{% set title = 'Check your answers' %} 
+{% set title = 'Check your answers' %}
 
 {% set errorMap = {
         'additional-sett': {
@@ -26,10 +26,12 @@
 {% block pageTitle %}{{ 'Error: ' + title if error else title }}{% endblock %}
 
 {% block pageContent %}
+
 {% for habitat in data.pageData %}
 
+
   <h1 class="govuk-heading-m">Sett: {{habitat.name}}</h1>
-    
+
   <div class="govuk-body">
     <a class="govuk-link govuk-link--no-visited-state" href={{data.confirmDelete + "?id=" + habitat.id}}>
       Remove sett
@@ -37,7 +39,7 @@
   </div>
 
   {% macro habitatMethodsMapper(habitatMethodTypes, habitat) %}
-   
+
     {% for item in habitatMethodTypes %}
          {% for key, value in habitat.activityTypes %}
           {% if (item == value) %}
@@ -46,20 +48,19 @@
           {% endif %}
         {% endfor %}
     {% endfor %}
-    
+
   {% endmacro %}
 
   {% macro habitatTypeMapper(habitatType, habitat) %}
-   
+
     {% for key, value in habitat.settTypes %}
       {% if (habitatType == value) %}
         {% set settTypeText = key %}
            <span>{{ habitatText.habitatActivitiesText[settTypeText]}}</span> <br>
       {% endif %}
     {% endfor %}
-  
-  {% endmacro %}
 
+  {% endmacro %}
     {{ govukSummaryList({
     rows: [
     {
@@ -68,7 +69,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-types?id=" + habitat.id,
+              href:  data.habitatURIs.TYPES.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -80,7 +81,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-reopen?id=" + habitat.id,
+              href:  data.habitatURIs.REOPEN.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -92,7 +93,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-entrances?id=" + habitat.id,
+              href:  data.habitatURIs.ENTRANCES.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -104,7 +105,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-active-entrances?id=" + habitat.id,
+              href:  data.habitatURIs.ACTIVE_ENTRANCES.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -116,7 +117,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-grid-ref?id=" + habitat.id,
+              href:  data.habitatURIs.GRID_REF.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -128,7 +129,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-work-start?id=" + habitat.id,
+              href:  data.habitatURIs.WORK_START.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -140,7 +141,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-work-end?id=" + habitat.id,
+              href:  data.habitatURIs.WORK_END.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]
@@ -152,7 +153,7 @@
       actions: {
           items: [
             {
-              href: "/habitat-activities?id=" + habitat.id,
+              href:  data.habitatURIs.ACTIVITIES.uri + "?id=" + habitat.id,
               text: "Change"
             }
           ]

@@ -69,6 +69,7 @@ export const getData = async request => {
     data.pageData.push(habitatData)
   }
   data.confirmDelete = habitatURIs.CONFIRM_DELETE.uri
+  data.habitatURIs = habitatURIs
   return data
 }
 
