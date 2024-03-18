@@ -5,7 +5,7 @@ describe('The sett-entrance-value-total entrances page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('sett-active-entrance-total page', () => {
-    it('the sett-active-entrance-total page forwards onto habitat-grid-ref page if theres no errors', async () => {
+    it('the sett-active-entrance-total page forwards onto sett-grid-reference page if theres no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -29,7 +29,7 @@ describe('The sett-entrance-value-total entrances page', () => {
         }
       }
       const { completion } = await import('../sett-active-entrance-total.js')
-      expect(await completion(request)).toBe('/habitat-grid-ref')
+      expect(await completion(request)).toBe('/sett-grid-reference')
     })
     it('the sett-active-entrance-total page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -313,7 +313,7 @@ describe('The sett-entrance-value-total entrances page', () => {
 
   describe('The sett-entrance-value-total entrances template', () => {
     it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../sett-entrance-value-total.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../sett-active-entrance-total.njk'))
 
       const renderedHtml = template.render({
         data: { numberOfActiveEntrances: 22 }

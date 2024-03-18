@@ -53,7 +53,7 @@ export const habitatURIs = {
   REOPEN: { uri: '/sett-reopened-after-development', page: 'sett-reopened-after-development' },
   ENTRANCES: { uri: '/sett-entrances-value', page: 'sett-entrances-value' },
   ACTIVE_ENTRANCES: { uri: '/sett-active-entrance-total', page: 'sett-active-entrance-total' },
-  GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
+  GRID_REF: { uri: '/sett-grid-reference', page: 'sett-grid-reference' },
   WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
   WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
   ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },

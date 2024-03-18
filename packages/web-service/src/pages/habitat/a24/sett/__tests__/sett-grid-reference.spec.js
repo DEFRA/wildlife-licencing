@@ -1,8 +1,8 @@
 describe('The habitat grid ref page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-grid-ref page', () => {
-    it('the habitat-grid-ref page forwards onto habitat-work-start on primary journey', async () => {
+  describe('sett-grif-reference page', () => {
+    it('the sett-grif-reference page forwards onto habitat-work-start on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -20,11 +20,11 @@ describe('The habitat grid ref page', () => {
           getData: () => ({ applicationId: '123abc' })
         })
       }
-      const { completion } = await import('../habitat-grid-ref.js')
+      const { completion } = await import('../sett-grid-reference.js')
       expect(await completion(request)).toBe('/habitat-work-start')
     })
 
-    it('the habitat-grid-ref page forwards onto check-habitat-answers on return journey', async () => {
+    it('the sett-grif-reference page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -42,7 +42,7 @@ describe('The habitat grid ref page', () => {
           getData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-grid-ref.js')
+      const { completion } = await import('../sett-grid-reference.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -74,7 +74,7 @@ describe('The habitat grid ref page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-grid-ref.js')
+      const { setData } = await import('../sett-grid-reference.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -122,7 +122,7 @@ describe('The habitat grid ref page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-grid-ref.js')
+      const { setData } = await import('../sett-grid-reference.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -141,14 +141,14 @@ describe('The habitat grid ref page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-grid-ref.js')
+      const { getData } = await import('../sett-grid-reference.js')
       expect(await getData(request)).toStrictEqual({ gridReference: result.habitatData.gridReference })
     })
 
     it('should throw an error when the user does not enter a habitat grid refernce', async () => {
       try {
         const payload = { 'habitat-grid-ref': '' }
-        const { validator } = await import('../habitat-grid-ref.js')
+        const { validator } = await import('../sett-grid-reference.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -159,7 +159,7 @@ describe('The habitat grid ref page', () => {
     it('should throw an error when the habitat grid reference is wrong', async () => {
       try {
         const payload = { 'habitat-grid-ref': 'N123456' }
-        const { validator } = await import('../habitat-grid-ref.js')
+        const { validator } = await import('../sett-grid-reference.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -170,7 +170,7 @@ describe('The habitat grid ref page', () => {
     it('should throw an when the user enters the habitat grid reference does not exist', async () => {
       try {
         const payload = { 'habitat-grid-ref': 'hh123456' }
-        const { validator } = await import('../habitat-grid-ref.js')
+        const { validator } = await import('../sett-grid-reference.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -180,7 +180,7 @@ describe('The habitat grid ref page', () => {
 
     it('should not throw an error for a correct grid reference of the habitat', async () => {
       const payload = { 'habitat-grid-ref': 'NY395557' }
-      const { validator } = await import('../habitat-grid-ref.js')
+      const { validator } = await import('../sett-grid-reference.js')
       expect(await validator(payload)).toBeUndefined()
     })
   })
