@@ -1,6 +1,3 @@
-import Joi from 'joi'
-import differenceInMonths from 'date-fns/differenceInMonths/index.js'
-
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -12,8 +9,6 @@ import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../../common/date-utils.js'
-import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
-import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { dateCompletion, getDateData } from './common/date/dates.js'
 import { isEndDateBeforeStartDate, isStartAndEndDateWithinWindow } from './common/date/validators.js'
 

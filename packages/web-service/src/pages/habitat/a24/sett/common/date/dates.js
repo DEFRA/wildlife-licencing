@@ -2,8 +2,6 @@ import { APIRequests } from '../../../../../../services/api-requests.js'
 import { A24_SETT } from '../../../../../tasklist/a24-badger-licence.js'
 import { isCompleteOrConfirmed } from '../../../../../common/tag-functions.js'
 import { habitatURIs } from '../../../../../../uris.js'
-import { getHabitatById } from '../../../common/get-habitat-by-id.js'
-import { putHabitatById } from '../../../common/put-habitat-by-id.js'
 
 export const getDateData = (dateToGet) => {
   if (dateToGet) {
@@ -24,4 +22,3 @@ export const dateCompletion = async (journeyData, uri) => {
   }
   return uri
 }
-

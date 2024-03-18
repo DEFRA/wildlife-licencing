@@ -1,6 +1,3 @@
-import differenceInMonths from 'date-fns/differenceInMonths/index.js'
-import Joi from 'joi'
-
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
@@ -12,9 +9,6 @@ import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 import { validateDateInFuture, validateDateInWindow } from '../common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../../common/date-utils.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
-import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
-
-import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 import { isEndDateBeforeStartDate, isStartAndEndDateWithinWindow } from './common/date/validators.js'
 import { dateCompletion } from './common/date/dates.js'
 
