@@ -15,6 +15,8 @@ import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
 
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { isEndDateBeforeStartDate, isStartAndEndDateWithinWindow } from './common/date/validators.js'
+import { dateCompletion } from './common/date/dates.js'
 
 const oldKey = 'habitat-work-start'
 export const getData = async request => {
@@ -38,35 +40,11 @@ export const validator = async (payload, context) => {
   // Validate the end date with the start date, if the end date is set
   const journeyData = await cacheDirect(context).getData()
   const { habitatData } = journeyData
-  if (habitatData.endDate) {
+  if (habitatData?.endDate) {
     const endDate = new Date(Date.parse(habitatData.endDate))
 
-    if (endDate < startDate) {
-      throw new Joi.ValidationError('ValidationError', [{
-        message: null,
-        path: [oldKey],
-        type: 'endDateBeforeStart',
-        context: {
-          label: oldKey,
-          value: 'Error',
-          key: oldKey
-        }
-      }], null)
-    }
-
-    // Check the start and date are not further apart than the maximum allowed
-    if (differenceInMonths(endDate, startDate) > LicenceTypeConstants[PowerPlatformKeys.APPLICATION_TYPES.A24].MAX_MONTHS_DURATION) {
-      throw new Joi.ValidationError('ValidationError', [{
-        message: null,
-        path: [oldKey],
-        type: 'workTooLong',
-        context: {
-          label: oldKey,
-          value: 'Error',
-          key: oldKey
-        }
-      }], null)
-    }
+    isEndDateBeforeStartDate(startDate, endDate, oldKey)
+    isStartAndEndDateWithinWindow(startDate, endDate, oldKey)
   }
 
   return payload
@@ -88,11 +66,7 @@ export const setData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
-  if (isCompleteOrConfirmed(tagState)) {
-    return habitatURIs.CHECK_YOUR_ANSWERS.uri
-  }
-  return habitatURIs.WORK_END.uri
+  return dateCompletion(journeyData, habitatURIs.WORK_END.uri)
 }
 
 export default pageRoute({

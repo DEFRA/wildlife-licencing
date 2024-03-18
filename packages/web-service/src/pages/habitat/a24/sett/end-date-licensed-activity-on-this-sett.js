@@ -14,6 +14,8 @@ import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../../common/date-utils.js'
 import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
+import { dateCompletion, getDateData } from './common/date/dates.js'
+import { isEndDateBeforeStartDate, isStartAndEndDateWithinWindow } from './common/date/validators.js'
 
 const oldKey = 'habitat-work-end'
 export const checkHasStart = async (request, h) => {
@@ -28,12 +30,7 @@ export const checkHasStart = async (request, h) => {
 
 export const getData = async request => {
   const { habitatData } = await request.cache().getData()
-  const endDate = new Date(habitatData.endDate)
-  return {
-    year: endDate.getFullYear(),
-    month: endDate.getMonth() + 1,
-    day: endDate.getDate()
-  }
+  return getDateData(habitatData?.endDate)
 }
 
 export const validator = async (payload, context) => {
@@ -45,32 +42,8 @@ export const validator = async (payload, context) => {
   const { habitatData } = await cacheDirect(context).getData()
   const startDate = new Date(Date.parse(habitatData.startDate))
 
-  if (endDate < startDate) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: null,
-      path: [oldKey],
-      type: 'endDateBeforeStart',
-      context: {
-        label: oldKey,
-        value: 'Error',
-        key: oldKey
-      }
-    }], null)
-  }
-
-  // Check the start and date are not further apart than the maximum allowed
-  if (differenceInMonths(endDate, startDate) > LicenceTypeConstants[PowerPlatformKeys.APPLICATION_TYPES.A24].MAX_MONTHS_DURATION) {
-    throw new Joi.ValidationError('ValidationError', [{
-      message: null,
-      path: [oldKey],
-      type: 'workTooLong',
-      context: {
-        label: oldKey,
-        value: 'Error',
-        key: oldKey
-      }
-    }], null)
-  }
+  isEndDateBeforeStartDate(startDate, endDate, oldKey)
+  isStartAndEndDateWithinWindow(startDate, endDate, oldKey)
 }
 
 export const setData = async request => {
@@ -90,12 +63,7 @@ export const setData = async request => {
 
 export const completion = async request => {
   const journeyData = await request.cache().getData()
-
-  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
-  if (isCompleteOrConfirmed(tagState)) {
-    return habitatURIs.CHECK_YOUR_ANSWERS.uri
-  }
-  return habitatURIs.ACTIVITIES.uri
+  return dateCompletion(journeyData, habitatURIs.ACTIVITIES.uri)
 }
 
 export default pageRoute({
