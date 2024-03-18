@@ -1,8 +1,8 @@
 describe('The habitat entrances page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-entrances page', () => {
-    it('the habitat-entrances page forwards onto habitat-active-entrances page on primary journey', async () => {
+  describe('sett-active-entrance-total page', () => {
+    it('the sett-active-entrance-total page forwards onto habitat-active-entrances page on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -23,10 +23,10 @@ describe('The habitat entrances page', () => {
         }
       }
       const { completion } = await import('../sett-entrances-value.js')
-      expect(await completion(request)).toBe('/habitat-active-entrances')
+      expect(await completion(request)).toBe('/sett-active-entrance-total')
     })
 
-    it('the habitat-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
+    it('the sett-active-entrance-total page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'

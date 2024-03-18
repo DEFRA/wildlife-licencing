@@ -9,7 +9,6 @@ import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
-
 const oldPage = 'habitat-entrances'
 export const completion = async request => {
   const journeyData = await request.cache().getData()

@@ -88,7 +88,6 @@ import checkSiteAnswers from '../pages/site/check-site-answers/check-site-answer
 
 import settRoutes from '../pages/habitat/a24/sett/router.js'
 
-import habitatActiveEntrances from '../pages/habitat/a24/active-entrances/habitat-active-entrances.js'
 import habitatGridRef from '../pages/habitat/a24/grid-ref/habitat-grid-ref.js'
 import habitatWorkStart from '../pages/habitat/a24/work-start/habitat-work-start.js'
 import habitatWorkEnd from '../pages/habitat/a24/work-end/habitat-work-end.js'
@@ -249,7 +248,6 @@ const routes = [
   ...siteMisMatchCheck,
   ...checkSiteAnswers,
   ...settRoutes,
-  ...habitatActiveEntrances,
   ...habitatGridRef,
   ...habitatWorkStart,
   ...habitatWorkEnd,

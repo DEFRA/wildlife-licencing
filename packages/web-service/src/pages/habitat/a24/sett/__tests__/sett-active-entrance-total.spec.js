@@ -1,11 +1,11 @@
 import path from 'path'
 import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 
-describe('The habitat active entrances page', () => {
+describe('The sett-entrance-value-total entrances page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-active-entrances page', () => {
-    it('the habitat-active-entrances page forwards onto habitat-grid-ref page if theres no errors', async () => {
+  describe('sett-active-entrance-total page', () => {
+    it('the sett-active-entrance-total page forwards onto habitat-grid-ref page if theres no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -28,10 +28,10 @@ describe('The habitat active entrances page', () => {
           }
         }
       }
-      const { completion } = await import('../habitat-active-entrances.js')
+      const { completion } = await import('../sett-active-entrance-total.js')
       expect(await completion(request)).toBe('/habitat-grid-ref')
     })
-    it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
+    it('the sett-active-entrance-total page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -50,7 +50,7 @@ describe('The habitat active entrances page', () => {
           getPageData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-active-entrances.js')
+      const { completion } = await import('../sett-active-entrance-total.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -87,7 +87,7 @@ describe('The habitat active entrances page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-active-entrances.js')
+      const { setData } = await import('../sett-active-entrance-total.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -157,7 +157,7 @@ describe('The habitat active entrances page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-active-entrances.js')
+      const { setData } = await import('../sett-active-entrance-total.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -185,7 +185,7 @@ describe('The habitat active entrances page', () => {
             }
           }
         })
-        const { validator } = await import('../habitat-active-entrances.js')
+        const { validator } = await import('../sett-active-entrance-total.js')
         expect(await validator(payload, context))
       } catch (e) {
         // eslint-disable-next-line
@@ -212,7 +212,7 @@ describe('The habitat active entrances page', () => {
           }
         }
       })
-      const { validator } = await import('../habitat-active-entrances.js')
+      const { validator } = await import('../sett-active-entrance-total.js')
       expect(await validator(payload, context)).toBeUndefined()
     })
 
@@ -226,7 +226,7 @@ describe('The habitat active entrances page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-active-entrances.js')
+      const { getData } = await import('../sett-active-entrance-total.js')
       expect(await getData(request)).toStrictEqual({ numberOfActiveEntrances: result.habitatData.numberOfActiveEntrances })
     })
 
@@ -266,7 +266,7 @@ describe('The habitat active entrances page', () => {
           }
         }
       })
-      const { validator } = await import('../habitat-active-entrances.js')
+      const { validator } = await import('../sett-active-entrance-total.js')
       await validator(payload, context)
       expect(mockGetHabitatsById).toHaveBeenCalledTimes(1)
     })
@@ -306,14 +306,14 @@ describe('The habitat active entrances page', () => {
           }
         }
       })
-      const { validator } = await import('../habitat-active-entrances.js')
+      const { validator } = await import('../sett-active-entrance-total.js')
       expect(await validator(payload, context)).toBe(undefined)
     })
   })
 
-  describe('The habitat active entrances template', () => {
+  describe('The sett-entrance-value-total entrances template', () => {
     it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../habitat-active-entrances.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../sett-entrance-value-total.njk'))
 
       const renderedHtml = template.render({
         data: { numberOfActiveEntrances: 22 }

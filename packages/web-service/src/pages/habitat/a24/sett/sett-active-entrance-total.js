@@ -9,6 +9,7 @@ import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
 
+const oldKey = 'habitat-active-entrances'
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
@@ -30,12 +31,12 @@ export const validator = async (payload, context) => {
     numberOfTotalEntrances = (currentHabitat.numberOfEntrances + 1) || 0
   }
 
-  const numberOfActiveEntrances = payload[habitatURIs.ACTIVE_ENTRANCES.page]
+  const numberOfActiveEntrances = payload[oldKey]
 
   Joi.assert(
-    { [habitatURIs.ACTIVE_ENTRANCES.page]: numberOfActiveEntrances },
+    { [oldKey]: numberOfActiveEntrances },
     Joi.object({
-      [habitatURIs.ACTIVE_ENTRANCES.page]: Joi.number().integer().required().less(numberOfTotalEntrances)
+      [oldKey]: Joi.number().integer().required().less(numberOfTotalEntrances)
     }).options({ abortEarly: false, allowUnknown: true })
   )
 }
@@ -44,8 +45,8 @@ export const setData = async request => {
   const journeyData = await request.cache().getData()
   const pageData = await request.cache().getPageData()
 
-  const numberOfActiveEntrances = parseInt(pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page])
-  const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[habitatURIs.ACTIVE_ENTRANCES.page] > 0
+  const numberOfActiveEntrances = parseInt(pageData.payload[oldKey])
+  const active = journeyData.habitatData.numberOfEntrances > 0 && pageData.payload[oldKey] > 0
 
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
 
