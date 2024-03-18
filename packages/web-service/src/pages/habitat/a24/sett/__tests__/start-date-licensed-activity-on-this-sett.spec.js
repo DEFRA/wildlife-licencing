@@ -1,11 +1,11 @@
 import path from 'path'
 import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 
-describe('The habitat work start page', () => {
+describe('The start date licensed activity on this sett page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('completion', () => {
-    it('the habitat-work-start page forwards onto habitat-work-end on primary journey', async () => {
+    it('the start-date-licensed-activity-on-this-sett page forwards onto end-date-licensed-activity-on-this-sett on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -26,11 +26,11 @@ describe('The habitat work start page', () => {
           }
         }
       }
-      const { completion } = await import('../habitat-work-start.js')
-      expect(await completion(request)).toBe('/habitat-work-end')
+      const { completion } = await import('../start-date-licensed-activity-on-this-sett.js')
+      expect(await completion(request)).toBe('/end-date-licensed-activity-on-this-sett')
     })
 
-    it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
+    it('the start-date-licensed-activity-on-this-sett page forwards onto check-habitat-answers on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -49,7 +49,7 @@ describe('The habitat work start page', () => {
           getPageData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-work-start.js')
+      const { completion } = await import('../start-date-licensed-activity-on-this-sett.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
   })
@@ -58,7 +58,7 @@ describe('The habitat work start page', () => {
     it('you cant pass a date in the past', async () => {
       try {
         const payload = { 'habitat-work-start-day': '11', 'habitat-work-start-month': '11', 'habitat-work-start-year': '2022' }
-        const { validator } = await import('../habitat-work-start.js')
+        const { validator } = await import('../start-date-licensed-activity-on-this-sett.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -69,7 +69,7 @@ describe('The habitat work start page', () => {
     it('you cant pass a date outside of the licence season', async () => {
       try {
         const payload = { 'habitat-work-start-day': '1', 'habitat-work-start-month': '12', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
-        const { validator } = await import('../habitat-work-start.js')
+        const { validator } = await import('../start-date-licensed-activity-on-this-sett.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -91,7 +91,7 @@ describe('The habitat work start page', () => {
           }
         })
         const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
-        const { validator } = await import('../habitat-work-start.js')
+        const { validator } = await import('../start-date-licensed-activity-on-this-sett.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -113,7 +113,7 @@ describe('The habitat work start page', () => {
           }
         })
         const payload = { 'habitat-work-start-day': '07', 'habitat-work-start-month': '07', 'habitat-work-start-year': (new Date().getFullYear() + 1).toString() }
-        const { validator } = await import('../habitat-work-start.js')
+        const { validator } = await import('../start-date-licensed-activity-on-this-sett.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -148,7 +148,7 @@ describe('The habitat work start page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-work-start.js')
+      const { setData } = await import('../start-date-licensed-activity-on-this-sett.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -196,7 +196,7 @@ describe('The habitat work start page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-work-start.js')
+      const { setData } = await import('../start-date-licensed-activity-on-this-sett.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -218,7 +218,7 @@ describe('The habitat work start page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-work-start.js')
+      const { getData } = await import('../start-date-licensed-activity-on-this-sett.js')
       expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
     })
 
@@ -227,14 +227,14 @@ describe('The habitat work start page', () => {
         cache: () => ({ getData: () => ({}) })
       }
 
-      const { getData } = await import('../habitat-work-start.js')
+      const { getData } = await import('../start-date-licensed-activity-on-this-sett.js')
       expect(await getData(request)).toBeNull()
     })
   })
 
-  describe('The habitat work start template', () => {
+  describe('The start date licensed activity on this sett template', () => {
     it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../habitat-work-start.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../start-date-licensed-activity-on-this-sett.njk'))
 
       const renderedHtml = template.render({
         data: {}

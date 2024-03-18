@@ -2,7 +2,7 @@ describe('The habitat grid ref page', () => {
   beforeEach(() => jest.resetModules())
 
   describe('sett-grif-reference page', () => {
-    it('the sett-grif-reference page forwards onto habitat-work-start on primary journey', async () => {
+    it('the sett-grif-reference page forwards onto start-date-licensed-activity-on-this-sett on primary journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -21,7 +21,7 @@ describe('The habitat grid ref page', () => {
         })
       }
       const { completion } = await import('../sett-grid-reference.js')
-      expect(await completion(request)).toBe('/habitat-work-start')
+      expect(await completion(request)).toBe('/start-date-licensed-activity-on-this-sett')
     })
 
     it('the sett-grif-reference page forwards onto check-habitat-answers on return journey', async () => {

@@ -16,6 +16,7 @@ import { LicenceTypeConstants } from '../../../../common/licence-type-constants.
 
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
 
+const oldKey = 'habitat-work-start'
 export const getData = async request => {
   const { habitatData } = await request.cache().getData()
   if (habitatData?.startDate) {
@@ -30,9 +31,9 @@ export const getData = async request => {
 }
 
 export const validator = async (payload, context) => {
-  const startDate = validatePageDate(payload, habitatURIs.WORK_START.page)
-  validateDateInFuture(startDate, habitatURIs.WORK_START.page)
-  validateDateInWindow(startDate, habitatURIs.WORK_START.page)
+  const startDate = validatePageDate(payload, oldKey)
+  validateDateInFuture(startDate, oldKey)
+  validateDateInWindow(startDate, oldKey)
 
   // Validate the end date with the start date, if the end date is set
   const journeyData = await cacheDirect(context).getData()
@@ -43,12 +44,12 @@ export const validator = async (payload, context) => {
     if (endDate < startDate) {
       throw new Joi.ValidationError('ValidationError', [{
         message: null,
-        path: [habitatURIs.WORK_START.page],
+        path: [oldKey],
         type: 'endDateBeforeStart',
         context: {
-          label: habitatURIs.WORK_START.page,
+          label: oldKey,
           value: 'Error',
-          key: habitatURIs.WORK_START.page
+          key: oldKey
         }
       }], null)
     }
@@ -57,12 +58,12 @@ export const validator = async (payload, context) => {
     if (differenceInMonths(endDate, startDate) > LicenceTypeConstants[PowerPlatformKeys.APPLICATION_TYPES.A24].MAX_MONTHS_DURATION) {
       throw new Joi.ValidationError('ValidationError', [{
         message: null,
-        path: [habitatURIs.WORK_START.page],
+        path: [oldKey],
         type: 'workTooLong',
         context: {
-          label: habitatURIs.WORK_START.page,
+          label: oldKey,
           value: 'Error',
-          key: habitatURIs.WORK_START.page
+          key: oldKey
         }
       }], null)
     }
@@ -72,7 +73,7 @@ export const validator = async (payload, context) => {
 }
 
 export const setData = async request => {
-  const startDate = extractDateFromPageDate(request.payload, habitatURIs.WORK_START.page)
+  const startDate = extractDateFromPageDate(request.payload, oldKey)
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
   if (isCompleteOrConfirmed(tagState)) {

@@ -1,4 +1,4 @@
-describe('The habitat work end page', () => {
+describe('The start date licensed activity on this sett page', () => {
   beforeEach(() => {
     jest.resetModules()
     jest.useFakeTimers().setSystemTime(new Date('2023-01-01'))
@@ -16,7 +16,7 @@ describe('The habitat work end page', () => {
         })
       }
 
-      const { checkHasStart } = await import('../habitat-work-end.js')
+      const { checkHasStart } = await import('../end-date-licensed-activity-on-this-sett.js')
       expect(await checkHasStart(request)).toBeNull()
     })
 
@@ -29,9 +29,9 @@ describe('The habitat work end page', () => {
         })
       }
       const h = { redirect: jest.fn() }
-      const { checkHasStart } = await import('../habitat-work-end.js')
+      const { checkHasStart } = await import('../end-date-licensed-activity-on-this-sett.js')
       await checkHasStart(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/habitat-work-start')
+      expect(h.redirect).toHaveBeenCalledWith('/start-date-licensed-activity-on-this-sett')
     })
   })
 
@@ -57,7 +57,7 @@ describe('The habitat work end page', () => {
           }
         }
       }
-      const { completion } = await import('../habitat-work-end.js')
+      const { completion } = await import('../end-date-licensed-activity-on-this-sett.js')
       expect(await completion(request)).toBe('/habitat-activities')
     })
 
@@ -80,7 +80,7 @@ describe('The habitat work end page', () => {
           getPageData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-work-end.js')
+      const { completion } = await import('../end-date-licensed-activity-on-this-sett.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
   })
@@ -101,7 +101,7 @@ describe('The habitat work end page', () => {
           }
         }
       })
-      const { validator } = await import('../habitat-work-end.js')
+      const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
 
       let error
       try {
@@ -120,7 +120,7 @@ describe('The habitat work end page', () => {
         'habitat-work-end-month': '',
         'habitat-work-end-year': '2023'
       }
-      const { validator } = await import('../habitat-work-end.js')
+      const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
 
       let error
       try {
@@ -139,7 +139,7 @@ describe('The habitat work end page', () => {
         'habitat-work-end-month': '11',
         'habitat-work-end-year': '2022'
       }
-      const { validator } = await import('../habitat-work-end.js')
+      const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
 
       let error
       try {
@@ -158,7 +158,7 @@ describe('The habitat work end page', () => {
         'habitat-work-end-month': '1',
         'habitat-work-end-year': '2024'
       }
-      const { validator } = await import('../habitat-work-end.js')
+      const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
 
       let error
       try {
@@ -189,7 +189,7 @@ describe('The habitat work end page', () => {
             }
           }
         })
-        const { validator } = await import('../habitat-work-end.js')
+        const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -224,7 +224,7 @@ describe('The habitat work end page', () => {
           })
         })
       }
-      const { setData } = await import('../habitat-work-end.js')
+      const { setData } = await import('../end-date-licensed-activity-on-this-sett.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         habitatData:
@@ -270,7 +270,7 @@ describe('The habitat work end page', () => {
         putHabitatById: () => {}
       }))
 
-      const { setData } = await import('../habitat-work-end.js')
+      const { setData } = await import('../end-date-licensed-activity-on-this-sett.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',
@@ -298,7 +298,7 @@ describe('The habitat work end page', () => {
           }
         }
       })
-      const { validator } = await import('../habitat-work-end.js')
+      const { validator } = await import('../end-date-licensed-activity-on-this-sett.js')
       expect(await validator(payload)).toBeUndefined()
     })
   })
@@ -319,7 +319,7 @@ describe('The habitat work end page', () => {
         }
       }
 
-      const { getData } = await import('../habitat-work-end.js')
+      const { getData } = await import('../end-date-licensed-activity-on-this-sett.js')
       expect(await getData(request)).toStrictEqual({ day: 11, month: 10, year: 3022 })
     })
   })

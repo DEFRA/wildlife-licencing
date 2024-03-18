@@ -88,8 +88,6 @@ import checkSiteAnswers from '../pages/site/check-site-answers/check-site-answer
 
 import settRoutes from '../pages/habitat/a24/sett/router.js'
 
-import habitatWorkStart from '../pages/habitat/a24/work-start/habitat-work-start.js'
-import habitatWorkEnd from '../pages/habitat/a24/work-end/habitat-work-end.js'
 import habitatActivities from '../pages/habitat/a24/activities/habitat-activities.js'
 import activeSettDropout from '../pages/habitat/a24/active-sett-dropout/active-sett-dropout.js'
 import confirmDelete from '../pages/habitat/a24/confirm-delete/confirm-delete.js'
@@ -247,8 +245,6 @@ const routes = [
   ...siteMisMatchCheck,
   ...checkSiteAnswers,
   ...settRoutes,
-  ...habitatWorkStart,
-  ...habitatWorkEnd,
   ...habitatActivities,
   ...activeSettDropout,
   ...checkHabitatAnswers,
