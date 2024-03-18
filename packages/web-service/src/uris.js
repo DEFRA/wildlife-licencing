@@ -56,7 +56,7 @@ export const habitatURIs = {
   GRID_REF: { uri: '/sett-grid-reference', page: 'sett-grid-reference' },
   WORK_START: { uri: '/start-date-licensed-activity-on-this-sett', page: 'start-date-licensed-activity-on-this-sett' },
   WORK_END: { uri: '/end-date-licensed-activity-on-this-sett', page: 'end-date-licensed-activity-on-this-sett' },
-  ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
+  ACTIVITIES: { uri: '/sett-disturbance-methods', page: 'sett-disturbance-methods' },
   ACTIVE_SETT_DROPOUT: { uri: '/active-sett-dropout', page: 'active-sett-dropout' },
   CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' },
   CONFIRM_DELETE: { uri: '/confirm-delete', page: 'confirm-delete' }

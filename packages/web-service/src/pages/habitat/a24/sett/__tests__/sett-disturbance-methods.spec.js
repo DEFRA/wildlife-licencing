@@ -3,23 +3,23 @@ import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 import path from 'path'
 const { METHOD_IDS: { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT } } = PowerPlatformKeys
 
-describe('The habitat activities page', () => {
+describe('The sett disturbance methods page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('habitat-activities page', () => {
-    it('the habitat-activities page forwards onto check-habitat-answers page on primary journey', async () => {
-      const { completion } = await import('../habitat-activities.js')
+  describe('sett-disturbance-methods page', () => {
+    it('the sett-disturbance-methods page forwards onto check-habitat-answers page on primary journey', async () => {
+      const { completion } = await import('../sett-disturbance-methods.js')
       expect(await completion()).toBe('/check-habitat-answers')
     })
 
-    it('the habitat-activities page forwards onto check-habitat-answers if no errors on return journey', async () => {
+    it('the sett-disturbance-methods page forwards onto check-habitat-answers if no errors on return journey', async () => {
       const request = {
         cache: () => ({
           getData: () => ({}),
           getPageData: () => ({})
         })
       }
-      const { completion } = await import('../habitat-activities.js')
+      const { completion } = await import('../sett-disturbance-methods.js')
       expect(await completion(request)).toBe('/check-habitat-answers')
     })
 
@@ -42,7 +42,7 @@ describe('The habitat activities page', () => {
 
       const getHabitatBySettIdMock = jest.fn()
 
-      const { getData } = await import('../habitat-activities.js')
+      const { getData } = await import('../sett-disturbance-methods.js')
       expect(await getData(request)).toEqual({
         OBSTRUCT_SETT_WITH_GATES,
         OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
@@ -56,9 +56,9 @@ describe('The habitat activities page', () => {
       expect(getHabitatBySettIdMock).not.toHaveBeenCalled()
     })
 
-    describe('The habitat activities template', () => {
+    describe('The sett disturbance methods template', () => {
       it('Matches the snapshot', async () => {
-        const template = await compileTemplate(path.join(__dirname, '../habitat-activities.njk'))
+        const template = await compileTemplate(path.join(__dirname, '../sett-disturbance-methods.njk'))
 
         const renderedHtml = template.render({
           data: {
@@ -105,7 +105,7 @@ describe('The habitat activities page', () => {
         }
       }))
 
-      const { getData } = await import('../habitat-activities.js')
+      const { getData } = await import('../sett-disturbance-methods.js')
       expect(await getData(request)).toEqual({
         OBSTRUCT_SETT_WITH_GATES,
         OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
@@ -134,7 +134,7 @@ describe('The habitat activities page', () => {
         })
       }
 
-      const { getData } = await import('../habitat-activities.js')
+      const { getData } = await import('../sett-disturbance-methods.js')
       expect(await getData(request)).toEqual({
         OBSTRUCT_SETT_WITH_GATES,
         OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF,
@@ -148,7 +148,7 @@ describe('The habitat activities page', () => {
     it('if the user doesnt fill a checkbox - it raises an error', async () => {
       try {
         const payload = { 'habitat-activities': '' }
-        const { validator } = await import('../habitat-activities.js')
+        const { validator } = await import('../sett-disturbance-methods.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -158,7 +158,7 @@ describe('The habitat activities page', () => {
 
     it('if the user fills out a checkbox - validator returns nothing', async () => {
       const payload = { 'habitat-activities': 'Obstruct the sett with a gate' }
-      const { validator } = await import('../habitat-activities.js')
+      const { validator } = await import('../sett-disturbance-methods.js')
       expect(await validator(payload)).toBe(undefined)
     })
 
@@ -204,7 +204,7 @@ describe('The habitat activities page', () => {
       jest.doMock('uuid', () => ({
         v4: () => '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8'
       }))
-      const { setData } = await import('../habitat-activities.js')
+      const { setData } = await import('../sett-disturbance-methods.js')
       await setData(request)
       expect(mockSet).toHaveBeenCalledWith({
         habitatData: {
@@ -261,7 +261,7 @@ describe('The habitat activities page', () => {
         }
       }))
 
-      const { setData } = await import('../habitat-activities.js')
+      const { setData } = await import('../sett-disturbance-methods.js')
       await setData(request)
       expect(mockSetData).toHaveBeenCalledWith({
         redirectId: '1e470963-e8bf-41f5-9b0b-52d19c21cb75',

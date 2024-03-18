@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The habitat activities page habitat-activities page The habitat activities template Matches the snapshot 1`] = `
+exports[`The sett disturbance methods page sett-disturbance-methods page The sett disturbance methods template Matches the snapshot 1`] = `
 "<!DOCTYPE html>
 <html lang=\\"en\\" class=\\"govuk-template \\">
   <head>

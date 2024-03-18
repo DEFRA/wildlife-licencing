@@ -18,6 +18,8 @@ const {
   ACTIVITY_ID: { INTERFERE_WITH_BADGER_SETT }
 } = PowerPlatformKeys
 
+const oldKey = 'habitat-activities'
+
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
 export const getData = async request => {
@@ -38,7 +40,7 @@ export const setData = async request => {
   const pageData = await request.cache().getPageData()
   const journeyData = await request.cache().getData()
   const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(A24_SETT)
-  const methodIds = [].concat(pageData.payload[habitatURIs.ACTIVITIES.page])
+  const methodIds = [].concat(pageData.payload[oldKey])
 
   if (isCompleteOrConfirmed(tagState)) {
     Object.assign(journeyData, { redirectId: request.query.id })
@@ -58,15 +60,15 @@ export const setData = async request => {
 }
 
 export const validator = async payload => {
-  if (!payload[habitatURIs.ACTIVITIES.page]) {
+  if (!payload[oldKey]) {
     throw new Joi.ValidationError('ValidationError', [{
       message: 'Error: no way of affecting the sett has been selected',
-      path: [habitatURIs.ACTIVITIES.page],
+      path: [oldKey],
       type: 'no-checkbox-selected',
       context: {
-        label: habitatURIs.ACTIVITIES.page,
+        label: oldKey,
         value: 'Error',
-        key: habitatURIs.ACTIVITIES.page
+        key: oldKey
       }
     }], null)
   }

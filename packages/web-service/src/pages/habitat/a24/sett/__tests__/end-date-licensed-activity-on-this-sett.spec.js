@@ -36,7 +36,7 @@ describe('The start date licensed activity on this sett page', () => {
   })
 
   describe('completed function', () => {
-    it('the habitat-work-end page forwards onto habitat-activities if there are no errors', async () => {
+    it('the habitat-work-end page forwards onto sett-disturbance-methods if there are no errors', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
         tagStatus: {
           COMPLETE: 'complete'
@@ -58,7 +58,7 @@ describe('The start date licensed activity on this sett page', () => {
         }
       }
       const { completion } = await import('../end-date-licensed-activity-on-this-sett.js')
-      expect(await completion(request)).toBe('/habitat-activities')
+      expect(await completion(request)).toBe('/sett-disturbance-methods')
     })
 
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {

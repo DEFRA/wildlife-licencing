@@ -7,6 +7,7 @@ import settActiveEntranceTotal from './sett-active-entrance-total.js'
 import settGridReference from './sett-grid-reference.js'
 import startDateLicensedActivityOnThisSett from './start-date-licensed-activity-on-this-sett.js'
 import endDateLicensedActivityOnThisSett from './end-date-licensed-activity-on-this-sett.js'
+import settDisturbanceMethods from './sett-disturbance-methods.js'
 export default [
   ...settStart,
   ...settName,
@@ -16,5 +17,6 @@ export default [
   ...settActiveEntranceTotal,
   ...settGridReference,
   ...startDateLicensedActivityOnThisSett,
-  ...endDateLicensedActivityOnThisSett
+  ...endDateLicensedActivityOnThisSett,
+  ...settDisturbanceMethods
 ]
