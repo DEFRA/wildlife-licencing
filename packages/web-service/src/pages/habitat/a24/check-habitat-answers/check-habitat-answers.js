@@ -106,7 +106,8 @@ export const completion = async request => {
     await request.cache().setData(journeyData)
 
     return habitatURIs.NAME.uri
-  } else if (pageData.payload[addSett] === 'no') {
+  }
+  if (pageData.payload[addSett] === 'no') {
     // Redirect user to active sett dropout page when a single badger sett  or all badger setts has 0 active (inactive) entrance holes
     const flagDropOut = checkSettDropout(habitatSites)
     if (flagDropOut) {
