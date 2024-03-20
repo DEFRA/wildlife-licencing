@@ -1,4 +1,4 @@
-import { NSIP, USER_ROLE, WINDOW_NOT_OPEN } from '../../uris.js'
+import { NSIP, USER_ROLE, APPLICATION_PROCESSING_WINDOW_WARNING } from '../../uris.js'
 import { yesNoPage } from '../common/yes-no.js'
 import { checkApplication } from '../common/check-application.js'
 import { APIRequests } from '../../services/api-requests.js'
@@ -25,7 +25,7 @@ export const completion = async request => {
   const { applicationTypeId } = await APIRequests.APPLICATION.getById(applicationId)
   const { WARNING_PAGE_START, WARNING_PAGE_END } = LicenceTypeConstants[applicationTypeId]
   if (inDateWindow(new Date(), WARNING_PAGE_START, WARNING_PAGE_END) && !boolFromYesNo(request.payload['yes-no'])) {
-    return WINDOW_NOT_OPEN.uri
+    return APPLICATION_PROCESSING_WINDOW_WARNING.uri
   }
 
   return USER_ROLE.uri

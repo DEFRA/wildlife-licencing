@@ -3,8 +3,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set errorMap = {
-        'work-category': {
-          'any.required': { ref: '#work-category', text: 'You have not selected an option' }
+        'development-type': {
+          'any.required': { ref: '#development-type', text: 'You have not selected an option' }
         }
     }
 %}
@@ -14,9 +14,9 @@
 {% block pageContent %}
 
   {{ govukRadios({
-    id: "work-category",
-    name: "work-category",
-    errorMessage: { text: "Select an option" } if error['work-category'],
+    id: "development-type",
+    name: "development-type",
+    errorMessage: { text: "Select an option" } if error['development-type'],
     items: [
       {
         checked: data.applicationCategory === data.BARN_CONVERSION,

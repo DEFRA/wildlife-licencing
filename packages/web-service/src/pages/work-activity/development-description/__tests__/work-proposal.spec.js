@@ -1,7 +1,7 @@
-describe('The work-proposal page', () => {
+describe('The development-description page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('work-proposal page', () => {
+  describe('development-description page', () => {
     it('getData moves the tag status in-progress', async () => {
       const mockSet = jest.fn()
       const request = {
@@ -25,7 +25,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-proposal.js')
+      const { getData } = await import('../development-description.js')
       await getData(request)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'in-progress' })
     })
@@ -52,7 +52,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-proposal.js')
+      const { getData } = await import('../development-description.js')
       expect(await getData(request)).toEqual({ proposalDescription: 'the proposal of the work' })
     })
 
@@ -83,7 +83,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { checkData } = await import('../work-proposal.js')
+      const { checkData } = await import('../development-description.js')
       await checkData(request, h)
       expect(mockRedirect).toHaveBeenCalledWith('/check-work-answers')
     })
@@ -111,7 +111,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { checkData } = await import('../work-proposal.js')
+      const { checkData } = await import('../development-description.js')
       expect(await checkData(request)).toEqual(null)
     })
 
@@ -142,7 +142,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { checkData } = await import('../work-proposal.js')
+      const { checkData } = await import('../development-description.js')
       expect(await checkData(request, h)).toEqual(null)
       expect(mockRedirect).not.toHaveBeenCalled()
     })
@@ -174,7 +174,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { checkData } = await import('../work-proposal.js')
+      const { checkData } = await import('../development-description.js')
       expect(await checkData(request, h)).toEqual(null)
       expect(mockRedirect).not.toHaveBeenCalled()
     })
@@ -198,11 +198,11 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-proposal.js')
+      const { completion } = await import('../development-description.js')
       expect(await completion(request)).toEqual('/check-work-answers')
     })
 
-    it('the completion function returns the work-payment url on the primary journey', async () => {
+    it('the completion function returns the payment-exemption-check url on the primary journey', async () => {
       const request = {
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -221,15 +221,15 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-proposal.js')
-      expect(await completion(request)).toEqual('/work-payment')
+      const { completion } = await import('../development-description.js')
+      expect(await completion(request)).toEqual('/payment-exemption-check')
     })
 
     it('setData hits the api with the user input', async () => {
       const mockUpdate = jest.fn()
       const request = {
         payload: {
-          'work-proposal': 'Work proposal: badger removal for new road'
+          'development-description': 'Work proposal: badger removal for new road'
         },
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -249,7 +249,7 @@ describe('The work-proposal page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-proposal.js')
+      const { setData } = await import('../development-description.js')
       expect(await setData(request)).toEqual(undefined)
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',

@@ -2,7 +2,7 @@ export const HEALTH = { uri: '/health', page: 'health' }
 export const SPECIES = { uri: '/which-species', page: 'which-species' }
 export const OTHER_SPECIES = { uri: '/other-species', page: 'other-species' }
 export const NSIP = { uri: '/nsip', page: 'nsip' }
-export const WINDOW_NOT_OPEN = { uri: '/window-not-open', page: 'window-not-open' }
+export const APPLICATION_PROCESSING_WINDOW_WARNING = { uri: '/application-processing-window-warning', page: 'application-processing-window-warning' }
 export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
@@ -63,11 +63,11 @@ export const habitatURIs = {
 }
 
 export const workActivityURIs = {
-  WORK_PROPOSAL: { uri: '/work-proposal', page: 'work-proposal' },
-  PAYING_FOR_LICENCE: { uri: '/work-payment', page: 'work-payment' },
-  PAYMENT_EXEMPT_REASON: { uri: '/work-payment-exempt-reason', page: 'work-payment-exempt-reason' },
-  WORK_CATEGORY: { uri: '/work-category', page: 'work-category' },
-  LICENCE_COST: { uri: '/work-licence-cost', page: 'work-licence-cost' },
+  WORK_PROPOSAL: { uri: '/development-description', page: 'development-description' },
+  PAYING_FOR_LICENCE: { uri: '/payment-exemption-check', page: 'payment-exemption-check' },
+  PAYMENT_EXEMPT_REASON: { uri: '/payment-exemption-reason', page: 'payment-exemption-reason' },
+  DEVELOPMENT_TYPE: { uri: '/development-type', page: 'development-type' },
+  LICENCE_COST: { uri: '/licence-cost', page: 'licence-cost' },
   CHECK_YOUR_ANSWERS: { uri: '/check-work-answers', page: 'check-work-answers' }
 }
 
@@ -181,8 +181,8 @@ export const ReturnsURIs = {
   WHY_NIL: { uri: '/why-nil', page: 'why-nil' },
   ANOTHER_LICENCE: { uri: '/another-licence', page: 'another-licence' },
   COMPLETE_WITHIN_DATES: { uri: '/complete-within-dates', page: 'complete-within-dates' },
-  WORK_START: { uri: '/work-start', page: 'work-start' },
-  WORK_END: { uri: '/work-finish', page: 'work-finish' },
+  WORK_START: { uri: '/date-work-started', page: 'date-work-started' },
+  WORK_END: { uri: '/date-work-finished', page: 'date-work-finished' },
   LICENCE_CONDITIONS: { uri: '/licence-conditions', page: 'licence-conditions' },
   CHECK_YOUR_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
   DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },

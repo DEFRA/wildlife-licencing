@@ -53,7 +53,7 @@ export const setData = async request => {
   const { applicationId } = await request.cache().getData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
-  const newData = Object.assign(applicationData, { applicationCategory: parseInt(request.payload[workActivityURIs.WORK_CATEGORY.page]) })
+  const newData = Object.assign(applicationData, { applicationCategory: parseInt(request.payload[workActivityURIs.DEVELOPMENT_TYPE.page]) })
   await APIRequests.APPLICATION.update(applicationId, newData)
 }
 
@@ -68,11 +68,11 @@ export const completion = async request => {
 }
 
 export default pageRoute({
-  uri: workActivityURIs.WORK_CATEGORY.uri,
-  page: workActivityURIs.WORK_CATEGORY.page,
+  uri: workActivityURIs.DEVELOPMENT_TYPE.uri,
+  page: workActivityURIs.DEVELOPMENT_TYPE.page,
   checkData: checkApplication,
   validator: Joi.object({
-    'work-category': Joi.any().required()
+    'development-type': Joi.any().required()
   }).options({ abortEarly: false, allowUnknown: true }),
   setData,
   completion,

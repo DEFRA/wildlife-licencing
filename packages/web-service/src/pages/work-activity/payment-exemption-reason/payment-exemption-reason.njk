@@ -4,8 +4,8 @@
 {% from 'govuk/components/textarea/macro.njk' import govukTextarea %}
 
 {% set errorMap = {
-        'work-payment-exempt-reason': {
-          'any.required': { ref: '#work-payment-exempt-reason', text: 'You have not selected an option' }
+        'payment-exemption-reason': {
+          'any.required': { ref: '#payment-exemption-reason', text: 'You have not selected an option' }
         },
         'exempt-details': {
           'string.empty': { ref: '#exempt-details', text: 'You have not described why your project is exempt from license payments' },
@@ -31,12 +31,12 @@
 {% block pageContent %}
 
   {{ govukRadios({
-    id: 'work-payment-exempt-reason',
-    name: 'work-payment-exempt-reason',
+    id: 'payment-exemption-reason',
+    name: 'payment-exemption-reason',
     hint: {
       text: 'Select one option.'
     },
-    errorMessage: { text: 'You have not selected an option' } if error['work-payment-exempt-reason'],
+    errorMessage: { text: 'You have not selected an option' } if error['payment-exemption-reason'],
     items: [
       {
         checked: data.radioChecked === data.PRESERVING_PUBLIC_HEALTH_AND_SAFETY,
@@ -72,7 +72,7 @@
         divider: 'or'
       },
       {
-        checked: payload['work-payment-exempt-reason'] == data.OTHER or data.radioChecked === data.OTHER or payload['exempt-details'].length > 4000,
+        checked: payload['payment-exemption-reason'] == data.OTHER or data.radioChecked === data.OTHER or payload['exempt-details'].length > 4000,
         value: data.OTHER,
         text: 'Other',
         conditional: {

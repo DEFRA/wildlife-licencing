@@ -1,7 +1,7 @@
-describe('The work-licence-cost page', () => {
+describe('The licence-cost page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('work-licence-cost page', () => {
+  describe('licence-cost page', () => {
     it('the completion function sets the tag status, if the journey is all complete', async () => {
       const mockSet = jest.fn()
       const request = {
@@ -24,7 +24,7 @@ describe('The work-licence-cost page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-licence-cost.js')
+      const { completion } = await import('../licence-cost.js')
       await completion(request)
       expect(mockSet).toHaveBeenCalledWith({ tag: 'work-activity', tagState: 'complete-not-confirmed' })
     })
@@ -50,7 +50,7 @@ describe('The work-licence-cost page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-licence-cost.js')
+      const { completion } = await import('../licence-cost.js')
       expect(await completion(request)).toEqual('/check-work-answers')
     })
 
@@ -78,8 +78,8 @@ describe('The work-licence-cost page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-licence-cost.js')
-      expect(await completion(request)).toEqual('/work-proposal')
+      const { completion } = await import('../licence-cost.js')
+      expect(await completion(request)).toEqual('/development-description')
     })
   })
 })

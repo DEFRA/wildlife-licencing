@@ -1,7 +1,7 @@
 import species from '../pages/species/which-species.js'
 import otherSpecies from '../pages/species/other-species.js'
 import nsip from '../pages/nsip/nsip.js'
-import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
+import { windowNotOpen } from '../pages/application-processing-window-warning/application-processing-window-warning.js'
 import applications from '../pages/applications/applications.js'
 import feedback from '../pages/feedback/feedback.js'
 import feedbackSent from '../pages/feedback/feedback-sent.js'
@@ -57,11 +57,11 @@ import { additionalEcologistEmail } from '../pages/contact/additional-contacts/a
 import { additionalEcologistCheckAnswers } from '../pages/contact/additional-contacts/additional-ecologist/additional-ecologist-check-answers.js'
 import { additionalApplicantCheckAnswers } from '../pages/contact/additional-contacts/additional-applicant/additional-applicant-check-answers.js'
 
-import workProposal from '../pages/work-activity/work-proposal/work-proposal.js'
-import workPayment from '../pages/work-activity/work-payment/work-payment.js'
-import workPaymentExemptReason from '../pages/work-activity/work-payment-exempt-reason/work-payment-exempt-reason.js'
-import workCategory from '../pages/work-activity/work-category/work-category.js'
-import workLicenceCost from '../pages/work-activity/work-licence-cost/work-licence-cost.js'
+import developmentDescription from '../pages/work-activity/development-description/development-description.js'
+import paymentExemptionCheck from '../pages/work-activity/payment-exemption-check/payment-exemption-check.js'
+import workPaymentExemptReason from '../pages/work-activity/payment-exemption-reason/payment-exemption-reason.js'
+import developmentType from '../pages/work-activity/development-type/development-type.js'
+import licenceCost from '../pages/work-activity/licence-cost/licence-cost.js'
 import checkWorkAnswers from '../pages/work-activity/check-work-answers/check-work-answers.js'
 
 import { invoiceResponsible } from '../pages/contact/invoice/invoice-responsible.js'
@@ -153,8 +153,8 @@ import { anotherLicence } from '../pages/returns/another-licence.js'
 import { returnUpload } from '../pages/returns/returns-upload.js'
 import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
 import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
-import workStart from '../pages/returns/work-start.js'
-import workFinish from '../pages/returns/work-finish.js'
+import dateWorkStarted from '../pages/returns/date-work-started.js'
+import dateWorkFinished from '../pages/returns/date-work-finished.js'
 import { oneWayGates } from '../pages/returns/a24/one-way-gates.js'
 import { blockingOrProofing } from '../pages/returns/a24/blocking-or-proofing.js'
 import { damageByHandOrMechanicalMeans } from '../pages/returns/a24/damage-by-hand-or-mechanical-means.js'
@@ -282,11 +282,11 @@ const routes = [
   ...enterClassMitigationDetails,
   ...checkEcologistAnswers,
 
-  ...workProposal,
-  ...workPayment,
+  ...developmentDescription,
+  ...paymentExemptionCheck,
   ...workPaymentExemptReason,
-  ...workCategory,
-  ...workLicenceCost,
+  ...developmentType,
+  ...licenceCost,
   ...checkWorkAnswers,
 
   ...licence,
@@ -315,8 +315,8 @@ const routes = [
   ...anotherLicence,
   ...completeWithinDates,
   ...whyNotCompletesWithinDates,
-  ...workStart,
-  ...workFinish,
+  ...dateWorkStarted,
+  ...dateWorkFinished,
   ...oneWayGates,
   ...blockingOrProofing,
   ...damageByHandOrMechanicalMeans,

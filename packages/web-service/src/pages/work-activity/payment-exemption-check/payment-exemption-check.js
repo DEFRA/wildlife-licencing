@@ -16,7 +16,7 @@ export const completion = async request => {
     if (boolFromYesNo(request.payload['yes-no'])) {
       return workActivityURIs.PAYMENT_EXEMPT_REASON.uri
     } else {
-      return workActivityURIs.WORK_CATEGORY.uri
+      return workActivityURIs.DEVELOPMENT_TYPE.uri
     }
   }
 }

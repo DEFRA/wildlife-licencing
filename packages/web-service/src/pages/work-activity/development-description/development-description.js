@@ -56,7 +56,7 @@ export default pageRoute({
     // Which leads to a mismatch on the character count as
     // '\r\n'.length == 2
     // '\n'.length   == 1
-    'work-proposal': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
+    'development-description': Joi.string().trim().required().replace('\r\n', '\n').max(4000)
   }).options({ abortEarly: false, allowUnknown: true }),
   getData,
   completion,

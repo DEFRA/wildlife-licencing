@@ -137,7 +137,7 @@ export const additionalPageData = async (request, h) => {
         workProposal: workActivityURIs.WORK_PROPOSAL.uri,
         workPayment: workActivityURIs.PAYING_FOR_LICENCE.uri,
         workPaymentExemptReason: workActivityURIs.PAYMENT_EXEMPT_REASON.uri,
-        workCategory: workActivityURIs.WORK_CATEGORY.uri,
+        developmentType: workActivityURIs.DEVELOPMENT_TYPE.uri,
 
         // Conviction
         isAnyConviction: convictionsURIs.ANY_CONVICTIONS.uri,

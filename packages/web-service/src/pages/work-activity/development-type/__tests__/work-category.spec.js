@@ -1,7 +1,7 @@
-describe('The work-category page', () => {
+describe('The development-type page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('work-category page', () => {
+  describe('development-type page', () => {
     it('the getData handler returns the keys for the nunjucks file', async () => {
       const request = {
         cache: () => ({
@@ -17,7 +17,7 @@ describe('The work-category page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-category.js')
+      const { getData } = await import('../development-type.js')
       expect(await getData(request)).toEqual(
         {
           BARN_CONVERSION: 100000004,
@@ -54,7 +54,7 @@ describe('The work-category page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-category.js')
+      const { getData } = await import('../development-type.js')
       expect(await getData(request)).toEqual(
         {
           BARN_CONVERSION: 100000004,
@@ -91,11 +91,11 @@ describe('The work-category page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-category.js')
+      const { completion } = await import('../development-type.js')
       expect(await completion(request)).toEqual('/check-work-answers')
     })
 
-    it('the completion handler returns work-licence-cost url on primary journey', async () => {
+    it('the completion handler returns licence-cost url on primary journey', async () => {
       const request = {
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -110,15 +110,15 @@ describe('The work-category page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-category.js')
-      expect(await completion(request)).toEqual('/work-licence-cost')
+      const { completion } = await import('../development-type.js')
+      expect(await completion(request)).toEqual('/licence-cost')
     })
 
     it('the setData handler hits the api with the user input', async () => {
       const mockUpdate = jest.fn()
       const request = {
         payload: {
-          'work-category': '101'
+          'development-type': '101'
         },
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -134,7 +134,7 @@ describe('The work-category page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-category.js')
+      const { setData } = await import('../development-type.js')
       expect(await setData(request)).toBe(undefined)
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',

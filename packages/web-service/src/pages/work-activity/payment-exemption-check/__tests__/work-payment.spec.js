@@ -1,7 +1,7 @@
-describe('The work-payment page', () => {
+describe('The payment-exemption-check page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('work-payment page', () => {
+  describe('payment-exemption-check page', () => {
     it('getData can return yes from the applicationData', async () => {
       const request = {
         cache: () => ({
@@ -17,7 +17,7 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-payment.js')
+      const { getData } = await import('../payment-exemption-check.js')
       expect(await getData(request)).toEqual({ yesNo: 'yes' })
     })
 
@@ -36,7 +36,7 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-payment.js')
+      const { getData } = await import('../payment-exemption-check.js')
       expect(await getData(request)).toEqual({ yesNo: 'no' })
     })
 
@@ -59,11 +59,11 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-payment.js')
+      const { completion } = await import('../payment-exemption-check.js')
       expect(await completion(request)).toEqual('/check-work-answers')
     })
 
-    it('the completion function returns the work-payment-exempt-reason url on the primary journey, if the user needs to pay for their licence', async () => {
+    it('the completion function returns the payment-exemption-reason url on the primary journey, if the user needs to pay for their licence', async () => {
       const request = {
         payload: {
           'yes-no': 'yes'
@@ -85,11 +85,11 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-payment.js')
-      expect(await completion(request)).toEqual('/work-payment-exempt-reason')
+      const { completion } = await import('../payment-exemption-check.js')
+      expect(await completion(request)).toEqual('/payment-exemption-reason')
     })
 
-    it('the completion function returns the work-category url on the primary journey, if the user doesnt need to pay for their licence', async () => {
+    it('the completion function returns the development-type url on the primary journey, if the user doesnt need to pay for their licence', async () => {
       const request = {
         payload: {
           'yes-no': 'no'
@@ -111,8 +111,8 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { completion } = await import('../work-payment.js')
-      expect(await completion(request)).toEqual('/work-category')
+      const { completion } = await import('../payment-exemption-check.js')
+      expect(await completion(request)).toEqual('/development-type')
     })
 
     it('setData hits the api with the user input, on the primary journey', async () => {
@@ -139,7 +139,7 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-payment.js')
+      const { setData } = await import('../payment-exemption-check.js')
       expect(await setData(request)).toEqual(undefined)
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',
@@ -181,7 +181,7 @@ describe('The work-payment page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-payment.js')
+      const { setData } = await import('../payment-exemption-check.js')
       expect(await setData(request)).toEqual(undefined)
       expect(workTag.tagState).toBe('in-progress')
       expect(mockUpdate).toHaveBeenCalledWith(

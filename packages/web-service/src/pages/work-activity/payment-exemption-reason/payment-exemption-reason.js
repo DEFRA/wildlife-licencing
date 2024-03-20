@@ -74,7 +74,7 @@ export const setData = async request => {
 export const validator = async payload => {
   if (!payload[workActivityURIs.PAYMENT_EXEMPT_REASON.page]) {
     Joi.assert(payload, Joi.object({
-      'work-payment-exempt-reason': Joi.any().required()
+      'payment-exemption-reason': Joi.any().required()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 
@@ -92,7 +92,7 @@ export const validator = async payload => {
 export default pageRoute({
   uri: workActivityURIs.PAYMENT_EXEMPT_REASON.uri,
   page: workActivityURIs.PAYMENT_EXEMPT_REASON.page,
-  completion: workActivityURIs.WORK_CATEGORY.uri,
+  completion: workActivityURIs.DEVELOPMENT_TYPE.uri,
   checkData: checkApplication,
   getData,
   validator,

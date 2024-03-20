@@ -1,0 +1,28 @@
+{% extends "standard-form.njk" %}
+
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set errorMap = {
+        'development-description': {
+          'string.empty': { ref: '#development-description', text: 'You have not entered the activity or development work you plan to do' },
+          'string.max': { ref: '#development-description', text: 'The description must be 4,000 characters or less' }
+        }
+    }
+%}
+
+{% set title = "What activity or development work do you plan to do?" %}
+
+{% block pageContent %}
+
+  {{ govukTextarea({
+    name: "development-description",
+    id: "development-description",
+    value: payload['development-description'] if payload['development-description'] else data.proposalDescription,
+    hint: {
+      text: "For example, construction of a new road, maintenance of a bridge, construction of five flats with access road and car parking area."
+    },
+    maxlength: 4000,
+    errorMessage: { text: "Enter the activity or development work you plan to do" } if error['development-description']
+  }) }}
+
+{% endblock %}

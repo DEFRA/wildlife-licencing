@@ -1,7 +1,7 @@
-describe('The work-payment-exempt-reason page', () => {
+describe('The payment-exemption-reason page', () => {
   beforeEach(() => jest.resetModules())
 
-  describe('work-payment-exempt-reason page', () => {
+  describe('payment-exemption-reason page', () => {
     it('getData returns the powerapps keys, and data from the APPLICATION api endpoint', async () => {
       const request = {
         cache: () => {
@@ -27,7 +27,7 @@ describe('The work-payment-exempt-reason page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-payment-exempt-reason.js')
+      const { getData } = await import('../payment-exemption-reason.js')
       expect(await getData(request)).toEqual(
         {
           CONSERVATION_OF_A_MONUMENT_OR_BUILDING: 452120006,
@@ -68,7 +68,7 @@ describe('The work-payment-exempt-reason page', () => {
           }
         }
       }))
-      const { getData } = await import('../work-payment-exempt-reason.js')
+      const { getData } = await import('../payment-exemption-reason.js')
       expect(await getData(request)).toEqual(
         {
           CONSERVATION_OF_A_MONUMENT_OR_BUILDING: 452120006,
@@ -87,17 +87,17 @@ describe('The work-payment-exempt-reason page', () => {
     it('zero radio buttons chosen causes a joi error', async () => {
       const payload = { }
       try {
-        const { validator } = await import('../work-payment-exempt-reason.js')
+        const { validator } = await import('../payment-exemption-reason.js')
         expect(await validator(payload))
       } catch (e) {
-        expect(e.details[0].message).toBe('"work-payment-exempt-reason" is required')
+        expect(e.details[0].message).toBe('"payment-exemption-reason" is required')
       }
     })
 
     it('zero user input causes a joi error, if the options selected was OTHER', async () => {
-      const payload = { 'work-payment-exempt-reason': 452120001, 'exempt-details': '' }
+      const payload = { 'payment-exemption-reason': 452120001, 'exempt-details': '' }
       try {
-        const { validator } = await import('../work-payment-exempt-reason.js')
+        const { validator } = await import('../payment-exemption-reason.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.details[0].message).toBe('"exempt-details" is not allowed to be empty')
@@ -105,8 +105,8 @@ describe('The work-payment-exempt-reason page', () => {
     })
 
     it('validator returns undefined on no errors', async () => {
-      const payload = { 'work-payment-exempt-reason': 452120001, 'exempt-details': 'licence is exempt due to government provisions' }
-      const { validator } = await import('../work-payment-exempt-reason.js')
+      const payload = { 'payment-exemption-reason': 452120001, 'exempt-details': 'licence is exempt due to government provisions' }
+      const { validator } = await import('../payment-exemption-reason.js')
       expect(await validator(payload)).toBe(undefined)
     })
 
@@ -114,7 +114,7 @@ describe('The work-payment-exempt-reason page', () => {
       const mockUpdate = jest.fn()
       const request = {
         payload: {
-          'work-payment-exempt-reason': '100000013'
+          'payment-exemption-reason': '100000013'
         },
         cache: () => ({
           getData: () => ({ applicationId: '123abc' })
@@ -130,7 +130,7 @@ describe('The work-payment-exempt-reason page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-payment-exempt-reason.js')
+      const { setData } = await import('../payment-exemption-reason.js')
       expect(await setData(request)).toEqual(undefined)
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',
@@ -146,7 +146,7 @@ describe('The work-payment-exempt-reason page', () => {
       const OTHER = 452120007
       const request = {
         payload: {
-          'work-payment-exempt-reason': `${OTHER}`,
+          'payment-exemption-reason': `${OTHER}`,
           'exempt-details': 'we move this into the api now'
         },
         cache: () => ({
@@ -163,7 +163,7 @@ describe('The work-payment-exempt-reason page', () => {
           }
         }
       }))
-      const { setData } = await import('../work-payment-exempt-reason.js')
+      const { setData } = await import('../payment-exemption-reason.js')
       expect(await setData(request)).toEqual(undefined)
       expect(mockUpdate).toHaveBeenCalledWith(
         '123abc',

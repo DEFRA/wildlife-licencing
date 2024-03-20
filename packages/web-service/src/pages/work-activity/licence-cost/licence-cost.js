@@ -8,7 +8,7 @@ export const completion = async request => {
   const { applicationId } = await request.cache().getData()
   const applicationData = await APIRequests.APPLICATION.getById(applicationId)
 
-  // The users can get to CYA, change their 'work-payment-exempt-reason.js' answer
+  // The users can get to CYA, change their 'payment-exemption-reason.js' answer
   // Which sets their flow to be 'in-progress' and then via the back button navigate to this page
   // And click "Continue" to complete the journey
   // We just need a small check to ensure they have completed everything necessary
