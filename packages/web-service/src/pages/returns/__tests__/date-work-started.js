@@ -31,7 +31,7 @@ describe('the Work start functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-start.js')
+      const { getData } = await import('../date-work-started.js')
       const result = await getData(request)
       expect(result).toEqual({ year: 2022, day: 10, month: 8 })
     })
@@ -63,7 +63,7 @@ describe('the Work start functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-start.js')
+      const { getData } = await import('../date-work-started.js')
       const result = await getData(request)
       expect(result).toEqual({ year: undefined, day: undefined, month: undefined })
     })
@@ -93,7 +93,7 @@ describe('the Work start functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-start.js')
+      const { getData } = await import('../date-work-started.js')
       const result = await getData(request)
       expect(result).toBeNull()
     })
@@ -103,7 +103,7 @@ describe('the Work start functions', () => {
     it('should throw an error if the date is in future', async () => {
       try {
         const payload = { 'work-start-day': '12', 'work-start-month': '9', 'work-start-year': '2999' }
-        const { validator } = await import('../work-start.js')
+        const { validator } = await import('../date-work-started.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -114,7 +114,7 @@ describe('the Work start functions', () => {
     it('should throw an error if the date is invalid', async () => {
       try {
         const payload = { 'work-start-day': '122', 'work-start-month': '', 'work-start-year': '2999' }
-        const { validator } = await import('../work-start.js')
+        const { validator } = await import('../date-work-started.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -123,7 +123,7 @@ describe('the Work start functions', () => {
     })
 
     it('should not throw an error if the date is valid and in the past', async () => {
-      const { validator } = await import('../work-start.js')
+      const { validator } = await import('../date-work-started.js')
       const payload = { 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' }
       expect(await validator(payload)).toEqual({ 'work-start-day': '2', 'work-start-month': '5', 'work-start-year': '2020' })
     })
@@ -163,7 +163,7 @@ describe('the Work start functions', () => {
         }
       }))
 
-      const { setData } = await import('../work-start.js')
+      const { setData } = await import('../date-work-started.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: true, outcome: true, startDate: new Date('2023-09-11T00:00:00.000Z') })
       expect(mockSetData).toHaveBeenCalled()

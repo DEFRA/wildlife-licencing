@@ -7,7 +7,7 @@ describe('the Work finish functions', () => {
     it('should throw an error if the end date is invalid', async () => {
       try {
         const payload = { 'work-finish-day': '122', 'work-finish-month': '', 'work-finish-year': '2999' }
-        const { validator } = await import('../work-finish.js')
+        const { validator } = await import('../date-work-finished.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -18,7 +18,7 @@ describe('the Work finish functions', () => {
     it('should throw an error if the end date is in future', async () => {
       try {
         const payload = { 'work-finish-day': '12', 'work-finish-month': '9', 'work-finish-year': '2999' }
-        const { validator } = await import('../work-finish.js')
+        const { validator } = await import('../date-work-finished.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -50,7 +50,7 @@ describe('the Work finish functions', () => {
             })
           }
         })
-        const { validator } = await import('../work-finish.js')
+        const { validator } = await import('../date-work-finished.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -59,7 +59,7 @@ describe('the Work finish functions', () => {
     })
 
     it('should not throw an error if the end date is valid and in the past', async () => {
-      const { validator } = await import('../work-finish.js')
+      const { validator } = await import('../date-work-finished.js')
       const payload = { 'work-finish-day': '20', 'work-finish-month': '11', 'work-finish-year': '2011' }
       jest.doMock('../../../services/api-requests.js', () => ({
         APIRequests: {
@@ -114,7 +114,7 @@ describe('the Work finish functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-finish.js')
+      const { getData } = await import('../date-work-finished.js')
       const result = await getData(request)
       expect(result).toEqual({ year: 2022, day: 10, month: 8 })
     })
@@ -146,7 +146,7 @@ describe('the Work finish functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-finish.js')
+      const { getData } = await import('../date-work-finished.js')
       const result = await getData(request)
       expect(result).toEqual({ year: undefined, day: undefined, month: undefined })
     })
@@ -176,7 +176,7 @@ describe('the Work finish functions', () => {
         }
       }))
 
-      const { getData } = await import('../work-finish.js')
+      const { getData } = await import('../date-work-finished.js')
       const result = await getData(request)
       expect(result).toBeNull()
     })
@@ -216,7 +216,7 @@ describe('the Work finish functions', () => {
         }
       }))
 
-      const { setData } = await import('../work-finish.js')
+      const { setData } = await import('../date-work-finished.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: true, outcome: true, endDate: new Date('2024-09-11T00:00:00.000Z') })
       expect(mockSetData).toHaveBeenCalled()
