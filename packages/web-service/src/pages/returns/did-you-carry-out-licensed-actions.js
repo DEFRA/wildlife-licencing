@@ -5,7 +5,7 @@ import pageRoute from '../../routes/page-route.js'
 import { activityTypes, checkLicence, getLicenceMethodTypes, allCompletion, resetReturnDataPayload } from './common-return-functions.js'
 import { boolFromYesNo, yesNoFromBool } from '../common/common.js'
 
-const { NIL_RETURN } = ReturnsURIs
+const { DID_YOU_CARRY_OUT_LICENSED_ACTIONS } = ReturnsURIs
 
 export const getData = async request => {
   const journeyData = await request.cache().getData()
@@ -49,8 +49,8 @@ export const setData = async request => {
 }
 
 export default pageRoute({
-  page: NIL_RETURN.page,
-  uri: NIL_RETURN.uri,
+  page: DID_YOU_CARRY_OUT_LICENSED_ACTIONS.page,
+  uri: DID_YOU_CARRY_OUT_LICENSED_ACTIONS.uri,
   validator: Joi.object({
     'yes-no': Joi.any()
       .valid('yes', 'no')

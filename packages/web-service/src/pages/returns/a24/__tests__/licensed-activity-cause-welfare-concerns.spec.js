@@ -32,7 +32,7 @@ describe('the welfare concerns functions', () => {
         }
       }))
 
-      const { getData } = await import('../welfare-concerns.js')
+      const { getData } = await import('../licensed-activity-cause-welfare-concerns.js')
       const result = await getData(request)
       expect(result).toEqual({
         yesNo: 'yes',
@@ -60,7 +60,7 @@ describe('the welfare concerns functions', () => {
         }
       }))
 
-      const { getData } = await import('../welfare-concerns.js')
+      const { getData } = await import('../licensed-activity-cause-welfare-concerns.js')
       const result = await getData(request)
       expect(result).toEqual({
         yesNo: '-',
@@ -101,7 +101,7 @@ describe('the welfare concerns functions', () => {
         }
       }))
 
-      const { setData } = await import('../welfare-concerns.js')
+      const { setData } = await import('../licensed-activity-cause-welfare-concerns.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
@@ -137,7 +137,7 @@ describe('the welfare concerns functions', () => {
         }
       }))
 
-      const { setData } = await import('../welfare-concerns.js')
+      const { setData } = await import('../licensed-activity-cause-welfare-concerns.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalled()
       expect(mockSetData).toHaveBeenCalled()
@@ -148,7 +148,7 @@ describe('the welfare concerns functions', () => {
     it('should throw an error if an option is not selected', async () => {
       try {
         const payload = { 'yes-no': '' }
-        const { validator } = await import('../welfare-concerns.js')
+        const { validator } = await import('../licensed-activity-cause-welfare-concerns.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -159,7 +159,7 @@ describe('the welfare concerns functions', () => {
     it('should throw an error if the condition input is empty', async () => {
       try {
         const payload = { 'yes-no': 'yes', 'yes-conditional-input': '' }
-        const { validator } = await import('../welfare-concerns.js')
+        const { validator } = await import('../licensed-activity-cause-welfare-concerns.js')
         expect(await validator(payload))
       } catch (e) {
         // eslint-disable-next-line
@@ -169,7 +169,7 @@ describe('the welfare concerns functions', () => {
 
     it('should not throws an error if an option is selected', async () => {
       const payload = { 'yes-no': 'no' }
-      const { validator } = await import('../welfare-concerns.js')
+      const { validator } = await import('../licensed-activity-cause-welfare-concerns.js')
       expect(await validator(payload)).toBeUndefined()
     })
   })

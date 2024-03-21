@@ -139,7 +139,7 @@ describe('additional page data', () => {
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
         siteGridReference: '/site-grid-ref',
-        siteMap: '/upload-map',
+        siteMap: '/upload-survey-map',
         siteMapThree: '/upload-map-of-mitigations-after-development',
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',

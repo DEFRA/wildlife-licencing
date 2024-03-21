@@ -11,7 +11,7 @@ describe('The NSIP page', () => {
         }
       }
     }))
-    const { getData } = await import('../nsip.js')
+    const { getData } = await import('../nationally-significant-infrastructure-project.js')
     const request = {
       cache: () => ({
         getData: () => ({ applicationId: '00ed369a-6765-45e3-bdad-546b774319f5' })
@@ -31,7 +31,7 @@ describe('The NSIP page', () => {
         }
       }
     }))
-    const { setData } = await import('../nsip.js')
+    const { setData } = await import('../nationally-significant-infrastructure-project.js')
     const request = {
       payload: { 'yes-no': 'yes' },
       cache: () => ({
@@ -56,7 +56,7 @@ describe('The NSIP page', () => {
         }
       }
     }))
-    const { completion } = await import('../nsip.js')
+    const { completion } = await import('../nationally-significant-infrastructure-project.js')
     const request = {
       payload: { 'yes-no': 'no' },
       cache: () => ({
@@ -78,7 +78,7 @@ describe('The NSIP page', () => {
         }
       }
     }))
-    const { completion } = await import('../nsip.js')
+    const { completion } = await import('../nationally-significant-infrastructure-project.js')
     const request = {
       payload: { 'yes-no': 'yes' },
       cache: () => ({
@@ -100,7 +100,7 @@ describe('The NSIP page', () => {
         }
       }
     }))
-    const { completion } = await import('../nsip.js')
+    const { completion } = await import('../nationally-significant-infrastructure-project.js')
     const request = {
       payload: { 'yes-no': 'yes' },
       cache: () => ({

@@ -58,7 +58,7 @@ exports[`the check your answers functions the returns check your answers templat
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`the check your answers functions the returns check your answers templat
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -181,7 +181,7 @@ exports[`the check your answers functions the returns check your answers templat
         <dd class=\\"govuk-summary-list__value\\">Yes</dd>
       
       <dd class=\\"govuk-summary-list__actions\\">
-        <a class=\\"govuk-link\\" href=\\"/licensed-actions\\">
+        <a class=\\"govuk-link\\" href=\\"/did-you-carry-out-licensed-actions\\">
           Change<span class=\\"govuk-visually-hidden\\">Did you carry out any of these actions?</span>
         </a>
       </dd>
@@ -323,7 +323,7 @@ exports[`the check your answers functions the returns check your answers templat
           <dd class=\\"govuk-summary-list__value\\">No</dd>
         
       <dd class=\\"govuk-summary-list__actions\\">
-        <a class=\\"govuk-link\\" href=\\"/welfare-concerns\\">
+        <a class=\\"govuk-link\\" href=\\"/licensed-activity-cause-welfare-concerns\\">
           Change<span class=\\"govuk-visually-hidden\\">Did the work carried out under the licence cause any concerns about badgers' welfare?</span>
         </a>
       </dd>

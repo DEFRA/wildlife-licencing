@@ -268,9 +268,9 @@ describe('getNextUri', () => {
     expect(resultUri).toBe(ReturnsURIs.CHECK_YOUR_ANSWERS.uri)
   })
 
-  it('returns NIL_RETURN uri when nilReturn is undefined', () => {
+  it('returns DID_YOU_CARRY_OUT_LICENSED_ACTIONS uri when nilReturn is undefined', () => {
     delete licenceReturnData.nilReturn
     const resultUri = getNextUri(licenceReturnData)
-    expect(resultUri).toBe(ReturnsURIs.NIL_RETURN.uri)
+    expect(resultUri).toBe(ReturnsURIs.DID_YOU_CARRY_OUT_LICENSED_ACTIONS.uri)
   })
 })

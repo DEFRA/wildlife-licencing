@@ -1,6 +1,6 @@
 import species from '../pages/species/which-species.js'
 import otherSpecies from '../pages/species/other-species.js'
-import nsip from '../pages/nsip/nsip.js'
+import nsip from '../pages/nationally-significant-infrastructure-project/nationally-significant-infrastructure-project.js'
 import { windowNotOpen } from '../pages/window-not-open/window-not-open.js'
 import applications from '../pages/applications/applications.js'
 import feedback from '../pages/feedback/feedback.js'
@@ -79,7 +79,7 @@ import siteName from '../pages/site/site-name/site-name.js'
 import siteGotPostcode from '../pages/site/site-got-postcode/site-got-postcode.js'
 import siteSelectAddress from '../pages/site/select-address/select-address.js'
 import siteAddressNoLookup from '../pages/site/site-address-no-lookup/site-address-no-lookup.js'
-import { siteMapUpload } from '../pages/site/upload-map/upload-map.js'
+import { siteMapUpload } from '../pages/site/upload-survey-map/upload-survey-map.js'
 import { siteMapUploadTwo } from '../pages/site/upload-map-of-mitigations-during-development/upload-map-of-mitigations-during-development.js'
 import { siteMapUploadThree } from '../pages/site/upload-map-of-mitigations-after-development/upload-map-of-mitigations-after-development.js'
 import siteGridRef from '../pages/site/site-grid-ref/site-grid-ref.js'
@@ -120,7 +120,7 @@ import enterMethods from '../pages/ecologist-experience/enter-methods/enter-meth
 import classMitigation from '../pages/ecologist-experience/class-mitigation/class-mitigation.js'
 import enterClassMitigationDetails from '../pages/ecologist-experience/enter-class-mitigation-details/enter-class-mitigation-details.js'
 import checkEcologistAnswers from '../pages/ecologist-experience/check-ecologist-answers/check-ecologist-answers.js'
-import licence from '../pages/ecologist-experience/licence/licence.js'
+import previousIndividualBadgerLicenceDetails from '../pages/ecologist-experience/previous-individual-badger-licence-details/previous-individual-badger-licence-details.js'
 import removeLicence from '../pages/ecologist-experience/remove-licence/remove-licence.js'
 
 import anyConvictions from '../pages/conviction/any-conviction/any-convictions.js'
@@ -146,13 +146,13 @@ import userRole from '../pages/user-role/user-role.js'
 import { signOut } from '../handlers/sign-out.js'
 import { signIn } from '../handlers/defra-idm.js'
 import { defraIdmCallback } from '../handlers/defra-idm-callback.js'
-import licensedActions from '../pages/returns/licensed-actions.js'
+import didYouCarryOutLicensedActions from '../pages/returns/did-you-carry-out-licensed-actions.js'
 import outcome from '../pages/returns/outcome.js'
-import whyNil from '../pages/returns/why-nil.js'
+import whyNil from '../pages/returns/reason-actions-not-done.js'
 import { anotherLicence } from '../pages/returns/another-licence.js'
 import { returnUpload } from '../pages/returns/returns-upload.js'
 import { completeWithinDates } from '../pages/returns/complete-within-dates.js'
-import whyNotCompletesWithinDates from '../pages/returns/a24/why-not-completes-within-dates.js'
+import whyNotCompletesWithinDates from '../pages/returns/a24/why-work-not-completed-within-licence-dates.js'
 import workStart from '../pages/returns/work-start.js'
 import workFinish from '../pages/returns/work-finish.js'
 import { oneWayGates } from '../pages/returns/a24/one-way-gates.js'
@@ -168,7 +168,7 @@ import artificialSettEvidenceFound from '../pages/returns/a24/artificial-sett-ev
 import artificialSettGridReference from '../pages/returns/a24/artificial-sett-grid-reference.js'
 import { artificialSettCreatedBeforeClosurePage } from '../pages/returns/a24/artificial-sett-created-before-closure.js'
 import licenceConditions from '../pages/returns/licence-conditions.js'
-import welfareConcerns from '../pages/returns/a24/welfare-concerns.js'
+import welfareConcerns from '../pages/returns/a24/licensed-activity-cause-welfare-concerns.js'
 import returnsCheck from '../pages/returns/returns-check.js'
 import declarationOfReturns from '../pages/returns/returns-declaration.js'
 import { uploadReturnSupportingInformation } from '../pages/returns/returns-upload-file.js'
@@ -289,7 +289,7 @@ const routes = [
   ...workLicenceCost,
   ...checkWorkAnswers,
 
-  ...licence,
+  ...previousIndividualBadgerLicenceDetails,
   ...removeLicence,
   ...confirmDelete,
   ...anyConvictions,
@@ -309,7 +309,7 @@ const routes = [
   ...descPotentialConflicts,
   ...checkConsentAnswers,
 
-  ...licensedActions,
+  ...didYouCarryOutLicensedActions,
   ...outcome,
   ...whyNil,
   ...anotherLicence,

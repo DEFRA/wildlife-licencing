@@ -33,7 +33,7 @@ describe('the Why nil functions', () => {
           })
         })
       }
-      const { getData } = await import('../why-nil.js')
+      const { getData } = await import('../reason-actions-not-done.js')
       expect(await getData(request)).toStrictEqual({
         whyNil: 452120000,
         whyNilOther: 'the sett was not in active',
@@ -45,11 +45,11 @@ describe('the Why nil functions', () => {
   })
 
   describe('the setData function', () => {
-    it('updates the why-nil flag', async () => {
+    it('updates the reason-actions-not-done flag', async () => {
       const mockSetData = jest.fn()
       const request = {
         payload: {
-          'why-nil': '452120000',
+          'reason-actions-not-done': '452120000',
           'other-details': '452120000'
         },
         cache: () => ({
@@ -76,17 +76,17 @@ describe('the Why nil functions', () => {
         }
       }))
 
-      const { setData } = await import('../why-nil.js')
+      const { setData } = await import('../reason-actions-not-done.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: 452120000 })
       expect(mockSetData).toHaveBeenCalled()
     })
 
-    it('updates the why-nil and whyNilOther flag', async () => {
+    it('updates the reason-actions-not-done and whyNilOther flag', async () => {
       const mockSetData = jest.fn()
       const request = {
         payload: {
-          'why-nil': '452120002',
+          'reason-actions-not-done': '452120002',
           'other-details': 'development has not started'
         },
         cache: () => ({
@@ -113,7 +113,7 @@ describe('the Why nil functions', () => {
         }
       }))
 
-      const { setData } = await import('../why-nil.js')
+      const { setData } = await import('../reason-actions-not-done.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: false, whyNil: 452120002, whyNilOther: 'development has not started' })
       expect(mockSetData).toHaveBeenCalled()
@@ -123,8 +123,8 @@ describe('the Why nil functions', () => {
   describe('the validator function', () => {
     it('should throw an error if an option is not selected', async () => {
       try {
-        const payload = { 'why-nil': '' }
-        const { validator } = await import('../why-nil.js')
+        const payload = { 'reason-actions-not-done': '' }
+        const { validator } = await import('../reason-actions-not-done.js')
         expect(await validator(payload))
       } catch (e) {
         expect(e.message).toBe('ValidationError')
@@ -134,8 +134,8 @@ describe('the Why nil functions', () => {
 
     it('should throw an error if the condition input is empty', async () => {
       try {
-        const payload = { 'why-nil': 'no', 'other-details': '' }
-        const { validator } = await import('../why-nil.js')
+        const payload = { 'reason-actions-not-done': 'no', 'other-details': '' }
+        const { validator } = await import('../reason-actions-not-done.js')
         expect(await validator(payload))
       } catch (e) {
         // eslint-disable-next-line
@@ -144,8 +144,8 @@ describe('the Why nil functions', () => {
     })
 
     it('should not throws an error if an option is selected', async () => {
-      const payload = { 'why-nil': '452120000' }
-      const { validator } = await import('../why-nil.js')
+      const payload = { 'reason-actions-not-done': '452120000' }
+      const { validator } = await import('../reason-actions-not-done.js')
       expect(await validator(payload)).toBeUndefined()
     })
   })

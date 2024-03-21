@@ -13,7 +13,7 @@
         <dd class="govuk-summary-list__value">No</dd>
       {% endif %}
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/licensed-actions">
+        <a class="govuk-link" href="/did-you-carry-out-licensed-actions">
           Change<span class="govuk-visually-hidden">Did you carry out any of these actions?</span>
         </a>
       </dd>
@@ -96,7 +96,7 @@
         <dt class="govuk-summary-list__key">Why was the work not completed between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</dt>
           <dd class="govuk-summary-list__value">{{ data.whyNotCompletedWithinLicenceDates }}</dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/why-not-completes-within-dates">
+          <a class="govuk-link" href="/why-work-not-completed-within-licence-dates">
             Change<span class="govuk-visually-hidden">Why was the work not completed between {{ data.licenceStartDate }} and {{ data.licenceEndDate }}?</span>
           </a>
         </dd>
@@ -393,7 +393,7 @@
           <dd class="govuk-summary-list__value">No</dd>
         {% endif %}
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/welfare-concerns">
+        <a class="govuk-link" href="/licensed-activity-cause-welfare-concerns">
           Change<span class="govuk-visually-hidden">Did the work carried out under the licence cause any concerns about badgers' welfare?</span>
         </a>
       </dd>
@@ -406,7 +406,7 @@
         <dt class="govuk-summary-list__key">Describe the welfare concerns</dt>
           <dd class="govuk-summary-list__value">{{ data.welfareConcernsDetails }}</dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="/welfare-concerns">
+          <a class="govuk-link" href="/licensed-activity-cause-welfare-concerns">
             Change<span class="govuk-visually-hidden">Describe the welfare concerns</span>
           </a>
         </dd>
@@ -456,7 +456,7 @@
           <dd class="govuk-summary-list__value">{{ data.whyNil }}</dd>
         {% endif %}
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="/why-nil">
+        <a class="govuk-link" href="/reason-actions-not-done">
           Change<span class="govuk-visually-hidden">Why didn't you carry out these actions?</span>
         </a>
       </dd>

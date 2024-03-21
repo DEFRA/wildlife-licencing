@@ -2,8 +2,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "textarea/macro.njk" import govukTextarea %}
 {% set errorMap = {
-    'why-nil': {
-      'any.required': { ref: '#why-nil', text: 'You have not selected an option' }
+    'reason-actions-not-done': {
+      'any.required': { ref: '#reason-actions-not-done', text: 'You have not selected an option' }
     },
     'other-details': {
       'string.empty': { ref: '#other-details', text: "You have not provided more detail about why you didn't carry out these actions" },
@@ -28,9 +28,9 @@
 {% endblock %}
 {% block pageContent %}
   {{ govukRadios({
-            id: "why-nil",
-            name: "why-nil",
-            errorMessage: { text: 'Select an option' } if error['why-nil'],
+            id: "reason-actions-not-done",
+            name: "reason-actions-not-done",
+            errorMessage: { text: 'Select an option' } if error['reason-actions-not-done'],
             items: [
               {
                 value: data.THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN,
@@ -45,7 +45,7 @@
               {
                 value: data.OTHER,
                 text: "Other",
-                checked: payload['why-nil'] == data.OTHER if payload['why-nil'] or data.whyNil == data.OTHER,
+                checked: payload['reason-actions-not-done'] == data.OTHER if payload['reason-actions-not-done'] or data.whyNil == data.OTHER,
                 conditional: {
                   html: otherDetailsWhyActions
                 }

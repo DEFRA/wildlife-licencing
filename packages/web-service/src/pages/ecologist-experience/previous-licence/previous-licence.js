@@ -15,7 +15,7 @@ export const checkData = async (request, h) => {
 
   const previousLicences = await APIRequests.ECOLOGIST_EXPERIENCE.getPreviousLicences(journeyData.applicationId)
   if (previousLicences.length !== 0) {
-    return h.redirect(ecologistExperienceURIs.LICENCE.uri)
+    return h.redirect(ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.uri)
   }
   return null
 }

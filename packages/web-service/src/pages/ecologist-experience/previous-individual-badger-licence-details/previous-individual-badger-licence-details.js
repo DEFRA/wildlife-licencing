@@ -15,8 +15,8 @@ export const getData = async request => {
 export const completion = async request => licenceCompletion(request, request.payload.licence)
 
 export default pageRoute({
-  uri: ecologistExperienceURIs.LICENCE.uri,
-  page: ecologistExperienceURIs.LICENCE.page,
+  uri: ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.uri,
+  page: ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.page,
   checkData: checkApplication,
   validator: Joi.object({
     licence: Joi.string().required()

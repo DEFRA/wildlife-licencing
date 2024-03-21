@@ -13,7 +13,7 @@ export const getData = async request => {
   return licence
 }
 
-export const completion = () => ecologistExperienceURIs.LICENCE.uri
+export const completion = () => ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.uri
 
 export const setData = async request => {
   const journeyData = await request.cache().getData()

@@ -34,7 +34,7 @@ describe('the Why not Completes within dates functions', () => {
         }
       }))
 
-      const { getData } = await import('../a24/why-not-completes-within-dates.js')
+      const { getData } = await import('../a24/why-work-not-completed-within-licence-dates.js')
       const result = await getData(request)
       expect(result).toEqual({ whyNotCompletedWithinLicenceDates: 'delay', endDate: '26 August 2022', startDate: '10 August 2022' })
     })
@@ -66,7 +66,7 @@ describe('the Why not Completes within dates functions', () => {
         }
       }))
 
-      const { getData } = await import('../a24/why-not-completes-within-dates.js')
+      const { getData } = await import('../a24/why-work-not-completed-within-licence-dates.js')
       const result = await getData(request)
       expect(result).toEqual({ whyNotCompletedWithinLicenceDates: undefined, endDate: '26 August 2022', startDate: '10 August 2022' })
     })
@@ -104,7 +104,7 @@ describe('the Why not Completes within dates functions', () => {
         }
       }))
 
-      const { setData } = await import('../a24/why-not-completes-within-dates.js')
+      const { setData } = await import('../a24/why-work-not-completed-within-licence-dates.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { nilReturn: true, outcome: true, whyNotCompletedWithinLicenceDates: 'development delay' })
       expect(mockSetData).toHaveBeenCalled()

@@ -63,7 +63,7 @@ export default pageRoute({
   uri: ecologistExperienceURIs.ENTER_LICENCE_DETAILS.uri,
   page: ecologistExperienceURIs.ENTER_LICENCE_DETAILS.page,
   checkData: checkApplication,
-  completion: ecologistExperienceURIs.LICENCE.uri,
+  completion: ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.uri,
   validator,
   setData
 })

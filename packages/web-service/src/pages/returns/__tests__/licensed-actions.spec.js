@@ -32,7 +32,7 @@ describe('the Licensed Actions functions', () => {
         }
       }))
 
-      const { getData } = await import('../licensed-actions.js')
+      const { getData } = await import('../did-you-carry-out-licensed-actions.js')
       const result = await getData(request)
       expect(result).toEqual({
         yesNo: 'no',
@@ -72,7 +72,7 @@ describe('the Licensed Actions functions', () => {
         }
       }))
 
-      const { getData } = await import('../licensed-actions.js')
+      const { getData } = await import('../did-you-carry-out-licensed-actions.js')
       const result = await getData(request)
       expect(result).toEqual({
         yesNo: undefined,
@@ -127,7 +127,7 @@ describe('the Licensed Actions functions', () => {
         }
       }))
 
-      const { setData } = await import('../licensed-actions.js')
+      const { setData } = await import('../did-you-carry-out-licensed-actions.js')
       await setData(request)
       expect(mockUpdateLicenceReturn).toHaveBeenCalledWith('ABC-567-GHU', '123456789', { whyNil: 'development issues', nilReturn: true, completedWithinLicenceDates: true, whyNotCompletedWithinLicenceDates: 'delay' })
       expect(mockSetData).toHaveBeenCalled()
@@ -159,7 +159,7 @@ describe('the Licensed Actions functions', () => {
         }
       }))
 
-      const { setData } = await import('../licensed-actions.js')
+      const { setData } = await import('../did-you-carry-out-licensed-actions.js')
       await setData(request)
       expect(mockCreateLicenceReturn).toHaveBeenCalledWith('DEF-7420-NGVR', { returnReferenceNumber: '26a3e94f-7420-NGVR-ROA1', nilReturn: true })
       expect(mockSetData).toHaveBeenCalled()
@@ -200,7 +200,7 @@ describe('the Licensed Actions functions', () => {
         resetReturnDataPayload: jest.fn()
       }))
 
-      const { setData } = await import('../licensed-actions.js')
+      const { setData } = await import('../did-you-carry-out-licensed-actions.js')
       const { resetReturnDataPayload } = await import('../common-return-functions.js')
       await setData(request)
       expect(resetReturnDataPayload).toHaveBeenCalled()

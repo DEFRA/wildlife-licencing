@@ -7,7 +7,7 @@ import { allCompletion, checkLicence } from './common-return-functions.js'
 
 const { WHY_NIL } = ReturnsURIs
 const { WHY_DIDNT_YOU_CARRY_OUT_THESE_ACTIONS: { THE_DEVELOPMENT_WORK_DID_NOT_HAPPEN, THE_SETT_WAS_NOT_IN_ACTIVE_USE_BY_BADGERS, OTHER } } = PowerPlatformKeys
-const whyNilRadio = 'why-nil'
+const whyNilRadio = 'reason-actions-not-done'
 const whyNilOtherDescription = 'other-details'
 
 export const getData = async request => {
@@ -26,7 +26,7 @@ export const getData = async request => {
 export const validator = async payload => {
   if (!payload[whyNilRadio]) {
     Joi.assert(payload, Joi.object({
-      'why-nil': Joi.any().required()
+      'reason-actions-not-done': Joi.any().required()
     }).options({ abortEarly: false, allowUnknown: true }))
   }
 

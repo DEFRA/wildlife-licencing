@@ -148,7 +148,7 @@ export const additionalPageData = async (request, h) => {
 
         // Misc
         previousLicence: ecologistExperienceURIs.PREVIOUS_LICENCE.uri,
-        licenceDetails: ecologistExperienceURIs.LICENCE.uri,
+        licenceDetails: ecologistExperienceURIs.PREVIOUS_INDIVIDUAL_BADGER_LICENCE_DETAILS.uri,
         experienceDetails: ecologistExperienceURIs.ENTER_EXPERIENCE.uri,
         methodExperience: ecologistExperienceURIs.ENTER_METHODS.uri,
         classMitigation: ecologistExperienceURIs.CLASS_MITIGATION.uri,

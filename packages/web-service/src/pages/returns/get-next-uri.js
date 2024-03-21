@@ -136,7 +136,7 @@ export const getNextUriForReturnFlow = (licenceReturn, methodTypes) => {
 // Determine the overall next URI, either for a nil return or the regular flow
 export const getNextUri = (licenceReturn, methodTypes) => {
   if (isUndefined(licenceReturn.nilReturn)) {
-    return ReturnsURIs.NIL_RETURN.uri
+    return ReturnsURIs.DID_YOU_CARRY_OUT_LICENSED_ACTIONS.uri
   }
 
   return licenceReturn.nilReturn ? getNextUriForNilReturnFlow(licenceReturn) : getNextUriForReturnFlow(licenceReturn, methodTypes)

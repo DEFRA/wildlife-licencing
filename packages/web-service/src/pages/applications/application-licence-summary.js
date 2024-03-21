@@ -63,7 +63,7 @@ export const completion = async request => {
   if (pageData === 'return') {
     delete journeyData.returns
     await request.cache().setData(journeyData)
-    return ReturnsURIs.NIL_RETURN.uri
+    return ReturnsURIs.DID_YOU_CARRY_OUT_LICENSED_ACTIONS.uri
   }
 
   await request.cache().setData(journeyData)
