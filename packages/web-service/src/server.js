@@ -14,6 +14,7 @@ import { additionalPageData, addCookiePrefs } from './additional-page-data.js'
 import db from 'debug'
 import { plugins } from './plugins.js'
 import { defraIdmCallbackPreAuth } from './handlers/defra-idm-callback.js'
+import { spikeRouter } from './pages/spike/index.js'
 const debug = db('web-service:server')
 
 const nodeModulesPath = '/../../node_modules/'
@@ -122,7 +123,8 @@ const init = async server => {
   server.ext('onPreResponse', addCookiePrefs)
 
   // Register the dynamic routes
-  await server.route(routes)
+  await server.route([...routes, ...spikeRouter])
+
 
   // Log any errors
   if (!process.env.NO_ERROR_ROUTE) {
