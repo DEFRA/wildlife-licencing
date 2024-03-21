@@ -7,7 +7,7 @@ describe('The remove licence page', () => {
   describe('completion function', () => {
     it('returns the licence uri if user selects yes', async () => {
       const { completion } = await import('../remove-licence.js')
-      expect(completion()).toBe('/licence')
+      expect(completion()).toBe('/previous-individual-badger-licence-details')
     })
   })
 

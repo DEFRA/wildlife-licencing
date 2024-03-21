@@ -127,7 +127,7 @@ describe('additional page data', () => {
         invoicePostcode: '/invoice-postcode',
         landowner: '/landowner',
         landownerPermission: '/landowner-permission',
-        licenceDetails: '/licence',
+        licenceDetails: '/previous-individual-badger-licence-details',
         idm: {
           management: '/manage',
           signIn: '/sign-in',

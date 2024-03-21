@@ -304,7 +304,7 @@ describe('The previous licence page', () => {
       }
       const { checkData } = await import('../previous-licence.js')
       expect(await checkData(request, h)).toEqual(null)
-      expect(mockRedirect).not.toHaveBeenCalledWith('/licence')
+      expect(mockRedirect).not.toHaveBeenCalledWith('/previous-individual-badger-licence-details')
     })
 
     it('if the user has past previous licences entered, we redirect them to another page', async () => {
@@ -328,7 +328,7 @@ describe('The previous licence page', () => {
       }
       const { checkData } = await import('../previous-licence.js')
       await checkData(request, h)
-      expect(mockRedirect).toHaveBeenCalledWith('/licence')
+      expect(mockRedirect).toHaveBeenCalledWith('/previous-individual-badger-licence-details')
     })
   })
 
