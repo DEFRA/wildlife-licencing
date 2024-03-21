@@ -11,7 +11,7 @@ describe('The licence page', () => {
           licence: 'yes'
         }
       }
-      const { completion } = await import('../licence.js')
+      const { completion } = await import('../previous-individual-badger-licence-details.js')
       expect(await completion(request)).toBe('/enter-licence-details')
     })
 
@@ -34,7 +34,7 @@ describe('The licence page', () => {
           })
         })
       }
-      const { completion } = await import('../licence.js')
+      const { completion } = await import('../previous-individual-badger-licence-details.js')
       expect(await completion(request)).toBe('/enter-experience')
     })
 
@@ -58,7 +58,7 @@ describe('The licence page', () => {
           })
         })
       }
-      const { completion } = await import('../licence.js')
+      const { completion } = await import('../previous-individual-badger-licence-details.js')
       expect(await completion(request)).toBe('/enter-methods')
     })
 
@@ -83,7 +83,7 @@ describe('The licence page', () => {
           })
         })
       }
-      const { completion } = await import('../licence.js')
+      const { completion } = await import('../previous-individual-badger-licence-details.js')
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
@@ -117,7 +117,7 @@ describe('The licence page', () => {
           })
         })
       }
-      const { completion } = await import('../licence.js')
+      const { completion } = await import('../previous-individual-badger-licence-details.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
       expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
@@ -142,7 +142,7 @@ describe('The licence page', () => {
           })
         })
       }
-      const { getData } = await import('../licence.js')
+      const { getData } = await import('../previous-individual-badger-licence-details.js')
       expect(await getData(request)).toStrictEqual({ allRemoved: false, previousLicences: ['A1234'] })
     })
   })
