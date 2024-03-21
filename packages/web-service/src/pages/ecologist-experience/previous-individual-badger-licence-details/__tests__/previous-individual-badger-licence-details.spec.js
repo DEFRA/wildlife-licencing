@@ -149,7 +149,7 @@ describe('The licence page', () => {
 
   describe('The licence page template', () => {
     it('Matches the snapshot', async () => {
-      const template = await compileTemplate(path.join(__dirname, '../licence.njk'))
+      const template = await compileTemplate(path.join(__dirname, '../previous-individual-badger-licence-details.njk'))
 
       const renderedHtml = template.render({
         data: { allRemoved: false, previousLicences: ['A1234'] }
