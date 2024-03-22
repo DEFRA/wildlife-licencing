@@ -47,16 +47,16 @@ export const ecologistExperienceURIs = {
 }
 
 export const habitatURIs = {
-  START: { uri: '/habitat-start', page: 'habitat-start' },
-  NAME: { uri: '/habitat-name', page: 'habitat-name' },
-  TYPES: { uri: '/habitat-types', page: 'habitat-types' },
-  REOPEN: { uri: '/habitat-reopen', page: 'habitat-reopen' },
-  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' },
-  ACTIVE_ENTRANCES: { uri: '/habitat-active-entrances', page: 'habitat-active-entrances' },
-  GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
-  WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
-  WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
-  ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
+  START: { uri: '/sett-start', page: 'habitat-start' },
+  NAME: { uri: '/sett-name', page: 'habitat-name' },
+  TYPES: { uri: '/sett-use-category', page: 'habitat-types' },
+  REOPEN: { uri: '/sett-reopened-after-development', page: 'habitat-reopen' },
+  ENTRANCES: { uri: '/sett-entrances-value', page: 'habitat-entrances' },
+  ACTIVE_ENTRANCES: { uri: '/sett-active-entrance-total', page: 'habitat-active-entrances' },
+  GRID_REF: { uri: '/sett-grid-reference', page: 'habitat-grid-ref' },
+  WORK_START: { uri: '/start-date-licensed-activity-on-this-sett', page: 'habitat-work-start' },
+  WORK_END: { uri: '/end-date-licensed-activity-on-this-sett', page: 'habitat-work-end' },
+  ACTIVITIES: { uri: '/sett-disturbance-methods', page: 'habitat-activities' },
   ACTIVE_SETT_DROPOUT: { uri: '/active-sett-dropout', page: 'active-sett-dropout' },
   CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' },
   CONFIRM_DELETE: { uri: '/confirm-delete', page: 'confirm-delete' }

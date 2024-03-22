@@ -24,7 +24,7 @@ describe('The habitat types page', () => {
         })
       }
       const { completion } = await import('../habitat-types.js')
-      expect(await completion(request)).toBe('/habitat-reopen')
+      expect(await completion(request)).toBe('/sett-reopened-after-development')
     })
 
     it('the habitat-types page forwards onto check-habitat-answers on return journey', async () => {
