@@ -1,4 +1,3 @@
-import { contactURIs } from '../uris.js'
 describe('additional page data', () => {
   beforeEach(() => jest.resetModules())
 
