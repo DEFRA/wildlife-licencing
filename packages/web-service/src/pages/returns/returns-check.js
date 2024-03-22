@@ -25,7 +25,7 @@ export const getData = async request => {
     ...upload,
     uploadedDate: timestampFormatter(upload.createdAt)
   }))
-  const data = { ...returnData, licenceStartDate, licenceEndDate, whyNil: nilReturnReason, noArtificialSettReason, destroyDate, startDate, endDate }
+  const data = { ...returnData, licenceStartDate, licenceEndDate, whyNil: nilReturnReason, noArtificialSettReason, destroyDate, startDate, endDate, ReturnsURIs }
   return { ...data, uploadedFiles }
 }
 
