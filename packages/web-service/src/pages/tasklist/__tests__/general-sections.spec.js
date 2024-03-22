@@ -1,5 +1,4 @@
 import { tagStatus } from '../../../services/status-tags.js'
-import { contactURIs } from '../../../uris.js'
 import { TASKS, SECTION_TASKS } from '../general-sections.js'
 
 describe('tasklist general sections', () => {
@@ -19,8 +18,8 @@ describe('tasklist general sections', () => {
 
   it('applicant check', () => {
     const task = TASKS[SECTION_TASKS.APPLICANT]
-    expect(task.uri([])).toEqual('/applicant-name')
-    expect(task.uri([{ tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
+    expect(task.uri([])).toEqual('/licence-holder-name')
+    expect(task.uri([{ tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual('/licence-holder-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(expect(task.status([

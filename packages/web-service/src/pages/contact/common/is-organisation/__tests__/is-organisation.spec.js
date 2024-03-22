@@ -299,7 +299,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-email')
+      expect(result).toEqual('/licence-holder-email')
     })
 
     it('if the user has selected \'no\', there is no address set go to the postcode page ', async () => {

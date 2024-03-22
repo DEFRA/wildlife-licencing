@@ -84,7 +84,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-email')
+      expect(result).toEqual('/licence-holder-email')
     })
 
     it('if a an account is associated and no address is present, return to the postcode page', async () => {
