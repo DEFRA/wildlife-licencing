@@ -113,7 +113,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.POSTCODE.uri)
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if an account is associated and an address is present, return to the check page', async () => {
@@ -148,7 +148,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
+      expect(result).toEqual('/licence-holder-check-answers')
     })
 
     it('if a no account is associated, return to the organisation page', async () => {
