@@ -192,7 +192,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return contactURIs.APPLICANT.CHECK_ANSWERS })(request)
-      expect(result).toEqual(contactURIs.APPLICANT.POSTCODE)
+      expect(result).toEqual(contactURIs.APPLICANT.POSTCODE.uri)
     })
 
     it('if an account is assigned and has an address, and has submitted a reference purhcase order number, redirect to the check page', async () => {
@@ -229,7 +229,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return contactURIs.APPLICANT.CHECK_ANSWERS })(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
+      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
     })
 
     it('if no account is assigned redirect to the postcode page', async () => {
@@ -261,7 +261,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.POSTCODE)
+      expect(result).toEqual(contactURIs.APPLICANT.POSTCODE.uri)
     })
 
     it('if no account is assigned and the contact has an address, redirect to the check page', async () => {
@@ -296,7 +296,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
+      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
     })
   })
 })

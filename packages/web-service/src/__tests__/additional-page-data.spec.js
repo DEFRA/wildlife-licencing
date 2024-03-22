@@ -101,11 +101,11 @@ describe('additional page data', () => {
     expect(request.response.source.context).toEqual({
       _uri: {
         applicantAddress: '/applicant-address',
-        applicantEmail: contactURIs.APPLICANT_EMAIL,
+        applicantEmail: contactURIs.APPLICANT_EMAIL.uri,
         applicantPhoneNumber: '/applicant-phone-number',
-        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION,
-        applicantName: contactURIs.APPLICANT.NAME,
-        applicantPostcode: contactURIs.APPLICANT.POSTCODE,
+        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION.uri,
+        applicantName: contactURIs.APPLICANT.NAME.uri,
+        applicantPostcode: contactURIs.APPLICANT.POSTCODE.uri,
         applicationSummary: '/application-summary',
         applications: '/applications',
         applicationLicence: '/application-licence-summary',

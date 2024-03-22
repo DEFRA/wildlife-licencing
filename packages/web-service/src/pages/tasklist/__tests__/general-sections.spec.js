@@ -1,4 +1,5 @@
 import { tagStatus } from '../../../services/status-tags.js'
+import { contactURIs } from '../../../uris.js'
 import { TASKS, SECTION_TASKS } from '../general-sections.js'
 
 describe('tasklist general sections', () => {
