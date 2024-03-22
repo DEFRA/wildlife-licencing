@@ -131,7 +131,7 @@ describe('applicant email page', () => {
       }
       const { completion } = await import('../applicant-email.js')
       const result = await completion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
+      expect(result).toEqual('/licence-holder-check-answers')
     })
   })
 })

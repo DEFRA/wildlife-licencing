@@ -368,7 +368,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
+      expect(result).toEqual('/licence-holder-check-answers')
     })
   })
 })

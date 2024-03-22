@@ -296,7 +296,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS.uri)
+      expect(result).toEqual('/licence-holder-check-answers')
     })
   })
 })

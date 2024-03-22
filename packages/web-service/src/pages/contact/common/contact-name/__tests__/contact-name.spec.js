@@ -174,7 +174,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-organisation')
+      expect(result).toEqual('/licence-holder-organisation')
     })
   })
 })
