@@ -19,7 +19,7 @@ describe('tasklist general sections', () => {
   it('applicant check', () => {
     const task = TASKS[SECTION_TASKS.APPLICANT]
     expect(task.uri([])).toEqual('/applicant-name')
-    expect(task.uri([{ tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual('/applicant-check-answers')
+    expect(task.uri([{ tag: SECTION_TASKS.APPLICANT, tagState: tagStatus.COMPLETE }])).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(expect(task.status([

@@ -110,7 +110,7 @@ describe('the phone-number page', () => {
       }))
       const { phoneNumberCompletion } = await import('../phone-number.js')
       const result = await phoneNumberCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
     })
   })
 })

@@ -92,7 +92,7 @@ describe('contact common handler functions', () => {
       const h = { redirect: jest.fn() }
       const { checkHasAddress } = await import('../common-handler.js')
       await checkHasAddress(contactURIs.APPLICANT)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/applicant-postcode')
+      expect(h.redirect).toHaveBeenCalledWith(contactURIs.APPLICANT.POSTCODE)
     })
   })
 

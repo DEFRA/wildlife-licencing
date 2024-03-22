@@ -1,3 +1,4 @@
+import { contactURIs } from '../uris.js'
 describe('additional page data', () => {
   beforeEach(() => jest.resetModules())
 
@@ -100,10 +101,10 @@ describe('additional page data', () => {
     expect(request.response.source.context).toEqual({
       _uri: {
         applicantAddress: '/applicant-address',
-        applicantEmail: '/applicant-email',
+        applicantEmail: contactURIs.APPLICANT_EMAIL,
         applicantPhoneNumber: '/applicant-phone-number',
-        applicantIsOrganisation: '/applicant-organisation',
-        applicantName: '/applicant-name',
+        applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION,
+        applicantName: contactURIs.APPLICANT.NAME,
         applicantPostcode: '/applicant-postcode',
         applicationSummary: '/application-summary',
         applications: '/applications',

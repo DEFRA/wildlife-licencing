@@ -60,7 +60,7 @@ describe('applicant email page', () => {
       }
       const { completion } = await import('../applicant-email.js')
       const result = await completion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
     })
 
     it('redirects to phone number url when we dont have an account and the phone number is not set', async () => {
@@ -131,7 +131,7 @@ describe('applicant email page', () => {
       }
       const { completion } = await import('../applicant-email.js')
       const result = await completion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual(contactURIs.APPLICANT.CHECK_ANSWERS)
     })
   })
 })
