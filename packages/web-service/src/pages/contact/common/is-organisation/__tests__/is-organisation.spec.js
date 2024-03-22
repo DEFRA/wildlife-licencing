@@ -161,7 +161,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/licence-holder-check-answers')
     })
 
     it('if the user has selected \'yes\', the account is not immutable and no contact details are set go to the email page ', async () => {
@@ -195,7 +195,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-postcode')
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if the user has selected \'yes\', the account is not immutable and no address is set go to the postcode page ', async () => {
@@ -230,7 +230,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-postcode')
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if the user has selected \'yes\', the account is not immutable and an address is set go to the check-answers page ', async () => {
@@ -266,7 +266,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/licence-holder-check-answers')
     })
 
     it('if the user has selected \'no\', there are no contactDetails set go to the email page ', async () => {
@@ -299,7 +299,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-email')
+      expect(result).toEqual('/licence-holder-email')
     })
 
     it('if the user has selected \'no\', there is no address set go to the postcode page ', async () => {
@@ -333,7 +333,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-postcode')
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if the user has selected \'no\', an address is set go to the check page ', async () => {
@@ -368,7 +368,7 @@ describe('the is-organisation page', () => {
 
       const { contactAccountCompletion } = await import('../is-organisation.js')
       const result = await contactAccountCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/licence-holder-check-answers')
     })
   })
 })

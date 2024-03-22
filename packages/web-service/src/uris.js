@@ -82,12 +82,12 @@ export const contactURIs = {
     ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
-    NAME: { uri: '/applicant-name', page: 'applicant-name' },
-    IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
-    EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
+    NAME: { uri: '/licence-holder-name', page: 'applicant-name' },
+    IS_ORGANISATION: { uri: '/licence-holder-organisation', page: 'applicant-organisation' },
+    EMAIL: { uri: '/licence-holder-email', page: 'applicant-email' },
     PHONE_NUMBER: { uri: '/applicant-phone-number', page: 'applicant-phone-number' },
-    CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
-    POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
+    CHECK_ANSWERS: { uri: '/licence-holder-check-answers', page: 'applicant-check-answers' },
+    POSTCODE: { uri: '/licence-holder-postcode', page: 'applicant-postcode' },
     ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
     ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
   },

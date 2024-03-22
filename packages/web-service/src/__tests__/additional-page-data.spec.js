@@ -100,11 +100,11 @@ describe('additional page data', () => {
     expect(request.response.source.context).toEqual({
       _uri: {
         applicantAddress: '/applicant-address',
-        applicantEmail: '/applicant-email',
+        applicantEmail: '/licence-holder-email',
         applicantPhoneNumber: '/applicant-phone-number',
-        applicantIsOrganisation: '/applicant-organisation',
-        applicantName: '/applicant-name',
-        applicantPostcode: '/applicant-postcode',
+        applicantIsOrganisation: '/licence-holder-organisation',
+        applicantName: '/licence-holder-name',
+        applicantPostcode: '/licence-holder-postcode',
         applicationSummary: '/application-summary',
         applications: '/applications',
         applicationLicence: '/application-licence-summary',
