@@ -8,7 +8,7 @@ describe('common', () => {
 
       const humanReadableDateTime = timestampFormatterWithTime('2022-06-01T13:00:00.000Z')
 
-      expect(humanReadableDateTime).toContain('1 June 2022 at 1:00 pm')
+      expect(humanReadableDateTime).toContain('1 June 2022, 1:00 pm')
     })
 
     it('should return a human readable date and time, even outside daylight savings period', () => {
@@ -17,7 +17,7 @@ describe('common', () => {
 
       const humanReadableDateTime = timestampFormatterWithTime('2022-12-01T13:00:00.000Z')
 
-      expect(humanReadableDateTime).toContain('1 December 2022 at 1:00 pm')
+      expect(humanReadableDateTime).toContain('1 December 2022, 1:00 pm')
     })
   })
 
