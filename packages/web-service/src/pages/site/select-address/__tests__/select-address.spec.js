@@ -118,7 +118,7 @@ describe('site-got-postcode page handler', () => {
         })
       })
     }
-    expect(await completion(request)).toBe('/upload-map')
+    expect(await completion(request)).toBe('/upload-survey-map')
   })
 
   it('should redirect user to check site answers page, when the tag is complete', async () => {

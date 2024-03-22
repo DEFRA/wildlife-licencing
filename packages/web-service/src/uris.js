@@ -1,9 +1,9 @@
 export const HEALTH = { uri: '/health', page: 'health' }
 export const SPECIES = { uri: '/which-species', page: 'which-species' }
 export const OTHER_SPECIES = { uri: '/other-species', page: 'other-species' }
-export const NSIP = { uri: '/nsip', page: 'nsip' }
+export const NSIP = { uri: '/nationally-significant-infrastructure-project', page: 'nsip' }
 export const WINDOW_NOT_OPEN = { uri: '/application-processing-window-warning', page: 'window-not-open' }
-export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
+export const COOKIE_PREFS = { uri: '/set-cookie-preferences' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
 export const SIGN_IN = { uri: '/sign-in' }
@@ -38,7 +38,7 @@ export const ecologistExperienceURIs = {
   PREVIOUS_LICENCE: { uri: '/previous-licence', page: 'previous-licence' },
   ENTER_EXPERIENCE: { uri: '/enter-experience', page: 'enter-experience' },
   ENTER_LICENCE_DETAILS: { uri: '/enter-licence-details', page: 'enter-licence-details' },
-  LICENCE: { uri: '/licence', page: 'licence' },
+  LICENCE: { uri: '/previous-individual-badger-licence-details', page: 'licence' },
   CHECK_YOUR_ANSWERS: { uri: '/check-ecologist-answers', page: 'check-ecologist-answers' },
   ENTER_METHODS: { uri: '/enter-methods', page: 'enter-methods' },
   CLASS_MITIGATION: { uri: '/class-mitigation', page: 'class-mitigation' },
@@ -131,7 +131,7 @@ export const siteURIs = {
   SITE_GOT_POSTCODE: { uri: '/site-got-postcode', page: 'site-got-postcode' },
   SELECT_ADDRESS: { uri: '/select-address', page: 'select-address' },
   ADDRESS_NO_LOOKUP: { uri: '/site-address-no-lookup', page: 'site-address-no-lookup' },
-  UPLOAD_MAP: { uri: '/upload-map', page: 'upload-map' },
+  UPLOAD_MAP: { uri: '/upload-survey-map', page: 'upload-map' },
   UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT: { uri: '/upload-map-of-mitigations-during-development', page: 'upload-map-of-mitigations-during-development' },
   UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT: { uri: '/upload-map-of-mitigations-after-development', page: 'upload-map-of-mitigations-after-development' },
   SITE_GRID_REF: { uri: '/site-grid-ref', page: 'site-grid-ref' },
@@ -176,9 +176,9 @@ export const convictionsURIs = {
 }
 
 export const ReturnsURIs = {
-  NIL_RETURN: { uri: '/licensed-actions', page: 'licensed-actions' },
+  NIL_RETURN: { uri: '/did-you-carry-out-licensed-actions', page: 'licensed-actions' },
   OUTCOME: { uri: '/outcome', page: 'outcome' },
-  WHY_NIL: { uri: '/why-nil', page: 'why-nil' },
+  WHY_NIL: { uri: '/reason-actions-not-done', page: 'why-nil' },
   ANOTHER_LICENCE: { uri: '/another-licence', page: 'another-licence' },
   COMPLETE_WITHIN_DATES: { uri: '/complete-within-dates', page: 'complete-within-dates' },
   WORK_START: { uri: '/date-work-started', page: 'work-start' },
@@ -204,8 +204,8 @@ export const ReturnsURIs = {
     ARTIFICIAL_SETT_EVIDENCE_FOUND: { uri: '/a24/artificial-sett-evidence-found', page: 'artificial-sett-evidence-found' },
     ARTIFICIAL_SETT_GRID_REFERENCE: { uri: '/a24/artificial-sett-grid-reference', page: 'artificial-sett-grid-reference' },
     ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE: { uri: '/a24/artificial-sett-created-before-closure', page: 'artificial-sett-created-before-closure' },
-    WHY_NOT_COMPLETE_WITHIN_DATES: { uri: '/why-not-completes-within-dates', page: 'why-not-completes-within-dates' },
-    WELFARE_CONCERNS: { uri: '/welfare-concerns', page: 'welfare-concerns' }
+    WHY_NOT_COMPLETE_WITHIN_DATES: { uri: '/why-work-not-completed-within-licence-dates', page: 'why-not-completes-within-dates' },
+    WELFARE_CONCERNS: { uri: '/licensed-activity-cause-welfare-concerns', page: 'welfare-concerns' }
   }
 }
 

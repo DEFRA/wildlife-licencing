@@ -21,7 +21,7 @@ describe('The miscellaneous route handlers', () => {
 
   it('The cookie-prefs route returns a status of 200', async () => {
     const misc = (await import('../misc-routes.js')).default
-    const route = misc.find(r => r.method === 'GET' && r.path === '/set-cookie-prefs')
+    const route = misc.find(r => r.method === 'GET' && r.path === '/set-cookie-preferences')
     const mockRedirect = jest.fn()
     const h = {
       redirect: mockRedirect
