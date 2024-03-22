@@ -163,10 +163,10 @@ describe('additional page data', () => {
         additionalEcologistEmail: '/additional-ecologist-email',
         species: '/which-species',
         taskList: '/tasklist',
-        workCategory: '/work-category',
-        workPayment: '/work-payment',
-        workPaymentExemptReason: '/work-payment-exempt-reason',
-        workProposal: '/work-proposal'
+        workCategory: '/development-type',
+        workPayment: '/payment-exemption-check',
+        workPaymentExemptReason: '/payment-exemption-reason',
+        workProposal: '/development-description'
       },
       credentials: 'credentials',
       cspNonce: expect.any(String),
