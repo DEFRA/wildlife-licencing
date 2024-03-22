@@ -105,7 +105,7 @@ describe('additional page data', () => {
         applicantPhoneNumber: '/applicant-phone-number',
         applicantIsOrganisation: contactURIs.APPLICANT.IS_ORGANISATION,
         applicantName: contactURIs.APPLICANT.NAME,
-        applicantPostcode: '/applicant-postcode',
+        applicantPostcode: contactURIs.APPLICANT.POSTCODE,
         applicationSummary: '/application-summary',
         applications: '/applications',
         applicationLicence: '/application-licence-summary',
