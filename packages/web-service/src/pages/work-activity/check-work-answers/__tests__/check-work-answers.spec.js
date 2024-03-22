@@ -93,7 +93,7 @@ describe('The check-work-answers', () => {
     }))
     const { checkData } = await import('../check-work-answers.js')
     await checkData(request, h)
-    expect(mockRedirect).toHaveBeenCalledWith('/work-proposal')
+    expect(mockRedirect).toHaveBeenCalledWith('/development-description')
   })
 
   it('getData returns correctly when the `OTHER` radio option is selected', async () => {

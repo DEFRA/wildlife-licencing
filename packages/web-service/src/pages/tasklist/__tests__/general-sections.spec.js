@@ -121,7 +121,7 @@ describe('tasklist general sections', () => {
 
   it('work activity', () => {
     const task = TASKS[SECTION_TASKS.WORK_ACTIVITY]
-    expect(task.uri([])).toEqual('/work-proposal')
+    expect(task.uri([])).toEqual('/development-description')
     expect(task.uri([{ tag: SECTION_TASKS.WORK_ACTIVITY, tagState: tagStatus.COMPLETE }])).toEqual('/check-work-answers')
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(task.enabled([])).toBeFalsy()
