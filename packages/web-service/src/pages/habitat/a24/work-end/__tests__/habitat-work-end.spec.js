@@ -31,7 +31,7 @@ describe('The habitat work end page', () => {
       const h = { redirect: jest.fn() }
       const { checkHasStart } = await import('../habitat-work-end.js')
       await checkHasStart(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/habitat-work-start')
+      expect(h.redirect).toHaveBeenCalledWith('/start-date-licensed-activity-on-this-sett')
     })
   })
 
@@ -58,7 +58,7 @@ describe('The habitat work end page', () => {
         }
       }
       const { completion } = await import('../habitat-work-end.js')
-      expect(await completion(request)).toBe('/habitat-activities')
+      expect(await completion(request)).toBe('/sett-disturbance-methods')
     })
 
     it('the habitat-work-end page forwards onto check-habitat-answers if no errors on return journey', async () => {

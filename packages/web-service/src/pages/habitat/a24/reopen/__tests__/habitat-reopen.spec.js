@@ -21,7 +21,7 @@ describe('The habitat reopen page', () => {
         })
       }
       const { completion } = await import('../habitat-reopen.js')
-      expect(await completion(request)).toBe('/habitat-entrances')
+      expect(await completion(request)).toBe('/sett-entrances-value')
     })
 
     it('the habitat-reopen page forwards onto check-habitat-answers on return journey', async () => {
