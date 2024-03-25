@@ -173,7 +173,7 @@ describe('invoice contact details page', () => {
         }
       }
       const { completion } = await import('../invoice-contact-details.js')
-      expect(await completion(request)).toBe('/invoice-check-answers')
+      expect(await completion(request)).toBe('/invoice-payer-check-answers')
     })
     it('returns the invoice responsible page if input is no', async () => {
       const request = {
@@ -190,7 +190,7 @@ describe('invoice contact details page', () => {
         }
       }
       const { completion } = await import('../invoice-contact-details.js')
-      expect(await completion(request)).toBe('/invoice-responsible')
+      expect(await completion(request)).toBe('/invoice-payer-responsibility')
     })
   })
 

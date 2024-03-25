@@ -55,7 +55,7 @@ describe('the common functions', () => {
       })
     }
     const { purchaseOrderCompletion } = await import('../common.js')
-    expect(await purchaseOrderCompletion(request)).toEqual('/invoice-check-answers')
+    expect(await purchaseOrderCompletion(request)).toEqual('/invoice-payer-check-answers')
   })
 
   it('purchaseOrderCompletion returns the user to invoice-purchase-order if the user has not submitted a referenceOrPurchaseOrderNumber', async () => {
@@ -74,6 +74,6 @@ describe('the common functions', () => {
       })
     }
     const { purchaseOrderCompletion } = await import('../common.js')
-    expect(await purchaseOrderCompletion(request)).toEqual('/invoice-purchase-order')
+    expect(await purchaseOrderCompletion(request)).toEqual('/enter-invoice-reference-purchase-order')
   })
 })

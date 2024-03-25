@@ -15,7 +15,7 @@ describe('invoice-email page', () => {
     const request = {
       cache: () => ({ getData: () => ({ applicationId: '9b0133b9-d140-42d8-ab61-10c095e55dd3' }) })
     }
-    expect(await redirectJourney(request)).toEqual('/invoice-check-answers')
+    expect(await redirectJourney(request)).toEqual('/invoice-payer-check-answers')
   })
 
   it('redirectJourney function returns the user to invoice-purchase-order if the user has not submitted a referenceOrPurchaseOrderNumber', async () => {
@@ -30,6 +30,6 @@ describe('invoice-email page', () => {
       cache: () => ({ getData: () => ({ applicationId: '9b0133b9-d140-42d8-ab61-10c095e55dd3' }) })
     }
     const { redirectJourney } = await import('../invoice-email.js')
-    expect(await redirectJourney(request)).toEqual('/invoice-purchase-order')
+    expect(await redirectJourney(request)).toEqual('/enter-invoice-reference-purchase-order')
   })
 })

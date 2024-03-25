@@ -22,7 +22,7 @@ describe('invoice check answers page', () => {
       const { checkHasPurchaseOrderNumber } = await import('../invoice-check-answers.js')
       const h = { redirect: jest.fn() }
       await checkHasPurchaseOrderNumber(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/invoice-purchase-order')
+      expect(h.redirect).toHaveBeenCalledWith('/enter-invoice-reference-purchase-order')
     })
 
     it('returns null if the invoice number has been captured', async () => {

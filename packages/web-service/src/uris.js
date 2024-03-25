@@ -101,14 +101,14 @@ export const contactURIs = {
     REMOVE: { uri: '/remove-authorised-person', page: 'remove-authorised-person' }
   },
   INVOICE_PAYER: {
-    RESPONSIBLE: { uri: '/invoice-responsible', page: 'invoice-responsible' },
+    RESPONSIBLE: { uri: '/invoice-payer-responsibility', page: 'invoice-responsible' },
     NAME: { uri: '/invoice-name', page: 'invoice-name' },
-    IS_ORGANISATION: { uri: '/invoice-organisation', page: 'invoice-organisation' },
-    EMAIL: { uri: '/invoice-email', page: 'invoice-email' },
-    CHECK_ANSWERS: { uri: '/invoice-check-answers', page: 'invoice-check-answers' },
-    CONTACT_DETAILS: { uri: '/invoice-contact-details', page: 'invoice-contact-details' },
-    PURCHASE_ORDER: { uri: '/invoice-purchase-order', page: 'invoice-purchase-order' },
-    POSTCODE: { uri: '/invoice-postcode', page: 'invoice-postcode' },
+    IS_ORGANISATION: { uri: '/invoice-payer-organisation', page: 'invoice-organisation' },
+    EMAIL: { uri: '/invoice-payer-email', page: 'invoice-email' },
+    CHECK_ANSWERS: { uri: '/invoice-payer-check-answers', page: 'invoice-check-answers' },
+    CONTACT_DETAILS: { uri: '/invoice-payer-contact-details', page: 'invoice-contact-details' },
+    PURCHASE_ORDER: { uri: '/enter-invoice-reference-purchase-order', page: 'invoice-purchase-order' },
+    POSTCODE: { uri: '/invoice-payer-postcode', page: 'invoice-postcode' },
     ADDRESS: { uri: '/invoice-address', page: 'invoice-address' },
     ADDRESS_FORM: { uri: '/invoice-address-form', page: 'invoice-address-form' }
   },

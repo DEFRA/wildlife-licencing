@@ -136,7 +136,7 @@ describe('contact common handler functions', () => {
       const h = { redirect: jest.fn() }
       const { checkAccountComplete } = await import('../common-handler.js')
       await checkAccountComplete('PAYER-ORGANISATION', contactURIs.INVOICE_PAYER)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/invoice-email')
+      expect(h.redirect).toHaveBeenCalledWith('/invoice-payer-email')
     })
 
     it('return redirect to the postcode page if no address is assigned', async () => {
@@ -162,7 +162,7 @@ describe('contact common handler functions', () => {
       const h = { redirect: jest.fn() }
       const { checkAccountComplete } = await import('../common-handler.js')
       await checkAccountComplete('PAYER-ORGANISATION', contactURIs.INVOICE_PAYER)(request, h)
-      expect(h.redirect).toHaveBeenCalledWith('/invoice-postcode')
+      expect(h.redirect).toHaveBeenCalledWith('/invoice-payer-postcode')
     })
   })
 })

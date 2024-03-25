@@ -432,7 +432,7 @@ describe('the invoice-responsible page', () => {
 
       const { completion } = await import('../invoice-responsible.js')
       const result = await completion(request)
-      expect(result).toEqual('/invoice-contact-details')
+      expect(result).toEqual('/invoice-payer-contact-details')
     })
   })
 })
