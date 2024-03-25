@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
 
 describe('The licence page', () => {
   beforeEach(() => jest.resetModules())
@@ -85,9 +87,17 @@ describe('The licence page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check page if user selects no and class mitigation is set', async () => {
+    it('returns the check page if user selects no and class mitigation is set, and sets the tag', async () => {
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               experienceDetails: 'details',
@@ -109,6 +119,7 @@ describe('The licence page', () => {
       }
       const { completion } = await import('../licence.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
   })
 
@@ -133,6 +144,18 @@ describe('The licence page', () => {
       }
       const { getData } = await import('../licence.js')
       expect(await getData(request)).toStrictEqual({ allRemoved: false, previousLicences: ['A1234'] })
+    })
+  })
+
+  describe('The licence page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../licence.njk'))
+
+      const renderedHtml = template.render({
+        data: { allRemoved: false, previousLicences: ['A1234'] }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

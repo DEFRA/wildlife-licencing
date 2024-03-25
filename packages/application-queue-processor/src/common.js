@@ -19,7 +19,8 @@ export const postProcess = async targetKeys => {
     previousLicences: { sddsKey: 'sddsPreviousLicenceId' },
     permissions: { sddsKey: 'sddsPermissionsId' },
     applicationDesignatedSites: { sddsKey: 'sddsDesignatedSiteId' },
-    returns: { sddsKey: 'sddsReturnId' }
+    returns: { sddsKey: 'sddsReturnId' },
+    feedbacks: { sddsKey: 'sddsFeedbackId' }
   }
 
   try {

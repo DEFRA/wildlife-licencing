@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the on or next to designated site start functions', () => {
@@ -28,6 +31,18 @@ describe('the on or next to designated site start functions', () => {
       const { getData } = await import('../on-or-next-to-designated-site.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
+    })
+  })
+
+  describe('on-or-next-to-designated-site page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../on-or-next-to-designated-site.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'yes' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

@@ -1,5 +1,15 @@
 import fs from 'fs'
 
+jest.mock('@hapi/crumb', () => {
+  return {
+    plugin: {
+      name: 'crumb',
+      register: jest.fn().mockImplementation((server, options) => {
+        // Mock implementation or behavior of crumb
+      })
+    }
+  }
+})
 describe('the WEB server', () => {
   beforeEach(() => jest.resetModules())
   describe('the default header function', () => {
@@ -7,6 +17,7 @@ describe('the WEB server', () => {
       jest.doMock('clamscan', () => jest.fn().mockImplementation(() => {
         return ({ init: () => Promise.resolve() })
       }))
+
       const { addDefaultHeaders } = await import('../server.js')
       const mockHeader = jest.fn()
       const result = await addDefaultHeaders({

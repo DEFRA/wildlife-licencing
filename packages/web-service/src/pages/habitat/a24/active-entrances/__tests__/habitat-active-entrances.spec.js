@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 
 describe('The habitat active entrances page', () => {
   beforeEach(() => jest.resetModules())
@@ -27,7 +29,7 @@ describe('The habitat active entrances page', () => {
         }
       }
       const { completion } = await import('../habitat-active-entrances.js')
-      expect(await completion(request)).toBe('/habitat-grid-ref')
+      expect(await completion(request)).toBe('/sett-grid-reference')
     })
     it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -306,6 +308,18 @@ describe('The habitat active entrances page', () => {
       })
       const { validator } = await import('../habitat-active-entrances.js')
       expect(await validator(payload, context)).toBe(undefined)
+    })
+  })
+
+  describe('The habitat active entrances template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../habitat-active-entrances.njk'))
+
+      const renderedHtml = template.render({
+        data: { numberOfActiveEntrances: 22 }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('site-got-postcode page handler', () => {
   beforeEach(() => jest.resetModules())
   it('getData returns the correct object', async () => {
@@ -115,7 +118,7 @@ describe('site-got-postcode page handler', () => {
         })
       })
     }
-    expect(await completion(request)).toBe('/upload-map')
+    expect(await completion(request)).toBe('/upload-survey-map')
   })
 
   it('should redirect user to check site answers page, when the tag is complete', async () => {
@@ -146,5 +149,17 @@ describe('site-got-postcode page handler', () => {
       })
     }
     expect(await completion(request)).toBe('/check-site-answers')
+  })
+})
+
+describe('site-got-postcode page template', () => {
+  it('Matches the snapshot', async () => {
+    const template = await compileTemplate(path.join(__dirname, '../select-address.njk'))
+
+    const renderedHtml = template.render({
+      data: {}
+    })
+
+    expect(renderedHtml).toMatchSnapshot()
   })
 })

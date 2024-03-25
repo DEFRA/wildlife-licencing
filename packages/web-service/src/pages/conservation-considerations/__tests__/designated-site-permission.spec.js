@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the designated site permission functions', () => {
@@ -31,6 +34,18 @@ describe('the designated site permission functions', () => {
       const { getData } = await import('../designated-site-permission.js')
       const result = await getData(request)
       expect(result).toEqual({ yesNo: 'yes' })
+    })
+  })
+
+  describe('Designated site permission page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../designated-site-permission.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'yes' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

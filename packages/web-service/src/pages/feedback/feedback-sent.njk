@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% set backlink = null %}
+
+{% set title = 'Thank you for your feedback' %}
+
+{% block pageTitle %}
+  {{ 'Error: ' + title if error else title }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Thank you for your feedback</h1>
+
+        <p class="govuk-body">We will use your feedback to improve our services.</p>
+
+        <p class="govuk-body">You can now <a href="/applications">view all your wildlife licences and applications</a> or close this browser tab to return to the service at the same point.</p>
+        
+        <p class="govuk-body">If you want to leave this service, you can <a href="/sign-out">sign out</a> or close this browser window.</p>
+    </div>
+  </div>
+{% endblock %}
+

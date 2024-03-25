@@ -45,32 +45,33 @@
           </span>
         </a>
       </div>
-      
+
       <div class="govuk-header__content">
         <a href="{{ _uri.applications }}" class="govuk-header__link govuk-header__link--service-name">Apply for a licence to do work that affects a protected species</a>
-        {% if credentials %}
-          <a class="govuk-header__link signout-link" href="{{ _uri.signOut }}">
-            Sign out
-          </a>
-        {% else %}
-          <a class="govuk-header__link signout-link" href="{{ _uri.login }}">
-            Sign in
-          </a>
-        {% endif %}
 
+        {% if credentials %}
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signOut }}">Sign out</a>
+          <span class="signout-link">&nbsp;|&nbsp;</span>
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.management }}">{{ user.name }}</a>
+        {% else %}
+          <a class="govuk-header__link signout-link" href="{{ _uri.idm.signIn }}">Sign in</a>
+        {% endif %}
       </div>
     </div>
   </header>
 {% endblock %}
 
-{% block beforeContent %}
-  {{ govukPhaseBanner({
-      tag: {
-        text: "beta"
-      },
-      html: 'This is a new service – your <a class="govuk-link" href="mailto:sdds.support@naturalengland.org.uk">feedback</a> will help us to improve it.'
-    }) }}
+{% if feedbackBannerHtml is not defined %}
+  {% set feedbackBannerHtml = '<a class="govuk-link" target="_BLANK" href="/feedback">Your feedback (opens in new tab)</a> can help us to improve this new service.' %}
+{% endif %}
 
+{% block beforeContent %}
+    {{ govukPhaseBanner({
+        tag: {
+          text: "beta"
+        },
+        html: feedbackBannerHtml
+      }) }}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {% if backlink.enabled %}
@@ -104,14 +105,14 @@
               type: "button",
               name: "cookies",
               value: "accept",
-              href: "/set-cookie-prefs?analytics=yes"
+              href: "/set-cookie-preferences?analytics=yes"
             },
             {
               text: "Reject analytics cookies",
               type: "button",
               name: "cookies",
               value: "reject",
-              href: "/set-cookie-prefs?analytics=no"
+              href: "/set-cookie-preferences?analytics=no"
             },
             {
               text: "View cookies",

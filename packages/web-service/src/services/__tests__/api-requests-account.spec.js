@@ -6,6 +6,19 @@ describe('The API requests account service', () => {
   describe('ACCOUNT requests', () => {
     beforeEach(() => jest.resetModules())
 
+    it('findAccountsByIDMOrganisation calls the API correctly', async () => {
+      const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
+      jest.doMock('@defra/wls-connectors-lib', () => ({
+        API: {
+          get: mockGet
+        }
+      }))
+      const { APIRequests } = await import('../api-requests.js')
+      const result = await APIRequests.ACCOUNT.findAccountsByIDMOrganisation('b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(mockGet).toHaveBeenCalledWith('/organisation-accounts/b306c67f-f5cd-4e69-9986-8390188051b3')
+      expect(result).toEqual(([{ foo: 'bar' }]))
+    })
+
     it('findAllAccountApplicationRolesByUser calls the API correctly', async () => {
       const mockGet = jest.fn(() => ([{ foo: 'bar' }]))
       jest.doMock('@defra/wls-connectors-lib', () => ({

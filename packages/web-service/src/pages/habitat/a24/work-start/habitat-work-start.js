@@ -9,7 +9,7 @@ import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { checkApplication } from '../../../common/check-application.js'
 import { isCompleteOrConfirmed } from '../../../common/tag-functions.js'
 import { A24_SETT } from '../../../tasklist/a24-badger-licence.js'
-import { validateDateInWindow } from '../common/date-validator.js'
+import { validateDateInFuture, validateDateInWindow } from '../common/date-validator.js'
 import { extractDateFromPageDate, validatePageDate } from '../../../../common/date-utils.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import { LicenceTypeConstants } from '../../../../common/licence-type-constants.js'
@@ -31,6 +31,7 @@ export const getData = async request => {
 
 export const validator = async (payload, context) => {
   const startDate = validatePageDate(payload, habitatURIs.WORK_START.page)
+  validateDateInFuture(startDate, habitatURIs.WORK_START.page)
   validateDateInWindow(startDate, habitatURIs.WORK_START.page)
 
   // Validate the end date with the start date, if the end date is set

@@ -2,40 +2,29 @@ import { APIRequests } from '../../../../services/api-requests.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
 import pageRoute from '../../../../routes/page-route.js'
 import Joi from 'joi'
-import { contactRoleIsSingular } from '../contact-roles.js'
 const nameReg = /^[\s\p{L}'.,-]{1,160}$/u
 
 /**
- * Find the duplicate names to validate against
- * For a singular role, ecologists etc, the duplicate check is across the user
- * otherwise, for authorised people, it is across the application.
- * For a singular role, the current name is excepted
- * @param contactRoles
+ * Find the duplicate conflicting names to validate against across the application.
+ * @param primaryRole - the role of the name being tested
+ * @param contactRoles - the set of roles to check for duplicate names against
  * @param userId
  * @param applicationId
- * @returns {Promise<*[]|*>}
+ * @returns {Promise<*>}
  */
-const duplicateNames = async (primaryRole, contactRoles, userId, applicationId) => {
-  let contacts = []
+const duplicateNames = async (contactRoles, applicationId) => {
+  let applicationContacts = []
   for await (const cr of contactRoles) {
-    if (contactRoleIsSingular(cr)) {
-      contacts = contacts.concat(await APIRequests.CONTACT.role(cr).findByUser(userId))
-    } else {
-      contacts = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
-    }
+    const contacts = await APIRequests.CONTACT.role(cr).getByApplicationId(applicationId)
+    applicationContacts = applicationContacts.concat(contacts)
   }
-  if (contactRoleIsSingular(primaryRole)) {
-    const currentContact = await APIRequests.CONTACT.role(primaryRole).getByApplicationId(applicationId)
-    return contacts.map(c => c.fullName).filter(c => c && c.toUpperCase() !== currentContact?.fullName?.toUpperCase())
-  } else {
-    return contacts.map(c => c.fullName).filter(c => c)
-  }
+  return applicationContacts.filter(c => c).map(c => c.fullName)
 }
 
-export const getValidator = (primaryRole, contactRoles) => async (payload, context) => {
+export const getValidator = contactRoles => async (payload, context) => {
   const cd = cacheDirect(context)
-  const { userId, applicationId } = await cd.getData()
-  const names = await duplicateNames(primaryRole, contactRoles, userId, applicationId)
+  const { applicationId } = await cd.getData()
+  const names = await duplicateNames(contactRoles, applicationId)
   Joi.assert({ name: payload.name }, Joi.object({
     // Remove double spacing
     name: Joi.string().trim().replace(/((\s+){2,})/gm, '$2')
@@ -43,7 +32,7 @@ export const getValidator = (primaryRole, contactRoles) => async (payload, conte
   }), 'name', { abortEarly: false, allowUnknown: true })
 }
 
-export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, primaryRole, contactRoles) =>
+export const contactNamePage = ({ page, uri, checkData, getData, completion, setData }, contactRoles) =>
   pageRoute({
     page,
     uri,
@@ -51,5 +40,5 @@ export const contactNamePage = ({ page, uri, checkData, getData, completion, set
     getData,
     completion,
     setData,
-    validator: getValidator(primaryRole, contactRoles)
+    validator: getValidator(contactRoles)
   })

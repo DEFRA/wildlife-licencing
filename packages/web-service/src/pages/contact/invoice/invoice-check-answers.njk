@@ -7,7 +7,7 @@
 {% block pageContent %}
     {% if data.responsibility.responsible === 'applicant' or data.responsibility.responsible === 'ecologist' %}
       {% set questionMap = {
-          whoIsResponsible: { question: 'Name of individual responsible for paying the invoice', value: data.responsibility.name, href: _uri.invoiceResponsible },
+          whoIsResponsible: { question: 'Individual responsible for paying the invoice', value: data.responsibility.name, href: _uri.invoiceResponsible },
           contactOrganisations: { question: 'Organisation' },
           email: { question: 'Email address' },
           address: { question: 'Contact address' },
@@ -15,9 +15,7 @@
       } %}
     {% else %}
       {% set questionMap = {
-          contactIsUser: { question: 'Is the signed-in user responsible for paying the invoice?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceUser },
-          someoneElse: { question: 'Who is responsible for paying the invoice?', href: _uri.invoiceResponsible },
-          whoIsResponsible: { question: 'Individual responsible for paying the invoice', href: _uri.invoiceName },
+          whoIsResponsible: { question: 'Individual responsible for paying the invoice', href: _uri.invoiceResponsible },
           contactIsOrganisation: { question: 'Is the payer part of an organisation?', answer: { 'yes': 'Yes', 'no': 'No', '-': 'Not answered' }, href: _uri.invoiceIsOrganisation  },
           contactOrganisations: { question: 'Organisation', href: _uri.invoiceOrganisations },
           email: { question: 'Email address', href: _uri.invoiceEmail },

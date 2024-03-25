@@ -6,7 +6,7 @@ import { ContactRoles } from '../contact/common/contact-roles.js'
 import { addressLine } from '../service/address.js'
 import { cacheDirect } from '../../session-cache/cache-decorator.js'
 import Joi from 'joi'
-import { getApplicationData, licenceStatuses, checkData, findLastSentEvent } from './application-common-functions.js'
+import { getApplicationData, licenceStatuses, checkData, findLatestLicenseAnnotation } from './application-common-functions.js'
 import { allCompletion } from '../returns/common-return-functions.js'
 
 export const getData = async request => {
@@ -18,12 +18,12 @@ export const getData = async request => {
   const applicant = await APIRequests.CONTACT.role(ContactRoles.APPLICANT).getByApplicationId(application.id)
 
   licences.forEach(licence => {
-    Object.assign(licence, { lastSent: timestampFormatter(findLastSentEvent(licence)?.modifiedOn) })
+    Object.assign(licence, { lastSent: timestampFormatter(findLatestLicenseAnnotation(licence)?.modifiedOn) })
     Object.assign(licence, { startDate: timestampFormatter(licence.startDate) })
     Object.assign(licence, { endDate: timestampFormatter(licence.endDate) })
   })
 
-  const lastSentEventFlag = licences.length > 0 && !!findLastSentEvent(licences[0])
+  const lastSentEventFlag = licences.length > 0 && !!findLatestLicenseAnnotation(licences[0])
 
   const lastLicenceReturn = await APIRequests.RETURNS.getLastLicenceReturn(applicationLicence.id)
 

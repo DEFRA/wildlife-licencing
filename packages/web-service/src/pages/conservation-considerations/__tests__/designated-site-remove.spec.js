@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../initialise-snapshot-tests.js'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the special area remove functions', () => {
@@ -35,6 +38,18 @@ describe('the special area remove functions', () => {
       const { getData } = await import('../designated-site-remove.js')
       const result = await getData(request)
       expect(result).toEqual({ name: 'Ribble Estuary SSSI' })
+    })
+  })
+
+  describe('designated-site-remove page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../designated-site-remove.njk'))
+
+      const renderedHtml = template.render({
+        data: { name: 'Ribble Estuary SSSI' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

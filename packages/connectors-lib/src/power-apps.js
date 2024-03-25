@@ -18,37 +18,38 @@ const { default: cloneDeep } = _cloneDeep
  * Access to dynamics using the OAuth2 client credentials flow.
  * See https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow
  */
-let accessToken
+const accessToken = []
 
-export const getToken = async () => {
+export const getToken = async platform => {
   try {
-    const msg = cloneDeep(Config.powerApps)
+    const msg = cloneDeep(platform)
     hide(msg, 'oauth.client.id')
     hide(msg, 'oauth.client.secret')
     debug(`Power Platform connections: ${JSON.stringify(msg, null, 4)}`)
-    const { client, auth } = Config.powerApps.oauth
+    const { client, auth } = platform.oauth
     const { id, secret } = client
     const oauthClient = new ClientCredentials({ client: { id, secret }, auth })
-    if (!accessToken || accessToken.expired(Config.powerApps.tokenExpireWindow || 60)) {
-      accessToken = await oauthClient.getToken({ scope: Config.powerApps.scope })
+    const tokenKey = platform.client.url
+    if (!accessToken[tokenKey] || accessToken[tokenKey].expired(platform.tokenExpireWindow || 60)) {
+      accessToken[tokenKey] = await oauthClient.getToken({ scope: platform.scope })
     }
-    return `${accessToken.token.token_type} ${accessToken.token.access_token}`
+    return `${accessToken[tokenKey].token.token_type} ${accessToken[platform.client.url].token.access_token}`
   } catch (error) {
     console.log('Access Token Error', error.message)
     throw new Error(`OAUTH access token error ${error.message}`)
   }
 }
 
-const fetchHeaderFunction = async () => ({
-  Authorization: await getToken(),
+const fetchHeaderFunction = platform => async () => ({
+  Authorization: await getToken(platform),
   'Content-Type': 'application/json',
   'OData-MaxVersion': '4.0',
   'OData-Version': '4.0',
-  Prefer: `odata.maxpagesize=${Config.powerApps.client.fetchSize || DEFAULT_FETCH_SIZE}`
+  Prefer: `odata.maxpagesize=${platform.client.fetchSize || DEFAULT_FETCH_SIZE}`
 })
 
-const batchHeaderFunction = async batchId => ({
-  Authorization: await getToken(),
+const batchHeaderFunction = platform => async batchId => ({
+  Authorization: await getToken(platform),
   'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
   'OData-MaxVersion': '4.0',
   'OData-Version': '4.0',
@@ -113,7 +114,7 @@ const fetchResponseFunction = async responsePromise => {
   }
 }
 
-export const POWERAPPS = {
+const getPlatform = platform => ({
   /**
    * Batch operations to update the Power Platform
    * @param requestHandle
@@ -121,29 +122,32 @@ export const POWERAPPS = {
    * @returns {Promise<*|undefined>}
    */
   batchRequest: async (requestHandle, batchRequestBody) =>
-    httpFetch(new URL(`${Config.powerApps.client.url}/$batch`).href,
+    httpFetch(new URL(`${platform.client.url}/$batch`).href,
       'POST',
       batchRequestBody,
-      () => batchHeaderFunction(requestHandle.batchId),
+      () => batchHeaderFunction(platform)(requestHandle.batchId),
       batchResponseFunction,
-      Config.powerApps.client.timeout),
+      platform.client.timeout),
 
   /**
-   * Get operations to retrieve data from Power Platform
-   * @param path
-   * @returns {Promise<void>}
-   */
+     * Get operations to retrieve data from Power Platform
+     * @param path
+     * @returns {Promise<void>}
+     */
   fetch: async path =>
-    httpFetch(new URL(`${Config.powerApps.client.url}/${path}`).href,
+    httpFetch(new URL(`${platform.client.url}/${path}`).href,
       'GET',
       null,
-      fetchHeaderFunction,
+      fetchHeaderFunction(platform),
       fetchResponseFunction,
-      Config.powerApps.client.timeout),
+      platform.client.timeout),
 
-  getClientUrl: () => new URL(Config.powerApps.client.url).href,
+  getClientUrl: () => new URL(platform.client.url).href,
   /*
-   * Export the HTTPResponseError to catch in the caller
-   */
+     * Export the HTTPResponseError to catch in the caller
+     */
   HTTPResponseError
-}
+})
+
+export const POWERAPPS = getPlatform(Config.powerApps)
+export const DEFRA_CUSTOMER = getPlatform(Config.defraCustomer)

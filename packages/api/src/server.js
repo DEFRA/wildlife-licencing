@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi'
 import Inert from '@hapi/inert'
 import { SERVER_PORT } from './constants.js'
-import db from 'debug'
+import * as winston from 'winston'
 
 import {
   getUserByUserId,
@@ -9,13 +9,25 @@ import {
   deleteUser,
   postUser,
   putUser,
-  authenticateUser
+  postUserUpdateSubmit
 } from './handlers/user/user.js'
+
+import {
+  getOrganisationById,
+  putOrganisation,
+  postOrganisationUpdateSubmit
+} from './handlers/organisation/organisation.js'
+
+import {
+  getUserOrganisationById,
+  putUserOrganisation
+} from './handlers/user-organisation/user-organisation.js'
 
 import {
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper
@@ -25,6 +37,7 @@ import {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper
@@ -167,6 +180,10 @@ import {
   getDesignatedSites
 } from './handlers/reference-data/reference-data.js'
 
+import {
+  postFeedback
+} from './handlers/feedback/feedback.js'
+
 import { findApplicationTypes } from './handlers/reference-data/find-application-types.js'
 
 import { getOptionSets } from './handlers/reference-data/option-sets.js'
@@ -174,6 +191,15 @@ import validationFail from './handlers/validation-fail.js'
 import notFound from './handlers/not-found.js'
 import postResponseHandler from './handlers/post-response-handler.js'
 import postResetHandler from './handlers/reset.js'
+
+// Using Winston we can send our logs anywhere we like, but for now we'll just log to the console
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
+  transports: [
+    new winston.transports.Console()
+  ]
+})
 
 /**
  * Create the hapi server. Exported for unit testing purposes
@@ -189,12 +215,16 @@ const handlers = {
   postUser,
   putUser,
   deleteUser,
-  authenticateUser,
+  getOrganisationById,
+  putOrganisation,
+  getUserOrganisationById,
+  putUserOrganisation,
 
   // Contact handlers
   getContacts,
   postContact,
   getContactByContactId,
+  getContactsByUserId,
   putContact,
   deleteContact,
   userContactsHelper,
@@ -203,6 +233,7 @@ const handlers = {
   getAccounts,
   postAccount,
   getAccountByAccountId,
+  getAccountsByOrganisationId,
   putAccount,
   deleteAccount,
   userAccountsHelper,
@@ -281,6 +312,10 @@ const handlers = {
   putReturnFileUpload,
   deleteReturnFileUploadByUploadId,
 
+  // Post customer update
+  postUserUpdateSubmit,
+  postOrganisationUpdateSubmit,
+
   // Application site handlers
   getApplicationSites,
   getApplicationSiteByApplicationSiteId,
@@ -324,7 +359,30 @@ const handlers = {
   validationFail,
   notFound,
   postResetHandler,
-  postResponseHandler
+  postResponseHandler,
+
+  // Feedback
+  postFeedback
+}
+
+const handleErrors = errors => {
+  for (const error of errors) {
+    logger.error(error)
+  }
+}
+
+const logResponse = request => {
+  let logString = `${request.method.toUpperCase()} ${request.response.statusCode} ${request.path} --> uri: ${request.raw.req.url}`
+
+  if (process.env.LOG_PAYLOADS === 'true' && request?.payload) {
+    logString += ` payload: ${JSON.stringify(request.payload)}`
+  }
+
+  logger.info(logString)
+
+  if (request?.response?.source?.errors) {
+    handleErrors(request.response.source.errors)
+  }
 }
 
 /**
@@ -334,8 +392,6 @@ const handlers = {
  */
 const init = async server => {
   const { OpenAPIBackend } = await import('openapi-backend')
-  const debug = db('api:request')
-
   /*
    * Create the OpenAPI backend
    */
@@ -351,13 +407,7 @@ const init = async server => {
    */
   await api.init()
 
-  /*
-   * For debugging only
-   */
-  server.events.on('response', request => {
-    // you can use request.log or server.log it's depends
-    debug(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode} uri: ${request.raw.req.url}`)
-  })
+  server.events.on('response', logResponse)
 
   /*
    * Direct the generic hapi route handler to the openapi backend
@@ -418,4 +468,4 @@ const init = async server => {
   }
 }
 
-export { init, createServer }
+export { init, createServer, logResponse, handleErrors }

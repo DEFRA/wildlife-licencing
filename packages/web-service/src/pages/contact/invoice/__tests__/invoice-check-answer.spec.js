@@ -53,9 +53,6 @@ describe('invoice check answers page', () => {
     it('creates the correct output for the payer is applicant', async () => {
       const tagSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: jest.fn().mockReturnValueOnce({
@@ -139,9 +136,6 @@ describe('invoice check answers page', () => {
     it('creates the correct output for the payer is ecologist', async () => {
       const tagSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: jest.fn().mockReturnValueOnce({
@@ -233,9 +227,6 @@ describe('invoice check answers page', () => {
         }
       })
       jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
         APIRequests: {
           CONTACT: {
             role: jest.fn().mockReturnValueOnce({
@@ -281,20 +272,12 @@ describe('invoice check answers page', () => {
       expect(result).toEqual({
         checkYourAnswers: [
           {
-            key: 'someoneElse',
-            value: 'Somebody else'
-          },
-          {
             key: 'whoIsResponsible',
             value: 'Keith'
           },
           {
             key: 'email',
             value: undefined
-          },
-          {
-            key: 'contactIsUser',
-            value: 'no'
           },
           {
             key: 'contactIsOrganisation',
@@ -328,72 +311,6 @@ describe('invoice check answers page', () => {
           responsible: 'other'
         }
       })
-    })
-  })
-
-  describe('the completion function', () => {
-    it('sets the tag in completion', async () => {
-      const tagSet = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return {
-                set: tagSet
-              }
-            }
-          }
-        }
-      }))
-      const request = {
-        cache: () => {
-          return {
-            getData: () => {
-              return {
-                applicationId: 'abe123'
-              }
-            }
-          }
-        }
-      }
-      const { completion } = await import('../invoice-check-answers.js')
-      await completion(request)
-      expect(tagSet).toHaveBeenCalledTimes(1)
-    })
-
-    it('returns TASKLIST.uri', async () => {
-      const tagSet = jest.fn()
-      jest.doMock('../../../../services/api-requests.js', () => ({
-        tagStatus: {
-          NOT_STARTED: 'not-started'
-        },
-        APIRequests: {
-          APPLICATION: {
-            tags: () => {
-              return {
-                set: tagSet
-              }
-            }
-          }
-        }
-      }))
-      const request = {
-        cache: () => {
-          return {
-            getData: () => {
-              return {
-                applicationId: 'abe123'
-              }
-            }
-          }
-        }
-      }
-      const { completion } = await import('../invoice-check-answers.js')
-      expect(await completion(request)).toBe('/tasklist')
-      expect(tagSet).toHaveBeenCalledTimes(1)
     })
   })
 

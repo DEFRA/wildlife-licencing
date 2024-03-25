@@ -1,0 +1,30 @@
+{
+  "name": "@defra/wls-defra-customer-lib",
+  "description": "Powerapps keys",
+  "main": "src/defra-customer-lib.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DEFRA/wildlife-licencing.git"
+  },
+  "dependencies": {
+    "debug": "^4.3.3"
+  },
+  "keywords": [
+    "Dynamics",
+    "Wildlife",
+    "licencing"
+  ],
+  "author": "Graham Willis",
+  "license": "SEE LICENSE IN LICENCE"
+}

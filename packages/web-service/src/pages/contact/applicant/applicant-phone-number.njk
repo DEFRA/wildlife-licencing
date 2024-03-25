@@ -1,0 +1,9 @@
+{% extends "phone-number.njk" %}
+
+{% set hintText = "We'll only use this to contact you about the application." %}
+
+{% if data.accountName %}
+    {% set title = 'What is ' + data.contactName + '\'s phone number at ' + data.accountName + '?' %}
+{% else %}
+    {% set title = 'What is ' + data.contactName + '\'s phone number?' %}
+{% endif %}

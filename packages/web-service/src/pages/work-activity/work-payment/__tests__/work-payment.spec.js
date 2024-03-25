@@ -86,7 +86,7 @@ describe('The work-payment page', () => {
         }
       }))
       const { completion } = await import('../work-payment.js')
-      expect(await completion(request)).toEqual('/work-payment-exempt-reason')
+      expect(await completion(request)).toEqual('/payment-exemption-reason')
     })
 
     it('the completion function returns the work-category url on the primary journey, if the user doesnt need to pay for their licence', async () => {
@@ -112,7 +112,7 @@ describe('The work-payment page', () => {
         }
       }))
       const { completion } = await import('../work-payment.js')
-      expect(await completion(request)).toEqual('/work-category')
+      expect(await completion(request)).toEqual('/development-type')
     })
 
     it('setData hits the api with the user input, on the primary journey', async () => {

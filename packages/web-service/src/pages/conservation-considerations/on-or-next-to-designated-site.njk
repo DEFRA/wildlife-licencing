@@ -1,6 +1,6 @@
 {% extends "yes-no.njk" %}
 {% set title = 'Designated sites' %}
-{% set noneSelected = 'You have not selected an option' %}
+{% set noneSelected = 'Select an option' %}
 {% set noneSelectedButton = 'Select an option' %}
 
 {% block pageContent %}
@@ -14,6 +14,7 @@
 <p class="govuk-body-m">
     <a href="{{_uri.magic.ds}}" class="govuk-link" rel="noreferrer noopener" target="_blank">Check the location of designated sites</a>
 </p>
+
 <h2 class="govuk-heading-m">Will the activity take place on or next to any designated sites?</h2>
 {{ super() }}
 {% endblock %}

@@ -4,12 +4,12 @@
 
 {% set errorMap = {
         'habitat-work-start': {
-          'noDateSent': { ref: '#habitat-work-start', text: 'Enter a start date' },
-          'invalidDate': { ref: '#habitat-work-start', text: 'Start date must be a real date' },
-          'dateHasPassed': { ref: '#habitat-work-start', text: 'Start date must be in the future' },
-          'outsideLicence': { ref: '#habitat-work-start', text: 'The start date must be within the licence period' },
-          'endDateBeforeStart': { ref: '#habitat-work-end', text: 'The start date must be before the end date' },
-          'workTooLong': { ref: '#habitat-work-end', text: 'The end date must be within 7 months of the start date' }
+          'noDateSent': { ref: '#habitat-work-start-day', text: 'Enter a start date' },
+          'invalidDate': { ref: '#habitat-work-start-day', text: 'Start date must be a real date' },
+          'dateHasPassed': { ref: '#habitat-work-start-day', text: 'Start date must be in the future' },
+          'outsideLicence': { ref: '#habitat-work-start-day', text: 'The start date must be within the licence period' },
+          'endDateBeforeStart': { ref: '#habitat-work-start-day', text: 'The start date must be before the end date' },
+          'workTooLong': { ref: '#habitat-work-start-day', text: 'The end date must be within 7 months of the start date' }
         }
     }
 %}
@@ -25,22 +25,22 @@
     items: [
       {
         classes: "govuk-input--width-2",
-        value: data.day,
+        value: payload['habitat-work-start-day'] if payload['habitat-work-start-day'] else data.day,
         name: "day"
       },
       {
         classes: "govuk-input--width-2",
-        value: data.month,
+        value: payload['habitat-work-start-month'] if payload['habitat-work-start-month'] else data.month,
         name: "month"
       },
       {
         classes: "govuk-input--width-4",
-        value: data.year,
+        value: payload['habitat-work-start-year'] if payload['habitat-work-start-year'] else data.year,
         name: "year"
       }
     ],
     hint: {
-      text: "The work must start during the licence period (from 1 May to 30 November)."
+      text: "The work must start during the licence period (from 1 May to 30 November)"
     }
   }) }}
 

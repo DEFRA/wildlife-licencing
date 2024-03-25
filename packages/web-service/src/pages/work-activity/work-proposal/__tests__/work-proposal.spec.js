@@ -222,7 +222,7 @@ describe('The work-proposal page', () => {
         }
       }))
       const { completion } = await import('../work-proposal.js')
-      expect(await completion(request)).toEqual('/work-payment')
+      expect(await completion(request)).toEqual('/payment-exemption-check')
     })
 
     it('setData hits the api with the user input', async () => {

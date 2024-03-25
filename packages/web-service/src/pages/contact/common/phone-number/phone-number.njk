@@ -1,0 +1,24 @@
+{% extends "standard-form.njk" %}
+{% from "input/macro.njk" import govukInput %}
+
+{% set errorMap = {
+        'phone-number': {
+            'string.empty': { ref: '#phone-number', text: 'Enter a valid phone number' },
+            'string.pattern.base': { ref: '#phone-number', text: 'Enter a valid phone number' }
+        }
+    }
+%}
+
+{% block pageContent %}
+    <h2 class="govuk-hint">For international numbers include the country code.</h2>
+    {{ govukInput({
+      id: "phone-number",
+      name: "phone-number",
+      type: "text",
+      spellcheck: false,
+      classes: "govuk-input--width-50",
+      value: payload['phone-number'] if payload['phone-number'] else data.phoneNumber,
+      attributes: { maxlength: 50 },
+      errorMessage: { text: errorMap['phone-number'][error['phone-number']].text } if error['phone-number']
+    }) }}
+{% endblock %}

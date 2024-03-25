@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
 
 describe('The habitat work start page', () => {
   beforeEach(() => jest.resetModules())
@@ -25,7 +27,7 @@ describe('The habitat work start page', () => {
         }
       }
       const { completion } = await import('../habitat-work-start.js')
-      expect(await completion(request)).toBe('/habitat-work-end')
+      expect(await completion(request)).toBe('/end-date-licensed-activity-on-this-sett')
     })
 
     it('the habitat-work-start page forwards onto check-habitat-answers on return journey', async () => {
@@ -227,6 +229,18 @@ describe('The habitat work start page', () => {
 
       const { getData } = await import('../habitat-work-start.js')
       expect(await getData(request)).toBeNull()
+    })
+  })
+
+  describe('The habitat work start template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../habitat-work-start.njk'))
+
+      const renderedHtml = template.render({
+        data: {}
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

@@ -6,6 +6,15 @@
 {% set title = 'Check your answers' %}
 {% set noneSelected = 'You have not selected an option' %}
 
+{% set fieldset = {
+    legend: {
+        text: "Do you want to add another site?",
+        isPageHeading: false,
+        classes: "govuk-fieldset__legend--m"
+    }
+} %}
+
+
 {% block pageContent %}
     {% if data.checkData.length === 0 %}
         {% set questionMap = { onOrNear: { question: 'Will the development take place on or next to a designated site?', href: _uri.onOrNextToDesignatedSite } } %}
@@ -26,7 +35,6 @@
             } %}
             {{ answerSummary(questionMap, designatedSite.tabData) }}
         {% endfor %}
-        <h1 class="govuk-heading-m">Do you want to add another site?</h1>
         {{ super() }}
     {% endif %}
 {% endblock %}

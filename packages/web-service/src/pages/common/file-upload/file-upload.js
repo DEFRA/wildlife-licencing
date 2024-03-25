@@ -92,7 +92,7 @@ export const validator = async (payload, fileType) => {
   if (!isFileExtensionSupported) {
     fs.unlinkSync(payload['scan-file'].path)
     throw new Joi.ValidationError('ValidationError', [{
-      message: 'Error: The selected file must be a JPG, BMP, PNG, TIF, KML, Shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF',
+      message: 'Error: The selected file must be a JPG, BMP, PNG, TIF, KML, shape, DOC, DOCX, ODT, XLS, XLSX, GeoJSON, ODS or PDF',
       path: ['scan-file'],
       type: 'wrong-file-type',
       context: {

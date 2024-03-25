@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import * as pkg from 'object-hash'
 import { models } from '@defra/wls-database-model'
+import { addressProcess } from './common.js'
 const hash = pkg.default
 
 export const writeAccountObject = async (obj, ts) => {
@@ -10,6 +11,9 @@ export const writeAccountObject = async (obj, ts) => {
   if (Object.keys(data).length === 0) {
     return { insert: 0, update: 0, pending: 0, error: 0 }
   }
+
+  // Operate on the address if present
+  addressProcess(data.accounts?.address)
 
   try {
     const baseKey = keys.find(k => k.apiTable === 'accounts')

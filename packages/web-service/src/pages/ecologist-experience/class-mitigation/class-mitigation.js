@@ -6,10 +6,15 @@ import { boolFromYesNo, yesNoFromBool } from '../../common/common.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
-export const completion = async request =>
-  boolFromYesNo(request.payload['yes-no'])
-    ? ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
-    : ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+export const completion = async request => {
+  if (boolFromYesNo(request.payload['yes-no'])) {
+    return ecologistExperienceURIs.ENTER_CLASS_MITIGATION.uri
+  } else {
+    const { applicationId } = await request.cache().getData()
+    await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
+    return ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri
+  }
+}
 
 export const getData = async request => {
   const { applicationId } = await request.cache().getData()
@@ -32,9 +37,12 @@ export const setData = async request => {
     if (ecologistExperience.classMitigation === false) {
       await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.IN_PROGRESS })
     }
-  } else if (ecologistExperience.classMitigation && !hasAClassMitigationLicence) {
-    // If the user goes from 'Yes' to 'No' - we need to delete the classMitigationDetails
-    delete ecologistExperience.classMitigationDetails
+  } else if (!hasAClassMitigationLicence) {
+    if (ecologistExperience.classMitigation) {
+      // If the user goes from 'Yes' to 'No' - we need to delete the classMitigationDetails
+      delete ecologistExperience.classMitigationDetails
+    }
+
     await APIRequests.APPLICATION.tags(applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE_NOT_CONFIRMED })
   }
 

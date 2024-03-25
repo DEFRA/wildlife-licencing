@@ -79,7 +79,7 @@ describe('The work-licence-cost page', () => {
         }
       }))
       const { completion } = await import('../work-licence-cost.js')
-      expect(await completion(request)).toEqual('/work-proposal')
+      expect(await completion(request)).toEqual('/development-description')
     })
   })
 })

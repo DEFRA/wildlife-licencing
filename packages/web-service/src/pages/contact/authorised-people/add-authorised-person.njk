@@ -15,7 +15,8 @@
     {% for contact in data.contacts %}
         <h2 class="govuk-heading-m">Authorised person</h2>
         <p class="govuk-body" />
-            <a class="govuk-link govuk-link--no-visited-state" href="{{ contact.uri.remove }}">Remove</a>
+            <a class="govuk-link govuk-link--no-visited-state" href="{{ contact.uri.remove }}" aria-label="Remove {{ contact.details[0].value  }}">Remove</a>
+
         </p>
         {% set questionMap = {
             name: { question: 'Name', href: contact.uri.name },

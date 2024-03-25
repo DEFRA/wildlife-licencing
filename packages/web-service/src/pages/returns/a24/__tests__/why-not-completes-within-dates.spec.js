@@ -143,7 +143,7 @@ describe('the why-not-completes-within-dates functions', () => {
       }))
       const { completion } = await import('../why-not-completes-within-dates.js')
       const result = await completion(request)
-      expect(result).toEqual('/a24/damage-by-hand-or-mechanical-means')
+      expect(result).toEqual('/a24/was-sett-damaged-hand-or-mechanical-means')
       expect(mockSetData).toHaveBeenCalled()
     })
   })

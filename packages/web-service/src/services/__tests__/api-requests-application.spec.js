@@ -25,7 +25,8 @@ describe('The API requests application service', () => {
         id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
         userId: 'b306c67f-f5cd-4e69-9986-8390188051b3',
         applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-        role: 'role1'
+        userRole: 'role1',
+        applicationRole: 'ECOLOGIST'
       }))
       const mockGet = jest.fn()
         .mockReturnValueOnce([])
@@ -45,12 +46,12 @@ describe('The API requests application service', () => {
       }))
       const { APIRequests } = await import('../api-requests.js')
       const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
-        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
+        '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1', 'ECOLOGIST')
 
-      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&userRole=role1')
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
       expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationTypeId=9d62e5b8-9c77-ec11-8d21-000d3a87431b')
-      expect(mockPost).toHaveBeenCalledWith('/application-user', { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', role: 'role1', userId: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
+      expect(mockPost).toHaveBeenCalledWith('/application-user', { applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', userRole: 'role1', applicationRole: 'ECOLOGIST', userId: 'b306c67f-f5cd-4e69-9986-8390188051b3' })
       expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
       expect(result).toEqual({
         application: {
@@ -61,7 +62,8 @@ describe('The API requests application service', () => {
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          role: 'role1',
+          userRole: 'role1',
+          applicationRole: 'ECOLOGIST',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }
       })
@@ -72,7 +74,8 @@ describe('The API requests application service', () => {
         .mockReturnValueOnce([{
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          role: 'role1',
+          userRole: 'role1',
+          applicationRole: 'ECOLOGIST',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }]).mockReturnValueOnce({ id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
         .mockReturnValue({ ref: 'REF-NO' })
@@ -92,7 +95,7 @@ describe('The API requests application service', () => {
       const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
 
-      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&userRole=role1')
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
       expect(mockGet).toHaveBeenCalledWith('/applications/get-reference', 'applicationTypeId=9d62e5b8-9c77-ec11-8d21-000d3a87431b')
       expect(mockPut).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', { applicationReferenceNumber: 'REF-NO', applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b' })
@@ -105,7 +108,8 @@ describe('The API requests application service', () => {
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          role: 'role1',
+          userRole: 'role1',
+          applicationRole: 'ECOLOGIST',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }
       })
@@ -116,7 +120,8 @@ describe('The API requests application service', () => {
         .mockReturnValueOnce([{
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          role: 'role1',
+          userRole: 'role1',
+          applicationRole: 'ECOLOGIST',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }]).mockReturnValue({
           id: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
@@ -134,7 +139,7 @@ describe('The API requests application service', () => {
       const result = await APIRequests.APPLICATION.initialize('b306c67f-f5cd-4e69-9986-8390188051b3',
         '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8', 'role1')
 
-      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&role=role1')
+      expect(mockGet).toHaveBeenCalledWith('/application-users', 'userId=b306c67f-f5cd-4e69-9986-8390188051b3&applicationId=56ea844c-a2ba-4af8-9b2d-425a9e1c21c8&userRole=role1')
       expect(mockGet).toHaveBeenCalledWith('/application/56ea844c-a2ba-4af8-9b2d-425a9e1c21c8')
       expect(result).toEqual({
         application: {
@@ -145,7 +150,8 @@ describe('The API requests application service', () => {
         applicationUser: {
           id: '3a0fd3af-cd68-43ac-a0b4-123b79aaa83b',
           applicationId: '56ea844c-a2ba-4af8-9b2d-425a9e1c21c8',
-          role: 'role1',
+          userRole: 'role1',
+          applicationRole: 'ECOLOGIST',
           userId: 'b306c67f-f5cd-4e69-9986-8390188051b3'
         }
       })

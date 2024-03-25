@@ -10,6 +10,38 @@ const debugTime = db('connectors-lib:fetch-performance')
 
 const DEFAULT_TIMEOUT = '20000'
 const APPLICATION_JSON = 'application/json'
+
+const HTTP_STATUS = {
+  NO_CONTENT: 204,
+  NOT_FOUND: 404
+}
+
+/**
+ * When logging http requests we want to specifically redact objects that are in this format to avoid cluttering the
+ * logs with long (and potentially sensitive) Buffer arrays:
+ *
+ * { type: "Buffer", data: [42, 75, 66, 66, 65, 72, 20, 42, 75, 66, 66, 65, 72, 20, 42, 75, 66, 66, 65, 72] }
+ *
+ * So when we stringify data we use this replacer function to identify objects like this and truncate the `data` array
+ * to just the first 10 entries with '...' appended:
+ *
+ * { type: "Buffer", data: [42, 75, 66, 66, 65, 72, 20, 42, 75, 66, '...'] }
+ */
+const redactBufferArrays = (_key, value) => {
+  // If this isn't an object make no changes
+  if (typeof value !== 'object' || value === null) { return value }
+
+  // If the object's `type` and `data` don't exist or aren't what we expect, make no changes
+  if (!('type' in value) || !('data' in value)) { return value }
+  if (value.type !== 'Buffer' || !Array.isArray(value.data)) { return value }
+
+  // Otherwise, reaplce the data array with a truncated version
+  return {
+    ...value,
+    data: [...value.data.slice(0, 10), '...']
+  }
+}
+
 export class HTTPResponseError extends Error {
   constructor (response) {
     super(`HTTP Error Response: ${response.status} ${response.statusText}`)
@@ -27,23 +59,23 @@ export class HTTPResponseError extends Error {
 export const checkResponseOkElseThrow = async responsePromise => {
   const response = await responsePromise
   debug(`HTTP response code: ${JSON.stringify(response.status)}`)
-  if (response.ok) {
-    if (response.status === 204) {
+  if (!response.ok) {
+    if (response.status === HTTP_STATUS.NOT_FOUND) {
       return null
-    } else {
-      if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
-        return response.json()
-      } else {
-        return response.body
-      }
     }
-  } else {
-    if (response.status === 404) {
-      return null
-    } else {
-      throw new HTTPResponseError(response)
-    }
+
+    throw new HTTPResponseError(response)
   }
+
+  if (response.status === HTTP_STATUS.NO_CONTENT) {
+    return null
+  }
+
+  if (response.headers.get('content-type').includes(APPLICATION_JSON)) {
+    return response.json()
+  }
+
+  return response.body
 }
 
 /**
@@ -73,7 +105,7 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
     ...additionalOptions
   }
 
-  debug(`Making HTTP request to ${url} with options: \n${JSON.stringify(options, null, 4)}`)
+  debug(`Making HTTP request to ${url} with options: ${JSON.stringify(options, redactBufferArrays)}`)
 
   // Create a timeout
   debug(`Setting timeout ${parseInt(timeOutMS)}...`)
@@ -101,20 +133,23 @@ export const httpFetch = async (url, method, payload, headerFunc, responseFunc =
       // Create a client timeout response
       console.error('Fetch ABORT error', err)
       throw new HTTPResponseError({ status: 408, statusText: 'Request Timeout' })
-    } else if (err.name === 'FetchError') {
+    }
+
+    if (err.name === 'FetchError') {
       console.error('Fetch REQUEST error', err)
       throw err
-    } else {
-      if (err.response) {
-        const msg = 'response error: ' + err.response.headers.get('content-type').includes(APPLICATION_JSON)
-          ? JSON.stringify(await err.response.json())
-          : await err.response.body()
-        console.error(`Unknown error thrown in fetch: ${msg}`)
-        throw new Error(msg)
-      } else {
-        throw err
-      }
     }
+
+    if (err.response) {
+      const errorString = err.response.headers.get('content-type').includes(APPLICATION_JSON)
+        ? JSON.stringify(await err.response.json())
+        : await err.response.body()
+      const msg = `response error: ${errorString}`
+      console.error(`Unknown error thrown in fetch: ${msg}`)
+      throw new Error(msg)
+    }
+
+    throw err
   } finally {
     debug('Request timeout clear ')
     clearTimeout(timeout)

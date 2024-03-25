@@ -13,7 +13,10 @@ import { errorHandler } from './handlers/error-handler.js'
 import { additionalPageData, addCookiePrefs } from './additional-page-data.js'
 import db from 'debug'
 import { plugins } from './plugins.js'
+import { defraIdmCallbackPreAuth } from './handlers/defra-idm-callback.js'
 const debug = db('web-service:server')
+
+const nodeModulesPath = '/../../node_modules/'
 
 const getSessionCookieName = () => process.env.SESSION_COOKIE_NAME || SESSION_COOKIE_NAME_DEFAULT
 
@@ -54,7 +57,7 @@ const sessionCookieOptions = {
   ttl: process.env.SESSION_TTL_MS || SESSION_TTL_MS_DEFAULT, // Will be kept alive on each request
   isSecure: process.env.NODE_ENV !== 'development',
   isHttpOnly: process.env.NODE_ENV !== 'development',
-  isSameSite: 'Strict',
+  isSameSite: 'Lax',
   encoding: 'iron',
   password: process.env.SESSION_COOKIE_PASSWORD,
   clearInvalid: true,
@@ -90,9 +93,9 @@ const init = async server => {
     isCached: process.env.NODE_ENV !== 'development',
 
     path: [
-      path.join(__dirname, 'node_modules', GOVUK_FRONTEND),
-      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk'),
-      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'govuk', 'components'),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk'),
+      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk', 'components'),
       path.join(__dirname, 'src/pages/layout'),
       path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths
@@ -104,7 +107,8 @@ const init = async server => {
   // Set up the session cookie
   debug(`Session cookie name: ${sessionCookieName}`)
   server.state(sessionCookieName, sessionCookieOptions)
-  server.ext('onPreAuth', sessionManager(sessionCookieName))
+  server.ext('onPreAuth', [sessionManager(sessionCookieName), defraIdmCallbackPreAuth])
+
   server.decorate('request', 'cache', cacheDecorator(sessionCookieName))
 
   // Set authentication up

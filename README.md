@@ -32,32 +32,41 @@ enable or disable auto fix on save. It is only available when VSCode's files.aut
 
 ```
 
-### To run the application in a local docker stack
+### To run the application locally using Docker
 
-First edit the docker secret environment files to add the secret keys
+#### First edit the docker secret environment files to add the secret keys
 
 - docker/env/aqp-secrets.env
 
-(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
+*The secrets for the test environment may be obtained from another member of the team*
 
-#### Extra step for M1 Mac users
-Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+#### Setup and / or rebuild the service containers
 
 ```
-NO_SCANNING_REQUIRED=true
+# Builds the base container for the services
+npm run docker:build-base
 ```
+*this is done to replicate the build steps followed by the CI pipeline*
 
-Now run the following shell commands;
+#### Start the Application using docker
+
+> Make sure to set up the Nginx proxy before running the commands below - [docs](docker/nginx/README.md)
 
 ```shell
-cd  wildlife-licencing
-npm i
-npm run docker:build
-npm run docker:start
-docker service ls
-npm run docker:stop
+# Start the dependencies locally
+npm run docker:start-cloud
+
+# Start the proxy locally  
+npm run docker:start-proxy
+
+# Start the services locally 
+npm run docker:start-services
 ```
 
+*To stop and containers you can use the `docker-stop<*>` commands*
+
+#### Check the services are running
 - http://localhost:3000/openapi-ui
 - http://localhost:4000/login
 
@@ -76,10 +85,17 @@ The docker services running should be as follows:
 - wls_localstack
 - wls_clamav
 - wls_adminer
+- 
+#### Extra step for M1 Mac users
+Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
+
+```
+NO_SCANNING_REQUIRED=true
+```
 
 ### To run locally
 
-To run the microservices locally you need to start the supporting cloud services in the docker swarm.
+To run the microservices locally you need to start the supporting cloud services using docker.
 
 Run the following shell commands;
 
@@ -190,19 +206,6 @@ cp env.example .env
 npm run dev
 ```
 
-#### How to restart your Docker swarm
-
-Sometimes, changes may go into `master` that will break your Docker swarm if you don't rebuild it. This isn't true for every change, but it's important to know how to bring your swarm down, rebuild it - and then start it again.
-
-The process is pretty simple:
-
-1. Pull from `master` and ensure you're upto date
-2. You need to drop all your database tables inside `wls`. You'll need your database container to be up, for this to work. Sometimes you may face with some issues with tables having a foreign key that's used elsewhere so it can't be deleted. You'll just have to delete the tables relying on the key first. You can always do this step via calling the delete script that the Jenkins pipelines use: https://gitlab-dev.aws-int.defra.cloud/new/new-jenkins-scripts/-/blob/master/drop_db_tables.sql
-3. Ensure you haven't lost your Docker .env variables, as pulling will often overwrite them
-4. Stop your swarm with `npm run docker:stop`
-5. Double check you don't need to run `npm i` from the top level of the repo, if the dependencies have changed. Often doesn't happen, just worth a check
-6. Build your swarm again with `npm run docker:build`
-7. Start your swarm again with `npm run docker:start`
 
 #### To start the queue processor locally
 
@@ -228,17 +231,18 @@ Alternatively set the environment variables in the running shell or your IDE
 
 | Package                                                                 | Description                                                                                                         | Runnable | Docker Image                   |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
-| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y        | wildlife-licencing/api         |
-| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y        | wildlife-licencing/aqp         |
-| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y        | wildlife-licencing/ep          |
-| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y        | wildlife-licencing/ep          |
-| [web-service](packages/web-service)                                     | Public facing web server                                                                                            | Y        | wildlife-licencing/web-service |
-| [file-queue-processor](packages/file-queue-processor)                   | Write files to sharepoint                                                                                           | Y        | wildlife-licencing/web-service |
-| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N        |
-| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N        |
-| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N        |
-| [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N        |
-| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N        |
+| [api](packages/api)                                                     | The application program interface to support the UI and manage data transfers from the middleware to Power Platform | Y | wildlife-licencing/api |
+| [application-queue-processor](packages/application-queue-processor)     | Consumes jobs from the application-queue and submits them to Power Platform as ODATA batch updates.                 | Y | wildlife-licencing/aqp | 
+| [application-extract-processor](packages/application-extract-processor) | Extracts data application data from Power Platform and updates the postgres database                                | Y | wildlife-licencing/ep | 
+| [refdata-extract-processor](packages/refdata-extract-processor)         | Extracts reference data from Power Platform and updates the postgres database                                       | Y | wildlife-licencing/ep | 
+| [web-service](packages/web-service)                                     | Public facing web server                                                                                            | Y | wildlife-licencing/web-service |
+| [file-queue-processor](packages/file-queue-processor)                   | Write files to sharepoint                                                                                           | Y | wildlife-licencing/web-service |
+| [connectors-lib](packages/connectors-lib)                               | Encapsulates connector logic. Currently supports AWS, Postgres, Redis, Power Platform & Bull-Queue                  | N | 
+| [database-model](packages/database-model)                               | Extracts the sequelize database model in order to share it between multiple processes                               | N | 
+| [powerapps-lib](packages/powerapps-lib)                                 | Supports operations against the Power Platform ODATA interface, including transformation                            | N |
+| [powerapps-keys](packages/powerapps-keys)                               | Record of fixed keys in the power platform                                                                          | N |
+| [queue-defs](packages/queue-defs)                                       | Extracts the bull-queue queue definitions                                                                           | N |
+| [defra-customer-lib](packages/defra-customer-lib)                       | Handles read queries to the defra customer service                                                                  | N |
 
 ## Application Architecture
 
@@ -279,4 +283,6 @@ openssl pkcs12 -in BOOMI-SDDS-SND.pfx -nocerts -out temp.key
 ```
 
 3. Extract the .key file from the encrypted private key
+```
    openssl rsa -in temp.key -out BOOMI-SDDS-SND.key
+```

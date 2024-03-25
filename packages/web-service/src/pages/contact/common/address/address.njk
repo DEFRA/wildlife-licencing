@@ -23,7 +23,8 @@
       label: {
         text: "Select an address"
       },
-      items: items
+      items: items,
+      errorMessage: { text: 'Select an address' } if error['uprn']
     }) }}
     <p class="govuk-body">
         <a href="{{ data.uri.addressForm }}" class="govuk-link">I can’t find the address in the list</a>

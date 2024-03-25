@@ -1,4 +1,5 @@
 import { Readable } from 'stream'
+import Config from '../config.js'
 
 jest.mock('../config.js', () => ({
   powerApps: {
@@ -29,7 +30,7 @@ describe('The powerapps connector', () => {
     }))
 
     const { getToken } = await import('../power-apps.js')
-    const token = await getToken()
+    const token = await getToken(Config.powerApps)
     expect(token).toBe('Bearer 56GKJGKJHGS')
   })
 
@@ -46,8 +47,8 @@ describe('The powerapps connector', () => {
       }))
     }))
     const { getToken } = await import('../power-apps.js')
-    await getToken()
-    await getToken()
+    await getToken(Config.powerApps)
+    await getToken(Config.powerApps)
     expect(mockExpired).toHaveBeenCalledTimes(1)
   })
 

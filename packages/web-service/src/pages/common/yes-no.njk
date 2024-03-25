@@ -2,34 +2,34 @@
 {% from "radios/macro.njk" import govukRadios %}
 
 {% set errorMap = {
-        'yes-no': {
-            'any.required': { ref: '#yes-no', text: noneSelected }
-        }
+    'yes-no': {
+        'any.required': { ref: '#yes-no', text: noneSelected }
     }
-%}
+} %}
 
 {% block pageContent %}
     {{ govukRadios({
-      idPrefix: "yes-no",
-      name: "yes-no",
-      isPageHeading: false,
-      hint: {
-        text: radioHint
-      } if radioHint,
-      errorMessage: {
-        text: noneSelectedButton if noneSelectedButton else noneSelected
-      } if error['yes-no'] === 'any.required',
-      items: [
-        {
-          value: "yes",
-          text: "Yes",
-          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
-        },
-        {
-          value: "no",
-          text: "No",
-          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
-        }
-      ]
+        fieldset: fieldset,
+        idPrefix: "yes-no",
+        name: "yes-no",
+        isPageHeading: false,
+        hint: {
+            text: radioHint
+        } if radioHint,
+        errorMessage: {
+            text: noneSelectedButton if noneSelectedButton else noneSelected
+        } if error['yes-no'] === 'any.required',
+        items: [
+            {
+                value: "yes",
+                text: "Yes",
+                checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
+            },
+            {
+                value: "no",
+                text: "No",
+                checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
+            }
+        ]
     }) }}
 {% endblock %}

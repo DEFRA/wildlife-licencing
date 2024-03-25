@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
+import { habitatURIs } from '../../../../../uris.js'
 describe('The check habitat answers page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -137,7 +140,7 @@ describe('The check habitat answers page', () => {
       }
       const { completion } = await import('../check-habitat-answers.js')
       const result = await completion(request)
-      expect(result).toBe('/habitat-name')
+      expect(result).toBe('/sett-name')
       expect(setData).toHaveBeenCalledWith({
         applicationId: '123abc'
       })
@@ -178,7 +181,7 @@ describe('The check habitat answers page', () => {
         }
       }
       const { completion } = await import('../check-habitat-answers.js')
-      expect(await completion(request)).toBe('/habitat-name')
+      expect(await completion(request)).toBe('/sett-name')
     })
     it('the check-habitat-answers return undefined if the user does not clicked yes or no', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -263,6 +266,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData:
           [
             {
@@ -289,6 +293,47 @@ describe('The check habitat answers page', () => {
               startDate: '25 July 2023'
             }
           ]
+      })
+    })
+
+    describe('The habitat activities template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../check-habitat-answers.njk'))
+
+        const renderedHtml = template.render({
+          data: {
+            confirmDelete: '/confirm-delete',
+            habitatURIs: { ...habitatURIs },
+            pageData:
+              [
+                {
+                  activityTypes: {
+                    DAMAGE_A_SETT: '3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24',
+                    DESTROY_A_SETT: '290461e0-58ed-ec11-bb3c-000d3a0cee24',
+                    DISTURB_A_SETT: 'a78bd9ec-58ed-ec11-bb3c-000d3a0cee24',
+                    OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF: '315af0cf-58ed-ec11-bb3c-000d3a0cee24',
+                    OBSTRUCT_SETT_WITH_GATES: 'f8a385c9-58ed-ec11-bb3c-000d3a0cee24'
+                  },
+                  habitatType: 100000000,
+                  methodIds: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'],
+                  methodTypes: ['3e7ce9d7-58ed-ec11-bb3c-000d3a0cee24'],
+                  reopen: 'Yes',
+                  settType: 100000000,
+                  settTypes: {
+                    ANNEXE: 100000002,
+                    MAIN_NO_ALTERNATIVE_SETT: 100000000,
+                    OUTLIER: 100000003,
+                    SUBSIDIARY: 100000006
+                  },
+                  willReopen: true,
+                  endDate: '28 July 2023',
+                  startDate: '25 July 2023'
+                }
+              ]
+          }
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
       })
     })
 
@@ -377,6 +422,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData: [
           {
             settType: 100000000,

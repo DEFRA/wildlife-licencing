@@ -76,7 +76,7 @@ describe('The which-species answers page', () => {
     }
     const { speciesCompletion } = await import('../which-species.js')
     const result = await speciesCompletion(request)
-    expect(result).toEqual('/nsip')
+    expect(result).toEqual('/nationally-significant-infrastructure-project')
   })
 
   it('speciesCompletion returns the other-species page if other is selected', async () => {

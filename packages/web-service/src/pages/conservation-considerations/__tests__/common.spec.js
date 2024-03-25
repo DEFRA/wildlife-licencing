@@ -1,6 +1,299 @@
 describe('the checkData function', () => {
   beforeEach(() => jest.resetModules())
 
+  describe('the checkAll function', () => {
+    it('returns a null if there are no designated sites', async () => {
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          })
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      const result = await checkAll(request, h)
+      expect(result).toBeNull()
+    })
+
+    it('returns a redirect to the permission page if there are is no permission set', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      await checkAll(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/designated-site-permission')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '144be97d-c928-4753-ae09-f8944ad9f228',
+        designatedSite: {
+          id: '444be97d-c928-4753-ae09-f8944ad9f228',
+          designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+        }
+      })
+    })
+
+    it('returns a redirect to the permission details page if permissions are set without details', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf',
+              permissionFromOwner: true
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      await checkAll(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/details-of-permission')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '144be97d-c928-4753-ae09-f8944ad9f228',
+        designatedSite: {
+          id: '444be97d-c928-4753-ae09-f8944ad9f228',
+          designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+        }
+      })
+    })
+
+    it('returns a redirect to the advice page if advice is not set', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf',
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS'
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      await checkAll(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/advice-from-natural-england')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '144be97d-c928-4753-ae09-f8944ad9f228',
+        designatedSite: {
+          id: '444be97d-c928-4753-ae09-f8944ad9f228',
+          designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+        }
+      })
+    })
+
+    it('returns a redirect to the advice detail page if advice is set set with no advice detail', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf',
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      await checkAll(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/ne-activity-advice')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '144be97d-c928-4753-ae09-f8944ad9f228',
+        designatedSite: {
+          id: '444be97d-c928-4753-ae09-f8944ad9f228',
+          designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+        }
+      })
+    })
+
+    it('returns a redirect to the proximity page if no proximity is set', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf',
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC'
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      await checkAll(request, h)
+      expect(h.redirect).toHaveBeenCalledWith('/designated-site-proximity')
+      expect(mockSetData).toHaveBeenCalledWith({
+        applicationId: '144be97d-c928-4753-ae09-f8944ad9f228',
+        designatedSite: {
+          id: '444be97d-c928-4753-ae09-f8944ad9f228',
+          designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf'
+        }
+      })
+    })
+
+    it('returns null if everything is set', async () => {
+      const mockSetData = jest.fn()
+      jest.doMock('../../../services/api-requests.js', () => ({
+        APIRequests: {
+          DESIGNATED_SITES: {
+            get: jest.fn(() => [{
+              id: '344be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'fa5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }, {
+              id: '444be97d-c928-4753-ae09-f8944ad9f228',
+              designatedSiteId: 'ga5b8103-56a9-ed11-aad1-0022481b53bf',
+              designatedSiteType: 100000001,
+              permissionFromOwner: true,
+              detailsOfPermission: 'DETAILS',
+              adviceFromNaturalEngland: true,
+              adviceFromWho: 'ADVICE_WHO',
+              adviceDescription: 'ADVICE_DESC',
+              onSiteOrCloseToSite: 100000001
+            }])
+          }
+        }
+      }))
+      const request = {
+        cache: () => ({
+          getData: () => ({
+            applicationId: '144be97d-c928-4753-ae09-f8944ad9f228'
+          }),
+          setData: mockSetData
+        })
+      }
+      const h = { redirect: jest.fn() }
+      const { checkAll } = await import('../common.js')
+      const result = await checkAll(request, h)
+      expect(result).toBeNull()
+      expect(mockSetData).not.toHaveBeenCalled()
+    })
+  })
+
   describe('the getFilteredDesignatedSites function', () => {
     it('returns a list of the sites combining the site-type into the name', async () => {
       jest.doMock('../../../services/api-requests.js', () => ({

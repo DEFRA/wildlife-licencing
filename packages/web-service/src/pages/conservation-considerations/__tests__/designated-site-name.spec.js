@@ -1,7 +1,23 @@
+import { compileTemplate } from '../../../initialise-snapshot-tests'
+import path from 'path'
+
 jest.spyOn(console, 'error').mockImplementation(() => null)
 
 describe('the SSSI site name functions', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = {
+    sites: [
+      {
+        id: '8fb171b3-55a9-ed11-aad1-0022481b53bf',
+        siteName: 'Ribble Estuary SSSI'
+      },
+      {
+        id: '93b171b3-55a9-ed11-aad1-0022481b53bf',
+        siteName: 'South London Downs SSSI'
+      }
+    ]
+  }
 
   describe('the getData function', () => {
     it('returns the set of designated sites where none is already selected', async () => {
@@ -38,17 +54,18 @@ describe('the SSSI site name functions', () => {
       }
       const { getData } = await import('../designated-site-name.js')
       const result = await getData(request)
-      expect(result).toEqual({
-        sites: [
-          {
-            id: '8fb171b3-55a9-ed11-aad1-0022481b53bf',
-            siteName: 'Ribble Estuary SSSI'
-          },
-          {
-            id: '93b171b3-55a9-ed11-aad1-0022481b53bf',
-            siteName: 'South London Downs SSSI'
-          }
-        ]
+      expect(result).toEqual(testData)
+    })
+
+    describe('designated site name page template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../designated-site-name.njk'))
+
+        const renderedHtml = template.render({
+          data: testData
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
       })
     })
 

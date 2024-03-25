@@ -48,7 +48,7 @@ describe('the common return functions', () => {
         })
       }
       const { licenceActionsCompletion } = await import('../common-return-functions.js')
-      expect(await licenceActionsCompletion(request)).toEqual('/a24/artificial-sett')
+      expect(await licenceActionsCompletion(request)).toEqual('/a24/did-you-create-artificial-sett')
     })
   })
 
@@ -127,7 +127,7 @@ describe('the common return functions', () => {
       const { checkReturns } = await import('../common-return-functions.js')
       await checkReturns(request, h)
       expect(mockRedirect).toHaveBeenCalled()
-      expect(mockRedirect).toHaveBeenCalledWith('/applications')
+      expect(mockRedirect).toHaveBeenCalledWith('/not-found?includeHomeLink=true')
     })
   })
 

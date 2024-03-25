@@ -1,0 +1,30 @@
+{% extends "yes-no.njk" %}
+{% set title = 'Do you want to add an alternative contact?' %}
+{% set radioHint = 'This alternative contact must be someone who is authorised to deal with this application on behalf of the intended licence-holder.' %}
+{% set noneSelected = 'Select yes if you want to add an additional applicant contact' %}
+
+{% block pageContent %}
+    {{ govukRadios({
+      idPrefix: "yes-no",
+      name: "yes-no",
+      isPageHeading: false,
+      hint: {
+        text: radioHint
+      } if radioHint,
+      errorMessage: {
+        text: noneSelectedButton if noneSelectedButton else noneSelected
+      } if error['yes-no'] === 'any.required',
+      items: [
+        {
+          value: "yes",
+          text: "Yes",
+          checked: data.yesNo === 'yes' or payload['yes-no'] === 'yes'
+        },
+        {
+          value: "no",
+          text: "No",
+          checked: data.yesNo === 'no' or payload['yes-no'] === 'no'
+        }
+      ]
+    }) }}
+{% endblock %}

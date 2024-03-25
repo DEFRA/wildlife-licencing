@@ -21,7 +21,16 @@ const {
 export const completion = async _request => habitatURIs.CHECK_YOUR_ANSWERS.uri
 
 export const getData = async request => {
-  const methodIds = (await request.cache().getData())?.habitatData?.methodIds || []
+  const journeyData = await request.cache().getData()
+  let methodIds = journeyData?.habitatData?.methodIds || []
+
+  if (!methodIds.length && request.query.id) {
+    // If we're revisiting the page then `request.query.id` will be the sett id; so if we had no cached habitat data
+    // we can use this to retrieve the habitat site's methods
+    const habitatSite = await APIRequests.HABITAT.getHabitatBySettId(journeyData.applicationId, request.query.id)
+    methodIds = habitatSite.methodIds
+  }
+
   return { OBSTRUCT_SETT_WITH_GATES, OBSTRUCT_SETT_WITH_BLOCK_OR_PROOF, DAMAGE_A_SETT, DESTROY_A_SETT, DISTURB_A_SETT, methodIds }
 }
 

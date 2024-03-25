@@ -1,3 +1,5 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
 
 describe('The enter experience page', () => {
   beforeEach(() => jest.resetModules())
@@ -45,9 +47,17 @@ describe('The enter experience page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check page if class mitigation is set', async () => {
+    it('returns the check page if class mitigation is set, and sets the tag', async () => {
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               methodExperience: 'method',
@@ -65,6 +75,7 @@ describe('The enter experience page', () => {
       }
       const { completion } = await import('../enter-experience.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
   })
 
@@ -137,6 +148,18 @@ describe('The enter experience page', () => {
           value: 'javascript: window.history.go(-1)'
         }
       })
+    })
+  })
+
+  describe('The enter experience page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../enter-experience.njk'))
+
+      const renderedHtml = template.render({
+        data: 'hello people'
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 })

@@ -4,7 +4,7 @@ import differenceInMonths from 'date-fns/differenceInMonths/index.js'
 import pageRoute from '../../../../routes/page-route.js'
 import { APIRequests } from '../../../../services/api-requests.js'
 import { habitatURIs } from '../../../../uris.js'
-import { validateDateInWindow } from '../common/date-validator.js'
+import { validateDateInFuture, validateDateInWindow } from '../common/date-validator.js'
 import { getHabitatById } from '../common/get-habitat-by-id.js'
 import { putHabitatById } from '../common/put-habitat-by-id.js'
 import { cacheDirect } from '../../../../session-cache/cache-decorator.js'
@@ -37,6 +37,7 @@ export const getData = async request => {
 
 export const validator = async (payload, context) => {
   const endDate = validatePageDate(payload, habitatURIs.WORK_END.page)
+  validateDateInFuture(endDate, habitatURIs.WORK_END.page)
   validateDateInWindow(endDate, habitatURIs.WORK_END.page)
 
   // Validate the end date with the start date

@@ -12,6 +12,7 @@ import { FILE_UPLOAD } from './api-requests-file-upload.js'
 import { APPLICATION_TYPES } from './api-requests-application-types.js'
 import { DESIGNATED_SITES } from './api-requests-designated-sites.js'
 import { RETURNS } from './api-requests-return.js'
+import { FEEDBACK } from './api-requests-feedback.js'
 
 import { boomify } from '@hapi/boom'
 import { OTHER } from './api-requests-other.js'
@@ -19,17 +20,20 @@ import { OTHER } from './api-requests-other.js'
 export const apiUrls = {
   USERS: '/users',
   USER: '/user',
+  USER_UPDATE: '/user-update/submit',
   APPLICATION: '/application',
   APPLICATIONS: '/applications',
   APPLICATION_USER: '/application-user',
   APPLICATION_USERS: '/application-users',
   CONTACTS: '/contacts',
   CONTACT: '/contact',
+  USER_CONTACTS: '/user-contacts',
   APPLICATION_CONTACTS: '/application-contacts',
   APPLICATION_CONTACT: '/application-contact',
   APPLICATION_CONTACTS_CONTACTS: 'application-contacts/contacts',
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
+  ORGANISATION_ACCOUNTS: '/organisation-accounts',
   APPLICATION_ACCOUNTS: '/application-accounts',
   APPLICATION_ACCOUNT: '/application-account',
   APPLICATION_ACCOUNTS_ACCOUNTS: 'application-accounts/accounts',
@@ -44,7 +48,9 @@ export const apiUrls = {
   LICENCE: '/licence',
   RETURN: '/return',
   RETURNS: '/returns',
-  DESIGNATED_SITES: 'designated-sites'
+  DESIGNATED_SITES: 'designated-sites',
+  FEEDBACK: '/feedback',
+  ORGANISATION_UPDATE: '/organisation-update/submit'
 }
 
 export const apiRequestsWrapper = async (apiHandler, errorMessage, status) => {
@@ -74,5 +80,6 @@ export const APIRequests = {
   OTHER,
   PERMISSION,
   DESIGNATED_SITES,
-  RETURNS
+  RETURNS,
+  FEEDBACK
 }

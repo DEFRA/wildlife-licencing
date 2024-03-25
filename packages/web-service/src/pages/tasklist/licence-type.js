@@ -43,20 +43,23 @@ export class LicenceType {
     return APIRequests.APPLICATION.tags(journeyData.applicationId).getAll()
   }
 
-  makeTask (task, tags) {
+  makeTask (task, tags, applicationRole) {
     return {
       name: task.name,
       uri: task.uri(tags),
-      status: task.status(tags),
-      enabled: task.enabled(tags)
+      status: task.status(tags, applicationRole),
+      enabled: task.enabled(tags, applicationRole)
     }
   }
 
   async decorate (request) {
     const tags = await this._getTags(request)
+    const { applicationRole } = await request.cache().getData()
     return this._sectionTasks.map(st => ({
       name: st.section.name,
-      tasks: st.tasks.map(t => this.makeTask(t, tags))
+      tasks: st.tasks
+        .filter(t => !t?.display || t.display(applicationRole))
+        .map(t => this.makeTask(t, tags, applicationRole))
     }))
   }
 
@@ -72,6 +75,7 @@ export class LicenceType {
 
   async canSubmit (request) {
     const tags = await this._getTags(request)
-    return this._canSubmitFunc(tags)
+    const { applicationRole } = await request.cache().getData()
+    return this._canSubmitFunc(tags, applicationRole)
   }
 }

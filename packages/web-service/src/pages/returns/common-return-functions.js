@@ -1,5 +1,5 @@
 import { PowerPlatformKeys } from '@defra/wls-powerapps-keys'
-import { APPLICATIONS, ReturnsURIs } from '../../uris.js'
+import { APPLICATIONS, ERRORS, ReturnsURIs } from '../../uris.js'
 import Joi from 'joi'
 import { APIRequests } from '../../services/api-requests.js'
 import { getNextUri } from './get-next-uri.js'
@@ -95,7 +95,7 @@ export const checkReturns = async (request, h) => {
   const journeyData = await request.cache().getData()
 
   if (!journeyData.returns) {
-    return h.redirect(APPLICATIONS.uri)
+    return h.redirect(ERRORS.NOT_FOUND_LINK_HOME.uri)
   }
 
   return null

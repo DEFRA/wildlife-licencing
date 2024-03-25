@@ -13,6 +13,7 @@ export default async (context, req, h) => {
         id: accountId,
         account: alwaysExclude(req.payload),
         updateStatus: 'L',
+        ...(req.payload.organisationId && { organisationId: req.payload.organisationId }),
         ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }
     })
@@ -27,6 +28,7 @@ export default async (context, req, h) => {
       const [, updatedAccount] = await models.accounts.update({
         account: alwaysExclude(req.payload),
         updateStatus: 'L',
+        ...(req.payload.organisationId && { organisationId: req.payload.organisationId }),
         ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
       }, {
         where: {

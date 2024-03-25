@@ -118,7 +118,10 @@ describe('The licence type class', () => {
     })
     const request = {
       cache: () => ({
-        getData: jest.fn(() => ({ applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94' }))
+        getData: jest.fn(() => ({
+          applicationId: '8d79bc16-02fe-4e3c-85ac-b8d792b59b94',
+          applicationRole: 'ECOLOGIST'
+        }))
       })
     }
     const result = await licenceType.decorate(request)
@@ -131,6 +134,6 @@ describe('The licence type class', () => {
     expect(mockGetProgress).toHaveBeenCalledWith(tags)
     const cs = await licenceType.canSubmit(request)
     expect(cs).toBeTruthy()
-    expect(mockCanSubmit).toHaveBeenCalledWith(tags)
+    expect(mockCanSubmit).toHaveBeenCalledWith(tags, 'ECOLOGIST')
   })
 })

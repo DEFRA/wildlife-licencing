@@ -11,6 +11,7 @@ export default async (_context, req, h) => {
       id: uuidv4(),
       account: alwaysExclude(req.payload),
       updateStatus: 'L',
+      ...(req.payload.organisationId && { organisationId: req.payload.organisationId }),
       ...(req.payload.cloneOf && { cloneOf: req.payload.cloneOf })
     })
 

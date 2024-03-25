@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The enter licence details page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -106,5 +109,17 @@ describe('The enter licence details page', () => {
     await setData(request)
     expect(mockAdd).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', 'AB1234')
     expect(mockPutExperienceById).toHaveBeenCalledWith('26a3e94f-2280-4ea5-ad72-920d53c110fc', { classMitigation: true, previousLicence: true })
+  })
+
+  describe('The enter licence details page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../enter-licence-details.njk'))
+
+      const renderedHtml = template.render({
+        data: {}
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
+    })
   })
 })

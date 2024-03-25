@@ -112,5 +112,65 @@ export const queueDefinitions = {
         }
       }
     }
+  },
+  FEEDBACK_QUEUE: {
+    name: 'feedback-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
+  },
+  USER_DETAILS_QUEUE: {
+    name: 'user-details-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
+  },
+  ORGANISATION_DETAILS_QUEUE: {
+    name: 'organisation-details-queue',
+    options: {
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: false,
+        priority: 1,
+        attempts: 200,
+        timeout: 30000,
+        backoff: {
+          type: 'fastThenSlow'
+        }
+      },
+      settings: {
+        backoffStrategies: {
+          fastThenSlow
+        }
+      }
+    }
   }
 }

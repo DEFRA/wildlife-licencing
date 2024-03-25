@@ -1,4 +1,5 @@
 version: "3.8"
+name: wls
 services:
   ##############################################################################################################
   # The database.
@@ -73,7 +74,7 @@ services:
   ##############################################################################################################
   clamd_container:
     image: clamav/clamav:0.105.0
-    ports: 
+    ports:
       - "3310:3310"
     volumes:
       - virus-db:/var/lib/clamav # named volume for signatures

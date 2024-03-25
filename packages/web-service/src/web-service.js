@@ -3,8 +3,9 @@ import { init, createServer } from './server.js'
 import { initializeClamScan } from './services/virus-scan.js'
 import fs from 'fs'
 
-import { ADDRESS, REDIS, ERRBIT } from '@defra/wls-connectors-lib'
+import { ADDRESS, REDIS, DEFRA_ID, ERRBIT } from '@defra/wls-connectors-lib'
 import { initializeScanDir } from './initialization.js'
+import { DEFRA_IDM_CALLBACK } from './uris.js'
 
 ERRBIT.initialize('Web service')
 
@@ -20,6 +21,7 @@ const prepare = async () => {
   await initializeClamScan()
   await REDIS.initialiseConnection()
   await ADDRESS.initialize()
+  await DEFRA_ID.initialise(DEFRA_IDM_CALLBACK.uri)
 }
 
 prepare()

@@ -1,5 +1,30 @@
+import { compileTemplate } from '../../../initialise-snapshot-tests'
+import path from 'path'
+
 describe('application-summary page', () => {
   beforeEach(() => jest.resetModules())
+
+  const testData = {
+    applicant: {
+      fullName: 'Joe Blogs'
+    },
+    application: {
+      applicationType: 'A24',
+      applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
+      id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
+      siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY',
+      userSubmission: '10 August 2022'
+    },
+    applicationStatuses: {
+      1: 'RECEIVED',
+      100000000: 'AWAITING_ALLOCATION',
+      100000001: 'ALLOCATED_FOR_ASSESSMENT',
+      100000002: 'UNDER_ASSESSMENT',
+      100000004: 'GRANTED',
+      100000005: 'PAUSED',
+      100000008: 'NOT_GRANTED'
+    }
+  }
 
   describe('getData', () => {
     it('looks-up the application and applicant and performs the necessary transformation', async () => {
@@ -64,26 +89,18 @@ describe('application-summary page', () => {
 
       const { getData } = await import('../application-summary.js')
       const result = await getData(request)
-      expect(result).toEqual({
-        applicant: {
-          fullName: 'Joe Blogs'
-        },
-        application: {
-          applicationType: 'A24',
-          applicationTypeId: '9d62e5b8-9c77-ec11-8d21-000d3a87431b',
-          id: '94de2969-91d4-48d6-a5fe-d828a244aa18',
-          siteAddress: 'site street,<br>jubilee,<br>123,<br>site street,<br>Peckham,<br>kent,<br>SW1W 0NY',
-          userSubmission: '10 August 2022'
-        },
-        applicationStatuses: {
-          1: 'RECEIVED',
-          100000000: 'AWAITING_ALLOCATION',
-          100000001: 'ALLOCATED_FOR_ASSESSMENT',
-          100000002: 'UNDER_ASSESSMENT',
-          100000004: 'GRANTED',
-          100000005: 'PAUSED',
-          100000008: 'NOT_GRANTED'
-        }
+      expect(result).toEqual(testData)
+    })
+
+    describe('application-summary page template', () => {
+      it('Matches the snapshot', async () => {
+        const template = await compileTemplate(path.join(__dirname, '../application-summary.njk'))
+
+        const renderedHtml = template.render({
+          data: testData
+        })
+
+        expect(renderedHtml).toMatchSnapshot()
       })
     })
 

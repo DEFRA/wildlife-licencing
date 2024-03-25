@@ -4,6 +4,7 @@ import { APIRequests } from '../../../services/api-requests.js'
 import { SECTION_TASKS } from '../../tasklist/general-sections.js'
 import { yesNoFromBool } from '../../common/common.js'
 import { Backlink } from '../../../handlers/backlink.js'
+import { isCompleteOrConfirmed } from '../../common/tag-functions.js'
 import { checkApplication } from '../../common/check-application.js'
 import { tagStatus } from '../../../services/status-tags.js'
 
@@ -26,6 +27,17 @@ export const getData = async request => {
   return result
 }
 
+export const checkData = async (request, h) => {
+  const journeyData = await request.cache().getData()
+  const tagState = await APIRequests.APPLICATION.tags(journeyData.applicationId).get(SECTION_TASKS.ECOLOGIST_EXPERIENCE)
+
+  if (!isCompleteOrConfirmed(tagState)) {
+    return h.redirect(ecologistExperienceURIs.PREVIOUS_LICENCE.uri)
+  }
+
+  return null
+}
+
 export const completion = async request => {
   const journeyData = await request.cache().getData()
   await APIRequests.APPLICATION.tags(journeyData.applicationId).set({ tag: SECTION_TASKS.ECOLOGIST_EXPERIENCE, tagState: tagStatus.COMPLETE })
@@ -35,7 +47,7 @@ export const completion = async request => {
 export default pageRoute({
   page: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.page,
   uri: ecologistExperienceURIs.CHECK_YOUR_ANSWERS.uri,
-  checkData: checkApplication,
+  checkData: [checkApplication, checkData],
   backlink: Backlink.NO_BACKLINK,
   getData,
   completion

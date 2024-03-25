@@ -11,11 +11,13 @@
                 {{ rows.push({
                     key: { text: questionMap[item.key].question },
                     value: { html: questionMap[item.key].answer[item.value] if questionMap[item.key].answer else (questionMap[item.key].value if questionMap[item.key].value else item.value) },
-                    actions: { items: [ { href: questionMap[item.key].href,
-                                          text: "Change",
-                                          classes: 'govuk-link govuk-link--no-visited-state',
-                                          visuallyHiddenText: questionMap[item.key].question } ] if questionMap[item.key].href else [] }  })
-                }}
+                    actions: { items: [{
+                        href: questionMap[item.key].href,
+                        text: "Change",
+                        classes: 'govuk-link govuk-link--no-visited-state',
+                        visuallyHiddenText: ':' + questionMap[item.key].question
+                    }]
+                        if questionMap[item.key].href else [] }  }) }}
             {% endfor %}
         </div>
         {{ govukSummaryList({ classes: 'govuk-!-margin-bottom-9', rows: rows }) }}

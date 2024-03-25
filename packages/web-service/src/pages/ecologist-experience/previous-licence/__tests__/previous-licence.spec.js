@@ -1,3 +1,6 @@
+import path from 'path'
+import { compileTemplate } from '../../../../initialise-snapshot-tests.js'
+
 describe('The previous licence page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -107,7 +110,8 @@ describe('The previous licence page', () => {
         APIRequests: {
           APPLICATION: {
             tags: () => ({
-              get: () => 'in-progress'
+              get: () => 'in-progress',
+              set: () => {}
             })
           },
           ECOLOGIST_EXPERIENCE: {
@@ -242,9 +246,17 @@ describe('The previous licence page', () => {
       expect(await completion(request)).toBe('/class-mitigation')
     })
 
-    it('returns the check page if user selects no and the class licence has been set', async () => {
+    it('returns the check page if user selects no and the class licence has been set, it also sets the tag', async () => {
+      const mockSet = jest.fn()
       jest.doMock('../../../../services/api-requests.js', () => ({
         APIRequests: {
+          APPLICATION: {
+            tags: () => {
+              return {
+                set: mockSet
+              }
+            }
+          },
           ECOLOGIST_EXPERIENCE: {
             getExperienceById: () => ({
               experienceDetails: 'details',
@@ -266,6 +278,7 @@ describe('The previous licence page', () => {
       }
       const { completion } = await import('../previous-licence.js')
       expect(await completion(request)).toBe('/check-ecologist-answers')
+      expect(mockSet).toHaveBeenCalledWith({ tag: 'ecologist-experience', tagState: 'complete-not-confirmed' })
     })
   })
 
@@ -291,7 +304,7 @@ describe('The previous licence page', () => {
       }
       const { checkData } = await import('../previous-licence.js')
       expect(await checkData(request, h)).toEqual(null)
-      expect(mockRedirect).not.toHaveBeenCalledWith('/licence')
+      expect(mockRedirect).not.toHaveBeenCalledWith('/previous-individual-badger-licence-details')
     })
 
     it('if the user has past previous licences entered, we redirect them to another page', async () => {
@@ -315,7 +328,19 @@ describe('The previous licence page', () => {
       }
       const { checkData } = await import('../previous-licence.js')
       await checkData(request, h)
-      expect(mockRedirect).toHaveBeenCalledWith('/licence')
+      expect(mockRedirect).toHaveBeenCalledWith('/previous-individual-badger-licence-details')
+    })
+  })
+
+  describe('The previous licence page template', () => {
+    it('Matches the snapshot', async () => {
+      const template = await compileTemplate(path.join(__dirname, '../previous-licence.njk'))
+
+      const renderedHtml = template.render({
+        data: { yesNo: 'no' }
+      })
+
+      expect(renderedHtml).toMatchSnapshot()
     })
   })
 

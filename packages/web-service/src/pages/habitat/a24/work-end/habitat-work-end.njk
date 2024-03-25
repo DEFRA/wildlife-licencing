@@ -25,17 +25,17 @@
     items: [
       {
         classes: "govuk-input--width-2",
-        value: data.day,
+        value: payload['habitat-work-end-day'] if payload['habitat-work-end-day'] else data.day,
         name: "day"
       },
       {
         classes: "govuk-input--width-2",
-        value: data.month,
+        value: payload['habitat-work-end-month'] if payload['habitat-work-end-month'] else data.month,
         name: "month"
       },
       {
         classes: "govuk-input--width-4",
-        value: data.year,
+        value: payload['habitat-work-end-year'] if payload['habitat-work-end-year'] else data.year,
         name: "year"
       }
     ],
