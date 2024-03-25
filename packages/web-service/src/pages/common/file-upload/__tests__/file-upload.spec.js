@@ -161,11 +161,11 @@ describe('the generic file-upload page handler', () => {
     const { fileUploadPageRoute } = await import('../file-upload.js')
     const result = fileUploadPageRoute({
       view: 'upload-map',
-      fileUploadUri: '/upload-map',
+      fileUploadUri: '/upload-survey-map',
       fileUploadCompletion: completion,
       getData
     })
-    const route = result.find(r => r.method === 'POST' && r.path === '/upload-map')
+    const route = result.find(r => r.method === 'POST' && r.path === '/upload-survey-map')
 
     const h = {
       redirect: mockRedirect

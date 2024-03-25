@@ -127,7 +127,7 @@ describe('additional page data', () => {
         invoicePostcode: '/invoice-postcode',
         landowner: '/landowner',
         landownerPermission: '/landowner-permission',
-        licenceDetails: '/licence',
+        licenceDetails: '/previous-individual-badger-licence-details',
         idm: {
           management: '/manage',
           signIn: '/sign-in',
@@ -139,7 +139,7 @@ describe('additional page data', () => {
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
         siteGridReference: '/site-grid-ref',
-        siteMap: '/upload-map',
+        siteMap: '/upload-survey-map',
         siteMapThree: '/upload-map-of-mitigations-after-development',
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
