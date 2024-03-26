@@ -13,7 +13,7 @@ const { CHECK_ANSWERS } = contactURIs.APPLICANT
 export const applicantCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
-    checkHasContact(ContactRoles.APPLICANT),
+    checkHasContact(ContactRoles.APPLICANT, contactURIs.APPLICANT.NAME),
     checkAccountComplete(AccountRoles.APPLICANT_ORGANISATION, contactURIs.APPLICANT)
   ],
   page: CHECK_ANSWERS.page,

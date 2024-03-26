@@ -12,7 +12,7 @@ const { CHECK_ANSWERS } = contactURIs.ECOLOGIST
 export const ecologistCheckAnswers = checkAnswersPage({
   checkData: [
     checkApplication,
-    checkHasContact(ContactRoles.ECOLOGIST),
+    checkHasContact(ContactRoles.ECOLOGIST, contactURIs.ECOLOGIST.NAME),
     checkAccountComplete(AccountRoles.ECOLOGIST_ORGANISATION, contactURIs.ECOLOGIST)
   ],
   page: CHECK_ANSWERS.page,
