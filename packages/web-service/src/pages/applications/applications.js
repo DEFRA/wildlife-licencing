@@ -54,8 +54,6 @@ export const getData = async request => {
 
   const applicationsWithLicences = await getApplicationsWithLicences(applications)
 
-  // applicationsWithLicences[0].statusCode = 10
-  // applicationsWithLicences[0].userSubmission = true
   return {
     totalSections,
     applicationStatuses,

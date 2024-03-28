@@ -32,7 +32,7 @@ export const PowerPlatformKeys = {
     GRANTED: 100000004,
     PAUSED: 100000005,
     NOT_GRANTED: 100000008,
-    WITHDRAWN: 10
+    WITHDRAWN: 100000006
   },
   LICENCE_STATUS: {
     ACTIVE: 1,
