@@ -13,7 +13,8 @@ describe('applications page', () => {
       100000002: 'UNDER_ASSESSMENT',
       100000004: 'GRANTED',
       100000005: 'PAUSED',
-      100000008: 'NOT_GRANTED'
+      100000008: 'NOT_GRANTED',
+      100000006: 'WITHDRAWN'
     },
     licenceStatuses: {
       1: 'ACTIVE',
@@ -111,8 +112,30 @@ describe('applications page', () => {
     it('Matches the snapshot', async () => {
       const template = await compileTemplate(path.join(__dirname, '../applications.njk'))
 
+      const testDataCopy = { ...testData }
+
+      testDataCopy.applications.push({
+        id: '8179c2f2-6eec-43d6-899b-6504d6a1e798',
+        applicationTags: [{ tag: 'eligibility-check', tagState: 'complete' }],
+        updatedAt: '2022-03-25T14:10:14.861Z',
+        lastSaved: '25 March 2022',
+        submitted: null,
+        userSubmission: true,
+        statusCode: 100000006, // Withdrawn
+        completed: 1,
+        licences: [
+          {
+            id: '7eabe3f9-8818-ed11-b83e-002248c5c45b',
+            applicationId: 'd9c9aec7-3e86-441b-bc49-87009c00a605',
+            endDate: '2022-08-26',
+            startDate: '2022-08-10',
+            licenceNumber: 'LI-0016N0Z4'
+          }
+        ]
+      })
+
       const renderedHtml = template.render({
-        data: testData
+        data: testDataCopy
       })
 
       expect(renderedHtml).toMatchSnapshot()
