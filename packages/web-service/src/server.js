@@ -84,7 +84,17 @@ const init = async server => {
           return context => template.render(context)
         },
         prepare: (options, next) => {
-          options.compileOptions.environment = Nunjucks.configure(options.path, { watch: false })
+          const environment = Nunjucks.configure(options.path, { watch: false });
+
+          environment.addFilter('getInlineErrorMessage', function(errorArray, key) {
+            if (errorArray) {
+              const errorMessage = errorArray.find(item => item.id === key)
+              return errorMessage ? errorMessage : null
+            }
+            return null
+          });
+
+          options.compileOptions.environment = environment;
           return next()
         }
       }

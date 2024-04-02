@@ -6,13 +6,13 @@ import { ROLE_SECTION_MAP } from '../common-handler.js'
 export const getContactData = contactRole => async request => {
   const { applicationId } = await request.cache().getData()
   await moveTagInProgress(applicationId, ROLE_SECTION_MAP[contactRole])
-  return APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
+  return await APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
 }
 
 /**
  * Create a contact if one does not already exist
  * @param contactRole
- * @returns {(function(*): Promise<void>)|*}
+ * @returns {(function(*): Promise<void>)|*}APIRequests.CONTACT.role(contactRole).getByApplicationId(applicationId)
  */
 export const setContactData = contactRole => async request => {
   const { applicationId } = await request.cache().getData()

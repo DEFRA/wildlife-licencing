@@ -1,17 +1,25 @@
 {% extends "standard-form.njk" %}
 {% from "input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set labelId = 'name' %}
 
 {% block pageContent %}
+    {% if errorList %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList
+    }) }}
+    {% endif %}
+
     {{ govukInput({
-      id: labelId,
-      name: "name",
-      spellcheck: false,
-      hint: { text: hintText } if hintText else '',
-      value: data.fullName if data.fullName else payload['name'],
-      classes: textBoxWidth if textBoxWidth else  "govuk-!-width-three-quarters",
-      attributes: { maxlength: 160 },
-      errorMessage: { text: 'Enter the full name' } if error['name']
+        id: labelId,
+        name: "name",
+        spellcheck: false,
+        hint: { text: hintText } if hintText else '',
+        value: data.fullName if data.fullName else payload['name'],
+        classes: textBoxWidth if textBoxWidth else  "govuk-!-width-three-quarters",
+        attributes: { maxlength: 160 },
+        errorMessage: errorList | getInlineErrorMessage('name')
     }) }}
 {% endblock %}

@@ -77,7 +77,17 @@ export default (view, checkData, getData, completion, setData, backlink = Backli
   // On a validation error, set the errors and redirect back to teh GET handler
   error: async (request, h, err) => {
     if (err instanceof Joi.ValidationError) {
-      await request.cache().setPageData({ payload: request.payload, error: errorShim(err) })
+
+      const errorList = []
+      err.details.forEach(error => {
+        errorList.push(  {
+          text: error.message,
+          href: "#" + error.path[0],
+          id: error.path[0]
+        })
+      })
+
+      await request.cache().setPageData({ payload: request.payload, error: errorShim(err), errorList })
       // Take account of any query string in the redirect
       const qs = querystring.stringify(request.query)
       return h.redirect(request.path + (qs.length > 0 ? ('?' + qs) : '')).takeover()
