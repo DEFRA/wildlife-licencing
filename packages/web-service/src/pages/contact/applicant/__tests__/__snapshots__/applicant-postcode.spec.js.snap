@@ -33,7 +33,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -43,7 +43,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -83,6 +83,10 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     </div>
   
 </div>
+
+
+
+
 
 
 
@@ -338,7 +342,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -348,7 +352,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -388,6 +392,10 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     </div>
   
 </div>
+
+
+
+
 
 
 

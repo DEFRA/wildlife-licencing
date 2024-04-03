@@ -12,13 +12,13 @@ export default async (request, h) => {
 
     if (request.query.analytics) {
       cookiePrefs.analytics = boolFromYesNo(request.query.analytics)
-      Object.assign(user, { cookiePrefs })
     }
 
     if (request.query.hideMessage) {
       cookiePrefs.hideMessage = boolFromYesNo(request.query.hideMessage)
-      Object.assign(user, { cookiePrefs })
     }
+
+    user.cookiePrefs = cookiePrefs
 
     await APIRequests.USER.update(journeyData.userId, user)
   }
