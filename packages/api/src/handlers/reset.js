@@ -7,6 +7,10 @@ import { clearCaches } from './user/users-cache.js'
 const { cache } = REDIS
 const { Sequelize } = pkg
 const Op = Sequelize.Op
+const STATUS_CODE = {
+  BAD_REQUEST_ERROR: 400,
+  OK: 200
+}
 
 const inApplicationIds = ids => ({
   where: {
@@ -34,8 +38,8 @@ export default async (_context, req, h) => {
     const [user] = await models.users.findAll({ where: { 'user.contactDetails.email': username } })
 
     if (!user) {
-      return h.response({ code: 400, error: { description: `username: ${username} not found` } })
-        .type(APPLICATION_JSON).code(400)
+      return h.response({ code: STATUS_CODE.BAD_REQUEST_ERROR, error: { description: `username: ${username} not found` } })
+        .type(APPLICATION_JSON).code(STATUS_CODE.BAD_REQUEST_ERROR)
     } else {
       await models.users.update({
         cookiePrefs: null
@@ -82,7 +86,7 @@ export default async (_context, req, h) => {
     await Promise.all(accountIds.map(async id => cache.delete(`/account/${id}`)))
     await Promise.all(siteIds.map(async id => cache.delete(`/site/${id}`)))
 
-    return h.response(response).type(APPLICATION_JSON).code(200)
+    return h.response(response).type(APPLICATION_JSON).code(STATUS_CODE.OK)
   } catch (err) {
     console.error('Error resetting', err)
     throw new Error(err.message)
