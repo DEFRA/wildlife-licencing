@@ -31,7 +31,7 @@ export default async (_context, req, h) => {
 
     console.log(`Removing data for the user ${username}...`)
 
-    const [user] = await models.users.findAll({ where: { username } })
+    const [user] = await models.users.findAll({ where: { 'user.contactDetails.email': username } })
 
     if (!user) {
       return h.response({ code: 400, error: { description: `username: ${username} not found` } })
