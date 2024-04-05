@@ -180,13 +180,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     Postcode
   </label>
 
-  
-  
-  <div id=\\"postcode-hint\\" class=\\"govuk-hint\\">
-    e.g. SW1W 0NY
-  </div>
-
-<input class=\\"govuk-input govuk-input--width-10\\" id=\\"postcode\\" name=\\"postcode\\" type=\\"text\\" spellcheck=\\"false\\" aria-describedby=\\"postcode-hint\\" maxlength=\\"20\\">
+<input class=\\"govuk-input govuk-input--width-10\\" id=\\"postcode\\" name=\\"postcode\\" type=\\"text\\" spellcheck=\\"false\\" maxlength=\\"20\\">
 </div>
 
     <p class=\\"govuk-body\\">
@@ -485,13 +479,7 @@ exports[`applicant postcode page applicant postcode page template Matches the sn
     Postcode
   </label>
 
-  
-  
-  <div id=\\"postcode-hint\\" class=\\"govuk-hint\\">
-    e.g. SW1W 0NY
-  </div>
-
-<input class=\\"govuk-input govuk-input--width-10\\" id=\\"postcode\\" name=\\"postcode\\" type=\\"text\\" spellcheck=\\"false\\" aria-describedby=\\"postcode-hint\\" maxlength=\\"20\\">
+<input class=\\"govuk-input govuk-input--width-10\\" id=\\"postcode\\" name=\\"postcode\\" type=\\"text\\" spellcheck=\\"false\\" maxlength=\\"20\\">
 </div>
 
     <p class=\\"govuk-body\\">
