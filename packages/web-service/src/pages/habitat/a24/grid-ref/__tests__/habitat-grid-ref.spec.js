@@ -21,7 +21,7 @@ describe('The habitat grid ref page', () => {
         })
       }
       const { completion } = await import('../habitat-grid-ref.js')
-      expect(await completion(request)).toBe('/habitat-work-start')
+      expect(await completion(request)).toBe('/start-date-licensed-activity-on-this-sett')
     })
 
     it('the habitat-grid-ref page forwards onto check-habitat-answers on return journey', async () => {

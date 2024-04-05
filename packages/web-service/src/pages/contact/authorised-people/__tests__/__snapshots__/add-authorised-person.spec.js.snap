@@ -58,7 +58,7 @@ exports[`add authorised person Add authro returns the add authorised person html
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`add authorised person Add authro returns the add authorised person html
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -216,7 +216,7 @@ exports[`add authorised person Add authro returns the add authorised person html
           <dd class=\\"govuk-summary-list__actions\\">
             
               <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-name?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
-                Change<span class=\\"govuk-visually-hidden\\"> Name</span>
+                Change<span class=\\"govuk-visually-hidden\\"> :Name</span>
                 </a>
             
           </dd>
@@ -236,7 +236,7 @@ exports[`add authorised person Add authro returns the add authorised person html
           <dd class=\\"govuk-summary-list__actions\\">
             
               <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-email?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
-                Change<span class=\\"govuk-visually-hidden\\"> Email address</span>
+                Change<span class=\\"govuk-visually-hidden\\"> :Email address</span>
                 </a>
             
           </dd>
@@ -256,7 +256,7 @@ exports[`add authorised person Add authro returns the add authorised person html
           <dd class=\\"govuk-summary-list__actions\\">
             
               <a class=\\"govuk-link govuk-link govuk-link--no-visited-state\\" href=\\"/authorised-person-postcode?id=dad9d73e-d591-41df-9475-92c032bd3ceb\\">
-                Change<span class=\\"govuk-visually-hidden\\"> Contact address</span>
+                Change<span class=\\"govuk-visually-hidden\\"> :Contact address</span>
                 </a>
             
           </dd>

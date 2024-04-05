@@ -4,7 +4,7 @@ describe('The habitat name page', () => {
   describe('habitat-name page', () => {
     it('the habitat-name page forwards onto habitat-types page', async () => {
       const { completion } = await import('../habitat-name.js')
-      expect(await completion()).toBe('/habitat-types')
+      expect(await completion()).toBe('/sett-use-category')
     })
 
     it('sets the name correctly', async () => {

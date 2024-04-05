@@ -111,7 +111,7 @@ describe('The work-category page', () => {
         }
       }))
       const { completion } = await import('../work-category.js')
-      expect(await completion(request)).toEqual('/work-licence-cost')
+      expect(await completion(request)).toEqual('/licence-cost')
     })
 
     it('the setData handler hits the api with the user input', async () => {

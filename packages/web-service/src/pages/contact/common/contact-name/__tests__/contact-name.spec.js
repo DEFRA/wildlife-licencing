@@ -84,7 +84,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-email')
+      expect(result).toEqual('/licence-holder-email')
     })
 
     it('if a an account is associated and no address is present, return to the postcode page', async () => {
@@ -113,7 +113,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-postcode')
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if an account is associated and an address is present, return to the check page', async () => {
@@ -148,7 +148,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/licence-holder-check-answers')
     })
 
     it('if a no account is associated, return to the organisation page', async () => {
@@ -174,7 +174,7 @@ describe('contact-name page', () => {
       }
       const { contactNameCompletion } = await import('../contact-name.js')
       const result = await contactNameCompletion('APPLICANT', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-organisation')
+      expect(result).toEqual('/licence-holder-organisation')
     })
   })
 })

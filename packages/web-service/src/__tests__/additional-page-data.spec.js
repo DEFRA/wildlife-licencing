@@ -100,11 +100,11 @@ describe('additional page data', () => {
     expect(request.response.source.context).toEqual({
       _uri: {
         applicantAddress: '/applicant-address',
-        applicantEmail: '/applicant-email',
+        applicantEmail: '/licence-holder-email',
         applicantPhoneNumber: '/applicant-phone-number',
-        applicantIsOrganisation: '/applicant-organisation',
-        applicantName: '/applicant-name',
-        applicantPostcode: '/applicant-postcode',
+        applicantIsOrganisation: '/licence-holder-organisation',
+        applicantName: '/licence-holder-name',
+        applicantPostcode: '/licence-holder-postcode',
         applicationSummary: '/application-summary',
         applications: '/applications',
         applicationLicence: '/application-licence-summary',
@@ -127,7 +127,7 @@ describe('additional page data', () => {
         invoicePostcode: '/invoice-postcode',
         landowner: '/landowner',
         landownerPermission: '/landowner-permission',
-        licenceDetails: '/licence',
+        licenceDetails: '/previous-individual-badger-licence-details',
         idm: {
           management: '/manage',
           signIn: '/sign-in',
@@ -139,7 +139,7 @@ describe('additional page data', () => {
         methodExperience: '/enter-methods',
         previousLicence: '/previous-licence',
         siteGridReference: '/site-grid-ref',
-        siteMap: '/upload-map',
+        siteMap: '/upload-survey-map',
         siteMapThree: '/upload-map-of-mitigations-after-development',
         siteMapTwo: '/upload-map-of-mitigations-during-development',
         siteName: '/site-name',
@@ -163,10 +163,10 @@ describe('additional page data', () => {
         additionalEcologistEmail: '/additional-ecologist-email',
         species: '/which-species',
         taskList: '/tasklist',
-        workCategory: '/work-category',
-        workPayment: '/work-payment',
-        workPaymentExemptReason: '/work-payment-exempt-reason',
-        workProposal: '/work-proposal'
+        workCategory: '/development-type',
+        workPayment: '/payment-exemption-check',
+        workPaymentExemptReason: '/payment-exemption-reason',
+        workProposal: '/development-description'
       },
       credentials: 'credentials',
       cspNonce: expect.any(String),

@@ -58,7 +58,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -222,6 +222,10 @@ exports[`applications page applications page template Matches the snapshot 1`] =
         2
      </div>
 
+    <div hidden>
+        3
+     </div>
+
 
 
     <table class=\\"govuk-table\\">
@@ -332,6 +336,60 @@ exports[`applications page applications page template Matches the snapshot 1`] =
           >
     
         <strong class=\\"govuk-tag govuk-tag--blue govuk-!-margin-top-4\\">IN PROGRESS</strong>
+    
+</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class=\\"govuk-table__row\\">
+        
+          
+          
+          <th scope=\\"row\\" class=\\"govuk-table__header\\"
+          >
+    <p class=\\"govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4\\">
+        
+            <a href=\\"?applicationId=8179c2f2-6eec-43d6-899b-6504d6a1e798\\" class=\\"govuk-link govuk-link--no-visited-state\\">Badger mitigation</a>
+        
+    </p>
+</th>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+  
+    <p></p>
+  
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+
+  <p></p>
+
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+    
+        
+    
+        
+            <strong class=\\"govuk-tag govuk-tag--grey govuk-!-margin-top-4\\">WITHDRAWN</strong>
+        
+    
+
     
 </td>
           

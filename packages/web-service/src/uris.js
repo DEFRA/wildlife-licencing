@@ -1,9 +1,9 @@
 export const HEALTH = { uri: '/health', page: 'health' }
 export const SPECIES = { uri: '/which-species', page: 'which-species' }
 export const OTHER_SPECIES = { uri: '/other-species', page: 'other-species' }
-export const NSIP = { uri: '/nsip', page: 'nsip' }
-export const WINDOW_NOT_OPEN = { uri: '/window-not-open', page: 'window-not-open' }
-export const COOKIE_PREFS = { uri: '/set-cookie-prefs' }
+export const NSIP = { uri: '/nationally-significant-infrastructure-project', page: 'nsip' }
+export const WINDOW_NOT_OPEN = { uri: '/application-processing-window-warning', page: 'window-not-open' }
+export const COOKIE_PREFS = { uri: '/set-cookie-preferences' }
 export const COOKIE_INFO = { uri: '/cookie-info', page: 'cookie-info' }
 
 export const SIGN_IN = { uri: '/sign-in' }
@@ -38,7 +38,7 @@ export const ecologistExperienceURIs = {
   PREVIOUS_LICENCE: { uri: '/previous-licence', page: 'previous-licence' },
   ENTER_EXPERIENCE: { uri: '/enter-experience', page: 'enter-experience' },
   ENTER_LICENCE_DETAILS: { uri: '/enter-licence-details', page: 'enter-licence-details' },
-  LICENCE: { uri: '/licence', page: 'licence' },
+  LICENCE: { uri: '/previous-individual-badger-licence-details', page: 'licence' },
   CHECK_YOUR_ANSWERS: { uri: '/check-ecologist-answers', page: 'check-ecologist-answers' },
   ENTER_METHODS: { uri: '/enter-methods', page: 'enter-methods' },
   CLASS_MITIGATION: { uri: '/class-mitigation', page: 'class-mitigation' },
@@ -47,27 +47,27 @@ export const ecologistExperienceURIs = {
 }
 
 export const habitatURIs = {
-  START: { uri: '/habitat-start', page: 'habitat-start' },
-  NAME: { uri: '/habitat-name', page: 'habitat-name' },
-  TYPES: { uri: '/habitat-types', page: 'habitat-types' },
-  REOPEN: { uri: '/habitat-reopen', page: 'habitat-reopen' },
-  ENTRANCES: { uri: '/habitat-entrances', page: 'habitat-entrances' },
-  ACTIVE_ENTRANCES: { uri: '/habitat-active-entrances', page: 'habitat-active-entrances' },
-  GRID_REF: { uri: '/habitat-grid-ref', page: 'habitat-grid-ref' },
-  WORK_START: { uri: '/habitat-work-start', page: 'habitat-work-start' },
-  WORK_END: { uri: '/habitat-work-end', page: 'habitat-work-end' },
-  ACTIVITIES: { uri: '/habitat-activities', page: 'habitat-activities' },
+  START: { uri: '/sett-start', page: 'habitat-start' },
+  NAME: { uri: '/sett-name', page: 'habitat-name' },
+  TYPES: { uri: '/sett-use-category', page: 'habitat-types' },
+  REOPEN: { uri: '/sett-reopened-after-development', page: 'habitat-reopen' },
+  ENTRANCES: { uri: '/sett-entrances-value', page: 'habitat-entrances' },
+  ACTIVE_ENTRANCES: { uri: '/sett-active-entrance-total', page: 'habitat-active-entrances' },
+  GRID_REF: { uri: '/sett-grid-reference', page: 'habitat-grid-ref' },
+  WORK_START: { uri: '/start-date-licensed-activity-on-this-sett', page: 'habitat-work-start' },
+  WORK_END: { uri: '/end-date-licensed-activity-on-this-sett', page: 'habitat-work-end' },
+  ACTIVITIES: { uri: '/sett-disturbance-methods', page: 'habitat-activities' },
   ACTIVE_SETT_DROPOUT: { uri: '/active-sett-dropout', page: 'active-sett-dropout' },
   CHECK_YOUR_ANSWERS: { uri: '/check-habitat-answers', page: 'check-habitat-answers' },
   CONFIRM_DELETE: { uri: '/confirm-delete', page: 'confirm-delete' }
 }
 
 export const workActivityURIs = {
-  WORK_PROPOSAL: { uri: '/work-proposal', page: 'work-proposal' },
-  PAYING_FOR_LICENCE: { uri: '/work-payment', page: 'work-payment' },
-  PAYMENT_EXEMPT_REASON: { uri: '/work-payment-exempt-reason', page: 'work-payment-exempt-reason' },
-  WORK_CATEGORY: { uri: '/work-category', page: 'work-category' },
-  LICENCE_COST: { uri: '/work-licence-cost', page: 'work-licence-cost' },
+  WORK_PROPOSAL: { uri: '/development-description', page: 'work-proposal' },
+  PAYING_FOR_LICENCE: { uri: '/payment-exemption-check', page: 'work-payment' },
+  PAYMENT_EXEMPT_REASON: { uri: '/payment-exemption-reason', page: 'work-payment-exempt-reason' },
+  WORK_CATEGORY: { uri: '/development-type', page: 'work-category' },
+  LICENCE_COST: { uri: '/licence-cost', page: 'work-licence-cost' },
   CHECK_YOUR_ANSWERS: { uri: '/check-work-answers', page: 'check-work-answers' }
 }
 
@@ -82,12 +82,12 @@ export const contactURIs = {
     ADDRESS_FORM: { uri: '/ecologist-address-form', page: 'ecologist-address-form' }
   },
   APPLICANT: {
-    NAME: { uri: '/applicant-name', page: 'applicant-name' },
-    IS_ORGANISATION: { uri: '/applicant-organisation', page: 'applicant-organisation' },
-    EMAIL: { uri: '/applicant-email', page: 'applicant-email' },
+    NAME: { uri: '/licence-holder-name', page: 'applicant-name' },
+    IS_ORGANISATION: { uri: '/licence-holder-organisation', page: 'applicant-organisation' },
+    EMAIL: { uri: '/licence-holder-email', page: 'applicant-email' },
     PHONE_NUMBER: { uri: '/applicant-phone-number', page: 'applicant-phone-number' },
-    CHECK_ANSWERS: { uri: '/applicant-check-answers', page: 'applicant-check-answers' },
-    POSTCODE: { uri: '/applicant-postcode', page: 'applicant-postcode' },
+    CHECK_ANSWERS: { uri: '/licence-holder-check-answers', page: 'applicant-check-answers' },
+    POSTCODE: { uri: '/licence-holder-postcode', page: 'applicant-postcode' },
     ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
     ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
   },
@@ -131,7 +131,7 @@ export const siteURIs = {
   SITE_GOT_POSTCODE: { uri: '/site-got-postcode', page: 'site-got-postcode' },
   SELECT_ADDRESS: { uri: '/select-address', page: 'select-address' },
   ADDRESS_NO_LOOKUP: { uri: '/site-address-no-lookup', page: 'site-address-no-lookup' },
-  UPLOAD_MAP: { uri: '/upload-map', page: 'upload-map' },
+  UPLOAD_MAP: { uri: '/upload-survey-map', page: 'upload-map' },
   UPLOAD_MAP_MITIGATIONS_DURING_DEVELOPMENT: { uri: '/upload-map-of-mitigations-during-development', page: 'upload-map-of-mitigations-during-development' },
   UPLOAD_MAP_MITIGATIONS_AFTER_DEVELOPMENT: { uri: '/upload-map-of-mitigations-after-development', page: 'upload-map-of-mitigations-after-development' },
   SITE_GRID_REF: { uri: '/site-grid-ref', page: 'site-grid-ref' },
@@ -176,13 +176,13 @@ export const convictionsURIs = {
 }
 
 export const ReturnsURIs = {
-  NIL_RETURN: { uri: '/licensed-actions', page: 'licensed-actions' },
+  NIL_RETURN: { uri: '/did-you-carry-out-licensed-actions', page: 'licensed-actions' },
   OUTCOME: { uri: '/outcome', page: 'outcome' },
-  WHY_NIL: { uri: '/why-nil', page: 'why-nil' },
+  WHY_NIL: { uri: '/reason-actions-not-done', page: 'why-nil' },
   ANOTHER_LICENCE: { uri: '/another-licence', page: 'another-licence' },
   COMPLETE_WITHIN_DATES: { uri: '/complete-within-dates', page: 'complete-within-dates' },
-  WORK_START: { uri: '/work-start', page: 'work-start' },
-  WORK_END: { uri: '/work-finish', page: 'work-finish' },
+  WORK_START: { uri: '/date-work-started', page: 'work-start' },
+  WORK_END: { uri: '/date-work-finished', page: 'work-finish' },
   LICENCE_CONDITIONS: { uri: '/licence-conditions', page: 'licence-conditions' },
   CHECK_YOUR_ANSWERS: { uri: '/returns-check', page: 'returns-check' },
   DECLARATION: { uri: '/returns-declaration', page: 'returns-declaration' },
@@ -192,20 +192,20 @@ export const ReturnsURIs = {
   UPLOADED_FILES_CHECK: { uri: '/returns-uploaded-files', page: 'returns-uploaded-files' },
 
   A24: {
-    DISTURB_BADGERS: { uri: '/a24/disturb-badgers', page: 'disturb-badgers' },
-    ONE_WAY_GATES: { uri: '/a24/one-way-gates', page: 'one-way-gates' },
-    BLOCKING_OR_PROOFING: { uri: '/a24/blocking-or-proofing', page: 'blocking-or-proofing' },
-    DAMAGE_BY_HAND_OR_MECHANICAL_MEANS: { uri: '/a24/damage-by-hand-or-mechanical-means', page: 'damage-by-hand-or-mechanical-means' },
-    DESTROY_VACANT_SETT: { uri: '/a24/destroy-vacant-sett', page: 'destroy-vacant-sett' },
+    DISTURB_BADGERS: { uri: '/a24/were-badgers-disturbed', page: 'disturb-badgers' },
+    ONE_WAY_GATES: { uri: '/a24/were-set-entrances-obstructed-one-way-gates', page: 'one-way-gates' },
+    BLOCKING_OR_PROOFING: { uri: '/a24/were-set-entrances-obstructed-blocking-or-proofing', page: 'blocking-or-proofing' },
+    DAMAGE_BY_HAND_OR_MECHANICAL_MEANS: { uri: '/a24/was-sett-damaged-hand-or-mechanical-means', page: 'damage-by-hand-or-mechanical-means' },
+    DESTROY_VACANT_SETT: { uri: '/a24/was-sett-destroyed-hand-or-mechanical-means', page: 'destroy-vacant-sett' },
     DESTROY_DATE: { uri: '/a24/destroy-date', page: 'destroy-date' },
-    ARTIFICIAL_SETT: { uri: '/a24/artificial-sett', page: 'artificial-sett' },
-    WHY_NO_ARTIFICIAL_SETT: { uri: '/a24/why-no-artificial-sett', page: 'why-no-artificial-sett' },
-    ARTIFICIAL_SETT_DETAILS: { uri: '/a24/artificial-sett-details', page: 'artificial-sett-details' },
-    ARTIFICIAL_SETT_EVIDENCE_FOUND: { uri: '/a24/artificial-sett-evidence-found', page: 'artificial-sett-evidence-found' },
+    ARTIFICIAL_SETT: { uri: '/a24/did-you-create-artificial-sett', page: 'artificial-sett' },
+    WHY_NO_ARTIFICIAL_SETT: { uri: '/a24/why-artificial-sett-not-created', page: 'why-no-artificial-sett' },
+    ARTIFICIAL_SETT_DETAILS: { uri: '/a24/describe-artificial-sett-work', page: 'artificial-sett-details' },
+    ARTIFICIAL_SETT_EVIDENCE_FOUND: { uri: '/a24/did-badgers-find-artificial-sett', page: 'artificial-sett-evidence-found' },
     ARTIFICIAL_SETT_GRID_REFERENCE: { uri: '/a24/artificial-sett-grid-reference', page: 'artificial-sett-grid-reference' },
     ARTIFICIAL_SETT_CREATED_BEFORE_CLOSURE: { uri: '/a24/artificial-sett-created-before-closure', page: 'artificial-sett-created-before-closure' },
-    WHY_NOT_COMPLETE_WITHIN_DATES: { uri: '/why-not-completes-within-dates', page: 'why-not-completes-within-dates' },
-    WELFARE_CONCERNS: { uri: '/welfare-concerns', page: 'welfare-concerns' }
+    WHY_NOT_COMPLETE_WITHIN_DATES: { uri: '/why-work-not-completed-within-licence-dates', page: 'why-not-completes-within-dates' },
+    WELFARE_CONCERNS: { uri: '/licensed-activity-cause-welfare-concerns', page: 'welfare-concerns' }
   }
 }
 

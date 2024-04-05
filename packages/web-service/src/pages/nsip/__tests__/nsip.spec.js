@@ -64,7 +64,7 @@ describe('The NSIP page', () => {
       })
     }
     const result = await completion(request)
-    expect(result).toEqual('/window-not-open')
+    expect(result).toEqual('/application-processing-window-warning')
   })
 
   it('the NSIP page completion causes a redirect to the landowner page if the current date is not in the warning window', async () => {

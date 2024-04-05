@@ -29,7 +29,7 @@ describe('The habitat active entrances page', () => {
         }
       }
       const { completion } = await import('../habitat-active-entrances.js')
-      expect(await completion(request)).toBe('/habitat-grid-ref')
+      expect(await completion(request)).toBe('/sett-grid-reference')
     })
     it('the habitat-active-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({

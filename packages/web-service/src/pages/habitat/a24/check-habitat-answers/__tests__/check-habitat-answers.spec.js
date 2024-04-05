@@ -1,6 +1,6 @@
 import path from 'path'
 import { compileTemplate } from '../../../../../initialise-snapshot-tests.js'
-
+import { habitatURIs } from '../../../../../uris.js'
 describe('The check habitat answers page', () => {
   beforeEach(() => jest.resetModules())
 
@@ -140,7 +140,7 @@ describe('The check habitat answers page', () => {
       }
       const { completion } = await import('../check-habitat-answers.js')
       const result = await completion(request)
-      expect(result).toBe('/habitat-name')
+      expect(result).toBe('/sett-name')
       expect(setData).toHaveBeenCalledWith({
         applicationId: '123abc'
       })
@@ -181,7 +181,7 @@ describe('The check habitat answers page', () => {
         }
       }
       const { completion } = await import('../check-habitat-answers.js')
-      expect(await completion(request)).toBe('/habitat-name')
+      expect(await completion(request)).toBe('/sett-name')
     })
     it('the check-habitat-answers return undefined if the user does not clicked yes or no', async () => {
       jest.doMock('../../../../../services/api-requests.js', () => ({
@@ -266,6 +266,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData:
           [
             {
@@ -302,6 +303,7 @@ describe('The check habitat answers page', () => {
         const renderedHtml = template.render({
           data: {
             confirmDelete: '/confirm-delete',
+            habitatURIs: { ...habitatURIs },
             pageData:
               [
                 {
@@ -420,6 +422,7 @@ describe('The check habitat answers page', () => {
       const { getData } = await import('../check-habitat-answers.js')
       expect(await getData(request)).toStrictEqual({
         confirmDelete: '/confirm-delete',
+        habitatURIs: { ...habitatURIs },
         pageData: [
           {
             settType: 100000000,
