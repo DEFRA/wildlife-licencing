@@ -13,6 +13,7 @@
     "test-clear": "jest --clearCache",
     "test:only-changed": "jest --changedSince master",
     "test:watch": "jest --watch",
+    "test:update-snapshots": "jest --updateSnapshot",
     "format": "standard",
     "lint": "standard",
     "lint:fix": "standard --fix",

@@ -3,13 +3,23 @@ import { APIRequests } from '../services/api-requests.js'
 
 export default async (request, h) => {
   const journeyData = await request.cache().getData() || {}
-  journeyData.cookies = { analytics: boolFromYesNo(request.query.analytics) }
-  await request.cache().setData(journeyData)
 
   // If signed save the cookie preferences
   if (journeyData.userId) {
     const user = await APIRequests.USER.getById(journeyData.userId)
-    Object.assign(user, { cookiePrefs: journeyData.cookies })
+
+    const cookiePrefs = user.cookiePrefs || {}
+
+    if (request.query.analytics) {
+      cookiePrefs.analytics = boolFromYesNo(request.query.analytics)
+    }
+
+    if (request.query.hideMessage) {
+      cookiePrefs.hideMessage = boolFromYesNo(request.query.hideMessage)
+    }
+
+    user.cookiePrefs = cookiePrefs
+
     await APIRequests.USER.update(journeyData.userId, user)
   }
 
