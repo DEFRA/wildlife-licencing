@@ -103,8 +103,8 @@ describe('tasklist general sections', () => {
 
   it('payer', () => {
     const task = TASKS[SECTION_TASKS.INVOICE_PAYER]
-    expect(task.uri([])).toEqual('/invoice-responsible')
-    expect(task.uri([{ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE }])).toEqual('/invoice-check-answers')
+    expect(task.uri([])).toEqual('/invoice-payer-responsibility')
+    expect(task.uri([{ tag: SECTION_TASKS.INVOICE_PAYER, tagState: tagStatus.COMPLETE }])).toEqual('/invoice-payer-check-answers')
 
     expect(expect(task.status([])).toEqual(tagStatus.CANNOT_START))
     expect(expect(task.status([
