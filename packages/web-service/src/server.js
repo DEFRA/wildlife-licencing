@@ -75,6 +75,8 @@ const init = async server => {
 
   await server.register(plugins)
 
+  console.log('Path -', path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'dist', 'govuk'))
+
   await server.views({
     engines: {
       njk: {
@@ -93,9 +95,12 @@ const init = async server => {
     isCached: process.env.NODE_ENV !== 'development',
 
     path: [
-      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND),
-      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk'),
-      path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk', 'components'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'dist'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'dist', 'govuk'),
+      path.join(__dirname, 'node_modules', GOVUK_FRONTEND, 'dist', 'govuk', 'components'),
+      // path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND),
+      // path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk'),
+      // path.join(__dirname, nodeModulesPath, GOVUK_FRONTEND, 'govuk', 'components'),
       path.join(__dirname, 'src/pages/layout'),
       path.join(__dirname, 'src/pages/macros'),
       ...pagesViewPaths

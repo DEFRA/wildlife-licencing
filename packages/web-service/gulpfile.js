@@ -18,12 +18,12 @@ import concat from 'gulp-concat'
 
 const sass = gulpSass(s)
 
-const nodeModulesPath = '../../node_modules'
+const nodeModulesPath = 'node_modules'
 
 const paths = {
   assets: 'assets/',
   public: 'public/',
-  govUk: path.join(nodeModulesPath, 'govuk-frontend', 'govuk/'),
+  govUk: path.join(nodeModulesPath, 'govuk-frontend', 'dist/', 'govuk/'),
   autocompleteAssets: path.join(nodeModulesPath, 'accessible-autocomplete', '/dist/{*.js,*.js.map}')
 }
 
@@ -52,8 +52,8 @@ const copyRobots = () => {
 }
 
 const copyJs = () => {
-  return gulp.src([`${paths.govUk}all.js`])
-    .pipe(concat('all.js'))
+  return gulp.src([`${paths.govUk}govuk-frontend.min.js`])
+    .pipe(concat('govuk-frontend.min.js'))
     .pipe(minify({ noSource: true }))
     .pipe(gulp.dest(`${paths.public}javascript`))
 }
