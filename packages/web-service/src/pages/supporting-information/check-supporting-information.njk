@@ -28,8 +28,8 @@
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Uploaded file {{ loop.index }}</dt>
                 <dd class="govuk-summary-list__value">
-                    {{ upload.filename }} <br>
-                    <p>Uploaded {{ upload.uploadedDate }}</>
+                    <p>  {{ upload.filename }} </p>
+                    <p class="govuk-body-s">Uploaded {{ upload.uploadedDate }}</>
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link govuk-link--no-visited-state" href="{{upload.removeUploadUrl}}?uploadId={{upload.id}}"  name: "remove-file">
