@@ -29,7 +29,7 @@ export const buildApiObject = async applicationId => {
     }
   })
 
-  debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
+  debug(`Pre-transform payload object: ${JSON.stringify(payload)}`)
   return payload
 }
 
@@ -44,7 +44,7 @@ export const licenceResendJobProcess = async job => {
     } else {
       // Update the application and associated data in Power Apps
       const targetKeys = await licenceResend(payload)
-      debug(`Returned key object: ${JSON.stringify(targetKeys, null, 4)}`)
+      debug(`Returned key object: ${JSON.stringify(targetKeys)}`)
     }
   } catch (error) {
     if (error instanceof UnRecoverableBatchError) {

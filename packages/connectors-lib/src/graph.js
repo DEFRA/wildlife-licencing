@@ -38,7 +38,7 @@ export const GRAPH = {
         graphQueryEntities.siteId = siteResponse.id
         const driveResponse = await client.api(`${base}/sites/${graphQueryEntities.siteId}/drives`).get()
         graphQueryEntities.drives = driveResponse.value
-        debug('initializing sharepoint graph interface: ' + JSON.stringify(graphQueryEntities, null, 4))
+        debug('initializing sharepoint graph interface: ' + JSON.stringify(graphQueryEntities))
       },
       /**
        * Upload a file to the sharepoint drive

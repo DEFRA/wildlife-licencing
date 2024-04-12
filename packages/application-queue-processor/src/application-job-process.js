@@ -254,7 +254,7 @@ export const buildApiObject = async applicationId => {
     // Add the designated sites
     await doApplicationDesignatedSites(applicationId, payload)
 
-    debug(`Pre-transform payload object: ${JSON.stringify(payload, null, 4)}`)
+    debug(`Pre-transform payload object: ${JSON.stringify(payload)}`)
     return payload
   } catch (error) {
     console.error('Error building source object and keys', error)
