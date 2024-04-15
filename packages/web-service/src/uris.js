@@ -85,11 +85,11 @@ export const contactURIs = {
     NAME: { uri: '/licence-holder-name', page: 'applicant-name' },
     IS_ORGANISATION: { uri: '/licence-holder-organisation', page: 'applicant-organisation' },
     EMAIL: { uri: '/licence-holder-email', page: 'applicant-email' },
-    PHONE_NUMBER: { uri: '/applicant-phone-number', page: 'applicant-phone-number' },
+    PHONE_NUMBER: { uri: '/licence-holder-phone-number', page: 'applicant-phone-number' },
     CHECK_ANSWERS: { uri: '/licence-holder-check-answers', page: 'applicant-check-answers' },
     POSTCODE: { uri: '/licence-holder-postcode', page: 'applicant-postcode' },
-    ADDRESS: { uri: '/applicant-address', page: 'applicant-address' },
-    ADDRESS_FORM: { uri: '/applicant-address-form', page: 'applicant-address-form' }
+    ADDRESS: { uri: '/licence-holder-address', page: 'applicant-address' },
+    ADDRESS_FORM: { uri: '/licence-holder-address-form', page: 'applicant-address-form' }
   },
   AUTHORISED_PEOPLE: {
     ADD: { uri: '/add-authorised-person', page: 'add-authorised-person' },

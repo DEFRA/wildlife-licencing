@@ -28,7 +28,7 @@ describe('applicant email page', () => {
       }
       const { completion } = await import('../applicant-email.js')
       const result = await completion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-phone-number')
+      expect(result).toEqual('/licence-holder-phone-number')
     })
 
     it('redirects to check your answers url when we have an account and the phone number is set', async () => {
@@ -94,7 +94,7 @@ describe('applicant email page', () => {
       }
       const { completion } = await import('../applicant-email.js')
       const result = await completion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-phone-number')
+      expect(result).toEqual('/licence-holder-phone-number')
     })
 
     it('redirects to check your answers url when we dont have an account and the phone number set', async () => {
