@@ -99,9 +99,9 @@ describe('additional page data', () => {
     expect(mockHeaders).toHaveBeenCalledWith('Content-Security-Policy', expect.stringContaining('script-src \'self\''))
     expect(request.response.source.context).toEqual({
       _uri: {
-        applicantAddress: '/applicant-address',
+        applicantAddress: '/licence-holder-address',
         applicantEmail: '/licence-holder-email',
-        applicantPhoneNumber: '/applicant-phone-number',
+        applicantPhoneNumber: '/licence-holder-phone-number',
         applicantIsOrganisation: '/licence-holder-organisation',
         applicantName: '/licence-holder-name',
         applicantPostcode: '/licence-holder-postcode',
