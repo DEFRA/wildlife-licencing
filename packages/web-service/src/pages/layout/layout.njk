@@ -92,7 +92,7 @@
 {% endset %}
 
 {% block bodyStart %}
-{% if not cookiePrefs or not cookiePrefs.analytics %}
+{% if not cookiePrefs or cookiePrefs.analytics == null %}
     {{ govukCookieBanner({
       ariaLabel: "Cookies on apply for and manage a wildlife licence",
       messages: [
@@ -125,10 +125,10 @@
 {% endif %}
 
 {% set hideCookieBannerHtml %}
-  <p class="govuk-body">You've accepted analytics cookies. You can <a href="">change your cookie settings</a> at any time.</p>
+  <p class="govuk-body">You've {{ "accepted" if cookiePrefs.analytics == true else "rejected" }} analytics cookies. You can <a href="/cookie-info">change your cookie settings</a> at any time.</p>
 {% endset %}
 
-{% if cookiePrefs.analytics and not cookiePrefs.hideMessage %}
+{% if (cookiePrefs.analytics == true or cookiePrefs.analytics == false) and not cookiePrefs.hideMessage %}
     {{ govukCookieBanner({
       messages: [
         {
