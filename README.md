@@ -8,6 +8,14 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=bugs)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
 
+## Outstanding issues
+
+2024-04-23
+
+As the frontend project is being halted we thought it be helpful to future development to log any outstanding issues that need to be resolved. These are: 
+
+- Submitted application are not present in power app: Jira - https://eaflood.atlassian.net/browse/SDDSIP-2211
+
 ## Getting started
 
 ## Editor configuration
