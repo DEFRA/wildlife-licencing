@@ -61,6 +61,7 @@ describe('the check your answers functions', () => {
         licenceEndDate: '26 August 2022',
         licenceStartDate: '10 August 2022',
         noArtificialSettReason: undefined,
+        workStartUri: '/date-work-started',
         uploadedFiles: [
           {
             applicationId: 'afda812d-c4df-4182-9978-19e6641c4a6e',

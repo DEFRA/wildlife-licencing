@@ -32,7 +32,8 @@ describe('Defra ID', () => {
 
     jest.doMock('jose', () => ({
       createRemoteJWKSet: jest.fn(() => 'ket-set'),
-      jwtVerify: () => ({ payload: 'payload' })
+      jwtVerify: () => ({ payload: 'payload' }),
+      decodeJwt: () => ('decoded')
     }))
   })
 
@@ -77,6 +78,15 @@ describe('Defra ID', () => {
       await DEFRA_ID.initialise('callback')
       const decode = await DEFRA_ID.verifyToken('jwt')
       expect(decode).toEqual('payload')
+    })
+  })
+
+  describe('decodeToken', () => {
+    it('decodes a token', async () => {
+      const { DEFRA_ID } = await import('../defra-id.js')
+      await DEFRA_ID.initialise('callback')
+      const decode = DEFRA_ID.decodeToken('jwt')
+      expect(decode).toEqual('decoded')
     })
   })
 })

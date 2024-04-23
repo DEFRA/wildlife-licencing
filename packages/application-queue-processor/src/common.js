@@ -9,7 +9,7 @@ import { SEQUELIZE } from '@defra/wls-connectors-lib'
  */
 export const postProcess = async targetKeys => {
   const debug = db('queue-processor:post-process')
-  debug(`Post process batch response object: ${JSON.stringify(targetKeys, null, 4)}`)
+  debug(`Post process batch response object: ${JSON.stringify(targetKeys)}`)
   const MODEL_MAP = {
     applications: { sddsKey: 'sddsApplicationId' },
     sites: { sddsKey: 'sddsSiteId' },

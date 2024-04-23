@@ -33,7 +33,7 @@ exports[`convictions check answers page handler convictions check answers page t
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -43,7 +43,7 @@ exports[`convictions check answers page handler convictions check answers page t
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -58,7 +58,7 @@ exports[`convictions check answers page handler convictions check answers page t
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`convictions check answers page handler convictions check answers page t
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -83,6 +83,10 @@ exports[`convictions check answers page handler convictions check answers page t
     </div>
   
 </div>
+
+
+
+
 
 
 

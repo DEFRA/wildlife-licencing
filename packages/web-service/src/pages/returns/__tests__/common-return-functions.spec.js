@@ -48,7 +48,7 @@ describe('the common return functions', () => {
         })
       }
       const { licenceActionsCompletion } = await import('../common-return-functions.js')
-      expect(await licenceActionsCompletion(request)).toEqual('/a24/artificial-sett')
+      expect(await licenceActionsCompletion(request)).toEqual('/a24/did-you-create-artificial-sett')
     })
   })
 

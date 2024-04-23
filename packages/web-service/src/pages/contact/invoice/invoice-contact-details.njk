@@ -7,6 +7,16 @@
 {% set noneSelected = 'You have not selected an option' %}
 {% set noneSelectedButton = 'Select an option' %}
 
+{% set fieldset = {
+    legend: {
+        text: "Are these the contact details to be used for the invoice?",
+        isPageHeading: false,
+        classes: "govuk-fieldset__legend--m"
+    }
+} %}
+
+{% set radioHint = "You will have to pay a £101 administration charge if you want to change this after the application is submitted." %}
+
 {% block pageContent %}
     {% if data.responsibility.responsible === 'applicant' %}
         {% set questionMap = {
@@ -26,8 +36,6 @@
 
     {{ answerSummary(questionMap, data.checkYourAnswers) }}
 
-    <h2 class="govuk-heading-m">Are these the contact details to be used for the invoice?</h2>
-    <h2 class="govuk-hint">You will have to pay a £101 administration charge if you want to change this after the application is submitted.</h2>
     {{ super() }}
 
 {% endblock %}

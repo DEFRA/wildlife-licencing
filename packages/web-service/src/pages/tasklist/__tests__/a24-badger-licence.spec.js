@@ -30,9 +30,9 @@ describe('The licence type class', () => {
   it('the A24 specific task functions', async () => {
     const { A24_SETTS_TASK } = await import('../a24-badger-licence.js')
     const csr = A24_SETTS_TASK.uri([])
-    expect(csr).toEqual('/habitat-start')
+    expect(csr).toEqual('/sett-start')
     const csr2 = A24_SETTS_TASK.uri([{ tag: 'setts', tagState: tagStatus.NOT_STARTED }])
-    expect(csr2).toEqual('/habitat-start')
+    expect(csr2).toEqual('/sett-start')
     const enabled = A24_SETTS_TASK.enabled([{ tag: 'eligibility-check', tagState: tagStatus.COMPLETE }])
     expect(enabled).toBeTruthy()
     const status = A24_SETTS_TASK.status([])

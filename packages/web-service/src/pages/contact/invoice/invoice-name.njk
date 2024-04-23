@@ -1,8 +1,9 @@
 {% extends "standard-form.njk" %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "input/macro.njk" import govukInput %}
 
-{% set title = 'Who is responsible for paying the invoice?' %}
-{% set hintText = 'Enter the full name' %}
+{% set title = 'Invoice payer details' %}
+{% set hintText = 'Enter the full name of an individual. Do not enter the name of an organisation or department.' %}
 
 {% set errorMap = {
         'name': {
@@ -14,10 +15,15 @@
 %}
 
 {% block pageContent %}
+
+    {{ govukInsetText({
+        text: "You will have to pay a £101 administration charge if you want to change these details after the application is submitted."
+    }) }}
     {{ govukInput({
       label: {
-        text: '',
-        classes: "govuk-!-margin-top-7"
+        text: 'Who should we send the invoice to?',
+        classes: "govuk-label--m",
+            isPageHeading: false
       },
       id: "name",
       name: "name",

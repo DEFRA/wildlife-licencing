@@ -33,7 +33,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -43,7 +43,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -58,7 +58,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`applications page applications page template Matches the snapshot 1`] =
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -83,6 +83,10 @@ exports[`applications page applications page template Matches the snapshot 1`] =
     </div>
   
 </div>
+
+
+
+
 
 
 
@@ -192,8 +196,10 @@ exports[`applications page applications page template Matches the snapshot 1`] =
     </h2>
   </div>
   <div class=\\"govuk-notification-banner__content\\">
-  <p class=\\"govuk-body\\">We use some essential cookies to make this service work.</p>
-  <p class=\\"govuk-body\\">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+  <h3 class=\\"govuk-notification-banner__heading\\">
+    Application saved
+  </h3>
+  <p class=\\"govuk-body\\">Return to an existing application by selecting it from your list of licence applications.</p>
 </div>
 </div>
 
@@ -220,6 +226,10 @@ exports[`applications page applications page template Matches the snapshot 1`] =
 
     <div hidden>
         2
+     </div>
+
+    <div hidden>
+        3
      </div>
 
 
@@ -332,6 +342,60 @@ exports[`applications page applications page template Matches the snapshot 1`] =
           >
     
         <strong class=\\"govuk-tag govuk-tag--blue govuk-!-margin-top-4\\">IN PROGRESS</strong>
+    
+</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class=\\"govuk-table__row\\">
+        
+          
+          
+          <th scope=\\"row\\" class=\\"govuk-table__header\\"
+          >
+    <p class=\\"govuk-body govuk-!-font-weight-bold govuk-!-margin-top-4\\">
+        
+            <a href=\\"?applicationId=8179c2f2-6eec-43d6-899b-6504d6a1e798\\" class=\\"govuk-link govuk-link--no-visited-state\\">Badger mitigation</a>
+        
+    </p>
+</th>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+  
+    <p></p>
+  
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+
+  <p></p>
+
+</td>
+          
+        
+          
+          
+          <td class=\\"govuk-table__cell\\"
+          >
+    
+        
+    
+        
+            <strong class=\\"govuk-tag govuk-tag--grey govuk-!-margin-top-4\\">WITHDRAWN</strong>
+        
+    
+
     
 </td>
           

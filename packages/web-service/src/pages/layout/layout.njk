@@ -8,11 +8,6 @@
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "govuk/components/cookie-banner/macro.njk" import govukCookieBanner %}
 
-{% set html %}
-  <p class="govuk-body">We use some essential cookies to make this service work.</p>
-  <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
-{% endset %}
-
 {% block head %}
     {% if gtm and cookiePrefs.analytics %}
         <!-- Google Tag Manager -->
@@ -91,32 +86,60 @@
   </div>
 {% endblock %}
 
+{% set cookieBannerHtml %}
+  <p class="govuk-body">We use some essential cookies to make this service work.</p>
+  <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+{% endset %}
+
 {% block bodyStart %}
-{% if not cookiePrefs %}
+{% if not cookiePrefs or cookiePrefs.analytics == null %}
     {{ govukCookieBanner({
-      ariaLabel: "Cookies on the wildlife licencing service",
+      ariaLabel: "Cookies on apply for and manage a wildlife licence",
       messages: [
         {
-          headingText: "Cookies on the wildlife licencing service",
-          html: html,
+          headingText: "Cookies on apply for and manage a wildlife licence",
+          html: cookieBannerHtml,
           actions: [
             {
               text: "Accept analytics cookies",
               type: "button",
               name: "cookies",
               value: "accept",
-              href: "/set-cookie-prefs?analytics=yes"
+              href: "/set-cookie-preferences?analytics=yes"
             },
             {
               text: "Reject analytics cookies",
               type: "button",
               name: "cookies",
               value: "reject",
-              href: "/set-cookie-prefs?analytics=no"
+              href: "/set-cookie-preferences?analytics=no"
             },
             {
               text: "View cookies",
               href: _uri.cookieInfo
+            }
+          ]
+        }
+      ]
+    }) }}
+{% endif %}
+
+{% set hideCookieBannerHtml %}
+  <p class="govuk-body">You've {{ "accepted" if cookiePrefs.analytics == true else "rejected" }} analytics cookies. You can <a href="/cookie-info">change your cookie settings</a> at any time.</p>
+{% endset %}
+
+{% if (cookiePrefs.analytics == true or cookiePrefs.analytics == false) and not cookiePrefs.hideMessage %}
+    {{ govukCookieBanner({
+      messages: [
+        {
+          html: hideCookieBannerHtml,
+          actions: [
+            {
+              text: "Hide cookie message",
+              type: "button",
+              name: "hideMessage",
+              value: "accept",
+              href: "/set-cookie-preferences?hideMessage=yes"
             }
           ]
         }

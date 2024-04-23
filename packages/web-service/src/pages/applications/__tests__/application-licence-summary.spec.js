@@ -178,7 +178,7 @@ describe('application-licence page', () => {
       }))
 
       const { completion } = await import('../application-licence-summary.js')
-      expect(await completion(request)).toBe('/licensed-actions')
+      expect(await completion(request)).toBe('/did-you-carry-out-licensed-actions')
       expect(mockSetData).toHaveBeenCalledWith({ applicationId: '94de2969-91d4-48d6-a5fe-d828a244aa18', licenceId: '123-AbEF-67', licenceNumber: '2023-500000-SPM-LIC' })
     })
 

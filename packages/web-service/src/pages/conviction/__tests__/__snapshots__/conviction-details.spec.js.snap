@@ -33,7 +33,7 @@ exports[`conviction details page handler conviction details page template Matche
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -43,7 +43,7 @@ exports[`conviction details page handler conviction details page template Matche
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -58,7 +58,7 @@ exports[`conviction details page handler conviction details page template Matche
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`conviction details page handler conviction details page template Matche
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -83,6 +83,10 @@ exports[`conviction details page handler conviction details page template Matche
     </div>
   
 </div>
+
+
+
+
 
 
 
@@ -152,14 +156,15 @@ exports[`conviction details page handler conviction details page template Matche
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +175,7 @@ exports[`conviction details page handler conviction details page template Matche
   </legend>
   
 
-
+                    
                 
   <p class=\\"govuk-body\\">You only need to tell us about convictions within the last 5 years or unspent convictions.
     <a
@@ -187,11 +192,9 @@ exports[`conviction details page handler conviction details page template Matche
   
 
 <div class=\\"govuk-form-group\\">
-  <h1 class=\\"govuk-label-wrapper\\">
-    <label class=\\"govuk-label govuk-label--m\\" for=\\"conviction-details\\">
-      Describe the convictions and their dates
-    </label>
-    </h1>
+  <label class=\\"govuk-label govuk-label--m\\" for=\\"conviction-details\\">
+    Describe the convictions and their dates
+  </label>
 
 
   <textarea class=\\"govuk-textarea\\" id=\\"conviction-details\\" name=\\"conviction-details\\" rows=\\"5\\">conviction</textarea>
@@ -199,12 +202,14 @@ exports[`conviction details page handler conviction details page template Matche
 
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -216,10 +221,10 @@ exports[`conviction details page handler conviction details page template Matche
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>

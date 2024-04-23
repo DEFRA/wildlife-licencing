@@ -10,18 +10,17 @@
 %}
 
 {% set title = 'Enter a reference or purchase order number' %}
-
+{% set labelId = 'purchase-order' %}
 {% block pageContent %}
-
-  {{ govukInput({
-    id: 'purchase-order',
-    name: 'purchase-order',
-    errorMessage: { text: 'Enter a reference or purchase order number' } if error['purchase-order'],
-    attributes: { maxlength: 100 },
-    value: data.purchaseOrder,
-    hint: {
-      text: 'You will have to pay a £101 administration charge if you want to change this after the application is submitted.'
-    }
-  }) }}
+    {{ govukInput({
+        id: labelId,
+        name: 'purchase-order',
+        errorMessage: { text: 'Enter a reference or purchase order number' } if error['purchase-order'],
+        attributes: { maxlength: 100 },
+        value: data.purchaseOrder,
+        hint: {
+            text: 'You will have to pay a £101 administration charge if you want to change this after the application is submitted.'
+        }
+    }) }}
 
 {% endblock %}

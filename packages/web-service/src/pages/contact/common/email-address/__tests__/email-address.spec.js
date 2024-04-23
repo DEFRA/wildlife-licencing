@@ -191,8 +191,8 @@ describe('the email-address page', () => {
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
-      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return '/applicant-check-answers' })(request)
-      expect(result).toEqual('/applicant-postcode')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return contactURIs.APPLICANT.CHECK_ANSWERS })(request)
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if an account is assigned and has an address, and has submitted a reference purhcase order number, redirect to the check page', async () => {
@@ -228,8 +228,8 @@ describe('the email-address page', () => {
         })
       }
       const { emailAddressCompletion } = await import('../email-address.js')
-      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return '/applicant-check-answers' })(request)
-      expect(result).toEqual('/applicant-check-answers')
+      const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT, () => { return contactURIs.APPLICANT.CHECK_ANSWERS })(request)
+      expect(result).toEqual('/licence-holder-check-answers')
     })
 
     it('if no account is assigned redirect to the postcode page', async () => {
@@ -261,7 +261,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-postcode')
+      expect(result).toEqual('/licence-holder-postcode')
     })
 
     it('if no account is assigned and the contact has an address, redirect to the check page', async () => {
@@ -296,7 +296,7 @@ describe('the email-address page', () => {
       }
       const { emailAddressCompletion } = await import('../email-address.js')
       const result = await emailAddressCompletion('APPLICANT', 'APPLICANT_ORGANISATION', contactURIs.APPLICANT)(request)
-      expect(result).toEqual('/applicant-check-answers')
+      expect(result).toEqual('/licence-holder-check-answers')
     })
   })
 })

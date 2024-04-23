@@ -23,7 +23,7 @@ describe('The habitat entrances page', () => {
         }
       }
       const { completion } = await import('../habitat-entrances.js')
-      expect(await completion(request)).toBe('/habitat-active-entrances')
+      expect(await completion(request)).toBe('/sett-active-entrance-total')
     })
 
     it('the habitat-entrances page forwards onto check-habitat-answers with no errors on return journey', async () => {

@@ -33,7 +33,7 @@ exports[`The previous licence page The previous licence page template Matches th
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     
 
-    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on the wildlife licencing service\\">
+    <div class=\\"govuk-cookie-banner \\" data-nosnippet role=\\"region\\" aria-label=\\"Cookies on apply for and manage a wildlife licence\\">
     
     
 
@@ -43,7 +43,7 @@ exports[`The previous licence page The previous licence page template Matches th
     <div class=\\"govuk-grid-row\\">
       <div class=\\"govuk-grid-column-two-thirds\\">
         
-        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on the wildlife licencing service</h2>
+        <h2 class=\\"govuk-cookie-banner__heading govuk-heading-m\\">Cookies on apply for and manage a wildlife licence</h2>
         
 
         <div class=\\"govuk-cookie-banner__content\\">
@@ -58,7 +58,7 @@ exports[`The previous licence page The previous licence page template Matches th
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=yes\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Accept analytics cookies
             </a>
             
@@ -66,7 +66,7 @@ exports[`The previous licence page The previous licence page template Matches th
         
           
             
-              <a href=\\"/set-cookie-prefs?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
+              <a href=\\"/set-cookie-preferences?analytics=no\\" role=\\"button\\" draggable=\\"false\\" class=\\"govuk-button\\" data-module=\\"govuk-button\\">
               Reject analytics cookies
             </a>
             
@@ -83,6 +83,10 @@ exports[`The previous licence page The previous licence page template Matches th
     </div>
   
 </div>
+
+
+
+
 
 
 
@@ -152,14 +156,15 @@ exports[`The previous licence page The previous licence page template Matches th
 
         <main class=\\"govuk-main-wrapper \\" id=\\"main-content\\" role=\\"main\\">
           
-<div class=\\"govuk-grid-row\\">
-    <div class=\\"govuk-grid-column-two-thirds\\">
-        
+    <div class=\\"govuk-grid-row\\">
+        <div class=\\"govuk-grid-column-two-thirds\\">
+            
     
 
 
-        <form method=\\"post\\" novalidate id=\\"main-content\\">
-            <fieldset class=\\"govuk-fieldset\\">
+            <form method=\\"post\\" novalidate id=\\"main-content\\">
+                
+                    <fieldset class=\\"govuk-fieldset\\">
   
   <legend class=\\"govuk-fieldset__legend govuk-fieldset__legend--l display-wrapped\\">
   
@@ -170,7 +175,7 @@ exports[`The previous licence page The previous licence page template Matches th
   </legend>
   
 
-
+                    
                 
     
 
@@ -220,12 +225,14 @@ exports[`The previous licence page The previous licence page template Matches th
 
 
 
-            
+                
 
 </fieldset>
 
 
-            
+
+
+                
   
 
 
@@ -237,10 +244,10 @@ exports[`The previous licence page The previous licence page template Matches th
   Continue
 </button>
 
-            <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
-        </form>
+                <input type=\\"hidden\\" name=\\"crumb\\" value=\\"\\"/>
+            </form>
+        </div>
     </div>
-</div>
 
         </main>
       </div>

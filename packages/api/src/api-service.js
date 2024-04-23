@@ -22,7 +22,7 @@ const initialize = async () => {
 const debug = db('api:env')
 
 // Warning -- may print sensitive info. Ensure disabled in production
-debug(`Environment: ${JSON.stringify(process.env, null, 4)}`)
+debug(`Environment: ${JSON.stringify(process.env)}`)
 const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 console.log(`Starting ${json.name}:${json.version}`)
 ERRBIT.initialize('API')

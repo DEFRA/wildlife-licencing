@@ -4,6 +4,8 @@ import { APIRequests } from '../services/api-requests.js'
 import db from 'debug'
 const debug = db('web-service:authenticate')
 
+const jwtTimeToString = seconds => new Date(seconds * 1000).toString()
+
 /**
  * Search the database for a user with the id of the contact
  * @param request
@@ -29,11 +31,11 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     if (journeyData?.cookies) {
       Object.assign(payload, { cookiePrefs: journeyData.cookies })
     }
-    debug(`Create user: ${JSON.stringify(payload, null, 4)}`)
+    debug(`Create user: ${JSON.stringify(payload)}`)
     await APIRequests.USER.createIDM(tokenPayload.contactId, payload)
     await APIRequests.USER.requestUserDetails(tokenPayload.contactId)
   } else {
-    debug(`Found user: ${JSON.stringify(user, null, 4)}`)
+    debug(`Found user: ${JSON.stringify(user)}`)
     await APIRequests.USER.requestUserDetails(user.id)
     if (journeyData?.cookies) {
       Object.assign(user, { cookiePrefs: journeyData?.cookies })
@@ -49,7 +51,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
   for (const rel of relationships) {
     if (rel.relationshipType !== 'Citizen') {
       const organisation = await APIRequests.USER.updateOrganisation(rel.organisationId, { name: rel.organisationName })
-      debug(`Setting organisation: ${JSON.stringify(organisation, null, 4)}`)
+      debug(`Setting organisation: ${JSON.stringify(organisation)}`)
       await APIRequests.USER.updateUserOrganisation(rel.userOrganisationId, {
         userId: tokenPayload.contactId,
         organisationId: rel.organisationId,
@@ -59,7 +61,7 @@ export const consumeTokenPayload = async (request, tokenPayload) => {
     }
   }
 
-  debug(`Setting auth: ${JSON.stringify(tokenPayload, null, 4)}`)
+  debug(`Setting auth: ${JSON.stringify(tokenPayload)}`)
   await request.cache().setAuthData(tokenPayload)
 
   // The role relationship is not currently stored in the database as there
@@ -105,7 +107,18 @@ export const defraIdmCallbackPreAuth = async (request, h) => {
     const params = new URLSearchParams(request.query)
     const code = params.get('code')
     debug(`Got code: ${code.substring(0, 10)}...`)
+    debug(`Time now: ${(new Date()).toString()}`)
     const token = await DEFRA_ID.fetchToken(code)
+    const payload = DEFRA_ID.decodeToken(token)
+    debug(`exp time: ${jwtTimeToString(payload.exp)}`)
+    debug(`iat time: ${jwtTimeToString(payload.iat)}`)
+    debug(`nbf time: ${jwtTimeToString(payload.nbf)}`)
+    debug(`Token payload: ${JSON.stringify(payload)}`)
+
+    // We don't want to log actual tokens in production so we first check that this is a dev environment
+    if (process.env.NODE_ENV === 'development') {
+      debug(`Token: ${token}`)
+    }
     const tokenPayload = await DEFRA_ID.verifyToken(token)
     await consumeTokenPayload(request, tokenPayload)
   }

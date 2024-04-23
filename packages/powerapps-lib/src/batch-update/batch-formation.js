@@ -1,6 +1,11 @@
 import crypto from 'crypto'
+import db from 'debug'
 import { v4 as uuidv4 } from 'uuid'
 import { createBatchRequestObjects, Methods } from '../schema/processors/schema-processes.js'
+
+const debug = db('powerapps-lib:batch-formation')
+
+const NUMBER_OF_PRECOMPILED_REGEXES_TO_GENERATE = 200
 
 /**
  * Initialize a batch request
@@ -23,13 +28,21 @@ const headerBuilder = (requestHandle, contentId, table, method, powerAppsId) => 
   result += 'Content-Transfer-Encoding:binary\n'
   result += `Content-ID: ${contentId}\n`
   result += '\n'
-  if (method === Methods.PATCH) {
-    result += `PATCH ${requestHandle.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
-  } else if (method === Methods.POST) {
-    result += `POST ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
-  } else if (method === Methods.PUT) {
-    result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+
+  switch (method) {
+    case Methods.PATCH:
+      result += `PATCH ${requestHandle.clientUrl}/${table}(${powerAppsId}) HTTP/1.1\n`
+      break
+    case Methods.POST:
+      result += `POST ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+      break
+    case Methods.PUT:
+      result += `PUT ${requestHandle.clientUrl}/${table} HTTP/1.1\n`
+      break
+    default:
+      // We only care about the methods above so take no action
   }
+
   result += 'Content-Type: application/json;type=entry\n'
   return result
 }
@@ -54,6 +67,7 @@ export const createBatchRequest = async (requestHandle, payload) => {
   let body = batchStart(requestHandle.batchId, changeId)
   // __URL__
   for (const b of requestHandle.batchRequestObjects) {
+    debug(`Creating batch request for: ${JSON.stringify(b)}`)
     const assignments = Object.entries(b.assignments)
       .reduce((a, [key, value]) => ({
         ...a,
@@ -76,8 +90,8 @@ export const createBatchRequest = async (requestHandle, payload) => {
 /*
  * Create a set of pre-compiled regular expressions to extract the table keys from the batch response
  */
-const preComplied = (n =>
-  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(200)
+const preCompiled = (n =>
+  ([...Array(n).keys()].map(i => new RegExp(`Content-ID: ${i}[\\w\\n\\s\\/.\\-:]*Location: \\/(?<entity>.*)\\((?<eid>.*)\\)`))))(NUMBER_OF_PRECOMPILED_REGEXES_TO_GENERATE)
 
 /**
  * Create a key array from the response body text and the batch request object
@@ -89,7 +103,7 @@ export const createKeyObject = (requestHandle, responseBody) => {
   const result = []
   const strippedResponseBody = responseBody.replaceAll(requestHandle.clientUrl, '')
   for (const batchRequestObject of requestHandle.batchRequestObjects) {
-    const sddsId = strippedResponseBody.match(preComplied[batchRequestObject.contentId])?.groups?.eid
+    const sddsId = strippedResponseBody.match(preCompiled[batchRequestObject.contentId])?.groups?.eid
     if (sddsId) {
       result.push({
         apiTableName: batchRequestObject.apiTable,
