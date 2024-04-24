@@ -37,7 +37,7 @@
     "argon2": "^0.30.1",
     "dotenv": "^10.0.0",
     "openapi-backend": "^5.0.0",
-    "sequelize": "^6.12.5",
+    "sequelize": "^6.37.3",
     "swagger-ui": "^4.1.0",
     "uuid": "^8.3.2",
     "winston": "^3.11.0"
