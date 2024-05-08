@@ -44,8 +44,6 @@ First edit the docker secret environment files to add the secret keys
 
 - docker/env/aqp-secrets.env
 
-(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
-
 #### Extra step for M1 Mac users
 Unfortunately the virus check package does not run on macs. This prevents the `web-service` container from running. To get around this you need to add the following environment variable to `docker/env/web.env`
 
@@ -219,8 +217,6 @@ npm run dev
 ```
 
 Edit the .env files to add secrets
-
-(The secrets for the test environment may be obtained from graham.willis@defra.gov.uk)
 
 If you receive the secrets, please remember to ignore them in git, by running  
 `git update-index --assume-unchanged docker/env/*.env`
