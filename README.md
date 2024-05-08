@@ -14,6 +14,10 @@ The `master` branch is currently behind the `develop` branch by a significant am
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_wildlife-licencing&metric=bugs)](https://sonarcloud.io/dashboard?id=DEFRA_wildlife-licencing)
 
+## Development status
+
+Work on the frontend service is paused as of April 2024. Further information on the current state of the frontend, including outstanding issues, can be found in [`STATUS.md`](STATUS.md).
+
 ## Getting started
 
 ## Editor configuration
